@@ -1,0 +1,298 @@
+<div class="container-fluid p-0">
+
+    <div class="d-flex justify-content-between headtitle mt-2">
+        <h4 class="ml-2 mt-2">Party Mapping</h4>
+
+        <div class="btntop">
+
+            <button *ngIf="isUpdate" type="button" (click)="this.partyCreateForm.enable();isUpdate = false"
+                class="btn btn-warning bmd-btn-edit btn-raised btntop emarginr ng-star-inserted">
+                <i class="material-icons editicon">edit</i>
+            </button>
+
+            <button type="button" class="btn btn-success bmd-btn-edit btn-raised btntop" (click)="partyListRoute()"><i
+                    class="material-icons editicon">reply</i>
+                <div class="ripple-container"></div>
+            </button>
+
+            <button *ngIf="isUpdate"
+                class="nav-link dropdown-toggle arrow-none waves-effect nav-user btn bmd-btn-edit btn-raised btntop btnlog"
+                data-placement="bottom" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="material-icons editicon">schedule</i>
+            </button>
+
+
+            <div style="background-color: aliceblue;width:250px;left:-66px"
+                class="dropdown-menu dropdown-menu  profile-dropdown" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" style="padding:15px;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12"><span>ModifiedOn: {{ModifiedOn}}</span> | <span>Modified By:
+                                        {{ModifiedBy}}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:10px;">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12"><span>CreatedOn: {{CreatedOn}}</span> | <span>Created By:
+                                        {{CreatedBy}}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ------title start---------- -->
+
+    <div class="row my-3 p-2" style="background-color: lavender;margin: 2px;">
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12">
+                    <nav aria-label="breadcrumb">
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row bkgno">
+                <div class="col-md-12">
+                    <label [title]="partyCreateForm.value.ReferenceNumber" class="lbltxt header-text-label"><span
+                            style="font-weight: lighter !important;">Reference
+                            Number : </span>{{partyCreateForm.value.ReferenceNumber |
+                        uppercase}}</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- --------title end----------- -->
+
+    <div class="card p-4">
+
+        <form [formGroup]="partyCreateForm">
+            <div class="row mt-4">
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="str">Merge Type</label>
+                        <!-- <select [ngClass]=" isUpdate ? 'block-input' : ''" (ngModelChange)="partyMergeChanges($event)"
+                            formControlName="MergeTypeId" name="AccType" id="ddlCountry" class="form-control my-select">
+                            <option disabled value="">--SELECT MERGE TYPE--</option>
+                            <option *ngFor="let data of mergeList" [value]="data.PartyMappingTypeId">{{data.Name |
+                                uppercase}}
+                            </option>
+                        </select> -->
+                        <ng-select class="searchdropdown"  
+                            [ngClass]=" isUpdate ? 'block-input' : ''" (ngModelChange)="partyMergeChanges($event)"
+                            formControlName="MergeTypeId" [clearable]="false" name="AccType" id="ddlCountry" >
+                            <ng-option [value]="''" [disabled]="true">--SELECT MERGE TYPE--</ng-option>
+                            <ng-option *ngFor="let data of mergeList" [value]="data.PartyMappingTypeId">
+                                {{data.Name | uppercase}}
+                            </ng-option>
+                          </ng-select>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class=" form-group">
+                        <label class="str" for="Reference">Reference Number</label>
+                        <input readonly formControlName="ReferenceNumber" type="text" id="Reference"
+                            class="form-control w-100" />
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <!-- <div class="form-group">
+                        <label class="str" for="Status">Active</label>
+                        <select formControlName="Status" name="Status" class="form-control my-select">
+                            <option disabled value="">--SELECT ACTIVE--</option>
+                            <option *ngFor="let status of statusvalues" [value]="status.value">
+                                {{status.viewValue | uppercase}}
+                            </option>
+                        </select>
+                    </div> -->
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class=" form-group">
+                        <label class="str" for="Party">Select Party</label>
+                        <!-- <select [ngClass]=" isUpdate ? 'block-input' : ''" *ngIf="isVendor == true"
+                            (ngModelChange)="partyChanges($event,true)" formControlName="FirstParty" name="Party"
+                            class="form-control my-select">
+                            <option disabled value="">--SELECT PARTY--</option>
+                            <option *ngFor="let data of vendorsList" [value]="data.VendorID">{{data.VendorName |
+                                uppercase}}
+                            </option>
+                        </select> -->
+                        <ng-select class="searchdropdown" 
+                            [ngClass]=" isUpdate ? 'block-input' : ''" *ngIf="isVendor == true" [clearable]="false"
+                            (ngModelChange)="partyChanges($event,true)" formControlName="FirstParty" name="Party" >
+                            <ng-option [value]="''" [disabled]="true">--SELECT PARTY--</ng-option>
+                            <ng-option *ngFor="let data of vendorsList" [value]="data.VendorID">
+                                {{data.VendorName | uppercase}}
+                            </ng-option>
+                          </ng-select>
+
+                        <!-- <select [ngClass]=" isUpdate ? 'block-input' : ''" *ngIf="isVendor == false"
+                            (ngModelChange)="partyChanges($event,false)" formControlName="FirstParty" name="Party"
+                            class="form-control my-select">
+                            <option disabled value="">--SELECT PARTY--</option>
+                            <option *ngFor="let data of customerList" [value]="data.CustomerID">{{data.CustomerName |
+                                uppercase}}
+                            </option>
+                        </select> -->
+                        <ng-select class="searchdropdown"  
+                        [ngClass]=" isUpdate ? 'block-input' : ''" *ngIf="isVendor == false" [clearable]="false"
+                            (ngModelChange)="partyChanges($event,false)" formControlName="FirstParty" name="Party" >
+                            <ng-option [value]="''" [disabled]="true">--SELECT PARTY--</ng-option>
+                            <ng-option *ngFor="let data of customerList" [value]="data.CustomerID">
+                                {{data.CustomerName | uppercase}}
+                            </ng-option>
+                          </ng-select>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4"> </div>
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4"> </div>
+
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class=" form-group">
+                        <label>Party Name</label>
+                        <input *ngIf="isVendor == true" [value]="vendorInformation.name ? vendorInformation.name : ''"
+                            type="text" id="Name" class="form-control w-100" readonly />
+                        <input *ngIf="isVendor == false"
+                            [value]="customerInformation.name ? customerInformation.name : ''" type="text" id="Name"
+                            class="form-control w-100" readonly />
+                    </div>
+                </div>
+
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class=" form-group">
+                        <label for="PAN">PAN Number</label>
+                        <input *ngIf="isVendor == true" [value]="vendorInformation.PAN ? vendorInformation.PAN : ''"
+                            type="text" id="PAN" class="form-control w-100" readonly />
+                        <input *ngIf="isVendor == false"
+                            [value]="customerInformation.PAN ? customerInformation.PAN : ''" type="text" id="PAN"
+                            class="form-control w-100" readonly />
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class=" form-group">
+                        <label for="GST">GST Number</label>
+                        <input *ngIf="isVendor == true" [value]="vendorInformation.GSt ? vendorInformation.GSt : ''"
+                            type="text" id="GST" class="form-control w-100" readonly />
+                        <input *ngIf="isVendor == false"
+                            [value]="customerInformation.GSt ? customerInformation.GSt : ''" type="text" id="GST"
+                            class="form-control w-100" readonly />
+                    </div>
+                </div>
+
+                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                    <h6 class="mt-3">Party to be merged with</h6>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class=" form-group">
+                        <label class="str" for="Party1">Select Party</label>
+                        <!-- <select [ngClass]=" isUpdate ? 'block-input' : ''" *ngIf="isVendor == true"
+                            (ngModelChange)="partyChanges($event,false)" formControlName="SecondParty" name="Party"
+                            class="form-control my-select">
+                            <option disabled value="">--SELECT PARTY--</option>
+                            <option *ngFor="let data of customerList" [value]="data.CustomerID">{{data.CustomerName |
+                                uppercase}}
+                            </option>
+                        </select> -->
+                        <ng-select class="searchdropdown" 
+                        [ngClass]=" isUpdate ? 'block-input' : ''" *ngIf="isVendor == true"[clearable]="false"
+                        (ngModelChange)="partyChanges($event,false)" formControlName="SecondParty" name="Party">
+                            <ng-option [value]="''" [disabled]="true">--SELECT PARTY--</ng-option>
+                            <ng-option *ngFor="let data of customerList" [value]="data.CustomerID">
+                                {{data.CustomerName | uppercase}}
+                            </ng-option>
+                          </ng-select>
+
+                        <!-- <select [ngClass]=" isUpdate ? 'block-input' : ''" *ngIf="isVendor == false"
+                            (ngModelChange)="partyChanges($event,true)" formControlName="SecondParty" name="Party"
+                            class="form-control my-select">
+                            <option disabled value="">--SELECT PARTY--</option>
+                            <option *ngFor="let data of vendorsList" [value]="data.VendorID">{{data.VendorName |
+                                uppercase}}
+                            </option>
+                        </select> -->
+                        <ng-select class="searchdropdown" 
+                        [ngClass]=" isUpdate ? 'block-input' : ''" *ngIf="isVendor == false" [clearable]="false"
+                            (ngModelChange)="partyChanges($event,true)" formControlName="SecondParty" name="Party">
+                            <ng-option [value]="''" [disabled]="true">--SELECT PARTY--</ng-option>
+                            <ng-option *ngFor="let data of vendorsList" [value]="data.VendorID">
+                                {{data.VendorName | uppercase}}
+                            </ng-option>
+                          </ng-select>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4"> </div>
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4"> </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class=" form-group">
+                        <label for="Name1">Party Name</label>
+                        <input readonly *ngIf="isVendor == false"
+                            [value]="vendorInformation.name ? vendorInformation.name : ''" type="text" id="Name"
+                            class="form-control w-100" />
+                        <input readonly *ngIf="isVendor == true"
+                            [value]="customerInformation.name ? customerInformation.name : ''" type="text" id="Name"
+                            class="form-control w-100" />
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class=" form-group">
+                        <label>PAN Number</label>
+                        <input readonly *ngIf="isVendor == false"
+                            [value]="vendorInformation.PAN ? vendorInformation.PAN : ''" type="text" id="PAN1"
+                            class="form-control w-100" />
+                        <input readonly *ngIf="isVendor == true"
+                            [value]="customerInformation.PAN ? customerInformation.PAN : ''" type="text" id="PAN1"
+                            class="form-control w-100" />
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class=" form-group">
+                        <label for="GST1">GST Number</label>
+                        <input readonly *ngIf="isVendor == false"
+                            [value]="vendorInformation.GSt ? vendorInformation.GSt : ''" type="text" id="GSt1"
+                            class="form-control w-100" />
+                        <input readonly *ngIf="isVendor == true"
+                            [value]="customerInformation.GSt ? customerInformation.GSt : ''" type="text" id="GSt1"
+                            class="form-control w-100" />
+                    </div>
+                </div>
+
+                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 text-right mt-4">
+                    <button *ngIf="!isUpdate" (click)="savePartyMapping()" type="submit"
+                        class="btn btn-primary btn-raised btn-default cntbtn mb-0">Merge</button>
+                    <button *ngIf="isUpdate && mergeTypes == 'UnMerge'" [disabled]="isUpdateMode"
+                        class="btn btn-primary btn-raised btn-default cntbtn mb-0"
+                        (click)="savePartyMapping('Merge')">Merge</button>
+                    <button *ngIf="isUpdate && mergeTypes == 'Merge'" [disabled]="isUpdateMode"
+                        class="btn btn-primary btn-raised btn-default cntbtn mb-0"
+                        (click)="savePartyMapping('Unmerge')">Unmerge</button>
+                    <button (click)="partyListRoute()" class="btn btn-danger btn-raised cntbtn mb-0">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>

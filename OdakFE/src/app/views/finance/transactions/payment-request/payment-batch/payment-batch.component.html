@@ -1,0 +1,104 @@
+<div class="container-fluid">
+  <div class="row mt-2">
+    <div class="col-12">
+      <h5 style="color:#003d79" class="ml-2 mt-2">Payment Batch - {{ currentTabName }}</h5>
+    </div>
+  </div>
+  <div class="row" style="margin-top: 12px; margin-bottom: 12px;">
+    <div class="col-md-6">
+      <ul class="nav nav-pills nav-justified p-0" role="tablist">
+        <li class="nav-item waves-effect waves-light">
+          <a
+            class="nav-link active show"
+            data-toggle="tab"
+            (click)="CurrentTAB('Open Request')"
+            href="#openRequest"
+            role="tab"
+            aria-selected="true"
+            >Open Request</a
+          >
+        </li>
+        <li class="nav-item waves-effect waves-light">
+          <a
+            class="nav-link"
+            data-toggle="tab"
+            (click)="CurrentTAB('In Progress')"
+            href="#inProgress"
+            role="tab"
+            aria-selected="false"
+            >In Progress</a
+          >
+        </li>
+        <li class="nav-item waves-effect waves-light">
+          <a
+            class="nav-link"
+            data-toggle="tab"
+            (click)="CurrentTAB('Closed Payments')"
+            href="#closedPayment"
+            role="tab"
+            aria-selected="false"
+            >Closed Payments</a
+          >
+        </li>
+      </ul>
+    </div>
+  </div>
+  <!-- header start -->
+
+  <!-- <div *ngIf="this.currentTabName == 'Open Request'" class="row mt-2">
+    <div class="col-12">
+      <span class="con">Total Open Request</span> :
+      <span style="font-weight: 600; color: red; font-size: 20px"> </span>
+    </div>
+  </div>
+
+  <div *ngIf="this.currentTabName == 'In Progress'" class="row mt-2">
+    <div class="col-12">
+      <span class="con">Total Payments in Progress</span> :
+      <span style="font-weight: 600; color: red; font-size: 20px"> </span>
+    </div>
+  </div> -->
+
+  <!-- <div
+    *ngIf="
+      this.currentTabName == 'Open Request' ||
+      this.currentTabName == 'In Progress'
+    "
+    class="row mt-2"
+   >
+    <div class="col-12">
+      <span class="con">Amount</span> :
+      <span style="font-weight: 600; color: red; font-size: 20px"> </span>
+    </div>
+  </div> -->
+</div>
+<!-- <div class="card-body col-12"> -->
+<div class="col-12">
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="tab-content">
+        <div class="tab-pane pt-3 active show" id="openRequest" role="tabpanel" *ngIf="this.currentTabName == 'Open Request'">
+          <app-open-request (activeTab)="onSelectedTab($event)"></app-open-request>
+        </div>
+
+        <div class="tab-pane pt-3 show" id="inProgress" role="tabpanel" *ngIf="this.currentTabName == 'In Progress'">
+          <app-payment-in-progress (activeTab)="onSelectedTab($event)"></app-payment-in-progress>
+        </div>
+
+        <div class="tab-pane pt-3 show" id="closedPayment" role="tabpanel" *ngIf="this.currentTabName == 'Closed Payments'">
+          <app-closed-payments (activeTab)="onSelectedTab($event)"></app-closed-payments>
+        </div>
+        <!-- 
+                        <div class="tab-pane pt-3" id="bankBook" role="tabpanel">
+                            <app-bank-book (click)="CurrentTAB('In Progress')" [bankSummaryFilterData]="bankSummaryFilterData"></app-bank-book>
+                        </div>
+
+
+                        <div class="tab-pane pt-3" id="bankStatement" role="tabpanel">
+                            <app-bank-statement (click)="CurrentTAB('Closed Payments')"></app-bank-statement>
+                        </div> -->
+      </div>
+    </div>
+  </div>
+</div>

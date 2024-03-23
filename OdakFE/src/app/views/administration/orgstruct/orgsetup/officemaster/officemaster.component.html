@@ -1,0 +1,192 @@
+<div class="row headtitle">
+    <div class="col-md-9">
+        <h4>Office Master</h4>
+    </div>
+    <div class="col-md-3 alrt">
+
+        <button type="button" class="btn btn-success bmd-btn-edit btn-raised btntop" (click)="onBack()" ><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+    </div>
+</div>
+<form [formGroup]="officeForm">
+    <div class="card">
+        <div class="card-body ">
+            <div class="row">
+                <div class="col-md-4">
+                    <ul class="nav nav-pills nav-justified" role="tablist">
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link active show" data-toggle="tab" href="#profile-1" role="tab" aria-selected="true">Office Setup</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" href="#profile-2" role="tab" aria-selected="false">Email Alert</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="tab-content">
+                        <div class="tab-pane pt-3 active show" id="profile-1" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-5 alrt">
+                                                <label class="str"> Office Location</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="text" id="txtCompanyname" autocomplete="off" formControlName="OfficeLoc" ng-model="OfficeLoc" class="form-control ng-pristine ng-untouched ng-valid ng-empty">
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="row">
+
+                                            <div class="col-md-12">
+                                                <label class="str">Company Name</label>
+                                                <input type="text" id="txtCompanyname" autocomplete="off" formControlName="CompanyName" ng-model="CompanyName" class="form-control ng-pristine ng-untouched ng-valid ng-empty">
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label class="str">Country</label>
+                                                <select class="form-control my-select" id="ddlCountry" formControlName="CountryID" (ngModelChange)="CountryChanged()">
+                                                    <option *ngFor="let gRow of dscountryItem" [value]="gRow.ID">
+                                                        {{gRow.CountryName}}
+                                                    </option>
+
+                                                </select>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label class="str">Status</label>
+                                                <select class="form-control my-select" id="ddlstatus" formControlName="StatusID">
+                                                    <option *ngFor="let status of statusvalues" [value]="status.value">
+                                                        {{status.viewValue}}
+                                                    </option>
+                                                </select>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group bmd-form-group">
+                                        <div class="col-md-12 padlr0">
+                                            <label class="str">Address</label>
+                                            <textarea class="form-control ng-pristine ng-valid ng-empty ng-touched" autocomplete="off" ng-model="Address" formControlName="Address" id="txtLocAddress" rows="5" style="height:200px!important;"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group bmd-form-group">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <label class="str">City</label>
+                                                        <select class="form-control my-select" id="ddlCityv" formControlName="CityID">
+                                                            <option *ngFor="let gRow of dsCityItem" [value]="gRow.ID">
+                                                                {{gRow.CityName}}
+                                                            </option>
+
+                                                        </select>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group bmd-form-group">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <label class="str">State</label>
+                                                        <select class="form-control my-select"  id="ddlState" formControlName="StateID">
+                                                            <option *ngFor="let gRow of dsStateItem" [value]="gRow.ID">
+                                                                {{gRow.StateName}}
+                                                            </option>
+
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group bmd-form-group">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <label class="str">Pin Code</label>
+                                                        <input type="number" min="1" id="txtPincode" formControlName="Pincode" autocomplete="off" ng-model="Pincode" class="form-control ng-pristine ng-untouched ng-valid ng-empty">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group bmd-form-group">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <label>Tax/GST Number</label>
+                                                        <input type="text" id="txtTanNo" formControlName="TaxGSTNo" autocomplete="off" ng-model="TaxGSTNo" class="form-control ng-pristine ng-untouched ng-valid ng-empty">
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group bmd-form-group">
+                                                <div class="col-md-12 padlr0">
+                                                    <label class="str">Tel No</label>
+                                                    <input type="number" id="txtBranch" formControlName="TelNo" autocomplete="off" ng-model="TelNo" class="form-control ng-pristine ng-untouched ng-valid ng-empty">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group bmd-form-group">
+                                                <div class="col-md-12 padlr0">
+                                                    <label>Fax No</label>
+                                                    <input type="number" id="txtFax" formControlName="FaxNo" autocomplete="off" ng-model="FaxNo" class="form-control ng-pristine ng-untouched ng-valid ng-empty">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer ">
+                                <div class="col-md-12" style="text-align:right;">
+                                    <button type="submit" (click)="onSubmit()" class="btn btn-success btn-raised mb-0"><i class="fa fa-save"></i> Save</button>
+                                </div>
+                                <input type="hidden" id="HDRegId" ng-model="HDRegId" />
+                            </div>
+                        </div>
+                        <div class="tab-pane pt-3" id="profile-2" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="row">
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+

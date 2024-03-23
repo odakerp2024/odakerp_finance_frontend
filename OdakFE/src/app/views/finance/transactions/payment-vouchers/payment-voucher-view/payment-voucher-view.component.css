@@ -1,0 +1,8 @@
+.table>thead>tr>th {
+    width: 11% !important;
+    text-align: center;
+}
+
+.text-black{
+    color: #000000 !important
+}

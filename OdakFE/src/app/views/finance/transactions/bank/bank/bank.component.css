@@ -1,0 +1,16 @@
+#exampleModalCenter1 .modal-dialog {
+    max-width: 700px;
+}
+::ng-deep .cdk-overlay-container {
+    z-index: 9999 !important;
+}
+
+::ng-deep button.mat-icon-button.mat-button-base {
+    position: absolute;
+    right: 10px;
+}
+
+::ng-deep button.mat-calendar-previous-button.mat-icon-button.mat-button-base {
+    position: relative;
+    right: 40px;
+}

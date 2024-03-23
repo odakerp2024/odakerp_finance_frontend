@@ -1,0 +1,220 @@
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between headtitle mt-2">
+        <h4 class="ml-2 mt-2">Credit Review </h4>
+
+        <div class="btntop">
+
+
+
+            <button type="button" class="btn btn-success bmd-btn-edit btn-raised btntop"
+                [routerLink]="['/views/credit-review/credit-review-view']"><i class="material-icons editicon">reply</i>
+                <div class="ripple-container"></div>
+            </button>
+
+        </div>
+    </div>
+
+    <div class="card">
+        <form [formGroup]="creditForm">
+            <div class="row mt-3 p-4">
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="">Customer</label>
+                        <input type="text"  class="form-control my-select disable-input--nostyle" placeholder="Payement Request #" formControlName="Customer" />
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="">Customer Branch</label>
+                        <input type="text"  class="form-control my-select disable-input--nostyle" placeholder="Payement Request #" formControlName="CustomerBranch" />
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="">Customer Prime contact </label>
+                        <input type="number"  class="form-control w-100 disable-input--nostyle" formControlName="CustomerPrimeContact"/>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="">Division</label>
+                        <input type="text"  class="form-control w-100 disable-input--nostyle" formControlName="Division"/>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="">Office</label>
+                        <input type="text"  class="form-control w-100 disable-input--nostyle" formControlName="Office"/>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="">Sales Person</label>
+                        
+                        <input type="text"  class="form-control w-100 disable-input--nostyle" formControlName="SalesPerson"/>
+                    </div>
+                </div>
+
+               
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4 mt-2 text-white ">
+                    <h5  class="creditAppoval text-center font-weight-bold">Credit Approval (s)</h5>
+                    <div class="card-one p-5 text-center">
+                        <!-- <h4 class="mb-2">{{convertToThousand(creditApprovalList[0].CreditLimitAmount)}} & {{creditApprovalCard.CreditLimitDays}} Days</h4> -->
+                        <h4 class="mb-2">{{convertToThousand(this.CreditLimitAmount)}} & {{this.CreditLimitDays}} Days</h4>
+
+                        <h6 class="font-weight-bolder">Current Credit</h6>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4  mt-2 text-white">
+                    <h5 class="businessPerformance text-center font-weight-bold">Business Performance </h5>
+                    <div class="card-two p-5 text-center">
+                        <!-- <h4 class="mb-2 bolder">{{convertToThousand(businessPerformanceCard.AverageRevenue)}}</h4> -->
+                        <h6 class="font-weight-bolder">Avg. Monthly Revenue</h6>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4  mt-2 text-white">
+                    <h5 class="paymentPerformance text-center font-weight-bold">Payment Performance </h5>
+                    <div class="card-three p-5 text-center">
+                        <!-- <h4 class="mb-2">{{paymentPerformanceCard.PaidOnTime}}</h4> -->
+                        <h6 class="font-weight-bolder">On-time Payments</h6>
+                    </div>
+                </div>
+
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4 mt-2">
+                    <table class="table table-responsive table-striped table-bordered w-100 dataTable no-footer table-one">
+                        <thead>
+                            <tr>
+                                <th class="text-center" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                    colspan="1" aria-label="Name: activate to sort column ascending"
+                                    style="width: 177.575px;">Request
+                                </th>
+                                <th class="text-center" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                    colspan="1" aria-label="Name: activate to sort column ascending"
+                                    style="width: 177.575px;">Credit Amount </th>
+
+                                <th tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                                    class="text-center" aria-label="Name: activate to sort column ascending"
+                                    style="width: 177.575px;">Credit Days</th>
+
+                                <th tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                                    class="text-center" aria-label="Name: activate to sort column ascending"
+                                    style="width: 120x;">Approval Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ng-container *ngIf="creditApprovalList.length > 0 else noRecord">
+                                <tr *ngFor="let credit of creditApprovalList">
+                                    <td>{{credit.Rquest}}</td>
+                                    <td>{{credit.CreditLimitAmount}}</td>
+                                    <td>{{credit.CreditLimitDays}}</td>
+                                    <td>{{credit.ApplicationDate | date: commonDataService.convertToLowerCaseDay(entityDateFormat) }}</td>
+                                </tr>
+                            </ng-container>   
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4 mt-2">
+
+                    <table class="table table-responsive table-striped table-bordered w-100 dataTable no-footer">
+                        <thead style="background: #385623;">
+                            <tr>
+                                <th class="text-center" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                    colspan="1" aria-label="Name: activate to sort column ascending"
+                                    style="width: 177.575px; background: #385623 !important;">Month
+                                </th>
+                                <th class="text-center" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                    colspan="1" aria-label="Name: activate to sort column ascending"
+                                    style="width: 177.575px;  background: #385623 !important;">Division</th>
+
+                                <th tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                                    class="text-center" aria-label="Name: activate to sort column ascending"
+                                    style="width: 177.575px;  background: #385623 !important;">Volume</th>
+
+                                <th tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                                    class="text-center" aria-label="Name: activate to sort column ascending"
+                                    style="width: 177.575px;  background: #385623 !important;">Revenue</th>
+                            </tr>
+                        </thead>
+                        <!-- <tbody style="background-color: #d4e2ce;">
+                            <ng-container *ngIf="businessPerformance.length > 0 else noRecord">
+                                <tr *ngFor="let credit of businessPerformance">
+                                    <td>{{credit.Month}}</td>
+                                    <td>{{credit.Division}}</td>
+                                    <td>{{credit.Volume}}</td>
+                                    <td>{{credit.TotalRevenue}}</td>
+                                </tr>
+                            </ng-container>  
+                        </tbody> -->
+                    </table>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4 mt-2">
+
+                    <table class="table table-responsive table-striped table-bordered w-100 dataTable no-footer">
+                        <thead >
+                            <tr>
+                                <th class="text-center" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                    colspan="1" aria-label="Name: activate to sort column ascending"
+                                    style="width: 177.575px; background: #c00000 !important;">Month
+                                </th>
+                                <th class="text-center" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                    colspan="1" aria-label="Name: activate to sort column ascending"
+                                    style="width: 177.575px; background: #c00000 !important">Division</th>
+
+                                <th tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                                    class="text-center" aria-label="Name: activate to sort column ascending"
+                                    style="width: 177.575px; background: #c00000 !important">Invoices Due</th>
+
+                                <th tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                                    class="text-center" aria-label="Name: activate to sort column ascending"
+                                    style="width: 177.575px; background: #c00000 !important">Paid On Time</th>
+                            </tr>
+                        </thead>
+                        <!-- <tbody style="background-color: #f8d6cc;"> 
+                            <ng-container *ngIf="paymentPerformance.length > 0 else noRecord">
+                                <tr *ngFor="let credit of paymentPerformance">
+                                    <td>{{credit.Month}}</td>
+                                    <td>{{credit.Division}}</td>
+                                    <td>{{credit.Volume}}</td>
+                                    <td>{{credit.TotalRevenue}}</td>
+                                </tr>
+                            </ng-container> 
+                        </tbody> -->
+                    </table>
+                </div>
+
+                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 text-right mt-4">
+                    <button type="button" class="btn btn-primary text-white mr-3 mb-0 col-auto"
+                    [routerLink]="['/views/credit-Review-info/credit-info-view']"
+                    [queryParams]="{'CreditReviewId': creditReviewId,'type': 'revise'}">
+                        Revise
+                    </button>
+                    <button type="button" class="btn btn-primary text-white mr-3 mb-0 col-auto"
+                    [routerLink]="['/views/credit-Review-info/credit-info-view']"
+                    [queryParams]="{'CreditReviewId': creditReviewId,'type': 'revoke'}" style="background-color: #19a84c !important;border: #19a84c !important;">
+                        Revoke
+                    </button>
+                    <button type="button" [routerLink]="['/views/credit-review/credit-review-view']"
+                        class="btn btn-warning text-white mr-3 mb-0 col-auto">
+                        Cancel
+                    </button>
+                </div>
+                <ng-template #noRecord>
+                    <tr>
+                        <td class="text-center" colspan="9" style="height: 100px;">No Records Found</td>
+                    </tr>
+                </ng-template>  
+            </div>
+        </form>
+    </div>
+
+</div>

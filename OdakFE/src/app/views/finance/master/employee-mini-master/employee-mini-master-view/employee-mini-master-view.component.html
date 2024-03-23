@@ -1,0 +1,253 @@
+<div class="p-4">
+    <div class="row headtitle">
+        <div class="col-9 d-flex justify-content-between">
+            <span class="mt-auto">
+                <h4>Employee Mini Master</h4>
+            </span>
+
+            <div>
+                <button class="btn btn-success btn-raised mr-3" (click)="checkAddPermission()" data-target="#exampleModalCenter" data-toggle="modal">
+                    Master Upload
+                </button>
+
+                <!-- <button class="btn btn-success btn-raised bmd-btn-edit"
+                    [routerLink]="['/views/finance/master/mini-master/mini-master-details']">
+                    <i class="material-icons editicon">add</i>
+                </button> -->
+
+                <!-- Modal -->
+                <div class="modal hide fade in" id="exampleModalCenter" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static"
+                    aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content bg-white">
+                            <div class="modal-header border-bottom">
+                                <h6>Upload File</h6>
+                                <button (click)="closeModal()" id="closeModalButton" type="button" class="close" data-dismiss="modal" #closeBtn
+                                    aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body mt-4" style="padding-bottom: 0px !important;">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="file-upload">
+                                            <input class="file-upload__input" hidden type="file" name="myFile" id="myFile"  [(ngModel)]="templateFile"
+                                            (change)="fileSelected($event)" [ngModelOptions]="{standalone: true}" [(ngModel)]="templateFile">
+                                            <label for="myFile" class="file-upload__button text-center W-100 px-4"
+                                                style="border: 1px solid #b1b1b1d1 !important; border-radius: 10px; box-shadow: 0px 0px 5px 0px rgb(202 202 202); background-color: white; font-weight: 600; margin-right: 0.5rem !important;"
+                                                type="button">
+                                                <img class="ml-2" src="assets/images/docupload.png" alt="Upload image"
+                                                    style="width: 1rem !important;" />
+                                                Upload File
+                                            </label>
+
+                                            <button type="button" class="py-0" (click)="downloadTemplateFile()" style="border: 1px solid #b1b1b1d1 !important; border-radius: 10px; box-shadow: 0px 0px 5px 0px rgb(202 202 202); background-color: white; font-weight: 600; margin-right: 0.5rem !important;">
+                                                <img class="ml-2" src="assets/images/download.png" alt="Upload image"
+                                                style="width: 1.5rem !important;" />
+                                                Download Template
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="file-upload__label pt-3">{{templateFile ? templateFile : ''}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-success btn-raised" (click)="uploadEmployee()">Upload</button>
+                                <!-- <button type="button" class="btn btn-secondary mx-2" data-dismiss="modal" >Close</button> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <!-- Table View -->
+        <div class="col-sm-12 col-md-9">
+            <div class=" mr-3 card">
+                <div class="row">
+                    <div class="col-12">
+                        <table class="table table-responsive   table-bordered w-100 table-striped  p-3 mt-3 border-0">
+                            <thead>
+                                <tr role="row">
+                                    <th id="th1" tabindex="0" style="text-align: center;" >
+                                        Employee Code #
+                                    </th>
+                                    <th id="th2"  style="text-align: center;">
+                                        Employee Name
+                                    </th>
+                                    <th id="th3"  style="text-align: center;">
+                                        Short Name
+                                    </th>
+                                    <th id="th4" scope="col" style="text-align: center;">Division</th>
+                                    <th id="th5" style="text-align: center;">
+                                        Office
+                                    </th>
+                                    <th style="text-align: center;">
+                                        Department
+                                    </th>
+                                    <th style="text-align: center;">
+                                        Status
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-container *ngIf="pagedItems?.length > 0; else noRecord">
+                                    <tr *ngFor="let miniMaster of pagedItems;let i = index">
+                                        <td class="text-center p-3" (click)="editInvoice(miniMaster.Id)"
+                                            style="color: #0366d6;cursor: pointer; ;padding: 12px !important" 
+                                            [routerLink]="['/views/finance/master/mini-master/mini-master-details']"
+                                            [queryParams]=" {Id: miniMaster.Id}">
+                                            {{miniMaster.EmployeeCode}} 
+                                        </td>
+                                        <td class="text-center">{{miniMaster.EmployeeName}}</td>
+                                        <td class="text-center">{{miniMaster.ShortName}}</td>
+                                        <td class="text-center">{{miniMaster.DivisionCode}}</td>
+                                        <td class="text-center">{{miniMaster.OfficeCode}}</td>
+                                        <td class="text-center">{{miniMaster.Department}}</td>
+                                        <td class="text-center">{{miniMaster.Status ? 'Active': 'Inactive'}}</td>
+                                    </tr>
+                                </ng-container>
+                                <ng-template #noRecord>
+                                    <tr>
+                                        <td class="text-center" colspan="7">No records found</td>
+                                    </tr>
+                                </ng-template>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                <div class="row page w-100 justify-content-end">
+                    <ul *ngIf="pager?.pages && pager?.pages?.length" class="pagination">
+                        <li [ngClass]="{disabled:pager.currentPage === 1}">
+                            <a (click)="setPage(1)">First</a>
+                        </li>
+                        <li [ngClass]="{disabled:pager.currentPage === 1}">
+                            <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+                        </li>
+                        <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                            <a (click)="setPage(page)">{{page}}</a>
+                        </li>
+                        <li *ngIf="(pager.totalPages - pager.startPage) > 5 ">
+                            <a (click)="setPage(pager.startPage + 5)">...</a>
+                        </li>
+                        <li *ngIf="(pager.totalPages - pager.startPage) > 5">
+                            <a (click)="setPage(pager.totalPages)">{{pager.totalPages}}</a>
+                        </li>
+
+                        <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                            <a (click)="setPage(pager.currentPage + 1)">Next</a>
+                        </li>
+                        <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                            <a (click)="setPage(pager.totalPages)">Last</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter -->
+        <div class="col-sm-12 col-xs-12 col-md-3">
+            <form [formGroup]="filterForm" class="">
+                <div class="row pt-4 card">
+                    <div class="col-12">
+                        <div class="form-group bmd-form-group">
+                            <input type="text" class="w-100 pl-2" formControlName="EmployeeCode"
+                                placeholder="EMPLOYEE CODE" />
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-group bmd-form-group">
+                            <input type="text" class="w-100 pl-2" formControlName="EmployeeName"
+                                placeholder="EMPLOYEE NAME" />
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-group bmd-form-group">
+                            <input type="text" class="w-100 pl-2" formControlName="ShortName"
+                                placeholder="SHORT NAME" />
+                        </div>
+                    </div>
+
+
+                    <div class="col-12">
+                        <div class="form-group bmd-form-group">
+                            <input type="text" class="w-100 pl-2" formControlName="DivisionCode"
+                            placeholder="DIVISION CODE" />
+                            <!-- <select class="form-control my-select" formControlName="DivisionCode"
+                                (change)="getOffice($event.target.value)">
+                                <option [value]="''" disabled>--SELECT DIVISION TYPE--</option>
+                                <ng-container *ngFor="let division of divisionList">
+                                    <option *ngIf="division.Active" [value]="division.DivisionCode">
+                                        {{division.DivisionName | uppercase}} -- {{division.DivisionCode}}
+                                    </option>
+                                </ng-container>
+                            </select> -->
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-group bmd-form-group">
+                            <input type="text" class="w-100 pl-2" formControlName="OfficeCode"
+                            placeholder="OFFICE CODE" />
+                            <!-- <select class="form-control my-select" formControlName="OfficeCode">
+                                <option [value]="''" disabled>--SELECT OFFICE TYPE--</option>
+                                <ng-container *ngFor="let office of officeList">
+                                    <option [value]="office.ID">
+                                        {{office.OfficeName | uppercase}}
+                                    </option>
+                                </ng-container>
+                            </select> -->
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-group bmd-form-group">
+                            <input type="text" class="w-100 pl-2" formControlName="Department"
+                            placeholder="DEPARTMENT" />
+                            <!-- <select class="form-control my-select" >
+                                <option value='' disabled>--SELECT DEPARTMENT--</option>
+                                <option *ngFor="let customer of customerList" [value]="name.ChartOfAccountsId">
+                                    {{name.name | uppercase}}
+                                </option>
+                            </select> -->
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-group bmd-form-group">
+                            <!-- <select class="form-control my-select" formControlName="Status">
+                                <option [value]="''" disabled>--SELECT STATUS--</option>
+                                <option value=1>ACTIVE</option>
+                                <option value=0>INACTIVE</option>
+                            </select> -->
+                        <ng-select class="searchdropdown"  [clearable]="false"  formControlName="Status" >
+                            <ng-option [value]="''" [disabled]="true">--SELECT STATUS--</ng-option>
+                            <ng-option value=1>ACTIVE</ng-option>
+                                <ng-option value=0>INACTIVE</ng-option>
+                        
+                      </ng-select>  
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 searchbtn alrt text-center mb-3 mt-3">
+                        <button type="submit" style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;"
+                            (click)="filterInvoice()" class="btn btn-primary btn-raised mb-0">
+                            Search
+                        </button>
+                        <button style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;"
+                            class="btn btn-raised btn-danger mb-0" (click)="clearFilter()">
+                            Clear
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,1217 @@
+<div class="row headtitle">
+    <div class="col-md-9 col-sm-9 col-lg-9 col-xl-9">
+        <h4>Vendor Master</h4>
+    </div>
+    <div class="col-md-3 col-sm-3 col-lg-3 col-xl-3 alrt">
+        <button type="button" class="btn btn-success bmd-btn-edit btn-raised btntop" [routerLink]="['/views/masters/commonmaster/vendor/vendorview']"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body ">
+        <div class="row">
+            <div class="col-md-8 col-sm-8 col-lg-8 col-xl-8">
+                <ul class="nav nav-pills nav-justified" role="tablist">
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link active show" data-toggle="tab" id="custab" (click)="onPageTab(1)" href="#profile-1" role="tab" aria-selected="true">VENDOR DETAILS</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" id="attachtab" (click)="onPageTab(2)" href="#profile-2" role="tab" aria-selected="false">ATTACHMENTS</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" id="acctab" (click)="onPageTab(2)" href="#profile-3" role="tab" aria-selected="false">ACCOUNTING LINK</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" id="crtab" (click)="onPageTab(4)" href="#profile-4" role="tab" aria-selected="false">CREDIT LIMIT</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" id="emailtab" (click)="onPageTab(5)" href="#profile-5" role="tab" aria-selected="false">EMAIL ALERTS</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                <div class="tab-content">
+                    <div class="tab-pane pt-3 active show" id="profile-1" role="tabpanel">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12" style="border-right:3px solid #dedcdd;">
+                                        <form [formGroup]="partyForm">
+                                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 padlr0" style="border-bottom: 2px dashed #ccc;padding-bottom: 7px;margin-bottom: 12px;">
+
+                                                <div class="row">
+                                                    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                                                        <div class="form-group">
+                                                            <div class="row">
+                                                                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                                    <label class="str">Vendor Name </label>
+                                                                    <input type="text" formControlName="CustomerName" id="txtCustomerName" class="form-control">
+                                                                    <input type="hidden" id="HDIDv" class="form-control" formControlName="Itemsv1" />
+                                                                    <!--<input type="hidden" id="HDIDSS" class="form-control" formControlName="cusID" />-->
+                                                                    <input type="hidden" id="HDIDv" class="form-control" formControlName="BusinessType" />
+
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                                                        <div class="form-group">
+                                                            <div class="row">
+                                                                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                                    <label class="lblfont str">Country </label>
+                                                                    <select class="form-control my-select" id="ddlCountry" formControlName="CountryID" (ngModelChange)="CountryChanged()">
+                                                                        <option *ngFor="let gRow of dscountryItem" [value]="gRow.ID">
+                                                                            {{gRow.CountryName}}
+                                                                        </option>
+
+                                                                    </select>
+
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+                                            <!--<div class="col-md-12 padlr0" style="border-bottom:3px dashed #ccc; padding-bottom:4px;">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <h5 style="margin-bottom:7px; margin-top:-3px; font-size:15px;color: #636161; font-weight: 600;text-decoration: underline;">Division <span class="man">*</span></h5>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <div class="row">
+
+                                                                <div class="col-md-12">
+                                                                    <span class="bmd-form-group is-filled is-focused">
+                                                                        <div class="checkbox">
+                                                                            <label>
+                                                                                <input type="checkbox" ng-true-value="1" ng-false-value="0" formControlName="IsNVOCC"><span class="checkbox-decorator">
+                                                                                    <span class="check"></span>
+                                                                                    <div class="ripple-container"></div>
+                                                                                </span> NVOCC
+                                                                            </label>
+                                                                        </div>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group">
+                                                            <div class="row">
+
+                                                                <div class="col-md-12">
+                                                                    <span class="bmd-form-group is-filled is-focused">
+                                                                        <div class="checkbox">
+                                                                            <label>
+                                                                                <input type="checkbox" ng-true-value="1" ng-false-value="0" formControlName="IsFF"><span class="checkbox-decorator"><span class="check"></span><div class="ripple-container"></div></span> FREIGHT FORWARDING
+                                                                            </label>
+                                                                        </div>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>-->
+                                        </form>
+                                        <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 padlr0" style="border-bottom:3px dashed #ccc; padding-bottom:7px;">
+                                            <div class="row">
+                                                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                    <h5 style="margin-bottom:7px; margin-top:-3px; font-size:15px;color: #636161; font-weight: 600;text-decoration: underline;">Division Details <span class="man">*</span></h5>
+                                                </div>
+                                                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 padlr0 tblparty">
+
+                                                    <div *ngFor="let BT of dsDivision" class="chkvalues">
+
+                                                        <label class="check">
+                                                            <input type="checkbox" id="chkDivision_{{BT.ID}}" [value]="BT.ID" ng-true-value="1" ng-false-value="0" [(ngModel)]="BT.IsTrue">
+                                                            <!--<input type="checkbox">-->
+                                                            {{BT.Division}}
+
+                                                        </label>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 padlr0" style="border-bottom:3px dashed #ccc; padding-bottom:4px;">
+                                            <div class="row">
+                                                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                    <h5 style="margin-bottom:7px; margin-top:10px; font-size:15px;color: #636161; font-weight: 600;text-decoration: underline;">Category <span class="man">*</span></h5>
+                                                </div>
+                                                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 padlr0 tblparty">
+                                                    <div *ngFor="let BT of dsBTItem" class="chkvalues ">
+                                                        <label class="chkbox">
+                                                            <input type="checkbox" id="chkBusinessType_{{BT.ID}}" [value]="BT.ID" ng-true-value="1" ng-false-value="0" [(ngModel)]="BT.IsTrue">
+                                                            <!--<input type="checkbox">-->
+                                                            {{BT.BusinessType}}
+
+                                                        </label>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 padlr0" style="margin-top:20px;">
+
+                                            <div class="row">
+                                                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                    <h5 style="margin-bottom:0; margin-top:-3px; font-size:15px;color: #636161; font-weight: 600;text-decoration: underline;">Branch Details <span class="man">*</span></h5>
+                                                    <div class="row">
+                                                        <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                            <div class="row">
+                                                                <div class="col-md-3 col-sm-3 col-lg-3 col-xl-3">
+                                                                    <div class="form-group">
+                                                                        <div class="row">
+                                                                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                                                <label class="str">City</label>
+                                                                                <select class="form-control my-select" [(ngModel)]="CityID" id="ddlCity" [ngModelOptions]="{standalone: true}">
+                                                                                    <option *ngFor="let gRow of dsCityItem" [value]="gRow.ID">{{gRow.CityName}}</option>
+                                                                                </select>
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3 col-sm-3 col-lg-3 col-xl-3">
+                                                                    <div class="form-group">
+                                                                        <div class="row">
+                                                                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                                                <label>State</label>
+                                                                                <select class="form-control my-select" [(ngModel)]="StateID" id="ddlState" [ngModelOptions]="{standalone: true}">
+                                                                                    <option *ngFor="let gRow of dsStateItem" [value]="gRow.ID"> {{gRow.StateName}}</option>
+                                                                                </select>
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3 col-sm-3 col-lg-3 col-xl-3">
+                                                                    <div class="form-group">
+                                                                        <div class="row">
+                                                                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                                                <label class="str">Tel</label>
+                                                                                <input type="number" id="txtTel" autocomplete="off" [(ngModel)]="TelNo" class="form-control" />
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-3 col-sm-3 col-lg-3 col-xl-3">
+                                                                    <div class="form-group">
+                                                                        <div class="row">
+                                                                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                                                <label class="str">Pin Code</label>
+                                                                                <input type="number" id="txtPincode" autocomplete="off" [(ngModel)]="PinCode" class="form-control" />
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                                                                    <div class="form-group">
+                                                                        <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 padlr0">
+                                                                            <label class="str">Address</label>
+                                                                            <textarea class="form-control" autocomplete="off" [(ngModel)]="Address" id="txtLocAddress" rows="5" style="height:109px!important;"></textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                                                                    <div class="row">
+                                                                        <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                                                                            <div class="form-group">
+                                                                                <div class="row">
+                                                                                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                                                        <label>Email ID</label>
+                                                                                        <input type="text" autocomplete="off" id="txtEmailID" [(ngModel)]="EmailID" class="form-control" />
+                                                                                    </div>
+
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                                                                            <div class="form-group">
+                                                                                <div class="row">
+                                                                                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                                                        <label class="str">PIC Name</label>
+                                                                                        <input type="text" autocomplete="off" id="txtPic" [(ngModel)]="PIC" class="form-control" />
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                                                                            <div class="form-group">
+                                                                                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 padlr0">
+                                                                                    <label>Branch</label>
+                                                                                    <input type="hidden" id="HDIDv" class="form-control" [(ngModel)]="CID" />
+                                                                                    <input type="hidden" id="HDArrayIndex" class="form-control" [(ngModel)]="HDArrayIndex" />
+                                                                                    <input type="text" id="txtBranch" [(ngModel)]="LocBranch" class="form-control" />
+
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                                                                            <div class="form-group">
+                                                                                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 padlr0">
+                                                                                    <label class="str">Status</label>
+
+                                                                                    <select class="form-control my-select" [(ngModel)]="StatusID" id="ddlStatus" [ngModelOptions]="{standalone: true}">
+                                                                                        <option *ngFor="let status of statusvalues" [value]="status.value">
+                                                                                            {{status.viewValue}}
+                                                                                        </option>
+                                                                                    </select>
+
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+
+                                                <div class="row">
+                                                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 alrt">
+                                                        <button type="submit" (click)="AddBranch();" class="btn btn-fill btn-success btn-raised">
+
+                                                            ADD
+                                                        </button>
+
+                                                    </div>
+                                                    <div class="clearfix"></div>
+                                                </div>
+
+                                                <div class="row" style="padding-top:20px;">
+                                                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 padlr0">
+                                                        <div class="material-datatables" style="width:100%;overflow:scroll;">
+
+                                                            <table class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>S.No</th>
+                                                                        <th>Branch</th>
+                                                                        <th>City</th>
+                                                                        <th>State</th>
+                                                                        <th>Tel</th>
+                                                                        <th>PinCode</th>
+                                                                        <th>EmailID</th>
+                                                                        <th>PIC</th>
+                                                                        <th>Address</th>
+                                                                        <th>Status</th>
+                                                                        <th class="disabled-sorting text-right actwid">Actions</th>
+                                                                    </tr>
+                                                                </thead>
+
+                                                                <tbody>
+
+
+                                                                    <tr *ngFor="let gRow of DynamicGrid; let i= index">
+                                                                        <td> {{i+1}}</td>
+                                                                        <td class="txtright">
+                                                                            {{gRow.LocBranch}}
+
+                                                                        </td>
+                                                                        <td>
+                                                                            {{gRow.City}}
+
+
+                                                                        </td>
+                                                                        <td>
+                                                                            {{gRow.State}}
+
+
+                                                                        </td>
+
+                                                                        <td class="txtright">
+                                                                            {{gRow.TelNo}}
+
+                                                                        </td>
+
+                                                                        <td class="txtright">
+                                                                            {{gRow.PinCode}}
+
+                                                                        </td>
+                                                                        <td class="txtright">
+                                                                            {{gRow.EmailID}}
+
+                                                                        </td>
+                                                                        <td class="txtright">
+                                                                            {{gRow.PIC}}
+
+                                                                        </td>
+
+                                                                        <td class="txtright">
+                                                                            {{gRow.Address}}
+
+                                                                        </td>
+                                                                        <td>
+                                                                            {{gRow.StatusResult}}
+
+
+                                                                        </td>
+                                                                        <td class="td-actions text-right bindgrid">
+
+                                                                            <button type="button" rel="tooltip" (click)="Selectvalues(DynamicGrid,i)" class="btn btn-success btn-round" data-original-title="" title="">
+                                                                                <i class="material-icons">edit</i>
+                                                                            </button>
+                                                                            <button type="button" rel="tooltip" (click)="RemoveBranch(DynamicGrid,i,gRow.CID)" class="btn btn-danger btn-round" data-original-title="" title="">
+                                                                                <i class="material-icons">delete</i>
+                                                                            </button>
+                                                                        </td>
+
+                                                                    </tr>
+
+
+                                                                </tbody>
+
+
+                                                            </table>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="card-footer ">
+                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 alrt">
+                                <button type="submit" (click)="OnSubmit()" class="btn btn-primary btn-raised mb-0"><i class="fa fa-save"></i> Submit</button>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="tab-pane pt-3" id="profile-2" role="tabpanel">
+                        <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 tbl" style="margin-top:0px;">
+                            <div class="material-datatables tblattach">
+                                <table class="table table-striped table-no-bordered table-hover" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Attach File</th>
+                                            <th>Attachment Type</th>
+                                            <th style="width:0%;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+
+
+                                            <td style="width:60%!important">
+                                                <!--<span class="input-group-addon">
+                                                <i class="fa fa-upload">-->
+                                                <input type="file" class="file-upload" id="txtAttachFile" [(ngModel)]="AttachFile" onchange="console.log(event.target.files)">
+                                                <!--</i>-->
+                                                <!--</span>-->
+                                                <span class='label label-info' id="upload-file-info"></span>
+                                                <!--<input type="hidden" id="HDArrayIndex" class="form-control" ng-model="HDArrayIndex" />
+                                                <input type="hidden" id="HDIDv" class="form-control" ng-model="AID" />-->
+                                            </td>
+                                            <td>
+                                                <select class="form-control my-select" [(ngModel)]="AttachTypeID" id="ddlAttachType" [ngModelOptions]="{standalone: true}">
+                                                    <option *ngFor="let gRow of dsAttachedDocumentTypes" [value]="gRow.ID">{{gRow.GeneralName}}</option>
+                                                </select>
+
+                                            </td>
+                                            <td class="td-actions text-right entrygrid">
+                                                <button type="button" rel="tooltip" (click)="AddAttach(gRow)" class="btn btn-success bmd-btn-fab" data-original-title="" title="">
+                                                    <i class="material-icons">add</i>
+                                                </button>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 tbl" style="margin-top:30px;">
+                            <div class="material-datatables">
+
+                                <table class="table table-striped table-no-bordered table-hover" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>S.No</th>
+                                            <th>Attach File</th>
+                                            <th>Attachment Type</th>
+                                            <th style="width:0%;">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let gRow of DynamicGridAttachLink; let i= index">
+                                            <td> {{i+1}}</td>
+
+
+                                            <td>
+                                                {{gRow.AttachFile}}
+                                                <!--<a href="#" ng-click="DownloadFile(gRow.FileName);" style="text-decoration:underline;"></a>-->
+
+                                            </td>
+                                            <td>
+                                                {{gRow.AttachName}}
+
+                                                <!--<input type="hidden" id="HDID" class="form-control" ng-model="gRow.AID" />-->
+                                            </td>
+                                            <td class="td-actions text-right">
+                                                <button type="button" rel="tooltip" (click)="RemoveAttach(DynamicGridAttachLink,$index,gRow.AID)" class="btn btn-danger btn-round" data-original-title="" title="">
+                                                    <i class="material-icons">delete</i>
+                                                </button>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12" style="text-align:right; margin-top:50px;">
+                                <button type="submit" class="btn btn-fill btn-primary" (click)="RecordAttachSave();">
+                                    <i class="material-icons">save</i>
+                                    Save
+                                </button>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane pt-3" id="profile-3" role="tabpanel">
+
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12" style="border-right:3px solid #dedcdd;">
+                                        <form [formGroup]="partyForm">
+                                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 padlr0" style="border-bottom: 2px dashed #ccc;padding-bottom: 7px;margin-bottom: 12px;">
+
+                                                <div class="row">
+                                                    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                                                        <div class="form-group">
+                                                            <div class="row">
+                                                                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                                    <label>Party Name </label>
+                                                                    <input type="text" disabled formControlName="CustomerName" id="txtCustomerName" class="form-control">
+                                                                    <input type="hidden" id="HDIDv" class="form-control" formControlName="Itemsv1" />
+                                                                    <!--<input type="hidden" id="HDIDSS" class="form-control" formControlName="cusID" />-->
+                                                                    <input type="hidden" id="HDIDv" class="form-control" formControlName="BusinessType" />
+
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                                                        <div class="form-group">
+                                                            <div class="row">
+                                                                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                                    <label class="lblfont">Country </label>
+                                                                    <select class="form-control my-select" disabled id="ddlCountry" formControlName="CountryID" (ngModelChange)="CountryChanged()">
+                                                                        <option *ngFor="let gRow of dscountryItem" [value]="gRow.ID">
+                                                                            {{gRow.CountryName}}
+                                                                        </option>
+
+                                                                    </select>
+
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+                                        </form>
+
+
+                                    </div>
+
+
+
+                                </div>
+                                <form [formGroup]="partyAcc">
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 padlr0" style="border-bottom: 2px dashed #ccc;padding-bottom: 7px;margin-bottom: 12px;">
+                                            <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4 offset-4">
+                                                <div class="form-group">
+                                                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                        <label>Branch</label>
+                                                        <select class="form-control my-select" [(ngModel)]="BranchID" id="ddlBranch" [ngModelOptions]="{standalone: true}">
+                                                            <option *ngFor="let gRow of dsBranchList" [value]="gRow.ID">{{gRow.Branch}}</option>
+                                                        </select>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                    <label>GST Category</label>
+                                                    <select class="form-control my-select" [(ngModel)]="GSTListID" id="ddlGstlist" [ngModelOptions]="{standalone: true}">
+                                                        <option *ngFor="let gRow of dsGSTList" [value]="gRow.ID">{{gRow.GSTINTax}}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                    <label>GST No</label>
+                                                    <input type="text" autocomplete="off" [(ngModel)]="GSTNo" id="txtGST" class="form-control" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                    <label>Business Legal Name</label>
+                                                    <input type="text" autocomplete="off" [(ngModel)]="Legalname" id="txtLegalname" class="form-control" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                    <label>PAN</label>
+                                                    <input type="text" autocomplete="off" [(ngModel)]="PAN" id="txtPAN" class="form-control" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                    <label>TAN</label>
+                                                    <input type="text" autocomplete="off" id="txtTAN" [(ngModel)]="TAN" class="form-control" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                    <label>Source of Supply</label>
+                                                    <select class="form-control my-select" [(ngModel)]="POSID" id="ddlPOS" [ngModelOptions]="{standalone: true}">
+                                                        <option *ngFor="let gRow of dsBranchByPosItem" [value]="gRow.ID">{{gRow.StateName}}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                    <label>TDS</label>
+                                                    <select class="form-control my-select" [(ngModel)]="TDS" id="ddlTDS" [ngModelOptions]="{standalone: true}">
+                                                        <option *ngFor="let status of tdsvalues" [value]="status.value">
+                                                            {{status.viewValue}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                            <div class="form-group">
+                                                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                    <label>Currency</label>
+                                                    <select class="form-control my-select" [(ngModel)]="CurrID" id="ddlCurrency" [ngModelOptions]="{standalone: true}">
+                                                        <option *ngFor="let gRow of dsCurrList" [value]="gRow.ID">{{gRow.CurrencyCode}}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
+
+
+                        </div>
+
+                        <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 alrt">
+                                    <button type="submit" (click)="AddAccLink();" class="btn btn-fill btn-primary btn-raised">
+
+                                        ADD
+                                    </button>
+
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+
+                            <div class="row" style="padding-top:20px;">
+                                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                    <div class="material-datatables" style="width:100%;overflow:scroll;">
+
+                                        <table class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th>S.No</th>
+                                                    <th>Branch</th>
+                                                    <th>GST Category</th>
+                                                    <th>GST No</th>
+                                                    <th>Customer Legal Name</th>
+                                                    <th>PAN</th>
+                                                    <th>TAN</th>
+                                                    <th>Source of Supply</th>
+                                                    <th>TDS</th>
+                                                    <th>Currency</th>
+
+                                                    <th class="disabled-sorting text-right actwid">Actions</th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>
+
+
+                                                <tr *ngFor="let gRow of DynamicGridAccLink; let i= index">
+                                                    <td> {{i+1}}</td>
+                                                    <td class="txtright">
+                                                        {{gRow.Branch}}
+
+                                                    </td>
+                                                    <td>
+                                                        {{gRow.GSTINTax}}
+
+
+                                                    </td>
+                                                    <td>
+                                                        {{gRow.GSTNo}}
+
+
+                                                    </td>
+
+                                                    <td class="txtright">
+                                                        {{gRow.Legalname}}
+
+                                                    </td>
+
+                                                    <td class="txtright">
+                                                        {{gRow.PAN}}
+
+                                                    </td>
+                                                    <td class="txtright">
+                                                        {{gRow.TAN}}
+
+                                                    </td>
+                                                    <td class="txtright">
+                                                        {{gRow.POS}}
+
+                                                    </td>
+                                                    <td class="txtright">
+                                                        {{gRow.TDSType}}
+
+                                                    </td>
+                                                    <td class="txtright">
+                                                        {{gRow.CurrencyCode}}
+
+                                                    </td>
+
+                                                    <td class="td-actions text-right bindgrid">
+
+                                                        <button type="button" rel="tooltip" (click)="SelectAccvalues(DynamicGridAccLink,i)" class="btn btn-success btn-round" data-original-title="" title="">
+                                                            <i class="material-icons">edit</i>
+                                                        </button>
+                                                        <button type="button" rel="tooltip" (click)="RemoveAccValues(DynamicGridAccLink,i,gRow.ID)" class="btn btn-danger btn-round" data-original-title="" title="">
+                                                            <i class="material-icons">delete</i>
+                                                        </button>
+                                                    </td>
+
+                                                </tr>
+
+
+                                            </tbody>
+
+
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                        <div class="card-footer ">
+                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12" style="text-align:right;">
+                                <button type="submit" (click)="OnSubmitAcc();" class="btn btn-primary btn-raised mb-0"><i class="fa fa-save"></i>Save</button>
+                            </div>
+                            <input type="hidden" id="HDRegId" ng-model="HDRegId" />
+                        </div>
+                    </div>
+                    <div class="tab-pane pt-3" id="profile-4" role="tabpanel">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12" style="border-right:3px solid #dedcdd;">
+                                        <form [formGroup]="partyForm">
+                                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 padlr0" style="border-bottom: 2px dashed #ccc;padding-bottom: 7px;margin-bottom: 12px;">
+
+                                                <div class="row">
+                                                    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                                                        <div class="form-group">
+                                                            <div class="row">
+                                                                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                                    <label>Party Name </label>
+                                                                    <input type="text" disabled formControlName="CustomerName" id="txtCustomerName" class="form-control">
+                                                                    <input type="hidden" id="HDIDv" class="form-control" formControlName="Itemsv1" />
+                                                                    <!--<input type="hidden" id="HDIDSS" class="form-control" formControlName="cusID" />-->
+                                                                    <input type="hidden" id="HDIDv" class="form-control" formControlName="BusinessType" />
+
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                                                        <div class="form-group">
+                                                            <div class="row">
+                                                                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                                    <label class="lblfont">Country </label>
+                                                                    <ng-select class="form-control my-select" [ngClass]=" isUpdate ? 'block-input' : ''" [clearable]="false" name="Country"
+                                                                    disabled id="ddlCountry" formControlName="CountryID"  (ngModelChange)="CountryChanged()" >
+                                                                    <ng-option [value]="0" [disabled]="true">--SELECT COUNTRY--</ng-option>
+                                                                    <ng-option *ngFor="let gRow of dscountryItem" [value]="gRow.ID">
+                                                                        {{gRow.CountryName | uppercase}}
+                                                                    </ng-option>
+                                                                  </ng-select>  
+                                                                    <!-- <select class="form-control my-select" disabled id="ddlCountry" formControlName="CountryID" (ngModelChange)="CountryChanged()">
+                                                                        <option *ngFor="let gRow of dscountryItem" [value]="gRow.ID">
+                                                                            {{gRow.CountryName}}
+                                                                        </option>
+
+                                                                    </select> -->
+
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+                                        </form>
+
+
+                                    </div>
+
+
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 padlr0" style="border-bottom: 2px dashed #ccc;padding-bottom: 7px;margin-bottom: 12px;">
+                                        <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4 offset-4">
+                                            <div class="form-group">
+                                                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                    <label>Branch</label>
+                                                    <select class="form-control my-select" [(ngModel)]="BranchID" id="ddlCrBranch" [ngModelOptions]="{standalone: true}">
+                                                        <option *ngFor="let gRow of dsBranchList" [value]="gRow.ID">{{gRow.Branch}}</option>
+                                                    </select>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                        <div class="form-group">
+                                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                <label>Credit Days</label>
+                                                <input type="text" autocomplete="off" [(ngModel)]="CreditDays" id="txtCrDays" class="form-control" />
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                        <div class="form-group">
+                                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                <label>Credit Limit</label>
+                                                <input type="text" autocomplete="off" [(ngModel)]="CreditLimit" id="txtCrLmt" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                        <div class="form-group">
+                                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                <label>Approved By</label>
+                                                <select class="form-control my-select" [(ngModel)]="UserID" id="ddlUser" [ngModelOptions]="{standalone: true}">
+                                                    <option *ngFor="let gRow of dsUserList" [value]="gRow.ID">{{gRow.UserName}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                        <div class="form-group">
+                                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                <label>Effective Date</label>
+                                                <mat-form-field class="paymentDate" >
+                                                    <input matInput (click)="EffectiveDatedp.open()" readonly autocomplete="off" [matDatepicker]="EffectiveDatedp"  id="EffectiveDatedp" placeholder="" [(ngModel)]="EffectiveDate">
+                                                    <mat-datepicker-toggle matSuffix [for]="EffectiveDatedp"></mat-datepicker-toggle>
+                                                    <mat-datepicker #EffectiveDatedp></mat-datepicker>
+                                                </mat-form-field>
+                                                <!-- <input type="date" autocomplete="off" [(ngModel)]="EffectiveDate" id="txtEffDate" class="form-control" /> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                        <div class="form-group">
+                                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                <label>Status</label>
+
+                                                <select class="form-control my-select" [(ngModel)]="StatusCrID" id="ddlCrStatus" [ngModelOptions]="{standalone: true}">
+                                                    <option *ngFor="let status of statusCrvalues" [value]="status.value">
+                                                        {{status.viewValue}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+                        <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 alrt">
+                                    <button type="submit" (click)="AddCrLink();" class="btn btn-fill btn-primary btn-raised">
+
+                                        ADD
+                                    </button>
+
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+
+                            <div class="row" style="padding-top:20px;">
+                                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                    <div class="material-datatables" style="width:100%;overflow:scroll;">
+
+                                        <table class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th>S.No</th>
+                                                    <th>Branch</th>
+                                                    <th>Credit Days</th>
+                                                    <th>Credit Limit</th>
+                                                    <th>Approved By</th>
+                                                    <th>Effective Date</th>
+                                                    <th>Status</th>
+
+
+                                                    <th class="disabled-sorting text-right actwid">Actions</th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>
+
+
+                                                <tr *ngFor="let gRow of DynamicGridCrLink; let i= index">
+                                                    <td> {{i+1}}</td>
+                                                    <td class="txtright">
+                                                        {{gRow.Branch}}
+
+                                                    </td>
+                                                    <td>
+                                                        {{gRow.CreditDays}}
+
+
+                                                    </td>
+                                                    <td>
+                                                        {{gRow.CreditLimit}}
+
+
+                                                    </td>
+
+                                                    <td class="txtright">
+                                                        {{gRow.ApprovedName}}
+
+                                                    </td>
+
+                                                    <td class="txtright">
+                                                        {{gRow.EffectiveDate}}
+
+                                                    </td>
+                                                    <td class="txtright">
+                                                        {{gRow.StatusV}}
+
+                                                    </td>
+
+
+                                                    <td class="td-actions text-right bindgrid">
+
+                                                        <button type="button" rel="tooltip" (click)="SelectCrvalues(DynamicGridCrLink,i)" class="btn btn-success btn-round" data-original-title="" title="">
+                                                            <i class="material-icons">edit</i>
+                                                        </button>
+                                                        <button type="button" rel="tooltip" (click)="RemoveCrvalues(DynamicGridCrLink,i,gRow.ID)" class="btn btn-danger btn-round" data-original-title="" title="">
+                                                            <i class="material-icons">delete</i>
+                                                        </button>
+                                                    </td>
+
+                                                </tr>
+
+
+                                            </tbody>
+
+
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                        <div class="card-footer ">
+                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12" style="text-align:right;">
+                                <button type="submit" (click)="OnSubmitCr()" class="btn btn-primary btn-raised mb-0"><i class="fa fa-save"></i>Save</button>
+                            </div>
+                            <input type="hidden" id="HDRegId" ng-model="HDRegId" />
+                        </div>
+                    </div>
+                    <div class="tab-pane pt-3" id="profile-5" role="tabpanel">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12" style="border-right:3px solid #dedcdd;">
+                                        <form [formGroup]="partyForm">
+                                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 padlr0" style="border-bottom: 2px dashed #ccc;padding-bottom: 7px;margin-bottom: 12px;">
+
+                                                <div class="row">
+                                                    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                                                        <div class="form-group">
+                                                            <div class="row">
+                                                                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                                    <label>Party Name </label>
+                                                                    <input type="text" disabled formControlName="CustomerName" id="txtCustomerName" class="form-control">
+                                                                    <input type="hidden" id="HDIDv" class="form-control" formControlName="Itemsv1" />
+                                                                    <!--<input type="hidden" id="HDIDSS" class="form-control" formControlName="cusID" />-->
+                                                                    <input type="hidden" id="HDIDv" class="form-control" formControlName="BusinessType" />
+
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                                                        <div class="form-group">
+                                                            <div class="row">
+                                                                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                                    <label class="lblfont">Country </label>
+                                                                    <select class="form-control my-select" disabled id="ddlCountry" formControlName="CountryID" (ngModelChange)="CountryChanged()">
+                                                                        <option *ngFor="let gRow of dscountryItem" [value]="gRow.ID">
+                                                                            {{gRow.CountryName}}
+                                                                        </option>
+
+                                                                    </select>
+
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+                                        </form>
+
+
+                                    </div>
+
+
+
+                                </div>
+
+                                <div class="row">
+
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3 col-sm-3 col-lg-3 col-xl-3">
+                                        <div class="form-group">
+                                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                <label>Branch</label>
+                                                <select class="form-control my-select" [(ngModel)]="BranchID" id="ddlAlertBranch" [ngModelOptions]="{standalone: true}">
+                                                    <option *ngFor="let gRow of dsBranchList" [value]="gRow.ID">{{gRow.Branch}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-lg-3 col-xl-3">
+                                        <div class="form-group">
+                                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                <label>Alert Type</label>
+                                                <select class="form-control my-select" [(ngModel)]="AlertTypeID" id="ddlAlertType" [ngModelOptions]="{standalone: true}">
+                                                    <option *ngFor="let gRow of dsAlertTypeList" [value]="gRow.ID">{{gRow.GeneralName}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3 col-sm-3 col-lg-3 col-xl-3">
+                                        <div class="form-group">
+                                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                <label>Email-ID</label>
+                                                <input type="text" autocomplete="off" [(ngModel)]="EmailAlertID" id="txtEmailAlertID" class="form-control" />
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-lg-3 col-xl-3">
+                                        <div class="form-group">
+                                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                <label>&nbsp;</label>
+                                                <button type="submit" (click)="AddEmailLink();" class="btn btn-fill btn-success btn-raised" style="margin-top:20px;">
+                                                    ADD
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+                        <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+
+                            <div class="row" style="padding-top:20px;">
+                                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                    <div class="material-datatables" style="width:100%;overflow:scroll;">
+
+                                        <table class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th>S.No</th>
+                                                    <th>Branch</th>
+                                                    <th>Alert Type</th>
+                                                    <th>Email ID</th>
+
+
+                                                    <th class="disabled-sorting text-right actwid">Actions</th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>
+
+
+                                                <tr *ngFor="let gRow of DynamicGridAlertLink; let i= index">
+                                                    <td> {{i+1}}</td>
+                                                    <td class="txtright">
+                                                        {{gRow.Branch}}
+
+                                                    </td>
+                                                    <td>
+                                                        {{gRow.AlertType}}
+
+
+                                                    </td>
+                                                    <td>
+                                                        {{gRow.EmailAlertID}}
+
+
+                                                    </td>
+
+
+                                                    <td class="td-actions text-right bindgrid">
+
+                                                        <button type="button" rel="tooltip" (click)="SelectEmailAlert(DynamicGridAlertLink,i)" class="btn btn-success btn-round" data-original-title="" title="">
+                                                            <i class="material-icons">edit</i>
+                                                        </button>
+                                                        <button type="button" rel="tooltip" (click)="RemoveAlertvalues(DynamicGridAlertLink,i,gRow.ID)" class="btn btn-danger btn-round" data-original-title="" title="">
+                                                            <i class="material-icons">delete</i>
+                                                        </button>
+                                                    </td>
+
+                                                </tr>
+
+
+                                            </tbody>
+
+
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                        <div class="card-footer ">
+                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12" style="text-align:right;">
+                                <button type="submit" (click)="OnSubmitEmailAlert()" class="btn btn-primary btn-raised mb-0"><i class="fa fa-save"></i>Save</button>
+                            </div>
+                            <input type="hidden" id="HDRegId" ng-model="HDRegId" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+

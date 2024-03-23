@@ -1,0 +1,498 @@
+<div class="row headtitle">
+    <div class="col-md-9 col-lg-9">
+        <h4 style="margin-top: 6px;">Export Manager - Vessel Tasks</h4>
+    </div>
+
+    <div class="col-md-3 col-lg-3 alrt">
+        <button type="button" class="btn btn-success btntop btn-raised bmd-btn-edit" [routerLink]="['/views/exportmanager/vessellevel/vessellevelview/vessellevelview/']"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+    </div>
+</div>
+
+<div class="row" style="margin-top: 2px; margin-bottom: 11px; background-color: lavender; padding: 11px; ">
+    <div class="col-md-3">
+        <div class="row" style="margin-top:5px;">
+            <div class="col-md-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item active"><a [routerLink]="['/views/exportmanager/vessellevel/vessellevelview/vessellevelview/']">Vessel Tasks</a></li>
+                        <li class="breadcrumb-item" aria-current="page" style="color:#000000;">Load List</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-9">
+        <div class="row">
+            <div class="col-md-6 alrt" style="font-weight: 600;">
+                <div class="row">
+                    <div class="col-md-12">
+                        <small>Ves/Voy</small>
+                    </div>
+                    <div class="col-md-12">
+                        <span>ACTUARIA</span>-<span>sdw</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 alrt" style="font-weight: 600;">
+                <div class="row">
+                    <div class="col-md-12">
+                        <small>ETD</small>
+                    </div>
+                    <div class="col-md-12">
+                        <span>
+                            30 Sep 2022
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 alrt" style="font-weight: 600;">
+                <div class="row">
+                    <div class="col-md-12">
+                        <small>Sailing Status</small>
+                    </div>
+                    <div class="col-md-12">
+                        <span>
+                            Pending/30 Sep 2022 19:00 Hrs
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 col-lg-12">
+        <div class="row bkgltab">
+            <div class="col-md-12 col-lg-12">
+                <ul class="nav nav-pills nav-justified" role="tablist">
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link active" data-toggle="tab" (click)="btntabclick(1)" role="tab" aria-selected="true">Load List</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" role="tab" (click)="btntabclick(2)" aria-selected="false">Pre-Alert</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" role="tab" (click)="btntabclick(3)" aria-selected="false">Loading Confirmation</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" role="tab" (click)="btntabclick(4)" aria-selected="false">Customer Onboard Confirm</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" role="tab" (click)="btntabclick(5)" aria-selected="false">Terminal Departure Report</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" role="tab" (click)="btntabclick(6)" aria-selected="false">Exceptions</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<form [formGroup]="vesselForm">
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <div class="tab-content">
+                <div class="tab-pane pt-3 active show" role="tabpanel">
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="line_box">
+                                        <div class="text_circle">
+
+                                            <a class="tvarp"><span><i class="fa fa-check" style="margin-top: 0.6rem;"></i></span></a>
+                                            <label>Status</label>
+                                        </div>
+                                        <div class="text_circle">
+
+                                            <a class="tvar"><span><i class="fa fa-envelope" style="margin-top: 0.6rem;"></i></span></a>
+                                            <label>Load List</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 borbot">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12 conttable cntralign padlr0">
+                                    <table id="datatable" cellpadding="0" cellspacing="0" class="table table-responsive table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                        <thead>
+                                            <tr>
+                                                <th rowspan="2">Slot Operator</th>
+                                                <th colspan="2" class="actwid">Space</th>
+                                                <th colspan="3">Actual</th>
+                                                <th colspan="2">Difference</th>
+                                            </tr>
+
+                                            <tr>
+                                                <th class="actwid">TEUs</th>
+                                                <th class="actwid">MT</th>
+                                                <th class="actwid">TEUs</th>
+                                                <th class="actwid">Cntrs</th>
+                                                <th class="actwid">MT</th>
+                                                <th class="actwid">TEUs</th>
+                                                <th class="actwid">MT</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <tr>
+                                                <td>GFS</td>
+                                                <td class="actwid">0</td>
+                                                <td class="actwid">0</td>
+                                                <td class="actwid">0</td>
+                                                <td class="actwid">0</td>
+                                                <td class="actwid">0</td>
+                                                <td class="actwid">0</td>
+                                                <td class="actwid">0</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                                <!--<div class="col-md-12 alrt">
+                    <button type="submit" class="btn btn-info btntop btn-raised vspbtn" [routerLink]="['/views/exportmanager/vessellevel/vsloadlist/loadlistmail/loadlistmail/']">Next</button>
+                </div>-->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 col-lg-12">
+                            <div class="row bkgltab">
+                                <div class="col-md-12 col-lg-12">
+                                    <ul class="nav nav-pills nav-justified" role="tablist">
+                                        <li class="nav-item waves-effect waves-light">
+                                            <a class="nav-link active" data-toggle="tab" role="tab" aria-selected="true">GFS</a>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 col-lg-12">
+                            <div class="tab-content">
+                                <div class="tab-pane pt-3 active show" role="tabpanel">
+
+                                    <div class="col-md-12 padlr0">
+                                        <div class="form-group">
+                                            <div class="col-md-12">
+                                                <div class="row">
+                                                    <div class="col-md-8 alrt">
+                                                        <label>Slot Operator</label>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <select class="form-control my-select">
+                                                            <option value="0">--select--</option>
+                                                            <option value="1">GFS</option>
+                                                            <option value="2">TWS</option>
+                                                            <option value="3">SEA</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-2 padlr0 alrt">
+                                                        <button type="submit" class="btn btn-primary btn-raised ldbtn">Move Selected Containers</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12 conttable cntralign padlr0">
+                                                    <table id="datatable" cellpadding="0" cellspacing="0" class="table table-responsive table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="actwid">S.No.</th>
+                                                                <th>Booking No.</th>
+                                                                <th>Inventory Type</th>
+                                                                <th>Cntr No.</th>
+                                                                <th>Cntr <br />Size</th>
+                                                                <th>TEUs</th>
+                                                                <th>Cargo Type</th>
+                                                                <th>Load Status</th>
+                                                                <th>Origin</th>
+                                                                <th>POD</th>
+                                                                <th>FPOD</th>
+                                                                <th>Principal</th>
+                                                                <th>Gated in <br />Date</th>
+                                                                <th>Gross <br />Weight</th>
+                                                                <th>Fixed</th>
+                                                                <th class="actwid">Select</th>
+                                                            </tr>
+                                                        </thead>
+
+                                                        <tbody>
+                                                            <tr>
+                                                                <td class="actwid">1</td>
+                                                                <td>BKGMAA0094/22-23</td>
+                                                                <td>Export</td>
+                                                                <td>CCLU6924256</td>
+                                                                <td>20'GP</td>
+                                                                <td>10</td>
+                                                                <td>General</td>
+                                                                <td>Laden</td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td>Yes</td>
+                                                                <td>
+                                                                    <input type="checkbox" />
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 padlr0">
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-2 padl0">
+                                        <label>Inventory Type</label>
+                                        <select class="form-control my-select">
+                                            <option value="0">--select--</option>
+                                            <option value="1">All</option>
+                                            <option value="2">Export</option>
+                                            <option value="3">TS</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label>Load List Status</label>
+                                        <select class="form-control my-select">
+                                            <option value="0">--select--</option>
+                                            <option value="1">Draft</option>
+                                            <option value="2">Final</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-7 alrt padlr0">
+                                        <button type="submit" class="btn btn-primary btn-raised ldmbtn">Generate</button>
+                                    </div>
+                                    <div class="col-md-1 padlr0 alrt">
+                                        <button type="submit" class="btn btn-info btn-raised ldmbtn" (click)="onClickMail()">E-Mail</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Modal -->
+                    <div class="modal fade seminor-login-modal" data-backdrop="static" id="EmailEntry">
+                        <div class="modal-dialog modal-dialog-centered dialog900">
+                            <div class="modal-content">
+                                <div class="row">
+                                    <div class="col-md-12 alrt">
+                                        <button type="button" class="close" data-dismiss="modal">
+                                            <span><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Modal body -->
+                                <div class="modal-body seminor-login-modal-body cntpopup">
+                                    <h5 class="modal-title text-center mdltitle">Email Notification</h5>
+                                    <div class="row ">
+                                        <div class="col-md-10 offset-1">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-md-1">
+                                                                <label>From</label>
+                                                            </div>
+                                                            <div class="col-md-11">
+                                                                <textarea inputmode="email" style="width:100%"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-md-1">
+                                                                <label>To</label>
+                                                            </div>
+                                                            <div class="col-md-11">
+                                                                <textarea inputmode="email" style="width:100%"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-md-1">
+                                                                <label>Cc</label>
+                                                            </div>
+                                                            <div class="col-md-11">
+                                                                <textarea inputmode="email" style="width:100%"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-md-1">
+                                                                <label>Bcc</label>
+                                                            </div>
+                                                            <div class="col-md-11">
+                                                                <textarea inputmode="email" style="width:100%"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-md-1">
+                                                                <label>Subject</label>
+                                                            </div>
+                                                            <div class="col-md-11">
+                                                                <textarea style="width:100%"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label>Good Day !</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label>
+                                                                    Please find attached the load list for below mentioned vessel.
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-md-2">
+                                                                <label>VSL</label>
+                                                            </div>
+                                                            <div class="col-md-9">
+                                                                <label>: </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-md-2">
+                                                                <label>Voyage</label>
+                                                            </div>
+                                                            <div class="col-md-9">
+                                                                <label>: </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-md-12 alrt">
+                                                                <button type="submit" class="btn btn-success btntop btn-raised vslbtn" (click)="btnEmailSend()">Send</button>
+                                                                <button type="submit" class="btn btn-danger btntop btn-raised vslbtn" (click)="cancelClick()">Cancel</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 col-lg-12">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-12 padl0">
+                                            <label>Load List Document Status</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-12 conttable cntralign padlr0">
+                                            <table id="datatable" cellpadding="0" cellspacing="0" class="table table-responsive table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                                <thead>
+                                                    <tr>
+                                                        <th>BOL</th>
+                                                        <th>Container</th>
+                                                        <th>Size & Type</th>
+                                                        <th>Cargo</th>
+                                                        <th>Documents</th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                    <tr>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

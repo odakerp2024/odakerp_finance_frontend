@@ -1,0 +1,69 @@
+<div class="row headtitle">
+    <div class="col-md-9">
+        <h4>Repair Master</h4>
+    </div>
+    <div class="col-md-3 alrt">
+        <button type="button" class="btn btn-success btntop btn-raised bmd-btn-edit" [routerLink]="['/views/masters/LAmaster/repairmaster/repairmasterview']"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+    </div>
+</div>
+
+<form [formGroup]="repairForm">
+    <div class="card">
+        <div class="card-body ">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Repair Code</label>
+                            </div>
+                            <div class="col-md-1">:</div>
+                            <div class="col-md-7">
+                                <input type="text" name="RepairCode" formControlName="RepairCode" autocomplete="off" id="txtTerminalCode" ng-model="txtTerminalCode" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Repair Description</label>
+                            </div>
+                            <div class="col-md-1">:</div>
+                            <div class="col-md-7">
+                                <input type="text" name="RepairDescription" formControlName="RepairDescription" autocomplete="off" id="txtTerminalName" ng-model="txtTerminalName" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Status</label>
+                            </div>
+                            <div class="col-md-1">:</div>
+                            <div class="col-md-7 input-field">
+                                <select name="Status" formControlName="Status" class="form-control my-select">
+                                    <option *ngFor="let status of statusvalues" [value]="status.value">
+                                        {{status.viewValue}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="card-footer ">
+            <div class="col-md-12" style="text-align:right;">
+                <button type="submit" (click)="onSubmit()" class="btn btn-primary btn-raised mb-0">Submit</button>
+            </div>
+            <input type="hidden" id="HDRegId" ng-model="HDRegId" />
+        </div>
+    </div>
+</form>
+

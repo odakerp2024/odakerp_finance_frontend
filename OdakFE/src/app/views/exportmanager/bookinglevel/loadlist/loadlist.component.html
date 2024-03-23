@@ -1,0 +1,75 @@
+<div class="row headtitle">
+    <div class="col-md-9">
+        <h4>Export Manager - Booking Tasks</h4>
+    </div>
+    <div class="col-md-3 alrt">
+        <button type="button" class="btn btn-success btntop btn-raised bmd-btn-edit" [routerLink]="['/views/exportmanager/bookinglevel/bookinglevelview/bookinglevelview']"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="row bkgltab">
+            <div class="col-md-12">
+                <ul class="nav nav-pills nav-justified" role="tablist">
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" [routerLink]="['/views/exportmanager/bookinglevel/bookings/bookings']" role="tab" aria-selected="false">Booking</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" [routerLink]="['/views/exportmanager/bookinglevel/containers/containers']" role="tab" aria-selected="false">Container(s)</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link active show" data-toggle="tab" [routerLink]="['/views/exportmanager/bookinglevel/loadlist/loadlist']" role="tab" aria-selected="true">Docs for Load List</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" [routerLink]="['/views/exportmanager/bookinglevel/bol/bol']" role="tab" aria-selected="false">Bill of Lading</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" [routerLink]="['/views/exportmanager/bookinglevel/blrelease/blrelease']" role="tab" aria-selected="false">BOL Release</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" [routerLink]="['/views/exportmanager/bookinglevel/exphandling/exphandling']" role="tab" aria-selected="false">Exceptions Handling</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" [routerLink]="['/views/exportmanager/bookinglevel/invoices/invoices']" role="tab" aria-selected="false">Invoices</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" [routerLink]="['/views/exportmanager/bookinglevel/attach/attach']" role="tab" aria-selected="false">Attachments</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="tab-content">
+            <div class="tab-pane pt-3 active show" role="tabpanel">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row bkgltab">
+                            <div class="col-md-12">
+                                <ul class="nav nav-pills nav-justified" role="tablist">
+                                    <li class="nav-item waves-effect waves-light">
+                                        <a class="nav-link" data-toggle="tab" [routerLink]="['/views/exportmanager/bookinglevel/bookings/bookings']" role="tab" aria-selected="false">Haz</a>
+                                    </li>
+                                    <li class="nav-item waves-effect waves-light">
+                                        <a class="nav-link" data-toggle="tab" [routerLink]="['/views/exportmanager/bookinglevel/containers/containers']" role="tab" aria-selected="false">OOG</a>
+                                    </li>
+                                    <li class="nav-item waves-effect waves-light">
+                                        <a class="nav-link active show" data-toggle="tab" [routerLink]="['/views/exportmanager/bookinglevel/loadlist/loadlist']" role="tab" aria-selected="true">Reefer</a>
+                                    </li>
+                                    <li class="nav-item waves-effect waves-light">
+                                        <a class="nav-link" data-toggle="tab" [routerLink]="['/views/exportmanager/bookinglevel/bol/bol']" role="tab" aria-selected="false">ODO</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

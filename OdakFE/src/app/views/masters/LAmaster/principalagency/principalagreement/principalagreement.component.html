@@ -1,0 +1,550 @@
+<form [formGroup]="formGrop" novalidate>
+
+
+    <div class="row headtitle">
+        <div class="col-md-9">
+            <h4>Principal/Agency Agreement</h4>
+        </div>
+        <div class="col-md-3 alrt">
+            <button type="button" class="btn btn-success btn-raised bmd-btn-edit btntop" [routerLink]="['/views/masters/LAmaster/Principalagency/Principalagencyview']"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+        </div>
+    </div>
+
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <ul class="nav nav-pills nav-justified" role="tablist">
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" (click)="btntabclick(1)" role="tab" aria-selected="true">Principal Details</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" (click)="btntabclick(2)" role="tab" aria-selected="false">Port wise agent Details</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link active show" data-toggle="tab" (click)="btntabclick(3)" role="tab" aria-selected="false">Principal Agreement</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" (click)="btntabclick(4)" role="tab" aria-selected="false">Attachments</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" (click)="btntabclick(5)" role="tab" aria-selected="false">Alert Mails</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="tab-content">
+                        <div class="tab-pane pt-3 active show" role="tabpanel">
+                            <div class="row tblrow">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Line Code</label>
+                                                <input type="text" id="txtLineCode" disabled name="UserID" formControlName="LineCode" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Line Name</label>
+                                                <input type="text" id="txtLineName" disabled name="UserID" formControlName="LineName" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row tblrow1">
+                <div class="col-md-12">
+                    <div class="tab-content">
+                        <div class="tab-pane pt-3 active show" id="revenue" role="tabpanel">
+                            <div id="datatable-buttons_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+                                <div class="row">
+                                    <div class="col-md-12 padlr0">
+                                        <h5 style="font-size:16px;">Freight Commission</h5>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12 padlr0 tablevar">
+                                        <table id="datatable-buttons" class="det table table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                            <thead>
+                                                <tr role="row">
+                                                    <th class="actwid" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" style="width: 177.575px;">
+                                                        S.No
+                                                    </th>
+                                                    <th tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" style="width: 177.575px;">
+                                                        Agreement Type
+                                                    </th>
+                                                    <th>Commission Type</th>
+                                                    <th>Shipment Type</th>
+                                                    <th>Charge</th>
+                                                    <th>Currency</th>
+                                                    <th>Cntr Type</th>
+
+                                                    <th>Value</th>
+                                                    <th>Action</th>
+
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>
+                                                <tr *ngFor="let gRow of FreightCommDynamicGrid; let i= index; let last=last">
+                                                    <td>{{i+1}}</td>
+
+                                                    <td class="des">
+                                                        <select class="form-control my-select" id="ddlAgreementType" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.AgreementTypeID">
+                                                            <option value="0">--Select--</option>
+                                                            <option *ngFor="let gRow of fillAgreementType" [value]="gRow.ID">
+                                                                {{gRow.GeneralName}}
+                                                            </option>
+                                                        </select>
+                                                    </td>
+                                                    <td class="other">
+                                                        <select class="form-control my-select other" [(ngModel)]="gRow.CommissionTypeID" [ngModelOptions]="{standalone: true}" id="ddlCommissionType">
+                                                            <option value="0">--Select--</option>
+                                                            <option *ngFor="let gRow of fillCommissionType" [value]="gRow.ID">
+                                                                {{gRow.GeneralName}}
+                                                            </option>
+                                                        </select>
+                                                    </td>
+                                                    <td class="other">
+                                                        <select class="form-control my-select other" [(ngModel)]="gRow.ShipmentTypeID" [ngModelOptions]="{standalone: true}" id="ddlShipmentType">
+                                                            <option value="0">--Select--</option>
+                                                            <option *ngFor="let gRow of fillShipmentType" [value]="gRow.ID">
+                                                                {{gRow.GeneralName}}
+                                                            </option>
+                                                        </select>
+                                                    </td>
+                                                    <td class="other">
+                                                        <select class="form-control my-select other" style="width:100px;" [(ngModel)]="gRow.ChargeTypeID" [ngModelOptions]="{standalone: true}" id="ddlChargeType">
+                                                            <option value="0">--Select--</option>
+                                                            <option *ngFor="let gRow of fillChargeType" [value]="gRow.ID">
+                                                                {{gRow.ChargeCode}}
+                                                            </option>
+                                                        </select>
+                                                    </td>
+                                                    <td class="other">
+                                                        <select class="form-control my-select other" [(ngModel)]="gRow.CurrencyID" [ngModelOptions]="{standalone: true}" id="ddlCurrency">
+                                                            <option value="0">--Select--</option>
+                                                            <option *ngFor="let gRow of fillCurrency" [value]="gRow.ID">
+                                                                {{gRow.Currency}}
+                                                            </option>
+                                                        </select>
+                                                    </td>
+
+                                                    <td class="other">
+                                                        <select class="form-control my-select" [(ngModel)]="gRow.CntrTypeID" [ngModelOptions]="{standalone: true}" id="ddlCntrType">
+                                                            <option value="0">--Select--</option>
+                                                            <option *ngFor="let gRow of fillCntrType" [value]="gRow.ID">
+                                                                {{gRow.CntrTypes}}
+                                                            </option>
+                                                        </select>
+                                                    </td>
+                                                    <td class="other"><input type="number" autocomplete="off" id="txtAmount" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.Amount" class="form-control" /></td>
+                                                    <td class="alc">
+                                                        <button class="btn btn-success bmd-btn-fab" *ngIf="last" (click)="btnAddFreightCommission(gRow,i)">
+                                                            <i class="material-icons">add</i>
+                                                        </button>
+                                                        <button class="btn btn-danger bmd-btn-fab" *ngIf="!last" (click)="DynamicDeleteGrid(FreightCommDynamicGrid,i,gRow.SID)">
+                                                            <i class="material-icons">delete</i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row tblrow1">
+                <div class="col-md-12 padlr0">
+                    <div class="tab-content">
+                        <div class="tab-pane pt-3 active show" id="revenue" role="tabpanel">
+                            <div id="datatable-buttons_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+
+                                <div class="row">
+                                    <div class="col-md-12 padlr0">
+                                        <h5 style="font-size:16px;">Terminal Handling</h5>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12 padlr0 scrtbl tablevar">
+                                        <table id="datatable-buttons" class="det table table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                            <thead>
+                                                <tr role="row">
+                                                    <th class="actwid" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" style="width: 177.575px;">
+                                                        S.No
+                                                    </th>
+                                                    <th tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" style="width: 177.575px;">
+                                                        Agreement Type
+                                                    </th>
+                                                    <th>Commission Type</th>
+                                                    <th>Shipment Type</th>
+                                                    <th>Port</th>
+                                                    <th>Terminal</th>
+                                                    <th>Charge</th>
+                                                    <th>Cntr Type</th>
+                                                    <th>Currency</th>
+                                                    <th>Collect</th>
+                                                    <th>Cost</th>
+                                                    <th>Difference</th>
+                                                    <th>Diff Remittance</th>
+                                                    <th>Action</th>
+
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>
+                                                <tr *ngFor="let gRow of TerminalHandlingDynamicGrid; let i= index; let last=last">
+                                                    <td>{{i+1}}</td>
+
+                                                    <td class="des">
+                                                        <select class="form-control my-select other" style="width:100px;" id="ddlTAgreementType" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.AgreementTypeID">
+                                                            <option value="0">--Select--</option>
+                                                            <option *ngFor="let gRow of fillAgreementType" [value]="gRow.ID">
+                                                                {{gRow.GeneralName}}
+                                                            </option>
+                                                        </select>
+                                                    </td>
+                                                    <td class="other">
+                                                        <select class="form-control my-select other" style="width:100px;" id="ddlTCommissionType" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.CommissionTypeID">
+                                                            <option value="0">--Select--</option>
+                                                            <option *ngFor="let gRow of fillCommissionType" [value]="gRow.ID">
+                                                                {{gRow.GeneralName}}
+                                                            </option>
+                                                        </select>
+                                                    </td>
+
+                                                    <td class="other">
+                                                        <select class="form-control my-select other" style="width:100px;" id="ddlTShipmentType" [(ngModel)]="gRow.ShipmentTypeID" [ngModelOptions]="{standalone: true}">
+                                                            <option value="0">--Select--</option>
+                                                            <option *ngFor="let gRow of fillShipmentType" [value]="gRow.ID">
+                                                                {{gRow.GeneralName}}
+                                                            </option>
+                                                        </select>
+                                                    </td>
+
+                                                    <td class="other">
+                                                        <select class="form-control" style="width:100px;" [ngModelOptions]="{standalone: true}" (ngModelChange)="btngridTerminal($event,i)" id="ddlTPort" [(ngModel)]="gRow.PortID">
+                                                            <option value="0">--Select--</option>
+                                                            <option *ngFor="let gRow of fillPortvalues" [value]="gRow.ID">
+                                                                {{gRow.PortName}}
+                                                            </option>
+                                                        </select>
+                                                    </td>
+
+                                                    <td class="other">
+                                                        <select class="form-control my-select other" style="width:100px;" id="ddlTHTerminal{{i}}" [(ngModel)]="gRow.TerminalID" [ngModelOptions]="{standalone: true}">
+                                                        </select>
+                                                    </td>
+                                                    <td class="other">
+                                                        <select class="form-control my-select other" style="width:100px;" id="ddlTChargeCode" [(ngModel)]="gRow.ChargeTypeID" [ngModelOptions]="{standalone: true}">
+                                                            <option value="0">--Select--</option>
+                                                            <option *ngFor="let gRow of fillChargeType" [value]="gRow.ID">
+                                                                {{gRow.ChargeCode}}
+                                                            </option>
+
+                                                        </select>
+                                                    </td>
+                                                    <td class="other">
+                                                        <select class="form-control my-select other" style="width:100px;" id="ddlTCntrType" [(ngModel)]="gRow.CntrTypeID" [ngModelOptions]="{standalone: true}">
+                                                            <option value="0">--Select--</option>
+                                                            <option *ngFor="let gRow of fillCntrType" [value]="gRow.ID">
+                                                                {{gRow.CntrTypes}}
+                                                            </option>
+                                                        </select>
+                                                    </td>
+                                                    <td class="other">
+                                                        <select class="form-control my-select other" style="width:100px;" id="ddlTCurrency" [(ngModel)]="gRow.CurrencyID" [ngModelOptions]="{standalone: true}">
+                                                            <option value="0">--Select--</option>
+                                                            <option *ngFor="let gRow of fillCurrency" [value]="gRow.ID">
+                                                                {{gRow.Currency}}
+                                                            </option>
+                                                        </select>
+                                                    </td>
+                                                    <td class="other"><input type="number" style="width:60px;" autocomplete="off" id="txtCollectAmt" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.CollectAmt" (change)="onClickQtyRatecalcuation(gRow);" class="form-control" /></td>
+                                                    <td class="other"><input type="number" style="width:60px;" autocomplete="off" id="txtCostAmt" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.CostAmt" (change)="onClickQtyRatecalcuation(gRow);" class="form-control" /></td>
+                                                    <td class="other"><input type="number" style="width:60px;" autocomplete="off" id="txtDifferenceAmt" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.DifferenceAmt" class="form-control" /></td>
+                                                    <td class="other"><input type="number" style="width:60px;" autocomplete="off" id="txtDiffRemittanceAmt" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.DiffRemittanceAmt" class="form-control" /></td>
+
+                                                    <td class="alc">
+                                                        <button class="btn btn-success bmd-btn-fab" *ngIf="last" (click)="OnClickAddTerminalHandling(gRow);">
+                                                            <i class="material-icons">add</i>
+                                                        </button>
+                                                        <button class="btn btn-danger bmd-btn-fab" *ngIf="!last" (click)="DynamicDeleteGrid(TerminalHandlingDynamicGrid,i,gRow.SID)">
+                                                            <i class="material-icons">delete</i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row tblrow1">
+                <div class="col-md-12">
+                    <div class="tab-content">
+                        <div class="tab-pane pt-3 active show" id="revenue" role="tabpanel">
+                            <div id="datatable-buttons_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+
+                                <div class="row">
+                                    <div class="col-md-12 padlr0">
+                                        <h5 style="font-size:16px;">Detention</h5>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12 padlr0 tablevar">
+                                        <table id="datatable-buttons" class="det table table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                            <thead>
+                                                <tr role="row">
+                                                    <th class="actwid" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" style="width: 177.575px;">
+                                                        S.No
+                                                    </th>
+                                                    <th  tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" style="width: 177.575px;">
+                                                        Agreement Type
+                                                    </th>
+                                                    <th>Commission Type</th>
+                                                    <th>Shipment Type</th>
+                                                    <th>Charge</th>
+                                                    <th>Currency</th>
+                                                    <th>Cntr Type</th>
+                                                    <th>Value</th>
+                                                    <th>Action</th>
+
+                                                </tr>
+                                            </thead>
+
+
+                                            <tbody>
+                                                <tr *ngFor="let gRow of DetentionDynamicGrid; let i= index; let last=last">
+                                                    <td>{{i+1}}</td>
+
+                                                    <td class="des">
+                                                        <select class="form-control my-select" id="ddlDAgreementType" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.AgreementTypeID">
+                                                            <option value="0">--Select--</option>
+                                                            <option *ngFor="let gRow of fillAgreementType" [value]="gRow.ID">
+                                                                {{gRow.GeneralName}}
+                                                            </option>
+                                                        </select>
+                                                    </td>
+                                                    <td class="other">
+                                                        <select class="form-control my-select other" [(ngModel)]="gRow.CommissionTypeID" [ngModelOptions]="{standalone: true}" id="ddlDCommissionType">
+                                                            <option value="0">--Select--</option>
+                                                            <option *ngFor="let gRow of fillCommissionType" [value]="gRow.ID">
+                                                                {{gRow.GeneralName}}
+                                                            </option>
+                                                        </select>
+                                                    </td>
+                                                    <td class="other">
+                                                        <select class="form-control my-select other" [(ngModel)]="gRow.ShipmentTypeID" [ngModelOptions]="{standalone: true}" id="ddlDShipmentType">
+                                                            <option value="0">--Select--</option>
+                                                            <option *ngFor="let gRow of fillShipmentType" [value]="gRow.ID">
+                                                                {{gRow.GeneralName}}
+                                                            </option>
+                                                        </select>
+                                                    </td>
+                                                    <td class="other">
+                                                        <select class="form-control my-select other" style="width:100px;" [(ngModel)]="gRow.ChargeTypeID" [ngModelOptions]="{standalone: true}" id="ddlDChargeType">
+                                                            <option value="0">--Select--</option>
+                                                            <option *ngFor="let gRow of fillChargeType" [value]="gRow.ID">
+                                                                {{gRow.ChargeCode}}
+                                                            </option>
+                                                        </select>
+                                                    </td>
+                                                    <td class="other">
+                                                        <select class="form-control my-select other" [(ngModel)]="gRow.CurrencyID" [ngModelOptions]="{standalone: true}" id="ddlDCurrency">
+                                                            <option value="0">--Select--</option>
+                                                            <option *ngFor="let gRow of fillCurrency" [value]="gRow.ID">
+                                                                {{gRow.Currency}}
+                                                            </option>
+
+                                                        </select>
+                                                    </td>
+
+                                                    <td class="other">
+                                                        <select class="form-control my-select" [(ngModel)]="gRow.CntrTypeID" [ngModelOptions]="{standalone: true}" id="ddlDCntrType">
+                                                            <option value="0">--Select--</option>
+                                                            <option *ngFor="let gRow of fillCntrType" [value]="gRow.ID">
+                                                                {{gRow.CntrTypes}}
+                                                            </option>
+                                                        </select>
+                                                    </td>
+                                                    <td class="other"><input type="number" autocomplete="off" id="txtDAmount" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.Amount" class="form-control" /></td>
+                                                    <td class="alc">
+                                                        <button class="btn btn-success bmd-btn-fab" *ngIf="last" (click)="btnAddDetention(gRow,i)">
+                                                            <i class="material-icons">add</i>
+                                                        </button>
+                                                        <button class="btn btn-danger bmd-btn-fab" *ngIf="!last" (click)="DynamicDeleteGrid(DetentionDynamicGrid,i,gRow.SID)">
+                                                            <i class="material-icons">delete</i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row tblrow1">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h5 style="font-size:16px;">Landside Charges</h5>
+                    </div>
+                </div>
+                <div class="col-sm-12 tablevar">
+                    <table id="datatable-buttons" class="det table table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                        <thead>
+                            <tr role="row">
+                                <th class="actwid" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" style="width: 177.575px;">
+                                    S.No
+                                </th>
+                                <th tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" style="width: 177.575px;">
+                                    Agreement Type
+                                </th>
+                                <th>Commission Type</th>
+                                <th>Shipment Type</th>
+                                <th>Port</th>
+                                <th>Terminal</th>
+                                <th>Charge</th>
+                                <th>Cntr Type</th>
+                                <th>Currency</th>
+                                <th>Value</th>
+                                <th>Action</th>
+
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr *ngFor="let gRow of LandsideDynamicGrid; let i= index; let last=last">
+                                <td></td>
+
+                                <td class="des">
+                                    <select class="form-control my-select other" id="ddlLCAgreementType" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.AgreementTypeID">
+                                        <option value="0">--Select--</option>
+                                        <option *ngFor="let gRow of fillAgreementType" [value]="gRow.ID">
+                                            {{gRow.GeneralName}}
+                                        </option>
+                                    </select>
+                                </td>
+                                <td class="other">
+                                    <select class="form-control my-select other" id="ddlLCCommissionType" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.CommissionTypeID">
+                                        <option value="0">--Select--</option>
+                                        <option *ngFor="let gRow of fillCommissionType" [value]="gRow.ID">
+                                            {{gRow.GeneralName}}
+                                        </option>
+                                    </select>
+                                </td>
+
+                                <td class="other">
+                                    <select class="form-control my-select other" id="ddlLCShipmentType" [(ngModel)]="gRow.ShipmentTypeID" [ngModelOptions]="{standalone: true}">
+                                        <option value="0">--Select--</option>
+                                        <option *ngFor="let gRow of fillShipmentType" [value]="gRow.ID">
+                                            {{gRow.GeneralName}}
+                                        </option>
+                                    </select>
+                                </td>
+
+                                <td class="other">
+                                    <select class="form-control" style="width:auto; width:100px;" [ngModelOptions]="{standalone: true}" (ngModelChange)="btngridLCTerminal($event,i)" id="ddlLCPort" [(ngModel)]="gRow.PortID">
+                                        <option value="0">--Select--</option>
+                                        <option *ngFor="let gRow of fillPortvalues" [value]="gRow.ID">
+                                            {{gRow.PortName}}
+                                        </option>
+                                    </select>
+                                </td>
+
+                                <td class="other">
+                                    <select class="form-control my-select other" style="width:100px;" id="ddlLCTerminal{{i}}" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.TerminalID">
+                                    </select>
+                                </td>
+                                <td class="other">
+                                    <select class="form-control my-select other" style="width:100px;" id="ddlLCChargeCode" [(ngModel)]="gRow.ChargeTypeID" [ngModelOptions]="{standalone: true}">
+                                        <option value="0">--Select--</option>
+                                        <option *ngFor="let gRow of fillChargeType" [value]="gRow.ID">
+                                            {{gRow.ChargeCode}}
+                                        </option>
+
+                                    </select>
+                                </td>
+                                <td class="other">
+                                    <select class="form-control my-select other" style="width:100px;" id="ddlLCCntrType" [(ngModel)]="gRow.CntrTypeID" [ngModelOptions]="{standalone: true}">
+                                        <option value="0">--Select--</option>
+                                        <option *ngFor="let gRow of fillCntrType" [value]="gRow.ID">
+                                            {{gRow.CntrTypes}}
+                                        </option>
+                                    </select>
+                                </td>
+                                <td class="other">
+                                    <select class="form-control my-select other" style="width:100px;" id="ddlLCCurrency" [(ngModel)]="gRow.CurrencyID" [ngModelOptions]="{standalone: true}">
+                                        <option value="0">--Select--</option>
+                                        <option *ngFor="let gRow of fillCurrency" [value]="gRow.ID">
+                                            {{gRow.Currency}}
+                                        </option>
+                                    </select>
+                                </td>
+                                <td class="other"><input type="text" id="txtLCAmount" style="width:100px;" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.Amount" class="form-control" /></td>
+
+                                <td class="alc">
+                                    <button class="btn btn-success bmd-btn-fab" *ngIf="last" (click)="btnAddLandside(gRow,i)">
+                                        <i class="material-icons">add</i>
+                                    </button>
+                                    <button class="btn btn-danger bmd-btn-fab" *ngIf="!last" (click)="DynamicDeleteGrid(LandsideDynamicGrid,i,gRow.SID)">
+                                        <i class="material-icons">delete</i>
+                                    </button>
+                                </td>
+                                <!--<td class="alc">
+                                    <button class="btn btn-success bmd-btn-fab" (click)="OnClickAddValue();">
+                                        <i class="material-icons">add</i>
+                                    </button>
+                                </td>-->
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
+
+
+        </div>
+
+        <div class="card-footer ">
+            <div class="col-md-12" style="text-align:right;">
+                <button type="submit" (click)="onSubmit()" class="btn btn-success btn-raised mb-0">Submit</button>
+            </div>
+
+        </div>
+    </div>
+
+</form>

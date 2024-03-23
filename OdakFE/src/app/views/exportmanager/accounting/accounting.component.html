@@ -1,0 +1,153 @@
+<div class="row headtitle">
+    <div class="col-md-12">
+        <h4>Task Manager - Booking Level Tasks</h4>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="row bkglevelnav">
+            <div class="col-md-12">
+                <ul class="nav nav-pills nav-justified" role="tablist">
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" [routerLink]="['/views/exportmanager/bookinglevel/bookinglevel']" role="tab" aria-selected="false">Booking Level Tasks</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" [routerLink]="['/views/exportmanager/vessellevel/vessellevel']" role="tab" aria-selected="false">Vessel Level Tasks</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link active show" data-toggle="tab" [routerLink]="['/views/exportmanager/accounting/accounting']" role="tab" aria-selected="true">Accounting Tasks</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="tab-content">
+            <div class="tab-pane pt-3 active show" role="tabpanel">
+
+                <div class="col-md-3">
+                    <select (change)="onChange($event)" class="form-control" type="text" style="width: 100%;">
+                        <option selected value="vessel">Vessel Status</option>
+                        <option value="bol">BOL Status</option>
+                    </select>
+                </div>
+
+                <div class="row" style="margin-top: 30px !important; margin-bottom: 30px !important">
+                    <div class="col-md-3">
+                        <select class="form-control">
+                            <option value="0">Bill of Ladding</option>
+                        </select>
+                    </div>
+                    <div class="col-md-7">
+                        <input type="text" class="form-control" />
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" (click)="onSubmit()" class="btn btn-primary btn-raised mb-0">Search<div class="ripple-container"></div></button>
+                        <button type="submit" (click)="clearSearch()" class="btn btn-raised btn-danger mb-0">Clear<div class="ripple-container"></div></button>
+                    </div>
+                </div>
+
+
+                <div *ngIf="selectedType == 'vessel'" class="col-md-12">
+
+                    <div class="row">
+                        <div class="col-md-12 padlr0">
+                            <table id="datatable-buttons" cellpadding="0" cellspacing="0" class="table table-responsive table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                <thead>
+
+                                    <tr>
+                                        <th rowspan="2">Vessel</th>
+                                        <th rowspan="2">Voyage</th>
+                                        <th rowspan="2">ETD</th>
+                                        <th rowspan="2">No. of Booking</th>
+                                        <th rowspan="2">No. of Containers</th>
+                                        <th colspan="2">Pick-up</th>
+                                        <th colspan="2">Gate-In</th>
+                                        <th colspan="2">Doc for Load List</th>
+                                        <th colspan="2">BOL Draft</th>
+                                        <th colspan="2">BOL Release</th>
+                                        <th colspan="2">Invoices</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Open</th>
+                                        <th>Complete</th>
+                                        <th>Open</th>
+                                        <th>Complete</th>
+                                        <th>Open</th>
+                                        <th>Complete</th>
+                                        <th>Open</th>
+                                        <th>Complete</th>
+                                        <th>Open</th>
+                                        <th>Complete</th>
+                                        <th>Open</th>
+                                        <th>Complete</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>NP</td>
+                                        <td>V100</td>
+                                        <td>24 JUL 2022</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>10</td>
+                                        <td>20</td>
+                                        <td>15</td>
+                                        <td>15</td>
+                                        <td>1</td>
+                                        <td>2</td>
+                                        <td>3</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td>1</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="selectedType == 'bol'" class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12 padlr0">
+                            <table id="datatable-buttons" cellpadding="0" cellspacing="0" class="table table-responsive table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                <thead>
+                                    <tr>
+                                        <th>Booking</th>
+                                        <th>Vessel</th>
+                                        <th>Voyage</th>
+                                        <th>BOL</th>
+                                        <th>BOL Type</th>
+                                        <th>BOL Approval</th>
+                                        <th></th>
+                                        <th>Issued Date</th>
+                                        <th>Issued By</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>Submitted</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

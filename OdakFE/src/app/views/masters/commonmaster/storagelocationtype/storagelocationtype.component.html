@@ -1,0 +1,154 @@
+<div class="row headtitle">
+    <div class="col-md-9 col-sm-9 col-lg-9 col-xl-9">
+        <h4>Storage Location Master</h4>
+    </div>
+    <div class="col-md-3 col-sm-3 col-lg-3 col-xl-3 alrt">
+        <button type="button" class="btn btn-success btn-raised btntop bmd-btn-edit" [routerLink]="['/views/masters/commonmaster/storagelocationtype/storagelocationtypeview/storagelocationtypeview']"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+    </div>
+</div>
+
+<form [formGroup]="StorageLocationForm">
+
+    <div class="card">
+        <div class="card-body ">
+            <div class="row">
+                <div class="col-md-6">
+
+                </div>
+                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4 headtitle">
+                                <h4>Storage location Type</h4>
+                            </div>
+                            <div class="col-md-8">
+                                <label class="check">
+                                    <input type="radio" (click)="PortChange(1)" [value]="1" name="SLTypeID" checked formControlName="SLTypeID" id="ChkPort" />
+                                    <span>Port</span>
+                                </label>
+                                <label class="check" style="margin-left:20px;">
+                                    <input type="radio" (click)="PortChange(2)" [value]="2" name="SLTypeID" checked formControlName="SLTypeID" />
+                                    <span>Depot</span>
+                                </label>
+                                <label class="check" style="margin-left:20px;">
+                                    <input type="radio" (click)="PortChange(3)" [value]="3" name="SLTypeID" checked formControlName="SLTypeID" />
+                                    <span>Customer</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                <label >Office</label>
+                            </div>
+                            <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                            <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                <select class="form-control my-select" id="OfficeCode1" formControlName="OfficeID">
+                                    <option *ngFor="let gRow of OfficeMasterAllvalues" [value]="gRow.ID">
+                                        {{gRow.CustomerName}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="row">
+
+                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                <label class="str">Storage Location </label>
+                            </div>
+                            <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                            <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                <input type="text" name="StorageLoc" formControlName="StorageLoc" autocomplete="off" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                <label>
+                                    Short Name
+                                </label>
+                            </div>
+                            <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                            <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                <input type="text" name="StorageCode" formControlName="StorageCode"  autocomplete="off"  class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                <label class="str">Port Code </label>
+                            </div>
+                            <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                            <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                <select class="form-control my-select" id="ddlPortCode" disabled formControlName="PortID">
+                                    <option *ngFor="let gRow of dsPorts" [value]="gRow.ID">
+                                        {{gRow.PortCode}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                <label>Status</label>
+                            </div>
+                            <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                            <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                <select name="Status" formControlName="StatusID" id="ddlStatus" class="form-control my-select">
+                                    <option *ngFor="let status of statusvalues" [value]="status.value">
+                                        {{status.viewValue}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                    <div>
+                        <div class="row">
+                            <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                <label>
+                                    Remarks
+                                </label>
+                            </div>
+                            <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                            <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                <textarea class="form-control" style="height:50px!important;" rows="5" placeholder="Notes" formControlName="Remarks"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="card-footer ">
+            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12" style="text-align:right;">
+                <button type="submit" (click)="onSubmit()" class="btn btn-primary btn-raised mb-0">Submit</button>
+            </div>
+           
+        </div>
+    </div>
+
+</form>

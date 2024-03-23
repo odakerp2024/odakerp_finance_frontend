@@ -1,0 +1,195 @@
+
+<form [formGroup]="principalformGrop" novalidate>
+    <div class="row headtitle">
+        <div class="col-md-9">
+            <h4>Principal/Agency Agreement</h4>
+        </div>
+        <div class="col-md-3 alrt">
+            <button type="button" class="btn btn-success btn-raised bmd-btn-edit btntop" [routerLink]="['/views/masters/LAmaster/Principalagency/Principalagencyview']"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+        </div>
+    </div>
+
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <ul class="nav nav-pills nav-justified" role="tablist">
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link active show" data-toggle="tab" href="home-1" (click)="btntabclick(1)" role="tab" aria-selected="true">Principal Details</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" (click)="btntabclick(2)" role="tab" aria-selected="false">Port wise agent Details</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" (click)="btntabclick(3)" role="tab" aria-selected="false">Principal Agreement</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" (click)="btntabclick(4)" role="tab" aria-selected="false">Attachments</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" (click)="btntabclick(5)" role="tab" aria-selected="false">Alert Mails</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="tab-content">
+                        <div class="tab-pane pt-3 active show" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label class="str">Line Code</label>
+                                                <input type="text" id="txtLineCode" formControlName="LineCode" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label class="str">Line Name</label>
+                                                <input type="text" id="txtLineName" name="LineName" formControlName="LineName" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label class="str">Country</label>
+                                                <select formControlName="CountryID" id="ddlCountryID" class="form-control my-select">
+                                                    <option *ngFor="let gRow of dscountryItem" [value]="gRow.ID">
+                                                        {{gRow.CountryName}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label class="str">City</label>
+                                                <select formControlName="CityID" id="ddlCityID" class="form-control my-select">
+                                                    <option *ngFor="let gRow of dsCityItem" [value]="gRow.ID">
+                                                        {{gRow.CityName}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>State</label>
+                                                <select formControlName="StateID" id="ddlStateID" class="form-control my-select">
+                                                    <option *ngFor="let gRow of dsStateItem" [value]="gRow.ID">
+                                                        {{gRow.StateName}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Tax/GST Number</label>
+                                                <input type="text" id="txtTaxGST" formControlName="TaxGST" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label class="str">Pin Code</label>
+                                                <input type="number" id="txtPinCode" formControlName="PinCode" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label class="str">Email</label>
+                                                <input type="text" id="txtEmail" formControlName="Email" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Tel No</label>
+                                                <input type="number" id="txtTelNo" formControlName="TelNo" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Status</label>
+                                                <select formControlName="Status" id="ddlStatus" class="form-control my-select">
+                                                    <option *ngFor="let status of statusvalues" [value]="status.value">
+                                                        {{status.viewValue}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Address</label>
+                                                <textarea class="form-control addressht" id="txtAddress" formControlName="Address" rows="5"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Note</label>
+                                                <textarea class="form-control addressht" id="txtNote" formControlName="Note" rows="5"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="card-footer ">
+            <div class="col-md-12" style="text-align:right;">
+                <button type="submit" (click)="onSubmitRecordSaved()" class="btn btn-success btn-raised mb-0">Submit</button>
+                <input type="text" id="RegId" name="RegId" formControlName="RegId" class="form-control" />
+
+            </div>
+
+        </div>
+    </div>
+</form>

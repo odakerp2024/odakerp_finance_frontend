@@ -1,0 +1,146 @@
+<div class="row headtitle">
+    <div class="col-md-9">
+        <h4>Commodity Master</h4>
+    </div>
+    <div class="col-md-3 alrt">
+        <button type="button" class="btn btn-success btntop btn-raised bmd-btn-edit" [routerLink]="['/views/masters/commonmaster/commodity/commodity']"><i class="material-icons editicon">add</i><div class="ripple-container"></div></button>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-9">
+        <div class="card m-b-30">
+            <div class="card-body leftcard">
+
+                <div id="datatable-buttons_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="datatable-buttons" class="table table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                <thead>
+                                    <tr role="row">
+                                        <th class="actwid" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" style="width: 177.575px;" >
+                                            S.No
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" style="width: 177.575px;" (click)="sort('CommodityUnCode')">
+                                            Commodity UN Code
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Position: activate to sort column descending" aria-sort="ascending" style="width: 274.725px;" (click)="sort('CommodityName')">Commodity Name</th>
+                                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 129.95px;" (click)="sort('HSCode')">HS Code</th>
+                                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 129.95px;" (click)="sort('DangerousFlag')">DG Flag</th>
+                                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 129.95px;" (click)="sort('CommodityType')">Commodity Type</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    <tr *ngFor="let dataItem of pagedItems ;
+                                        let i = index" (mouseover)="highlightRow(dataItem)"
+                                        [ngClass]="{'highlight' : dataItem.CommodityCode == selectedName}">
+                                        <td> {{ i + 1*pager.startIndex+1 }}</td>
+                                        <td>{{dataItem.CommodityUnCode}}</td>
+                                        <td>{{dataItem.CommodityName}}</td>
+                                        <td>{{dataItem.HSCode}}</td>
+                                        <td>{{dataItem.DangerousFlag}}</td>
+                                        <td>{{dataItem.CommodityType}}</td>
+                                        <td class="alc">
+                                            <button class="btn btn-success bmd-btn-fab" [routerLink]="['/views/masters/commonmaster/commodity/commodity']" [queryParams]="{id: dataItem.ID}" queryParamsHandling="merge">
+                                                <i class="material-icons">edit</i>
+                                            </button>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="row page" align="right">
+
+                        <!-- pager -->
+                        <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10" class="pagination">
+                            <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                <a (click)="setPage(1)">First</a>
+                            </li>
+                            <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+                            </li>
+                            <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                                <a (click)="setPage(page)">{{page}}</a>
+                            </li>
+                            <li *ngIf="(pager.totalPages - pager.startPage) > 5 ">
+                                <a (click)="setPage(pager.startPage + 5)">...</a>
+                            </li>
+                            <li *ngIf="(pager.totalPages - pager.startPage) > 5">
+                                <a (click)="setPage(pager.totalPages)">{{pager.totalPages}}</a>
+                            </li>
+
+                            <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                <a (click)="setPage(pager.currentPage + 1)">Next</a>
+                            </li>
+                            <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                <a (click)="setPage(pager.totalPages)">Last</a>
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <form [formGroup]="searchForm">
+            <div class="card m-b-30 sidesearch">
+                <div class="card-body cpad">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group">
+                                <input type="text" autocomplete="off" formControlName="CommodityUnCode" name="CommodityUnCode" class="form-control" placeholder="Commodity UN Code">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group">
+                                <input type="text" autocomplete="off" formControlName="CommodityName" name="CommodityName" class="form-control" placeholder="Commodity Name">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group">
+                                <input type="text" autocomplete="off" formControlName="HSCode" class="form-control" placeholder="HS Code">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group">
+                                <select class="form-control my-select" id="ddlCommodityTypev" formControlName="CommodityTypeID">
+                                    <option value="0">Commodity Type</option>
+                                    <option *ngFor="let gRow of CommodityItem" [value]="gRow.CommodityType">
+                                        {{gRow.GeneralName}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group">
+                                <select class="form-control my-select" id="ddlFlagv" formControlName="DangerousFlag">
+                                    <option value="0">DG Flag</option>
+                                    <option *ngFor="let gRow of dgflag" [value]="gRow.value">
+                                        {{gRow.viewValue}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 searchbtn alrt">
+                            <button type="submit" (click)="onSubmit()" class="btn btn-primary btn-raised mb-0">Search<div class="ripple-container"></div></button>
+                            <button type="submit" (click)="clearSearch()" class="btn btn-raised btn-danger mb-0">Clear<div class="ripple-container"></div></button>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

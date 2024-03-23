@@ -1,0 +1,370 @@
+<div class="container-fluid">
+    <!-- header start -->
+    <div class="row mt-2">
+        <div class="col-9">
+            <h4 class="ml-2 mt-2">Invoice Setoff AP</h4>
+        </div>
+        <div class="col-3 mt-auto">
+            <div class="float-right">
+                <button type="button" class="btn btn-warning bmd-btn-edit text-white mr-3" *ngIf="isUpdate && !IsFinal"
+                    (click)="updateValue()">
+                    <i class="material-icons editicon">edit</i>
+                </button>
+                <button type="button" class="btn btn-success bmd-btn-edit text-white mr-3"
+                (click)="goBack()">
+                    <i class="material-icons editicon">reply</i>
+                </button>
+                <button type="button" class="btn btn-raised bmd-btn-edit" *ngIf="isUpdate" data-placement="bottom"
+                    type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+                    <i class="material-icons editicon">schedule</i>
+                </button>
+                <div style="background-color: aliceblue;width:250px;left:-66px"
+                    class="dropdown-menu dropdown-menu  profile-dropdown" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item p-4">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span>ModifiedOn: {{ModifiedOn | date: commonDataService.convertToLowerCaseDay(entityDateFormat)}}</span> | <span>Modified By:
+                                    {{ModifiedBy}}</span>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:10px;">
+                            <div class="col-md-12">
+                                <span>CreatedOn: {{CreatedOn | date: commonDataService.convertToLowerCaseDay(entityDateFormat)}}</span> | <span>Created By:
+                                    {{CreatedBy}}</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- header end -->
+
+    <!-- Table start -->
+    <form [formGroup]="invoiceForm">
+        <div class="card mt-2 p-4">
+            <div class="row">
+
+                <div class="col-3">
+                    <div class="form-group bmd-form-group w-100">
+                        <label class="str">AP set off reference #</label>
+                        <input formControlName="ReferenceNo" type="text" class="form-control disable-input">
+                    </div>
+                </div>
+
+                <!-- <div class="col-3">
+                    <div class="form-group bmd-form-group w-100">
+                        <label class="str">Date</label>
+                        <input formControlName="OutStandingReferenceDate" type="text"
+                            class=" form-control disable-input">
+                    </div>
+                </div> -->
+
+                <div class="col-3">
+                    <div  class="form-group bmd-form-group w-100">
+                        <label class="str mb-2" for="Status">Date</label>
+                        <mat-form-field class="tillDate mat_date_picker"   appearance="outline">
+                            <input matInput (click)="OutStandingReferenceDate.open()" readonly disabled [matDatepicker]="OutStandingReferenceDate" placeholder="" formControlName="OutStandingReferenceDate">
+                            <mat-datepicker-toggle matSuffix [for]="OutStandingReferenceDate"></mat-datepicker-toggle>
+                            <mat-datepicker #OutStandingReferenceDate></mat-datepicker>
+                            </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="col-3">
+                    <div class="form-group bmd-form-group">
+                        <label class="str">Status</label>
+                        <select [ngClass]=" isUpdate ? 'block-input' : 'block-input'" disabled
+                            formControlName="StatusId" class="form-control my-select">
+                            <option value='' disabled>--SELECT STATUS--</option>
+                            <option disabled *ngFor="let data of statusList" [value]='data.Id'>{{data.StatusName |
+                                uppercase}}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-3">
+                    <div class="form-group bmd-form-group w-100">
+                        <label class="str">Party</label>
+                        <!-- <select formControlName="PartyId" (change)="partyEvent($event.target.value)"
+                            class="form-control my-select">
+                            <option value="0" disabled>--SELECT PARTY--</option>
+                            <option *ngFor="let vendor of vendorsList" [value]="vendor.VendorID">
+                                {{vendor.VendorName | uppercase}}
+                            </option>
+                        </select> -->
+                        <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'PartyId'"(change)="partyEvent($event)">
+                            <ng-option [value]="0" disabled>--SELECT PARTY--</ng-option>
+                            <ng-option *ngFor="let vendor of vendorsList" [value]="vendor.VendorID">
+                                <span class="textwrap">{{vendor.VendorName | uppercase}}</span>
+                            </ng-option>
+                        </ng-select> 
+                    </div>
+                </div>
+
+                <div class="col-6">
+                    <div class="col-12 p-0">
+                        <h6 class="mt-2 font-weight-bold">Payment & Vendor Credits ( Open) </h6>
+                    </div>
+                    <table
+                        [ngStyle]="{'height':invoiceForm.get('receiptInfo').controls.length > 10 ? '451px' : 'auto' }"
+                        class="table table-responsive table-bordered w-100 table-striped mt-3 border-0 overflow-auto text-center fixTableHead">
+                        <thead>
+                            <tr role="row">
+                                <th id="th1" tabindex="0">
+                                    Voucher #
+                                </th>
+                                <th id="th2">
+                                    Date
+                                </th>
+                                <th id="th3">
+                                    Amount
+                                </th>
+                                <th id="th4" scope="col">Adjusted</th>
+                                <th id="th5">
+                                    Open Amount
+                                </th>
+                                <th id="th5">
+                                    Set-Off
+                                </th>
+                                <th id="th5">
+                                    Select
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody formArrayName="receiptInfo">
+                            <ng-container *ngIf="receiptList?.length != 0; else noRecord2">
+                                <tr *ngFor="let receipt of invoiceForm.get('receiptInfo').controls; let i = index"
+                                    [formGroupName]="i">
+                                    <td> <input class="text-center border-0"  Style="max-width:140px" formControlName="VoucherNumber" readonly
+                                            [value]="receipt.VoucherNumber" type="text">
+                                    </td>
+                                    <td>
+                                        <input class="text-center border-0"  Style="max-width:70px" formControlName="VoucherDate" readonly
+                                            [value]="receipt.VoucherDate" type="text">
+                                    </td>
+                                    <td>
+                                        <input class="text-center border-0" Style="max-width:50px" formControlName="VoucherAmount" readonly
+                                            [value]="receipt.VoucherAmount" type="text">
+                                    </td>
+                                    <td>
+                                        <input class="text-center border-0" Style="max-width:50px" formControlName="IsAdjusted" readonly
+                                            [value]="receipt.IsAdjusted" type="text">
+                                    </td>
+                                    <td>
+                                        <input class="text-center border-0" Style="max-width:60px" formControlName="PendingAmount" readonly
+                                            [value]="receipt.PendingAmount" type="text">
+                                    </td>
+                                    <td>
+                                        <input [ngClass]=" isUpdateMode ? 'block-set-off-input' : ''"
+                                            [readonly]="isUpdateMode" Style="max-width:60px"
+                                            (change)="setOffChangeEvent($event,i,'Receipts');"
+                                            class="text-center" formControlName="AdjustedAmount"
+                                            [value]="receipt.AdjustedAmount" min="1" type="number" RemoveSpecialChars>
+                                    </td>
+                                    <td>
+                                        <input (change)="onSelectEvent(i,'Receipts')" Style="max-width:40px" formControlName="IsSelect"
+                                            type="checkbox" />
+                                    </td>
+                            </ng-container>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="col-6">
+                    <div class="col-12 p-0">
+                        <h6 class="mt-2 font-weight-bold">Open Purchase Invoices</h6>
+                    </div>
+                    <table
+                        [ngStyle]="{'height':invoiceForm.get('openInvoiceInfo').controls.length > 10 ? '451px' : 'auto' }"
+                        class="table table-responsive table-bordered w-100 table-striped mt-3 border-0 overflow-auto text-center fixTableHead">
+                        <thead>
+                            <tr role="row">
+                                <th id="th1" tabindex="0">
+                                    Voucher #
+                                </th>
+                                <th id="th2">
+                                    Date
+                                </th>
+                                <th id="th3">
+                                    Amount
+                                </th>
+                                <th id="th4" scope="col">Adjusted</th>
+                                <th id="th5">
+                                    Open Amount
+                                </th>
+                                <th id="th5">
+                                    Set-Off
+                                </th>
+                                <th id="th5">
+                                    Select
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody formArrayName="openInvoiceInfo">
+                            <ng-container *ngIf="openInvoiceList?.length != 0; else noRecord2">
+                                <tr *ngFor="let invoice of invoiceForm.get('openInvoiceInfo').controls; let i = index"
+                                    [formGroupName]="i">
+                                    <td> <input class="text-center border-0" Style="max-width:140px" formControlName="InvoiceNumber" readonly
+                                            [value]="invoice.InvoiceNumber" type="text">
+                                    </td>
+                                    <td>
+                                        <input class="text-center border-0" Style="max-width:70px" formControlName="InvoiceDate" readonly
+                                            [value]="invoice.InvoiceDate" type="text">
+                                    </td>
+                                    <td>
+                                        <input class="text-center border-0" Style="max-width:40px" formControlName="InvoiceAmount" readonly
+                                            [value]="invoice.InvoiceAmount" type="text">
+                                    </td>
+                                    <td>
+                                        <input class="text-center border-0" Style="max-width:40px" formControlName="IsAdjusted" readonly
+                                            [value]="invoice.IsAdjusted" type="text">
+                                    </td>
+                                    <td>
+                                        <input class="text-center border-0" Style="max-width:50px" formControlName="PendingAmount" readonly
+                                            [value]="invoice.PendingAmount" type="text">
+                                    </td>
+                                    <td>
+                                        <input [readonly]="isUpdateMode" Style="max-width:70px"
+                                            [ngClass]=" isUpdateMode ? 'block-set-off-input' : ''"
+                                            (ngModelChange)="setOffChangeEvent($event,i,'Invoices');"
+                                            class="text-center" formControlName="AdjustedAmount"
+                                            [value]="invoice.AdjustedAmount" min="1" type="number" RemoveSpecialChars>
+                                    </td>
+                                    <td>
+                                        <input (change)="onSelectEvent(i,'Invoices')" Style="max-width:40px" formControlName="IsSelect"
+                                            type="checkbox" />
+                                    </td>
+                            </ng-container>
+                        </tbody>
+                    </table>
+                </div>
+
+                <ng-template #noRecord2>
+                    <tr>
+                        <td class="text-center" colspan="7">No records found</td>
+                    </tr>
+                </ng-template>
+
+                <div class="col-6">
+                    <label for="" class="">Payment Remarks</label>
+                    <textarea formControlName="Remarks" class="p-1 form-control" name="" id="" cols="50"
+                        rows="2"></textarea>
+                </div>
+
+                <div class="col-6">
+                    <table
+                        class="table table-responsive   table-bordered w-100 table-striped  border-0 overflow-auto text-center">
+                        <thead>
+                            <tr role="row">
+                                <th id="th1" tabindex="0">
+                                    Total
+                                </th>
+                                <th id="th2">
+                                    Amount
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="font-weight-bold">Debit</td>
+                                <td>
+                                    {{TotalDebitAmount}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="font-weight-bold">Credit</td>
+                                <td>{{TotalCreditAmount}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-12 mt-auto">
+                <div class="row ">
+                    <div class="col-sm-12 col-md-6  col-lg-4 col-xl-8 p-0">
+                        <label class="mt-2">Upload File</label>
+                        <div class="file-upload">
+                            <input type="text" hidden />
+                            <input *ngIf="!isUpdateMode" class="file-upload__input" hidden type="file" name="myFile"
+                                id="myFile" (change)="fileSelected($event)">
+
+                            <input *ngIf="isUpdateMode" class="file-upload__input" hidden readonly type="text"
+                                name="myFile" id="myFile" (change)="fileSelected($event)">
+                            <label for="myFile" class="file-upload__button text-center"
+                                style="     width: 27% !important; margin-top: 10px; border: 1px solid #b1b1b1d1 !important; border-radius: 10px; box-shadow: 0px 0px 5px 0px rgb(202 202 202); background-color: white; font-weight: 600; margin-right: 0.5rem !important;"
+                                type="button">
+                                <img class="ml-2" src="assets/images/docupload.png" alt="Upload image"
+                                    style="width: 1rem !important;" />
+                                Choose File(s)
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class=" col-md-12 col-sm-12 col-lg-6 col-xl-6 mt-3 p-0">
+                        <table class="table table-responsive table-striped table-bordered w-100 dataTable no-footer">
+                            <thead class="text-center">
+                                <tr>
+                                    <th tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                                        aria-label="Name: activate to sort column ascending" style="width: 177.575px;">
+                                        S.No
+                                    </th>
+                                    <th tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                                        aria-label="Name: activate to sort column ascending" style="width: 177.575px;">
+                                        File Name</th>
+                                    <th tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                                        class="text-center" aria-label="Name: activate to sort column ascending"
+                                        style="width: 177.575px;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-center" *ngIf="FileList.length > 0">
+                                <tr *ngFor="let data of FileList;let i = index">
+                                    <td>{{i + 1}}</td>
+                                    <td id="documentFileName">{{data.FileName}}</td>
+                                    <td class="text-center">
+                                        <button [disabled]="isUpdateMode" type="submit"
+                                            class="btn btn-danger bmd-btn-fab" (click)="OnClickDeleteValueFile(i)"><i
+                                                class="material-icons editicon">delete</i>
+                                            <div class="ripple-container"></div>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody *ngIf="FileList.length == 0">
+                                <tr>
+                                    <td class="text-center" colspan="3">No records found</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 pt-4 pb-4">
+                <div class="float-right">
+                    <button type="button" [disabled]="TotalDebitAmount != TotalCreditAmount || isUpdateMode"
+                        class="btn btn-primary text-white mr-3 mb-0 col-auto" (click)="saveInfo(0)">
+                        Save
+                    </button>
+                    <button [disabled]="TotalDebitAmount != TotalCreditAmount || !isUpdateMode1"
+                        style="background-color: #19a84c !important;border: #19a84c !important;"
+                        class="btn btn-primary text-white mr-3 mb-0 col-auto " (click)="saveInfo(1)">
+                        Final
+                    </button>
+
+                    <button type="button" *ngIf="isUpdate && !IsFinal" [disabled]="isUpdateMode" (click)="saveInfo(0,true)"
+                    class="btn btn-warning text-white mr-3 mb-0 col-auto">
+                    Delete
+                </button>
+                   
+                    <button type="button" (click)="saveInfo(2)"
+                        class="btn btn-warning text-white mr-3 mb-0 col-auto" 
+                        >
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

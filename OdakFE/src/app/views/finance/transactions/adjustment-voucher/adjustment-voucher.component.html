@@ -1,0 +1,249 @@
+<div class="container-fluid">
+
+    <div class="row headtitle rotle mt-1">
+        <div class="col-md-9">
+            <h4 class="ml-2 mt-2">Adjustment Voucher</h4>
+        </div>
+        <div class="col-md-3 alrt">
+            <button type="button" class="btn btn-success btn-raised bmd-btn-edit btntop" tabindex="0"
+                (click)="CreateNew()">
+                <i class="material-icons editicon">add</i>
+                <div class="ripple-container">
+                </div>
+            </button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-9 mt-2">
+            <div class="card m-b-30">
+                <div class="card-body cpad enqview">
+                    <div class="col-sm-12 ">
+                        <table class="table table-responsive table-striped table-bordered w-100 dataTable no-footer"
+                            style="text-align-last: center;">
+                            <thead>
+                                <tr>
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        style="width: 177.575px;" (click)="sort()">AV Number
+                                    </th>
+
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        style="width: 177.575px;" (click)="sort()">AV Date </th>
+
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        style="width: 177.575px;" (click)="sort()">Account name </th>
+
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        style="width: 177.575px;" (click)="sort()">Transaction  <br /> Type </th> 
+                                        <!-- DR / CR -->
+
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                         (click)="sort()">Status</th>
+                                    <th class="sorting align-middle" tabindex="0" aria-controls="datatable-buttons" rowspan="2" colspan="1"
+                                        aria-label="Name: activate to sort column ascending" >Copy</th>  
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let data of pagedItems">
+                                    <td (click)="adjustmentInfoRoute(data.Id)" style="color: #0366d6;cursor: pointer;">
+                                        {{data.AVNumber}}</td>
+                                    <td>{{data.AVDate | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td>
+                                    
+                                    <td [title]="data.AccountName | uppercase">
+                                        {{ (data.AccountName && data.AccountName.length > 20) ?data.AccountName.slice(0, 20) + '-' : data.AccountName }}
+                                      </td>
+                                    
+                                    <!-- <td>{{data.AccountName}}</td> -->
+                                    <td>{{data.TransactionType}}</td>
+                                    <td>
+                                        <div
+                                    [ngClass]="data.Status == 'Confirmed' ? 'badge badge-state-confirm' : data.Status == 'Cancelled' ? 'badge badge-state-cancel' : 'badge badge-state'">
+                                        {{data.Status}}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button (click)="copyPaste(data.Id, true)"
+                                                class="btn btn-primary bmd-btn-fab">
+                                                <i class="material-icons">filter_none</i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- <div class="row page mr-2" align="right">
+                        <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10" class="pagination">
+                            <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                <a (click)="setPage(1)">First</a>
+                            </li>
+                            <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+                            </li>
+                            <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                                <a (click)="setPage(page)">{{page}}</a>
+                            </li>
+                            <li *ngIf="(pager.totalPages - pager.startPage) > 5 ">
+                                <a (click)="setPage(pager.startPage + 5)">...</a>
+                            </li>
+                            <li *ngIf="(pager.totalPages - pager.startPage) > 5">
+                                <a (click)="setPage(pager.totalPages)">{{pager.totalPages}}</a>
+                            </li>
+
+                            <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                <a (click)="setPage(pager.currentPage + 1)">Next</a>
+                            </li>
+                            <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                <a (click)="setPage(pager.totalPages)">Last</a>
+                            </li>
+                        </ul>
+                    </div> -->
+                    
+                    <div class="row page" align="right">
+                      <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10" class="pagination">
+                       <li [ngClass]="{disabled: pager.currentPage === 1}">
+                         <a (click)="setPage(1)">First</a>
+                       </li>
+                       <li [ngClass]="{disabled: pager.currentPage === 1}">
+                         <a (click)="setPage(pager.currentPage > 1 ? pager.currentPage - 1 : 1)">Previous</a>
+                       </li>
+                       <li *ngFor="let page of pager.pages" [ngClass]="{active: pager.currentPage === page}">
+                         <a (click)="setPage(page)">{{ page }}</a>
+                       </li>
+                       <li *ngIf="(pager.totalPages - pager.startPage) > 5 ">
+                         <a (click)="setPage(pager.startPage + 5)">...</a>
+                       </li>
+                       <li *ngIf="(pager.totalPages - pager.startPage) > 5">
+                         <a (click)="setPage(pager.totalPages)">{{ pager.totalPages }}</a>
+                       </li>
+                       <li [ngClass]="{disabled: pager.currentPage === pager.totalPages}">
+                         <a (click)="setPage(pager.currentPage < pager.totalPages ? pager.currentPage + 1 : pager.totalPages)">Next</a>
+                       </li>
+                       <li [ngClass]="{disabled: pager.currentPage === pager.totalPages}">
+                         <a (click)="setPage(pager.totalPages)">Last</a>
+                       </li>
+                      </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mt-2">
+            <div class="card p-1 pt-4 pb-4 ">
+                <form [formGroup]="adjustmentFilter" class="mt-1 mb-1">
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                        <div class="form-group bmd-form-group">
+                            <input formControlName="AVNumber" type="text" autocomplete="off" class="form-control"
+                                name="Reference" placeholder="AV NUMBER #" maxlength="20">
+                        </div>
+                    </div>
+<!-- 
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                        <div class="form-group bmd-form-group">
+                            <input formControlName="AVDate" [max]="minDate" type="date" class="form-control"
+                                name="date">
+                        </div>
+                    </div> -->
+                    <div class="col-md-12" style="margin-top: -7px;">
+                        <div class="form-group bmd-form-group">
+                           <div class="row">
+                                <div class="col-md-6">
+                                 <label class=" mb-3">From</label>
+                                 <div class="input-group">
+                                    <mat-form-field class="tillDate mat_date_picker"  appearance="outline" >
+                                        <input matInput autocomplete="off" (click)="StartDate.open()" readonly [max]="validTillMinDate" [matDatepicker]="StartDate"  id="StartDate" [placeholder]="entityDateFormat" formControlName="StartDate">
+                                        <mat-datepicker-toggle matSuffix [for]="StartDate"></mat-datepicker-toggle>
+                                        <mat-datepicker #StartDate></mat-datepicker>
+                                    </mat-form-field>
+                                 <!-- <input formControlName="StartDate" (change)="adjustmentEvent($event.target.value)" [max]="minDate"  type="date" class="form-control"
+                                 placeholder="voucher Date" /> -->
+                                </div>
+                                </div>
+                                 <div class="col-md-6">
+                                   <label class="mb-3">Till</label>
+                                   <div class="input-group">
+                                    <mat-form-field  class="tillDate mat_date_picker"  appearance="outline">
+                                        <input matInput autocomplete="off" (click)="EndDate.open()" readonly [min]="adjustmentFilter.get('StartDate').value" [matDatepicker]="EndDate"  id="EndDate" [placeholder]="entityDateFormat" formControlName="EndDate">
+                                        <mat-datepicker-toggle matSuffix [for]="EndDate"></mat-datepicker-toggle>
+                                        <mat-datepicker #EndDate></mat-datepicker>
+                                    </mat-form-field>
+                                   <!-- <input formControlName="EndDate" [min]="validTillMinDate"  type="date" class="form-control"
+                                   placeholder=" voucher Date" /> -->
+                                   </div>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12" style="margin-top: -20px;">
+                        <div class="form-group bmd-form-group">
+                            <!-- <select formControlName="AccountId" class="form-control my-select">
+                                <option value="0" disabled>--SELECT ACCOUNT NAME--</option>
+                                <option *ngFor="let name of accountName" [value]="name.ChartOfAccountsId">
+                                    {{name.AccountName | uppercase}}
+                                </option>
+                            </select> -->
+                            <ng-select class="searchdropdown custom" [clearable]="false"  formControlName="AccountId" >
+                                <ng-option [value]="0" [disabled]="true">--SELECT ACCOUNT NAME--</ng-option>
+                                <ng-option  *ngFor="let name of accountName"  [value]="name.ChartOfAccountsId">
+                                    <span class="textwrap">{{name.AccountName | uppercase}}</span>
+                                </ng-option>
+                            </ng-select> 
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                        <div class="form-group bmd-form-group">
+                            <!-- <select formControlName="TransactionType" class="form-control" name="CategoryId"
+                                id="CategoryId">
+                                <option value="" disabled>--SELECT DR/CR--</option>
+                                <option *ngFor="let item of debitCreditList" [value]="item.Id">
+                                    {{item.TransactionName | uppercase}}
+                                </option>
+                            </select> -->
+                            <ng-select class="searchdropdown custom"  formControlName="TransactionType" [clearable]="false" name="CategoryId"  id="CategoryId" >
+                                <ng-option [value]="''" [disabled]="true">--SELECT DR/CR--</ng-option>
+                                <ng-option *ngFor="let item of debitCreditList"  [value]="item.Id">
+                                    <span class="textwrap">{{item.TransactionName | uppercase}}</span>
+                                </ng-option>
+                            </ng-select> 
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                        <div class="form-group bmd-form-group">
+                            <!-- <select formControlName="Status" class="form-control" name="active" id="active">
+                                <option value="0" disabled>--SELECT STATUS--</option>
+                                <option *ngFor="let data of statusList" [value]=data.ID>{{data.StatusName | uppercase}}
+                                </option>
+                            </select> -->
+                           <ng-select class="searchdropdown custom" [clearable]="false" formControlName="Status" name="active" id="active">
+                                <ng-option [value]="0" [disabled]="true">--SELECT STATUS--</ng-option>
+                                <ng-option  *ngFor="let data of statusList" [value]=data.ID>
+                                    <span class="textwrap">{{data.StatusName | uppercase}}</span>
+                                </ng-option>
+                            </ng-select> 
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 searchbtn alrt text-center mb-3 mt-3">
+                        <button (click)="getAdjustmentList()"
+                            style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;" type="submit"
+                            class="btn btn-primary btn-raised mb-0">Search<div class="ripple-container"></div></button>
+                        <button (click)="createAdjustment();getAdjustmentList()"
+                            style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;"
+                            class="btn btn-raised btn-danger mb-0">Clear
+                            <div class="ripple-container">
+                            </div>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

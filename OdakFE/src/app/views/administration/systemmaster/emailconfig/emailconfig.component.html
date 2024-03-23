@@ -1,0 +1,118 @@
+<div class="row headtitle">
+    <div class="col-md-9">
+        <h4>Email Configuration</h4>
+    </div>
+    <div class="col-md-3 alrt">
+        <button type="button" class="btn btn-success btn-raised bmd-btn-edit btntop" [routerLink]="['/views/administration/systemmaster/emailconfig/emailconfigview']"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body ">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Database</label>
+                            <input type="text" autocomplete="off" id="txtCountryCode" ng-model="txtCountryCode" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Sender Email ID</label>
+                            <input type="text" autocomplete="off" id="txtCountryCode" ng-model="txtCountryCode" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Sender Email Password</label>
+                            <input type="text" autocomplete="off" id="txtCountryCode" ng-model="txtCountryCode" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Incoming Server Type</label>
+                            <select class="form-control">
+                                <option>--Select--</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Incoming Server Name</label>
+                            <input type="text" id="txtCountryName" autocomplete="off" ng-model="txtCountryName" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Incoming Server Port Number</label>
+                            <input type="text" id="txtCountryName" autocomplete="off" ng-model="txtCountryName" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Outgoing Server Type</label>
+                            <select class="form-control">
+                                <option>--Select--</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Outgoing Server Name</label>
+                            <input type="text" id="txtCountryName" autocomplete="off" ng-model="txtCountryName" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Outgoing Server Port Number</label>
+                            <input type="text" id="txtCountryName" autocomplete="off" ng-model="txtCountryName" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+    <div class="card-footer ">
+        <div class="col-md-12" style="text-align:right;">
+            <button type="submit" ng-click="Recordsave();" class="btn btn-primary btn-raised mb-0">Submit</button>
+        </div>
+        <input type="hidden" id="HDRegId" ng-model="HDRegId" />
+    </div>
+</div>

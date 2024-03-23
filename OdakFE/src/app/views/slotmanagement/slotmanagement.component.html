@@ -1,0 +1,301 @@
+
+<div class="row headtitle">
+    <div class="col-md-9">
+        <h4>Open Slot-Space Management </h4>
+    </div>
+    <div class="col-md-3 alrt">
+        <button type="button" class="btn btn-success btn-raised btntop bmd-btn-edit" [routerLink]="['/views/slotmanagement/slotmanagementview/slotmanagementview']">
+            <i class="material-icons editicon">reply</i><div class="ripple-container"></div>
+        </button>
+
+    </div>
+</div>
+
+<div class="card">
+    <form [formGroup]="slotForm">
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-md-12 padlr0">
+                    <h5 style="font-size:16px;">Open Slot-Space Mgnt</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 conttable padlr0">
+                    <div class="material-datatables">
+
+                        <table id="datatable-buttons" cellpadding="0" cellspacing="0" class="table table-responsive table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                            <thead>
+                                <tr>
+
+                                    <th>Vessel Name </th>
+                                    <th>Voyage</th>
+                                    <th>ETA</th>
+                                    <th>ETD</th>
+                                    <th>POD</th>
+                                    <th>VOA</th>
+                                    <th>TEUS</th>
+                                    <th>MT</th>
+                                    <th>Notes</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+
+                                    <td class="txtbox1">
+                                        <select class="form-control my-select" id="ddlVessel" formControlName="VesID">
+                                            <option value="0">--Select--</option>
+                                            <option *ngFor="let gRow of ddlVesselItem" [value]="gRow.ID">
+                                                {{gRow.VesselName}}
+                                            </option>
+                                        </select>
+
+                                    </td>
+                                    <td class="txtbox1">
+                                        <select class="form-control my-select" id="ddlVoyagev" formControlName="VoyageID">
+                                            <option value="0">--Select--</option>
+                                            <option *ngFor="let gRow of ddlVoyageItem" [value]="gRow.ID">
+                                                {{gRow.Voyage}}
+                                            </option>
+                                        </select>
+                                    </td>
+                                    <td class="other">
+                                        <!--{{gRow.ETA}}-->
+                                        <input type="text" disabled autocomplete="off" id="txtETA" class="form-control" formControlName="ETA" />
+                                    </td>
+                                    <td class="other">
+                                        <!--{{gRow.ETD}}-->
+                                        <input type="text" disabled autocomplete="off" id="txtETD" class="form-control" formControlName="ETD" />
+                                    </td>
+                                    <td class="txtbox1">
+                                        <select class="form-control my-select" id="ddlPOD" [ngModelOptions]="{standalone: true}" [(ngModel)]="PODID">
+                                            <option value="0">--Select--</option>
+                                            <option *ngFor="let gRow of dsPorts" [value]="gRow.ID">
+                                                {{gRow.PortCode}}
+                                            </option>
+                                        </select>
+
+                                    </td>
+                                    <td class="txtbox1">
+                                        <select class="form-control my-select" id="ddlVOA" [ngModelOptions]="{standalone: true}" [(ngModel)]="VOAID">
+                                            <option value="0">--Select--</option>
+                                            <option *ngFor="let gRow of ddlVOAItem" [value]="gRow.ID">
+                                                {{gRow.VOA}}
+                                            </option>
+                                        </select>
+                                    </td>
+
+                                    <td class="txtbox1">
+                                        <input type="number" autocomplete="off" id="txtTeus" [ngModelOptions]="{standalone: true}" [(ngModel)]="Teus" class="form-control" />
+                                    </td>
+                                    <td class="txtbox1">
+                                        <input type="number" autocomplete="off" id="txtMt" [ngModelOptions]="{standalone: true}" [(ngModel)]="MT" class="form-control" />
+                                    </td>
+                                    <td class="txtbox1">
+                                        <input type="text" autocomplete="off" id="txtNotes" [ngModelOptions]="{standalone: true}" [(ngModel)]="Notes" class="form-control" />
+                                    </td>
+
+                                    <td class="txtbox1">
+                                        <button class="btn btn-success bmd-btn-fab" (click)="btnAddSlot()">
+                                            <i class="material-icons">add</i>
+                                        </button>
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+            <div class="row" style="margin-top:20px;">
+                <div class="col-md-12">
+                    <div class="row headtitle">
+                        <div class="col-md-9">
+                            <h4>Space Planning</h4>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 padlr0 scrtbl conttable">
+                            <div class="material-datatables" style="width:100%;overflow:scroll;">
+
+                                <table class="table table-striped table-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th> S.No </th>
+                                            <th>POD </th>
+                                            <th>VOA </th>
+                                            <th>TEUS</th>
+                                            <th>MT</th>
+                                            <th>Notes</th>
+                                            <th length="auto">FileName</th>
+                                            <th length="auto">Attachment</th>
+                                            <th>Edit</th>
+                                            <th>Delete</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr *ngFor="let gRow of SvSlotGrid; let i= index; let last=last">
+                                            <td>{{i+1}}</td>
+
+                                            <td>   {{gRow.POD}}    </td>
+                                            <td>   {{gRow.VOA}}    </td>
+                                            <td>   {{gRow.Teus}}    </td>
+                                            <td>   {{gRow.MT}}    </td>
+                                            <td>   {{gRow.Notes}}    </td>
+                                            <td>   {{gRow.FileName}}    </td>
+                                            <td>
+
+                                                <button *ngIf="showAttach[i]" class="btn btn-success bmd-btn-fab" (click)="onAttachModel(gRow.SID);">
+                                                    <i class="material-icons">file_upload</i>
+                                                </button>
+                                            </td>
+
+                                            <td class="alc">
+                                                <button class="btn btn-success bmd-btn-fab" (click)="Selectvalues(SvSlotGrid,i);">
+                                                    <i class="material-icons">edit</i>
+                                                </button>
+
+                                            </td>
+                                            <td class="alc">
+                                                <button (click)="RemoveValues(SvSlotGrid,$index,gRow.SID);" class="btn btn-danger bmd-btn-fab" data-original-title="" title="">
+                                                    <i class="material-icons">delete</i>
+                                                </button>
+
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="3" style="text-align:center">Total</th>
+                                            <th style="text-align:center">{{ BindTeusTotal}} </th>
+                                            <th style="text-align:center">{{ BindMTTotal }} </th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-6">
+                    <div class="row headtitle" style="margin-top:20px;">
+                        <div class="col-md-9">
+                            <h4>Status in(Teus)</h4>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 padlr0 scrtbl conttable">
+                            <div class="material-datatables" style="width:100%;overflow:scroll;">
+                                <table id="datatable-buttons" class="det table table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                    <thead>
+                                        <tr role="row">
+                                            <th class="actwid" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" style="width: 177.575px;">
+                                                S.No
+                                            </th>
+                                            <th>Booking</th>
+                                            <th>Pickup</th>
+                                            <th>Gate-In</th>
+                                            <th>LoadOut</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>2</td>
+                                            <td>0</td>
+                                            <td>0</td>
+                                            <td>0</td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div class="card-footer ">
+                <div class="col-md-12" style="text-align:right;">
+                    <button type="submit" (click)="OnSubmit()" class="btn btn-success btn-raised mb-0">Submit</button>
+                </div>
+            </div>
+
+            <div class="modal fade seminor-login-modal" data-backdrop="static" id="AttachModel">
+                <div class="modal-dialog modal-dialog-centered dialogsmall">
+                    <div class="modal-content">
+                        <div class="row">
+                            <div class="col-md-12 alrt">
+                                <button type="button" class="close" data-dismiss="modal">
+                                    <span><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+                                </button>
+                            </div>
+                        </div>
+
+
+                        <div class="modal-body seminor-login-modal-body cntpopup">
+                            <h5 class="modal-title text-center">Attachment</h5>
+
+                            <div class="row">
+                                <div class="col-sm-12 padlr0">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <!--<label>Attachment</label>-->
+                                                        <input type="file" class="file-upload" id="txtAttachFile" formControlName="AttachFile" (change)="onFileSelected($event)">
+                                                        <span class='label label-info' id="upload-file-info"></span>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+
+                                <div class="divide"></div>
+                                <div class="col-md-12 searchbtn alc">
+                                    <button type="submit" (click)="onAttachSave()" class="btn btn-success btn-raised mb-0">Save<div class="ripple-container"></div></button>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+

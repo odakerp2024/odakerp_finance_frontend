@@ -1,0 +1,472 @@
+<div class="container-fluid">
+    <!-- header start -->
+    <div class="row mt-2 hide-element-print">
+        <div class="col-9">
+            <h4 class="ml-2 mt-2">Credit Application</h4>
+        </div>
+        <div class="col-3 mt-auto">
+            <div class="float-right">
+                <!-- edit -->
+                <button *ngIf="isUpdate && !IsFinal" (click)="updateValue()"
+                    type="button" class="btn btn-warning bmd-btn-edit text-white mr-3">
+                    <i class="material-icons editicon">edit</i>
+                </button>
+                <!-- back -->
+                <button type="button" class="btn btn-success bmd-btn-edit text-white mr-3"
+                    [routerLink]="['/views/transactions/credit-application/credit-application-view']">
+                    <i class="material-icons editicon">reply</i>
+                </button>
+                <!-- clock details -->
+                <button *ngIf="isUpdate" type="button" class="btn btn-raised bmd-btn-edit" data-placement="bottom"
+                    type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+                    <i class="material-icons editicon">schedule</i>
+                </button>
+                <!-- clock click pop-up -->
+                <div style="background-color: aliceblue;width:250px;left:-66px"
+                    class="dropdown-menu dropdown-menu  profile-dropdown" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item p-4">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span>ModifiedOn: {{ModifiedOn | date: commonDataService.convertToLowerCaseDay(entityDateFormat)}}</span> | <span>Modified By:
+                                    {{ModifiedBy}}</span>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:10px;">
+                            <div class="col-md-12">
+                                <span>CreatedOn: {{CreatedOn | date: commonDataService.convertToLowerCaseDay(entityDateFormat)}}</span> | <span>Created By:
+                                    {{CreatedBy}}</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- header end -->
+
+
+    <!-- Table start -->
+    <div id="print-content" class="card m-2 p-4 print-content">
+        <form [formGroup]="creditApplicationForm">
+            <!-- Basic Details -->
+            <div class="row mb-3">
+                <h4 class="col-12">Basic Details</h4>
+                <div class="col-4">
+                    <label class="str">Credit Application Number</label>
+                    <input type="text" class="w-100 form-control" formControlName="CreditApplicationNumber" readonly
+                    [ngClass]=" isUpdate ? 'disable-input' : ''" />
+
+                </div>
+
+                <!-- <div class="col-4">
+                    <label class="str">Credit Application Date</label>
+                    <mat-form-field   class="paymentDate">
+                        <input matInput (click)="ApplicationDate.open()" readonly autocomplete="off"  [max]="maxDate" class="disable-input" [matDatepicker]="ApplicationDate"  id="ApplicationDate" placeholder="" formControlName="ApplicationDate">
+                        <mat-datepicker-toggle class="disable-input" matSuffix [for]="ApplicationDate"></mat-datepicker-toggle>
+                        <mat-datepicker #ApplicationDate></mat-datepicker>
+                    </mat-form-field> -->
+                    <!-- <input [max]="maxDate" type="date" class="w-100 p-0 form-control pl-2 disable-input" formControlName="ApplicationDate"
+                    placeholder="" /> -->
+                <!-- </div> -->
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <label class="str mb-2">Credit Application Date</label>
+                    <div class="form-group bmd-form-group">
+                        <mat-form-field class="tillDate mat_date_picker"   appearance="outline">
+                            <input matInput autocomplete="off" (click)="ApplicationDate.open()" readonly disabled [matDatepicker]="ApplicationDate"  id="ApplicationDate" [placeholder]="entityDateFormat" formControlName="ApplicationDate">
+                            <mat-datepicker-toggle matSuffix [for]="ApplicationDate" ></mat-datepicker-toggle>
+                            <mat-datepicker #ApplicationDate></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                 </div>
+                <div class="col-4">
+                    <div class="form-group bmd-form-group w-100">
+                        <label class="str">Application Status</label>
+                        <select class="form-control my-select disable-input" formControlName="ApplicationStatus">
+                            <option [value]="''" disabled>--SELECT APPLICATION STATUS--</option>
+                            <ng-container *ngFor="let status of applicationStatus">
+                                <option [value]="status.Id">
+                                    {{status.Status | uppercase}}
+                                </option>
+                            </ng-container>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <div class="form-group bmd-form-group w-100">
+                        <label class="str">Division</label>
+                        <!-- <select (ngModelChange)="getOfficeList($event)" (change)="getWQuestions()" formControlName="DivisionId"
+                            class="form-control my-select">
+                            <option [value]="''" disabled>--SELECT DIVISION TYPE--</option>
+                            <ng-container *ngFor="let division of divisionList">
+                                <option *ngIf="division.Active" [value]="division.ID">
+                                    {{division.DivisionName | uppercase}}
+                                </option>
+                            </ng-container>
+                        </select> -->
+                        <ng-select  class="searchdropdown"  formControlName="DivisionId" [clearable]="false"
+                        (ngModelChange)="getOfficeList($event)" (change)="getWQuestions()">
+                            <ng-option [value]="''" disabled>--SELECT DIVISION TYPE--</ng-option>
+                            <ng-container  *ngFor="let division of divisionList">
+                              <ng-option  *ngIf="division.Active"  [value]="division.ID">
+                                <span class="textwrap">{{division.DivisionName | uppercase}}</span>
+                              </ng-option>
+                           </ng-container>
+                        </ng-select> 
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <div class="form-group bmd-form-group w-100">
+                        <label class="str">Office</label>
+                        <!-- <select  class="form-control my-select" formControlName="OfficeId" (change)="getNumberRangeList()">
+                            <option value="" disabled>--SELECT OFFICE--</option>
+                            <option *ngFor="let office of officeList" [value]="office.ID">
+                                {{office.OfficeName | uppercase}}
+                            </option>
+                        </select> -->
+                        <ng-select  class="searchdropdown"  formControlName="OfficeId" [clearable]="false" (change)="getNumberRangeList()">
+                            <ng-option [value]="''" disabled>--SELECT OFFICE--</ng-option>
+                            <ng-container *ngFor="let office of officeList">
+                              <ng-option [value]="office.ID">
+                                <span class="textwrap">{{office.OfficeName | uppercase}}</span>
+                              </ng-option>
+                            </ng-container>
+                        </ng-select>  
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <div class="form-group bmd-form-group w-100">
+                        <label class="str">Customer</label>
+                        <!-- <select class="form-control my-select"  formControlName="CustomerId" (change)="getBranch(true)">
+                            <option value="0" disabled>--SELECT CUSTOMER--</option>
+                            <option *ngFor="let customerData of customerAndBranchList" [value]=customerData.CustomerID>
+                                {{customerData.CustomerName | uppercase}}
+                            </option>
+                        </select> -->
+                        <!-- <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'CustomerId'" (change)="getBranch(true)">
+                            <ng-option [value]="0" disabled>--SELECT CUSTOMER--</ng-option>
+                               <ng-option *ngFor="let customerData of customerAndBranchList"[value]=customerData.CustomerID>
+                               <span class="textwrap"> {{customerData.CustomerName | uppercase}}</span>
+                            </ng-option>
+                       </ng-select>  -->
+
+
+                       <ng-select
+                       class="searchdropdown custom"  [formControlName]="'CustomerId'" [ngClass]="{'disable-input': isCopied}" [clearable]="false" 
+                       (change)="isSelectBranch = true;getCustomerBranchCode($event)">
+                       <ng-option [value]="0" disabled>--SELECT CUSTOMER--</ng-option>
+                       <ng-option *ngFor="let customerData of customerAndBranchList" [value]="customerData.CustomerID">
+                        {{customerData.CustomerName | uppercase }}
+                   </ng-option>
+                 </ng-select>          
+
+
+
+                    </div>
+                </div>
+                
+                <!-- <div *ngIf="this.branches == 1" class="col-4">
+                    <label class="str">Customer Branch</label>
+                       <div class="form-control my-select">
+                        <div disabled >{{this.newOne}}</div>
+                    </div>
+                </div> -->
+
+                <div class="col-4">
+                    <div  class="form-group ">
+                        <label class="str">Customer Branch</label>
+                        <!-- <select class="form-control my-select" formControlName="CustomerBranchId" (change)="updateSalesPerson()">
+                            <option  disabled value="0">--SELECT BRANCH--</option>
+                            <option *ngFor="let customerData of customerBranchList" [value]=customerData.CustomerBranchID>
+                                {{customerData.BranchCode | uppercase}}
+                            </option>
+                        </select> -->
+                        <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'CustomerBranchId'" (change)="getCustomerFullDetail($event)">
+                               <ng-option [value]="0" disabled>--SELECT BRANCH--</ng-option>
+                               <ng-option *ngFor="let customerData of customerBranchList"  [value]=customerData.CustomerBranchID>
+                                {{customerData.CityName | uppercase}}
+                               <!-- <span class="textwrap"></span> -->
+                            </ng-option>
+                       </ng-select> 
+                    </div>
+                </div>
+
+                <div class="col-4">
+
+                        <div class="form-group bmd-form-group">
+                            <label>Sales Person</label>
+                            <!-- <select class="form-control my-select" formControlName="SalesPersonId" disabled>
+                                <option value='' disabled>----</option>
+                                <option *ngFor="let customerData of customerAndBranchList" [value]=customerData.SalesId>
+                                    {{customerData.SalesPIC | uppercase}}
+                                </option>
+                            </select> -->
+
+                            <input type="text" class="w-100 form-control disable-input" formControlName="SalesPersonId">
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <div class="form-group bmd-form-group w-100">
+                        <label class="str">Trade</label>
+                        <ng-select class="searchdropdown" formControlName="Trade" [clearable]="false">
+                            <ng-option [value]="''" disabled>--SELECT TRADE--</ng-option>                            
+                            <ng-option *ngFor="let getTrade of getTradeLists" [value]="getTrade.Id">
+                                {{ getTrade.TradeType | uppercase }}
+                            </ng-option>
+                        </ng-select>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <!-- Customer Details -->
+            <div class="row mb-3">
+                <h4 class="col-12">Customer Details</h4>
+
+                <div class="col-4">
+                    <div class="form-group bmd-form-group w-100">
+                        <label class="">Customer Status</label>
+                        <select class="form-control my-select disable-input" formControlName="CustomerStatus">
+                            <option value='' disabled>--SELECT A--</option>
+                            <ng-container *ngFor="let status of statusValues">
+                                <option [value]="status.value">
+                                    {{status.viewValue | uppercase}}
+                                </option>
+                            </ng-container>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <div class="form-group bmd-form-group w-100">
+                        <label class="">Customer PAN</label>
+                        <input type="text"  class="w-100 form-control disable-input" formControlName="CustomerPan" />
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <div class="form-group bmd-form-group">
+                        <label class="">Customer Prime contact</label>
+                        <input type="tel" name="" id=""  class="w-100 form-control disable-input" formControlName="CustomerPrimeContact"/>
+                    </div>
+                </div>
+
+
+                <div class="col-4">
+                    <div class="form-group bmd-form-group">
+                        <label class="">Telephone</label>
+                        <input type="tel" name="" id=""  class="w-100 form-control disable-input" formControlName="Telephone"/>
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <div class="form-group bmd-form-group">
+                        <label class="">Mobile</label>
+                        <input type="tel" name="" id=""  class="w-100 form-control disable-input" formControlName="Mobile"  />
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <div class="form-group bmd-form-group">
+                        <label class="">E-mail</label>
+                        <input type="email" name="" id=""  class="w-100 form-control disable-input" formControlName="Email" />
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- proposed credit limit -->
+            <div class="row mb-3">
+                <h4 class="col-12">Proposed Credit Limit</h4>
+                <div class="col-4">
+                    <!-- <div class="form-group bmd-form-group w-100">
+                        <label class="str">Credit Limit (Days)</label>                        
+                        <ng-select class="searchdropdown days" [clearable]="false" [formControlName]="'CreditLimitDays'">
+                            <ng-option [value]="''" disabled>--SELECT CREDIT DAYS--</ng-option>
+                               <ng-option *ngFor="let credit of creditLimit"  [value]="credit.MaxCreditDays">
+                               <span class="textwrap">{{credit.MaxCreditDays}}</span>
+                            </ng-option>
+                       </ng-select>
+                    </div> -->
+                    <div class="form-group bmd-form-group w-100">
+                        <label class="str">Credit Limit (Days)</label>
+                        <input type="number" class="form-control" (change)="onCreditLimitDays($event)" [formControlName]="'CreditLimitDays'" min="0" step="2" [disabled]="true">
+                        <p *ngIf="creditdaysValidation" style="color: red;">The selected credit days has been exceeded</p>
+                    </div>
+                </div>
+
+                <div class="col-4">
+                        <div class="form-group bmd-form-group">
+                            <label class="str">Credit Limit (Amount)</label>
+                            <!-- <select class="form-control my-select amount" formControlName="CreditLimitAmount">
+                                <option value='' disabled>--SELECT CREDIT AMOUNT--</option>
+                                <option *ngFor="let  credit of creditLimit" [value]=credit.MaxCreditAmount>
+                                    {{credit.MaxCreditAmount}}
+                                </option>
+                            </select> -->
+                            <!-- <ng-select class="searchdropdown days" [clearable]="false" [formControlName]="'CreditLimitAmount'">
+                                <ng-option [value]="''" disabled>--SELECT CREDIT AMOUNT--</ng-option>
+                                   <ng-option *ngFor="let credit of creditLimit" [value]=credit.MaxCreditAmount>
+                                   <span class="textwrap">{{credit.MaxCreditAmount}}</span>
+                                </ng-option>
+                           </ng-select> -->
+                           <input type="number" class="form-control" (change)="onCreditLimitAmount($event)" [formControlName]="'CreditLimitAmount'" min="0" step="2" [disabled]="true">
+                        <p *ngIf="creditAmountValidation" style="color: red;">The selected credit amount has been exceeded</p>
+                    </div>
+                </div>
+
+                <div class="col-4">
+                        <div class="form-group bmd-form-group">
+                            <label class="str">With Post Dated Cheque ?</label>
+                            <!-- <select class="form-control my-select" formControlName="PostDatedCheques">
+                                <option value='' disabled>--SELECT TRADE--</option>
+                                <ng-container *ngFor="let status of statusValues">
+                                    <option [value]="status.value">
+                                        {{status.viewValue | uppercase}}
+                                    </option>
+                                </ng-container>
+                            </select> -->
+                            <ng-select  class="searchdropdown"  formControlName="PostDatedCheques" [clearable]="false" >
+                                <ng-option [value]="''" disabled>--SELECT TRADE--</ng-option>
+                                <ng-container  *ngFor="let status of PDCValue">
+                                  <ng-option [value]="status.value">
+                                    <span class="textwrap">{{status.viewValue | uppercase}}</span>
+                                  </ng-option>
+                                </ng-container>
+                            </ng-select>  
+                        </div>
+                </div>
+
+                <div class="col-12">
+                    <label for="" class="">Request Remarks</label><br>
+                    <textarea class="p-1 form-control w-50" name="" cols="50" rows="3"
+                        formControlName="RequestRemarks"></textarea>
+                </div>
+            </div>
+
+
+              <!-- Customer Details -->
+            <!-- <div class="row mb-3">
+                <h4 class="col-12">Documents</h4>
+
+                <table class="table table-responsive   table-bordered w-100 table-striped  p-3 border-0">
+                    <thead class="text-center">
+                        <tr role="row">
+                            <th class="align-middle" id="th1" rowspan="2" colspan="1" tabindex="0">
+                                Document Name
+                            </th>
+                            <th class="align-middle" id="th2" rowspan="2" colspan="1">
+                                Files
+                            </th>
+                            <th class="align-middle" id="th6" rowspan="2" colspan="1">
+                                Uploaded on
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-center">
+                        <ng-container *ngIf="documentList.length; else noRecord">
+                            <tr *ngFor="let document of pagedItems;let i = index">
+                                <td>
+                                    {{document.name }}
+                                </td>
+                                <td  style="color: #0366d6;cursor: pointer;" (click)="editTransactionLocks(journal.Id)">{{document.fileName }}</td>
+                                <td>{{document.uploadedOn | date :commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td>
+                            </tr>
+                        </ng-container>
+                        
+]\
+                        <ng-template #noRecord>
+                            <tr>
+                                <td class="text-center" colspan="3">No Records Found</td>
+                            </tr>
+                        </ng-template>
+                    </tbody>
+                </table>
+            </div> -->
+
+            <div class="row mb-3 "  [ngClass]=" !isEditMode ? 'disabled-content' : ''" >
+                <h4 class="col-12">Documents</h4>
+                    <div class="col-12">
+                        <app-documents [documentList]="documentInfo" [dropDownOptions]="dropDownOptions" (saveDocumentEvent)="uploadDocument($event)"
+                        (deleteDocumentEvent)="deleteDocument($event)"></app-documents>
+                    </div>
+            </div>
+
+
+            <div class="row mb-3">
+                <h4 class="col-12">Validations</h4>
+                <div class="col-12">
+                    <table class="table table-responsive  table-bordered w-100 table-striped border-0">
+                        <thead class="text-center">
+                            <tr role="row">
+                                <th class="align-middle" id="th1" rowspan="2" colspan="1" tabindex="0">
+                                    S.No
+                                </th>
+                                <th class="align-middle" id="th2" rowspan="2" colspan="1">
+                                    Questions
+                                </th>
+                                <th class="align-middle" id="th6" rowspan="2" colspan="1">
+                                    Response
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center">
+                            <ng-container *ngIf="questionArray.length; else noRecord">
+                                <tr *ngFor="let validation of questionArray;let i = index">
+                                    <td>
+                                        {{  i + 1 }}
+                                    </td>
+                                    <td >{{validation.CreditQuestions }}</td>
+                                    <td class="p-0">
+                                        <input type="text" class="w-100" [ngClass]=" !isEditMode ? 'disable-input' : ''"
+                                         [(ngModel)]="validation.Response"  [ngModelOptions]="{standalone: true}"/>
+                                        <!-- {{validation.Response}} -->
+                                    </td>
+                                </tr>
+                            </ng-container>
+                            
+                            <!-- no data -->
+                            <ng-template #noRecord>
+                                <tr>
+                                    <td class="text-center" colspan="3">No Records Found</td>
+                                </tr>
+                            </ng-template>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="col-12 m-auto text-right hide-element-print">
+                    
+                        <button type="submit" [ngClass]=" !isEditMode ? 'disable-input--style' : ''"
+                            class="btn btn-primary btn-raised mb-0" (click)="confirmFunction(SAVE_TYPE)">
+                            Save
+                        </button>
+
+
+                        <button type="submit" [ngClass]=" !isEditMode  || !isUpdate? 'disable-input--style' : ''"
+                            class="btn btn-primary btn-raised mb-0" (click)="confirmFunction(FINAL_TYPE)">
+                            Submit for Approval
+                        </button>
+                        
+                        <button type="submit" class="btn btn-primary btn-raised mb-0" (click)="printPage()">
+                            Print
+                        </button>
+
+                        <button
+                            class="btn btn-raised btn-danger mb-0" (click)="Cancel()">
+                            Cancel
+                        </button>
+                </div>
+            </div>
+            
+        </form>
+
+
+    </div>

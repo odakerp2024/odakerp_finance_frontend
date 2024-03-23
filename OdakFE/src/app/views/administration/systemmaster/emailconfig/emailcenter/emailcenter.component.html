@@ -1,0 +1,207 @@
+<div class="row headtitle">
+    <div class="col-md-9">
+        <h4>Email Centre</h4>
+    </div>
+    <div class="col-md-3 alrt">
+        <button type="button" class="btn btn-success btn-raised bmd-btn-edit btntop" [routerLink]="['views/administration/systemmaster/emailconfig/emailcenter']"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-4 alrt">
+                            <label>Email Centre</label>
+                        </div>
+                        <div class="col-md-6">
+                            <select class="form-control">
+                                <option>--Select--</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <section>
+                                <div class="container">
+                                    <div class="accordion" id="accordionExample">
+                                        <div class="steps">
+                                            <div class="step-item">
+                                                <button class="step-button text-center" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                                    1
+                                                </button>
+                                                <div class="step-title">
+                                                    Message
+                                                </div>
+                                            </div>
+                                            <div class="connectingline"></div>
+                                            <div class="step-item">
+                                                <button class="step-button text-center collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                                    2
+                                                </button>
+                                                <div class="step-title">
+                                                    Pick Users
+                                                </div>
+                                            </div>
+                                            <div class="step-item">
+                                                <button class="step-button text-center collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                                    3
+                                                </button>
+                                                <div class="step-title">
+                                                    Review
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="card">
+                                            <div id="headingOne">
+
+                                            </div>
+
+                                            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <label>Name*</label>
+                                                                        <input type="text" id="txtUserName" autocomplete="off" ng-model="txtUserName" class="form-control">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <label>Description</label>
+                                                                        <textarea class="form-control addressht" id="txtAddress" rows="5"></textarea>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-footer ">
+                                                        <div class="col-md-12" style="text-align:center;">
+                                                            <button type="submit" style="padding: 10px; margin: 10px;" class="btn btn-primary btn-raised mb-0">Next</button>
+                                                            <button type="submit" style="padding: 10px; margin: 10px;" ng-click="Recordsave();" class="btn btn-default btn-raised mb-0">Save</button>
+                                                        </div>
+                                                        <input type="hidden" id="HDRegId" ng-model="HDRegId" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card">
+                                            <div id="headingTwo">
+
+                                            </div>
+                                            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <div style="margin-left:20px">
+                                                                            <input type="checkbox" />
+                                                                            <label>Login User</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12">
+                                                                        <div style="margin-left:20px">
+                                                                            <input type="checkbox" />
+                                                                            <label>Pick from Party Master</label>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-12">
+                                                                        <div style="margin-left:20px">
+                                                                            <input type="checkbox" />
+                                                                            <label>Pick from Agency Master</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-footer ">
+                                                        <div class="col-md-12" style="text-align:center;">
+                                                            <button type="submit" style="padding: 10px; margin: 10px;" class="btn btn-primary btn-raised mb-0">Next</button>
+                                                            <button type="submit" style="padding: 10px; margin: 10px;" ng-click="Recordsave();" class="btn btn-default btn-raised mb-0">Save</button>
+                                                        </div>
+                                                        <input type="hidden" id="HDRegId" ng-model="HDRegId" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card">
+                                            <div id="headingThree">
+
+                                            </div>
+                                            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="row brdr">
+                                                                <div class="col-md-2">
+                                                                    From :
+                                                                </div>
+                                                                <div class="col-md-10">
+                                                                    Sample
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    To :
+                                                                </div>
+                                                                <div class="col-md-10">
+                                                                    Sample
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    BCC :
+                                                                </div>
+                                                                <div class="col-md-10">
+                                                                    Sample
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    Reply-to :
+                                                                </div>
+                                                                <div class="col-md-10">
+                                                                    Sample
+                                                                </div>
+                                                                <div class="col-md-2">
+                                                                    Subject :
+                                                                </div>
+                                                                <div class="col-md-10">
+                                                                    Sample
+                                                                </div>
+                                                            </div>
+                                                            <br />
+                                                            <div class="row brdr">
+                                                                <div class="col-md-12">
+                                                                    Dear Test,<br />
+                                                                    This is a Sample Text.
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="card-footer ">
+                                                        <div class="col-md-12" style="text-align:center;">
+                                                            <button type="submit" style="padding: 10px; margin: 10px;" ng-click="Recordsave();" class="btn btn-default btn-raised mb-0">Save</button>
+                                                        </div>
+                                                        <input type="hidden" id="HDRegId" ng-model="HDRegId" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

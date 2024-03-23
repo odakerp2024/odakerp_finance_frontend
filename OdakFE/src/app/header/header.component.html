@@ -1,0 +1,141 @@
+<form [formGroup]="HeaderForm">
+    <div class="topbar">
+
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row navbar-custom">
+
+                    <div class="col-md-3">
+                        <div class="logo1">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <img src="../../assets/images/OCEANUS LOGO.png" alt="Company Logo" />
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-9 alrt">
+
+                        <nav>
+                            <ul class="nav nav-pills nav-justified float-left maindash" role="tablist">
+
+                                <li class="nav-item waves-effect waves-light">
+
+                                    <a class="nav-link work" data-toggle="tab" role="tab" aria-selected="false" (click)="btntabclick(1)">
+                                        <div class="row" style="display:inline-flex!important;">
+                                            <div class="col-md-1">
+                                                <span1 class="material-symbols-outlined">
+                                                    view_list
+                                                </span1>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <span>Workspace</span>
+                                            </div>
+                                        </div>
+
+
+
+                                    </a>
+
+
+                                </li>
+                                <li class="nav-item waves-effect waves-light">
+
+                                    <a class="nav-link trans" data-toggle="tab" role="tab" aria-selected="false" (click)="btntabclick(2)">
+                                        <div class="row" style="display:inline-flex!important;">
+                                            <div class="col-md-1">
+                                                <span1 class="material-symbols-outlined">
+                                                    receipt_long
+                                                </span1>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <span>Transactions</span>
+                                            </div>
+                                        </div>
+                                    </a>
+
+                                </li>
+                                <li class="nav-item waves-effect waves-light">
+
+                                    <a class="nav-link dash" data-toggle="tab" role="tab" aria-selected="false" (click)="btntabclick(3)">
+                                        <div class="row" style="display:inline-flex!important;">
+                                            <div class="col-md-1">
+                                                <span1 class="material-symbols-outlined">
+                                                    dashboard
+                                                </span1>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <span>Dashboards</span>
+                                            </div>
+                                        </div>
+                                    </a>
+
+                                </li>
+                                <li class="nav-item waves-effect waves-light">
+
+                                    <a class="nav-link reports" data-toggle="tab" role="tab" aria-selected="false" (click)="btntabclick(4)">
+                                        <div class="row" style="display:inline-flex!important;">
+                                            <div class="col-md-1">
+                                                <span1 class="material-symbols-outlined">
+                                                    overview
+                                                </span1>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <span>Reports</span>
+                                            </div>
+                                        </div>
+                                    </a>
+
+                                </li>
+                                <li class="nav-item waves-effect waves-light">
+
+                                    <a class="nav-link masters" data-toggle="tab" role="tab" aria-selected="false" (click)="btntabclick(5)">
+                                        <div class="row" style="display:inline-flex!important;">
+                                            <div class="col-md-1">
+                                                <span1 class="material-symbols-outlined">
+                                                    tune
+                                                </span1>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <span>Masters</span>
+                                            </div>
+                                        </div>
+                                    </a>
+
+                                </li>
+                            </ul>
+
+                        </nav>
+                        <!--<nav>
+        <ul class="nav nav-pills nav-justified float-left maindash" role="tablist">
+
+            <li class="nav-item waves-effect waves-light" *ngFor="let dataItem of FillMainMenuList;">
+            <a class="nav-link work" data-toggle="tab" role="tab" aria-selected="false" (click)="btntabclick(dataItem.Menu_Id)">
+                <div class="row" style="display:inline-flex!important;">
+                    <div class="col-md-1">
+                        <span1 class="material-symbols-outlined">
+                            view_list
+                        </span1>
+                    </div>
+                    <div class="col-md-9">
+                        <span>{{dataItem.Menu_Name}}</span>
+                    </div>
+                </div>
+            </a>
+        </li>
+
+
+
+        </ul>
+
+    </nav>-->
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+   

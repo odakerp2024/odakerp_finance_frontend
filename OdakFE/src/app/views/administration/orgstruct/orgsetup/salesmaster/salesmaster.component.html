@@ -1,0 +1,90 @@
+<div class="row headtitle">
+    <div class="col-md-9">
+        <h4>Sales Office Master</h4>
+    </div>
+    <div class="col-md-3 alrt">
+        <button type="button" class="btn btn-success bmd-btn-edit btn-raised btntop" (click)="onBack()"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+
+    </div>
+</div>
+<form [formGroup]="salesForm" (ngSubmit)="onSubmit()">
+
+    <div class="card">
+        <div class="card-body ">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="str">Sales Office Location</label>
+                            </div>
+                            <div class="col-md-1">:</div>
+                            <div class="col-md-7">
+                                <input type="text" id="txtRegionName" autocomplete="off" formControlName="SalesOffLoc" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="str">Handled by Office</label>
+                            </div>
+                            <div class="col-md-1">:</div>
+                            <div class="col-md-7 input-field">
+                                <select class="form-control my-select" id="ddlOfficeLoc" formControlName="OfficeLocID"
+                                        (ngModelChange)="OfficeLocChanged()">
+                                    <option *ngFor="let gRow of dsOffLocItem" [value]="gRow.ID">
+                                        {{gRow.OfficeLoc}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="str">Operational Company</label>
+                            </div>
+                            <div class="col-md-1">:</div>
+                            <div class="col-md-7 input-field">
+                                <select class="form-control my-select" formControlName="OfficeID" id="ddlCom">
+                                    <option *ngFor="let gRow of dsOffItem" [value]="gRow.ID">
+                                        {{gRow.CompanyName}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="str">Status</label>
+                            </div>
+                            <div class="col-md-1">:</div>
+                            <div class="col-md-7 input-field">
+                                <select class="form-control my-select" formControlName="Status" id="ddlStatus">
+                                    <option *ngFor="let statusv of statusvalues" [value]="statusv.value">
+                                        {{statusv.viewValue}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer ">
+            <div class="col-md-12" style="text-align:right;">
+                <button type="submit" click="onSubmit()" class="btn btn-primary btn-raised mb-0">Submit</button>
+            </div>
+            <input type="hidden" id="HDRegId" ng-model="HDRegId" />
+        </div>
+    </div>
+
+</form>

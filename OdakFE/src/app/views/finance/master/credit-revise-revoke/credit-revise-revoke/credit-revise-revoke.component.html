@@ -1,0 +1,335 @@
+<div class="container-fluid">
+
+    <div class="row headtitle rotle mt-1">
+        <div class="col-md-9">
+            <h4 class="ml-2 mt-2">Credit Revise / Revoke </h4>
+        </div>
+        <!-- <div class="col-md-3 alrt">
+            <button type="button" class="btn btn-success btn-raised bmd-btn-edit btntop" tabindex="0"
+                (click)="creditInfoRoute()">
+                <i class="material-icons editicon">add</i>
+                <div class="ripple-container">
+                </div>
+            </button>
+        </div> -->
+    </div>
+
+    <div class="row">
+        <div class="col-md-9 mt-2">
+            <div class="card m-b-30">
+                <div class="card-body cpad enqview">
+                    <div class="col-sm-12 ">
+                        <table class="table table-responsive table-striped table-bordered w-100 dataTable no-footer"
+                            style="text-align-last: center;">
+                            <thead>
+                                <tr>
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        style="width: 177.575px;">Application #
+                                    </th>
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        style="width: 177.575px;">Application Date </th>
+
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        style="width: 177.575px;">Application Type </th>
+
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        style="width: 177.575px;">Customer <br /> Branch</th>
+
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        style="width: 177.575px;">Credit Limit <br /> (Amount)</th>
+
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        style="width: 177.575px;">Credit Limit <br /> (Days)</th>
+
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        style="width: 177.575px;">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                    <tr *ngFor="let credit of pagedItems;let i = index">
+                                        <td (click)="editCreditApplication(credit.Id)" style="color: #0366d6;cursor: pointer;">
+                                            {{credit.ApplicationNumber}}
+                                        </td>
+                                        <td>{{credit.ApplicationDate | date
+                                            :commonService.convertToLowerCaseDay(entityDateFormat) }}</td>
+                                        <td>{{credit.ApplicationTypeName}}</td>
+                                        <td>
+                                            {{credit.Customer}}
+                                        </td>
+                                        <td>
+                                            {{credit.CreditLimitAmount}}
+                                        </td>
+                                        <td>{{credit.CreditLimitDays}}</td>
+                                        <!-- <td>{{credit.Status}}</td> -->
+                                        <td>
+                                            <div
+                                                [ngClass]="credit.Status == 'Approved' ? 'badge badge-state-confirm' : credit.Status == 'Rejected' ? 'badge badge-state-cancel' : credit.Status == null ? '' : 'badge badge-state'">
+                                                {{credit.Status}}
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                <!-- no data -->
+                                <!-- <ng-template #noRecord>
+                                    <tr>
+                                        <td class="text-center" colspan="6">No Records Found</td>
+                                    </tr>
+                                </ng-template> -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="row page mr-2" align="right">
+                        <ul *ngIf="pager?.pages && pager.pages?.length" class="pagination">
+                            <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                <a (click)="setPage(1)">First</a>
+                            </li>
+                            <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+                            </li>
+                            <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                                <a (click)="setPage(page)">{{page}}</a>
+                            </li>
+                            <li *ngIf="(pager.totalPages - pager.startPage) > 5 ">
+                                <a (click)="setPage(pager.startPage + 5)">...</a>
+                            </li>
+                            <li *ngIf="(pager.totalPages - pager.startPage) > 5">
+                                <a (click)="setPage(pager.totalPages)">{{pager.totalPages}}</a>
+                            </li>
+
+                            <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                <a (click)="setPage(pager.currentPage + 1)">Next</a>
+                            </li>
+                            <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                <a (click)="setPage(pager.totalPages)">Last</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mt-2">
+            <div class="card p-1 pt-4 pb-4 ">
+                <form class="mt-1 mb-1" [formGroup]="reviseRevokeFilterForm">
+
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                        <div class="form-group bmd-form-group">
+                            <!-- <select formControlName="DivisionId" class="form-control my-select">
+                                <option [value]="0" disabled>--SELECT DIVISION TYPE--</option>
+                                <ng-container *ngFor="let division of divisionList">
+                                    <option *ngIf="division.Active" [value]="division.ID">
+                                        {{division.DivisionName | uppercase}}
+                                    </option>
+                                </ng-container>
+                            </select> -->
+                            <ng-select class="searchdropdown" formControlName="DivisionId" [clearable]="false">
+                                <ng-option [value]="0" disabled>--SELECT DIVISION TYPE--</ng-option>
+                                <ng-container *ngFor="let division of divisionList">
+                                    <ng-option *ngIf="division.Active" [value]="division.ID">
+                                        <span class="textwrap">{{division.DivisionName | uppercase}}</span>
+                                    </ng-option>
+                                </ng-container>
+                            </ng-select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                        <div class="form-group bmd-form-group">
+                            <!-- <select formControlName="OfficeId" class="form-control">
+                                <option value="0" disabled>--SELECT OFFICE--</option>
+                                <option *ngFor="let office of officeList" [value]="office.ID">
+                                    {{office.OfficeName | uppercase}}
+                                </option>
+                            </select> -->
+                            <ng-select class="searchdropdown" formControlName="OfficeId" [clearable]="false">
+                                <ng-option [value]="0" disabled>--SELECT OFFICE--</ng-option>
+                                <ng-container *ngFor="let office of officeList">
+                                    <ng-option [value]="office.ID">
+                                        <span class="textwrap">{{office.OfficeName | uppercase}}</span>
+                                    </ng-option>
+                                </ng-container>
+                            </ng-select>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                        <div class="form-group bmd-form-group">
+                            <input type="text" autocomplete="off" class="form-control" name="Application"
+                                placeholder="APPLICATION NUMBER #" maxlength="20" formControlName="ApplicationNumber">
+                        </div>
+                    </div>
+                    <!-- 
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                        <div class="form-group bmd-form-group">
+                            <input [max]="minDate" type="date" class="form-control" name="date" formControlName="ApplicationDate">
+                        </div>
+                    </div> -->
+                    <div class="col-md-12" style="margin-top: -7px;">
+                        <div class="form-group bmd-form-group">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class=" mb-3">From</label>
+                                    <div class="input-group">
+                                        <mat-form-field class="tillDate mat_date_picker" appearance="outline">
+                                            <input matInput (click)="StartDate.open()" readonly autocomplete="off"
+                                                [max]="validTillMinDate" [matDatepicker]="StartDate" id="StartDate"
+                                                placeholder="DD-MM-YYYY" formControlName="StartDate">
+                                            <mat-datepicker-toggle matSuffix [for]="StartDate"></mat-datepicker-toggle>
+                                            <mat-datepicker #StartDate></mat-datepicker>
+                                        </mat-form-field>
+                                        <!-- <input class="form-control" formcontrolname="StartDate" (change)="creditEvent($event.target.value)" [max]="minDate"  type="date" class="form-control" /> -->
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class=" mb-3">Till</label>
+                                    <div class="input-group">
+                                        <mat-form-field class="tillDate mat_date_picker" appearance="outline">
+                                            <input matInput (click)="EndDate.open()" readonly autocomplete="off"
+                                                [min]="reviseRevokeFilterForm.get('StartDate').value"
+                                                [matDatepicker]="EndDate" id="EndDate" placeholder="DD-MM-YYYY"
+                                                formControlName="EndDate">
+                                            <mat-datepicker-toggle matSuffix [for]="EndDate"></mat-datepicker-toggle>
+                                            <mat-datepicker #EndDate></mat-datepicker>
+                                        </mat-form-field>
+                                        <!-- <input class="form-control" formcontrolname="EndDate " [min]="validTillMinDate" type="date" class="form-control" /> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12" style="margin-top: -17px;">
+                        <div class="form-group bmd-form-group">
+                            <!-- <select class="form-control my-select">
+                                <option value="0" disabled>--SELECT APPLICATION TYPE--</option>
+                                <ng-container *ngFor="let type of ApplicationTypeList">
+                                    <option [value]="type.Id">
+                                        {{type.ApplicationType | uppercase}}
+                                    </option>
+                                </ng-container>
+                            </select> -->
+                            <ng-select class="searchdropdown" [clearable]="false" formControlName="ApplicationType">
+                                <ng-option [value]="0" disabled>--SELECT APPLICATION TYPE--</ng-option>
+                                <ng-container *ngFor="let type of ApplicationTypeList">
+                                    <ng-option [value]="type.Id">
+                                        <span class="textwrap"> {{type.ApplicationType | uppercase}}</span>
+                                    </ng-option>
+                                </ng-container>
+                            </ng-select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                        <div class="form-group bmd-form-group">
+                            <!-- <select class="form-control my-select" formControlName="CustomerId">
+                                <option value="0" disabled>--SELECT CUSTOMER--</option>
+                                <ng-container *ngFor="let customer of CustomerList">
+                                    <option [value]="customer.CustomerID">
+                                        {{customer.CustomerName | uppercase}}
+                                    </option>
+                                </ng-container>
+                            </select> -->
+                            <ng-select class="searchdropdown" [clearable]="false" formControlName="CustomerId">
+                                <ng-option [value]="0" disabled>--SELECT CUSTOMER--</ng-option>
+                                <ng-container *ngFor="let customer of CustomerList">
+                                    <ng-option [value]="customer.CustomerID">
+                                        <span class="textwrap">{{customer.CustomerName | uppercase}}</span>
+                                    </ng-option>
+                                </ng-container>
+                            </ng-select>
+                        </div>
+                    </div>
+
+                    <!-- <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                        <div class="form-group bmd-form-group">
+                            <select name="Branch" class="form-control my-select disable-input" formControlName="CustomerBranchId" 
+                                (change)="getSalesList()">
+                                <option disabled value="">--SELECT CUSTOMER BRANCH--</option>
+                                <ng-container *ngFor="let customer of CustomerBranchList">
+                                    <option [value]="customer.CustomerBranchID">
+                                        {{customer.BranchCode | uppercase}}
+                                    </option>
+                                </ng-container>
+                            </select>
+                        </div>
+                    </div> -->
+
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                        <div class="form-group bmd-form-group">
+                            <input formControlName="CreditLimitAmount" onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly class="form-control"
+                                placeholder="CREDIT AMOUNT " name="CreditAmount">
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                        <div class="form-group bmd-form-group">
+                            <input formControlName="CreditLimitDays" onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly class="form-control"
+                                placeholder="CREDIT LIMIT (in days)" name="CreditLimit">
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                        <div class="form-group bmd-form-group">
+                            <!-- <select class="form-control" formControlName="SalesPersonId">
+                                <option value="0" disabled>--SELECT SALES PERSON--</option>
+                                <ng-container *ngFor="let division of ApplictionStatusList">
+                                    <option [value]="division.SalesId">
+                                        {{division.SalesPIC | uppercase}}
+                                    </option>
+                                </ng-container>
+                            </select> -->
+                            <!-- <ng-select  class="searchdropdown" [clearable]="false"  formControlName="SalesPersonId">
+                                <ng-option [value]="0" disabled>--SELECT SALES PERSON--</ng-option>
+                                <ng-container *ngFor="let division of ApplictionStatusList">
+                                  <ng-option [value]="division.SalesId" >
+                                    <span class="textwrap">{{division.SalesPIC | uppercase}}</span>
+                                  </ng-option>
+                               </ng-container>
+                            </ng-select>  -->
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                        <div class="form-group bmd-form-group">
+                            <!-- <select class="form-control" name="active" formControlName="StatusId">
+                                <option value="0" disabled>--SELECT APPLICATION STATUS--</option>
+                                <ng-container *ngFor="let division of ApplictionStatusList">
+                                    <option [value]="division.Id">
+                                        {{division.Status | uppercase}}
+                                    </option>
+                                </ng-container>
+                            </select> -->
+                            <ng-select class="searchdropdown" [clearable]="false" formControlName="StatusId">
+                                <ng-option [value]="0" disabled>--SELECT APPLICATION STATUS--</ng-option>
+                                <ng-container *ngFor="let division of ApplictionStatusList">
+                                    <ng-option [value]="division.Id">
+                                        <span class="textwrap"> {{division.Status | uppercase}}</span>
+                                    </ng-option>
+                                </ng-container>
+                            </ng-select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 searchbtn alrt text-center mb-3 mt-3">
+                        <button style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;" type="submit"
+                            class="btn btn-primary btn-raised mb-0" (click)="applyFilter()">Search<div
+                                class="ripple-container"></div></button>
+                        <button style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;"
+                            class="btn btn-raised btn-danger mb-0" (click)="clearFilter()">Clear
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

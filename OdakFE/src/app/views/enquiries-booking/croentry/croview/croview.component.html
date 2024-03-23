@@ -1,0 +1,88 @@
+<div class="row headtitle">
+    <div class="col-md-9">
+        <h4>Container Release Order</h4>
+    </div>
+
+    <div class="col-md-3 alrt">
+        <button type="button" class="btn btn-success btn-raised bmd-btn-edit btntop" (click)="OnClickNew()" style="margin-right:15px;"><i class="material-icons editicon">add</i><div class="ripple-container"></div></button>
+        <button type="button" class="btn btn-success bmd-btn-edit btn-raised btntop" [routerLink]="['/views/enquiries-booking/booking/bookingview/bookingview']"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+
+    </div>
+</div>
+
+<div class="row enquirynav">
+    <div class="col-md-12">
+        <ul class="nav nav-pills nav-justified" role="tablist">
+            <li class="nav-item waves-effect waves-light">
+                <a class="nav-link show" data-toggle="tab" (click)="btntabclick(1)" id="agencydetails" href="#Enquiry" role="tab" aria-selected="true">Booking</a>
+            </li>
+
+            <li class="nav-item waves-effect waves-light">
+                <a class="nav-link active" data-toggle="tab" id="pricipaltab" (click)="btntabclick(2)" href="#Links" role="tab" aria-selected="false">CRO</a>
+            </li>
+
+        </ul>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 col-lg-12 col-sm-12">
+        <div class="card m-b-30">
+            <div class="card-body leftcard">
+                <table id="datatable-buttons" class="table table-responsive table-striped table-bordered w-100 dataTable no-footer scrtbl" role="grid" aria-describedby="datatable-buttons_info">
+                    <thead>
+                        <tr role="row">
+                            <th class="actwid">
+                                S.No
+                            </th>
+                            <th>
+                                CRO NO
+                            </th>
+                            <th>
+                                STATUS
+                            </th>
+                            <th>
+                                RELEASE TO
+                            </th>
+
+                            <th>
+                                PICKUP-DEPO
+                            </th>
+                            <th>
+                                VALID TILL
+                            </th>
+
+                            <th>
+                                ACTION
+                            </th>
+
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr *ngFor="let dataItem of DSCro;let i = index">
+                            <td> {{ i + 1 }}</td>
+                            <td> {{dataItem.CRONo}}   </td>
+                            <td>{{dataItem.CROStatus}}</td>
+                            <td>{{dataItem.ReleaseTo}}</td>
+                            <td>{{dataItem.Depot}}</td>
+                            <td>{{dataItem.ValidTill}}</td>
+                            <td class="alc">
+                                <button class="btn btn-success bmd-btn-fab" queryParamsHandling="merge" (click)="CROEdit(dataItem.ID)">
+                                    <i class="material-icons">edit</i>
+                                </button>
+                                <button class="btn bmd-btn-fab" style="background-color:grey; color:white;" (click)="CROpdf()">
+                                    <i class="material-icons">print</i>
+                                </button>
+                            </td>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+

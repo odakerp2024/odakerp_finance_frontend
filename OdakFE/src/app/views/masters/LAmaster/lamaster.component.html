@@ -1,0 +1,147 @@
+<div class="row headtitle">
+    <div class="col-md-9">
+        <h4>Master Data Management - LA Masters</h4>
+    </div>
+</div>
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4 panelbox">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Inventory</div>
+                    <div class="panel-body">
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-link" [routerLink]="['/views/masters/LAmaster/containermaster/containermasterview']" style="font-size: 14px; color: blue"><i class="fa fa-angle-double-right"></i>  Container Master</button>
+                            <div style="border-bottom: dashed 1px;"></div>
+                        </div>
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-link" [routerLink]="['/views/masters/LAmaster/inventorymove/inventorymoveview']" style="font-size: 14px; color: blue"><i class="fa fa-angle-double-right"></i>  Inventory Move Creation/Mapping</button>
+                            <!--<div style="border-bottom: dashed 1px;"></div>-->
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 panelbox">
+                <div class="panel panel-default">
+                    <div class="panel-heading" style="font-size: 16px;">
+                        Operation
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-link" [routerLink]="['/views/masters/LAmaster/vessel/vesselview']" style="font-size:14px; color:blue;"><i class="fa fa-angle-double-right"></i>  Vessel Master</button>
+                            <div style="border-bottom: dashed 1px;"></div>
+                        </div>
+                        <!--<div class="col-md-12">
+                            <button type="button" class="btn btn-link"  style="font-size:14px; color:blue;"><i class="fa fa-angle-double-right"></i>  Voyage Master</button>
+                            <div style="border-bottom: dashed 1px;"></div>
+                        </div>-->
+                        <div class="col-md-12">
+        <button type="button" class="btn btn-link" [routerLink]="['/views/masters/LAmaster/voyage/voyageview']" style="font-size:14px; color:blue;"><i class="fa fa-angle-double-right"></i>  Voyage Master</button>
+        <div style="border-bottom: dashed 1px;"></div>
+    </div>
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-link" [routerLink]="['/views/masters/LAmaster/servicesetup/servicesetupview']" style="font-size:14px; color:blue;"><i class="fa fa-angle-double-right"></i>  Service Setup</button>
+                            <!--<div style="border-bottom: dashed 1px;"></div>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 panelbox">
+                <div class="panel panel-default">
+                    <div class="panel-heading" style="font-size: 16px;">
+                        Tariff Master
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-link" [routerLink]="['/views/masters/LAmaster/porttariff/porttariffview']" style="font-size:14px; color:blue;"><i class="fa fa-angle-double-right"></i>  Port/Liner Tariff</button>
+                            <div style="border-bottom: dashed 1px;"></div>
+                        </div>
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-link" [routerLink]="['/administration/systems/user/userview']" style="font-size:14px; color:blue;"><i class="fa fa-angle-double-right"></i> Slot Contract</button>
+                            <div style="border-bottom: dashed 1px;"></div>
+                        </div>
+                        <!--<div class="col-md-12">
+                            <button type="button" class="btn btn-link" [routerLink]="['/administration/systems/user/userview']" style="font-size:14px; color:blue;"><i class="fa fa-angle-double-right"></i>  IHC Haulage Tariff</button>
+                            <div style="border-bottom: dashed 1px;"></div>
+                        </div>-->
+                        <!--<div class="col-md-12">
+                            <button type="button" class="btn btn-link" [routerLink]="['/administration/systems/user/userview']" style="font-size:14px; color:blue;"><i class="fa fa-angle-double-right"></i>  Detention/Demmurage Tariff</button>
+                            <div style="border-bottom: dashed 1px;"></div>
+                        </div>-->
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-link" [routerLink]="['/administration/systems/user/userview']" style="font-size:14px; color:blue;"><i class="fa fa-angle-double-right"></i>  Container Yard/CFS Tariff</button>
+                            <!--<div style="border-bottom: dashed 1px;"></div>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 panelbox">
+                <div class="panel panel-default">
+                    <div class="panel-heading" style="font-size: 16px;">
+                        MNR
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-link" [routerLink]="['/views/masters/LAmaster/depot/depotview']" style="font-size:14px; color:blue;"><i class="fa fa-angle-double-right"></i>  Depot Master</button>
+                            <div style="border-bottom: dashed 1px;"></div>
+                        </div>
+                   
+                        <!--<div class="col-md-12">
+                            <button type="button" class="btn btn-link" [routerLink]="['/views/masters/LAmaster/damagemaster/damagemasterview']" style="font-size:14px; color:blue;"><i class="fa fa-angle-double-right"></i> Damage Master</button>
+                            <div style="border-bottom: dashed 1px;"></div>
+                        </div>
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-link" [routerLink]="['/views/masters/LAmaster/repairmaster/repairmasterview']" style="font-size:14px; color:blue;"><i class="fa fa-angle-double-right"></i>  Rapair Master</button>
+                            <div style="border-bottom: dashed 1px;"></div>
+                        </div>
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-link" [routerLink]="['/views/masters/LAmaster/componentmaster/componentmasterview']" style="font-size:14px; color:blue;"><i class="fa fa-angle-double-right"></i>  Component Master</button>
+                            <div style="border-bottom: dashed 1px;"></div>
+                        </div>
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-link" [routerLink]="['/views/masters/LAmaster/containerloc/containerlocview']" style="font-size:14px; color:blue;"><i class="fa fa-angle-double-right"></i>  Container Location Master</button>
+                            <div style="border-bottom: dashed 1px;"></div>
+                        </div>
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-link" [routerLink]="['/administration/systems/user/userview']" style="font-size:14px; color:blue;"><i class="fa fa-angle-double-right"></i>  MNR Tariff</button>-->
+                            <!--<div style="border-bottom: dashed 1px;"></div>-->
+                        <!--</div>-->
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 panelbox">
+                <div class="panel panel-default">
+                    <div class="panel-heading" style="font-size: 16px;">
+                        Reporting
+                    </div>
+                    <div class="panel-body">
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-md-4 panelbox">
+                <div class="panel panel-default">
+                    <div class="panel-heading" style="font-size: 16px;">
+                        Principal/Agency Master
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-link" [routerLink]="['/views/masters/LAmaster/Principalagency/Principalagencyview']" style="font-size:14px; color:blue;"><i class="fa fa-angle-double-right"></i>  Principal/Agency Agreement</button>
+                            <div style="border-bottom: dashed 1px;"></div>
+                        </div>
+                        <div class="col-md-12">
+                            <button type="button" class="btn btn-link" [routerLink]="['/views/masters/LAmaster/agencymaster/agencymasterview']" style="font-size:14px; color:blue;"><i class="fa fa-angle-double-right"></i> Agency Master</button>
+                            <div style="border-bottom: dashed 1px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

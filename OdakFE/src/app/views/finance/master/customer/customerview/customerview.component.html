@@ -1,0 +1,327 @@
+<div class="row headtitle">
+    <div class="col-md-9">
+        <h4>Customer </h4>
+    </div>
+    <div style="text-align: start; margin-left: -4rem;" class="col-md-3 alrt">
+        <button type="button" class="btn btn-success btn-raised bmd-btn-edit btntop"
+            (click)="checkAddPermission('add')">
+            <i class="material-icons editicon">add</i>
+            <div class="ripple-container"></div>
+        </button>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-9 col-xl-9">
+        <div class="card m-b-30">
+            <div class="card-body cpad enqview">
+                <div class="col-md-12" *ngIf="!Is_DataFound">
+                    <div class="text-center ">
+                        <img src={{imagenotfound}} alt="No Data Found !!" class="imagenodata">
+                    </div>
+                </div>
+                <div id="datatable-buttons_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer"
+                    *ngIf="Is_DataFound">
+                    <div class="row">
+                        <div class="col-md-12 alrt">
+                            <!--<span style="font-size:13px; margin-right:0px;">Download</span><a ng-click="btnPrint();" style="color:#18aa08;font-size:16px; margin-right:20px;"> <i class="fa fa-file-excel-o"></i></a>-->
+                        </div>
+                        <div class="col-sm-12 scrtbl overflow-auto">
+                            <table id="datatable-buttons"
+                                class="table table-striped table-bordered w-100 dataTable no-footer text-center"
+                                role="grid" aria-describedby="datatable-buttons_info">
+                                <thead>
+                                    <tr role="row" class="text-center">
+
+                                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="2"
+                                            colspan="1" aria-label="Name: activate to sort column ascending"
+                                            (click)="sort('CustomerCode')">
+                                            Customer Code
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                            colspan="1" aria-label="Name: activate to sort column ascending"
+                                            (click)="sort('CustomerName')">
+                                            Customer Name
+                                        </th>
+
+                                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                            colspan="1" aria-label="Name: activate to sort column ascending"
+                                            (click)="sort('CustomerName')">
+                                            Customer Status
+                                        </th>
+
+                                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                            colspan="1" aria-label="Name: activate to sort column ascending"
+                                            (click)="sort('BranchCode')">
+                                            Branch Code
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                            colspan="1" aria-label="Name: activate to sort column ascending"
+                                            (click)="sort('CityName')">
+                                            Branch/City
+                                        </th>
+
+                                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                            colspan="1" aria-label="Name: activate to sort column ascending"
+                                            (click)="sort('CustomerStatus')">
+                                            Onboarding Status
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                            colspan="1" aria-label="Name: activate to sort column ascending"
+                                            (click)="sort('Status')">
+                                            Branch Status
+                                        </th>
+                                    </tr>
+                                </thead>
+
+                                <tbody class="text-center">
+
+                                    <tr *ngFor="let dataItem of pagedItems;let i = index">
+                                        <td style="color: #2a7ddc; cursor: pointer;"
+                                            (click)="checkAddPermission('edit', dataItem.CustomerID, dataItem.CustomerBranchID)">
+                                            {{dataItem.CustomerCode}}
+                                        </td>
+
+                                        <td [title]="dataItem.CustomerName | uppercase">
+                                            {{ (dataItem.CustomerName && dataItem.CustomerName.length > 20) ?
+                                            dataItem.CustomerName.slice(0, 20) + '-' : dataItem.CustomerName }}
+                                        </td>
+
+                                        <!-- <td [title]="dataItem.CustomerName">{{dataItem.CustomerName ?
+                                            dataItem.CustomerName : ''}}</td> -->
+                                        <td>{{dataItem.Status}}</td>
+                                        <td>{{dataItem.BranchCode}}</td>
+                                        <td>{{dataItem.CityName}}</td>
+
+                                        <td>
+                                            <div
+                                                [ngClass]="dataItem.OnboradName == 'CONFIRMED' ? 'badge badge-state-confirm' : 'badge badge-state'">
+                                                {{dataItem.OnboradName}}
+                                            </div>
+                                        </td>
+                                        <td>{{dataItem.BranchSTatus == true ? 'ACTIVE' : 'INACTIVE'}}</td>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row page" align="right">
+
+                        <!-- pager -->
+                        <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10" class="pagination">
+                            <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                <a (click)="setPage(1)">First</a>
+                            </li>
+                            <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+                            </li>
+                            <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                                <a (click)="setPage(page)">{{page}}</a>
+                            </li>
+                            <li *ngIf="(pager.totalPages - pager.startPage) > 5 ">
+                                <a (click)="setPage(pager.startPage + 5)">...</a>
+                            </li>
+                            <li *ngIf="(pager.totalPages - pager.startPage) > 5">
+                                <a (click)="setPage(pager.totalPages)">{{pager.totalPages}}</a>
+                            </li>
+
+                            <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                <a (click)="setPage(pager.currentPage + 1)">Next</a>
+                            </li>
+                            <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                <a (click)="setPage(pager.totalPages)">Last</a>
+                            </li>
+                        </ul>
+
+
+                        <!--<pagination-controls (pageChange)="p = $event" class="float-right"></pagination-controls>-->
+                        <!--<pagination-controls (pageChange)="p = $event" class="float-right"></pagination-controls>-->
+                        <!--<div class="col-sm-12 col-md-5"><div class="dataTables_info" id="datatable-buttons_info" role="status" aria-live="polite">Showing 1 to 10 of 57 entries</div></div><div class="col-sm-12 col-md-7"><div class="dataTables_paginate paging_simple_numbers" id="datatable-buttons_paginate"><ul class="pagination"><li class="paginate_button page-item previous disabled" id="datatable-buttons_previous"><a href="#" aria-controls="datatable-buttons" data-dt-idx="0" tabindex="0" class="page-link">Previous</a></li><li class="paginate_button page-item active"><a href="#" aria-controls="datatable-buttons" data-dt-idx="1" tabindex="0" class="page-link">1</a></li><li class="paginate_button page-item "><a href="#" aria-controls="datatable-buttons" data-dt-idx="2" tabindex="0" class="page-link">2</a></li><li class="paginate_button page-item "><a href="#" aria-controls="datatable-buttons" data-dt-idx="3" tabindex="0" class="page-link">3</a></li><li class="paginate_button page-item "><a href="#" aria-controls="datatable-buttons" data-dt-idx="4" tabindex="0" class="page-link">4</a></li><li class="paginate_button page-item "><a href="#" aria-controls="datatable-buttons" data-dt-idx="5" tabindex="0" class="page-link">5</a></li><li class="paginate_button page-item "><a href="#" aria-controls="datatable-buttons" data-dt-idx="6" tabindex="0" class="page-link">6</a></li><li class="paginate_button page-item next" id="datatable-buttons_next"><a href="#" aria-controls="datatable-buttons" data-dt-idx="7" tabindex="0" class="page-link">Next</a></li></ul></div></div>-->
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3">
+        <form [formGroup]="fg">
+            <div class="card m-b-30 sidesearch">
+                <div class="card-body cpad enqview">
+                    <div class="row">
+
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group">
+                                <input style="text-transform:uppercase" type="text" name="customerCode"
+                                    formControlName="CustomerCode" autocomplete="off" class="form-control"
+                                    placeholder="CUSTOMER CODE">
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group">
+                                <input style="text-transform:uppercase" type="text" name="customerName"
+                                    formControlName="CustomerName" autocomplete="off" class="form-control"
+                                    placeholder="CUSTOMER NAME">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group">
+                                <!-- <input type="text" autocomplete="off" class="form-control" name="category"
+                                    formControlName="Category" placeholder="Category"> -->
+
+                                <mat-select id="ddlGSTCategory" name="category" formControlName="Category"
+                                    placeholder="CATEGORY" class="form-control">
+                                    <mat-option *ngFor="let gRow  of categoryList" [value]="gRow.CategoryID">
+                                        {{gRow.Category | uppercase}}
+                                    </mat-option>
+                                </mat-select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group">
+                                <!-- <input type="text" autocomplete="off" class="form-control" name="onBoarding"
+                                    formControlName="OnBoard" placeholder="Onboarding Status"> -->
+
+                                <!-- <select class="form-control my-select statuscls" id="ddlStatusv" name="onBoarding"
+                                    formControlName="OnBoard">
+                                    <option value="" disabled>--SELECT
+                                        ONBOARDING STATUS--</option>
+                                    <option *ngFor="let OnBoard of onBoardList" [value]="OnBoard.OnboradName">
+                                        {{OnBoard.OnboradName | uppercase}}
+                                    </option>
+                                </select> -->
+                                <ng-select class="searchdropdown" id="ddlStatusv" name="onBoarding"
+                                    formControlName="OnBoard" [clearable]="false">
+                                    <ng-option [value]="''" [disabled]="true">--SELECT ONBOARDING STATUS--</ng-option>
+                                    <ng-option *ngFor="let OnBoard of onBoardList" [value]="OnBoard.OnboradName">
+                                        {{OnBoard.OnboradName | uppercase}}
+                                    </ng-option>
+                                </ng-select>
+
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                            <div class="form-group bmd-form-group">
+                                <!-- <input type="text" autocomplete="off" class="form-control" name="customerStatus"
+                                    formControlName="CompanyStatus" placeholder="Customer Status"> -->
+                                <!-- <select name="companyStatus" id="ddlcompanyStatus" formControlName="CompanyStatus"
+                                    class="form-control my-select">
+                                    <option value="" disabled>
+                                        --SELECT COMPANY STATUS--
+                                    </option>
+                                    <option *ngFor="let gRow of FillCompanyStatus" [value]="gRow.CompanyStatus">
+                                        {{gRow.CompanyStatus | uppercase}}
+                                    </option>
+                                </select> -->
+                                <ng-select class="searchdropdown" [clearable]="false" name="companyStatus"
+                                    id="ddlcompanyStatus" formControlName="CompanyStatus">
+                                    <ng-option [value]="''" [disabled]="true">--SELECT COMPANY STATUS--</ng-option>
+                                    <ng-option *ngFor="let gRow of FillCompanyStatus" [value]="gRow.CompanyStatus">
+                                        {{gRow.CompanyStatus | uppercase}}
+                                    </ng-option>
+                                </ng-select>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                            <div class="form-group bmd-form-group">
+                                <input type="text" autocomplete="off" class="form-control" name="Branch"
+                                    formControlName="BranchCode" placeholder="BRANCH CODE">
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                            <div class="form-group bmd-form-group">
+                                <!-- <input type="text" autocomplete="off" class="form-control" name="Branch/City"
+                                    formControlName="CityName" placeholder="Branch City"> -->
+
+                                <!-- <select name="Branch/City" id="BranchCity" formControlName="CityName"
+                                    class="form-control my-select">
+                                    <option value="" disabled>
+                                        --SELECT BRANCH / CITY--
+                                    </option>
+                                    <option *ngFor="let gRow of stateList" [value]="gRow.ID">
+                                        {{gRow.CityName | uppercase}}
+                                    </option>
+                                </select> -->
+                                <ng-select class="searchdropdown" [clearable]="false" name="Branch/City" id="BranchCity"
+                                    formControlName="CityName">
+                                    <ng-option [value]="''" [disabled]="true">--SELECT BRANCH / CITY--</ng-option>
+                                    <ng-option *ngFor="let gRow of stateList" [value]="gRow.ID">
+                                        {{gRow.CityName | uppercase}}
+                                    </ng-option>
+                                </ng-select>
+
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <!-- <select name="GSTcategory" id="ddlGSTCategory" formControlName="GSTCategory"
+                                            class="form-control my-select">
+                                            <option [value]="''" disabled selected>
+                                                --SELECT GST CATEGORY--</option>
+                                            <option *ngFor="let gRow of GSTCategoryList" [value]="gRow.CategoryName">
+                                                {{gRow.CategoryName |
+                                                uppercase}}
+                                            </option>
+                                        </select> -->
+                                        <ng-select class="searchdropdown" name="GSTcategory" [clearable]="false"
+                                            id="ddlGSTCategory" formControlName="GSTCategory">
+                                            <ng-option [value]="''" disabled selected>--SELECT GST
+                                                CATEGORY--</ng-option>
+                                            <ng-option *ngFor="let gRow of GSTCategoryList" [value]="gRow.CategoryName">
+                                                {{gRow.CategoryName | uppercase}}
+                                            </ng-option>
+                                        </ng-select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group">
+                                <input type="text" autocomplete="off" class="form-control" name="nGSTNo"
+                                    formControlName="GSTNumber" placeholder="GST NUMBER">
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group">
+                                <!-- <select class="form-control my-select" id="ddlStatusv" formControlName="IsActive">
+                                    <option value="" disabled>--SELECT ACTIVE--</option>
+                                    <option *ngFor="let statusv of statusvalues" [value]="statusv.value">
+                                        {{statusv.viewValue == 'Yes' ? 'ACTIVE' : 'INACTIVE' | uppercase}}
+                                    </option>
+                                </select> -->
+                                <ng-select class="searchdropdown" [clearable]="false" id="ddlStatusv"
+                                    formControlName="IsActive">
+                                    <ng-option [value]="''" [disabled]="true">--SELECT ACTIVE--</ng-option>
+                                    <ng-option *ngFor="let statusv of statusvalues" [value]="statusv.value">
+                                        {{statusv.viewValue == 'Yes' ? 'ACTIVE' : 'INACTIVE' | uppercase}}
+                                    </ng-option>
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 searchbtn alrt">
+                            <button type="submit" (click)="onSubmit()" class="btn btn-primary btn-raised mb-0">Search
+                                <div class="ripple-container"></div>
+                            </button>
+                            <button class="btn btn-raised btn-danger mb-0" (click)="clearSearch()">Clear<div
+                                    class="ripple-container"></div></button>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

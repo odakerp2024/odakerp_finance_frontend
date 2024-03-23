@@ -1,0 +1,242 @@
+
+<form [formGroup]="searchForm">
+    <div class="row headtitle rotle">
+        <div class="col-md-9">
+            <h4>Booking and CRO</h4>
+        </div>
+
+        <div class="col-md-3 alrt">
+            <!--<button type="button" class="btn btn-success btn-raised bmd-btn-edit btntop" [routerLink]="['/views/enquiries-booking/booking/booking/']"><i class="material-icons editicon">add</i><div class="ripple-container"></div></button>-->
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-9">
+            <div class="card m-b-30">
+                <div class="card-body cpad enqview">
+                    <table id="datatable-buttons" class="table table-responsive table-striped table-bordered w-100 dataTable no-footer">
+                        <thead>
+                            <tr role="row">
+
+                                <th class="sorting" (click)="sort('BookingNo')">
+                                    Booking Number
+                                </th>
+                                <th class="sorting" (click)="sort('BookingDate')">
+                                    Date
+                                </th>
+                                <th class="sorting" (click)="sort('CustomerName')">
+                                    Customer Name
+                                </th>
+                                <th class="sorting" (click)="sort('POD')">
+                                    POL
+                                </th>
+                                <th class="sorting" (click)="sort('FPOD')">
+                                    FPOD
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr *ngFor="let dataItem of pagedItems;let i = index">
+                                <!--<td class="actwid">{{ i + 1 }}</td>-->
+                                <td>
+                                    <button class="btn btn-success bmd-btn-fab enqbtn" (click)="OnClickEdit(dataItem.ID)">{{dataItem.BookingNo}}</button>
+                                </td>
+                                <td>{{dataItem.BookingDate}}</td>
+                                <!--<td>{{dataItem.BookingNo}}</td>-->
+                                <td>{{dataItem.CustomerName}}</td>
+                                <td>{{dataItem.POD}}</td>
+                                <td>{{dataItem.FPOD}}</td>
+
+                                <td *ngIf="statusActive[i]" style="color: #163dc8; font-weight: bold; "><span class="badge badge-primary">{{dataItem.Satusv}}</span></td>
+                                <td *ngIf="statusApprove[i]" style="color: #047d39; font-weight: bold; "><span class="badge badge-success">{{dataItem.Satusv}}</span></td>
+                                <td *ngIf="statusCancel[i]" style="color: #ff5500; font-weight: bold; "><span class="badge badge-warning">{{dataItem.Satusv}}</span></td>
+                                <!--<td>{{dataItem.Satusv}}</td>-->
+                                <!--<td class="alc">
+                                    <button class="btn btn-success bmd-btn-fab" (click)="OnClickEdit(dataItem.ID)"><i class="material-icons">edit</i></button>
+                                </td>-->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row page" align="right" style="align-self: end;">
+                    <div class="col-md-12 alrt">
+
+                        <!-- pager -->
+                        <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10" class="pagination">
+                            <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                <a (click)="setPage(1)">First</a>
+                            </li>
+                            <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+                            </li>
+                            <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                                <a (click)="setPage(page)">{{page}}</a>
+                            </li>
+                            <li *ngIf="(pager.totalPages - pager.startPage) > 5 ">
+                                <a (click)="setPage(pager.startPage + 5)">...</a>
+                            </li>
+                            <li *ngIf="(pager.totalPages - pager.startPage) > 5">
+                                <a (click)="setPage(pager.totalPages)">{{pager.totalPages}}</a>
+                            </li>
+
+                            <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                <a (click)="setPage(pager.currentPage + 1)">Next</a>
+                            </li>
+                            <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                <a (click)="setPage(pager.totalPages)">Last</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card m-b-30 sidesearch">
+                <div class="card-body cpad eqlfont">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group">
+                                <select class="form-control my-select" id="OfficeCode1" formControlName="OfficeCode">
+                                    <option value="0">Office</option>
+                                    <option *ngFor="let gRow of OfficeMasterAllvalues" [value]="gRow.ID">
+                                        {{gRow.CustomerName}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group">
+                                <select class="form-control my-select" id="CustomerIDv" formControlName="CustomerID">
+                                    <option value="0">Customer</option>
+                                    <option *ngFor="let gRow of ddlCustomerItem" [value]="gRow.ID">
+                                        {{gRow.CustomerName}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group">
+                                <select class="form-control my-select" id="POL" formControlName="POL">
+                                    <option value="0">POL</option>
+                                    <option *ngFor="let gRow of ddlDestinationItem" [value]="gRow.ID">
+                                        {{gRow.PortName}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group">
+                                <select class="form-control my-select" id="FPOD" formControlName="FPOD">
+                                    <option value="0">FPOD</option>
+                                    <option *ngFor="let gRow of ddlDischargePortItem" [value]="gRow.ID">
+                                        {{gRow.PortName}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group">
+                                <select class="form-control my-select" id="VesselID" formControlName="VesselID">
+                                    <option value="0">Vessel</option>
+                                    <option *ngFor="let gRow of fillVeslVoyage" [value]="gRow.ID">
+                                        {{gRow.VesselName}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group">
+                                <select class="form-control my-select" id="VoyageID" formControlName="VoyageID">
+                                    <option value="0">Voyage</option>
+                                    <option *ngFor="let gRow of FillVoyageMaster" [value]="gRow.ID">
+                                        {{gRow.VoyageName}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group">
+                                <input type="text" class="form-control" formControlName="BookingNo" placeholder="Booking No" />
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group">
+                                <input type="text" class="form-control" formControlName="EnquiryNo" placeholder="Enquiry No" />
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group bmd-form-group">
+                                From
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="form-group bmd-form-group">
+                                <mat-form-field class="tillDate" >
+                                    <input matInput (click)="BookingDate.open()" readonly autocomplete="off" [matDatepicker]="BookingDate"  id="BookingDate" placeholder="" formControlName="BookingDate">
+                                    <mat-datepicker-toggle matSuffix [for]="BookingDate"></mat-datepicker-toggle>
+                                    <mat-datepicker #BookingDate></mat-datepicker>
+                                </mat-form-field>
+                                <!-- <input type="date" class="form-control" id="BookingDate" formControlName="BookingDate" placeholder="Booking Date - Between" /> -->
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group bmd-form-group">
+                                To
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="form-group bmd-form-group">
+                                <mat-form-field  class="tillDate">
+                                    <input matInput (click)="BookingDateto.open()" readonly autocomplete="off" [matDatepicker]="BookingDateto"  id="BookingDateto" placeholder="" formControlName="BookingDateto">
+                                    <mat-datepicker-toggle matSuffix [for]="BookingDateto"></mat-datepicker-toggle>
+                                    <mat-datepicker #BookingDateto></mat-datepicker>
+                                </mat-form-field>
+                                <!-- <input type="date" class="form-control" id="BookingDateto" formControlName="BookingDateto" placeholder="Booking Date - Between" /> -->
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group">
+                                <select class="form-control my-select" id="ddlSalesPersonv" formControlName="SalesPersonID">
+                                    <option value="0">Sales Person</option>
+                                    <option *ngFor="let gRow of ddlSalesPersonItem" [value]="gRow.ID">
+                                        {{gRow.UserName}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group">
+                                <select class="form-control my-select" id="ddlStatusv" formControlName="ddlStatusID">
+                                    <option value="0">Status</option>
+                                    <option *ngFor="let gRow of AllListEnquireStatus" [value]="gRow.ID">
+                                        {{gRow.Desc}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 searchbtn alrt">
+                            <button type="submit" (click)="onSubmit()" class="btn btn-primary btn-raised mb-0">Search<div class="ripple-container"></div></button>
+                            <button type="submit" (click)="clearSearch()" class="btn btn-raised btn-danger mb-0">Clear<div class="ripple-container"></div></button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

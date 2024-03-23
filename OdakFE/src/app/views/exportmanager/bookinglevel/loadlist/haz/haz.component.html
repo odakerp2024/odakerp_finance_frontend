@@ -1,0 +1,316 @@
+<div class="row headtitle">
+    <div class="col-md-9">
+        <h4>Export Manager - Booking Tasks</h4>
+    </div>
+    <div class="col-md-3 alrt">
+        <button type="button" class="btn btn-success btntop btn-raised bmd-btn-edit" [routerLink]="['/views/exportmanager/bookinglevel/bookinglevelview/bookinglevelview']"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+    </div>
+</div>
+<div class="row" style="margin-top: 2px; margin-bottom: 11px; background-color: lavender; padding: 11px; ">
+    <div class="col-md-3">
+        <div class="row" style="margin-top:5px;">
+            <div class="col-md-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item active"><a href="#" [routerLink]="['/views/exportmanager/bookinglevel/bookinglevelview/bookinglevelview/']">Booking Tasks</a></li>
+                        <li class="breadcrumb-item" aria-current="page" style="color:#000000;">Docs for Load List</li>
+
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-9">
+        <div class="row">
+            <div class="col-md-3" style="font-weight: 600;">
+                <div class="row bkgno">
+                    <div class="col-md-12">
+                        <small>Booking No</small>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="lbltxt">{{bkgNo}}</label>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-3" style="font-weight: 600;">
+                <div class="row bkgparty">
+                    <div class="col-md-12">
+                        <small>Booking Party</small>
+                    </div>
+                    <div class="col-md-12">
+                        <span>
+                            <label class="lbltxt">{{bkgparty}}</label>
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-md-3" style="font-weight: 600;">
+                <div class="row bkgfpod">
+                    <div class="col-md-12">
+                        <small>FPOD</small>
+                    </div>
+                    <div class="col-md-12">
+                        <span>
+                            <label class="lbltxt">{{destination}}</label>
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-3" style="font-weight: 600;">
+                <div class="row bkgves">
+                    <div class="col-md-12">
+                        <small>Ves/Voy</small>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="lbltxt">{{vesselname}}-{{voyageno}}</label>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="row bkgltab" style="border-bottom:2px dashed #ccc; margin-bottom:10px; padding-bottom:10px;">
+            <div class="col-md-12">
+                <ul class="nav nav-pills nav-justified" role="tablist">
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" (click)="btntabclick(1)" role="tab" aria-selected="false">Booking</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" (click)="btntabclick(2)" role="tab" aria-selected="true">Container(s)</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link show" data-toggle="tab" (click)="btntabclick(9)" role="tab" aria-selected="true">BOL Allotment</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link active show" data-toggle="tab" (click)="btntabclick(3)" role="tab" aria-selected="false">Docs for Load List</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" (click)="btntabclick(4)" role="tab" aria-selected="false">Bill of Lading</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" (click)="btntabclick(5)" role="tab" aria-selected="false">BOL Release</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" (click)="btntabclick(6)" role="tab" aria-selected="false">Exceptions</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" (click)="btntabclick(7)" role="tab" aria-selected="false">Invoices</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" (click)="btntabclick(8)" role="tab" aria-selected="false">Attachments</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="tab-content">
+            <div class="tab-pane pt-3 active show" role="tabpanel">
+
+                <!--<div class="row">
+                    <div class="col-md-12">
+                        <div class="row enquirynav">
+                            <div class="col-md-12">
+                                <ul class="nav nav-pills nav-justified" role="tablist">
+                                    <li class="nav-item waves-effect waves-light">
+                                        <a class="nav-link active show" data-toggle="tab" (click)="doctab(1)" role="tab" aria-selected="true">Haz</a>
+                                    </li>-->
+                <!--<li class="nav-item waves-effect waves-light">
+                    <a class="nav-link" data-toggle="tab" (click)="doctab(2)" role="tab" aria-selected="false">OOG</a>
+                </li>
+                <li class="nav-item waves-effect waves-light">
+                    <a class="nav-link" data-toggle="tab" (click)="doctab(3)" role="tab" aria-selected="false">Reefer</a>
+                </li>
+                <li class="nav-item waves-effect waves-light">
+                    <a class="nav-link" data-toggle="tab" (click)="doctab(4)" role="tab" aria-selected="false">ODO</a>
+                </li>-->
+                <!--</ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="tab-content">
+                            <form [formGroup]="docForm">
+                                <div class="tab-pane pt-3 active show" role="tabpanel">
+
+                                    <!--<div class="col-md-5 col-lg-5 padl0">
+                                        <div class="row">
+                                            <div class="col-md-4 alrt">
+                                                <label>List Number of Rows</label>
+                                            </div>
+
+                                            <div class="col-md-4 alrt">
+                                                <select class="form-control">
+                                                    <option value="0">--Default--</option>
+                                                    <option>10</option>
+                                                    <option>25</option>
+                                                    <option>50</option>
+                                                    <option>100</option>
+                                                </select>
+                                            </div>
+                                        </div>-->
+                                    <!--<div class="row">
+                                        <div class="col-md-10 alrt">
+                                            <label>List Number of Rows</label>
+                                        </div>
+
+                                        <div class="col-md-2 alrt">
+                                            <select class="form-control">
+                                                <option value="0">--Default--</option>
+                                                <option>10</option>
+                                                <option>25</option>
+                                                <option>50</option>
+                                                <option>100</option>
+                                            </select>
+                                        </div>
+                                    </div>-->
+                                    <!--</div>-->
+
+                                    <div class="row">
+                                        <div class="col-md-12 padlr0">
+                                            <div id="datatable-buttons_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+                                                <div class="row">
+                                                    <div class="col-md-12 conttable">
+                                                        <table id="datatable-buttons" class="table table-responsive table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                                            <thead>
+                                                                <tr role="row">
+                                                                    <th class="chkth">
+                                                                        Select  <span>
+                                                                            <!--<button class="btn btn-warning bmd-btn-fab">
+                                                                                <i class="material-icons">check</i>
+                                                                            </button>-->
+                                                                        </span>
+                                                                        <!--<span>
+                                                                            <button class="btn btn-warning bmd-btn-fab">
+                                                                                <i class="material-icons">content_copy</i>
+                                                                            </button>
+                                                                        </span>-->
+                                                                    </th>
+                                                                    <th style="max-width: 4% !important">Container Number</th>
+                                                                    <th style="max-width: 4% !important">Container Type</th>
+                                                                    <th style="max-width: 4% !important">Doc Type</th>
+                                                                    <!--<th>File Name</th>-->
+                                                                    <th>Attached File</th>
+                                                                    <!--<th class="chkth">Action</th>-->
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr *ngFor="let dataItem of dsDocs;let i = index">
+                                                                    <td class="chktbl">
+                                                                        <input type="checkbox" id="ChkFlag" [(ngModel)]="dataItem.ChkFlag" ng-true-value="1" ng-false-value="0" [ngModelOptions]="{standalone: true}" />
+                                                                    </td>
+                                                                    <td>{{dataItem.CntrNo}}</td>
+                                                                    <td>{{dataItem.CntrType}}</td>
+                                                                    <td>{{dataItem.DocsType}}</td>
+                                                                    <!--<td>{{dataItem.FileName}}</td>-->
+                                                                    <!--<td>{{dataItem.AttachFile}}</td>-->
+
+                                                                    <td class="alc">
+                                                                        <table>
+                                                                            <tr *ngFor="let attachItem of dataItem.BkgAttachList;let i = index">
+                                                                                <td class="haztd">
+                                                                                    <button class="btn btn-success bmd-btn-fab enqbtn" (click)="download(attachItem.FileName)">{{attachItem.AttachFile}}</button>
+                                                                                </td>
+                                                                                <td rowspan="2" class="actwid alc haztdb" *ngIf="showdelete[i]">
+                                                                                    <button (click)="DeleteAttach(dataItem.CntrID,dataItem.BkgID,dataItem.DocsTypeID)" class="btn btn-danger bmd-btn-fab">
+                                                                                        <i class="material-icons">delete</i>
+                                                                                    </button>
+
+                                                                                </td>
+                                                                                <td rowspan="2" class="actwid alc haztdb" *ngIf="showdeletedisbale[i]">
+
+                                                                                    <button class="btn btn-danger bmd-btn-fab" disabled>
+                                                                                        <i class="material-icons">delete</i>
+                                                                                    </button>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </table>
+
+                                                                    </td>
+
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <!--<div class="col-md-6 padl0">
+                                                <div id="datatable-buttons_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+                                                    <div class="row">
+                                                        <div class="col-md-12 padlr0">
+                                                            <table id="datatable-buttons" class="table table-responsive table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                                                <thead>
+                                                                    <tr role="row">
+                                                                        <th class="actwid">S.No</th>
+                                                                        <th>File Name</th>
+                                                                        <th>Attached File</th>
+                                                                        <th class="actwid">Action</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr *ngFor="let dataItem of dsHazAttachments;let i = index">
+                                                                        <td>{{i+1}}</td>
+                                                                        <td>{{dataItem.FileName}}</td>
+                                                                        <td>{{dataItem.AttachFile}}</td>
+                                                                        <td class="actwid alc">
+                                                                            <button class="btn btn-danger bmd-btn-fab">
+                                                                                <i class="material-icons">delete</i>
+                                                                            </button>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>-->
+                                            <div class="col-md-12">
+                                                <div class="row" style="border: 1px dashed #31498a; padding:7px 14px;height:78px; margin-top:8px; ">
+                                                    <div class="col-md-6" style="padding-top:20px;">
+                                                        <input type="file" class="file-upload" id="txtAttachFile" formControlName="AttachFile" (change)="onFileSelected($event)">
+                                                    </div>
+                                                    <!--<div class="col-md-7">
+                                                        <label>File Name</label>
+                                                        <input type="text" class="form-control" id="txFileName" formControlName="FileName">
+                                                    </div>-->
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 searchbtn alrt" style="margin-top:20px;">
+                                    <button type="submit" (click)="onSubmit()" class="btn btn-primary btn-raised mb-0">Save<div class="ripple-container"></div></button>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

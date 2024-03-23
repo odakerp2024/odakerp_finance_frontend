@@ -1,0 +1,347 @@
+<div class="row headtitle">
+    <div class="col-md-9 col-lg-9">
+        <h4 style="margin-top: 6px;">Export Manager - Booking Tasks</h4>
+    </div>
+
+    <div class="col-md-3 col-lg-3 alrt">
+        <button type="button" class="btn btn-success btntop btn-raised bmd-btn-edit" [routerLink]="['/views/exportmanager/bookinglevel/bookinglevelview/bookinglevelview']"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+    </div>
+</div>
+
+<form [formGroup]="ViewformBL">
+    <div class="row" style="margin-top: 2px; margin-bottom: 11px; background-color: lavender; padding: 11px; ">
+        <div class="col-md-3">
+            <div class="row" style="margin-top:5px;">
+                <div class="col-md-12">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item active"><a [routerLink]="['/views/exportmanager/bookinglevel/bookinglevelview/bookinglevelview/']">Booking Tasks</a></li>
+                            <li class="breadcrumb-item" aria-current="page" style="color:#000000;">BOL Allotment</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-md-3" style="font-weight: 600;">
+                    <div class="row bkgno">
+                        <div class="col-md-12">
+                            <small>Booking No</small>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="lbltxt">{{bkgNo}}</label>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-3" style="font-weight: 600;">
+                    <div class="row bkgparty">
+                        <div class="col-md-12">
+                            <small>Booking Party</small>
+                        </div>
+                        <div class="col-md-12">
+                            <span>
+                                <label class="lbltxt">{{bkgparty}}</label>
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-md-3" style="font-weight: 600;">
+                    <div class="row bkgfpod">
+                        <div class="col-md-12">
+                            <small>FPOD</small>
+                        </div>
+                        <div class="col-md-12">
+                            <span>
+                                <label class="lbltxt">{{destination}}</label>
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-3" style="font-weight: 600;">
+                    <div class="row bkgves">
+                        <div class="col-md-12">
+                            <small>Ves/Voy</small>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="lbltxt">{{vesselname}}-{{voyageno}}</label>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <div class="row borbot">
+        <div class="col-md-12">
+            <div class="row bkgtab">
+                <div class="col-md-12">
+                    <ul class="nav nav-pills nav-justified" role="tablist">
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" (click)="btntabclick(1)" role="tab" aria-selected="false">Booking</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" (click)="btntabclick(2)" role="tab" aria-selected="false">Container(s)</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link active show" data-toggle="tab" (click)="btntabclick(9)" role="tab" aria-selected="true">BOL Allotment</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" (click)="btntabclick(3)" role="tab" aria-selected="false">Docs for Load List</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" (click)="btntabclick(4)" role="tab" aria-selected="false">Bill of Lading</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" (click)="btntabclick(5)" role="tab" aria-selected="false">BOL Release</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" (click)="btntabclick(6)" role="tab" aria-selected="false">Exceptions</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" (click)="btntabclick(7)" role="tab" aria-selected="false">Invoices</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" role="tab" aria-selected="false">Attachments</a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <div class="tab-content">
+                <div class="tab-pane pt-3 active show" role="tabpanel">
+                    <div class="row">
+                        <div class="col-md-12 col-lg-12">
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <h6 style="font-weight: 600;">Pending Units for BOL Allotment</h6>
+                                </div>
+                                <div class="col-md-3 alrt">
+                                    <label style="margin-right: 1rem;">Part BOL</label>
+                                    <input type="checkbox" class="checkbox" ng-true-value="1" ng-false-value="0" (change)="PartBLOpenWindows($event)" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 conttable padlr0">
+                                <table id="datatable" class="table table-striped table-responsive table-bordered w-100 dataTable no-footer">
+                                    <thead>
+                                        <tr role="row">
+                                            <th class="actwid chkth">
+                                                Select
+                                            </th>
+                                            <th>Container No</th>
+                                            <th>Size</th>
+                                            <th>Pick Up Date</th>
+                                            <th>Gate In Date</th>
+                                            <th> Commodity</th>
+                                        </tr>
+                                    </thead>
+
+
+                                    <tbody *ngIf="divRecords">
+                                        <tr *ngFor="let gRow of fillCntrDynamicGrid; let i= index let last=last">
+                                            <td class="alc actwid chktbl">
+                                                <input type="checkbox" [(ngModel)]="gRow.OPT" ng-true-value="1" ng-false-value="0" class="form-control checkbox" [ngModelOptions]="{standalone: true}" (click)="onCheck(gRow.CntrNo)" />
+                                            </td>
+                                            <td class="alc">
+                                                <button class="btn btn-success bmd-btn-fab enqbtn" (click)="BLContainerDetails(gRow.ID)">{{gRow.CntrNo}}</button>
+                                            </td>
+                                            <td>{{gRow.Size}}</td>
+                                            <td>{{gRow.PickupDate}}</td>
+                                            <td>{{gRow.GateInDate}}</td>
+                                            <td>{{gRow.Commodity}}</td>
+                                        </tr>
+
+                                    </tbody>
+                                    <tbody *ngIf="divNoRecords">
+                                        <tr>
+                                            <td colspan="6">
+                                                No Records Found
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="col-md-12 alrt borbot padlr0">
+                                <button type="button" class="btn btn-success btntop btn-raised blbtn" (click)="onSubmit()">Allocate BOL</button>
+                            </div>
+
+                            <!--<div class="row">
+                                <div class="col-md-12 bgtab">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <ul class="nav nav-tabs scrtbl">
+                                                <li *ngFor="let gRow of fillBLNumberDynamicGrid; let i= index let last=last" class="active">
+                                                    <a class="nav-link" (click)="OnClickBLNumberdisplay(gRow.ID)">{{gRow.BLNumber}}</a>
+                                                </li>
+
+                                            </ul>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="row">
+                                                <div class="col-md-12 col-lg-12">
+                                                    <div class="tab-content">
+                                                        <div class="tab-pane active show" role="tabpanel">
+                                                            <div class="row">
+                                                                <div class="col-md-12 col-lg-12 padlr0">
+                                                                    <div class="col-md-12 conttable">
+                                                                        <table id="datatable-buttons" class="table table-striped table-responsive table-bordered w-100 dataTable no-footer">
+                                                                            <thead>
+                                                                                <tr role="row">
+
+                                                                                    <th>Container No</th>
+                                                                                    <th>Size</th>
+                                                                                    <th>Pick Up Date</th>
+                                                                                    <th>Gate In Date</th>
+                                                                                    <th> Commodity</th>
+                                                                                </tr>
+                                                                            </thead>
+
+                                                                            <tbody>
+                                                                                <tr *ngFor="let gRow of fillCntrBLDynamicGrid; let i= index let last=last">
+
+                                                                                    <td class="alc">
+                                                                                        <button class="btn btn-success bmd-btn-fab enqbtn" (click)="BLContainerDetails(gRow.ID)">{{gRow.CntrNo}}</button>
+                                                                                    </td>
+                                                                                    <td>{{gRow.Size}}</td>
+                                                                                    <td>{{gRow.PickupDate}}</td>
+                                                                                    <td>{{gRow.GateInDate}}</td>
+                                                                                    <td>{{gRow.Commodity}}</td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                    <div class="col-md-12 alrt">
+                                                                        <button type="button" class="btn btn-danger btntop btn-raised blbtn" (click)="onRemoved()">Remove BOL</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>-->
+
+
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12">
+                                    <div class="row bkgltab">
+                                        <div class="col-md-12 col-lg-12">
+                                            <ul class="nav nav-pills nav-justified" role="tablist">
+                                                <li class="nav-item waves-effect waves-light" *ngFor="let gRow of fillBLNumberDynamicGrid; let i= index let last=last">
+                                                    <a class="nav-link" *ngIf="statusInactive[i]" data-toggle="tab" role="tab" aria-selected="false" (click)="OnClickBLNumberdisplay(gRow.ID)">{{gRow.BLNumber}}</a>
+                                                    <a class="nav-link active" *ngIf="statusActive[i]" data-toggle="tab" role="tab" aria-selected="false" (click)="OnClickBLNumberdisplay(gRow.ID)">{{gRow.BLNumber}}</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12">
+                                    <div class="tab-content">
+                                        <div class="tab-pane active show" role="tabpanel">
+                                            <div class="row">
+                                                <div class="col-md-12 col-lg-12">
+                                                    <div class="col-md-12 conttable padlr0">
+                                                        <table id="datatable-buttons" class="table table-striped table-responsive table-bordered w-100 dataTable no-footer">
+                                                            <thead>
+                                                                <tr role="row">
+                                                                    <th>Container No</th>
+                                                                    <th>Size</th>
+                                                                    <th>Pick Up Date</th>
+                                                                    <th>Gate In Date</th>
+                                                                    <th> Commodity</th>
+                                                                </tr>
+                                                            </thead>
+
+                                                            <tbody>
+                                                                <tr *ngFor="let gRow of fillCntrBLDynamicGrid; let i= index let last=last">
+                                                                    <td class="alc">
+                                                                        <button class="btn btn-success bmd-btn-fab enqbtn" (click)="BLContainerDetails(gRow.ID)">{{gRow.CntrNo}}</button>
+                                                                    </td>
+                                                                    <td>{{gRow.Size}}</td>
+                                                                    <td>{{gRow.PickupDate}}</td>
+                                                                    <td>{{gRow.GateInDate}}</td>
+                                                                    <td>{{gRow.Commodity}}</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div class="col-md-12 alrt padlr0">
+                                                        <button type="button" class="btn btn-danger btntop btn-raised blbtn" (click)="onRemoved()">Remove BOL</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--<div class="col-md-12 alrt">
+            <button type="button" class="btn btn-success btntop btn-raised blbtn" (click)="partbl()">Allocate BOL</button>
+        </div>-->
+        <div class="modal fade seminor-login-modal" data-backdrop="static" id="PartBLModal">
+            <div class="modal-dialog modal-dialog-centered dialog100">
+                <div class="modal-content">
+                    <div class="row">
+                        <div class="col-md-12 alrt">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body seminor-login-modal-body cntpopup">
+                        <h6 class="modal-title text-center">Number of BOL</h6>
+                        <div class="divide3"></div>
+                        <div class="row">
+                            <div class="col-md-12 padlr0">
+                                <input class="form-control" type="text" formControlName="NoofBL" />
+                            </div>
+
+                            <div class="divide3"></div>
+                            <div class="col-md-12 alrt padlr0 btmrw">
+                                <button type="submit" class="btn btn-primary btn-raised cntbtn mb-0" (click)="PartBlCreate();">Save<div class="ripple-container"></div></button>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

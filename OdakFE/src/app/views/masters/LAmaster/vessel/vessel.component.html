@@ -1,0 +1,134 @@
+<div class="row headtitle">
+    <div class="col-md-9">
+        <h4>Vessel Master</h4>
+    </div>
+    <div class="col-md-3 alrt">
+        <button type="button" class="btn btn-success btn-raised btntop bmd-btn-edit" (click)="onBack()" ><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+    </div>
+</div>
+
+<form [formGroup]="vesselForm">
+    <div class="card">
+        <div class="card-body ">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Vessel Name</label>
+                            </div>
+                            <div class="col-md-1">:</div>
+                            <div class="col-md-7">
+                                <input type="text" name="VesselName" id="VesselName" formControlName="VesselName" autocomplete="off" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Vessel Call Sign</label>
+                            </div>
+                            <div class="col-md-1">:</div>
+                            <div class="col-md-7">
+                                <input type="text" name="VesselCallSign" id="VesselCallSign" formControlName="VesselCallSign" autocomplete="off" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>IMO Number</label>
+                            </div>
+                            <div class="col-md-1">:</div>
+                            <div class="col-md-7">
+                                <input type="text" name="IMONumber" id="IMONumber" formControlName="IMONumber" autocomplete="off" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>MMSI</label>
+                            </div>
+                            <div class="col-md-1">:</div>
+                            <div class="col-md-7">
+                                <input type="text" name="MMSI" id="MMSI" formControlName="MMSI" autocomplete="off" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Flag</label>
+                            </div>
+                            <div class="col-md-1">:</div>
+                            <div class="col-md-7">
+                                <input type="text" name="Flag" id="Flag" formControlName="Flag" autocomplete="off" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Vessel ID</label>
+                            </div>
+                            <div class="col-md-1">:</div>
+                            <div class="col-md-7">
+                                <input type="text" name="VesselID" id="VesselID" formControlName="VesselID" autocomplete="off" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Vessel Owner</label>
+                            </div>
+                            <div class="col-md-1">:</div>
+                            <div class="col-md-7">
+                                <input type="text" name="VesselOwner" id="VesselOwner" formControlName="VesselOwner" autocomplete="off" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Status</label>
+                            </div>
+                            <div class="col-md-1">:</div>
+                            <div class="col-md-7">
+                                <select class="form-control my-select" name="Status" formControlName="Status" id="ddlStatusv">
+                                    <option *ngFor="let status of statusvalues" [value]="status.value">
+                                        {{status.viewValue}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            
+
+        </div>
+        <div class="card-footer ">
+            <div class="col-md-12" style="text-align:right;">
+                <button type="submit" (click)="onSubmit()" class="btn btn-primary btn-raised mb-0">Submit</button>
+            </div>
+            <input type="hidden" id="HDRegId" ng-model="HDRegId" />
+        </div>
+    </div>
+</form>

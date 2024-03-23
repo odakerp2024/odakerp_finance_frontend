@@ -1,0 +1,12 @@
+.invalid-input {
+  border: 1px solid #ff0000 !important;
+}
+.cursor_blocked {
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+  border-color: #00000017 !important;
+  background-color: #e9ecef !important;
+}
+.file-upload--customBorder {
+  border-radius: 6px 0px 0px 6px !important;
+}

@@ -1,0 +1,81 @@
+<div class="row headtitle">
+    <div class="col-md-9">
+        <h4>App Configuration</h4>
+    </div>
+    <div class="col-md-3 alrt">
+        <button type="button" class="btn btn-success bmd-btn-edit btn-raised btntop" [routerLink]="['/views/administration/systemmaster/appconfig/appconfigview']"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+    </div>
+</div>
+<form [formGroup]="appconfigForm">
+    <div class="card">
+        <div class="card-body ">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Ref Code</label>
+                            </div>
+                            <div class="col-md-1">:</div>
+                            <div class="col-md-7">
+                                <input type="text" autocomplete="off" formControlName="RefCode" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>General Name</label>
+                            </div>
+                            <div class="col-md-1">:</div>
+                            <div class="col-md-7">
+                                <input type="text"  autocomplete="off" formControlName="GeneralName" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Status</label>
+                            </div>
+                            <div class="col-md-1">:</div>
+                            <div class="col-md-7 input-field">
+                                <select class="form-control" formControlName="StatusN">
+                                    <option *ngFor="let status of statusvalues" [value]="status.value">
+                                        {{status.viewValue}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Seq No</label>
+                            </div>
+                            <div class="col-md-1">:</div>
+                            <div class="col-md-7">
+                                <input type="text"  autocomplete="off" formControlName="SeqNo" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+        <div class="card-footer ">
+            <div class="col-md-12" style="text-align:right;">
+                <button type="submit" (click)="onSubmit()" class="btn btn-primary btn-raised mb-0">Submit</button>
+            </div>
+            <input type="hidden" id="HDRegId" ng-model="HDRegId" />
+        </div>
+    </div>
+</form>

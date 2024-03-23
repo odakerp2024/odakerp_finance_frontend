@@ -1,0 +1,385 @@
+<div class="row headtitle">
+    <div class="col-md-12">
+        <h4>Inventory Manager - Inventory</h4>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="row enquirynav">
+            <div class="col-md-12">
+                <ul class="nav nav-pills nav-justified" role="tablist">
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link active show" data-toggle="tab" role="tab" aria-selected="true">Inventory</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" role="tab" aria-selected="false">Operations</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="tab-content">
+            <div class="tab-pane pt-3 active show" role="tabpanel">
+
+                <div class="col-md-12 padl0">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <select class="form-control my-select" id="ddlinventory">
+                                    <option value="0">Empty Container Status</option>
+                                    <option value="1">Empty Idling (Aging)</option>
+                                    <option value="2">Container Stock</option>
+                                    <option value="3">Long Idling - with Consignee</option>
+                                    <option value="4">Long Idling - with Shipper</option>
+                                    <option value="5">Mix up Containers Status</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12 alrt">
+                                <label>Status as on: 17 Nov 2022</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 padlr0">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-8">
+
+                            </div>
+                            <div class="col-md-2">
+                                <select class="form-control my-select">
+                                    <option value="0">Office</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <select class="form-control my-select">
+                                    <option value="0">Principal</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--<div *ngIf="showOff" class="col-md-12 padlr0">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-10">
+
+                            </div>
+                            <div class="col-md-2">
+                                <select class="form-control my-select">
+                                    <option value="0">Office</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
+
+                <div *ngIf="divOne" class="col-md-12">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12 conttable cntralign padlr0">
+                                <table id="datatable" cellpadding="0" cellspacing="0" class="table table-responsive table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                    <thead>
+                                        <tr>
+                                            <th rowspan="2">Slot Operator</th>
+                                            <th colspan="2">Available</th>
+                                            <th colspan="2">Damaged</th>
+                                            <th colspan="2">Under Repair</th>
+                                            <th colspan="2">Total</th>
+                                            <th colspan="2">CRO Released</th>
+                                        </tr>
+
+                                        <tr>
+                                            <th class="actwid">20</th>
+                                            <th class="actwid">40</th>
+                                            <th class="actwid">20</th>
+                                            <th class="actwid">40</th>
+                                            <th class="actwid">20</th>
+                                            <th class="actwid">40</th>
+                                            <th class="actwid">20</th>
+                                            <th class="actwid">40</th>
+                                            <th class="actwid">20</th>
+                                            <th class="actwid">40</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>United Yard</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngIf="divTwo" class="col-md-12">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12 conttable cntralign padlr0">
+                                <table id="datatable" cellpadding="0" cellspacing="0" class="table table-responsive table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                    <thead>
+                                        <tr>
+                                            <th>Storage Location</th>
+                                            <th>01 - 10 <br /> Days</th>
+                                            <th>11 - 20 <br /> Days</th>
+                                            <th>21 - 30 <br /> Days</th>
+                                            <th>31 - 60 <br /> Days</th>
+                                            <th>60+ <br /> Days</th>
+                                            <th>Total</th>
+                                            <th>20GP</th>
+                                            <th>40HC</th>
+                                            <th>20RF</th>
+                                            <th>40RF</th>
+                                            <th>20OT</th>
+                                            <th>40OT</th>
+                                            <th>20FR</th>
+                                            <th>40FR</th>
+                                            <th>Others</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>United Yard</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngIf="divThree" class="col-md-12">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12 conttable cntralign padlr0">
+                                <table id="datatable" cellpadding="0" cellspacing="0" class="table table-responsive table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                    <thead>
+                                        <tr>
+                                            <th rowspan="2">Storage Location</th>
+                                            <th colspan="2">Discharged</th>
+                                            <th colspan="2">With Consignee</th>
+                                            <th colspan="2">Empty</th>
+                                            <th colspan="2">With Shipper</th>
+                                            <th colspan="2">Returned Full</th>
+                                            <th colspan="2">Total</th>
+                                        </tr>
+
+                                        <tr>
+                                            <th class="actwid">20</th>
+                                            <th class="actwid">40</th>
+                                            <th class="actwid">20</th>
+                                            <th class="actwid">40</th>
+                                            <th class="actwid">20</th>
+                                            <th class="actwid">40</th>
+                                            <th class="actwid">20</th>
+                                            <th class="actwid">40</th>
+                                            <th class="actwid">20</th>
+                                            <th class="actwid">40</th>
+                                            <th class="actwid">20</th>
+                                            <th class="actwid">40</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>United Yard</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngIf="divFour" class="col-md-12">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12 conttable cntralign padlr0">
+                                <table id="datatable" cellpadding="0" cellspacing="0" class="table table-responsive table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                    <thead>
+                                        <tr>
+                                            <th>Principal</th>
+                                            <th>20GP</th>
+                                            <th>40HC</th>
+                                            <th>20RF</th>
+                                            <th>40RF</th>
+                                            <th>20OT</th>
+                                            <th>40OT</th>
+                                            <th>20FR</th>
+                                            <th>40FR</th>
+                                            <th>Others</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>NCL</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngIf="divFive" class="col-md-12">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12 conttable cntralign padlr0">
+                                <table id="datatable" cellpadding="0" cellspacing="0" class="table table-responsive table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                    <thead>
+                                        <tr>
+                                            <th>Principal</th>
+                                            <th>20GP</th>
+                                            <th>40HC</th>
+                                            <th>20RF</th>
+                                            <th>40RF</th>
+                                            <th>20OT</th>
+                                            <th>40OT</th>
+                                            <th>20FR</th>
+                                            <th>40FR</th>
+                                            <th>Others</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>NCL</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                            <td class="actwid">0</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngIf="divSix" class="col-md-12">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12 conttable cntralign padlr0">
+                                <table id="datatable" cellpadding="0" cellspacing="0" class="table table-responsive table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                    <thead>
+                                        <tr>
+                                            <th rowspan="2">Container No</th>
+                                            <th rowspan="2">Cntr <br />Type</th>
+                                            <th rowspan="2">Owning Line</th>
+                                            <th rowspan="2">Operating Line</th>
+                                            <th colspan="3">Import</th>
+                                            <th colspan="2">Current Status</th>
+                                        </tr>
+
+                                        <tr>
+                                            <th>Vessel</th>
+                                            <th>Voyage</th>
+                                            <th>BOL</th>
+                                            <th>Container <br />Status</th>
+                                            <th>Storage <br />Location</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>XXXX</td>
+                                            <td>40HC</td>
+                                            <td>NCL</td>
+                                            <td>MCL</td>
+                                            <td>NH</td>
+                                            <td>V101</td>
+                                            <td></td>
+                                            <td>Discharged</td>
+                                            <td>MICT Terminal</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

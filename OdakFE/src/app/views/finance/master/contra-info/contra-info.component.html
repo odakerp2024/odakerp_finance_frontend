@@ -1,0 +1,376 @@
+<div class="container-fluid p-0">
+
+    <div class="d-flex justify-content-between headtitle mt-2">
+        <h4 class="ml-2 mt-2">Contra Voucher</h4>
+
+        <div class="btntop">
+
+            <button *ngIf="!IsFinal && !isEditMode" type="button"
+                class="btn btn-warning bmd-btn-edit btn-raised btntop emarginr ng-star-inserted" (click)="enableEdit()">
+                <i class="material-icons editicon">edit</i>
+            </button>
+            
+            
+
+            <button type="button" class="btn btn-success bmd-btn-edit btn-raised btntop" (click)="CancelContra()"
+                ><i class="material-icons editicon">reply</i>
+                <div class="ripple-container"></div>
+            </button>
+
+            <button
+                class="nav-link dropdown-toggle arrow-none waves-effect nav-user btn bmd-btn-edit btn-raised btntop btnlog"
+                data-placement="bottom" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="material-icons editicon">schedule</i>
+            </button>
+
+
+            <div style="background-color: aliceblue;width:250px;left:-66px"
+                class="dropdown-menu dropdown-menu  profile-dropdown" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" style="padding:15px;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12"><span>ModifiedOn: {{ModifiedOn}}</span> | <span>Modified By:
+                                        {{ModifiedOn}}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:10px;">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12"><span>CreatedOn: {{CreatedOn}}</span> | <span>Created By:
+                                        {{CreatedBy}}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-4">
+        <form [formGroup]="contraForm">
+            <div class="row mt-4">
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="str">Division</label>
+                        
+                        <ng-select  class="searchdropdown custom"  [attr.disabled]="isCopied ? 'disabled' : null" formControlName="DivisionId"
+                         (change)="getOffice($event)" [clearable]="false">
+                         <ng-option [value]="''" disabled>--SELECT DIVISION TYPE--</ng-option>
+                         <ng-container  *ngFor="let division of divisionList">
+                           <ng-option *ngIf="division.Active" [value]="division.ID">
+                              {{division.DivisionName | uppercase}}
+                           </ng-option>
+                        </ng-container>
+                     </ng-select>                           
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class=" form-group">
+                        <label class="str" for="Name">Office</label>
+                                       
+                        <ng-select  class="searchdropdown custom"  [attr.disabled]="isCopied ? 'disabled' : null" formControlName="OfficeId"
+                           [placeholder]="'--SELECT OFFICE TYPE--'"  [clearable]="false">
+                            <ng-option [value]="''" disabled>--SELECT OFFICE TYPE--</ng-option>
+                            <ng-container *ngFor="let office of officeList">
+                              <ng-option [value]="office.ID">
+                                {{office.OfficeName | uppercase}}
+                              </ng-option>
+                            </ng-container>
+                        </ng-select>                                       
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="str" for="Status">Contra Number</label>
+                        <input type="text" class="form-control w-100 bg-light border" readonly
+                            formControlName="ContraVoucherNumber" />
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class=" form-group">
+                        <label class="str mb-2" for="Party">Contra Date</label>
+                        <mat-form-field class="tillDate mat_date_picker disable-input--noStyle" appearance="outline">
+                            <input matInput style="margin-bottom: 3px;" (click)="ContraVoucherDate.open()" disabled autocomplete="off" readonly [matDatepicker]="ContraVoucherDate"  id="ContraVoucherDate" [placeholder]="entityDateFormat" formControlName="ContraVoucherDate">
+                            <mat-datepicker-toggle disabled matSuffix [for]="ContraVoucherDate"></mat-datepicker-toggle>
+                            <mat-datepicker #ContraVoucherDate disabled></mat-datepicker>
+                        </mat-form-field>
+                        <!-- <input type="date" class="w-100 py-0 hide-date-icon bg-light border" readonly
+                            formControlName="ContraVoucherDate" /> -->
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="str" for="Status">From Account</label>
+                        
+                        <ng-select class="searchdropdown custom" [attr.disabled]="isCopied ? 'disabled' : null" [formControlName]="'FromAccount'"
+                         (change)="getToAccount($event)"  [clearable]="false">
+                            <ng-option [value]="''" [disabled]="true">--SELECT FROM ACCOUNT--</ng-option>
+                            <ng-option *ngFor="let bank of bankList" [value]="bank.BankID">
+                              {{ bank.BankName | uppercase }} - {{ bank.AccountNo }}
+                            </ng-option>
+                          </ng-select>                          
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="str" for="Status">To Account</label>
+                        
+                        <ng-select class="searchdropdown custom" [attr.disabled]="isCopied ? 'disabled' : null"  formControlName="ToAccount"   [clearable]="false">
+                        <ng-option [value]="''" [disabled]="true">--SELECT TO ACCOUNT--</ng-option>
+                        <ng-option *ngFor="let bank of toAccount" [value]="bank.BankID">
+                            {{bank.BankName | uppercase}} - {{bank.AccountNo}}
+                        </ng-option>
+                      </ng-select>                     
+                    </div>
+                </div>
+
+
+                   <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                        <div class="row">
+                           <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6" >
+                                <label class="str" for="Status">Currency</label>
+                                
+                                <ng-select  class="searchdropdown custom" formControlName="CurrencyId" (change)="setCurrencyId($event); getExchangeRate()" [clearable]="false">
+                                <ng-option [value]="''" [disabled]="true">--SELECT CURRENCY--</ng-option>
+                                <ng-option *ngFor="let currency of currencyList" [value]="currency.CurrencyID">
+                                  {{ currency.CurrencyCode | uppercase }} - {{ currency.CurrencyName | uppercase }}
+                                </ng-option>
+                              </ng-select>                              
+                            </div>     
+                           <div class = "col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                            <div  class="form-group">
+                               <label class="str fontstyles" >Amount</label>
+                                 <input
+                                  onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                  min="0" numbersOnly (change)="calculateLocalAmount(); CurrentExRate()" 
+                                  appDynamicDecimal class="form-control my-select amount w-100 mr-0"
+                                  formControlName="AmountPaid"/>
+                            </div>
+                            
+                            
+                       </div>
+                        </div> 
+                    </div>
+           
+                <!-- <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="row">
+                        <div class="d-flex ">
+                               <select (change)="amountChangeEvent($event.target.value)" formControlName="AmountTypeId"
+                                    class="form-control my-select  w-100 mt-4" style="margin-left: 14px;">
+                                    <option value="0" disabled>--SELECT CURRENCY--</option>
+                                    <option *ngFor="let currency of currencyList" [value]="currency.ID">
+                                     {{currency.CurrencyCode | uppercase}}
+                                    </option>
+                                </select>
+                          <div class = "col-lg-6 col-xl-6">
+                            <label class="str d-block">Amount Received</label>
+                             <input (ngModelChange)="amountChange($event)" appDynamicDecimal
+                             formControlName="AmountReceived" type="number" style="margin-right: 8px;width: 270px; "   />
+                          </div>
+                        </div>
+                    </div>  
+                </div>
+           -->
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="str" for="Status">Mode of Payment</label>
+                        <ng-select class="searchdropdown custom" formControlName="ModeofPaymentId" [clearable]="false">
+                        <ng-option [value]="''" disabled>--Mode Of Payment--</ng-option>
+                        <ng-option *ngFor="let payment of paymentModeList" [value]="payment.Id">
+                          {{payment.PaymentType | uppercase}}
+                        </ng-option>
+                      </ng-select>                     
+                    </div>
+                </div>
+               
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class=" form-group">
+                        <label *ngIf = "contraForm.value.ModeofPaymentId != 2" class="str" for="Party" >Reference Number</label>
+                        <label *ngIf = "contraForm.value.ModeofPaymentId == 2" for="Party" >Reference Number</label>
+                        <input onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly class="form-control w-100" formControlName="ReferenceNo" />
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label>Remarks</label>
+                        <textarea class="form-control addressht" id="txtRemarks" rows="5"
+                            formControlName="Remarks"></textarea>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="str">Status</label>
+                        <select [ngClass]=" isUpdate ? 'block-input' : 'block-input'" readonly formControlName="StatusId" name="Status" class="form-control my-select disable-input--nostyle">
+                            <option disabled value="">--SELECT STATUS--</option>
+                            <option disabled *ngFor="let status of statusList" [value]="status.Id">
+                                {{status.StatusName | uppercase}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4"> </div> -->
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4"> </div>
+
+
+
+                <div class="col-4 mt-auto">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="col-6">
+                                    <label class="">Upload File</label>
+                                    <div class="file-upload">
+                                        <input type="text" [(ngModel)]="FilePath" [ngModelOptions]="{standalone: true}"
+                                            hidden />
+                                        <input class="file-upload__input" hidden type="file" name="myFile" id="myFile"
+                                            (change)="documentSelected($event)">
+                                        <label for="myFile" class="file-upload__button text-center w-100"
+                                            style="border: 1px solid #b1b1b1d1 !important; border-radius: 10px; box-shadow: 0px 0px 5px 0px rgb(202 202 202); background-color: white; font-weight: 600; margin-right: 0.5rem !important;"
+                                            type="button">
+                                            <img class="ml-2" src="assets/images/docupload.png" alt="Upload image"
+                                                style="width: 1rem !important;" />
+                                            Choose File(s)
+                                        </label>
+                                    </div>
+                                </div>
+                                <!-- <div class="col-6 mt-auto d-flex">
+                                    <button type="button" class="btn btn-primary text-white mr-3 mb-0 col-auto" (click)="uploadDocument()">Upload</button>
+                                    <button type="button" class="btn btn-warning text-white mr-3 mb-0 col-auto">Cancel</button>
+                                </div> -->
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <!-- <div class="col-md-12 alrt">
+                                <button type="submit" class="btn btn-danger bmd-btn-fab mt-2" (click)="deleteDocument()"><i
+                                        class="material-icons editicon">delete</i>
+                                    <div class="ripple-container"></div>
+                                </button>
+                            </div> -->
+                            <table
+                                class="table table-responsive  table-bordered w-100 table-striped border-0 agingTable mt-2">
+                                <thead class="text-center">
+                                    <tr>
+                                        <th scope="col">S.No</th>
+                                        <th scope="col">File Name</th>
+                                        <th>Select</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-center">
+                                    <ng-container *ngIf="documentTableList.length; else noRecord">
+                                        <tr *ngFor="let document of documentTableList;let i = index">
+                                            <td>{{ i + 1 }}</td>
+                                            <td>{{ document.DocumentName }}</td>
+                                            <td class="alc actwid chktbl">
+                                                <!-- <input class="vertal checkbox" type="radio" name="AlertCheck" id="RadioCheck"
+                                                    (click)="onFileSelected(i)" /> -->
+                                                <button type="submit" class="btn btn-danger bmd-btn-fab mt-2"
+                                                    (click)="deleteDocument(i)"><i
+                                                        class="material-icons editicon">delete</i>
+                                                    <div class="ripple-container"></div>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </ng-container>
+                                    <ng-template #noRecord>
+                                        <tr>
+                                            <td class="text-center" colspan="3">No records found</td>
+                                        </tr>
+                                    </ng-template>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-4 mt-auto">
+               
+                    <div *ngIf="!isSameCurrency" >
+                    <label class="">Exchange Rates</label>
+                        <!-- <button type="submit" class="btn btn-success bmd-btn-fab float-right" (click)="addExchangeRate()">
+                            <i class="material-icons editicon">add</i>
+                        </button> -->
+                        <button  type="button"
+                        class="btn btn-warning bmd-btn-fab text-white mr-3 mb-0" style = "margin-left: 60px;" (click)="disableField()">
+                         <i class="material-icons editicon">edit</i>
+                        </button>
+
+
+                        <button *ngIf="showExchangeRate" [disabled] = "contraForm.value.CurrentExRate == 0" type="submit" style = "margin-left: 80px;" class="btn btn-success bmd-btn-fab text-white mr-3 mb-0"
+                        (click)="CurrentExRate()"><i class="material-icons editicon">add</i>
+                        </button><br>
+                        
+                        <table
+                            class="table table-responsive  table-bordered w-100 table-striped border-0 agingTable mt-2">
+                            <thead class="text-center">
+                                <tr>
+                                    <th scope="col">Rate Pair</th>
+                                    <th scope="col">Rate</th>
+                                    <th *ngIf="showExchangeRate" scope="col">Updated Rate</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-center">
+                
+                                <ng-container *ngIf="exchangePairDetails?.length; else noRecord2">
+                                    <tr *ngFor="let exchange of exchangePairDetails;let i = index">
+                                        <td>{{exchange.CurrencyPair}}</td>
+                                        <td>{{exchange.Rate}}</td>
+                                        <td *ngIf="showExchangeRate">
+                                            <input formControlName="CurrentExRate"  appDynamicDecimal class="form-control w-100"
+                                             autocomplete="off" type="text">{{exchange.CurrentExRate}}
+                                        </td>
+                                    </tr>
+                                </ng-container>
+                                <ng-template #noRecord2>
+                                    <tr>
+                                        <td class="text-center" colspan="3">No records found</td>
+                                    </tr>
+                                </ng-template>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-3 mt-auto mb-3">
+                    <label class="">Local Amount</label>
+                    <input type="text" class="w-100" appDynamicDecimal style="text-transform: initial !important;" 
+                    class="form-control local w-100 " readonly min="0"
+                    formControlName="TotalAmount" placeholder="Local Amount" />
+                </div>
+
+
+                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 text-right mt-4">
+
+                    <button type="submit"class="btn btn-primary text-white mr-3 mb-0 col-auto"
+                        [ngClass]=" !isEditMode ? 'disable-input--nostyle save-disable---style' : ''"
+                        
+                        (click)="saveContra()">Save</button>
+
+                    <button type="submit" class="btn btn-success text-white mr-3 mb-0 col-auto"
+                   
+                        [ngClass]=" !isEditMode1 ? 'disable-input--nostyle final-disable--style' : ''"
+                        (click)="finalSaveContra()">Final</button>
+                    <button type="button" *ngIf="isUpdate && !IsFinal" [ngClass]=" !isEditMode ? 'disable-input--style' : ''"
+                         (click)="saveContra(true)"
+                        class="btn btn-warning text-white mr-3 mb-0 col-auto">
+                        Delete
+                    </button>
+                    <button  (click)="CancelContra()"
+                        class="btn btn-warning text-white mr-3 mb-0 col-auto">Cancel</button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+</div>

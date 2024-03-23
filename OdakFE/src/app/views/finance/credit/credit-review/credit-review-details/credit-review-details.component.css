@@ -1,0 +1,23 @@
+.card-one{
+    background-color:  #2e75b5 !important;
+}
+
+.card-two{
+    background-color:  #548135 !important;
+}
+
+.card-three{
+    background-color:  #c55a11 !important;
+}
+
+.creditAppoval{
+    color: #2e75b5 !important;
+}
+
+.businessPerformance{
+   color: #548135 !important;
+}
+
+.paymentPerformance{
+    color: #c55a11 !important;
+}

@@ -1,0 +1,23 @@
+.cursor_blocked {
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+}
+
+.block-input {
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+    background-color: #e9ecef !important;
+}
+
+
+.bestfit-width {
+    min-width: 176px !important
+}
+.best-fit-width {
+    max-width: 114px !important;
+    font-size: 9px !important;
+}
+.best-fit-width {
+    max-width: 120px !important;
+    font-size: 9px !important;
+}

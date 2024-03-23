@@ -1,0 +1,231 @@
+
+<form [formGroup]="bolform">
+    <div class="row headtitle">
+        <div class="col-md-9">
+            <h4>Export Manager - Booking Tasks</h4>
+        </div>
+        <div class="col-md-3 alrt">
+            <button type="button" class="btn btn-success btntop btn-raised bmd-btn-edit" [routerLink]="['/views/exportmanager/bookinglevel/bookinglevelview/bookinglevelview']"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 2px; margin-bottom: 11px; background-color: lavender; padding: 11px; ">
+        <div class="col-md-3">
+            <div class="row" style="margin-top:5px;">
+                <div class="col-md-12">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item active"><a href="#" [routerLink]="['/views/exportmanager/bookinglevel/bookinglevelview/bookinglevelview/']">Booking Tasks</a></li>
+                            <li class="breadcrumb-item" aria-current="page" style="color:#000000;">BOL Release</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-md-3" style="font-weight: 600;">
+                    <div class="row bkgno">
+                        <div class="col-md-12">
+                            <small>Booking No</small>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="lbltxt">{{bkgNo}}</label>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-3" style="font-weight: 600;">
+                    <div class="row bkgparty">
+                        <div class="col-md-12">
+                            <small>Booking Party</small>
+                        </div>
+                        <div class="col-md-12">
+                            <span>
+                                <label class="lbltxt">{{bkgparty}}</label>
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-md-3" style="font-weight: 600;">
+                    <div class="row bkgfpod">
+                        <div class="col-md-12">
+                            <small>FPOD</small>
+                        </div>
+                        <div class="col-md-12">
+                            <span>
+                                <label class="lbltxt">{{destination}}</label>
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-3" style="font-weight: 600;">
+                    <div class="row bkgves">
+                        <div class="col-md-12">
+                            <small>Ves/Voy</small>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="lbltxt">{{vesselname}}-{{voyageno}}</label>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row bkgltab">
+                <div class="col-md-12">
+                    <ul class="nav nav-pills nav-justified" role="tablist">
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link " data-toggle="tab" (click)="btntabclick(1)" role="tab" aria-selected="false">Booking</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link show" data-toggle="tab" (click)="btntabclick(2)" role="tab" aria-selected="true">Container(s)</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link show" data-toggle="tab" (click)="btntabclick(9)" role="tab" aria-selected="true">BOL Allotment</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" (click)="btntabclick(3)" role="tab" aria-selected="false">Docs for Load List</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" (click)="btntabclick(4)" role="tab" aria-selected="false">Bill of Lading</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link active" data-toggle="tab" (click)="btntabclick(5)" role="tab" aria-selected="false">BOL Release</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" (click)="btntabclick(6)" role="tab" aria-selected="false">Exceptions</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" (click)="btntabclick(7)" role="tab" aria-selected="false">Invoices</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" (click)="btntabclick(8)" role="tab" aria-selected="false">Attachments</a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row forms">
+        <div class="col-md-12 padlr0">
+
+            <div class="tab-content" style="padding:0;">
+                <div class="tab-pane pt-3 active show" id="Enquiry" role="tabpanel">
+                    <div class="col-md-12 boltable">
+                        <table id="datatable-buttons" class="table table-striped table-bordered w-100 dataTable no-footer">
+                            <thead>
+                                <tr role="row">
+                                    <th>
+                                        BOL Number
+                                    </th>
+                                    <th>
+                                        BOL Type
+                                    </th>
+                                    <th>
+                                        BOL Status
+                                    </th>
+
+                                    <th>
+                                        Issued Date
+                                    </th>
+                                    <th>
+                                        Issued By
+                                    </th>
+                                    <th>
+                                        Select
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let dataItem of pagedItems;let i = index">
+
+
+                                    <td>{{dataItem.BLNumber}}</td>
+                                    <td>{{dataItem.BLType}}</td>
+                                    <td>{{dataItem.BLStatusv}}</td>
+                                    <td>{{dataItem.IssueDate}}</td>
+                                    <td>Admin</td>
+                                    <td class="chktbl">
+                                        <input type="checkbox" id="chkbl" formControlName="ChkBLID" (click)="BlNumberChk(dataItem.MainID)" />
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal fade seminor-login-modal" data-backdrop="static" id="PrintModal">
+                        <div class="modal-dialog modal-dialog-centered dialogsmall1">
+                            <div class="modal-content">
+                                <div class="row">
+                                    <div class="col-md-12 alrt">
+                                        <button type="button" class="close" data-dismiss="modal">
+                                            <span><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Modal body -->
+                                <div class="modal-body seminor-login-modal-body cntpopup">
+                                    <h5 class="modal-title text-center">BL Print</h5>
+                                    <div class="divide1"></div>
+                                    <div class="row upldfile">
+                                        <div class="col-sm-12  padlr0">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <label class="str">BL Template</label>
+                                                                        <select name="LineName" id="ddlBLRelease" formControlName="LineName" class="form-control my-select">
+                                                                            <option *ngFor="let gRow of fillPricibleMasterAllvalues" [value]="gRow.ID">
+                                                                                {{gRow.CustomerName}}
+                                                                            </option>
+                                                                        </select>
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="divide"></div>
+                                        <div class="col-md-10 offset-1 searchbtn alrt padlr0">
+                                            <button type="submit" (click)="naviopdf()" class="btn btn-success btn-raised mb-0">Generate<div class="ripple-container"></div></button>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 alrt">
+                        <!--<button type="submit" (click)="naviopdf()" class="btn btn-success btn-raised mb-0">Print<div class="ripple-container"></div></button>-->
+                        <button class="btn btn-success btn-raised upld" (click)="BLPrint()">Print</button>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+</form>

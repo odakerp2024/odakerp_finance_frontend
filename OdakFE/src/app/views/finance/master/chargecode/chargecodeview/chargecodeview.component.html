@@ -1,0 +1,271 @@
+<div class="container-fluid">
+
+    <div class="row headtitle rotle mt-1">
+        <div class="col-md-9">
+            <h4 class="ml-2 mt-2">Charge Code / Tariff</h4>
+        </div>
+        <div class="col-md-3 alrt">
+            <button type="button" class="btn btn-success btn-raised bmd-btn-edit btntop" tabindex="0"
+                (click)="checkAddPermission()">
+                <i class="material-icons editicon">add</i>
+                <div class="ripple-container">
+                </div>
+            </button>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-9 col-xl-9 mt-2">
+            <div class="card m-b-30">
+                <div class="card-body ">
+
+                    <!-- <div class="text-right mr-4 alrt">
+                    <button type="button" class="btn btn-success btn-raised bmd-btn-edit btntop"
+                        [routerLink]="['/views/finance/master/chargecode']">
+                        <i class="material-icons editicon">add</i>
+                        <div class="ripple-container"></div>
+                    </button>
+                </div> -->
+
+                    <div class="col-md-12" *ngIf="!Is_DataFound">
+                        <div class="text-center ">
+                            <img src={{imagenotfound}} alt="No Data Found !!" class="imagenodata">
+                        </div>
+                    </div>
+                    <div id="datatable-buttons_wrapper"
+                        class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer" *ngIf="Is_DataFound">
+                        <div class="row">
+                            <div class="col-md-12 alrt">
+                                <!--<span style="font-size:13px; margin-right:0px;">Download</span><a ng-click="btnPrint();" style="color:#18aa08;font-size:16px; margin-right:20px;"> <i class="fa fa-file-excel-o"></i></a>-->
+                            </div>
+                            <div class="col-sm-12">
+                                <table id="datatable-buttons"
+                                    class="table table-responsive table-striped table-bordered w-100 dataTable no-footer text-center"
+                                    role="grid" aria-describedby="datatable-buttons_info">
+                                    <thead>
+                                        <tr role="row">
+                                            <th class="actwid" tabindex="0" aria-controls="datatable-buttons"
+                                                rowspan="1" colspan="1"
+                                                aria-label="Name: activate to sort column ascending"
+                                                style="width: 177.575px;">
+                                                Tariff code
+                                            </th>
+                                            <th class="sorting" tabindex="0" aria-controls="datatable-buttons"
+                                                rowspan="1" colspan="1"
+                                                aria-label="Name: activate to sort column ascending"
+                                                (click)="sort('ChargeName')">
+                                                Tariff Name
+                                            </th>
+                                            <th class="sorting" tabindex="0" aria-controls="datatable-buttons"
+                                                rowspan="1" colspan="1"
+                                                aria-label="Name: activate to sort column ascending"
+                                                (click)="sort('DivisionName')">
+                                                Division
+                                            </th>
+                                            <th class="sorting" tabindex="0" aria-controls="datatable-buttons"
+                                            rowspan="1" colspan="1"
+                                            aria-label="Name: activate to sort column ascending"
+                                            (click)="sort('SACCode')">
+                                            SAC Code
+                                        </th>
+                                            <th class="sorting" tabindex="0" aria-controls="datatable-buttons"
+                                                rowspan="1" colspan="1"
+                                                aria-label="Name: activate to sort column ascending"
+                                                (click)="sort('TaxRate')">
+                                                GST Group
+                                            </th>
+
+                                            <th class="sorting" tabindex="0" aria-controls="datatable-buttons"
+                                                rowspan="1" colspan="1"
+                                                aria-label="Name: activate to sort column ascending"
+                                                (click)="sort('GLMappingStatus')">
+                                                GL Mapping Status
+                                            </th>
+
+                                            <!-- <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                            colspan="1" aria-label="Name: activate to sort column ascending"
+                                            style="width: 177.575px;" (click)="sort('Division')">
+                                            Division
+                                        </th> -->
+
+                                            <th class="sorting" tabindex="0" aria-controls="datatable-buttons"
+                                                rowspan="1" colspan="1"
+                                                aria-label="Name: activate to sort column ascending"
+                                                (click)="sort('IsActive')">
+                                                Active
+                                            </th>
+                                            <!-- <th class="actwid" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                            colspan="1" aria-label="Office: activate to sort column ascending"
+                                            style="width: 129.95px;">
+                                            Action
+                                        </th> -->
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+
+                                        <tr *ngFor="let dataItem of pagedItems;let i = index">
+                                            <td style="color: #0366d6; cursor: pointer;" (click)="checkUpdatePerission(dataItem.ChargesId)">
+                                                {{dataItem.ChargeCode}}
+                                            </td>
+                                            <td> {{dataItem.ChargeName}}</td>
+                                            <td>{{dataItem.DivisionName}}</td>
+                                            <td>{{dataItem.SACCode}}</td>
+                                            <td>{{dataItem.TaxRate}} %</td>
+                                            <td>{{dataItem.GLMappingStatus}}</td>
+                                            <td>{{dataItem.IsActive == true ? 'Yes':'No'}}</td>
+                                            <!-- <td>
+                                            <button class="btn btn-success bmd-btn-fab">
+                                                <i class="material-icons">edit</i>
+                                            </button>
+                                        </td> -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row page" align="right">
+                            <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10" class="pagination">
+                                <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                    <a (click)="setPage(1)">First</a>
+                                </li>
+                                <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                    <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+                                </li>
+                                <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                                    <a (click)="setPage(page)">{{page}}</a>
+                                </li>
+                                <li *ngIf="(pager.totalPages - pager.startPage) > 5 ">
+                                    <a (click)="setPage(pager.startPage + 5)">...</a>
+                                </li>
+                                <li *ngIf="(pager.totalPages - pager.startPage) > 5">
+                                    <a (click)="setPage(pager.totalPages)">{{pager.totalPages}}</a>
+                                </li>
+
+                                <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                    <a (click)="setPage(pager.currentPage + 1)">Next</a>
+                                </li>
+                                <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                    <a (click)="setPage(pager.totalPages)">Last</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 mt-2">
+            <form [formGroup]="fg">
+                <div class="card m-b-30 sidesearch">
+                    <div class="card-body cpad">
+                        <div class="row">
+
+                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                <div class="form-group bmd-form-group">
+                                    <input type="text" formControlName="ChargeCode" name="code" autocomplete="off"
+                                        placeholder="Tariff Code" id="code" class="form-control" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                <div class="form-group bmd-form-group">
+                                    <input type="text" name="chargeName" formControlName="ChargeName" autocomplete="off"
+                                        placeholder="Tariff Name" id="txtChargeName" class="form-control" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                <div class="form-group bmd-form-group">
+
+                                    <ng-select class="searchdropdown" name="SACID" [clearable]="false"
+                                        formControlName="SACCode" id="ddlSACCode">
+                                        <ng-option [value]="''" [disabled]="true">--SELECT SAC CODE--</ng-option>
+                                        <ng-option *ngFor="let status of FillSAC" [value]="status.SACCode">
+                                            {{status.SACDescription | uppercase}}
+                                        </ng-option>
+                                    </ng-select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                <div class="form-group bmd-form-group">
+
+
+                                    <ng-select class="searchdropdown" [clearable]="false" name="gSTGroupID"
+                                        formControlName="GSTGroup" id="ddlGSTGroup">
+                                        <ng-option [value]="''" [disabled]="true">--SELECT GST GROUP--</ng-option>
+                                        <ng-option *ngFor="let status of FillGSTGroup" [value]="status.GSTGroup">
+                                            {{status.GSTGroup | uppercase}}
+                                        </ng-option>
+                                    </ng-select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                <div class="form-group bmd-form-group">
+
+                                    <ng-select class="searchdropdown" [clearable]="false" formControlName="Division">
+                                        <ng-option [value]="''" [disabled]="true">--SELECT DIVISION--</ng-option>
+                                        <ng-option *ngFor="let statusv of divisionList" [value]="statusv.DivisionName">
+                                            {{statusv.DivisionName | uppercase}}
+                                        </ng-option>
+                                    </ng-select>
+                                </div>
+                            </div>
+
+                            <!-- <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                <div class="form-group bmd-form-group">
+
+                                    <ng-select class="searchdropdown" id="ddlGLLink" [clearable]="false"
+                                        formControlName="GLLink">
+                                        <ng-option [value]="''" [disabled]="true">--SELECT GL LINK--</ng-option>
+                                        <ng-option *ngFor="let statusv of coaAccountList" [value]="statusv.AccountName">
+                                            {{statusv.AccountName | uppercase}}
+                                        </ng-option>
+                                    </ng-select>
+                                </div>
+                            </div> -->
+
+                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                <div class="form-group bmd-form-group">
+
+                                    <ng-select class="searchdropdown" id="ddlStatusv" [clearable]="false"
+                                        formControlName="IsActive">
+                                        <ng-option [value]="''" [disabled]="true">--SELECT ACTIVE--</ng-option>
+                                        <ng-option *ngFor="let statusv of statusvalues" [value]="statusv.value">
+                                            {{statusv.viewValue | uppercase}}
+                                        </ng-option>
+                                    </ng-select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                <div class="form-group bmd-form-group">
+
+                                    <ng-select class="searchdropdown" id="ddlGLLink" [clearable]="false"
+                                        formControlName="GLLink">
+                                        <ng-option [value]="''" [disabled]="true">--SELECT GL Mapping Status--</ng-option>
+                                        <ng-option *ngFor="let statusv of GLStatusvaluesa" [value]="statusv.viewValue">
+                                            {{statusv.viewValue | uppercase}}
+                                        </ng-option>
+                                    </ng-select>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-12 searchbtn alrt text-center mb-3 mt-3">
+                                <button type="submit" (click)="onSubmit()" class="btn btn-primary btn-raised mb-0"
+                                    style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;">Search
+                                    <div class="ripple-container"></div>
+                                </button>
+                                <button class="btn btn-raised btn-danger mb-0" (click)="clearSearch()"
+                                    style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;">Clear<div
+                                        class="ripple-container"></div></button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>

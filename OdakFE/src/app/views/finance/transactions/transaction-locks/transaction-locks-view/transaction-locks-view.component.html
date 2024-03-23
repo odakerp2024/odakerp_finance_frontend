@@ -1,0 +1,157 @@
+<div class="p-4">
+    <div class="row headtitle">
+        <div class="col-9 d-flex justify-content-between">
+            <span class="mt-auto">
+                <h4>Transaction Locks</h4>
+            </span>
+            <button (click)="CreateNew()" class="btn btn-success btn-raised bmd-btn-edit">
+                <i class="material-icons editicon">add</i>
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <!-- Table View -->
+        <div class="col-sm-12 col-md-9">
+            <div class=" mr-3 card">
+                <div class="row">
+                    <div class="col-12">
+                        <table class="table table-responsive   table-bordered w-100 table-striped  p-3 mt-3 border-0">
+                            <thead class="text-center">
+                                <tr role="row">
+                                    <th class="align-middle" id="th1" rowspan="2" colspan="1" tabindex="0">
+                                        Financial Year
+                                    </th>
+                                    <th class="align-middle" id="th2" rowspan="2" colspan="1">
+                                        Period
+                                    </th>
+                                    <th class="align-middle" id="th6" rowspan="2" colspan="1">
+                                        Status
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-center">
+                                <ng-container *ngIf="transactionLocksList.length; else noRecord">
+                                    <tr *ngFor="let transactionLocks of pagedItems;let i = index">
+                                        <td (click)="editTransactionLocks(transactionLocks.TransactionLockId)" style="color: #0366d6;cursor: pointer;">
+                                            {{transactionLocks.FinancialYear}}
+                                        </td>
+                                        <td>{{transactionLocks.Period }}</td>
+                                        <td><div [ngClass]="transactionLocks.StatusName == 'Closed' ? 'badge badge-state-confirm' : 'badge badge-state'">
+                                            {{transactionLocks.StatusName}}</div>
+                                        </td>
+                                    </tr>
+                                </ng-container>
+
+                                <!-- no data -->
+                                <ng-template #noRecord>
+                                    <tr>
+                                        <td class="text-center" colspan="3">No Records Found</td>
+                                    </tr>
+                                </ng-template>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                <div style="justify-content: end;" class="row page w-100">
+                    <ul *ngIf="pager.pages && pager?.pages?.length && pager.totalItems > 10" class="pagination">
+                        <li [ngClass]="{disabled:pager.currentPage === 1}">
+                            <a (click)="setPage(1)">First</a>
+                        </li>
+                        <li [ngClass]="{disabled:pager.currentPage === 1}">
+                            <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+                        </li>
+                        <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                            <a (click)="setPage(page)">{{page}}</a>
+                        </li>
+                        <li *ngIf="(pager.totalPages - pager.startPage) > 5 ">
+                            <a (click)="setPage(pager.startPage + 5)">...</a>
+                        </li>
+                        <li *ngIf="(pager.totalPages - pager.startPage) > 5">
+                            <a (click)="setPage(pager.totalPages)">{{pager.totalPages}}</a>
+                        </li>
+
+                        <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                            <a (click)="setPage(pager.currentPage + 1)">Next</a>
+                        </li>
+                        <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                            <a (click)="setPage(pager.totalPages)">Last</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter -->
+        <div class="col-sm-12 col-xs-12 col-md-3 card">
+            <form [formGroup]="filterForm" class="">
+                <div class="row pt-4">
+
+                    <div class="col-12">
+                        <div class="form-group bmd-form-group">
+                            <!-- <select class="form-control my-select" formControlName="FinancialYear">
+                                <option value="" disabled>--SELECT FINANCIAL YEAR--</option>
+                                <option *ngFor="let Final of finalYearList" [value]="Final.FinancialYearName">
+                                    {{Final.FinancialYearName | uppercase}}
+                                </option>
+                            </select> -->                                     
+                            <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'FinancialYear'">
+                               <ng-option [value]="''" disabled>--SELECT FINANCIAL YEAR--</ng-option>
+                                 <ng-option  *ngFor="let Final of finalYearList" [value]="Final.FinancialYearId">
+                                 <span class="textwrap">{{Final.FinancialYearName | uppercase}}</span>
+                                </ng-option>
+                            </ng-select> 
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-group bmd-form-group w-100">
+                            <!-- <select class="form-control my-select" formControlName="PeriodType">
+                                <option value="0" disabled>--SELECT PERIOD--</option>
+                                <option *ngFor="let period of periodList" [value]="period.PeriodTypeId">
+                                    {{period.PeriodType | uppercase}}
+                                </option>
+                            </select> -->
+                            <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'PeriodType'">
+                                <ng-option [value]="0" disabled>--SELECT PERIOD--</ng-option>
+                                  <ng-option *ngFor="let period of periodList" [value]="period.PeriodTypeId">
+                                  <span class="textwrap"> {{period.PeriodType | uppercase}}</span>
+                                 </ng-option>
+                             </ng-select> 
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-group bmd-form-group">
+                            <!-- <select class="form-control my-select" formControlName="Status">
+                                <option value='0' disabled>--SELECT STATUS--</option>
+                                <option *ngFor="let data of statusList" [value]=data.Id>{{data.Status |
+                                    uppercase}}
+                                </option>
+                            </select> -->                                      
+                            <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'Status'">
+                              <ng-option [value]="0" disabled>--SELECT STATUS--</ng-option>
+                                <ng-option *ngFor="let data of statusList" [value]=data.Id>
+                                <span class="textwrap">{{data.Status |
+                                    uppercase}}</span>
+                              </ng-option>
+                            </ng-select> 
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 searchbtn alrt text-center mb-3 mt-3">
+                        <button type="submit" style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;"
+                            class="btn btn-primary btn-raised mb-0" (click)="getTransactionList()">
+                            Search
+                        </button>
+                        <button (click)="filterFormCreate();getTransactionList()"
+                            style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;"
+                            class="btn btn-raised btn-danger mb-0">
+                            Clear
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,24 @@
+.block-set-off-input {
+    border: 1px solid darkgrey;
+    background: #e9ecef;
+}
+
+.fixTableHead {
+    overflow-y: auto;
+}
+.fixTableHead thead th {
+    position: sticky;
+    top: 0;
+}
+
+.fixTableHead tfoot td {
+    position: -webkit-sticky;
+    position: sticky;
+    bottom: 0;
+    background: #e2e3e5;
+    z-index: 4;
+}
+:host ::ng-deep .mat-form-field-outline{
+    background:  #e9ecef !important;
+
+ }

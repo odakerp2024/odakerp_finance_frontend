@@ -1,0 +1,39 @@
+@media print {
+    .print-content {
+      width: 95vw;
+      margin: 0;
+      padding: 0;
+      position: absolute;
+      left: 0;
+    }
+    
+    .hide-element-print{
+        display: none;
+    }
+  }
+
+
+  .disabled-content {
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .my-select.days {
+    background-color: rgb(192, 247, 192)!important;
+    font-weight: bold !important;
+    font-size: medium !important;
+}
+
+.my-select.amount {
+  background-color: rgb(192, 247, 192)!important;
+  font-weight: bold !important;
+  font-size: medium !important;
+}
+:host ::ng-deep .mat-form-field-outline{
+  background:  #e9ecef !important;
+
+}
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}

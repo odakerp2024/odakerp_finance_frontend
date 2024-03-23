@@ -1,0 +1,235 @@
+<div class="container-fluid p-0">
+
+    <div class="d-flex justify-content-between headtitle mt-2">
+        <h4 class="ml-2 mt-2">Division</h4>
+
+        <div class="btntop">
+
+            <button *ngIf="isUpdate" (click)="divisionForm.enable();isUpdateEnable = true" type="button"
+                class="btn btn-warning bmd-btn-edit btn-raised btntop emarginr ng-star-inserted">
+                <i class="material-icons editicon">edit</i>
+            </button>
+
+            <button type="button" class="btn btn-success bmd-btn-edit btn-raised btntop"
+                (click)="divisionListRoute()"><i class="material-icons editicon">reply</i>
+                <div class="ripple-container"></div>
+            </button>
+
+            <button *ngIf="!isCreate"
+                class="nav-link dropdown-toggle arrow-none waves-effect nav-user btn bmd-btn-edit btn-raised btntop btnlog"
+                data-placement="bottom" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="material-icons editicon">schedule</i>
+            </button>
+
+
+            <div style="background-color: aliceblue;width:250px;left:-66px"
+                class="dropdown-menu dropdown-menu  profile-dropdown" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" style="padding:15px;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12"><span>ModifiedOn: {{ModifiedOn}}</span> | <span>Modified By:
+                                        {{ModifiedBy}}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:10px;">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12"><span>CreatedOn: {{CreatedOn}}</span> | <span>Created By:
+                                        {{CreatedBy}}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- <button *ngIf="!isCreate"
+                class="nav-link dropdown-toggle arrow-none waves-effect nav-user btn bmd-btn-edit btn-raised btntop btnlog"
+                data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                <i class="material-icons editicon">schedule</i>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right profile-dropdown"
+                style="background-color: aliceblue;width:236px;left:-66px">
+                <a class="dropdown-item" href="#" style="padding:15px;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12"><span>ModifiedOn: {{ModifiedOn}}</span> | <span>Modified By:
+                                        {{ModifiedBy}}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:10px;">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12"><span>CreatedOn: {{CreatedOn}}</span> | <span>Created By:
+                                        {{CreatedBy}}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div> -->
+
+        </div>
+    </div>
+
+    <!-- ------title start---------- -->
+
+
+
+    <div class="row my-3 p-2" style="background-color: lavender;margin: 2px;">
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item active">
+                                <a class="info-title" routerLink="/views/division/division-view">Division </a>
+                            </li>
+                            <li aria-current="page" class="breadcrumb-item lbltxt">
+                                {{selectedTabName == 'Basic' ? 'Basic Details':selectedTabName == 'email'?
+                                'E-Mail ids':''}}</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row bkgno">
+                <div class="col-md-12">
+                    <label [title]="divisionForm.value.DividionName" class="lbltxt header-text-label"> <span
+                            style="font-weight: lighter !important;">Division
+                            Name : </span>
+                        {{divisionForm.value.DividionName | uppercase }}</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- --------title end----------- -->
+    <div class="card p-4">
+
+        <div class="row mt-4 ml-0" style="height: 2.4rem;">
+            <div (click)="checkPermission('Basic')"
+                [ngClass]="selectedTabName == 'Basic' ? 'selected-tav-view' : 'not-selected-tav-view'"
+                class="col-2 text-center select-tav-view">Basic Details </div>
+            <div *ngIf="isBasicDetailsFilled" (click)="checkPermission('email')"
+                [ngClass]="selectedTabName == 'email' ? 'selected-tav-view' : 'not-selected-tav-view'"
+                class="col-2 text-center select-tav-view">E-Mail ids</div>
+            <div *ngIf="!isBasicDetailsFilled" disabled = 'isEmail' class="col-2 text-center not-selected-tav-view pt-2 disabled-tav-view">
+                E-Mail ids
+            </div> <!-- Disabled state -->
+        </div>
+
+        <!-- <div class="row mt-4 ml-0" style="height: 2.4rem;">
+            <div (click)="selectedTabName = 'Basic'"
+                [ngClass]=" selectedTabName == 'Basic' ? 'selected-tav-view' : 'not-selected-tav-view'"
+                class="col-2 text-center select-tav-view">Basic Details </div>
+            <div (click)="selectedTabName = 'email'"
+                [ngClass]=" selectedTabName == 'email' ? 'selected-tav-view' : 'not-selected-tav-view'"
+                class="col-2 text-center select-tav-view">E-Mail ids</div>
+        </div> -->
+
+        <div *ngIf="selectedTabName == 'Basic'">
+
+            <form [formGroup]="divisionForm">
+                <div class="row mt-4">
+                    <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+
+                        <div class="form-group">
+                            <label class="str" for="companyName">Division Code</label><br>
+                            <input readonly [ngClass]=" isUpdate ? 'block-input' : ''" formControlName="DivisionCode"
+                                type="text" id="companyName" class="form-control w-100" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+
+                        <div class=" form-group">
+                            <label class="str" for="companyName">Division Name</label><br>
+                            <input [ngClass]=" isUpdate ? 'block-input' : ''" formControlName="DividionName" type="text"
+                                id="companyName" class="form-control w-100" />
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+
+                        <div class="form-group">
+                            <label class="str" for="companyName">Short Name</label><br>
+                            <input (ngModelChange)="autoCodeGeneration($event)"
+                                [ngClass]=" isUpdate ? 'block-input' : ''" formControlName="ShortName" type="text"
+                                id="companyName" class="form-control w-100" />
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                        <div class=" form-group">
+                            <label class="str" for="companyName">Application (if any)</label><br>
+                            <!-- <select [ngClass]=" isUpdate ? 'block-input' : ''" formControlName="Application"
+                                name="AccType" id="ddlCountry" class="form-control my-select">
+                                <option disabled value="">--SELECT APPLICATION--</option>
+                                <option value="LA">LA</option>
+                                <option value="FF">FF</option>
+                                <option value="NA">Not Applicable</option>
+                            </select> -->
+                            <ng-select class="searchdropdown" [clearable]="false"
+                                [ngClass]=" isUpdate ? 'block-input' : ''" formControlName="Application" name="AccType"
+                                id="ddlCountry">
+                                <ng-option [value]="''" [disabled]="true">--SELECT APPLICATION--</ng-option>
+                                <ng-option value="LA">LA</ng-option>
+                                <ng-option value="FF">FF</ng-option>
+                                <ng-option value="NA">Not Applicable</ng-option>
+                            </ng-select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                        <div class=" form-group">
+                            <label class="str" for="companyName">Active</label><br>
+                            <!-- <select formControlName="Active" name="AccType" id="ddlCountry"
+                                class="form-control my-select">
+                                <option disabled [value]="''">--SELECT ACTIVE--</option>
+                                <option *ngFor="let status of statusvalues" [value]="status.value">
+                                    {{status.viewValue | uppercase}}
+                                </option>
+                            </select> -->
+                            <ng-select class="searchdropdown" [clearable]="false" formControlName="Active"
+                                name="AccType" id="ddlCountry">
+                                <ng-option [value]="''" [disabled]="true">--SELECT ACTIVE--</ng-option>
+                                <ng-option *ngFor="let status of statusvalues" [value]="status.value">
+                                    {{status.viewValue | uppercase}}
+                                </ng-option>
+                            </ng-select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 text-right mt-4">
+                        <button *ngIf="isCreate" (click)="saveDivision()" type="submit"
+                            class="btn btn-primary btn-raised btn-default cntbtn mb-0">Save</button>
+
+                        <button [disabled]="!isUpdateEnable" *ngIf="isUpdate" (click)="saveDivision()" type="submit"
+                            class="btn btn-primary btn-raised btn-default cntbtn mb-0">Update</button>
+                        <button [routerLink]="['/views/finance/financemaster']"
+                            class="btn btn-danger btn-raised cntbtn mb-0">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+        <div *ngIf="selectedTabName == 'email'" class="email">
+
+            <app-e-mail-table [tableData]="emailData" [OrgId]="companyDetailId" (saveTable)="emailUpdate($event)"
+                (deleteRecord)="deleteRecord($event)"></app-e-mail-table>
+
+
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,117 @@
+<div class="row headtitle">
+    <div class="col-md-9">
+        <h4>Document Numbering</h4>
+    </div>
+    <div class="col-md-3 alrt">
+        <button type="button" class="btn btn-success btn-raised bmd-btn-edit btntop" [routerLink]="['/views/administration/systemmaster/documentnumbering/documentnumberingview']"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+    </div>
+</div>
+<form [formGroup]="docnumbForm">
+    <div class="card">
+        <div class="card-body ">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label>Module</label>
+                                <select class="form-control my-select" id="ddlModule" name="Module" formControlName="ModuleID">
+                                    <option *ngFor="let gRow of moduleItem" [value]="gRow.ID">
+                                        {{gRow.GeneralName}}
+                                    </option>
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label>Program</label>
+
+                                <!--<mat-form-field appearance="fill">                                
+                                    <mat-select>
+                                        <mat-option *ngFor="let gRow of programItem" [value]="gRow.ID">
+                                            {{gRow.GeneralName}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>-->
+
+                                <select class="form-control my-select" id="ddlProgram" name="Program" formControlName="ProgramID" (ngModelChange)="ProgramChange()">
+                                    <option *ngFor="let gRow of programItem" [value]="gRow.ID">
+                                        {{gRow.GeneralName}}
+                                    </option>
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label>Status</label>
+                                <select class="form-control my-select" id="ddlStatus" name="Status" formControlName="StatusID">
+                                    <option *ngFor="let status of statusvalues" [value]="status.value">
+                                        {{status.viewValue}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label>Numbering Logics*</label>
+                                <select class="form-control my-select" id="ddlNumbLogic" name="NumbLogic" formControlName="BLNoLogicID">
+                                    <option *ngFor="let gRow of logItem" [value]="gRow.ID">
+                                        {{gRow.BLNoLogic}}
+                                    </option>
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label>Liner Code*</label>
+                               <input type="text" formControlName="LinerCode" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label>Liner Name*</label>
+                                <select class="form-control my-select" id="ddlLinerName" name="LinerName" formControlName="LinerID">
+                                    <option *ngFor="let gRow of linerItem" [value]="gRow.ID">
+                                        {{gRow.CustomerName}}
+                                    </option>
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="card-footer ">
+            <div class="col-md-12" style="text-align:right;">
+                <button type="submit" (click)="onSubmit()" class="btn btn-primary btn-raised mb-0">Submit</button>
+            </div>
+            <input type="hidden" id="HDRegId" ng-model="HDRegId" />
+        </div>
+    </div>
+</form>

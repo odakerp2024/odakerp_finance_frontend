@@ -1,0 +1,102 @@
+<div class="row headtitle">
+    <div class="col-md-9">
+        <h4>City Master</h4>
+    </div>
+    <div class="col-md-3 alrt">
+        <button type="button" class="btn btn-success btn-raised bmd-btn-edit btntop" (click)="onBack()"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+    </div>
+</div>
+<form [formGroup]="cityForm" >
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="str">City Code</label>
+                            </div>
+                            <div class="col-md-1">:</div>
+                            <div class="col-md-7">
+                                <input type="text" name="CityCode" autocomplete="off" formControlName="CityCode" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="str">City Name</label>
+                            </div>
+                            <div class="col-md-1">:</div>
+                            <div class="col-md-7">
+                                <input type="text" name="CityName" autocomplete="off" formControlName="CityName" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>State Name</label>
+                            </div>
+                            <div class="col-md-1">:</div>
+                            <div class="col-md-7">
+                                <!--<input type="text" name="StateName" autocomplete="off" formControlName="StateName" class="form-control">-->
+                                <select class="form-control my-select" formControlName="StateID" id="ddlStatev">
+                                    <option *ngFor="let gRow of dsStateItem" [value]="gRow.ID"> {{gRow.StateName}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Country </label>
+                            </div>
+                            <div class="col-md-1">:</div>
+                            <div class="col-md-7">
+                                <select class="form-control my-select" id="ddlCountryv"  formControlName="CountryID" (ngModelChange)="CountryChanged()">
+                                    <option *ngFor="let gRow of dscountryItem" [value]="gRow.ID">
+                                        {{gRow.CountryName}}
+                                    </option>
+
+                                </select>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Status</label>
+                            </div>
+                            <div class="col-md-1">:</div>
+                            <div class="col-md-7 ">
+                                <select class="form-control my-select" id="ddlStatus" formControlName="Status">
+                                    <option *ngFor="let status of statusvalues" [value]="status.value">
+                                        {{status.viewValue}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="card-footer ">
+            <div class="col-md-12" style="text-align:right;">
+                <button type="submit" (click)="onSubmit()" class="btn btn-primary btn-raised mb-0">Submit</button>
+            </div>
+            <input type="hidden" id="HDRegId" ng-model="HDRegId" />
+        </div>
+    </div>
+    </form>

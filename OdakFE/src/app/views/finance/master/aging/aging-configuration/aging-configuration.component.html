@@ -1,0 +1,274 @@
+<div class="container-fluid">
+
+    <!-- header start -->
+    <div class="row mt-2">
+        <div class="col-9">
+            <h4 class="ml-2 mt-2">Reporting – Aging Configuration</h4>
+        </div>
+        <div class="col-3 mt-auto">
+            <div class="float-right">
+                <!-- edit -->
+                <button type="button" class="btn btn-warning bmd-btn-edit text-white mr-3" (click)="enableEdit()">
+                    <i class="material-icons editicon">edit</i>
+                </button>
+                <!-- back -->
+                <button type="button" class="btn btn-success bmd-btn-edit text-white mr-3"
+                    [routerLink]="['/views/aging/aging-list']">
+                    <i class="material-icons editicon">reply</i>
+                </button>
+                <!-- clock details -->
+                <button type="button" class="btn btn-raised bmd-btn-edit" data-placement="bottom" type="button"
+                    id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="material-icons editicon">schedule</i>
+                </button>
+                <!-- clock click pop-up -->
+                <div style="background-color: aliceblue;width:250px;left:-66px"
+                    class="dropdown-menu dropdown-menu  profile-dropdown" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item p-4">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span>ModifiedOn: {{ModifiedOn}}</span> | <span>Modified By: {{ModifiedOn}}</span>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:10px;">
+                            <div class="col-md-12">
+                                <span>CreatedOn: {{CreatedOn}}</span> | <span>Created By: {{CreatedBy}}</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- header end -->
+
+
+    <!-- -------title start--------- -->
+    <!-- <div class="row p-3" style="background-color: lavender;">
+        <div class="col-9"></div>
+        <div class="col-3">
+            <div class="row bkgno">
+                <div class="col-md-12">
+                    <small class="info-title">Financial Year</small>
+                </div>
+                <div class="col-md-12">
+                </div>
+            </div>
+        </div>
+    </div> -->
+    <!-- -------title end--------- -->
+
+
+    <!-- Table start -->
+    <div class="row card m-2">
+        <!-- Report and aging Dropdown start -->
+        <form [formGroup]="agingConfigurationForm">
+            <div class="col-12">
+                <div class="row pt-3 pb-3 mb-4">
+                    <div class="col-4 ">
+                        <label class="str">Report Type</label>
+                        <!-- <select [ngClass]=" isUpdate ? 'disable-input' : ''" class="form-control my-select"
+                            [(ngModel)]="agingDetails.ReportId" [ngModelOptions]="{standalone: true}"
+                            (change)="updateReport($event.target.value)">
+                            <option [value]="0" disabled>--SELECT REPORT TYPE--</option>
+                            <option *ngFor="let report of reportDropdown" [value]="report.ReportId">
+                                {{report.ReportName | uppercase}}
+                            </option>
+                        </select> -->
+                        <ng-select class="searchdropdown"  [clearable]="false" [ngClass]=" isUpdate ? 'disable-input' : ''"
+                        [(ngModel)]="agingDetails.ReportId" [ngModelOptions]="{standalone: true}"
+                        (change)="updateReport($event)" >
+                            <ng-option [value]="0" [disabled]="true">--SELECT REPORT TYPE--</ng-option>
+                            <ng-option *ngFor="let report of reportDropdown" [value]="report.ReportId">
+                                {{report.ReportName | uppercase}}
+                            </ng-option>
+                          </ng-select> 
+                    </div>
+                    <div class="col-4">
+                        <label class="str">Aging Group</label>
+                        <!-- <select [ngClass]=" isUpdate ? 'disable-input' : ''" class="form-control my-select"
+                            [(ngModel)]="agingDetails.AgingId" [ngModelOptions]="{standalone: true}"
+                            (change)="updateAging($event.target.value)">
+                            <option [value]="0" disabled>--SELECT AGING GROUP--</option>
+                            <option *ngFor="let aging of agingGroupDropdown" [value]="aging.AgingId">
+                                {{aging.AgingGroupName | uppercase}}
+                            </option>
+                        </select> -->
+                        <ng-select class="searchdropdown" [ngClass]=" isUpdate ? 'disable-input' : ''" [clearable]="false" 
+                        [(ngModel)]="agingDetails.AgingId" [ngModelOptions]="{standalone: true}"
+                        (change)="updateAging($event)" >
+                            <ng-option [value]="0" [disabled]="true">--SELECT AGING GROUP--</ng-option>
+                            <ng-option *ngFor="let aging of agingGroupDropdown" [value]="aging.AgingId">
+                                {{aging.AgingGroupName | uppercase}}
+                            </ng-option>
+                          </ng-select>
+                    </div>
+                    <div class="col mt-auto">
+                        <div class="">
+                            <!-- [disabled]="agingDetails.ReportId == 0" -->
+                            <button
+                                [ngClass]="[isUpdate ? 'disable-but-success' : '', agingDetails.ReportId == 0 ? 'disable-but-success' : '']"
+                                type="button" class="btn btn-success bmd-btn-fab text-white mr-3" data-toggle="modal"
+                                data-target="#exampleModalCenter">
+                                <i class="material-icons editicon">add</i>
+                            </button>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+                                aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content bg-white">
+                                        <div class="modal-header">
+                                            <button id="closeModalButton" type="button" class="close"
+                                                data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <label class="str">Add New Aging Group Name</label>
+                                            <input type="text" class="form-control" [(ngModel)]="agingGroupName"
+                                                [ngModelOptions]="{standalone: true}" />
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-primary"
+                                                (click)="addAgingDropdown()">Save</button>
+                                            <button type="button" class="btn btn-secondary mx-2" data-dismiss="modal"
+                                                (click)="clearAgingGroupName()">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button [disabled]="agingDetails.ReportId == 0" type="button"
+                                class="btn btn-warning bmd-btn-fab text-white mr-3" (click)="deleteAgingDropdown()">
+                                <i class="material-icons editicon">delete</i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Report and aging Dropdown end -->
+            <div class="col-12 ">
+                <div class="card text-center">
+                    <div class="card-header p-0">
+                        <div class="row p-2">
+                            <div class="col-auto ml-auto">
+                                <button type="button" class="btn btn-success bmd-btn-fab text-white mr-3 mb-0"
+                                    (click)="addAging()">
+                                    <i class="material-icons editicon">add</i>
+                                </button>
+                                <button type="button" class="btn btn-warning bmd-btn-fab text-white mr-3 mb-0"
+                                    (click)="editAging()">
+                                    <i class="material-icons editicon">edit</i>
+                                </button>
+                                <button type="button" class="btn btn-danger bmd-btn-fab mr-3 mb-0"
+                                    (click)="deleteAging()">
+                                    <i class="material-icons editicon">delete</i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="row">
+                            <div class="col-12">
+                                <table
+                                    class="table table-responsive   table-bordered w-100 table-striped border-0 agingTable mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">SI.NO</th>
+                                            <th scope="col">From<span>(days)</span></th>
+                                            <th scope="col">To<span>(days)</span></th>
+                                            <th scope="col">Description</th>
+                                            <th scope="col">Select</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                <input [ngClass]=" isEdit ? 'disable-input' : ''" class="form-control"
+                                                    autocomplete="off" formControlName="From" onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly name="From"
+                                                    id="fromDate" oninput="validity.valid||(value='');" RemoveSpecialChars/>
+                                            </td>
+                                            <td>
+                                                <input [ngClass]=" isEdit ? 'disable-input' : ''" class="form-control"
+                                                    autocomplete="off" formControlName="To"  name=""
+                                                    id="toDate" onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly oninput="validity.valid||(value='');" RemoveSpecialChars/>
+                                            </td>
+                                            <td>
+                                                <input [ngClass]=" isEdit ? 'disable-input' : ''" class="form-control"
+                                                    autocomplete="off" formControlName="Description" type="text" name=""
+                                                    id="description">
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                        <ng-container *ngIf="agingList.length; else noRecord">
+                                            <tr *ngFor="let agingData of pagedItems;let i = index">
+                                                <td class="py-1">{{i + 1}}</td>
+                                                <td class="px-1">{{agingData.From}}</td>
+                                                <td class="px-1">{{agingData.To}}</td>
+                                                <td class="px-1">{{agingData.Description}}</td>
+                                                <td class="px-1">
+                                                    <input type="radio" (click)="OnClickRadio(i)" name="select" />
+                                                </td>
+                                            </tr>
+                                        </ng-container>
+                                        <!-- no data -->
+                                        <ng-template #noRecord>
+                                            <tr>
+                                                <td colspan="5" style="height: 200px;">No records found</td>
+                                            </tr>
+                                        </ng-template>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer text-muted">
+
+                        <!-- Pagination -->
+                        <div class="row page">
+                            <ul *ngIf="pager.pages && pager.pages?.length" class="pagination">
+                                <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                    <a (click)="setPage(1)">First</a>
+                                </li>
+                                <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                    <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+                                </li>
+                                <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                                    <a (click)="setPage(page)">{{page}}</a>
+                                </li>
+                                <li *ngIf="(pager.totalPages - pager.startPage) > 5 ">
+                                    <a (click)="setPage(pager.startPage + 5)">...</a>
+                                </li>
+                                <li *ngIf="(pager.totalPages - pager.startPage) > 5">
+                                    <a (click)="setPage(pager.totalPages)">{{pager.totalPages}}</a>
+                                </li>
+
+                                <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                    <a (click)="setPage(pager.currentPage + 1)">Next</a>
+                                </li>
+                                <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                    <a (click)="setPage(pager.totalPages)">Last</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="col-12 pt-4 pb-4">
+            <div class="float-right">
+                <button type="button" class="btn btn-primary text-white mr-3 mb-0 col-auto" (click)="submit()"
+                    [disabled]="isEdit">
+                    Save
+                </button>
+                <button type="button" class="btn btn-warning text-white mr-3 mb-0 col-auto"
+                    [routerLink]="['/views/aging/aging-list']">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

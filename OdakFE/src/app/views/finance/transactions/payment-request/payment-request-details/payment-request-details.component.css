@@ -1,0 +1,15 @@
+.pophead{
+    font-size: 20px;
+    font-weight: 600;
+    color:#003d79;
+}
+
+.form-control.amount.amount {
+    background-color: rgb(192, 247, 192)!important;
+    font-weight: bold !important;
+    font-size: large !important;
+}
+:host ::ng-deep .mat-form-field-outline{
+    background:  #e9ecef !important;
+
+ }

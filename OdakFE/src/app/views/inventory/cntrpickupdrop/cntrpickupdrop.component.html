@@ -1,0 +1,277 @@
+<div class="row headtitle">
+    <div class="col-md-9">
+        <h4>Container Pick and Drop</h4>
+    </div>
+    <div class="col-md-3 alrt">
+        <button class="nav-link dropdown-toggle arrow-none waves-effect nav-user btn bmd-btn-edit btn-raised btntop btnlog" data-toggle="dropdown" href="#" role="button" aria-haspopup="false"
+                aria-expanded="false">
+            <i class="material-icons editicon">schedule</i>
+        </button>
+        <div class="dropdown-menu dropdown-menu-right profile-dropdown" style="background-color: aliceblue;width:250px;left:-66px">
+
+            <a class="dropdown-item" style="padding:15px;">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-12"><span>ModifiedOn: 17/10/2022</span> | <span>Modified By: Admin</span></div>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px;">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-12"><span>CreatedOn: {{CreatedOn}}</span> | <span>Created By: {{CreatedBy}}</span></div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <button type="button" *ngIf="showEdit" class="btn btn-warning bmd-btn-edit btn-raised btntop" (click)="ForsControlDisable();" style="margin-right:15px;"><i class="material-icons editicon">edit</i></button>
+        <button type="button" class="btn btn-success bmd-btn-edit btn-raised btntop" [routerLink]="['/views/enquiries-booking/rateapprovals/rateapprovalsview/rateapprovalsview']"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+    </div>
+</div>
+
+<div class="row forms">
+    <div class="col-md-12">
+
+        <div class="row">
+            <div class="col-md-12 padlr0">
+                <form [formGroup]="CntrPickDrop">
+                    <div class="tab-content" style="padding:0;">
+                        <div class="tab-pane pt-3 active show" id="Enquiry" role="tabpanel">
+
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4 class="enqtitle">Basic Details</h4>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-5">
+
+                                    </div>
+                                    <div class="col-md-3 rad alrt">
+                                        <label> Transaction</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label>&nbsp;</label>
+                                            <label class="check">
+                                                <input type="radio" (click)="StatusChange(1)" [value]="1" name="TransationStatus" checked formControlName="TransationStatus" />
+                                                <span>Pick</span>
+                                            </label>
+                                            <label class="check" style="margin-left:20px;">
+                                                <input type="radio" (click)="StatusChange(2)" [value]="2" name="TransationStatus" formControlName="TransationStatus" />
+                                                <span>Drop</span>
+                                            </label>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row" style="border-bottom:2px dashed #ccc; margin-bottom:15px; padding-bottom:10px;">
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label>Reference#</label>
+                                                    <input type="text" autocomplete="off" formControlName="Reference" id="txtReference" class="form-control" />
+                                                </div>
+
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label class="str"> Date</label>
+                                                    <mat-form-field class="paymentDate" >
+                                                        <input matInput (click)="RefDate.open()" readonly [max]="getToday()" autocomplete="off" [matDatepicker]="RefDate"  id="RefDate" placeholder="" formControlName="RefDate">
+                                                        <mat-datepicker-toggle matSuffix [for]="RefDate"></mat-datepicker-toggle>
+                                                        <mat-datepicker #RefDate></mat-datepicker>
+                                                    </mat-form-field>
+                                                    <!-- <input type="date" autocomplete="off" formControlName="RefDate" id="txtRefDate" class="form-control"
+                                                           [max]="getToday()"  /> -->
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label class="str">Office </label>
+                                                    <select class="form-control my-select" id="ddlOfficeLocation" formControlName="OfficeLocation">
+                                                        <option *ngFor="let gRow of OfficeMasterAllvalues" [value]="gRow.ID">
+                                                            {{gRow.CustomerName}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label class="str">Pick/Drop Type</label>
+                                                    <select class="form-control my-select" formControlName="PickDropTypeID" id="ddlPickDropType">
+                                                        <option *ngFor="let gRow of Pickdropallvalues" [value]="gRow.ID">
+                                                            {{gRow.GeneralName}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label class="str">Pick/Drop Location</label>
+                                                    <select class="form-control my-select" id="ddlSalesperson" formControlName="PickDropLocID">
+                                                        <option *ngFor="let gRow of Pickdropallvalues" [value]="gRow.ID">
+                                                            {{gRow.GeneralName}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label class="str">Owning Principal</label>
+                                                    <select class="form-control my-select" id="ddlOwnPrinciple" formControlName="OwnPrinciple">
+                                                        <option *ngFor="let gRow of fillPricibleMasterAllvalues" [value]="gRow.ID">
+                                                            {{gRow.CustomerName}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label class="str">Operating Principal</label>
+                                                    <select class="form-control my-select" formControlName="OprPrinciple" id="ddlOprPrinciple">
+                                                        <option *ngFor="let gRow of fillPricibleMasterAllvalues" [value]="gRow.ID">
+                                                            {{gRow.CustomerName}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label class="str">Owning Customer</label>
+                                                    <select class="form-control my-select" id="ddlOwnCus" formControlName="OwnCustomer">
+                                                        <option *ngFor="let gRow of CustomerMasterAllvalues" [value]="gRow.ID">
+                                                            {{gRow.CustomerName}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label class="str">Principle Agent</label>
+                                                    <input type="text" autocomplete="off" formControlName="PrincipleAgent" id="txtPrincipleAgent" class="form-control" />
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label >Remarks</label>
+                                                    <textarea type="text" autocomplete="off" formControlName="Remarks" id="txtRemarks" class="form-control" style="height:60px!important;"></textarea>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="row" style="border: 1px dashed #31498a; padding:7px 14px;height:78px; margin-top:8px; ">
+                                            <div class="col-md-6" style="padding-top:20px;">
+                                                <input type="file" class="file-upload" id="txtAttachFile" formControlName="AttachFile" (change)="onFileSelected($event)">
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+
+
+                            </div>
+
+                            <div class="divide"></div>
+                            <div class="col-md-12 searchbtn alrt">
+                                <button type="submit" (click)="onSubmit()" *ngIf="showSave" [disabled]="disableSave" class="btn btn-primary btn-raised mb-0">Save<div class="ripple-container"></div></button>
+                                <button type="submit" (click)="onApprove()" *ngIf="showApprove" [disabled]="disableApprove" class="btn btn-success btn-raised mb-0">Approve<div class="ripple-container"></div></button>
+                                <button type="submit" (click)="onReject()" *ngIf="showReject" [disabled]="disableReject" class="btn btn-danger btn-raised mb-0">Reject<div class="ripple-container"></div></button>
+                                <button type="submit" (click)="onCancel()" *ngIf="showCancel" [disabled]="disableCancel" class="btn btn-warning btn-raised mb-0">Cancel<div class="ripple-container"></div></button>
+                            </div>
+
+
+
+
+
+
+
+
+
+
+
+                        </div>
+
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

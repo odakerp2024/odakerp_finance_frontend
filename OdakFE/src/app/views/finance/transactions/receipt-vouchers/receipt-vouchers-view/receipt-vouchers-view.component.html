@@ -1,0 +1,350 @@
+<div class="p-4">
+    <div class="row headtitle">
+        <div class="col-9 d-flex justify-content-between">
+            <span class="mt-auto">
+                <h4>Receipt Voucher</h4>
+            </span>
+            <button (click)="CreateNew()" class="btn btn-success btn-raised bmd-btn-edit">
+                <i class="material-icons editicon">add</i>
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <!-- Table View -->
+        <div class="col-sm-12 col-md-9">
+            <div class=" mr-3 card">
+                <div class="row">
+                    <div class="col-12 ">
+                        <table class="table table-responsive table-bordered w-100 table-striped  p-3 mt-3 border-0">
+                            <thead class="text-center">
+                                <tr role="row">
+                                    <th class="align-middle" id="th1" rowspan="2" colspan="1" tabindex="0">
+                                        RV Number
+                                    </th>
+                                    <!-- <th class="align-middle" id="th2" rowspan="2" colspan="1">
+                                        RV Type
+                                    </th> -->
+                                    <th class="align-middle" id="th3" rowspan="2" colspan="1">
+                                        RV Date
+                                    </th>
+                                    <th class="align-middle" id="th4" rowspan="2" colspan="1">
+                                        Customer
+                                    </th>
+                                    <!-- <th class="align-middle" id="th5" rowspan="2" colspan="1">
+                                        Customer Branch
+                                    </th> -->
+                                    <th class="align-middle" id="th6" rowspan="1" colspan="2">Received</th>
+                                    <th class="align-middle" id="th7" rowspan="2" colspan="1">
+                                        Deposited   <br /> Bank
+                                    </th>
+                                    <th class="align-middle" id="th8" rowspan="2" colspan="1">
+                                        Reference  <br />Number
+                                    </th>
+                                    <th class="align-middle" id="th8" rowspan="2" colspan="1">
+                                        Status
+                                    </th>
+
+                                    <th class="sorting align-middle" tabindex="0" aria-controls="datatable-buttons" rowspan="2" colspan="1"
+                                     aria-label="Name: activate to sort column ascending"
+                                       >
+                                        Copy
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th scope="col">Amount</th>
+                                    <th scope="col">Currency</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-center">
+                                <tr *ngFor="let receipt of pagedItems;let i = index">
+                                    <td (click)="editReceipt(receipt.Id)" style="color: #0366d6;cursor: pointer;">
+                                        <a>{{receipt.VoucherNumber}}</a>
+                                    </td>
+                                    <!-- <td>{{receipt.VoucherType}}</td> -->
+                                    
+                                <td>{{receipt.VoucherDate | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td>
+
+                                    
+                                    <td [title]="receipt.CustomerName | uppercase">
+                                        {{ (receipt.CustomerName && receipt.CustomerName.length > 20) ? receipt.CustomerName.slice(0, 20) + '-' : receipt.CustomerName }}
+                                      </td>
+                                    
+                                    
+                                    <!-- <td>{{receipt.CustomerName ? receipt.CustomerName : ''}}</td> -->
+                                    <!-- <td>{{receipt.CustomerBranch}}</td> -->
+                                    <td>{{receipt.AmountReceived}}</td>
+                                    <td>{{receipt.AmountTypeName}}</td>
+                                    <td>{{receipt.BankName ? receipt.BankName : ''}}</td>
+                                    <td>{{receipt.ReferenceNo || '-'}}</td>
+                                    <td>
+                                        <div
+                                    [ngClass]="receipt.StatusName == 'Confirmed' ? 'badge badge-state-confirm' : receipt.StatusName == 'Cancelled' ? 'badge badge-state-cancel' : 'badge badge-state'">
+                                    {{receipt.StatusName}}
+                                        </div>
+                                </td>
+                                    <td>
+                                        <button (click)="copyPaste(receipt.Id, true)"
+                                            class="btn btn-primary bmd-btn-fab">
+                                            <i class="material-icons">filter_none</i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+                <div style=" width: 100%;justify-content: end;" class="row page">
+                    <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10 && pager.totalItems > 10" class="pagination">
+                        <li [ngClass]="{disabled:pager.currentPage === 1}">
+                            <a (click)="setPage(1)">First</a>
+                        </li>
+                        <li [ngClass]="{disabled:pager.currentPage === 1}">
+                            <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+                        </li>
+                        <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                            <a (click)="setPage(page)">{{page}}</a>
+                        </li>
+                        <li *ngIf="(pager.totalPages - pager.startPage) > 5 ">
+                            <a (click)="setPage(pager.startPage + 5)">...</a>
+                        </li>
+                        <li *ngIf="(pager.totalPages - pager.startPage) > 5">
+                            <a (click)="setPage(pager.totalPages)">{{pager.totalPages}}</a>
+                        </li>
+
+                        <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                            <a (click)="setPage(pager.currentPage + 1)">Next</a>
+                        </li>
+                        <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                            <a (click)="setPage(pager.totalPages)">Last</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter -->
+        <div class="col-sm-12 col-xs-12 col-md-3 card">
+            <form [formGroup]="filterForm" class="">
+                <div class="row pt-4">
+                    <div class="col-12">
+                        <div class="form-group bmd-form-group w-100">
+                           
+                            <ng-select  class="searchdropdown custom"  formControlName="DivisionId" [clearable]="false">
+                            <ng-option [value]="''" disabled>--SELECT DIVISION--</ng-option>
+                            <ng-container  *ngFor="let division of divisionList">
+                              <ng-option  [value]="division.ID">
+                                <span class="textwrap">{{division.DivisionName | uppercase}}</span>
+                              </ng-option>
+                           </ng-container>
+                        </ng-select> 
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-group bmd-form-group w-100">
+                            <!-- <select formControlName="OfficeId" class="form-control my-select">
+                                <option value="" disabled>--SELECT OFFICE--</option>
+                                <option *ngFor="let office of officeList" [value]="office.ID">
+                                    {{office.OfficeName | uppercase}}
+                                </option>
+                            </select> -->
+                            <ng-select  class="searchdropdown"  formControlName="OfficeId" [clearable]="false">
+                                <ng-option [value]="''" disabled>--SELECT OFFICE--</ng-option>
+                                <ng-container *ngFor="let office of officeList">
+                                  <ng-option [value]="office.ID">
+                                    <span class="textwrap">{{office.OfficeName | uppercase}}</span>
+                                  </ng-option>
+                                </ng-container>
+                            </ng-select>   
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-group bmd-form-group">
+                            
+                            <ng-select class="searchdropdown custom" [clearable]="false"
+                            [formControlName]="'ReceiptVoucherTypeId'">
+                            <ng-option [value]="''" disabled>--SELECT VOUCHER TYPE--</ng-option>
+                            <ng-option *ngFor="let type of voucherTypeList" [value]="type.ID">
+                                <span class="textwrap">{{ type.VoucherTypeName | uppercase }}</span>
+                            </ng-option>
+                          </ng-select>                         
+                        </div>
+                    </div>
+
+                    <!-- <div class="col-12">
+                        <div class="form-group bmd-form-group">
+                            <select formControlName="ReceiptVoucherFor" class="form-control my-select">
+                                <option value="0" disabled>--SELECT VOUCHER FOR--</option>
+                                <option *ngFor="let type of voucherForList" [value]="type.ID">
+                                    {{type.VoucherName | uppercase}}
+                                </option>
+                            </select>
+                        </div>
+                    </div> -->
+
+                    <div class="col-12">
+                        <div class="form-group bmd-form-group">
+                            <input formControlName="ReceiptVoucherNumber" type="text" class="w-100"
+                                placeholder="RECEIPT VOUCHER NUMBER" />
+                        </div>
+                    </div>
+
+                    <!-- <div class="col-12">
+                        <div class="form-group bmd-form-group">
+                            <input formControlName="ReceiptVoucherDate" [max]="maxDate" type="date" class="w-100 p-0"
+                                placeholder=" Receipt Voucher Date" />
+                        </div>
+                    </div> -->
+                    <div class="col-md-12" style="margin-top: -7px;">
+                       <!-- <div class="form-group bmd-form-group">
+                          <div class="row">
+                               <div class="col-md-6">
+                                <label class="dateLabel">From</label>
+                                <input formControlName="StartDate" (change)="receiptEvent($event.target.value)" [max]="minDate" 
+                                type="date" class="w-100 p-0"  placeholder=" Receipt Voucher Date" />
+                               </div>
+                                <div class="col-md-6">
+                                  <label class="dateLabel">Till</label>
+                                  <input formControlName="EndDate"  [min]="validTillMinDate" type="date" class="w-100 p-0"
+                                  placeholder=" Receipt Voucher Date" />
+                                </div>
+                            </div>
+                        </div> -->
+                        <div class="form-group bmd-form-group">
+                            <div class="row">
+                              <div class="col-md-6">
+                                <label class=" mb-3">From</label>
+                                <div class="input-group">
+                                    <mat-form-field class="tillDate mat_date_picker"  appearance="outline">
+                                        <input matInput (click)="dp.open()" readonly formControlName="StartDate"  [max]="validTillMinDate"  [matDatepicker]="dp" [placeholder]="entityDateFormat"   >
+                                        <mat-datepicker-toggle matSuffix [for]="dp"></mat-datepicker-toggle>
+                                        <mat-datepicker #dp ></mat-datepicker>
+                                    </mat-form-field>
+                                  <!-- <input formControlName="StartDate" (change)="receiptEvent($event.target.value)" [max]="minDate" [value]="minDate"
+                                    type="date" class="form-control" placeholder="Receipt Voucher Date" />                                  -->
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <label class=" mb-3">Till</label>
+                                <div class="input-group">
+                                    <mat-form-field class="tillDate mat_date_picker"  appearance="outline">
+                                        <input matInput (click)="EndDate.open()" readonly formControlName="EndDate" [min]="filterForm.get('StartDate').value"[matDatepicker]="EndDate"[placeholder]="entityDateFormat"   >
+                                        <mat-datepicker-toggle matSuffix [for]="EndDate"></mat-datepicker-toggle>
+                                        <mat-datepicker #EndDate></mat-datepicker>
+                                    </mat-form-field>
+                                  <!-- <input formControlName="EndDate" [min]="validTillMinDate" type="date" class="form-control"
+                                    placeholder="Receipt Voucher Date" /> -->
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                    <div class="col-12">
+                        <div class="form-group bmd-form-group">
+                          
+                            <ng-select class="searchdropdown custom" [clearable]="false"
+                            (change)="isShowBranch = true;selectedCustomer($event)"
+                            [formControlName]="'CustomerId'" >
+                            <ng-option [value]="''" disabled>--SELECT CUSTOMER--</ng-option>
+                            <ng-option *ngFor="let type of voucherCustomerList" [value]="type.CustomerID">
+                              <span class="textwrap">{{ type.CustomerName | uppercase }}</span>
+                            </ng-option>
+                          </ng-select>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-group bmd-form-group w-100">
+                        
+                            <ng-select
+                            class="searchdropdown custom"  [formControlName]="'CustomerBranch'" [clearable]="false">
+                            <ng-option [value]="''" disabled>--SELECT CUSTOMER BRANCH--</ng-option>
+                            <ng-option *ngFor="let code of voucherCustomerCodeList" [value]="code.BranchCode">
+                                <span class="textwrap">{{code.BranchCode | uppercase}}</span>
+                            </ng-option>
+                          </ng-select> 
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-group bmd-form-group">
+                            <input onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly formControlName="AmountReceived" class="w-100"
+                                placeholder=" AMOUNT RECEIVED" />
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-group bmd-form-group">
+                            
+                            <ng-select class="searchdropdown custom" [formControlName]="'AmountTypeId'" [clearable]="false">
+                                <ng-option [value]="''" disabled>--SELECT CURRENCY--</ng-option>
+                                <ng-option *ngFor="let currency of currencyList" [value]="currency.ID">
+                                    <span class="textwrap">{{ currency.Currency | uppercase }}</span>
+                                </ng-option>
+                            </ng-select>                      
+                        </div>
+                    </div>
+
+
+                    <div class="col-12">
+                        <div class="form-group bmd-form-group">
+                           
+                            <ng-select class="searchdropdown custom" [formControlName]="'DepositedBankId'"  [clearable]="false">
+                                <ng-option [value]="''" disabled>--SELECT DEPOSITED BANK --</ng-option>
+                                <ng-option *ngFor="let Deposit of bankListDetails" [value]="Deposit.BankID">
+                                    <span class="textwrap">{{Deposit.BankName | uppercase}}</span>
+                                </ng-option>
+                            </ng-select> 
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-group bmd-form-group">
+                            
+                            <ng-select class="searchdropdown custom" [formControlName]="'ModeOfPaymentId'"[clearable]="false" >
+                                <ng-option [value]="''" disabled>--SELECT MODE OF PAYMENT-</ng-option>
+                                <ng-option *ngFor="let Receipt of voucherReceiptList" [value]="Receipt.ID">
+                                    <span class="textwrap">{{Receipt.PaymentType | uppercase}}</span>
+                                </ng-option>
+                            </ng-select> 
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-group bmd-form-group">
+                            <input formControlName="ReferenceNumber" type="text" class="w-100"
+                                placeholder=" REFERENCE NUMBER" />
+                        </div>
+                    </div>
+                    
+                    <div class="col-12">
+                        <div class="form-group bmd-form-group">
+                            
+                            <ng-select class="searchdropdown custom" [formControlName]="'Status'" [clearable]="false">
+                                <ng-option [value]="''" disabled>--SELECT STATUS--</ng-option>
+                                <ng-option *ngFor="let data of statusList" [value]=data.Id>
+                                    <span class="textwrap">{{data.StatusName | uppercase}}</span>
+                                </ng-option>
+                            </ng-select> 
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 searchbtn alrt text-center mb-3 mt-3">
+                        <button type="submit" style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;"
+                            (click)="getReceiptList()" class="btn btn-primary btn-raised mb-0">
+                            Search
+                        </button>
+                        <button style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;"
+                            class="btn btn-raised btn-danger mb-0"
+                            (click)="createReceiptFilterForm();getReceiptList();voucherCustomerCodeList = [];">
+                            Clear
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

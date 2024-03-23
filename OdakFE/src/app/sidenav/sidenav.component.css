@@ -1,0 +1,91 @@
+.mat-icon {
+    background-repeat: no-repeat;
+    display: inline-block;
+    fill: currentColor;
+    height: 25px;
+    width: 25px;
+}
+
+
+/*10-04-23*/
+
+/* Dropdown Button */
+.dropbtn {
+    background-color: white;
+    color: #102555;
+    padding: 5px;
+    font-size: 0px;
+    border: none;
+    border-radius: 5px;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+    position: absolute;
+    display: inline-block;
+    bottom: 10px;
+    margin-left: -35px;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 100px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    margin-top: -100px;
+    margin-left: 35px;
+    border-radius: 10px !important;
+}
+
+    /* Links inside the dropdown */
+    .dropdown-content a {
+        color: black;
+        padding: 10px 10px;
+        text-decoration: none;
+        display: block;
+    }
+
+        /* Change color of dropdown links on hover */
+        .dropdown-content a:hover {
+            background-color: #d3d3d3;
+            border-radius: 10px !important;
+        }
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Change the background color of the dropdown button when the dropdown content is shown */
+.dropdown:hover .dropbtn {
+    background-color: #ffffff;
+}
+
+.dropdown .dropdown-content a .editicon {
+    color: #0f2454 !important;
+    font-size: 15px !important;
+    vertical-align: text-bottom !important;
+}
+
+.dropbtn1 {
+    background-color: white;
+    color: #102555;
+    padding: 5px;
+    font-size: 0px;
+    border: none;
+    border-radius: 5px;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown1 {
+    position: initial;
+    display: inline-block;
+    margin-left: 4px;
+}
+
+.dropbtn1.active {
+    background-color: #FFFF00 !important;
+}

@@ -1,0 +1,19 @@
+.but-reconciliation{
+    min-width: 140px;
+}
+
+.reconsile{
+    background: #385623 !important;
+}
+
+.reconsile-row{
+    background: #d4e2ce !important;
+}
+
+.unreconsile-head{
+    background: #ed7d31 !important;
+}
+
+.unreconsile-row{
+    background: #f8d6cc !important;
+}

@@ -1,0 +1,166 @@
+<div class="condainer card p-4">
+
+    <form [formGroup]="bankFilterForm">
+        <div class="row pb-4 mb-4 border-bottom">
+            <div class="col-2">
+                <label class="str mb-2">Period</label><br>
+                <div class="d-flex">
+                    <div class="w-100 pr-2">
+                        <mat-form-field class="tillDate mat_date_picker"   appearance="outline" >
+                            <input matInput (click)="FromDate.open()" readonly autocomplete="off" readonly  class="py-0 w-100 pr-2" (click)="FromDate.open()" [max]="fromMaxDate" [matDatepicker]="FromDate"  id="FromDate" [placeholder]="entityDateFormat" formControlName="StatementDate">
+                            <mat-datepicker-toggle matSuffix [for]="FromDate"></mat-datepicker-toggle>
+                            <mat-datepicker #FromDate></mat-datepicker>
+                        </mat-form-field>
+                        <!-- <input formControlName="FromDate" type="date"
+                            class="py-0 w-100 pr-2 form-control" [max]="fromMaxDate"> -->
+                    </div>
+                    <!-- <div class="w-50">
+                        <mat-form-field class="paymentDate mat_date_picker"  appearance="outline">
+                            <input matInput (click)="ToDate.open()" readonly autocomplete="off" class="py-0 w-100" [max]="toMaxDate"
+                            (change)="updateFromDate($event.target.value)" [matDatepicker]="ToDate"  id="ToDate" [placeholder]="entityDateFormat" formControlName="ToDate">
+                            <mat-datepicker-toggle matSuffix [for]="ToDate"></mat-datepicker-toggle>
+                            <mat-datepicker #ToDate></mat-datepicker>
+                        </mat-form-field>
+                    </div> -->
+                </div>
+                <!-- <select class="form-control my-select">
+                    <option [value]="0" disabled>--SELECT PERIOD--</option>
+                    <option *ngFor="let division of divisionDropdown" [value]="division.ReportId">
+                        {{division.ReportName | uppercase}}
+                    </option>
+                </select> -->
+            </div>
+
+            <div class="col-3">
+                <label class="str">Division</label>
+                <mat-select formControlName="Division" placeholder="Select Division(s)"
+                class="form-control" multiple >
+                    <mat-option #allSelected (click)="toggleAllSelection()" [value]="0">All</mat-option>
+                    <ng-container *ngFor="let division of divisionList">
+                    <mat-option   [value]="division.ID" (click)="tosslePerOne(allSelected.viewValue)">
+                        {{division.DivisionName | uppercase}}
+                    </mat-option>
+                </ng-container>
+                </mat-select>
+            </div>
+            <div class="col-3">
+                <label class="str">Office</label>
+                <mat-select [placeholder]="OfficeList.length ? 'Select Office' : 'Select Division'" formControlName="Office"
+                    class="form-control" multiple>
+                    <mat-option #allSelected1 *ngIf="OfficeList.length" (click)="toggleAllSelectionOffiece()" [value]="0">All</mat-option>
+                    <ng-container *ngFor="let office of OfficeList">
+                    <mat-option  [value]="office.ID" (click)="tosslePerOneOffice(allSelected.viewValue)">
+                        {{office.OfficeName | uppercase}}
+                    </mat-option>
+                </ng-container>
+                </mat-select>
+            </div>
+
+            <div class="col-3  m-auto">
+            <button type="submit"
+                (click)="getSummaryList()" class="btn btn-primary btn-raised mb-0">
+                Search Summary
+            </button>
+            </div>
+        </div>
+    </form>
+  
+    <div class="row">
+        <div class="col-4"></div>
+        <div style="font-weight: 600;" class="col-4">
+            BANK & CASH SUMMARY AS ON ( {{bankFilterForm.value.StatementDate |date : commonDataService.convertToLowerCaseDay(entityDateFormat)}} )
+        </div>
+        <div class="col-4 text-right d-flex justify-content-end">
+            <div style="font-weight: 600;">Export as : </div>
+            <div>
+                    <img style="cursor: pointer;" width="22px" height="22px" class="exportAs mx-1 align-baseline"
+                    src="../../../../assets/images/icon/file-pdf-solid.jpeg" (click)="downloadAsPDF()" alt="logo">
+                <img style="cursor: pointer;" width="22px" height="22px" class="exportAs mx-1 align-baseline"
+                    src="../../../../assets/images/icon/file-csv-solid.jpeg" (click)="downloadAsCSV()" alt="logo">
+                <img style="cursor: pointer;" width="22px" height="22px" class="exportAs mx-1 align-baseline"
+                    src="../../../../assets/images/icon/file-excel-solid.jpeg" (click)="downloadAsExcel()" alt="logo">
+            </div>
+        </div>
+    </div>
+    <div class="row  mb-4"></div>
+    <div class="row">
+        <div class="col-12">
+            <table id="bankSummaryTable"
+                class="table table-responsive  table-bordered w-100 table-striped border-0 agingTable mt-2 text-center">
+                <thead>
+                    <tr>
+                        <th scope="col">Bank</th>
+                        <th scope="col">Account</th>
+                        <th scope="col">Currency</th>
+                        <th scope="col">Balance In Bank</th>
+                        <th scope="col">Balance In Book</th>
+                        <th scope="col">Unreconciled Transactions</th>
+                        <th scope="col">Bank Statement Till</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngIf="cashSummaryTable?.length; else noRecord">
+                    <ng-container *ngFor="let cashSummary of cashSummaryTable;let i = index">
+                         <tr>
+                            <td class="text-center" style="color:#0366d6;cursor: pointer;" (click)="forwardToBankBook(cashSummary.BankID);">
+                                {{cashSummary.BankName}}
+                            </td>
+                            <td class="text-center">{{cashSummary.AccountNo}}</td>
+                            <td class="text-center" [ngClass]="{'total-color': cashSummary.CurrencyName == 'Total'}">                            
+                                {{cashSummary.CurrencyCode}}</td>
+                            <td class="text-center" [ngClass]="{'total-color': cashSummary.CurrencyName == 'Total'}">
+                                {{cashSummary.TotalClosingBalance}}</td>
+                            <td class="text-center">{{cashSummary.TotalBankClosingBalance}}</td>
+                            <td class="text-center">{{cashSummary.UnReconcileCount}}</td>
+                            <td class="text-center">{{cashSummary.StatementUploadedTill |date: commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td>
+                        </tr>
+                        <tr *ngIf=" i + 1 == cashSummaryTable.length  || cashSummary.CurrencyName != cashSummaryTable[i + 1].CurrencyName" >
+                            <td></td>
+                            <td></td>
+                            <td class="text-danger font-weight-bold">Total</td>
+                            <td class="text-danger font-weight-bold" >{{getTotalAmountByCurrency(cashSummary.CurrencyName)?.TotalClosingBalanceSum}}</td>
+                            <td></td>
+                            <td class="text-danger font-weight-bold" >{{getTotalAmountByCurrency(cashSummary.CurrencyName)?.TotalUnreconcileSum}}</td>
+                            <td></td>
+                        </tr>
+                    </ng-container>
+                    </ng-container>
+                    <!-- no data -->
+                    <ng-template #noRecord>
+                        <tr>
+                            <td class="text-center" colspan="7" style="height: 100px;">No records found</td>
+                        </tr>
+                    </ng-template>
+                </tbody>
+            </table>
+            <div>
+                <div class="row page mb-3">
+                    <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10" class="pagination mt-2 mb-0">
+                        <li [ngClass]="{disabled:pager.currentPage === 1}">
+                            <a (click)="setPage(1)">First</a>
+                        </li>
+                        <li [ngClass]="{disabled:pager.currentPage === 1}">
+                            <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+                        </li>
+                        <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                            <a (click)="setPage(page)">{{page}}</a>
+                        </li>
+                        <li *ngIf="(pager.totalPages - pager.startPage) > 5 ">
+                            <a (click)="setPage(pager.startPage + 5)">...</a>
+                        </li>
+                        <li *ngIf="(pager.totalPages - pager.startPage) > 5">
+                            <a (click)="setPage(pager.totalPages)">{{pager.totalPages}}</a>
+                        </li>
+
+                        <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                            <a (click)="setPage(pager.currentPage + 1)">Next</a>
+                        </li>
+                        <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                            <a (click)="setPage(pager.totalPages)">Last</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

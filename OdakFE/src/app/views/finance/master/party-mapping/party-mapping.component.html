@@ -1,0 +1,136 @@
+<div class="container-fluid">
+
+    <div class="row headtitle rotle mt-1">
+        <div class="col-md-9">
+            <h4 class="ml-2 mt-2">Party Mapping</h4>
+        </div>
+        <div class="col-md-3 alrt">
+            <button type="button" class="btn btn-success btn-raised bmd-btn-edit btntop" tabindex="0"
+                (click)="partyInfoRoute('add')">
+                <i class="material-icons editicon">add</i>
+                <div class="ripple-container">
+                </div>
+            </button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-9 col-xl-9 mt-2">
+            <div class="card m-b-30">
+                <div class="card-body cpad enqview">
+                    <div class="col-sm-12">
+                        <table class="table table-responsive table-striped table-bordered w-100 dataTable no-footer">
+                            <thead>
+                                <tr>
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                         (click)="sort('ReferenceNumber')">Reference #</th>
+
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                         (click)="sort('PartyName')">Party Name</th>
+
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                         (click)="sort('CustomerCode')">Customer Code</th>
+
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                         (click)="sort('VendorCode')">Vendor Code</th>
+
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                         (click)="sort('VendorCode')">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let data of pagedItems">
+                                    <td (click)="partyInfoRoute('edit',data.MappingId)"
+                                        style="color: #0366d6;cursor: pointer;">
+                                        {{data.ReferenceNumber}}</td>
+                                    <td>{{data.PartyName}}</td>
+                                    <td>{{data.CustomerCode}} </td>
+                                    <td>{{data.VendorCode}} </td>
+                                    <td>{{data.Status == true ? 'Merged' : 'UnMerged'}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="row page" align="right">
+                        <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10" class="pagination">
+                            <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                <a (click)="setPage(1)">First</a>
+                            </li>
+                            <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+                            </li>
+                            <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                                <a (click)="setPage(page)">{{page}}</a>
+                            </li>
+                            <li *ngIf="(pager.totalPages - pager.startPage) > 5 ">
+                                <a (click)="setPage(pager.startPage + 5)">...</a>
+                            </li>
+                            <li *ngIf="(pager.totalPages - pager.startPage) > 5">
+                                <a (click)="setPage(pager.totalPages)">{{pager.totalPages}}</a>
+                            </li>
+
+                            <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                <a (click)="setPage(pager.currentPage + 1)">Next</a>
+                            </li>
+                            <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                <a (click)="setPage(pager.totalPages)">Last</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 mt-2">
+            <div class="card p-1 pt-4 pb-4 ">
+                <form [formGroup]="partyFilter" class="mt-1 mb-1">
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                        <div class="form-group bmd-form-group">
+                            <input formControlName="ReferenceNumber" type="text" autocomplete="off" class="form-control"
+                                name="Reference" placeholder="Reference #" maxlength="20">
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                        <div class="form-group bmd-form-group">
+                            <input formControlName="PartyName" type="text" autocomplete="off" class="form-control"
+                                name="acctCode" placeholder="Party Name" maxlength="20">
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                        <div class="form-group bmd-form-group">
+                            <!-- <select formControlName="Status" class="form-control">
+                                <option disabled value=null>---SELECT---</option>
+                                <option value=true>MERGED</option>
+                                <option value=false>UNMERGED</option>
+                            </select> -->
+                            <ng-select class="searchdropdown" [clearable]="false" formControlName="Status"  >
+                                <ng-option [value]="''" [disabled]="true">--SELECT--</ng-option>
+                                <ng-option value=true>MERGED</ng-option>
+                                <ng-option value=false>UNMERGED</ng-option>
+                              </ng-select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 searchbtn alrt text-center mb-3 mt-3">
+                        <button style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;" type="submit"
+                            (click)="getPartyList()" class="btn btn-primary btn-raised mb-0">Search<div
+                                class="ripple-container"></div></button>
+                        <button style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;"
+                            class="btn btn-raised btn-danger mb-0" (click)="PartyForm();getPartyList('getALL');">Clear
+                            <div class="ripple-container">
+                            </div>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

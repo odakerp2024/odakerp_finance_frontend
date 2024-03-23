@@ -1,0 +1,66 @@
+<div class="container-fluid">
+    <!-- header start -->
+    <div class="row mt-2">
+        <div class="col-12">
+            <h4 class="ml-2 mt-2">Banking – {{currentTabName}}</h4>
+        </div>
+        <div class="card-body col-12">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <ul class="nav nav-pills nav-justified p-0" role="tablist">
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link active show" data-toggle="tab" (click)="CurrentTAB('Bank Summary');"
+                                href="#bankSummary" role="tab" aria-selected="true">Bank Summary</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" (click)="CurrentTAB('Bank Book');"
+                                href="#bankBook" role="tab" aria-selected="false" #bankBookTab>Bank Book</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" (click)="CurrentTAB('Bank Statement');"
+                                href="#bankStatement" role="tab" aria-selected="false">Bank Statement</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" (click)="CurrentTAB('Bank Reconciliation');"
+                                href="#bankReconciliation" role="tab" aria-selected="false">Bank Reconciliation</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" (click)="CurrentTAB('Bank Un-reconcile');"
+                                href="#bankUnreconcile" role="tab" aria-selected="false">Bank Un-reconcile</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="tab-content">
+                        <div class="tab-pane pt-3 active show" id="bankSummary" role="tabpanel">
+                            <!-- <app-dynamic-table  [headers]="tableHeaders" [data]="tableData"></app-dynamic-table> -->
+                            <app-bank-summary (click)="CurrentTAB('Bank Summary')" (switchToBankBook)="navigateToBook($event)"></app-bank-summary>
+                        </div>
+
+                        <div class="tab-pane pt-3" id="bankBook" role="tabpanel">
+                            <app-bank-book (click)="CurrentTAB('Bank Book')" [bankSummaryFilterData]="bankSummaryFilterData"></app-bank-book>
+                        </div>
+
+
+                        <div class="tab-pane pt-3" id="bankStatement" role="tabpanel">
+                            <app-bank-statement (click)="CurrentTAB('Bank Statement')"></app-bank-statement>
+                        </div>
+
+
+                        <div class="tab-pane pt-3" id="bankReconciliation" role="tabpanel">
+                            <app-bank-reconciliation (click)="CurrentTAB('Bank Reconciliation')"></app-bank-reconciliation>
+                        </div>
+
+
+                        <div class="tab-pane pt-3" id="bankUnreconcile" role="tabpanel">
+                            <app-bank-un-reconcile (click)="CurrentTAB('Bank Un-reconcile')"></app-bank-un-reconcile>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+</div>

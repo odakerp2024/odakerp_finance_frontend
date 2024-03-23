@@ -1,0 +1,531 @@
+<div class="row headtitle">
+    <div class="col-md-9">
+        <h4>New Payment Voucher </h4>
+    </div>
+
+    <div class="col-md-3 alrt">
+
+        <button type="button" class="btn btn-success btn-raised bmd-btn-edit btntop"
+            [routerLink]="['/views/finance/master/paymentvoucher/paymentvoucherview']"><i
+                class="material-icons editicon">reply</i>
+            <div class="ripple-container"></div>
+        </button>
+
+    </div>
+</div>
+<form [formGroup]="Organizationform">
+
+    <div class="row">
+
+        <div class="col-12">
+            <div class="card m-b-30">
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Main Block Start -->
+                        <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                            <div class="form-group bmd-form-group">
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                        <label class="str">Office Code</label>
+                                    </div>
+                                    <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                                    <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                        <input readonly [(ngModel)]="branchCode"  name="entityvalue" formControlName="Entityvalue"
+                                            autocomplete="off" id="txtEntityvalue" 
+                                            class="form-control">
+                                    </div>
+
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                            <div class="form-group bmd-form-group">
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                        <label class="str">Transaction</label>
+                                    </div>
+                                    <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                                    <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                        <input type="radio" name="invoice" value="invoice" [(ngModel)]="transaction" /> Invoice
+                                        <input type="radio" name="onaccount" value="onaccount" [(ngModel)]="transaction" /> On account
+                                        <input type="radio" name="security_deposit" value="security_deposit" [(ngModel)]="transaction" /> Security Deposit
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                            <div class="form-group bmd-form-group">
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                        <label class="str">Receipt</label>
+                                    </div>
+                                    <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                                    <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                        <input readonly [(ngModel)]="code"  name="code" formControlName="code"
+                                            autocomplete="off" id="code" 
+                                            class="form-control">
+                                    </div>
+
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                            <div class="form-group bmd-form-group">
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                        <label class="str">Recipt Date</label>
+                                    </div>
+                                    <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                                    <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7 input-field">
+                                        <input class="form-control"  type="date" formControlName="EffectiveFrom"  id="StartDate" (change)="changeDate()" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                            <div class="form-group bmd-form-group">
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                        <label class="str">TDS Applicable</label>
+                                    </div>
+                                    <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                                    <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                        <select name="AccType" 
+                                        formControlName="RegionalOffice" id="RegionalOffice"    value="Yes"                                    
+                                        class="form-control my-select">
+                                        <option  value="Yes" selected="selected" default selected>Yes</option>
+                                        <option  value="No">No</option>
+                                    </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                       
+                        <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                            <div class="form-group bmd-form-group">
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-4 col-lg-4 col-xl-5">
+                                        <label class="str">Customer Name&nbsp;&nbsp;&nbsp;&nbsp;:</label>
+                                    </div>
+                                    <!--<div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>-->
+                                    <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                        <select name="AccType" 
+                                        formControlName="RegionalOffice" id="RegionalOffice"
+                                       
+                                        class="form-control my-select">
+                                        <option [value]="null">-- Select Customer --</option>
+                                        <option *ngFor="let gRow  of AccTyperegional" [value]="gRow.RegionId">
+                                            {{gRow.RegionName}}
+                                        </option>
+                                    </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                            <div class="form-group bmd-form-group">
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-4 col-lg-4 col-xl-5">
+                                        <label class="str">Office&nbsp;&nbsp;&nbsp;&nbsp;:</label>
+                                    </div>
+                                    <!--<div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>-->
+                                    <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                        <select name="AccType" 
+                                        formControlName="RegionalOffice" id="RegionalOffice"
+                                       
+                                        class="form-control my-select">
+                                        <option [value]="null">-- Select Office --</option>
+                                        <option *ngFor="let gRow  of AccTyperegional" [value]="gRow.RegionId">
+                                            {{gRow.RegionName}}
+                                        </option>
+                                    </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                            <div class="form-group bmd-form-group">
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                        <label class="str">TAN</label>
+                                    </div>
+                                    <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                                    <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                        <input readonly [(ngModel)]="tan"  name="tan" formControlName="tan"
+                                            autocomplete="off" id="tan" 
+                                            class="form-control">
+                                    </div>                                    
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                            <div class="form-group bmd-form-group">
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-4 col-lg-4 col-xl-5">
+                                        <label class="str">Currency&nbsp;&nbsp;&nbsp;&nbsp;:</label>
+                                    </div>
+                                    <!--<div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>-->
+                                    <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                        <select name="AccType" 
+                                        formControlName="RegionalOffice" id="RegionalOffice"
+                                       
+                                        class="form-control my-select">
+                                        <option [value]="null">-- Select Currency --</option>
+                                        <option *ngFor="let gRow  of AccTyperegional" [value]="gRow.RegionId">
+                                            {{gRow.RegionName}}
+                                        </option>
+                                    </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                            <div class="form-group bmd-form-group">
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-4 col-lg-4 col-xl-5">
+                                        <label class="str">Mode Of Payment&nbsp;&nbsp;&nbsp;&nbsp;:</label>
+                                    </div>
+                                    <!--<div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>-->
+                                    <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                        <select name="AccType" 
+                                        formControlName="RegionalOffice" id="RegionalOffice"
+                                       
+                                        class="form-control my-select">
+                                        <option [value]="null">-- Select Payment --</option>
+                                        <option [value]="Cash" [selected]="true">Cash</option>
+                                        <option [value]="Card">Card</option>
+                                        
+                                    </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        
+                        <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                            <div class="form-group bmd-form-group">
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-4 col-lg-4 col-xl-5">
+                                        <label class="str">Deposit To&nbsp;&nbsp;&nbsp;&nbsp;:</label>
+                                    </div>
+                                    <!--<div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>-->
+                                    <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                        <select name="AccType" 
+                                        formControlName="RegionalOffice" id="RegionalOffice"
+                                       
+                                        class="form-control my-select">
+                                        <option [value]="null">-- Select Account --</option>
+                                        <option *ngFor="let gRow  of AccTyperegional" [value]="gRow.RegionId">
+                                            {{gRow.RegionName}}
+                                        </option>
+                                    </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                            <div class="form-group bmd-form-group">
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-4 col-lg-4 col-xl-5">
+                                        <label class="str">TDS Ledger&nbsp;&nbsp;&nbsp;&nbsp;:</label>
+                                    </div>
+                                    <!--<div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>-->
+                                    <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                        <select name="AccType" 
+                                        formControlName="RegionalOffice" id="RegionalOffice"
+                                       
+                                        class="form-control my-select">
+                                        <option [value]="null">-- Select Ledger --</option>
+                                        <option *ngFor="let gRow  of AccTyperegional" [value]="gRow.RegionId">
+                                            {{gRow.RegionName}}
+                                        </option>
+                                    </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                        
+
+                        <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                            <div class="form-group bmd-form-group">
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-4 col-lg-4 col-xl-5">
+                                        <label class="str">Amount Received&nbsp;&nbsp;&nbsp;&nbsp;:</label>
+                                    </div>
+                                    <!--<div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>-->
+                                    <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                        <input type="text" name="entityvalue"
+                                        formControlName="TelphoneNumber" numberOnly
+                                        autocomplete="off"
+                                        id="TelphoneNumbers"
+                                        ng-model="txtEntityvalue"
+                                            (keypress)="numericOnly($event)"
+                                        class="form-control" required maxlength="15" oninput="this.value=this.value.replace([a-zs-z0-9],'');">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                        
+
+                        <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                            <div class="form-group bmd-form-group">
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-4 col-lg-4 col-xl-5">
+                                        <label>Reference&nbsp;&nbsp;&nbsp;&nbsp;:</label>
+                                    </div>
+                                    <!--<div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>-->
+                                    <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                        <input type="text" name="entityvalue"
+                                        formControlName="TelphoneNumber" numberOnly
+                                        autocomplete="off"
+                                        id="TelphoneNumbers"
+                                        ng-model="txtEntityvalue"
+                                            (keypress)="numericOnly($event)"
+                                        class="form-control" required maxlength="15" oninput="this.value=this.value.replace([a-zs-z0-9],'');">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                            <div class="form-group bmd-form-group">
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-4 col-lg-4 col-xl-5">
+                                        <label>Bank Charge(If any)&nbsp;&nbsp;&nbsp;&nbsp;:</label>
+                                    </div>
+                                    <!--<div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>-->
+                                    <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                        <input type="text" name="entityvalue"
+                                        formControlName="TelphoneNumber" numberOnly
+                                        autocomplete="off"
+                                        id="TelphoneNumbers"
+                                        ng-model="txtEntityvalue"
+                                            (keypress)="numericOnly($event)"
+                                        class="form-control" required maxlength="15" oninput="this.value=this.value.replace([a-zs-z0-9],'');">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                       
+
+                        <!-- Main Block End -->
+                    </div>
+
+                </div>
+
+                <div class="row p-1">
+
+                    <div class="col-12">
+                        <div class="card m-b-30">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div id="datatable-buttons_wrapper"
+                                        class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+                                        <div class="row det tblrow" style="border:0px red">
+                                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                                <div class="form-group bmd-form-group">
+                                                    <div class="row">
+                                                        <div
+                                                            class="col-md-3 col-sm-3 col-lg-3 col-xl-3 text-center">
+                                                            <label class="str1">Search Invoices :</label>
+                                                        </div>
+                                                        <div
+                                                            class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                                                            <input type="text" name="entityvalue"
+                                                                formControlName="TelphoneNumber" numberOnly
+                                                                autocomplete="off"
+                                                                id="TelphoneNumbers"
+                                                                ng-model="txtEntityvalue"
+                                                                 (keypress)="numericOnly($event)"
+                                                                class="form-control" required maxlength="15" oninput="this.value=this.value.replace([a-zs-z0-9],'');">
+                                                        </div>
+                                                        <div
+                                                            class="col-md-3 col-sm-3 col-lg-3 col-xl-3">
+                                                            <button type="button" class="btn btn-warning btn-raised mb-0" (click)="clearSelect()">Clear All Amount</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- end -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <table id="datatable-buttons"
+                                    class="det table table-striped table-bordered w-100 dataTable no-footer" role="grid"
+                                    aria-describedby="datatable-buttons_info">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                <span class="bmd-form-group is-filled is-focused">
+                                                    <div class="checkbox">
+                                                        <label class="text-white">
+                                                            <input type="checkbox" formControlName="IsPrincipal"
+                                                                (change)="selectAll($event)" ng-true-value="1"
+                                                                ng-false-value="0" id="chkIsPrincipalAcct">
+                                                            <span class="checkbox-decorator">
+                                                                <span class="check"></span>
+                                                                <div class="ripple-container"></div>
+                                                            </span> All
+                
+                                                        </label>
+                                                    </div>
+                                                </span>
+                                            </th>
+                                            <th>Date</th>
+                                            <th>Invoice</th>
+                                            <th>Currency</th>
+                                            <th>Invoice Amount</th>
+                                            <th>TDS</th>
+                                            <th>Amount</th>
+                                            <th>Due</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr
+                                            *ngFor="let gRow of DynamicRevenuDOChargesGrid; let i= index; let last=last">
+                                            <td>
+                                                <span class="bmd-form-group is-filled is-focused">
+                                                    <div class="checkbox">
+                                                        <label>
+                                                            <input type="checkbox" formControlName="IsPrincipal"
+                                                                (change)="select($event)" ng-true-value="1"
+                                                                ng-false-value="0" id="chkIsPrincipalAcct">
+                                                            <span class="checkbox-decorator">
+                                                                <span class="check"></span>
+                                                                <div class="ripple-container"></div>
+                                                            </span>
+                
+                                                        </label>
+                                                    </div>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                {{gRow.date}}
+                                            </td>
+                                            <td>
+                                                {{gRow.invoice_no}}
+                                            </td>
+                                            <td>
+                                                {{gRow.Currency}}
+                                            </td>
+                                            <td>
+                                                {{gRow.amount}}
+                                            </td>
+                                            <td><input type="number" autocomplete="off" class="form-control"
+                                                    [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.SlabUpto" />
+                                            </td>
+                                            <td><input type="number" autocomplete="off" class="form-control"
+                                                    [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.Amount" />
+                                            </td>
+                                            <td><input type="number" autocomplete="off" class="form-control"
+                                                [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.Amount" />
+                                        </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row p-1">
+                    <!-- Main Block Start -->
+                    <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                        <div class="form-group bmd-form-group">
+                            <div class="row">
+                                <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                    <label class="">Attached Files</label>
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                                <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                    <input type="file">
+                                </div>
+
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-3 col-lg-3 col-xl-3">
+                        <div class="form-group bmd-form-group">
+                            <div class="row">
+                                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                                    <label class="">Exchange Rate:</label>
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                                    <input readonly [(ngModel)]="exchageRate"  name="exchageRate" formControlName="exchageRate"
+                                        autocomplete="off" id="exchageRate" 
+                                        class="form-control">
+                                </div>
+
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-3 col-lg-3 col-xl-3">
+                        <div class="form-group bmd-form-group">
+                            <div class="row">
+                                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                                    <label class="">Local Amount:</label>
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                                    <input readonly [(ngModel)]="localAmount"  name="localAmount" formControlName="localAmount"
+                                        autocomplete="off" id="localAmount" 
+                                        class="form-control">
+                                </div>
+
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-sm-2 col-lg-2 col-xl-2">
+                        <button type="button" class="btn btn-danger btn-raised mb-0" (click)="clearSelect()">Reverse Voucher</button>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                        <div class="form-group bmd-form-group">
+                            <div class="row">
+                                <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                    <label class="">Remarks</label>
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                                <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                    <input [(ngModel)]="remarks"  name="remarks" formControlName="remarks"
+                                        autocomplete="off" id="remarks" 
+                                        class="form-control">
+                                </div>
+
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="divide"></div>
+                <div class="row align-item-right">
+                    <div class="col-md-12 alrt">
+                        <button type="submit" (click)="onSubmit()" class="btn btn-success btn-raised mb-0  m-r-15"> Submit </button>
+                        <button type="button" (click)="reset()" class="btn btn-primary btn-raised mb-0">Cancel</button>
+                    </div>
+                    <input type="hidden" id="RegId" [ngModelOptions]="{standalone: true}" [(ngModel)]="RegId" name="RegId" />
+                </div>
+
+            </div>
+        </div>
+        
+        
+
+    </div>
+
+</form>

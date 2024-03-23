@@ -1,0 +1,157 @@
+
+
+<form [formGroup]="formGrop" novalidate>
+
+
+    <div class="row headtitle">
+        <div class="col-md-9">
+            <h4>Principal/Agency Agreement</h4>
+        </div>
+        <div class="col-md-3 alrt">
+            <button type="button" class="btn btn-success btn-raised bmd-btn-edit btntop" [routerLink]="['/views/masters/LAmaster/Principalagency/Principalagencyview']"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+        </div>
+    </div>
+
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <ul class="nav nav-pills nav-justified" role="tablist">
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" (click)="btntabclick(1)" role="tab" aria-selected="true">Principal Details</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" (click)="btntabclick(2)" role="tab" aria-selected="false">Port wise agent Details</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" (click)="btntabclick(3)" role="tab" aria-selected="false">Principal Agreement</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" (click)="btntabclick(4)" role="tab" aria-selected="false">Attachments</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link active show" data-toggle="tab" (click)="btntabclick(5)" role="tab" aria-selected="false">Alert Mails</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row tblrow1">
+                <div class="col-md-12">
+                    <div class="tab-content">
+                        <div class="tab-pane pt-3 active show" role="tabpanel">
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="tab-content">
+                                        <div class="tab-pane pt-3 active show" role="tabpanel">
+                                            <div class="row tblrow">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label>Line Code</label>
+                                                                <input type="text" id="txtLineCode" disabled name="UserID" formControlName="LineCode" class="form-control" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label>Line Name</label>
+                                                                <input type="text" id="txtLineName" disabled name="UserID" formControlName="LineName" class="form-control" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row ">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Alert Type</label>
+                                                <select class="form-control my-select" [(ngModel)]="AttachTypeID" id="ddlAttachType" [ngModelOptions]="{standalone: true}">
+                                                    <option *ngFor="let gRow of fillAttachedAgreementType" [value]="gRow.ID">{{gRow.GeneralName}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Email ID</label>
+                                                <input type="text" id="txtEmailID" name="EmailID" formControlName="EmailID" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12" style="text-align:right;">
+                    <button type="submit" (click)="onSubmitAdd()" class="btn btn-success btn-raised mb-0">
+                        <i class="material-icons add">add</i>
+                        ADD
+                    </button>
+                </div>
+            </div>
+            <div class="row tblrow1">
+                <div class="col-sm-12 tablevar">
+                    <table id="datatable-buttons" class="det table table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                        <thead>
+                            <tr role="row">
+                                <th class="sorting actwid" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" style="width: 177.575px;">
+                                    S.No
+                                </th>
+                                <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" style="width: 177.575px;">
+                                    Alert Type
+                                </th>
+                                <th>Email ID</th>
+                                <th class="actwid">Action</th>
+
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr *ngFor="let gRow of DynamicGridEmail; let i= index">
+                                <td> {{i+1}}</td>
+                                <td>{{gRow.AlertType}}</td>
+                                <td>{{gRow.EmailID}}</td>
+                                <td class="alc actwid">
+
+                                    <button type="button" rel="tooltip" (click)="OnclickSelectvalues(DynamicGridEmail,i)" class="btn btn-success bmd-btn-fab" data-original-title="" title="">
+                                        <i class="material-icons">edit</i>
+                                    </button>
+                                    <button type="button" rel="tooltip" (click)="OnclickRemove(DynamicGrid,i,gRow.TID)" class="btn btn-danger bmd-btn-fab" data-original-title="" title="">
+                                        <i class="material-icons">delete</i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-footer ">
+            <div class="col-md-12" style="text-align:right;">
+                <button type="submit" (click)="onSubmit()" class="btn btn-success btn-raised mb-0">Submit</button>
+            </div>
+
+        </div>
+    </div>
+</form>

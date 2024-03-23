@@ -1,0 +1,141 @@
+<form [formGroup]="emailForm">
+    <div class="row alogtop">
+        <div class="col-md-12 alrt">
+            <button type="submit" class="btn btn-success bmd-btn-fab tblbtngap" (click)="OnClickAddValue()"><i
+                    class="material-icons editicon">add</i>
+                <div class="ripple-container"></div>
+            </button>
+            <button type="submit" class="btn btn-primary bmd-btn-fab tblbtngap" (click)="OnClickEditValue()"><i
+                    class="material-icons editicon">edit</i>
+                <div class="ripple-container"></div>
+            </button>
+            <button type="submit" class="btn btn-danger bmd-btn-fab" (click)="OnClickDeleteValue()"><i
+                    class="material-icons editicon">delete</i>
+                <div class="ripple-container"></div>
+            </button>
+        </div>
+
+        <div class="col-md-12 col-sm-12  col-lg-12 col-xl-12 partytbl">
+            <div class="material-datatables">
+                <table id="datatable" class="table table-striped table-bordered table-hover" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th class="actwid text-center">S.No.</th>
+                            <th class="text-center">Category</th>
+                            <th class="text-center">Email</th>
+                            <th class="text-center">Start Date</th>
+                            <th class="text-center">End Date</th>
+                            <th class="actwid text-center">Select</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <!-- <td></td> -->
+
+                            <td>
+                                <input type="hidden" id="HDIDv" name="id" formControlName="ID" class="form-control" />
+                                <!-- <input type="hidden" id="HDArrayIndex" name="idarray" [(ngModel)]="HDArrayIndex" class="form-control" /> -->
+                            </td>
+                            <td class="other">
+                                <!-- <select class="form-control my-select" id="ddlCategory" name="Category"
+                                    formControlName="Category" style="width:100%!important;"> -->
+                                    <!-- <option value="" disabled>--SELECT CATEGORY--</option>
+                                    <option *ngFor="let gRow  of categoryList" [value]="gRow.Category">
+                                        {{gRow.Category | uppercase}}
+                                    </option>
+                                </select> -->
+                                <ng-select class="searchdropdown"  [clearable]="false"  formControlName="Category"
+                                 id="ddlCategory" name="Category" [appendTo]="'body'">
+                                    <ng-option [value]="''" >--SELECT CATEGORY--</ng-option>
+                                    <ng-option *ngFor="let gRow  of categoryList" [value]="gRow.Category">
+                                        {{gRow.Category | uppercase}}
+                                    </ng-option>
+                                </ng-select>  
+                            </td>
+                            <td>
+                                <input class="form-control" autocomplete="off" type="email" id="txtEmailID"
+                                    name="EmailID" formControlName="EmailId" placeholder="Email" />
+                            </td>
+                            <td class="text-center mt-3">
+                                <!-- <mat-form-field class="tillDate mat_date_picker mt-3"   appearance="outline" style="font:small-caption;font-size:12px" >
+                                    <input matInput (dateInput)="fromDateChange('input', $event)" (click)="StartDate.open()" readonly (change)="setEndMinDate()" 
+                                    [matDatepicker]="StartDate" [placeholder]="entityDateFormat" formControlName="StartDate" [min]="minDate">
+                                    <mat-datepicker-toggle matSuffix [for]="StartDate"></mat-datepicker-toggle>
+                                    <mat-datepicker #StartDate></mat-datepicker>
+                                </mat-form-field> -->
+                                <mat-form-field class="tillDate mat_date_picker mt-3"  appearance="outline"  style="font:small-caption;font-size:12px" >
+                                    <input matInput (click)="StartDate.open()" readonly autocomplete="off"  [max]="validTillMinDate" [matDatepicker]="StartDate"  id="StartDate" [placeholder]="entityDateFormat" formControlName="StartDate">
+                                    <mat-datepicker-toggle matSuffix [for]="StartDate"></mat-datepicker-toggle>
+                                    <mat-datepicker #StartDate></mat-datepicker>
+                                </mat-form-field>
+                        
+                                <!-- <input class="form-control" [min]="minDate" type="date" id="txtStartDate"
+                                    (change)="setEndMinDate()" name="StartDate" formControlName="StartDate" /> -->
+                            </td>
+                            <td class="text-center" >
+                                    <!-- <mat-form-field  class="tillDate mat_date_picker mt-3" appearance="outline" style="font:small-caption;font-size:12px"  >
+                                        <input matInput (dateInput)="toDateChange('input', $event)" (click)="EndDate.open()" readonly [matDatepicker]="EndDate" 
+                                        [placeholder]="entityDateFormat" formControlName="EndDate" [min]="emailForm.get('StartDate').value">
+                                        <mat-datepicker-toggle matSuffix [for]="EndDate"></mat-datepicker-toggle>
+                                        <mat-datepicker #EndDate></mat-datepicker>
+                                    </mat-form-field> -->
+
+                                    <mat-form-field  class="tillDate mat_date_picker mt-3"  appearance="outline"  style="font:small-caption;font-size:12px">
+                                        <input matInput (click)="EndDate.open()" readonly autocomplete="off" [min]="emailForm.get('StartDate').value" [matDatepicker]="EndDate"  id="EndDate" [placeholder]="entityDateFormat" formControlName="EndDate">
+                                        <mat-datepicker-toggle matSuffix [for]="EndDate"></mat-datepicker-toggle>
+                                        <mat-datepicker #EndDate></mat-datepicker>
+                                    </mat-form-field>
+
+                                <!-- <input class="form-control" [min]="endMinDate" type="date" id="txtEndDate"
+                                    name="EndDate" formControlName="EndDate" /> -->
+                            </td>
+
+                        </tr>
+                        <tr *ngFor="let gRow of DynamicSlotEmailMaster; let i= index">
+                            <td class="text-center"> {{i+1}}</td>
+                            <td class="txtright text-center">
+                                {{gRow.Category}}
+
+                                <!-- <select class="form-control my-select"  [(ngModel)]="gRow.ID"  [ngModelOptions]="{standalone: true}"
+                              style="width:100%!important;">
+                                <option *ngFor="let gRow of dsCategoryItem" [value]="gRow.ID">
+                                    {{gRow.Category}}
+                                </option>
+                            </select> -->
+                            </td>
+                            <td class="txtright text-center">
+                                {{gRow.EmailId}}
+                            </td>
+                            <td class="text-center">
+                                {{gRow.StartDate | date: commonDataService.convertToLowerCaseDay(entityDateFormat)}}
+                            </td>
+                            <td class="txtright text-center">
+                                {{gRow.EndDate | date: commonDataService.convertToLowerCaseDay(entityDateFormat)}}
+                            </td>
+
+                            <td class="actwid text-center">
+                                <input class="vertal checkbox" type="radio" name="AlertCheck" id="RadioCheck"
+                                    (click)="OnClickRadio(i,gRow.ID)" />
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+    <div class="row alogtop">
+        <div class="col-md-12 alrt">
+            <button type="submit" class="btn btn-primary btn-raised btn-default cntbtn mb-0"
+                (click)="OnSubmit()">{{isUpdate ? 'Update' : 'Save'}}<div class="ripple-container"></div></button>
+            <button type="submit" class="btn btn-danger btn-raised cntbtn mb-0" (click)="OnClearEmailForm()">Cancel<div
+                    class="ripple-container"></div></button>
+        </div>
+    </div>
+</form>

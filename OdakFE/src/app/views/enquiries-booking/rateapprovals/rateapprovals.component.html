@@ -1,0 +1,971 @@
+<div class="row headtitle">
+    <div class="col-md-9">
+        <h4>Principal Rate Approval</h4>
+    </div>
+    <div class="col-md-3 alrt">
+        <button class="nav-link dropdown-toggle arrow-none waves-effect nav-user btn bmd-btn-edit btn-raised btntop btnlog" data-toggle="dropdown" role="button" aria-haspopup="false"
+                aria-expanded="false">
+            <i class="material-icons editicon">schedule</i>
+        </button>
+        <div class="dropdown-menu dropdown-menu-right profile-dropdown alog">
+
+
+            <a class="dropdown-item">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-12"><span>ModifiedOn: {{ModifiedOn}}</span> | <span>Modified By: {{ModifiedBy}}</span></div>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row alogtop">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-12"><span>CreatedOn: {{CreatedOn}}</span> | <span>Created By: {{CreatedBy}}</span></div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <button type="button" *ngIf="showEdit" class="btn btn-warning bmd-btn-edit btn-raised btntop" (click)="ForsControlDisable();" style="margin-right:15px;"><i class="material-icons editicon">edit</i></button>
+        <button type="button" class="btn btn-success bmd-btn-edit btn-raised btntop" [routerLink]="['/views/enquiries-booking/rateapprovals/rateapprovalsview/rateapprovalsview']"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+    </div>
+</div>
+
+<div class="row forms">
+    <div class="col-md-12">
+        <div class="row enquirynav">
+            <div class="col-md-12">
+                <ul class="nav nav-pills nav-justified" role="tablist">
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link active show" data-toggle="tab" (click)="onPageTab(1)" id="agencydetails" href="#Enquiry" role="tab" aria-selected="true">Rate Request</a>
+                    </li>
+
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" id="pricipaltab" (click)="onPageTab(2)" href="#Links" role="tab" aria-selected="false">Links</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 padlr0">
+                <form [formGroup]="rateForm">
+                    <div class="tab-content" style="padding:0;">
+                        <div class="tab-pane pt-3 active show" id="Enquiry" role="tabpanel">
+
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4 class="enqtitle">Basic Details</h4>
+                                    </div>
+                                </div>
+                                <div class="row" style="border-bottom:2px dashed #ccc; margin-bottom:15px; padding-bottom:10px;">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label class="str">Principal</label>
+                                                    <select class="form-control my-select" id="ddlPrinciple" formControlName="PrincipleID">
+                                                        <option *ngFor="let gRow of dsPrincipleTypes" [value]="gRow.ID">
+                                                            {{gRow.LineName}}
+                                                        </option>
+
+                                                    </select>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label>Request No</label>
+                                                    <input type="text" autocomplete="off" formControlName="RequestNo" id="txtRequestNo" disabled class="form-control" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label class="str">Request Date</label>
+                                                    <mat-form-field class="paymentDate" >
+                                                        <input matInput (click)="RequestDate.open()" readonly  [min]="getToday()" autocomplete="off" [matDatepicker]="RequestDate"  id="RequestDate" placeholder="" formControlName="RequestDate">
+                                                        <mat-datepicker-toggle matSuffix [for]="RequestDate"></mat-datepicker-toggle>
+                                                        <mat-datepicker #RequestDate></mat-datepicker>
+                                                    </mat-form-field>
+                                                    <!-- <input type="date" autocomplete="off" formControlName="RequestDate" id="txtRequestDate" class="form-control" [max]="getToday()" [min]="getBack()" /> -->
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label>Office Location</label>
+                                                    <select class="form-control my-select" id="ddlOffice" formControlName="OfficeLocID">
+                                                        <option *ngFor="let gRow of OfficeMasterAllvalues" [value]="gRow.ID">
+                                                            {{gRow.CustomerName}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label>Enquiry No</label>
+                                                    <select class="form-control my-select" id="ddlEnquiryNo" formControlName="EnquiryID">
+                                                        <option *ngFor="let gRow of dsEnquiry" [value]="gRow.ID">
+                                                            {{gRow.EnquiryNo}}
+                                                        </option>
+
+                                                    </select>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label class="str">Status</label>
+                                                    <select disabled class="form-control" formControlName="StatusID" id="ddlStatus">
+                                                        <option *ngFor="let status of statusvalues" [value]="status.value">
+                                                            {{status.viewValue}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label class="str">Sales Person</label>
+                                                    <select class="form-control my-select" id="ddlSalesperson" formControlName="SalesPersonID">
+                                                        <option *ngFor="let gRow of dsSalesperson" [value]="gRow.ID">
+                                                            {{gRow.SalesPerson}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label class="str">Valid Till</label>
+                                                    <mat-form-field  >
+                                                        <input matInput autocomplete="off" [matDatepicker]="ValidTill"  id="ValidTill" placeholder="" formControlName="ValidTill">
+                                                        <mat-datepicker-toggle matSuffix [for]="ValidTill"></mat-datepicker-toggle>
+                                                        <mat-datepicker #ValidTill></mat-datepicker>
+                                                    </mat-form-field>
+                                                    <!-- <input type="date" autocomplete="off" formControlName="ValidTill" id="txtValidTill" class="form-control" [min]="getToday()" /> -->
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="row" style="border-bottom:2px dashed #ccc; margin-bottom:15px; padding-bottom:10px;">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <h4 class="enqtitle">Shipment Details</h4>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label class="str">Origin</label>
+                                                            <select class="form-control my-select" id="ddlOrigin" formControlName="OriginID">
+                                                                <option *ngFor="let gRow of dsPorts" [value]="gRow.ID">
+                                                                    {{gRow.PortCode}}
+                                                                </option>
+                                                            </select>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label class="str">Load Port</label>
+                                                            <select class="form-control my-select" id="ddlLoadPort" formControlName="LoadPortID">
+                                                                <option *ngFor="let gRow of dsPorts" [value]="gRow.ID">
+                                                                    {{gRow.PortCode}}
+                                                                </option>
+                                                            </select>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label class="str">Discharge Port</label>
+                                                            <select class="form-control my-select" id="ddlDischargePort" formControlName="DischargePortID">
+                                                                <option *ngFor="let gRow of dsPorts" [value]="gRow.ID">
+                                                                    {{gRow.PortCode}}
+                                                                </option>
+                                                            </select>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label class="str">Destination</label>
+                                                            <select class="form-control my-select" id="ddlDestination" formControlName="DestinationID">
+                                                                <option *ngFor="let gRow of dsPorts" [value]="gRow.ID">
+                                                                    {{gRow.PortCode}}
+                                                                </option>
+                                                            </select>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label class="str">Route</label>
+                                                            <select class="form-control my-select" id="ddlRouteType" formControlName="RouteTypeID">
+                                                                <option *ngFor="let gRow of dsRouteTypes" [value]="gRow.ID">
+                                                                    {{gRow.RouteType}}
+                                                                </option>
+                                                            </select>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label class="str">Delivery Terms</label>
+                                                            <select class="form-control my-select" id="ddlDeliveryTerm" formControlName="DeliveryTermID">
+                                                                <option *ngFor="let gRow of dsDeliveryTerms" [value]="gRow.ID">
+                                                                    {{gRow.DeliveryTerms}}
+                                                                </option>
+                                                            </select>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                        <div class="col-md-12">
+
+                                            <div class="row">
+                                                <div class="col-sm-12 padlr0 conttable cntralign">
+                                                    <table id="datatable-buttons" cellpadding="0" cellspacing="0" class="table table-responsive table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="ble" rowspan="2">Container Type</th>
+                                                                <th class="ble" rowspan="2">Nos</th>
+                                                                <th class="ble" rowspan="2">Cargo</th>
+                                                                <th class="ble" rowspan="2">Curreny</th>
+                                                                <th class="ble" colspan="1">Ocean Freight(Per Unit)</th>
+                                                                <th class="ble" colspan="1">Slot(Per Unit)</th>
+                                                                <!--<th class="ble" colspan="3">POL Charges(Per Container)</th>-->
+                                                                <th class="ble" colspan="2">POD Charges(Per Unit)</th>
+                                                                <th class="ble" rowspan="3" colspan="3">Action</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th class="ble">Amount</th>
+                                                                <!--<th class="ble">Currency</th>-->
+                                                                <th class="ble">Amount</th>
+                                                                <!--<th class="ble">Currency</th>-->
+                                                                <!--<th class="ble">Std/Spl</th>-->
+                                                                <!--<th class="ble">Amount(Incase of Spl.)</th>
+                                                                <th class="ble">Currency</th>-->
+                                                                <th class="ble">Std/Spl</th>
+                                                                <th class="ble">Amount(Incase of Spl.)</th>
+                                                                <!--<th class="ble">Currency</th>-->
+                                                            </tr>
+                                                        </thead>
+
+
+                                                        <tbody>
+                                                            <tr *ngFor="let gRow of DsCntrTypeDetailsCharges; let i= index; let last=last">
+
+
+                                                                <td class="txtbox1">
+                                                                    <select class="form-control my-select" id="ddlCntrType" [disabled]="ControlDisplay" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.CntrTypeID">
+                                                                        <option value="0">--Select--</option>
+                                                                        <option *ngFor="let gRow of dsCntrType" [value]="gRow.ID">
+                                                                            {{gRow.Size}}
+                                                                        </option>
+                                                                    </select>
+                                                                </td>
+                                                                <td class="txtbox2"><input type="number" [disabled]="ControlDisplay" autocomplete="off" id="txtNos" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.Nos" class="form-control" /></td>
+                                                                <td class="txtbox1">
+                                                                    <select class="form-control my-select other" [disabled]="ControlDisplay" [(ngModel)]="gRow.CargoTypeID" [ngModelOptions]="{standalone: true}" id="ddlCargoType">
+                                                                        <option value="0">--Select--</option>
+                                                                        <option *ngFor="let gRow of dsCargoTypes" [value]="gRow.ID">
+                                                                            {{gRow.CargoTypes}}
+                                                                        </option>
+                                                                    </select>
+                                                                </td>
+
+                                                                <td class="txtbox1">
+                                                                    <select class="form-control my-select other" [disabled]="ControlDisplay" [(ngModel)]="gRow.FrtCurrID" [ngModelOptions]="{standalone: true}" id="ddlFrtCurrency">
+                                                                        <option value="0">--Select--</option>
+                                                                        <option *ngFor="let gRow of fillCurrency" [value]="gRow.ID">
+                                                                            {{gRow.Currency}}
+                                                                        </option>
+
+                                                                    </select>
+                                                                </td>
+                                                                <td class="txtbox1"><input type="text" [disabled]="ControlDisplay" autocomplete="off" id="txtFrieghtAmt" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.FrieghtAmount" class="form-control" /></td>
+
+                                                                <td class="txtbox1"><input type="text" [disabled]="ControlDisplay" autocomplete="off" id="txtSlotAmt" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.SlotAmount" class="form-control" /></td>
+
+
+                                                                <!--<td class="other">
+                                                                    <select class="form-control my-select other" [(ngModel)]="gRow.SlotCurrID" [ngModelOptions]="{standalone: true}" id="ddlFrtCurrency">
+                                                                        <option value="0">--Select--</option>
+                                                                        <option *ngFor="let gRow of fillCurrency" [value]="gRow.ID">
+                                                                            {{gRow.Currency}}
+                                                                        </option>
+
+                                                                    </select>
+                                                                </td>-->
+                                                                <!--<td class="other">
+                                                                    <select class="form-control" [(ngModel)]="gRow.StdSplID" [ngModelOptions]="{standalone: true}" id="ddlStdSpl">
+                                                                        <option value="0">--Select--</option>
+                                                                        <option *ngFor="let gRow of StdSplvalues" [value]="gRow.ID">
+                                                                            {{gRow.Desc}}
+                                                                        </option>
+
+                                                                    </select>
+                                                                </td>
+                                                                <td class="other">
+                                                                    <input type="text" style="width:60px;" autocomplete="off" id="txtStdSplAmt" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.StdSplAmount" class="form-control" />
+                                                                </td>
+                                                                <td class="other">
+                                                                    <select class="form-control" [(ngModel)]="gRow.StdSplCurrID" [ngModelOptions]="{standalone: true}" id="ddlStSpCur">
+                                                                        <option value="0">--Select--</option>
+                                                                        <option *ngFor="let gRow of fillCurrency" [value]="gRow.ID">
+                                                                            {{gRow.Currency}}
+                                                                        </option>
+
+                                                                    </select>
+                                                                </td>-->
+                                                                <td class="txtbox1">
+                                                                    <select class="form-control my-select other" [disabled]="ControlDisplay" [(ngModel)]="gRow.StdSplVID" [ngModelOptions]="{standalone: true}" id="ddlStdSplV">
+                                                                        <!--(ngModelChange)="StdSplChanged($event,i)">
+                                                                        >-->
+                                                                        <option value="0">--Select--</option>
+                                                                        <option *ngFor="let gRow of StdSplvalues" [value]="gRow.ID">
+                                                                            {{gRow.Desc}}
+                                                                        </option>
+                                                                    </select>
+                                                                </td>
+                                                                <td class="txtbox1">
+                                                                    <input type="text" autocomplete="off" id="txtStdSplVAmt" [disabled]="ControlDisplay" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.StdSplVAmount" class="form-control" />
+                                                                </td>
+                                                                <!--[disabled]="disableStdSplAmt[i]"-->
+                                                                <!--<td class="other">
+                                                                    <select class="form-control my-select other" [(ngModel)]="gRow.StdSplVCurrID" [ngModelOptions]="{standalone: true}" id="ddlStSpVCurr">
+                                                                        <option value="0">--Select--</option>
+                                                                        <option *ngFor="let gRow of fillCurrency" [value]="gRow.ID">
+                                                                            {{gRow.Currency}}
+                                                                        </option>
+
+                                                                    </select>
+                                                                </td>-->
+                                                                <td class="alc txtact">
+                                                                    <button class="btn btn-success bmd-btn-fab" [disabled]="ControlDisplay" *ngIf="last" (click)="btnAddCntrTypeCharges(gRow,i)">
+                                                                        <i class="material-icons">add</i>
+                                                                    </button>
+                                                                    <button class="btn btn-danger bmd-btn-fab" [disabled]="ControlDisplay" *ngIf="!last" (click)="DynamicDeleteGrid(FreightCommDynamicGrid,i,gRow.SID)">
+                                                                        <i class="material-icons">delete</i>
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+
+                                                    </table>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-md-3">
+                                                                <label>Free Days-Origin</label>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <div class="col-md-12 form-check">
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <input class="form-check-input" type="radio" id="FreeDaysOrigin1" (click)="StandardOrgChange(1)" [value]="1" formControlName="FreeDaysOrigin" name="FreeDaysOrigin">
+                                                                            <label class="form-check-label">
+                                                                                Standard
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <input class="form-check-input" type="radio" id="FreeDaysOrigin2" (click)="StandardOrgChange(2)" [value]="2" formControlName="FreeDaysOrigin" name="FreeDaysOrigin">
+                                                                            <label class="form-check-label">
+                                                                                Special
+                                                                            </label>
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <input type="text" id="txtFreedaysOrg" class="form-control" formControlName="FreeDaysOrgValue" />
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-md-3">
+                                                                <label>Free Days-Destination</label>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <div class="col-md-12 form-check">
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <input class="form-check-input" type="radio" [value]="1" id="FreeDaysDest1" (click)="StandardDestChange(1)" formControlName="FreeDaysDest" name="FreeDaysDest">
+                                                                            <label class="form-check-label">
+                                                                                Standard
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <input class="form-check-input" type="radio" [value]="2" id="FreeDaysDest2" (click)="StandardDestChange(2)" formControlName="FreeDaysDest" name="FreeDaysDest">
+                                                                            <label class="form-check-label">
+                                                                                Special
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <input type="text" id="txtFreedaysDest" class="form-control" formControlName="FreeDaysDestValue" />
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-md-3">
+                                                                <label>Damage Scheme</label>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <div class="col-md-12 form-check">
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <input class="form-check-input" type="radio" [value]="1" id="DamageScheme1" (click)="DamageSchemeChange(1)" formControlName="DamageScheme" name="DamageScheme">
+                                                                            <label class="form-check-label">
+                                                                                Standard
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <input class="form-check-input" type="radio" id="DamageScheme2" [value]="2" (click)="DamageSchemeChange(2)" formControlName="DamageScheme" name="DamageScheme">
+                                                                            <label class="form-check-label">
+                                                                                Special
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <input type="text" id="txtDamageScheme" class="form-control" formControlName="DamageSchemeValue" />
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-md-3">
+                                                                <label>Security Deposit</label>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <div class="col-md-12 form-check">
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <input class="form-check-input" type="radio" id="SecurityDeposit1" [value]="1" (click)="SecurityDepositChange(1)" formControlName="SecurityDeposit" name="SecurityDeposit">
+                                                                            <label class="form-check-label">
+                                                                                Standard
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <input class="form-check-input" type="radio" id="SecurityDeposit2" [value]="2" (click)="SecurityDepositChange(2)" formControlName="SecurityDeposit" name="SecurityDeposit">
+                                                                            <label class="form-check-label">
+                                                                                Special
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <input type="text" id="txtSecurityDeposit" class="form-control" formControlName="SecurityDepositDesc" />
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-md-3">
+                                                                <label>BOL Requirement</label>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <div class="col-md-12 form-check">
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <input class="form-check-input" type="radio" id="BOLReq1" [value]="1" (click)="BOLReqChange(1)" formControlName="BOLReq" name="BOLReq">
+                                                                            <label class="form-check-label">
+                                                                                Standard
+                                                                            </label>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <input class="form-check-input" type="radio" id="BOLReq2" [value]="2" (click)="BOLReqChange(2)" formControlName="BOLReq" name="BOLReq">
+                                                                            <label class="form-check-label">
+                                                                                Special
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <input type="text" id="txtBOLReq" class="form-control" formControlName="BOLReqDesc" />
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+
+                                <div class="col-md-12" style="border-bottom: 2px dashed #de703a69; margin-bottom: 15px; padding-bottom: 10px;">
+                                    <div class="col-md-12 padlr0">
+                                        <div class="row" style="border-bottom:2px dashed #ccc; margin-bottom:15px; padding-bottom:10px;">
+                                            <div class="col-md-12 padlr0">
+                                                <h4 class="enqtitle">Attachments</h4>
+                                            </div>
+
+                                            <div class="col-md-12 conttable padlr0 cntralign">
+                                                <div class="material-datatables">
+                                                    <table class="table table-striped table-bordered table-hover" cellspacing="0">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Attachment Name</th>
+                                                                <th>Attach File</th>
+
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>
+
+                                                                    <input type="text" [disabled]="ControlDisplay" class="form-control" id="txtAttachName" [(ngModel)]="AttachName" [ngModelOptions]="{standalone: true}">
+                                                                </td>
+
+                                                                <td>
+                                                                    <!--<span class="input-group-addon">
+                                                                    <i class="fa fa-upload">-->
+                                                                    <input type="file" [disabled]="ControlDisplay" class="file-upload" id="txtAttachFile" [(ngModel)]="AttachFile" (change)="onFileSelected($event)" [ngModelOptions]="{standalone: true}">
+                                                                    <!--</i>-->
+                                                                    <!--</span>-->
+                                                                    <span class='label label-info' id="upload-file-info"></span>
+                                                                    <!--<input type="hidden" id="HDArrayIndex" class="form-control" ng-model="HDArrayIndex" />
+                                                                    <input type="hidden" id="HDIDv" class="form-control" ng-model="AID" />-->
+                                                                </td>
+
+                                                                <td class="td-actions text-right entrygrid">
+                                                                    <button [disabled]="ControlDisplay" type="button" rel="tooltip" (click)="AddAttach(gRow)" class="btn btn-success bmd-btn-fab" data-original-title="" title="">
+                                                                        <i class="material-icons">add</i>
+                                                                    </button>
+
+                                                                </td>
+                                                            </tr>
+                                                            <tr *ngFor="let gRow of DynamicGridAttachLink; let i= index">
+
+
+
+                                                                <td>
+                                                                    {{gRow.AttachName}}
+
+                                                                    <!--<a href="#" ng-click="DownloadFile(gRow.FileName);" style="text-decoration:underline;"></a>-->
+
+                                                                </td>
+                                                                <td>
+
+                                                                    {{gRow.AttachFile}}
+                                                                    <!--<input type="hidden" id="HDID" class="form-control" ng-model="gRow.AID" />-->
+                                                                </td>
+                                                                <td class="td-actions text-right">
+                                                                    <button [disabled]="ControlDisplay" type="button" rel="tooltip" (click)="RemoveAttach(DynamicGridAttachLink,$index,gRow.AID)" class="btn btn-danger bmd-btn-fab" data-original-title="" title="">
+                                                                        <i class="material-icons">delete</i>
+                                                                    </button>
+
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+
+                                                    </table>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
+                                </div>
+
+                                <div class="row" style="border-bottom:2px dashed #ccc; margin-bottom:15px; padding-bottom:10px;">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <h4 class="enqtitle">Remarks</h4>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+
+                                                <div class="row">
+
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <textarea class="form-control" id="Remarks" style="height:50px!important;" rows="5" placeholder="Notes" formControlName="Remarks"></textarea>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+
+                                <!--<div class="row" *ngIf="showRemarks" style="border-bottom:2px dashed #ccc; margin-bottom:15px; padding-bottom:10px;">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <h4 class="enqtitle">Cancel/Reject Remarks</h4>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+
+                                                <div class="row">
+
+                                                    <div class="col-md-12">
+
+                                                        <div class="form-group">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label class="str">Reject</label>
+                                                                    <select class="form-control my-select" id="ddlDeliveryTerm" formControlName="DeliveryTermID">
+                                                                        <option *ngFor="let gRow of dsDeliveryTerms" [value]="gRow.ID">
+                                                                            {{gRow.DeliveryTerms}}
+                                                                        </option>
+                                                                    </select>
+                                                                </div>
+
+                                                            </div>
+
+
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+
+                                                <div class="row">
+
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <textarea class="form-control" style="height:50px!important;" rows="5" placeholder="Notes" formControlName="CancelRemarks"></textarea>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+
+                                </div>-->
+                            </div>
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-12" *ngIf="showCancelReason">
+                                        <table class="table table-responsive table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Cancel Reason</th>
+                                                    <th>Remarks</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>{{Reason}}</td>
+                                                    <td>{{CancelRemarks}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                    <div class="col-md-12" *ngIf="showRejectReason">
+                                        <table class="table table-responsive table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Reject Reason</th>
+                                                    <th>Remarks</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>{{Reason}}</td>
+                                                    <td>{{CancelRemarks}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="divide"></div>
+                            <div class="col-md-12 searchbtn alrt">
+                                <button type="submit" (click)="onSubmit()" *ngIf="showSave" [disabled]="disableSave" class="btn btn-primary btn-raised mb-0">Save<div class="ripple-container"></div></button>
+                                <button type="submit" (click)="onApprove()" *ngIf="showApprove" [disabled]="disableApprove" class="btn btn-success btn-raised mb-0">Confirm<div class="ripple-container"></div></button>
+                                <button type="submit" (click)="onReject()" *ngIf="showReject" [disabled]="disableReject" class="btn btn-danger btn-raised mb-0">Lost<div class="ripple-container"></div></button>
+                                <button type="submit" (click)="onCancel()" *ngIf="showCancel" [disabled]="disableCancel" class="btn btn-warning btn-raised mb-0">Cancel<div class="ripple-container"></div></button>
+                            </div>
+
+
+
+
+
+
+
+
+
+
+
+                        </div>
+                        <div class="modal fade seminor-login-modal" data-backdrop="static" id="CancelReason">
+                            <div class="modal-dialog modal-dialog-centered dialogsmall">
+                                <div class="modal-content">
+                                    <div class="row">
+                                        <div class="col-md-12 alrt">
+                                            <button type="button" class="close" data-dismiss="modal">
+                                                <span><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="modal-body seminor-login-modal-body cntpopup">
+                                        <h5 class="modal-title text-center">Cancel Reason</h5>
+
+                                        <div class="row">
+                                            <div class="col-sm-12 padlr0">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label>Cancel Reason</label>
+                                                                    <select class="form-control my-select" style="text-transform: capitalize;" id="ddlCancel" formControlName="CancelReasonID">
+                                                                        <option value="0">Cancel Reason</option>
+                                                                        <option *ngFor="let gRow of ddlCancelItem" [value]="gRow.ID">
+                                                                            {{gRow.GeneralName}}
+                                                                        </option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label>Remarks</label>
+                                                                    <textarea class="form-control" id="txtCancelReason" formControlName="CancelRemarks" style="height:80px!important;background-color:#fff!important;" rows="5" placeholder="Remarks"></textarea>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="divide"></div>
+                                            <div class="col-md-12 searchbtn alc">
+                                                <button type="submit" (click)="onCancelSave()" class="btn btn-success btn-raised mb-0">Save<div class="ripple-container"></div></button>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+
+
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal fade seminor-login-modal" data-backdrop="static" id="RejectReason">
+                            <div class="modal-dialog modal-dialog-centered dialogsmall">
+                                <div class="modal-content">
+                                    <div class="row">
+                                        <div class="col-md-12 alrt">
+                                            <button type="button" class="close" data-dismiss="modal">
+                                                <span><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="modal-body seminor-login-modal-body cntpopup">
+                                        <h5 class="modal-title text-center">Lost Reason</h5>
+
+                                        <div class="row">
+                                            <div class="col-sm-12 padlr0">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label>Lost Reason</label>
+                                                                    <select class="form-control my-select" style="text-transform:capitalize;" id="ddlReject" formControlName="RejectReasonID">
+                                                                        <option value="0">Lost Reason</option>
+                                                                        <option *ngFor="let gRow of ddlRejectItem" [value]="gRow.ID">
+                                                                            {{gRow.GeneralName}}
+                                                                        </option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label>Remarks</label>
+                                                                    <textarea class="form-control" id="txtRejectReason" formControlName="RejectRemarks" style="height:80px!important;background-color:#fff!important;" rows="5" placeholder="Remarks"></textarea>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                            <div class="divide"></div>
+                                            <div class="col-md-12 searchbtn alc">
+                                                <button type="submit" (click)="onRejectSave()" class="btn btn-success btn-raised mb-0">Save<div class="ripple-container"></div></button>
+
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+
+
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>

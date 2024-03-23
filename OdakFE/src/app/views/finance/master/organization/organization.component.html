@@ -1,0 +1,1127 @@
+<div class="row headtitle">
+    <div class="col-md-9">
+        <h4>New Organization </h4>
+    </div>
+
+    <div class="col-md-3 alrt">
+
+        <button type="button" class="btn btn-success btn-raised bmd-btn-edit btntop"
+            [routerLink]="['/views/finance/master/organization/organizationview']"><i
+                class="material-icons editicon">reply</i>
+            <div class="ripple-container"></div>
+        </button>
+
+    </div>
+</div>
+<form [formGroup]="Organizationform">
+
+    <div class="row">
+
+        <div class="col-12">
+            <div class="card m-b-30">
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Main Block Start -->
+                        <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                            <div class="form-group bmd-form-group">
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                        <label class="str">Entity</label>
+                                    </div>
+                                    <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                                    <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                        <input readonly [(ngModel)]="name"  name="entityvalue" formControlName="Entityvalue"
+                                            autocomplete="off" id="txtEntityvalue" 
+                                            class="form-control">
+                                    </div>
+
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                            <div class="form-group bmd-form-group">
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                        <label class="str">Business Location</label>
+                                    </div>
+                                    <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                                    <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7 input-field">
+                                        <select name="AccType" formControlName="BusinessLocation" id="BusinessLocation"
+                                          ng-true-value="1"
+                                          ng-false-value="0"
+                                            class="form-control my-select" (change)="OnBindDropdownStates()">
+                                            <option [value]="null">-- Select Business Location --</option>
+                                            <option *ngFor="let gRow of AccTypecountry" [value]="gRow.ID">
+                                                  {{gRow.CountryName}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        
+
+                        <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                            <div class="form-group bmd-form-group">
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                        <label class="str">Financial Year</label>
+                                    </div>
+                                    <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                                    <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7 input-field">
+                                        <select name="AccType" formControlName="FinancialYear" id="FinancialYear"
+                                            class="form-control my-select" [attr.disabled]="(!finacialYearDisable) ? null : 'disabled'">
+                                            <option [value]="null">-- Select Financial Year --</option>
+                                            <option
+                                            *ngFor="let gRow of AccTypeyear"
+                                            [value]="gRow.FinancialYearID">
+                                            {{gRow.FinancialYearName }}
+                                        </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                            <div class="form-group bmd-form-group">
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-4 col-lg-4 col-xl-5">
+                                        <label class="str">Company Incorporation No&nbsp;&nbsp;&nbsp;&nbsp;:</label>
+                                    </div>
+                                    <!--<div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>-->
+                                    <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                        <input type="text" name="entityvalue" formControlName="CompanyIncorporation" (keypress)="incorportion($event)"
+                                            autocomplete="off" id="txtEntityvalue" ng-model="txtEntityvalue"
+                                            class="form-control" required maxlength="50">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        
+                        <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                            <div class="form-group bmd-form-group">
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                        <label class="str">PAN Number</label>
+                                    </div>
+                                    <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                                    <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                        <input type="text" name="entityvalue" formControlName="PANNumber" (keypress)="numericOnlys($event)"
+                                            autocomplete="off" id="pannumber" ng-model="txtEntityvalue"  [readonly]="Organizationform.value.BusinessLocation!=53"
+                                            class="form-control" required maxlength="10" oninput="this.value=this.value.replace([a-zs-z0-9],'');">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                            <div class="form-group bmd-form-group">
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                        <span class="bmd-form-group is-filled is-focused">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" ng-true-value="1" ng-false-value="0"
+                                                        id="Checkbx" formControlName="IsRegistrationAddress"
+                                                         (change)="BlockChange($event)">
+                                                    <span class="checkbox-decorator"> <span class="check"></span>
+                                                        <div class="ripple-container"></div>
+                                                    </span>
+                                                    Registration Address
+                                                </label>
+                                            </div>
+                                        </span>
+                                    </div>
+                                    <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                                    <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                            <textarea class="form-control addressht" id="txtRemarks" name="entityvaluess"  formControlName="RegistrationAddress"
+                                            autocomplete="off" id="registration" [readonly]="!isRegistrationAddress" ng-model="txtEntityvalue"></textarea>
+
+                                           
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                            <div class="form-group bmd-form-group">
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                        <label class="str">Business Divisions</label>
+                                    </div>
+                                    <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                                    <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                        <span *ngFor="let choice of divisionMasterList; let i=index">
+                                            <span class="checkbox">
+                                                <label>
+                                                    <input type="checkbox"  [checked]="choice.isChecked" value="{{choice.DivisionId}}"
+                                                        id="Checkbx" 
+                                                        (change)="divisionChange($event)">
+                                                    <span class="checkbox-decorator"> <span class="check"></span>
+                                                        <div class="ripple-container"></div>
+                                                    </span>
+                                                    {{choice.DivisionLable}}&nbsp;&nbsp;
+                                                </label>
+                                            </span>
+                                        </span>
+                                        
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Main Block End -->
+                    </div>
+                </div>
+
+                <div class="card-body porttarifftab">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <ul class="nav nav-pills nav-justified" role="tablist">
+                                <li class="nav-item waves-effect waves-light">
+                                    <a class="nav-link active show" data-toggle="tab" (click)="btnTariffRate(1);"
+                                        href="#revenue" role="tab" aria-selected="true">Office Details</a>
+                                </li>
+                                <li class="nav-item waves-effect waves-light">
+                                    <a class="nav-link" data-toggle="tab" href="#detention" 
+                                        role="tab" aria-selected="false">Email Alerts</a>
+                                </li>
+                                <li class="nav-item waves-effect waves-light">
+                                    <a class="nav-link" data-toggle="tab" href="#Storage" (click)="btnTariffRate(5);"
+                                        role="tab" aria-selected="false">Attachments</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="row porttariff">
+                        <div class="col-md-12">
+                            <div class="tab-content">
+                                <div class="tab-pane pt-3 active show" id="revenue" role="tabpanel">
+
+                                    <div class="row">
+
+                                        <div class="col-12">
+                                            <div class="card m-b-30">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div id="datatable-buttons_wrapper"
+                                                            class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+                                                            <div class="row det tblrow" style="border:0px red">
+                                                                <!-- Start -->
+                                                                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                                                                    <div class="form-group bmd-form-group">
+                                                                        <div class="row">
+                                                                            <div class="col-md-12">
+                                                                                <span
+                                                                                    class="bmd-form-group is-filled is-focused">
+                                                                                    <div class="checkbox">
+                                                                                        <label>
+                                                                                            <input type="checkbox"
+                                                                                                ng-true-value="1"
+                                                                                                ng-false-value="0"
+                                                                                                id="Checkbx"
+                                                                                                formControlName="IsPrincipalAcct" (change)="SaleOffChange($event)"
+                                                                                                
+                                                                                                ><span
+                                                                                                class="checkbox-decorator">
+                                                                                                <span
+                                                                                                    class="check"></span>
+                                                                                                <div
+                                                                                                    class="ripple-container">
+                                                                                                </div>
+                                                                                            </span> Is sales office 
+                                                                                        </label>
+                                                                                    </div>
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                                                                    <div class="form-group bmd-form-group">
+                                                                        <div class="row">
+                                                                            <div
+                                                                                class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                                                                <label class="str">Office Name</label>
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-md-1 col-sm-1 col-lg-1 col-xl-1">
+                                                                                :</div>
+                                                                            <div
+                                                                                class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                                                                <input type="text" name="entityvalue" [(ngModel)]="selectedCompany"
+                                                                                    formControlName="OfficeName"
+                                                                                    autocomplete="off"
+                                                                                    id="txtEntityvalue"
+                                                                                    ng-model="txtEntityvalue"
+                                                                                     (keypress)="officename($event)"
+                                                                                    class="form-control" required maxlength="50">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                                                                    <div class="form-group bmd-form-group">
+                                                                        <div class="row">
+                                                                            <div
+                                                                                class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                                                                <label class="str">Office Code</label>
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-md-1 col-sm-1 col-lg-1 col-xl-1">
+                                                                                :</div>
+                                                                            <div
+                                                                                class="col-md-7 col-sm-7 col-lg-7 col-xl-7 input-field">
+                                                                                <input type="text" name="entityvalue"
+                                                                                formControlName="OfficeCode"
+                                                                                autocomplete="off"
+                                                                                id="txtEntityvalue"
+                                                                                ng-model="txtEntityvalue"
+                                                                                readonly value="{{selectedCompany.substring(0, 3)}}" maxlength="3"
+                                                                                class="form-control" >
+
+
+                                                                                
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                                                                    <div class="form-group bmd-form-group">
+                                                                        <div class="row">
+                                                                            <div
+                                                                                class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                                                                <label class="str">State</label>
+                                                                                
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-md-1 col-sm-1 col-lg-1 col-xl-1">
+                                                                                :</div>
+                                                                            <div
+                                                                                class="col-md-7 col-sm-7 col-lg-7 col-xl-7 input-field">
+                                                                                <select name="AccType"
+                                                                                    formControlName="State"
+                                                                                    id="state"
+                                                                                    class="form-control my-select" [attr.disabled]="StateVisiable==false ? 'disabled' : null">
+                                                                                    <option [value]="null">-- Select State --</option>
+                                                                                    <option
+                                                                                        *ngFor="let gRow of AccTypevalues"
+                                                                                        [value]="gRow.StateCode">
+                                                                                        {{gRow.StateName}}
+                                                                                    </option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                                                                    <div class="form-group bmd-form-group">
+                                                                        <div class="row">
+                                                                            <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                                                                <label class="str">GST Number</label>
+                                                                            </div>
+                                                                            <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1"> :</div>
+                                                                            <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                                                                <input type="text"  [readonly]="Organizationform.value.BusinessLocation!=53" name="entityvalue" formControlName="GSTNumber" 
+                                                                                    autocomplete="off" id="numbers" ng-model="txtEntityvalue" class="form-control" required maxlength="15">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                                                                    <div class="form-group bmd-form-group">
+                                                                        <div class="row">
+                                                                            <div
+                                                                                class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                                                                <label class="str">Pin Code</label>
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-md-1 col-sm-1 col-lg-1 col-xl-1">
+                                                                                :</div>
+                                                                            <div
+                                                                                class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                                                                <input type="text" min="1" name="entityvalue"
+                                                                                    formControlName="PinCode" 
+                                                                                    autocomplete="off"
+                                                                                    id="PinCodes"
+                                                                                    ng-model="txtEntityvalue"
+                                                                                   
+                                                                                    class="form-control" required maxlength="6">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                                                                    <div class="form-group bmd-form-group">
+                                                                        <div class="row">
+                                                                            <div
+                                                                                class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                                                                <label class="str1">Tel. No.</label>
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-md-1 col-sm-1 col-lg-1 col-xl-1">
+                                                                                :</div>
+                                                                            <div
+                                                                                class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                                                                <input type="text" name="entityvalue"
+                                                                                    formControlName="TelphoneNumber" numberOnly
+                                                                                    autocomplete="off"
+                                                                                    id="TelphoneNumbers"
+                                                                                    ng-model="txtEntityvalue"
+                                                                                     (keypress)="numericOnly($event)"
+                                                                                    class="form-control" required maxlength="15" oninput="this.value=this.value.replace([a-zs-z0-9],'');">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                                                                    <div class="form-group bmd-form-group">
+                                                                        <div class="row">
+                                                                            <div
+                                                                                class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                                                                <label class="str1">Address</label>
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-md-1 col-sm-1 col-lg-1 col-xl-1">
+                                                                                :</div>
+                                                                            <div
+                                                                                class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                                                                <input type="text" name="entityvalue"
+                                                                                    formControlName="Address"
+                                                                                    autocomplete="off"
+                                                                                    id="Add"
+                                                                                    ng-model="txtEntityvalue"
+                                                                                    
+                                                                                    class="form-control">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                                                                    <div class="form-group bmd-form-group">
+                                                                        <div class="row">
+                                                                            <div
+                                                                                class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                                                                <label class="str">Regional Office</label>
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-md-1 col-sm-1 col-lg-1 col-xl-1">
+                                                                                :</div>
+                                                                            <div
+                                                                                class="col-md-7 col-sm-7 col-lg-7 col-xl-7 input-field">
+                                                                                <select name="AccType" 
+                                                                                    formControlName="RegionalOffice" id="RegionalOffice"
+                                                                                   
+                                                                                    class="form-control my-select">
+                                                                                    <option [value]="null">-- Select Regional Office --</option>
+                                                                                    <option *ngFor="let gRow  of AccTyperegional" [value]="gRow.RegionId">
+                                                                                        {{gRow.RegionName}}
+                                                                                    </option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                                                                    <div class="form-group bmd-form-group">
+                                                                        <div class="row">
+                                                                            <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                                                                <label class="str">Effective From</label>
+                                                                            </div>
+                                                                            <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                                                                            <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                                                                <mat-form-field class="paymentDate" >
+                                                                                    <input matInput (click)="EffectiveFrom.open()" readonly autocomplete="off" (change)="changeDate()"  [matDatepicker]="EffectiveFrom"  id="EffectiveFrom" placeholder="" formControlName="EffectiveFrom">
+                                                                                    <mat-datepicker-toggle matSuffix [for]="EffectiveFrom"></mat-datepicker-toggle>
+                                                                                    <mat-datepicker #EffectiveFrom></mat-datepicker>
+                                                                                </mat-form-field>
+                                                                                <!-- <input class="form-control"  type="date" formControlName="EffectiveFrom"  id="StartDate" (change)="changeDate()" /> -->
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                
+                                                                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                                                                    <div class="form-group bmd-form-group">
+                                                                        <div class="row">
+                                                                            <div
+                                                                                class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                                                                <label class="strs" >Parent Office</label>
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-md-1 col-sm-1 col-lg-1 col-xl-1">
+                                                                                :</div>
+                                                                            <div
+                                                                                class="col-md-7 col-sm-7 col-lg-7 col-xl-7 input-field">
+                                                                                <select name="AccType"
+                                                                                    formControlName="ParentOffice"
+                                                                                    id="ParentOffice"
+                                                                                    class="form-control my-select" [attr.disabled]="!parentOffice ? 'disabled' : null">
+                                                                                    <option [value]="null">-- Select Parent Office --</option>
+                                                                                    <option
+                                                                                        *ngFor="let gRow of organizationOfficeList"
+                                                                                        [value]="gRow.OrganizationOfficeID">
+                                                                                        {{gRow.OfficeName}}
+                                                                                    </option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                                                                    <div class="form-group bmd-form-group">
+                                                                        <div class="row">
+                                                                            <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                                                                <span class="bmd-form-group is-filled is-focused">
+                                                                                    <div class="checkbox">
+                                                                                        <label>
+                                                                                            <input type="checkbox" ng-true-value="1" ng-false-value="0" id="Checkbx"
+                                                                                                formControlName="IsBlock"
+                                                                                                (change)="BlockChange($event)"><span class="checkbox-decorator">
+                                                                                                <span class="check"></span>
+                                                                                                <div class="ripple-container"></div>
+                                                                                            </span> Active
+                                                                                        </label>
+                                                                                    </div>
+                                                                                </span>
+                                                                            </div>                           
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- end -->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="tab-pane pt-3" id="detention" role="tabpanel">
+                                    <div class="row">
+
+                                        <div class="col-12">
+                                            <div class="card m-b-30">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div id="datatable-buttons_wrapper"
+                                                            class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+                                                            <div class="row det tblrow" style="border:0px red">
+                                                                <!-- Start -->
+                                                                
+
+                                                                <div class="col-sm-7 scrtbl">
+                                                                    <table id="datatable-buttons"
+                                                                        class="table table-striped table-bordered w-100 dataTable no-footer" role="grid"
+                                                                        aria-describedby="datatable-buttons_info">
+                                                                        <thead>
+                                                                            <tr role="row">
+                                                                                <th class="actwid" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                                                                    colspan="1" aria-label="Name: activate to sort column ascending"
+                                                                                    style="width: 177.575px;">
+                                                                                    S.No
+                                                                                </th> 
+                                                                                <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                                                                    colspan="1" aria-label="Name: activate to sort column ascending"
+                                                                                    style="width: 177.575px;" (click)="sort('OrgCode')">
+                                                                                    Alert Type
+                                                                                </th>
+                                                                                <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                                                                    colspan="1" aria-label="Name: activate to sort column ascending" 
+                                                                                    style="width: 177.575px;" (click)="sort('OrgCode')">
+                                                                                    Email ID
+                                                                                </th>
+                                                                                
+                                                                                <th class="actwid" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                                                                    colspan="1" aria-label="Office: activate to sort column ascending"
+                                                                                    style="width: 150.95px;">Action
+                                                                                </th> 
+                                                                            </tr>
+                                                                        </thead>
+                                        
+                                                                        <tbody>
+                                        
+                                                                            <tr *ngFor="let dataItem of emailAlerts;let i = index">
+                                                                                 <td> {{ i+1 }}</td> 
+                                                                                                                                                              
+                                                                                <td> <select name="AccType" [ngModelOptions]="{standalone: true}"
+                                                                                    [(ngModel)]="dataItem.AlertTypeId"
+                                                                                        id="ddlAccType"
+                                                                                        class="form-control my-select">
+
+                                                                                        <option value="null">-- Select Alert Type --</option>
+                                                                                        <option
+                                                                                            *ngFor="let gRow of AccTypevaluesd"
+                                                                                            [value]="gRow.Id">
+                                                                                            {{gRow.AlertType}}
+                                                                                        </option>
+                                                                                    </select></td>
+                                                                                <td>
+                                                                                    <input type="text" name="entityvalue"
+                                                                                    [(ngModel)]="dataItem.EmailId" [ngModelOptions]="{standalone: true}"
+                                                                                    autocomplete="off"
+                                                                                    id="txtEntityvalue"
+                                                                                    
+                                                                                    class="form-control">
+                                                                                   </td>   
+                                                                                <td>
+                                                                                    <button *ngIf="i==(emailAlerts.length-1)" type="submit" (click)="AddTerminal(i,dynamic);" class="btn btn-success bmd-btn-fab mt-1"><i class="material-icons">add</i></button>
+                                                                                    <button type="button" (click)="alertEmailRemove(dataItem.AlertTypeId)" rel="tooltip" class="btn btn-danger bmd-btn-fab">
+                                                                                    <i class="material-icons">delete</i>
+                                                                                </button></td>                                                                              
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+
+
+                                                                <!-- End -->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="tab-pane pt-3" id="Storage" role="tabpanel">
+                                    <div class="row">
+
+                                        <div class="col-12">
+                                            <div class="card m-b-30">
+                                                <div class="card-body">
+                                                    <div class="row">
+                                                        <div id="datatable-buttons_wrapper"
+                                                            class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+                                                            <div class="row det tblrow" style="border:0px red">
+                                                                <!-- Start -->
+                                                                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                                                                    <div class="form-group bmd-form-group">
+                                                                        <div class="row">
+                                                                            <div
+                                                                                class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                                                                <label class="str">Document Name</label>
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-md-1 col-sm-1 col-lg-1 col-xl-1">
+                                                                                :</div>
+                                                                            <div
+                                                                                class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                                                                <input type="text" name="entityvalue"
+                                                                                    formControlName="DocumentName"
+                                                                                    autocomplete="off"
+                                                                                    id="txtEntityvalue"
+                                                                                    ng-model="txtEntityvalue"
+                                                                                    class="form-control">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                                                                    <div class="form-group bmd-form-group">
+                                                                        <div class="row">
+                                                                            <div
+                                                                                class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                                                                <label class="str">office Code</label>
+                                                                            </div>
+                                                                            <div
+                                                                                class="col-md-1 col-sm-1 col-lg-1 col-xl-1">
+                                                                                :</div>
+                                                                            <div
+                                                                                class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                                                                <input type="text" name="entityvalue"
+                                                                                    formControlName="Entity"
+                                                                                    autocomplete="off"
+                                                                                    id="txtEntityvalue"
+                                                                                    ng-model="txtEntityvalue"
+                                                                                    class="form-control">
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-sm-7 scrtbl">
+                                                                    <table id="datatable-buttons"
+                                                                        class="table table-striped table-bordered w-100 dataTable no-footer" role="grid"
+                                                                        aria-describedby="datatable-buttons_info">
+                                                                        <thead>
+                                                                            <tr role="row">
+                                                                                <th class="actwid" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                                                                    colspan="1" aria-label="Name: activate to sort column ascending"
+                                                                                    style="width: 177.575px;">
+                                                                                    S.No
+                                                                                </th>
+                                                                                <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                                                                    colspan="1" aria-label="Name: activate to sort column ascending"
+                                                                                    style="width: 177.575px;" (click)="sort('OrgCode')">
+                                                                                    Document Name
+                                                                                </th>
+                                                                                <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                                                                    colspan="1" aria-label="Name: activate to sort column ascending"
+                                                                                    style="width: 177.575px;" (click)="sort('OrgCode')">
+                                                                                    Files
+                                                                                </th>
+                                                                                <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                                                                    colspan="1" aria-label="Name: activate to sort column ascending"
+                                                                                    style="width: 177.575px;" (click)="sort('OrgCode')">
+                                                                                    Uploaded On
+                                                                                </th>
+                                                                                <!-- <th class="actwid" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                                                                    colspan="1" aria-label="Office: activate to sort column ascending"
+                                                                                    style="width: 129.95px;">Action
+                                                                                </th> -->
+                                                                            </tr>
+                                                                        </thead>
+                                        
+                                                                        <tbody>
+                                        
+                                                                            <tr *ngFor="let dataItem of pagedItems;let i = index">
+                                                                                <!-- <td> {{ i + 1*pager.startIndex+1 }}</td> -->
+                                                                                <td>{{dataItem.OrganizationCode}}</td>                                                                               
+                                                                                <td>{{dataItem.Status}}</td>                                                                                
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+
+
+                                                                <!-- End -->
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="divide"></div>
+                    <div class="row">
+                        <div class="col-md-12 alrt">
+                            <button type="submit" (click)="onSubmit()"  class="btn  btn-raised mb-0" style="background-color:green;color:white;margin-right:12px;">Submit</button>&nbsp;&nbsp;
+                            <button type="button" (click)="reset()" class="btn btn-primary btn-raised mb-0">Cancel</button>
+                       
+                        </div>
+                        <input type="hidden" id="RegId" [ngModelOptions]="{standalone: true}" [(ngModel)]="RegId" name="RegId" />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="modal fade seminor-login-modal" data-backdrop="static" id="RevenuDOChargesModal">
+            <div class="modal-dialog modal-dialog-centered dialog1100">
+                <div class="modal-content">
+                    <div class="row">
+                        <div class="col-md-12 alrt">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body seminor-login-modal-body">
+                        <h5 class="modal-title text-center">DO CHARGES</h5>
+
+                        <div class="row">
+                            <div class="col-sm-12 padlr0">
+                                <table id="datatable-buttons"
+                                    class="det table table-striped table-bordered w-100 dataTable no-footer" role="grid"
+                                    aria-describedby="datatable-buttons_info">
+                                    <thead>
+                                        <tr>
+                                            <th>S.No</th>
+                                            <th>Slab Upto</th>
+                                            <th>Currency</th>
+                                            <th>Amount</th>
+                                            <th>Action</th>
+
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr
+                                            *ngFor="let gRow of DynamicRevenuDOChargesGrid; let i= index; let last=last">
+                                            <td>{{i+1}}</td>
+                                            <td><input type="number" autocomplete="off" class="form-control"
+                                                    [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.SlabUpto" />
+                                            </td>
+                                            <td>
+
+                                                <select class="form-control my-select other" id="ddlDOCurrency"
+                                                    [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.CurrencyID">
+                                                    <option value="0">--Select--</option>
+                                                    <option *ngFor="let gRow of CurrencyValue" [value]="gRow.ID">
+                                                        {{gRow.Currency}}
+                                                    </option>
+                                                </select>
+
+                                            </td>
+                                            <td><input type="number" autocomplete="off" class="form-control"
+                                                    [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.Amount" />
+                                            </td>
+                                            <td class="alc actwid">
+
+                                                <button class="btn btn-danger bmd-btn-fab" *ngIf="!last"
+                                                    (click)="BtnClickDOChargeDelete(DynamicRevenuDOChargesGrid,i,gRow.SLID);">
+                                                    <i class="material-icons">delete</i>
+                                                </button>
+                                                <button class="btn btn-success bmd-btn-fab" *ngIf="last"
+                                                    (click)="BtnClickRevenuDOCharges(gRow,i);">
+                                                    <i class="material-icons">add</i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 alrt">
+                                <button type="button"  class="btn  btn-raised mb-0" style="background-color:green;color:white;margin-right:12px;"
+                                    (click)="OnclickTariffDORecordSave(DynamicRevenuDOChargesGrid);">SUBMIT</button>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade seminor-login-modal" data-backdrop="static" id="THCCostChargesModal">
+            <div class="modal-dialog modal-dialog-centered dialog1100">
+                <div class="modal-content">
+                    <div class="row">
+                        <div class="col-md-12 alrt">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body seminor-login-modal-body">
+                        <h5 class="modal-title text-center">THC COSTINGS</h5>
+
+                        <div class="row">
+                            <div class="col-sm-12 padlr0">
+                                <table id="datatable-buttons"
+                                    class="table table-striped table-bordered w-100 dataTable no-footer" role="grid"
+                                    aria-describedby="datatable-buttons_info">
+                                    <thead>
+                                        <tr>
+                                            <th>S.No</th>
+                                            <th>Charges</th>
+                                            <th>Shipment Type</th>
+                                            <th>Commodity</th>
+                                            <th>Cntr Type</th>
+                                            <th>Currency</th>
+                                            <th>Amount</th>
+                                            <th>Ex.Rate</th>
+                                            <th>Local Amt</th>
+                                            <th>Action</th>
+
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr *ngFor="let gRow of DynamicTHCChargesGrid; let i= index; let last=last">
+                                            <td>{{i+1}}</td>
+                                            <td>
+                                                <select class="form-control my-select other" id="ddlTHCChargeCode"
+                                                    [ngModelOptions]="{standalone: true}"
+                                                    [(ngModel)]="gRow.ChargeCodeID">
+                                                    <option value="0">--Select--</option>
+                                                    <option *ngFor="let gRow of ChargeCodeAllvalues" [value]="gRow.ID">
+                                                        {{gRow.ChargeCode}}
+                                                    </option>
+                                                </select>
+                                            </td>
+
+                                            <td>
+                                                <select class="form-control my-select other" id="ddlTHCShipmentType"
+                                                    [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.ShipmentID">
+                                                    <option value="0">--Select--</option>
+                                                    <option *ngFor="let gRow of FillShipmentTypes" [value]="gRow.ID">
+                                                        {{gRow.GeneralName}}
+                                                    </option>
+                                                </select>
+                                            </td>
+
+                                            <td>
+                                                <select class="form-control my-select other" id="ddlTHCCommodity"
+                                                    [ngModelOptions]="{standalone: true}"
+                                                    [(ngModel)]="gRow.CommodityID">
+                                                    <option value="0">--Select--</option>
+                                                    <option *ngFor="let gRow of CommodityAllvalues" [value]="gRow.ID">
+                                                        {{gRow.GeneralName}}
+                                                    </option>
+                                                </select>
+                                            </td>
+
+                                            <td>
+                                                <select class="form-control my-select other" id="ddlCntrTypes"
+                                                    [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.CntrType">
+                                                    <option value="0">--Select--</option>
+                                                    <option *ngFor="let gRow of CntrTypesvalues" [value]="gRow.ID">
+                                                        {{gRow.CntrTypes}}
+                                                    </option>
+                                                </select>
+                                            </td>
+
+
+                                            <td>
+
+                                                <select class="form-control my-select other" id="ddlDOCurrency"
+                                                    [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.CurrencyID">
+                                                    <option value="0">--Select--</option>
+                                                    <option *ngFor="let gRow of CurrencyValue" [value]="gRow.ID">
+                                                        {{gRow.Currency}}
+                                                    </option>
+                                                </select>
+
+                                            </td>
+                                            <td><input type="number" autocomplete="off" class="form-control"
+                                                    [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.Amount" />
+                                            </td>
+                                            <td><input type="number" autocomplete="off" class="form-control"
+                                                    [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.ExRate" />
+                                            </td>
+                                            <td><input type="number" autocomplete="off" class="form-control"
+                                                    [ngModelOptions]="{standalone: true}"
+                                                    [(ngModel)]="gRow.LocalAmount" /></td>
+
+                                            <td class="alc">
+
+                                                <button class="btn btn-danger bmd-btn-fab" *ngIf="!last"
+                                                    (click)="BtnClickTHCChargeDelete(DynamicTHCChargesGrid,i,gRow.SLID);">
+                                                    <i class="material-icons">delete</i>
+                                                </button>
+                                                <button class="btn btn-success bmd-btn-fab" *ngIf="last"
+                                                    (click)="BtnClickTHCCharges(gRow,i);">
+                                                    <i class="material-icons">add</i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 alrt">
+                                <button type="button" class="btn btn-raised btn-success"
+                                    (click)="OnclickTariffTHCRecordSave(DynamicTHCChargesGrid);">SUBMIT</button>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade seminor-login-modal" data-backdrop="static" id="IFCBrackupChargesModal">
+            <div class="modal-dialog modal-dialog-centered dialog1100">
+                <div class="modal-content">
+                    <div class="row">
+                        <div class="col-md-12 alrt">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body seminor-login-modal-body">
+                        <h5 class="modal-title text-center">IFC CHARGES</h5>
+
+                        <div class="row">
+                            <div class="col-sm-12 padlr0">
+                                <table id="datatable-buttons"
+                                    class="table table-striped table-bordered w-100 dataTable no-footer" role="grid"
+                                    aria-describedby="datatable-buttons_info">
+                                    <thead>
+                                        <tr>
+                                            <th>S.No</th>
+                                            <th>Charges</th>
+                                            <th>Payment To</th>
+                                            <th>Amount</th>
+                                            <th>Action</th>
+
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr
+                                            *ngFor="let gRow of DynamicIHCBrackupChargesGrid; let i= index; let last=last">
+                                            <td>{{i+1}}</td>
+                                            <td>
+                                                <select class="form-control my-select other" id="ddlIFCChargeCode"
+                                                    [ngModelOptions]="{standalone: true}"
+                                                    [(ngModel)]="gRow.ChargeCodeID">
+                                                    <option value="0">--Select--</option>
+                                                    <option *ngFor="let gRow of ChargeCodeAllvalues" [value]="gRow.ID">
+                                                        {{gRow.ChargeCode}}
+                                                    </option>
+                                                </select>
+                                            </td>
+
+                                            <td>
+                                                <select class="form-control my-select other" id="ddlPaymentTo"
+                                                    [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.PaymentTo">
+                                                    <option value="0">--Select--</option>
+                                                    <option *ngFor="let gRow of fillPaymentTo" [value]="gRow.ID">
+                                                        {{gRow.GeneralName}}
+                                                    </option>
+                                                </select>
+                                            </td>
+                                            <td><input type="number" autocomplete="off" class="form-control"
+                                                    [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.Amount" />
+                                            </td>
+
+                                            <td class="alc">
+
+                                                <button class="btn btn-danger bmd-btn-fab" *ngIf="!last">
+                                                    <i class="material-icons">delete</i>
+                                                </button>
+                                                <button class="btn btn-success bmd-btn-fab" *ngIf="last"
+                                                    (click)="BtnClickIFCBrackupCharges(gRow,i);">
+                                                    <i class="material-icons">add</i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 alrt">
+                                <button type="button" class="btn btn-raised btn-success"
+                                    (click)="OnclickTariffBrackupIHCRecordSave(DynamicIHCBrackupChargesGrid);">SUBMIT</button>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="modal fade seminor-login-modal" data-backdrop="static" id="AgreementModal">
+            <div class="modal-dialog modal-dialog-centered dialog1100">
+                <div class="modal-content">
+                    <div class="row">
+                        <div class="col-md-12 alrt">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body seminor-login-modal-body">
+                        <h5 class="modal-title text-center">PRINCIPAL AGREEMENT</h5>
+
+                        <div class="row">
+                            <div class="col-sm-12 padlr0">
+                                <table id="datatable-buttons"
+                                    class="table table-striped table-bordered w-100 dataTable no-footer" role="grid"
+                                    aria-describedby="datatable-buttons_info">
+                                    <thead>
+                                        <tr>
+                                            <th>S.No</th>
+                                            <th>Agreement Type</th>
+                                            <th>Tariff Type</th>
+                                            <th>Commission Type</th>
+                                            <th>Shipment Type</th>
+                                            <th>Charge</th>
+                                            <th>Currency</th>
+                                            <th>Cntr Type</th>
+                                            <th>Amount</th>
+
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+
+                                        <tr *ngFor="let gRow of FreightCommDynamicGrid; let i= index; let last=last">
+                                            <td>{{i+1}}</td>
+                                            <td>{{gRow.AgreementType}}</td>
+                                            <td>{{gRow.TariffType}}</td>
+                                            <td>{{gRow.CommissionType}}</td>
+                                            <td>{{gRow.ShipmentType}}</td>
+                                            <td>{{gRow.ChargeType}}</td>
+                                            <td>{{gRow.Currency}}</td>
+                                            <td>{{gRow.CntrType}}</td>
+                                            <td>{{gRow.Amount}}</td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</form>

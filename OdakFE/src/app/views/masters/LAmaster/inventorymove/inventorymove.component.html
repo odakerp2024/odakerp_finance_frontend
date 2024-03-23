@@ -1,0 +1,263 @@
+
+<div class="row headtitle">
+    <div class="col-md-9">
+        <h4>Inventory Move Creation</h4>
+    </div>
+    <div class="col-md-3 alrt">
+        <button type="button" class="btn btn-success bmd-btn-edit btn-raised btntop" [routerLink]="['/views/masters/LAmaster/inventorymove/inventorymoveview']"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body ">
+
+        <div class="container-fluid">
+            <form [formGroup]="codeForm">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card ">
+
+                            <div class="card-body ">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label>Short Code</label>
+                                                    <input type="text" id="txtStatus" autocomplete="off" formControlName="Status" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label class="str">Status Description</label>
+                                                    <input type="text" id="txtStatusDesc" autocomplete="off" formControlName="StatusDescription" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label class="str">Status</label>
+                                                    <select class="form-control my-select" id="ddlStatus" formControlName="StatusID">
+                                                        <option *ngFor="let status of statusvalues" [value]="status.value">
+                                                            {{status.viewValue}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12" style="margin-top: 21px;">
+
+                                        <h5 style="margin-bottom:7px; margin-top:-3px; font-size:15px;color: #636161; font-weight: 600;text-decoration: underline;">Validation Details <span class="man">*</span></h5>
+
+                                    </div>
+                                    <!--<div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label>Vessel/Voyage</label>
+                                                    <select class="form-control my-select" id="ddlVesVoy" formControlName="ValidVslVoy">
+                                                        <option *ngFor="let gRow of dsValid" [value]="gRow.ID">
+                                                            {{gRow.GeneralName}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label> Location</label>
+                                                    <select class="form-control my-select" id="ddlLoc" formControlName="ValidNextLoc">
+                                                        <option *ngFor="let gRow of dsValid" [value]="gRow.ID">
+                                                            {{gRow.GeneralName}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label>Terminal</label>
+                                                    <select class="form-control my-select" id="ddlTerminal" formControlName="ValidTerminal">
+                                                        <option *ngFor="let gRow of dsValid" [value]="gRow.ID">
+                                                            {{gRow.GeneralName}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label>Transit Mode</label>
+                                                    <select class="form-control my-select" id="ddlTM" formControlName="ValidTransMode">
+                                                        <option *ngFor="let gRow of dsValid" [value]="gRow.ID">
+                                                            {{gRow.GeneralName}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label>Depot </label>
+                                                    <select class="form-control my-select" id="ddlDepot" formControlName="ValidDepot">
+                                                        <option *ngFor="let gRow of dsValid" [value]="gRow.ID">
+                                                            {{gRow.GeneralName}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>-->
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label>Booking No </label>
+                                                    <select class="form-control my-select" id="ddlBL" formControlName="ValidBL">
+                                                        <option *ngFor="let gRow of dsValid" [value]="gRow.ID">
+                                                            {{gRow.GeneralName}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label>Repo </label>
+                                                    <select class="form-control my-select" id="ddlCustomer" formControlName="ValidCustomer">
+                                                        <option *ngFor="let gRow of dsValid" [value]="gRow.ID">
+                                                            {{gRow.GeneralName}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12" style="margin-top: 21px;">
+
+                                        <h5 style="margin-bottom:7px; margin-top:-3px; font-size:15px;color: #636161; font-weight: 600;text-decoration: underline;">Allowed Previous Status <span class="man">*</span></h5>
+
+                                    </div>
+                                    <div class="col-md-6" style="margin-top: 21px;">
+                                        <div class="material-datatables">
+
+                                            <table class="table table-striped table-bordered table-hover" cellspacing="0">
+                                                <thead>
+                                                    <tr>
+
+                                                        <th class="actwid">S.No</th>
+                                                        <th>Status</th>
+                                                        <!--<th>Status Description</th>-->
+                                                        <th class="disabled-sorting text-right actwid">Action</th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody style="margin-top:20px!important;">
+                                                    <tr class="gridbody">
+                                                        <td></td>
+                                                        <td>
+
+                                                            <input type="hidden" id="HDIDv" class="form-control" [(ngModel)]="SID" />
+                                                            <select class="form-control my-select" [(ngModel)]="ToStatus" id="ddlToStatus" [ngModelOptions]="{standalone: true}">
+                                                                <option *ngFor="let gRow of dsStatuscode" [value]="gRow.ID">{{gRow.Status}}</option>
+                                                            </select>
+                                                        </td>
+                                                        <!--<td class="amt"><input type="text" id="txtStatusDescV" class="form-control" [(ngModel)]="ToStatusDescription" /></td>-->
+                                                        <td class="td-actions text-right entrygrid" style="text-align-last: center;">
+                                                            <button type="button" rel="tooltip" (click)="Add(gRow)" class="btn btn-success bmd-btn-fab" data-original-title="" title="">
+                                                                <i class="material-icons">add</i>
+                                                            </button>
+
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+
+
+                                                <tbody>
+
+
+                                                    <tr *ngFor="let gRow of DynamicGrid; let i= index">
+                                                        <td>{{i+1}}</td>
+
+
+                                                        <td class="txtright">
+                                                            {{gRow.ToStatus}}
+
+                                                        </td>
+
+                                                        <!--<td class="txtright">
+                                                            {{gRow.ToStatusDescription}}
+
+                                                        </td>-->
+
+                                                        <td class="td-actions text-right bindgrid">
+                                                            <button type="button" rel="tooltip" (click)="Selectvalues(DynamicGrid,i)" class="btn btn-success bmd-btn-fab" data-original-title="" title="">
+                                                                <i class="material-icons">edit</i>
+                                                            </button>
+                                                            <button type="button" rel="tooltip" (click)="RemoveValues(DynamicGrid,i,gRow.SID)" class="btn btn-danger bmd-btn-fab" data-original-title="" title="">
+                                                                <i class="material-icons">delete</i>
+                                                            </button>
+
+
+                                                        </td>
+
+                                                    </tr>
+
+
+                                                </tbody>
+                                            </table>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card-footer ">
+                                    <div class="col-md-12" style="text-align:right;">
+                                        <button type="submit" (click)="Recordsave();" class="btn btn-primary btn-raised mb-0">Submit</button>
+                                        <input type="hidden" id="HdStatusCodeId" ng-model="HdStatusCodeId" />
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

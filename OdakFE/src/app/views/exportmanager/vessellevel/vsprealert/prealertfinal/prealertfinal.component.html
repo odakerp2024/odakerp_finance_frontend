@@ -1,0 +1,183 @@
+<form [formGroup]="vesselForm">
+    <div class="row headtitle">
+        <div class="col-md-9 col-lg-9">
+            <h4 style="margin-top: 6px;">Export Manager - Vessel Tasks</h4>
+        </div>
+
+        <div class="col-md-3 col-lg-3 alrt">
+            <button type="button" class="btn btn-success btntop btn-raised bmd-btn-edit" [routerLink]="['/views/exportmanager/vessellevel/vessellevelview/vessellevelview/']"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top: 2px; margin-bottom: 11px; background-color: lavender; padding: 11px; ">
+        <div class="col-md-3">
+            <div class="row" style="margin-top:5px;">
+                <div class="col-md-12">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item active"><a [routerLink]="['/views/exportmanager/vessellevel/vessellevelview/vessellevelview/']">Vessel Tasks</a></li>
+                            <li class="breadcrumb-item" aria-current="page" style="color:#000000;">Pre-Alert</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-md-6 alrt" style="font-weight: 600;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <small>Ves/Voy</small>
+                        </div>
+                        <div class="col-md-12">
+                            <span>ACTUARIA</span>-<span>sdw</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 alrt" style="font-weight: 600;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <small>ETD</small>
+                        </div>
+                        <div class="col-md-12">
+                            <span>
+                                30 Sep 2022
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 alrt" style="font-weight: 600;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <small>Sailing Status</small>
+                        </div>
+                        <div class="col-md-12">
+                            <span>
+                                Pending/30 Sep 2022 19:00 Hrs
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <div class="row bkgltab">
+                <div class="col-md-12 col-lg-12">
+                    <ul class="nav nav-pills nav-justified" role="tablist">
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" (click)="btntabclick(1)" role="tab" aria-selected="false">Load List</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link active" data-toggle="tab" role="tab" (click)="btntabclick(2)" aria-selected="true">Pre-Alert</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" role="tab" (click)="btntabclick(3)" aria-selected="false">Loading Confirmation</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" role="tab" (click)="btntabclick(4)" aria-selected="false">Customer Onboard Confirm</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" role="tab" (click)="btntabclick(5)" aria-selected="false">Terminal Departure Report</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" role="tab" (click)="btntabclick(6)" aria-selected="false">Exceptions</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <div class="tab-content">
+                <div class="tab-pane pt-3 active show" role="tabpanel">
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="line_box">
+                                        <div class="text_circle dntimeln">
+
+                                            <a class="tvarp"><span><i class="fa fa-check" style="margin-top: 0.6rem;"></i></span></a>
+                                            <label>Status</label>
+                                        </div>
+                                        <div class="text_circle">
+
+                                            <a class="tvar"><span><i class="fa fa-thumbs-up" style="margin-top: 0.6rem;"></i></span></a>
+                                            <label>Finalize</label>
+                                        </div>
+                                        <div class="text_circle">
+
+                                            <a class="tvarp"><span><i class="fa fa-envelope" style="margin-top: 0.6rem;"></i></span></a>
+                                            <label>Mail</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12 conttable cntralign padlr0">
+                                    <table id="datatable" cellpadding="0" cellspacing="0" class="table table-responsive table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                        <thead>
+                                            <tr>
+                                                <th class="actwid">S.No</th>
+                                                <th>BOL No</th>
+                                                <th>POD</th>
+                                                <th>FPOD</th>
+                                                <th>BL Status</th>
+                                                <th>No. of <br />Containers</th>
+                                                <th>Routing</th>
+                                                <th>Attachment Status</th>
+                                                <th>Attach</th>
+                                                <th>Instructions to Agents</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <tr *ngFor="let dataItem of pagedItems; let i = index">
+                                                <td>{{ i + 1*pager.startIndex+1 }}</td>
+                                                <td>{{dataItem.BLNumber}}</td>
+                                                <td>{{dataItem.PODName}}</td>
+                                                <td>{{dataItem.FPODName}}</td>
+                                                <td>{{dataItem.BLStatus}}</td>
+                                                <td>{{dataItem.CntrCount}}</td>
+                                                <td>{{dataItem.RouteName}}</td>
+                                                <td></td>
+                                                <td class="actwid">
+                                                <input class="vertal" type="checkbox" id="myCheck"/></td>
+                                                <td></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-md-6 alrt" style="margin-top: 2rem;"><label>Pre-Alert Status</label></div>
+                                <div class="col-md-3" style="margin-top: 2rem;">
+                                    <select class="form-control my-select">
+                                        <option value="0">--select--</option>
+                                        <option value="1">Draft</option>
+                                        <option value="2">Final</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3 alrt">
+                                    <button type="submit" class="btn btn-info btntop btn-raised vspbtn" (click)="onclickNext()" >Email</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

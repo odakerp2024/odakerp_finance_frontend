@@ -1,0 +1,14 @@
+.con{
+    font-size: 17px;
+    font-weight: 600;
+    color:#003d79;
+    margin-left: 8px;
+}
+
+#bankSummaryTable1.table-responsive{
+    display: contents;
+}
+
+.placeholder-small::placeholder {
+    font-size: 14px; /* Adjust the font size as needed */
+  }

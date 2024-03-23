@@ -1,0 +1,15 @@
+.wrap {
+    width: 100%;
+    overflow: auto;
+    padding: 2px;
+}
+
+.fleft {
+    float: left;
+    width: 50%;
+}
+
+.fright {
+    float: right;
+    width: 45%;
+}

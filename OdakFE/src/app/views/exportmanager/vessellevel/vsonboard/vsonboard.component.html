@@ -1,0 +1,200 @@
+<div class="row headtitle">
+    <div class="col-md-9 col-lg-9">
+        <h4 style="margin-top: 6px;">Export Manager - Vessel Tasks</h4>
+    </div>
+
+    <div class="col-md-3 col-lg-3 alrt">
+        <button type="button" class="btn btn-success btntop btn-raised bmd-btn-edit" [routerLink]="['/views/exportmanager/vessellevel/vessellevelview/vessellevelview/']"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+    </div>
+</div>
+
+<div class="row" style="margin-top: 2px; margin-bottom: 11px; background-color: lavender; padding: 11px; ">
+    <div class="col-md-3">
+        <div class="row" style="margin-top:5px;">
+            <div class="col-md-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item active"><a [routerLink]="['/views/exportmanager/vessellevel/vessellevelview/vessellevelview/']">Vessel Tasks</a></li>
+                        <li class="breadcrumb-item" aria-current="page" style="color:#000000;">Customer Onboard Confirmation</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-9">
+        <div class="row">
+            <div class="col-md-6 alrt" style="font-weight: 600;">
+                <div class="row">
+                    <div class="col-md-12">
+                        <small>Ves/Voy</small>
+                    </div>
+                    <div class="col-md-12">
+                        <span>ACTUARIA</span>-<span>sdw</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 alrt" style="font-weight: 600;">
+                <div class="row">
+                    <div class="col-md-12">
+                        <small>ETD</small>
+                    </div>
+                    <div class="col-md-12">
+                        <span>
+                            30 Sep 2022
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 alrt" style="font-weight: 600;">
+                <div class="row">
+                    <div class="col-md-12">
+                        <small>Sailing Status</small>
+                    </div>
+                    <div class="col-md-12">
+                        <span>
+                            Pending/30 Sep 2022 19:00 Hrs
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 col-lg-12">
+        <div class="row bkgltab">
+            <div class="col-md-12 col-lg-12">
+                <ul class="nav nav-pills nav-justified" role="tablist">
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" (click)="btntabclick(1)" role="tab" aria-selected="false">Load List</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link " data-toggle="tab" role="tab" (click)="btntabclick(2)" aria-selected="false">Pre-Alert</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link " data-toggle="tab" role="tab" (click)="btntabclick(3)" aria-selected="false">Loading Confirmation</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link active" data-toggle="tab" role="tab" (click)="btntabclick(4)" aria-selected="true">Customer Onboard Confirm</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" role="tab" (click)="btntabclick(5)" aria-selected="false">Terminal Departure Report</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" role="tab" (click)="btntabclick(6)" aria-selected="false">Exceptions</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="row">
+    <div class="col-md-12 col-lg-12">
+        <div class="tab-content">
+            <div class="tab-pane pt-3 active show" role="tabpanel">
+
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h6>Onboarded Containers</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12 conttable cntralign padlr0">
+                                <table id="datatable-buttons" cellpadding="0" cellspacing="0" class="table table-responsive table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                    <thead>
+                                        <tr>
+                                            <th>Select</th>
+                                            <th>Customer</th>
+                                            <th>Booking No</th>
+                                            <th>BOL No</th>
+                                            <th>No. of <br />Cntrs</th>
+                                            <th>TEUs</th>
+                                            <th>POD</th>
+                                            <th>FPOD</th>
+                                            <th colspan="2">Email ID</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr *ngFor="let dataItem of pagedItems; let i = index">
+                                            <td>
+                                                <input type="checkbox" />
+                                            </td>
+                                            <td>{{dataItem.CustomerName}}</td>
+                                            <td>{{dataItem.BookingNo}}</td>
+                                            <td>{{dataItem.BLNumber}}</td>
+                                            <td>{{dataItem.CntrCount}}</td>
+                                            <td>{{dataItem.Tues}}</td>
+                                            <td>{{dataItem.PODName}}</td>
+                                            <td>{{dataItem.FPODName}}</td>
+                                            <td>
+                                                {{dataItem.CusEmail}}
+
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-success bmd-btn-fab" (click)="onClickEdit(dataItem.CusEmail)">
+                                                    <i class="material-icons">edit</i>
+                                                </button>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <div class="modal fade seminor-login-modal" data-backdrop="static" id="EmailEntry">
+                                    <div class="modal-dialog modal-dialog-centered dialogsmall">
+                                        <div class="modal-content">
+                                            <div class="row">
+                                                <div class="col-md-12 alrt">
+                                                    <button type="button" class="close" data-dismiss="modal">
+                                                        <span><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <!-- Modal body -->
+                                            <div class="modal-body seminor-login-modal-body cntpopup">
+                                                <h5 class="modal-title text-center">Update Email Address</h5>
+                                                <input class="form-control" style="width:100%" type="text" value="{{CusEmail}}" id="txtEmail" formControlName="EmailID" />
+
+                                                <div class="col-md-12 alrt padlr0">
+                                                    <button type="submit" class="btn btn-success btntop btn-raised onbtn" (click)="onSaveEmail()">Save</button>
+                                                </div>
+
+                                            </div>
+
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-md-12 alrt">
+                                <button type="submit" class="btn btn-info btntop btn-raised vspbtn" (click)="sendMail()">Send Onboard Confirmation</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

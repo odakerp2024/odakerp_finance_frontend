@@ -1,0 +1,21 @@
+hr.solid {
+    border-top: 1px solid #f7f7f7;
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
+}
+
+@media screen and (min-width: 0px) and (max-width: 400px) {
+    .show-content-xs {
+        display: block;
+    }
+
+    /* show it on small screens */
+}
+
+@media screen and (min-width: 401px) and (max-width: 1024px) {
+    .hide-content-xs {
+        display: none;
+    }
+
+    /* hide it elsewhere */
+}

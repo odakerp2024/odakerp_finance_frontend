@@ -1,0 +1,27 @@
+.block-input {
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+    background-color: #e9ecef !important;
+}
+
+#documentFileName {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.form-control.debit {
+    background-color: rgb(192, 247, 192)!important;
+    font-weight: bold !important;
+    font-size: large !important;
+}
+.form-control.credit{
+    background-color: rgb(192, 247, 192)!important;
+    font-weight: bold !important;
+    font-size: large !important;
+}
+.form-control.difference{
+    background-color: rgb(192, 247, 192)!important;
+    font-weight: bold !important;
+    font-size: large !important;
+}

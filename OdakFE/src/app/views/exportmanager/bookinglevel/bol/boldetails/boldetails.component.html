@@ -1,0 +1,752 @@
+
+<form [formGroup]="Formvalues">
+    <div class="row headtitle">
+        <div class="col-md-9 col-lg-9">
+            <h4>Booking Level Tasks</h4>
+        </div>
+        <div class="col-md-3 col-lg-3 alrt">
+            <button type="button" class="btn btn-success btntop btn-raised bmd-btn-edit" [routerLink]="['/views/exportmanager/bookinglevel/bookinglevelview/bookinglevelview']"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 2px; margin-bottom: 11px; background-color: lavender; padding: 11px; ">
+        <div class="col-md-3">
+            <div class="row" style="margin-top:5px;">
+                <div class="col-md-12">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item active"><a href="#" [routerLink]="['/views/exportmanager/bookinglevel/bookinglevelview/bookinglevelview/']">Booking Tasks</a></li>
+                            <li class="breadcrumb-item" aria-current="page" style="color:#000000;">Bill Of Lading</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-md-3" style="font-weight: 600;">
+                    <div class="row bkgno">
+                        <div class="col-md-12">
+                            <small>Booking No</small>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="lbltxt">{{bkgNo}}</label>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-3" style="font-weight: 600;">
+                    <div class="row bkgparty">
+                        <div class="col-md-12">
+                            <small>Booking Party</small>
+                        </div>
+                        <div class="col-md-12">
+                            <span>
+                                <label class="lbltxt">{{bkgparty}}</label>
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-md-3" style="font-weight: 600;">
+                    <div class="row bkgfpod">
+                        <div class="col-md-12">
+                            <small>FPOD</small>
+                        </div>
+                        <div class="col-md-12">
+                            <span>
+                                <label class="lbltxt">{{destination}}</label>
+                            </span>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-3" style="font-weight: 600;">
+                    <div class="row bkgves">
+                        <div class="col-md-12">
+                            <small>Ves/Voy</small>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="lbltxt">{{vesselname}}-{{voyageno}}</label>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <div class="row bkgltab">
+                <div class="col-md-12 col-lg-12">
+                    <ul class="nav nav-pills nav-justified" role="tablist">
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" (click)="btntabclick(1)" role="tab" aria-selected="false">Booking</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link show" data-toggle="tab" (click)="btntabclick(2)" role="tab" aria-selected="true">Container(s)</a>
+                        </li>
+
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link show" data-toggle="tab" (click)="btntabclick(9)" role="tab" aria-selected="true">BOL Allotment</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" (click)="btntabclick(3)" role="tab" aria-selected="false">Docs for Load List</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link active" data-toggle="tab" (click)="btntabclick(4)" role="tab" aria-selected="false">Bill of Lading</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" (click)="btntabclick(5)" role="tab" aria-selected="false">BOL Release</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" (click)="btntabclick(6)" role="tab" aria-selected="false">Exceptions</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" (click)="btntabclick(7)" role="tab" aria-selected="false">Invoices</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" role="tab" aria-selected="false">Attachments</a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--<div class="row">
+        <div class="col-md-12 bgtab">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <ul class="nav nav-tabs">
+                        <li *ngFor="let dataItem of blNoview" class="active"><a href="#tab1default" data-toggle="tab" (click)="OnClickEdit(dataItem.ID,dataItem.MainID)">{{dataItem.BLNumber}}</a></li>
+
+                    </ul>
+                </div>
+                <div class="panel-body">
+                    <div class="tab-content">
+                        <div class="tab-pane fade in active" id="tab1default">Default 1</div>
+                        <div class="tab-pane fade" id="tab2default">Default 2</div>
+                        <div class="tab-pane fade" id="tab3default">Default 3</div>
+                        <div class="tab-pane fade" id="tab4default">Default 4</div>
+                        <div class="tab-pane fade" id="tab5default">Default 5</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>-->
+
+    <div class="row forms bolpage">
+        <div class="col-md-12 col-lg-12">
+            <div class="divide2"></div>
+            <div class="row">
+                <div class="col-md-12 col-lg-12">
+                    <h4 class="enqtitle">Shipping Instruction</h4>
+                </div>
+            </div>
+            <div class="row borbot">
+                <div class="col-md-12 col-lg-12">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row" style="margin-top:26px;">
+                                <div class="col-md-3 col-lg-3">
+                                    <label class="lblfont">Input Source</label>
+                                </div>
+                                <div class="col-md-9 col-lg-9 rad">
+                                    <label class="check">
+                                        <input type="radio" (click)="SourceChange(1)" name="source" [value]="1" checked />
+                                        <span>Manual</span>
+                                    </label>
+                                    <label class="check" style="margin-left:20px;">
+                                        <input type="radio" (click)="SourceChange(2)" name="source" [value]="2" />
+                                        <span>Template Upload</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-6" style="border: 1px dashed #31498a; padding:7px 14px;" *ngIf="ShowUpload">
+                                    <div class="row upldfile">
+                                        <div class="col-md-2">
+                                            <i class="fa fa-cloud-upload"></i>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <label for="img" class="btn btn-info">Browse</label>
+
+                                            <input type="file" style="display:none">
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-6">
+                                    <div class="form-group">
+                                        <label>BOL Template</label>
+                                        <select class="form-control"></select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+            <div class="divide2"></div>
+            <div class="row">
+                <div class="col-md-8 col-lg-8">
+                    <h4 class="enqtitle">Bill Of Lading Parties</h4>
+                </div>
+
+            </div>
+
+            <div class="row borbot">
+                <div class="col-md-4 col-lg-4">
+                    <div class="form-group">
+                        <label>BOL Number</label>
+                        <select class="form-control my-select" id="ddlBLNumber" formControlName="BLNumberID">
+                            <option *ngFor="let gRow of BLNumberDropDown" [value]="gRow.ID">
+                                {{gRow.BLNumber}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-4">
+                    <div class="form-group">
+
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-4">
+                    <div class="form-group">
+
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <div class="row">
+                        <div class="col-md-12 col-lg-12">
+                            <div class="form-group">
+                                <label>Shipper</label>
+                                <input type="text" list="shipperdata" autocomplete="off" (keyup)="getShipper($event)" id="ddlShipper" class="form-control" formControlName="ShipperName" />
+                                <datalist id="shipperdata">
+                                    <option *ngFor="let gRow of ShipperDropDown" [value]="gRow.ShipperName">
+                                    </option>
+                                </datalist>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-12">
+                            <div class="form-group">
+                                <label>Shipper Address</label>
+                                <textarea class="form-control" formControlName="ShipperAddress"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <div class="row">
+                        <div class="col-md-12 col-lg-12">
+                            <div class="form-group">
+                                <label>Consignee</label>
+                                <input type="text" list="consigneedata" autocomplete="off" (keyup)="getConsignee($event)" id="ddlConsignee" class="form-control" formControlName="Consignee" />
+                                <datalist id="consigneedata">
+                                    <option *ngFor="let gRow of ConsigneeDropDown" [value]="gRow.Consignee">
+                                    </option>
+                                </datalist>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-12">
+                            <div class="form-group">
+                                <label>Consignee Address</label>
+                                <textarea class="form-control" formControlName="ConsigneeAddress"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-4">
+                    <div class="row">
+                        <div class="col-md-12 col-lg-12">
+                            <div class="form-group">
+                                <label>Notify</label>
+                                <input type="text" list="notifydata" autocomplete="off" (keyup)="getNotify($event)" id="ddlNotify" class="form-control" formControlName="Notify" />
+                                <datalist id="notifydata">
+                                    <option *ngFor="let gRow of NotifyDropDown" [value]="gRow.Notify">
+                                    </option>
+                                </datalist>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-12">
+                            <div class="form-group">
+                                <label>Notify Address</label>
+                                <textarea class="form-control" formControlName="NotifyAddress"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-4">
+                    <div class="row">
+                        <div class="col-md-12 col-lg-12">
+                            <div class="form-group">
+                                <label>Delivery Agent</label>
+                                <select class="form-control my-select" id="ddlDeliveryAgent" formControlName="DeliveryAgent">
+                                    <option *ngFor="let gRow of AgencyDropDown" [value]="gRow.ID">
+                                        {{gRow.AgencyName}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-12">
+                            <div class="form-group">
+                                <label>Delivery Agent Address</label>
+                                <textarea class="form-control" formControlName="DeliveryAgentAddress"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-4">
+                    <div class="row">
+                        <div class="col-md-12 col-lg-12">
+                            <div class="form-group">
+                                <label>Notify also</label>
+                                <input type="text" list="notifyalsodata" autocomplete="off" id="ddlNotifyAlso" (keyup)="getNotifyAlso($event)" class="form-control" formControlName="NotifyAlso" />
+                                <datalist id="notifyalsodata">
+                                    <option *ngFor="let gRow of NotifyAlsoDropDown" [value]="gRow.NotifyAlso">
+                                    </option>
+                                </datalist>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-12">
+                            <div class="form-group">
+                                <label>Notify also Address</label>
+                                <textarea class="form-control" formControlName="NotifyAlsoAddress"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="divide2"></div>
+            <div class="row">
+                <div class="col-md-12 col-lg-12">
+                    <h4 class="enqtitle">Port and Vessel Details</h4>
+                </div>
+            </div>
+            <div class="row borbot">
+                <div class="col-lg-3 col-md-3">
+                    <div class="form-group">
+                        <label>Place of Receipt</label>
+                        <input type="text" class="form-control" disabled formControlName="Origin" />
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3">
+                    <div class="form-group">
+                        <label>Port of Loading</label>
+                        <input type="text" class="form-control" disabled formControlName="LoadPort" />
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3">
+                    <div class="form-group">
+                        <label>Port of Discharge</label>
+                        <input type="text" class="form-control" disabled formControlName="Discharge" />
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3">
+                    <div class="form-group">
+                        <label>Port of Destination</label>
+                        <input type="text" class="form-control" disabled formControlName="Destination" />
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-3">
+                    <div class="form-group">
+                        <label>Place of Receipt</label>
+                        <select class="form-control my-select" id="ddlOrigin" formControlName="OriginID">
+                            <option *ngFor="let gRow of PortAllvalues" [value]="gRow.ID">
+                                {{gRow.PortName}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3">
+                    <div class="form-group">
+                        <label>Port of Loading</label>
+                        <select class="form-control my-select" id="ddlLoadPort" formControlName="LoadPortID">
+                            <option *ngFor="let gRow of PortAllvalues" [value]="gRow.ID">
+                                {{gRow.PortName}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3">
+                    <div class="form-group">
+                        <label>Port of Discharge</label>
+                        <select class="form-control my-select" id="ddlDischarge" formControlName="DischargeID">
+                            <option *ngFor="let gRow of PortAllvalues" [value]="gRow.ID">
+                                {{gRow.PortName}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3">
+                    <div class="form-group">
+                        <label>Port of Destination</label>
+                        <select class="form-control my-select" id="ddlDestination" formControlName="DestinationID">
+                            <option *ngFor="let gRow of PortAllvalues" [value]="gRow.ID">
+                                {{gRow.PortName}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="divide2"></div>
+            <div class="row">
+                <div class="col-md-12 col-lg-12">
+                    <h4 class="enqtitle">Marks & Description</h4>
+                </div>
+            </div>
+            <div class="row marks borbot">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Marks & Nos</label>
+                        <textarea class="form-control" id="txtMarksNos" formControlName="MarksNos"></textarea>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label>Packages</label>
+                        <textarea class="form-control" id="txtPackages" formControlName="Packages"></textarea>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="form-control" id="txtDescription" formControlName="Description"></textarea>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <label>Weight</label>
+                        <textarea class="form-control" id="txtWeight" formControlName="Weight"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="divide2"></div>
+            <div class="row">
+                <div class="col-md-12 col-lg-12">
+                    <h4 class="enqtitle">Containers</h4>
+                </div>
+            </div>
+            <div class="row borbot">
+                <div class="col-md-12 col-lg-12 boltable">
+                    <table id="datatable-buttons" class="table table-striped table-bordered w-100 dataTable no-footer">
+                        <thead>
+                            <tr role="row">
+                                <th>
+                                    Container No
+                                </th>
+                                <th>
+                                    Type
+                                </th>
+                                <th>
+                                    Agent Seal No
+                                </th>
+                                <th>
+                                    Custom Seal No
+                                </th>
+                                <th>
+                                    Gross Weight(KGS)
+                                </th>
+                                <th>
+                                    Net Weight(KGS)
+                                </th>
+                                <th>
+                                    No Of Pkgs
+                                </th>
+                                <th>
+                                    Volume
+                                </th>
+
+
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr *ngFor="let dataItem of excntr;let i = index">
+                                <td>{{dataItem.ContainerNo}}</td>
+                                <td>{{dataItem.ContrType}}</td>
+                                <td>{{dataItem.AgentSealNo}}</td>
+                                <td>{{dataItem.CustomerSealNo}}</td>
+                                <td>{{dataItem.GrsWt}}</td>
+                                <td>{{dataItem.NetWt}}</td>
+                                <td>{{dataItem.NoOfPkgs}}</td>
+                                <td>{{dataItem.Volume}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="divide2"></div>
+            <div class="row">
+                <div class="col-md-12 col-lg-12">
+                    <h4 class="enqtitle">BOL Status</h4>
+                </div>
+            </div>
+            <div class="row borbot">
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Freight Terms</label>
+                        <input type="text" class="form-control" formControlName="PaymentTerms" />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Freight Payable at</label>
+                        <input type="text" class="form-control" formControlName="FreightPayableAt" />
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>BL Type</label>
+                        <select class="form-control my-select" id="ddlBLTypes" formControlName="BLTypeID">
+                            <option *ngFor="let gRow of BLTypesDropDown" [value]="gRow.ID">
+                                {{gRow.BLType}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>No of Originals</label>
+                        <input type="text" class="form-control" formControlName="NoOfOriginal" />
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>BL Issue Date</label>
+                        <mat-form-field class="paymentDate" >
+                            <input matInput (click)="BLIssueDate.open()" readonly autocomplete="off" [matDatepicker]="BLIssueDate"  id="BLIssueDate" placeholder="" formControlName="BLIssueDate">
+                            <mat-datepicker-toggle matSuffix [for]="BLIssueDate"></mat-datepicker-toggle>
+                            <mat-datepicker #BLIssueDate></mat-datepicker>
+                        </mat-form-field>
+                        <!-- <input type="date" class="form-control" formControlName="BLIssueDate" /> -->
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Place of Issue</label>
+                        <input type="text" class="form-control" formControlName="PlaceOfIssue" />
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Ship onboard Date</label>
+                        <mat-form-field class="paymentDate" >
+                            <input matInput (click)="ShipOnboardDate.open()" readonly autocomplete="off" [matDatepicker]="ShipOnboardDate"  id="ShipOnboardDate" placeholder="" formControlName="ShipOnboardDate">
+                            <mat-datepicker-toggle matSuffix [for]="ShipOnboardDate"></mat-datepicker-toggle>
+                            <mat-datepicker #ShipOnboardDate></mat-datepicker>
+                        </mat-form-field>
+                        <!-- <input type="date" class="form-control" formControlName="ShipOnboardDate" /> -->
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label>Rfl Bol</label>
+                        <input type="checkbox" class="comchk" ng-true-value="1" ng-false-value="0" formControlName="RFLBol" />
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="divide2"></div>
+            <div class="row">
+                <div class="col-md-12 col-lg-12">
+                    <h4 class="enqtitle">BOL Print Requirements</h4>
+                </div>
+            </div>
+            <div class="row borbot">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Print Weight in MT</label>
+                        <input type="checkbox" class="comchk" ng-true-value="1" ng-false-value="0" formControlName="PrintWt" />
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Do not Print Net Weight</label>
+                        <input type="checkbox" class="comchk" ng-true-value="1" ng-false-value="0" formControlName="PrintNetWt" />
+
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>Do not Print Volume</label>
+                        <input type="checkbox" class="comchk" ng-true-value="1" ng-false-value="0" formControlName="NotPrint" />
+
+                    </div>
+                </div>
+            </div>
+            <div class="divide2"></div>
+            <div class="row">
+                <div class="col-md-12 col-lg-12">
+                    <h4 class="enqtitle">BOL Clause</h4>
+                </div>
+            </div>
+
+            <div class="row borbot">
+                <div class="col-md-12 col-lg-12 boltable">
+                    <table id="datatable-buttons" class="table table-striped table-bordered w-100 dataTable no-footer">
+                        <thead>
+                            <tr role="row">
+                                <th>
+                                    #
+                                </th>
+                                <th>
+                                    Clauses
+                                </th>
+                                <th>
+                                    Category
+                                </th>
+                                <th>
+                                    Select
+                                </th>
+
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+                                <td>01</td>
+                                <td>
+                                    FACTORY STUFFING CARRIER NOT RESPONSIBLE FOR PACKING OF CARGO
+                                </td>
+                                <td></td>
+                                <td>
+                                    <input type="checkbox" class="comchk1" />
+                                </td>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="divide2"></div>
+            <div class="row">
+                <div class="col-md-12 col-lg-12">
+                    <h4 class="enqtitle">BOL Alerts</h4>
+                </div>
+            </div>
+            <div class="row borbot">
+                <div class="col-md-12 col-lg-12 boltable">
+                    <table id="datatable-buttons" class="table table-striped table-bordered w-100 dataTable no-footer">
+                        <thead>
+                            <tr role="row">
+                                <th>
+                                    #
+                                </th>
+                                <th>
+                                    Description
+                                </th>
+                                <th>
+                                    Category
+                                </th>
+
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+                                <td>01</td>
+                                <td>
+                                    &nbsp;
+                                </td>
+                                <td>
+                                    &nbsp;
+                                </td>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="divide2"></div>
+            <div class="row">
+                <div class="col-md-12 col-lg-12">
+                    <h4 class="enqtitle">Attachments</h4>
+                </div>
+            </div>
+            <div class="row borbot">
+                <div class="col-md-12">
+                    <div class="row upldfile1">
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-12"><label>Upload Shipping Bill</label></div>
+                                <div class="col-md-12" style="border: 1px dashed #31498a; padding:7px 14px; ">
+                                    <div class="row upldfile">
+                                        <div class="col-md-2">
+                                            <i class="fa fa-cloud-upload"></i>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <label for="file-upload">
+
+                                            </label>
+
+                                            <input type="file" class="file-upload" id="txtAttachFile" formControlName="AttachShippingBill" (change)="onFileSelected($event)">
+                                            <span class='label label-info' id="upload-file-info"></span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4"></div>
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-12"><label>Upload Customer Approval</label></div>
+                                <div class="col-md-12" style="border: 1px dashed #31498a; padding:7px 14px; ">
+                                    <div class="row upldfile">
+                                        <div class="col-md-2">
+                                            <i class="fa fa-cloud-upload"></i>
+                                        </div>
+                                        <div class="col-md-10">
+                                            <label for="file-upload">
+
+                                            </label>
+
+                                            <input type="file" class="file-upload" id="txtApproval" formControlName="AttachCustomerApproval" (change)="onFileSelected($event)">
+                                            <span class='label label-info' id="upload-file-info"></span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="divide"></div>
+            <div class="col-md-12 searchbtn alrt padlr0 bolbtns">
+                <button type="submit" (click)="onSubmit()" class="btn btn-primary btn-raised btn-default cntbtn mb-0">Save<div class="ripple-container"></div></button>
+                <button type="submit" class="btn btn-warning btn-raised cntbtn mb-0">Print(Draft)<div class="ripple-container"></div></button>
+                <button type="submit" (click)="onApproval()" class="btn btn-success btn-raised cntbtn mb-0">Submit for Approval<div class="ripple-container"></div></button>
+
+            </div>
+        </div>
+    </div>
+</form>

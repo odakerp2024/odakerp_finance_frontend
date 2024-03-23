@@ -1,0 +1,18 @@
+.table > thead > tr > th {
+    width: 11% !important;
+}
+
+.headingtxt {
+    color: #4b5493 !important;
+}
+
+.subtitle {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.block-input {
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+    background-color: #e9ecef !important;
+}

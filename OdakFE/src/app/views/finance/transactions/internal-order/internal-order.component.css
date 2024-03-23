@@ -1,0 +1,10 @@
+
+:host ::ng-deep .mat_date_picker .mat-form-field-infix {
+    padding: 0px !important;
+    margin-bottom: 0.25em  !important;
+   
+}
+.mat-form-field{
+   margin-top:  0.15em !important;
+   align-items: center !important;
+}

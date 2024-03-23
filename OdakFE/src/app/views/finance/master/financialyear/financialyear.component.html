@@ -1,0 +1,190 @@
+<div class="container-fluid p-0">
+    <div class="row headtitle mt-2">
+        <div class="col-md-9 col-sm-9 col-lg-9 col-xl-9">
+            <h4 class="ml-2 mt-2">Financial Year </h4>
+        </div>
+        <div class="col-md-3 col-sm-3 col-lg-3 col-xl-3 alrt">
+            <button *ngIf="isUpdate" (click)="fg.enable();isUpdateEnable = false" type="button"
+                class="btn btn-warning bmd-btn-edit btn-raised btntop emarginr ng-star-inserted"><i
+                    class="material-icons editicon">edit</i>
+                <div class="ripple-container"></div>
+            </button>
+            <button type="button" class="btn btn-success btntop btn-raised bmd-btn-edit" (click)="onBack()"><i
+                    class="material-icons editicon">reply</i>
+                <div class="ripple-container"></div>
+            </button>
+            <button *ngIf="isUpdate"
+                class="nav-link dropdown-toggle arrow-none waves-effect nav-user btn bmd-btn-edit btn-raised btntop btnlog"
+                data-placement="bottom" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="material-icons editicon">schedule</i>
+            </button>
+
+
+            <div style="background-color: aliceblue;width:250px;left:-66px"
+                class="dropdown-menu dropdown-menu  profile-dropdown" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" style="padding:15px;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12"><span>ModifiedOn: {{ModifiedOn}}</span> | <span>Modified By:
+                                        {{ModifiedBy}}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:10px;">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12"><span>CreatedOn: {{CreatedOn}}</span> | <span>Created By:
+                                        {{CreatedBy}}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- -------title start--------- -->
+    <div class="row my-3 p-2" style="background-color: lavender;margin: 2px;">
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row bkgno">
+
+                <div class="col-md-12">
+                    <label [title]="fg.value.FinancialYearName" class="lbltxt header-text-label"> <span
+                            style="font-weight: lighter !important;">Financial
+                            Year :
+                        </span>{{fg.value.FinancialYearName | uppercase}}</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- --------title end----------- -->
+
+    <form [formGroup]="fg">
+        <div class="card">
+            <div class="card-body ">
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="str">Financial Period</label>
+                                    <input readonly type="text" name="financialPeriod" formControlName="FinancialPeriod"
+                                        id="financialPeriod" ng-model="financialPeriod" class="form-control" required
+                                        maxlength="7">
+
+                                    <!-- <select formControlName="FinancialPeriod" name="financialPeriod"
+                                        id="financialPeriod" ng-model="financialPeriod" required
+                                        class="form-control my-select block-input">
+                                        <option disabled value="">--SELECT FINICAL PERIOD--</option>
+                                        <option *ngFor="let group of FinicalPeriodList" [value]="group.Months">
+                                            {{group.Months}}
+                                        </option>
+                                    </select> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="str">Financial Year</label>
+                                    <input [ngClass]=" isUpdate ? 'block-input' : ''" type="text" name="financialYear"
+                                        formControlName="FinancialYearName" id="txtFinancialYear"
+                                        ng-model="txtFinancialYear" class="form-control" required maxlength="7"
+                                        (keypress)="decimalFilter($event)">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="str mb-2">Start Date</label>
+                                    <mat-form-field class="tillDate  mat_date_picker"   appearance="outline">
+                                        <input matInput  (click)="FromDate.open()" readonly [ngClass]=" isUpdate ? 'disable-datepicker' : ''" [matDatepicker]="FromDate"[placeholder]="entityDateFormat" formControlName="FromDate">
+                                        <mat-datepicker-toggle matSuffix [for]="FromDate"></mat-datepicker-toggle>
+                                        <mat-datepicker #FromDate></mat-datepicker>
+                                        </mat-form-field>
+
+                                    <!-- <input [ngClass]=" isUpdate ? 'block-input' : ''" class="form-control" type="date"
+                                        name="txtDtFrom" formControlName="FromDate" id="txtFromDate"
+                                        autocomplete="off" /> -->
+                                    <!-- <p *ngIf="fg.touched && fg.invalid">Please add a valid from and to date</p> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="str mb-2">End Date</label>
+                                    <mat-form-field class="tillDate mat_date_picker"   appearance="outline" >
+                                        <input matInput (click)="ToDate.open()" readonly autocomplete="off" [ngClass]=" isUpdate ? 'disable-datepicker' : ''"  [matDatepicker]="ToDate"  id="ToDate" [placeholder]="entityDateFormat" formControlName="ToDate">
+                                        <mat-datepicker-toggle matSuffix [for]="ToDate"></mat-datepicker-toggle>
+                                        <mat-datepicker #ToDate></mat-datepicker>
+                                    </mat-form-field>
+                                    <!-- <input [ngClass]=" isUpdate ? 'block-input' : ''" class="form-control" type="date"
+                                        formControlName="ToDate" id="txtToDate" autocomplete="off" /> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="str">Status</label>
+                                    <select name="isActive" formControlName="IsActive" id="ddlIsActive"
+                                        class="form-control my-select">
+                                        <option value="-1" disabled selected>--SELECT ACTIVE--</option>
+                                        <option *ngFor="let status of statusvalues" [value]="status.value">
+                                            {{status.viewValue | uppercase}}
+                                        </option>
+                                    </select>
+                                    <!-- <ng-select class="searchdropdown"  
+                                        name="isActive" formControlName="IsActive" [clearable]="false" id="ddlIsActive">
+                                        <ng-option [value]="-1" [disabled] = true >--SELECT ACTIVE--</ng-option>
+                                        <ng-option *ngFor="let status of statusvalues" [value]="status.value">
+                                            {{status.viewValue | uppercase}}
+                                        </ng-option>
+                                    </ng-select>  -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12" style="text-align:right;">
+                    <button [disabled]="isUpdateEnable" type="submit" (click)="onSubmit()"
+                        class="btn btn-primary btn-raised mb-0 m-r-15">Save</button>
+                    <button type="button" (click)="reset()" class="btn btn-danger btn-raised mb-0">Cancel</button>
+                </div>
+                <input type="hidden" id="HDRegId" ng-model="HDRegId" />
+            </div>
+        </div>
+    </form>
+</div>

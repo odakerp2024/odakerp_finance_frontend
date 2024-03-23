@@ -1,0 +1,313 @@
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between headtitle mt-2">
+        <h4 class="ml-2 mt-2">Voucher Reversals </h4>
+
+        <div class="btntop">
+            
+            <button *ngIf="isUpdate && !isFinalRecord" type="button"
+                (click)="updateValue()"
+                class="btn btn-warning bmd-btn-edit btn-raised btntop emarginr ng-star-inserted">
+                <i class="material-icons editicon">edit</i>
+            </button>
+
+            <button type="button" class="btn btn-success bmd-btn-edit btn-raised btntop"
+            (click)="saveInfo(3)"><i class="material-icons editicon">reply</i>
+                <div class="ripple-container"></div>
+            </button>
+
+            <button *ngIf="isUpdate"
+                class="nav-link dropdown-toggle arrow-none waves-effect nav-user btn bmd-btn-edit btn-raised btntop btnlog"
+                data-placement="bottom" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="material-icons editicon">schedule</i>
+            </button>
+
+            <div style="background-color: aliceblue;width:250px;left:-66px"
+                class="dropdown-menu dropdown-menu  profile-dropdown" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" style="padding:15px;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12"><span>ModifiedOn: {{ModifiedOn | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}</span> |
+                                    <span>Modified By:
+                                        {{ModifiedBy}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:10px;">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12"><span>CreatedOn: {{CreatedOn | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}</span> |
+                                    <span>Created By:
+                                        {{CreatedBy}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <form [formGroup]="voucherCreateForm">
+            <div class="row mt-3 p-4">
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="str">Reversal Reference #</label>
+                        <input formControlName="ReversalReference" readonly type="text" id="Reversal"
+                            class="form-control w-100" />
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="str mb-2">Date of Reversal</label>
+                        <mat-form-field class="tillDate mat_date_picker"  appearance="outline">
+                            <input matInput (click)="DateOfReversal.open()" disabled readonly autocomplete="off" [matDatepicker]="DateOfReversal"  id="DateOfReversal"[placeholder]="entityDateFormat"  formControlName="DateOfReversal">
+                            <mat-datepicker-toggle matSuffix [for]="DateOfReversal"></mat-datepicker-toggle>
+                            <mat-datepicker #DateOfReversal></mat-datepicker>
+                        </mat-form-field>
+                        <!-- <input formControlName="DateOfReversal" readonly type="date" id="date"
+                            class="form-control w-100" /> -->
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="str">Status</label>
+                        <select [ngClass]=" isUpdate ? 'block-input' : 'block-input'" readonly formControlName="StatusId"
+                            name="Status" class="form-control my-select disable-input--nostyle">
+                            <option disabled value="">--SELECT STATUS--</option>
+                            <option disabled *ngFor="let data of dropDownListStatus" [value]="data.Id">
+                                {{data.StatusName}}
+                            </option>
+                        </select>   
+                    </div>
+                </div>
+
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="str">Voucher Type </label>
+                        <!-- <select
+                            (ngModelChange)="voucherTypeChangeEvent($event);voucherCreateForm.controls['VoucherNumber'].setValue('')"
+                            formControlName="VoucherTypeId" name="VoucherTypeId" class="form-control my-select">
+                            <option disabled value="0">--SELECT VOUCHER TYPE--</option>
+                            <option *ngFor="let data of dropDownListVoucherList" [value]="data.Id">
+                                {{data.VoucherName}}
+                            </option>
+                        </select> -->     
+                        <ng-select class="searchdropdown custom" [formControlName]="'VoucherTypeId'" [clearable]="false" 
+                        (ngModelChange)="voucherTypeChangeEvent($event);voucherCreateForm.controls['VoucherNumber'].setValue('')" name="VoucherTypeId">
+                            <ng-option [value]="0" [disabled]="true">--SELECT VOUCHER TYPE--</ng-option>
+                            <ng-option *ngFor="let data of dropDownListVoucherList"  [value]="data.Id">
+                                {{data.VoucherName}}
+                            </ng-option> 
+                        </ng-select>                                          
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div *ngIf="!isUpdateMode" class="form-group">
+                        <label class="str">Voucher #</label>
+                        <!-- <select (ngModelChange)="voucherChangeEvent($event)" formControlName="VoucherNumber"
+                            name="VoucherNumber" class="form-control my-select">
+                            <option disabled value="">--SELECT VOUCHER--</option>
+                            <option *ngFor="let data of voucherList" [value]="data.VoucherNo">
+                                {{data.VoucherNo}}
+                            </option>
+                        </select> --> 
+                        <ng-select class="searchdropdown custom" [formControlName]="'VoucherNumber'" [clearable]="false"
+                        (ngModelChange)="voucherChangeEvent($event)" name="VoucherNumber">
+                            <ng-option [value]="''" [disabled]="true">--SELECT VOUCHER--</ng-option>
+                            <ng-option *ngFor="let data of voucherList" [value]="data.VoucherNo">
+                              {{ data.VoucherNo}}
+                            </ng-option> 
+                        </ng-select>                                         
+                    </div>
+
+                    <div *ngIf="isUpdateMode" class="form-group">
+                        <label class="str">Voucher #</label>
+                        <input formControlName="VoucherNumber" class="form-control addressht" id="txtRemarks">
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label>Remarks</label>
+                        <input formControlName="Remarks" class="form-control addressht" id="txtRemarks">
+                    </div>
+                </div>
+
+                <div class="col-md-8 mt-2">
+                    <div>
+                        <div>
+                            <div>
+                                <table
+                                    class="table table-responsive table-striped table-bordered w-100 dataTable no-footer text-center">
+                                    <thead>
+                                        <tr>
+                                            <th  tabindex="0" aria-controls="datatable-buttons"
+                                                rowspan="1" colspan="1"
+                                                aria-label="Name: activate to sort column ascending"
+                                                style="width: 177.575px;">Voucher # / Reference # </th>
+
+                                            <th  tabindex="0" aria-controls="datatable-buttons"
+                                                rowspan="1" colspan="1"
+                                                aria-label="Name: activate to sort column ascending"
+                                                style="width: 177.575px;">Date </th>
+
+                                            <th  tabindex="0" aria-controls="datatable-buttons"
+                                                rowspan="1" colspan="1"
+                                                aria-label="Name: activate to sort column ascending"
+                                                style="width: 177.575px;">Account / Party</th>
+
+                                            <th  tabindex="0" aria-controls="datatable-buttons"
+                                                rowspan="1" colspan="1"
+                                                aria-label="Name: activate to sort column ascending"
+                                                style="width: 177.575px;">Amount </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let data of pagedItems">
+                                            <td>{{data.ReferenceNo || data.VoucherNo || '-'}} </td>
+                                            
+                                            <td>{{data.VoucherDate | date : commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td>
+                                            
+                                            <td [title]="data.AccountOrParty | uppercase" >
+                                                {{ (data.AccountOrParty && data.AccountOrParty.length > 20) ? data.AccountOrParty.slice(0, 20) + '-' : data.AccountOrParty|| '-'  }}
+                                                <!-- {{data.AccountOrParty}} -->
+             
+                                            </td>
+                                            <td>{{data.Amount}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="row page" align="right">
+                                <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10" class="pagination">
+                                    <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                        <a (click)="setPage(1)">First</a>
+                                    </li>
+                                    <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                        <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+                                    </li>
+                                    <li *ngFor="let page of pager.pages"
+                                        [ngClass]="{active:pager.currentPage === page}">
+                                        <a (click)="setPage(page)">{{page}}</a>
+                                    </li>
+                                    <li *ngIf="(pager.totalPages - pager.startPage) > 5 ">
+                                        <a (click)="setPage(pager.startPage + 5)">...</a>
+                                    </li>
+                                    <li *ngIf="(pager.totalPages - pager.startPage) > 5">
+                                        <a (click)="setPage(pager.totalPages)">{{pager.totalPages}}</a>
+                                    </li>
+
+                                    <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                        <a (click)="setPage(pager.currentPage + 1)">Next</a>
+                                    </li>
+                                    <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                        <a (click)="setPage(pager.totalPages)">Last</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-sm-6 col-lg-4 col-xl-4"> </div>
+
+                <div class="col-4 mt-3">
+                    <label class="str">Upload File</label>
+                    <div class="file-upload">
+                        <input type="text" hidden />
+                        <input *ngIf="!isUpdateMode" class="file-upload__input" hidden type="file" name="myFile"
+                            id="myFile" (change)="fileSelected($event)">
+
+                        <input *ngIf="isUpdateMode" class="file-upload__input" hidden readonly type="text" name="myFile"
+                            id="myFile" (change)="fileSelected($event)">
+                        <label for="myFile" class="file-upload__button text-center"
+                            style=" width: 50% !important; border: 1px solid #b1b1b1d1 !important;margin-top: 14px; border-radius: 10px; box-shadow: 0px 0px 5px 0px rgb(202 202 202); background-color: white; font-weight: 600; margin-right: 0.5rem !important;"
+                            type="button">
+                            <img class="ml-2" src="assets/images/docupload.png" alt="Upload image"
+                                style="width: 1rem !important;" />
+                            Choose File(s)
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col-md-8 col-sm-6 col-lg-4 col-xl-4"> </div>
+
+                <div class="col-md-5 mt-3">
+                    <table
+                        class="table table-responsive table-striped table-bordered w-100 dataTable no-footer text-center">
+                        <thead>
+                            <tr>
+                                <th tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                                    aria-label="Name: activate to sort column ascending" style="width: 177.575px;">S.No
+                                </th>
+                                <th tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                                    aria-label="Name: activate to sort column ascending" style="width: 177.575px;"
+                                    (click)="sort('DivisionName')">File Name</th>
+
+                                <th tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                                    class="text-center" aria-label="Name: activate to sort column ascending"
+                                    style="width: 177.575px;" (click)="sort('ShortName')">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody *ngIf="FileList.length > 0">
+                            <tr *ngFor="let data of FileList;let i = index">
+                                <td>{{i + 1}}</td>
+                                <td id="documentFileName">{{data.FileName}}</td>
+                                <td class="text-center">
+                                    <button [disabled]="isUpdateMode" type="submit" class="btn btn-danger bmd-btn-fab"
+                                        (click)="OnClickDeleteValueFile(i)"><i
+                                            class="material-icons editicon">delete</i>
+                                        <div class="ripple-container"></div>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody *ngIf="FileList.length == 0">
+                            <tr>
+                                <td class="text-center" colspan="3">No records found.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 text-right mt-4">
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 text-right mt-4">
+                        <button [disabled]="isUpdateMode" *ngIf="!isUpdate && !isFinalRecord" type="button"
+                            class="btn btn-primary text-white mr-3 mb-0 col-auto" (click)="saveInfo(1)">
+                            Save
+                        </button>
+                        <button [disabled]="!isUpdateMode1" *ngIf="!isFinalRecord" type="button"
+                            class="btn btn-primary text-white mr-3 mb-0 col-auto"
+                            style="background-color: #19a84c !important;border: #19a84c;border: 1px solid #19a84c !important;"
+                            (click)="saveInfo(2)">
+                            Final
+                        </button>
+                        <!-- [ngClass]=" !isEditMode ? 'disable-input--style' : ''" -->
+                        <button type="button" *ngIf="isUpdate && !isFinalRecord" [disabled]="isUpdateMode"
+                            (click)="saveInfo(1,true)" class="btn btn-warning text-white mr-3 mb-0 col-auto">
+                            Delete
+                        </button>
+                      
+                        <button type="button"  (click)="saveInfo(3)"
+                            class="btn btn-warning text-white mr-3 mb-0 col-auto">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+</div>

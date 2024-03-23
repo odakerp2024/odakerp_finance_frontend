@@ -1,0 +1,245 @@
+<div class="container-fluid">
+    <div class="d-flex justify-content-between">
+        <h4>Number Range</h4>
+    </div>
+    <form [formGroup]="autoCodeForm">
+        <div class="card m-b-30">
+            <div class="card-body">
+                <div class="row mr-0 ml-0">
+
+                    <div class="col-md-12 alrt row m-2" >
+                     
+                        <div class="col-md-9 d-flex ">
+                            <!-- <select formControlName="searchOptionValue" (change)="searchOption($event.target.value)"
+                                style="border-radius: 5px;" class="ml-3">
+                                <option disabled selected value="">--SELECT OBJECT NAME--</option>
+                                <option *ngFor="let data of objectNameList" [value]="data.Id">
+                                    {{data.ObjectName | uppercase}}</option>
+                            </select> -->
+                             <ng-select class="searchdropdown" [clearable]="false" [appendTo]="'body'"  formControlName="searchOptionValue" (change)="searchOption($event)"
+                             style="border-radius: 5px;" >
+                                                <ng-option [value]="''" disabled selected>--SELECT OBJECT NAME--</ng-option>
+                                                <ng-option *ngFor="let data of objectNameList" [value]="data.Id">
+                                                    <span class="textwrap">{{data.ObjectName | uppercase}}</span>
+                                                </ng-option>
+                                              </ng-select>
+                            
+
+                            <button (click)="getNumberRange()" type="submit" class="btn btn-primary ml-3">
+                                Search
+                            </button>
+
+                            <button (click)="objectNameId = 0;getNumberRange('clear')" type="submit"
+                                class="btn btn-warning ml-3">
+                                <span style="color: white;">Clear</span>
+                            </button>
+                        </div>
+                        <div class="col-md-3 alrt ">
+                            <button  (click)="OnClickAddValue()" type="submit"
+                                class="btn btn-success btn-raised bmd-btn-edit btntop" tabindex="0">
+                                <i class="material-icons editicon">add</i>
+                                <div class="ripple-container">
+                                </div>
+                            </button>
+                        </div>
+                        <!-- <button type="submit" class="btn btn-success bmd-btn-fab tblbtngap"
+                            (click)="OnClickAddValue()"><i class="material-icons editicon">add</i>
+                            <div class="ripple-container"></div>
+                        </button> -->
+                        <!-- <button type="submit" class="btn btn-primary bmd-btn-fab tblbtngap"
+                    (click)="OnClickEditValue(gRow,i)"><i class="material-icons editicon">edit</i>
+                    <div class="ripple-container"></div>
+                    </button>
+                    <button type="submit" class="btn btn-danger bmd-btn-fab" (click)="OnClickDeleteValue(gRow,i)"><i
+                        class="material-icons editicon">delete</i>
+                    <div class="ripple-container"></div>
+                    </button> -->
+                </div>
+
+                    <div class="col-md-12 col-sm-12  col-lg-12 col-xl-12 partytbl scrtbl overflow-auto">
+                        <div class="material-datatables">
+                            <table id="datatable"
+                                class="table table-striped table-bordered  w-100 table-hover dataTable no-footer text-center"
+                                cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Object Name</th>
+                                        <th>Section-A</th>
+                                        <th>Prefix</th>
+                                        <th>Section-B</th>
+                                        <th>Section-C</th>
+                                        <th>Section-D</th>
+                                        <th>Effective Date</th>
+                                        <th>Current Number</th>
+                                        <th>Yearly Reset</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <!-- <select formControlName="ObjectName" class="form-control my-select">
+                                                <option disabled value="">--SELECT--</option>
+                                                <option *ngFor="let data of objectNameList" [value]="data.ObjectName">
+                                                    {{data.ObjectName | uppercase}}</option>
+                                            </select> -->
+                                            <ng-select class="searchdropdown" [clearable]="false"  [appendTo]="'body'" formControlName="ObjectName" >
+                                                <ng-option [value]="''" [disabled]="true">--SELECT--</ng-option>
+                                                <ng-option *ngFor="let data of objectNameList" [value]="data.ObjectName">
+                                                    <span class="textwrap"> {{data.ObjectName | uppercase}}</span>
+                                                </ng-option>
+                                              </ng-select> 
+                                        </td>
+                                        <td>
+                                            <!-- <select (change)="changeEvent($event.target.value)"
+                                                formControlName="SectionA" class="form-control my-select">
+                                                <option disabled value="">--SELECT--</option>
+                                                <option *ngFor="let data of sectionList" [value]="data.DropDownName">
+                                                    {{data.DropDownName | uppercase}}
+                                                </option>
+                                            </select> -->
+                                            <ng-select class="searchdropdown" [clearable]="false"  [appendTo]="'body'" (change)="changeEvent($event)"
+                                            formControlName="SectionA" >
+                                                <ng-option [value]="''" [disabled]="true">--SELECT--</ng-option>
+                                                <ng-option *ngFor="let data of sectionList" [value]="data.DropDownName">
+                                                    <span class="textwrap">{{data.DropDownName | uppercase}}</span>
+                                                </ng-option>
+                                              </ng-select> 
+                                        </td>
+                                        <td class="other">
+                                            <input formControlName="Prefix" maxlength="4" class="form-control"
+                                                type="text" name="Prefix" />
+                                        </td>
+                                        <td>
+                                            <select (change)="changeEvent($event.target.value)"
+                                                [ngClass]="autoCodeForm.value.SectionA == ''? 'block-input' : ''"
+                                                formControlName="SectionB" class="form-control my-select">
+                                                <option disabled value="">--SELECT--</option>
+                                                <option *ngFor="let data of sectionList" [value]="data.DropDownName">
+                                                    {{data.DropDownName | uppercase}}
+                                                </option>
+                                            </select>
+                                            <!-- <ng-select class="searchdropdown" [clearable]="false"  [appendTo]="'body'"  formControlName="SectionB" 
+                                            (change)="changeEvent($event.target.value)" [ngClass]="autoCodeForm.value.SectionA == ''? 'block-input' : ''" >
+                                                <ng-option [value]="''" [disabled]="true">--SELECT--</ng-option>
+                                                <ng-option *ngFor="let data of sectionList" [value]="data.DropDownName">
+                                                    <span class="textwrap">{{data.DropDownName | uppercase}}</span>
+                                                </ng-option>
+                                              </ng-select>  -->
+                                        </td>
+                                        <td>
+                                            <select (change)="changeEvent($event.target.value)"
+                                                [ngClass]="autoCodeForm.value.SectionB == ''? 'block-input' : ''"
+                                                formControlName="SectionC" class="form-control my-select">
+                                                <option disabled value="">--SELECT--</option>
+                                                <option *ngFor="let data of sectionList" [value]="data.DropDownName">
+                                                    {{data.DropDownName | uppercase}}
+                                                </option>
+                                            </select>
+                                        </td>
+
+                                        <td>
+                                            <select (change)="changeEvent($event.target.value)"
+                                                [ngClass]="autoCodeForm.value.SectionC == ''? 'block-input' : ''"
+                                                formControlName="SectionD" class="form-control my-select">
+                                                <option disabled value="">--SELECT--</option>
+                                                <option *ngFor="let data of sectionList" [value]="data.DropDownName">
+                                                    {{data.DropDownName | uppercase}}
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>             
+                                            <mat-form-field class="tillDate mat_date_picker"   appearance="outline">
+                                                <input matInput (click)="EffectiveDate.open()" readonly  [matDatepicker]="EffectiveDate" autocomplete="off"
+                                                 [min]="minDate" [matDatepicker]="EffectiveDate"  id="EffectiveDate" [placeholder]="entityDateFormat" formControlName="EffectiveDate">
+                                                <mat-datepicker-toggle matSuffix [for]="EffectiveDate"></mat-datepicker-toggle>
+                                                <mat-datepicker #EffectiveDate></mat-datepicker>
+                                                </mat-form-field>
+                                            <!-- <input formControlName="EffectiveDate" class="form-control" [min]="minDate"
+                                                type="date" id="EffectiveDate" /> -->
+                                        </td>
+
+                                        <td class="other">
+                                            <input [readonly]="autoCodeForm.value.SectionA == ''"
+                                                (keyup)="checkRange($event.target.value)" formControlName="NextNumber" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+                                                class="form-control"  name="NextNumber" />
+                                        </td>
+                                        <td>
+                                            <select formControlName="YearlyReset" class="form-control my-select">
+                                                <option disabled value=null>--SELECT--</option>
+                                                <option value=true>YES</option>
+                                                <option value=false>NO</option>
+                                            </select>
+                                            <!-- <ng-select class="searchdropdown" [clearable]="false" [appendTo]="'body'"  formControlName="YearlyReset" >
+                                                <ng-option [value]="0" [disabled]="true">--SELECT--</ng-option>
+                                                <ng-option value=true>YES</ng-option>
+                                                <ng-option value=false>NO</ng-option>
+                                                
+                                              </ng-select>  -->
+                                        </td>
+
+                                    </tr>
+                                    <tr *ngFor="let data of pagedItems;let i = index">
+                                        <td class="txtright">{{data.ObjectName}}</td>
+                                        <td class="txtright">{{data.SectionA}}</td>
+                                        <td class="txtright">{{data.Prefix}}</td>
+                                        <td class="txtright">{{data.SectionB}}</td>
+                                        <td class="txtright">{{data.SectionC}}</td>
+                                        <td class="txtright">{{data.SectionD}}</td>
+                                        <td class="txtright">{{data.EffectiveDate | date :commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td>
+                                        <td class="txtright">{{data.NextNumber}}</td>
+                                        <td class="txtright">{{data.YearlyReset == true ? 'YES' :'NO'}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="row mx-2" style="float:right">
+                                <div class="row page" align="right">
+
+                                    <!-- <div class="col-md-12 w-100"> -->
+                                    <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10" class="pagination justify-content-end">
+                                        <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                            <a (click)="setPage(1)">First</a>
+                                        </li>
+                                        <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                            <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+                                        </li>
+                                        <li *ngFor="let page of pager.pages"
+                                            [ngClass]="{active:pager.currentPage === page}">
+                                            <a (click)="setPage(page)">{{page}}</a>
+                                        </li>
+                                        <li *ngIf="(pager.totalPages - pager.startPage) > 5 ">
+                                            <a (click)="setPage(pager.startPage + 5)">...</a>
+                                        </li>
+                                        <li *ngIf="(pager.totalPages - pager.startPage) > 5">
+                                            <a (click)="setPage(pager.totalPages)">{{pager.totalPages}}</a>
+                                        </li>
+
+                                        <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                            <a (click)="setPage(pager.currentPage + 1)">Next</a>
+                                        </li>
+                                        <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                            <a (click)="setPage(pager.totalPages)">Last</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+
+                <div class="row ">
+                    <div class="col-md-12 alrt">
+                        <button type="submit" class="btn btn-primary btn-raised mt-2 " (click)="submit(0)">Save
+                            <div class="ripple-container"></div>
+                        </button>
+                        <button  type="submit"
+                            class="btn btn-danger btn-raised cntbtn mx-3 " (click)="submit(1)">Cancel
+                            <div class="ripple-container"></div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+</div>

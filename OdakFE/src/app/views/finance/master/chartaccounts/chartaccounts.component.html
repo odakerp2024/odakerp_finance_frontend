@@ -1,0 +1,594 @@
+<div class="container-fluid p-0">
+    <form [formGroup]="fg" novalidate>
+        <div class="row headtitle mt-2">
+            <div class="col-md-9">
+                <h4 class="ml-2 mt-2">Chart Of Accounts</h4>
+            </div>
+            <div class="col-md-3 alrt">
+
+                <button *ngIf="isUpdateMode" (click)="fg.enable();isUpdateEnable = false" type="button"
+                    class="btn btn-warning bmd-btn-edit btn-raised btntop emarginr ng-star-inserted">
+                    <i class="material-icons editicon">edit</i>
+                </button>
+
+                <button type="button" class="btn btn-success btn-raised bmd-btn-edit btntop"
+                    [routerLink]="['/views/finance/master/chartaccounts/chartaccountsView']">
+                    <i class="material-icons editicon">reply</i>
+                    <div class="ripple-container"></div>
+                </button>
+
+                <button *ngIf="isUpdateMode"
+                    class="nav-link dropdown-toggle arrow-none waves-effect nav-user btn bmd-btn-edit btn-raised btntop btnlog"
+                    data-placement="bottom" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    <i class="material-icons editicon">schedule</i>
+                </button>
+
+                <div style="background-color: aliceblue;width:250px;left:-66px"
+                    class="dropdown-menu dropdown-menu  profile-dropdown" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" style="padding:15px;">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-12"><span>ModifiedOn: {{ModifiedOn}}</span> | <span>Modified By:
+                                            {{ModifiedBy}}</span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:10px;">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-12"><span>CreatedOn: {{CreatedOn}}</span> | <span>Created By:
+                                            {{CreatedBy}}</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- -----title start----------- -->
+        <div class="row my-3 p-2" style="background-color: lavender;margin: 2px;">
+            <div class="col-md-3">
+                <div class="row">
+                    <div class="col-md-12">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                </div>
+            </div>
+            <div class="col-md-3" style="font-weight: 600;">
+                <div class="row bkgno">
+
+                    <div class="col-md-12">
+                        <label [title]="fg.value.AccountName" class="lbltxt header-text-label"> <span
+                                style="font-weight: lighter !important;">COA
+                                Name : </span>{{fg.value.AccountName |
+                            uppercase}}</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- -------title end------------ -->
+
+        <div class="card">
+            <div class="card-body pb-0">
+
+                <!-- new code -->
+
+                <div class="row-md-4 ">
+                    <div class="row mt-4 ">
+
+                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                            <div class="form-group">
+                                <label class="str" for="companyName">Account Code</label><br>
+                                <input [ngClass]=" isUpdateMode ? 'block-input' : ''" readonly
+                                    formControlName="AccountCode" type="number" id="companyName"
+                                    class="form-control w-100" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                            <div class=" form-group bmd-form-group w-100">
+                                <label class="str" for="companyName">Account Type</label><br>
+                                <!-- <select name="AccType" formControlName="AccountTypeID" id="ddlAccType"
+                                class="form-control my-select" (ngModelChange)="AccountCodegen()">
+                                <option value="''" disabled>--SELECT--</option>
+                                <option *ngFor="let AccTypev of FillAccountType" [value]="AccTypev.SubAccountGroupId"
+                                    selected>
+                                    {{AccTypev.SubAccountGroupName}}
+                                </option>
+                            </select> -->
+
+                                <select (ngModelChange)="accountTypeChanged($event)"
+                                    id="ddlCountry" name="AccType" formControlName="AccountTypeID"
+                                    class="form-control my-select">
+                                    <option disabled value="0">--SELECT ACCOUNT TYPE--</option>
+                                    <ng-container>
+                                        <optgroup *ngFor="let ddlAccType of groupedCoaTypeList | keyvalue"
+                                            [label]="ddlAccType.key">
+                                            <option *ngFor="let type of ddlAccType.value" [value]="type.ID">
+                                                {{ type.COATypeName | uppercase }}
+                                            </option>
+                                        </optgroup>
+                                    </ng-container>
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                            <div class=" form-group">
+                                <label class="str" for="companyName">Account
+                                    Name</label><br>
+                                <input [ngClass]=" isUpdateMode ? 'block-input' : ''" formControlName="AccountName"
+                                    type="text" id="companyName" class="form-control w-100" />
+
+                                <!-- <select name="AccType" formControlName="AccountName" id="ddlAccType"
+                                class="form-control my-select" (ngModelChange)="AccountCodegen()">
+                                <option value="''" disabled>--SELECT--</option>
+                                <option *ngFor="let AccTypev of FillAccountType" [value]="AccTypev.SubAccountGroupId"
+                                    selected>
+                                    {{AccTypev.SubAccountGroupName}}
+                                </option>
+                            </select> -->
+
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                            <div class="form-group">
+                                <label class="str" for="companyName">Short Name</label><br>
+                                <input [ngClass]=" isUpdateMode ? 'block-input' : ''" formControlName="ShortName"
+                                    type="text" id="companyName" class="form-control w-100" />
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                            <div class=" form-group">
+                                <label class="str" for="companyName">Active</label><br>
+                                <!-- <select formControlName="IsActive" name="AccType" id="ddlActive"
+                                    class="form-control my-select">
+                                    <option disabled value="">--SELECT ACTIVE--</option>
+                                    <option *ngFor="let status of statusvalues" [value]="status.value">
+                                        {{status.viewValue | uppercase}}
+                                    </option>
+                                </select> -->
+                                <ng-select class="searchdropdown"  [clearable]="false" name="isActive" formControlName="IsActive" id="ddlIsActive">
+                                    <ng-option [value]="''" [disabled]="true">--SELECT ACTIVE--</ng-option>
+                                    <ng-option *ngFor="let status of statusvalues" [value]="status.value">
+                                        {{status.viewValue | uppercase}}
+                                    </ng-option>
+                                </ng-select>
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4"></div>
+
+                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                            <div class="form-group">
+                                <label class="str" for="companyName">Sub Account</label><br>
+                                <select [ngClass]=" isUpdateMode ? 'block-input' : ''" formControlName="IsSubAccount"
+                                    name="AccType" id="ddlCountry" class="form-control my-select"
+                                    (ngModelChange)="accountsChanged($event)">
+                                    <option disabled value="">-- SELECT SUB ACCOUNT--</option>
+                                    <option *ngFor="let status of statusvalues" [value]="status.value">
+                                        {{status.viewValue | uppercase}}
+                                    </option>
+                                </select>
+
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                            <div class="form-group">
+                                <label for="companyName">Parent Account</label><br>
+                                <input [ngClass]=" isUpdateMode ? 'block-input' : ''"
+                                    *ngIf="fg.value.IsSubAccount == 'false' || fg.value.IsSubAccount == false"
+                                    formControlName="ParentAccountID" readonly type="text" value="-- Select --"
+                                    class="form-control" />
+                                <select [ngClass]=" isUpdateMode ? 'block-input' : ''"
+                                    *ngIf="fg.value.IsSubAccount == 'true' || fg.value.IsSubAccount == true"
+                                    name="parentAccountID" formControlName="ParentAccountID" id="ddlPAccount"
+                                    class="form-control my-select">
+                                    <option value="" disabled>-- SELECT PARENT ACCOUNT--</option>
+                                    <option *ngFor="let AccTypev of ParentAccountList"
+                                        [value]="AccTypev.ChartOfAccountsId">
+                                        {{AccTypev.AccountName | uppercase}}
+                                    </option>
+                                </select>
+
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4"></div>
+
+
+                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                            <div class=" form-group">
+                                <label class="str" for="companyName">Job Account</label><br>
+                                <select [ngClass]=" isUpdateMode ? 'block-input' : ''" formControlName="IsJobAccount"
+                                    name="AccType" id="ddlCountry" class="form-control my-select"
+                                    (ngModelChange)="jobChanged($event)">
+                                    <option disabled value="">--SELECT JOB ACCOUNT--</option>
+                                    <option *ngFor="let status of statusvalues" [value]="status.value">
+                                        {{status.viewValue | uppercase}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                            <div class=" form-group">
+                                <label for="companyName">Division</label><br>
+                                <input [ngClass]=" isUpdateMode ? 'block-input' : ''"
+                                    *ngIf="fg.value.IsJobAccount == 'false' || fg.value.IsJobAccount == false"
+                                    formControlName="DivisionId" readonly type="text" value="-- Select --"
+                                    class="form-control" />
+                                <select [ngClass]=" isUpdateMode ? 'block-input' : ''"
+                                    *ngIf="fg.value.IsJobAccount == 'true' || fg.value.IsJobAccount == true"
+                                    name="businessDivision" formControlName="DivisionId" id="ddlBusinessDivision"
+                                    class="form-control my-select">
+                                    <option value="" disabled>--SELECT DIVISION--</option>
+                                    <ng-container *ngFor="let AccTypev of divisionList">
+                                        <option *ngIf="AccTypev.Active" [value]="AccTypev.ID" selected>
+                                            {{AccTypev.DivisionName | uppercase}}
+                                        </option>
+                                    </ng-container>
+
+                                </select>
+
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4"></div>
+
+                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                            <div class=" form-group">
+                                <label class="str" for="companyName">Principal Account</label><br>
+                                <select [ngClass]=" isUpdateMode ? 'block-input' : ''" formControlName="IsPrincipal"
+                                    name="AccType" id="ddlCountry" class="form-control my-select"
+                                    (ngModelChange)="principalChanged($event)">
+                                    <option disabled value="">--SELECT PRIMARY ACCOUNT--</option>
+                                    <option *ngFor="let status of statusvalues" [value]="status.value">
+                                        {{status.viewValue | uppercase}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                            <div class="form-group">
+                                <label for="companyName">Principal</label><br>
+                                <input [ngClass]=" isUpdateMode ? 'block-input' : ''"
+                                    *ngIf="fg.value.IsPrincipal == 'false' || fg.value.IsPrincipal == false"
+                                    formControlName="PrincipalID" readonly type="text" value="-- Select --"
+                                    class="form-control" />
+                                <select [ngClass]=" isUpdateMode ? 'block-input' : ''"
+                                    *ngIf="fg.value.IsPrincipal == 'true'|| fg.value.IsPrincipal == true"
+                                    name="principalAccount" formControlName="PrincipalID" id="ddlPrincipalAccount"
+                                    class="form-control my-select">
+                                    <option value="" disabled>--SELECT PRINCIPAL--</option>
+                                    <option *ngFor="let AccTypev of FillPrincipal" [value]="AccTypev.ID" selected>
+                                        {{AccTypev.LineName | uppercase}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4"></div>
+
+                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+
+                            <div class="form-group">
+                                <label for="remarks">Remarks</label><br>
+                                <textarea [ngClass]=" isUpdateMode ? 'block-input' : ''" formControlName="Remarks"
+                                    id="remarks" row="4" class="addressht form-control w-100"></textarea>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <br><br><br>
+
+                <!-- new code end -->
+                <!-- old code -->
+
+                <!-- <div class="row">
+                <div class="col-md-2">
+                    <ul class="nav nav-pills nav-justified" role="tablist">
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link active show" data-toggle="tab" href="home-1" (click)="btntabclick(1)"
+                                role="tab" aria-selected="true">COA</a>
+                        </li>
+                    </ul>
+                </div>
+            </div> -->
+
+                <!-- <div class="row">
+                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                <label class="str">Entity</label>
+                            </div>
+                            <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                            <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7"> -->
+                <!-- <input type="text" autocomplete="off" class="form-control"
+                                    id="txtEntityvalue" name="entityvalue" formControlName="OrganizationName" ng-model="txtEntityvalue"
+                                    readonly> -->
+
+                <!-- <select name="organizationID" formControlName="OrganizationID" id="ddlOrganizationID"
+                                    class="form-control my-select" [(ngModel)]="this.OrgID" disabled> -->
+                <!-- <option value="0" disabled>--SELECT--</option> -->
+                <!-- <option *ngFor="let AccTypev of FillEntity" [value]="AccTypev.OrganizationId" selected disabled>
+                                        {{AccTypev.OrganizationName}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                <label class="str">Account Type</label>
+                            </div>
+                            <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                            <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7 input-field">
+                                <select name="AccType" formControlName="AccountTypeID" id="ddlAccType" class="form-control my-select"
+                                    (ngModelChange)="AccountCodegen()" >
+                                    <option value="0" disabled>--SELECT--</option>
+                                    <option *ngFor="let AccTypev of FillAccountType" [value]="AccTypev.SubAccountGroupId">
+                                        {{AccTypev.SubAccountGroupName}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                <label class="str">Account Code</label>
+                            </div>
+                            <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                            <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                <input type="text" name="acctCode" formControlName="AccountCode" autocomplete="off"
+                                    id="txtAcctCode"  class="form-control" disabled [(ngModel)]="this.Account_Code">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                <label class="str">Account Name</label>
+                            </div>
+                            <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                            <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                <input type="text" name="acctName" formControlName="AccountName" autocomplete="off"
+                                    id="txtAcctName" ng-model="txtAcctName" class="form-control" maxlength="100">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span class="bmd-form-group is-filled is-focused">
+                                    <div class="checkbox">
+                                        <label> -->
+                <!-- <input type="checkbox" ng-true-value="1" ng-false-value="0" id="chkIsSubAccount"
+                                                formControlName="IsSubAccount" [(ngModel)]="IsCheckBoxDr"
+                                                (change)="BlockChange($event)"><span class="checkbox-decorator">
+                                                <span class="check"></span>
+                                                <div class="ripple-container"></div>
+                                            </span> Is Sub Account -->
+                <!-- <input type="checkbox" id="chkIsSubAccount" formControlName="IsSubAccount"
+                                                (change)="IsSubAccountChange($event)" ng-true-value="1"
+                                                ng-false-value="0" id="chkSubAccount">
+                                            <span class="checkbox-decorator">
+                                                <span class="check"></span>
+                                                <div class="ripple-container"></div>
+                                            </span> Is Sub Account
+
+                                        </label>
+                                    </div>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                    <div class="form-group bmd-form-group">
+                        <div class="row" *ngIf="showPAccount">
+                            <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                <label class="str">Parent Account</label>
+                            </div>
+                            <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                            <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7 input-field">
+                                <select name="parentAccountID" formControlName="ParentAccountID" id="ddlPAccount"
+                                    class="form-control my-select">
+                                    <option value="0" disabled>--SELECT--</option>
+                                    <option *ngFor="let AccTypev of FillParentAccount"
+                                        [value]="AccTypev.ChartOfAccountsID">
+                                        {{AccTypev.AccountName}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span class="bmd-form-group is-filled is-focused">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" formControlName="IsJobAccount"
+                                                (change)="JobAccountChange($event)" ng-true-value="1" ng-false-value="0"
+                                                id="chkJobAccount">
+                                            <span class="checkbox-decorator">
+                                                <span class="check"></span>
+                                                <div class="ripple-container"></div>
+                                            </span> Job Account
+                                        </label>
+                                    </div>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                    <div class="form-group bmd-form-group">
+                        <div class="row" *ngIf="showBDivision">
+                            <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                <label class="str">Business Division</label>
+                            </div>
+                            <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                            <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7 input-field">
+                                <select name="businessDivision" formControlName="DivisionId" id="ddlBusinessDivision"
+                                    class="form-control my-select">
+                                    <option value="0" disabled>--SELECT--</option>
+                                    <option *ngFor="let AccTypev of FillDivision" [value]="AccTypev.Id">
+                                        {{AccTypev.DivisionName}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span class="bmd-form-group is-filled is-focused">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" formControlName="IsPrincipal"
+                                                (change)="PrincipalAcctChange($event)" ng-true-value="1"
+                                                ng-false-value="0" id="chkIsPrincipalAcct">
+                                            <span class="checkbox-decorator">
+                                                <span class="check"></span>
+                                                <div class="ripple-container"></div>
+                                            </span> Is Principal Account
+
+                                        </label>
+                                    </div>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                    <div class="form-group bmd-form-group">
+                        <div class="row" *ngIf="showPrincipal">
+                            <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                <label class="str">Principal</label>
+                            </div>
+                            <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                            <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7 input-field">
+                                <select name="principalAccount" formControlName="PrincipalID" id="ddlPrincipalAccount"
+                                    class="form-control my-select">
+                                    <option value="0" disabled>--SELECT--</option>
+                                    <option *ngFor="let AccTypev of FillPrincipal" [value]="AccTypev.ID">
+                                        {{AccTypev.LineName}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                <label class="str">Status</label>
+                            </div>
+                            <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                            <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7 input-field">
+                                <select name="Status" formControlName="IsActive" id="ddlIsActive"
+                                    class="form-control my-select">
+                                    <option value="" disabled>--SELECT--</option>
+                                    <option *ngFor="let status of statusvalues" [value]="status.value">
+                                        {{status.viewValue}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-3 col-sm-4 col-lg-4 col-xl-4">
+                                <label>Remarks</label>
+                            </div>
+                            <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                            <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7 input-field">
+                                <textarea class="form-control addressht" id="txtRemarks" formControlName="Remarks"
+                                    rows="5"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div> -->
+                <!-- old code end -->
+            </div>
+
+            <div class="mb-3">
+                <div class="col-md-12" style="text-align:right;">
+                    <button [disabled]="isUpdateEnable" *ngIf="isUpdateMode" type="submit" (click)="onSubmit()"
+                        class="btn btn-primary btn-raised mb-0 m-r-15">Update</button>
+
+                    <button *ngIf="!isUpdateMode" type="submit" (click)="onSubmit()"
+                        class="btn btn-primary btn-raised mb-0 m-r-15">Save</button>
+
+                    <button type="button" (click)="reset()" class="btn btn-danger btn-raised mb-0">Cancel</button>
+                    <!-- <input type="text" id="RegId" name="RegId" formControlName="RegId" class="form-control" /> -->
+
+                </div>
+
+            </div>
+        </div>
+    </form>
+
+</div>

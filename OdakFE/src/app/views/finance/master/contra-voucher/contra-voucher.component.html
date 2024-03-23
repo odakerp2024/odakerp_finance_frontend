@@ -1,0 +1,350 @@
+<div class="p-4">
+    <div class="row headtitle">
+        <div class="col-9 d-flex justify-content-between">
+            <span class="mt-auto">
+                <h4>Contra Voucher</h4>
+            </span>
+            <button (click)="CreateNew()" class="btn btn-success btn-raised bmd-btn-edit">
+                <i class="material-icons editicon">add</i>
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <!-- Table View -->
+        <div class="col-sm-12 col-md-9">
+            <div class=" mr-3">
+                <div class="row">
+                    <div class="col-12 card">
+                        <table class="table table-responsive   table-bordered w-100 table-striped  p-3 mt-3 border-0">
+                            <thead class="text-center">
+                                <tr role="row">
+                                    <th class="align-middle" id="th1" rowspan="2" colspan="1" tabindex="0">
+                                        CV Number
+                                    </th>
+                                    <th class="align-middle" id="th2" rowspan="2" colspan="1">
+                                        CV Date
+                                    </th>
+                                    <th class="align-middle" id="th3" rowspan="2" colspan="1">
+                                        From Account
+                                    </th>
+                                    <th class="align-middle" id="th4" rowspan="2" colspan="1">
+                                        To Account
+                                    </th>
+                                    <th id="th5" class="text-center" rowspan="1" colspan="2">Paid</th>
+                                    <th class="align-middle" id="th6" rowspan="2" colspan="1">
+                                        Reference <br /> Number
+                                    </th>
+                                    <th class="align-middle" id="th6" rowspan="2" colspan="1">
+                                        Status
+                                    </th>
+                                    <th class="sorting align-middle" tabindex="0" aria-controls="datatable-buttons"
+                                        rowspan="2" colspan="1" aria-label="Name: activate to sort column ascending">
+                                        Copy
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th class="text-center" scope="col">Amount</th>
+                                    <th class="text-center" scope="col">Currency</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-center">
+                                <tr *ngFor="let contra of pagedItems; let i = index">
+                                    <td>
+                                        <!-- <a style="color:#0366d6;cursor: pointer;" href=""
+                                        [routerLink]="['/views/contra-info/contra-info-view']"
+                                        [queryParams]="{ contraId: contra.ContraVoucherId }"
+                                        class="">{{contra.ContraVoucherNumber ? contra.ContraVoucherNumber: 'NA'}}</a> -->
+
+                                        <a (click)="editPayment(contra.ContraVoucherId)"
+                                            style="color:#0366d6;cursor: pointer;" class="">{{contra.ContraVoucherNumber? contra.ContraVoucherNumber: 'NA'}}</a>
+                                    </td>
+                                    <td>{{contra.ContraVoucherDate | date: commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td>
+                                    <!-- <td [title]="contra.FromAccount">
+                                        <select
+                                            class="form-control my-select disable-input--nostyle border-0 text-black"
+                                            [(ngModel)]="contra.FromAccount">
+                                            <option *ngFor="let bank of bankList" [value]="bank.BankID">
+                                                {{bank.BankName | uppercase}}
+                                            </option>
+                                        </select>
+                                    </td>                                  -->
+                                    <td [title]="getTooltipNameById(contra.FromAccount)">
+                                        <select class="form-control my-select disable-input--nostyle border-0 text-black"
+                                                [(ngModel)]="contra.FromAccount">
+                                          <option *ngFor="let bank of bankList" [value]="bank.BankID">
+                                            {{bank.BankName | uppercase}}
+                                          </option>
+                                        </select>
+                                      </td>                                      
+                                    <td [title]="getTooltipNameById(contra.ToAccount)">
+                                        <select
+                                            class="form-control my-select disable-input--nostyle border-0 text-black"
+                                            [(ngModel)]="contra.ToAccount">
+                                            <option *ngFor="let bank of bankList" [value]="bank.BankID">
+                                                {{bank.BankName | uppercase}}
+                                            </option>
+                                        </select>
+                                    </td>
+                                    <td>{{contra.AmountPaid}}</td>
+                                    <td>{{contra.CurrencyName}}</td>
+                                    <td>{{contra.ReferenceNo || '-' }}</td>
+                                    <td>
+                                        <div
+                                            [ngClass]="contra.StatusName == 'Confirmed' ? 'badge badge-state-confirm' : contra.StatusName == 'Cancelled' ? 'badge badge-state-cancel' : 'badge badge-state'">
+                                            {{contra.StatusName}}
+                                        </div>
+                                    </td>
+
+                                    <td>
+
+                                        <button (click)="copyPaste(contra.ContraVoucherId, true)"
+                                            class="btn btn-primary bmd-btn-fab">
+                                            <i class="material-icons">filter_none</i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="row page">
+                            <div class="col-auto ml-auto">
+                                <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10"
+                                    class="pagination">
+                                    <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                        <a (click)="setPage(1)">First</a>
+                                    </li>
+                                    <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                        <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+                                    </li>
+                                    <li *ngFor="let page of pager.pages"
+                                        [ngClass]="{active:pager.currentPage === page}">
+                                        <a (click)="setPage(page)">{{page}}</a>
+                                    </li>
+                                    <li *ngIf="(pager.totalPages - pager.startPage) > 5 ">
+                                        <a (click)="setPage(pager.startPage + 5)">...</a>
+                                    </li>
+                                    <li *ngIf="(pager.totalPages - pager.startPage) > 5">
+                                        <a (click)="setPage(pager.totalPages)">{{pager.totalPages}}</a>
+                                    </li>
+
+                                    <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                        <a (click)="setPage(pager.currentPage + 1)">Next</a>
+                                    </li>
+                                    <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                        <a (click)="setPage(pager.totalPages)">Last</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter -->
+        
+        <div class="col-sm-12 col-xs-12 col-md-3 card">
+            <form [formGroup]="filterForm">
+                <div class="col-12 mt-4">
+                    <div class="form-group bmd-form-group ">
+                        <!-- <select class="form-control my-select" formControlName="DivisionId">
+                            <option [value]="''" disabled>--SELECT DIVISION TYPE--</option>
+                            <ng-container *ngFor="let division of divisionList">
+                                <option *ngIf="division.Active" [value]="division.ID">
+                                    {{division.DivisionName | uppercase}}
+                                </option>
+                            </ng-container>
+                        </select> -->
+                        <ng-select  class="searchdropdown"  formControlName="DivisionId" [clearable]="false">
+                            <ng-option [value]="''" disabled>--SELECT DIVISION--</ng-option>
+                            <ng-container  *ngFor="let division of divisionList">
+                              <ng-option  *ngIf="division.Active"  [value]="division.ID">
+                                <span class="textwrap">{{division.DivisionName | uppercase}}</span>
+                              </ng-option>
+                           </ng-container>
+                        </ng-select> 
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="form-group bmd-form-group w-100">
+                        <!-- <select class="form-control my-select" formControlName="OfficeId">
+                            <option [value]="''" disabled>--SELECT OFFICE TYPE--</option>
+                            <ng-container *ngFor="let office of officeList">
+                                <option [value]="office.ID">
+                                    {{office.OfficeName | uppercase}}
+                                </option>
+                            </ng-container>
+                        </select> -->
+                        <ng-select  class="searchdropdown"  formControlName="OfficeId" [clearable]="false">
+                            <ng-option [value]="''" disabled>--SELECT OFFICE TYPE--</ng-option>
+                            <ng-container *ngFor="let office of officeList">
+                              <ng-option [value]="office.ID">
+                                <span class="textwrap">{{office.OfficeName | uppercase}}</span>
+                              </ng-option>
+                            </ng-container>
+                        </ng-select>  
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="form-group bmd-form-group">
+                        <input type="text" class="w-100 pl-2 inputs" placeholder="CONTRA VOUCHER NUMBER"
+                            formControlName="ContraVoucherNumber" />
+                    </div>
+                </div>
+
+                <!-- <div class="col-12">
+                    <div class="form-group bmd-form-group">
+                        <input type="date" class="w-100 p-0 pl-2 form-control" [max]="minDate"
+                            formControlName="ContraVoucherDate" />
+                    </div>
+                </div> -->
+                <div class="col-md-12" style="margin-top: -7px;">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class=" mb-3">From</label>
+                                <div class="input-group">
+                                    <mat-form-field class="tillDate mat_date_picker"  appearance="outline">
+                                        <input matInput (click)="StartDate.open()" readonly autocomplete="off" 
+                                        [max]="validTillMinDate" [matDatepicker]="StartDate"  id="StartDate" [placeholder]="entityDateFormat" formControlName="StartDate">
+                                        <mat-datepicker-toggle matSuffix [for]="StartDate"></mat-datepicker-toggle>
+                                        <mat-datepicker #StartDate></mat-datepicker>
+                                    </mat-form-field>
+                                    <!-- <input formControlName="StartDate" (change)="contraEvent($event.target.value)"
+                                        [max]="minDate" type="date" class="form-control"
+                                        placeholder=" Contra Voucher Date" /> -->
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class=" mb-3">Till</label>
+                                <div class="input-group">
+                                    <mat-form-field class="tillDate mat_date_picker"  appearance="outline">
+                                        <input matInput (click)="EndDate.open()" readonly autocomplete="off" [min]="filterForm.get('StartDate').value" [matDatepicker]="EndDate"  id="EndDate" [placeholder]="entityDateFormat" formControlName="EndDate">
+                                        <mat-datepicker-toggle matSuffix [for]="EndDate"></mat-datepicker-toggle>
+                                        <mat-datepicker #EndDate></mat-datepicker>
+                                    </mat-form-field>
+                                    <!-- <input formControlName="EndDate" [min]="validTillMinDate" type="date"
+                                        class="form-control" placeholder="Contra VoucherDate" /> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 mt-0 mt-n3">
+                    <div class="form-group bmd-form-group">
+                        <!-- <select class="form-control my-select" formControlName="FromAccount"
+                            (click)="getToAccount($event.target.value)">
+                            <option [value]="''" disabled>--SELECT FROM ACCOUNT--</option>
+                            <option *ngFor="let bank of bankList" [value]="bank.BankID">
+                                {{bank.BankName | uppercase}} - {{bank.AccountNo}}
+                            </option>
+                        </select> -->
+                        <ng-select class="searchdropdown"  formControlName="FromAccount" (change)="getToAccount($event)"[clearable]="false">
+                            <ng-option [value]="''" [disabled]="true">--SELECT FROM ACCOUNT--</ng-option>
+                            <ng-option *ngFor="let bank of bankList" [value]="bank.BankID">
+                                <span class="textwrap">{{bank.BankName | uppercase}} - {{bank.AccountNo}}</span>
+                            </ng-option>
+                        </ng-select> 
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="form-group bmd-form-group">
+                        <!-- <select class="form-control my-select" formControlName="ToAccount">
+                            <option [value]="''" disabled>--SELECT TO ACCOUNT--</option>
+                            <option *ngFor="let bank of toAccount" [value]="bank.BankID">
+                                {{bank.BankName | uppercase}} - {{bank.AccountNo}}
+                            </option>
+                        </select> -->
+                        <ng-select class="searchdropdown" formControlName="ToAccount" [clearable]="false">
+                            <ng-option [value]="''" [disabled]="true">--SELECT TO ACCOUNT--</ng-option>
+                            <ng-option *ngFor="let bank of toAccount" [value]="bank.BankID">
+                                <span class="textwrap">{{bank.BankName | uppercase}} - {{bank.AccountNo}}</span>
+                            </ng-option>
+                        </ng-select>                    
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="form-group bmd-form-group">
+                        <input onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly class="w-100 pl-2 inputs" formControlName="AmountPaid" placeholder=" AMOUNT" />
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="form-group bmd-form-group">
+                        <!-- <select class="form-control my-select m-0" formControlName="CurrencyName">
+                            <option [value]="''" selected disabled>--SELECT CURRENCY--</option>
+                            <option *ngFor="let currency of currencyList" [value]="currency.CurrencyCode">
+                                {{currency.CurrencyCode | uppercase}} - {{currency.CurrencyName |uppercase}}
+                            </option>
+                        </select> -->
+                        <ng-select class="searchdropdown"  formControlName="CurrencyName" [clearable]="false">
+                            <ng-option [value]="''" [disabled]="true">--SELECT CURRENCY--</ng-option>
+                            <ng-option *ngFor="let currency of currencyList"  [value]="currency.CurrencyCode">
+                                <span class="textwrap">{{currency.CurrencyCode | uppercase}} - {{currency.CurrencyName |uppercase}}</span>
+                            </ng-option>
+                        </ng-select> 
+                    </div>
+                </div>
+
+
+                <div class="col-12">
+                    <div class="form-group bmd-form-group">
+                        <!-- <select class="form-control my-select" formControlName="ModeofPaymentId">
+                            <option [value]="''" disabled>--Mode Of Payment--</option>
+                            <option *ngFor="let payment of paymentModeList" [value]="payment.Id">
+                                {{payment.PaymentType | uppercase}}
+                            </option>
+                        </select> -->
+                        <ng-select  class="searchdropdown" [formControlName]="'ModeofPaymentId'"[clearable]="false">
+                            <ng-option [value]="''" disabled>{{ '--Mode Of Payment--' | uppercase }}</ng-option>
+                            <ng-option *ngFor="let payment of paymentModeList" [value]="payment.ID">
+                                <span class="textwrap">{{ payment.PaymentType | uppercase }}</span>
+                            </ng-option>
+                        </ng-select>  
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="form-group bmd-form-group">
+                        <input type="text" class="w-100 inputs" formControlName="ReferenceNo"
+                            placeholder=" REFERENCE NUMBER" />
+                    </div>
+                </div>
+                
+                <div class="col-12">
+                    <div class="form-group bmd-form-group">
+                        <!-- <select class="form-control my-select" formControlName="Status">
+                            <option value='' disabled>--SELECT STATUS--</option>
+                            <option *ngFor="let data of statusList" [value]=data.Id>
+                                {{data.StatusName | uppercase}}
+                            </option>
+                        </select> -->
+                        <ng-select  class="searchdropdown" [formControlName]="'Status'"[clearable]="false">
+                            <ng-option [value]="''" disabled>--SELECT STATUS--</ng-option>
+                            <ng-option *ngFor="let data of statusList" [value]=data.Id>
+                                <span class="textwrap">{{data.StatusName | uppercase}}</span>
+                            </ng-option>
+                        </ng-select> 
+                    </div>
+                </div>
+
+                <div class="col-md-12 searchbtn alrt text-center mb-3 mt-3">
+                    <button type="submit" style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;"
+                        class="btn btn-primary btn-raised mb-0" (click)="filterContra()">
+                        Search
+                    </button>
+                    <button style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;"
+                        class="btn btn-raised btn-danger mb-0" (click)="clearFilter()">
+                        Clear
+                    </button>
+                </div>
+            </form>
+        </div>
+
+
+    </div>
+</div>

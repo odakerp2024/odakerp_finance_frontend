@@ -1,0 +1,381 @@
+<div class="constiner card p-4">
+    <form [formGroup]="bankReconciliationForm">
+        <div class="row mb-5">
+            <div class="col-4">
+                <label class="str mb-2">Period</label>
+                <div class="d-flex">
+                    <div class="w-50 pr-2">
+                        <mat-form-field  class="tillDate mat_date_picker"   appearance="outline">
+                            <input matInput (click)="fromPeriod.open()" readonly autocomplete="off"  [max]="fromMaxDate"  [matDatepicker]="fromPeriod"  id="fromPeriod" [placeholder]="entityDateFormat" formControlName="fromPeriod">
+                            <mat-datepicker-toggle matSuffix [for]="fromPeriod"></mat-datepicker-toggle>
+                            <mat-datepicker #fromPeriod></mat-datepicker>
+                        </mat-form-field>
+                        <!-- <input type="date" name="" id="" class="py-0 w-100 pr-2 form-control" [max]="fromMaxDate" formControlName="fromPeriod"> -->
+                    </div>
+                    <div class="w-50">
+                        <mat-form-field  class="tillDate mat_date_picker"   appearance="outline">
+                            <input matInput (click)="toPeriod.open()" readonly autocomplete="off" [max]="toMaxDate" (change)="updateFromDate($event.target.value)" [matDatepicker]="toPeriod"  id="toPeriod" [placeholder]="entityDateFormat" formControlName="toPeriod">
+                            <mat-datepicker-toggle matSuffix [for]="toPeriod"></mat-datepicker-toggle>
+                            <mat-datepicker #toPeriod></mat-datepicker>
+                        </mat-form-field>
+                        <!-- <input type="date" name="" id="" class="py-0 w-100 form-control"  [max]="toMaxDate" (change)="updateFromDate($event.target.value)" formControlName="toPeriod"> -->
+                    </div>
+                </div>
+            </div>
+    
+            <div class="col-4">
+                <label class="str">Division</label>
+               
+
+                <mat-select formControlName="divisionId" placeholder="Select Division(s)"
+                class="form-control" multiple >
+                    <mat-option #allSelected (click)="toggleAllSelection()" [value]="0">All</mat-option>
+                    <ng-container *ngFor="let division of divisionDropdown">
+                    <mat-option   [value]="division.ID" (click)="tosslePerOne(allSelected.viewValue)">
+                        {{division.DivisionName | uppercase}}
+                    </mat-option>
+                </ng-container>
+                </mat-select>
+            </div>
+    
+            <div class="col-4">
+                <label class="str">Office</label>
+    
+
+                <mat-select [placeholder]=" officeDropdown.length?  'Select Office' : 'Select Division'" formControlName="officeId"
+                class="form-control" multiple>
+                    <mat-option #allSelected1 *ngIf="officeDropdown.length" (click)="toggleAllSelectionOffiece()" [value]="0">All</mat-option>
+                    <ng-container *ngFor="let office of officeDropdown">
+                    <mat-option  [value]="office.ID" (click)="tosslePerOneOffice(allSelected.viewValue)">
+                        {{office.OfficeName | uppercase}}
+                    </mat-option>
+                </ng-container>
+                </mat-select>
+            </div>
+    
+            <div class="col-4">
+                <label class="str">Bank</label>
+                <!-- <select class="form-control my-select" formControlName="bankId">
+                    <option [value]="0" disabled>--SELECT BANK --</option>
+                    <option *ngFor="let bank of bankDropdown" [value]="bank.BankID">
+                        {{bank.BankName | uppercase}} -- {{bank.AccountNo}}
+                    </option>
+                </select> -->
+                <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'bankId'">
+                    <ng-option [value]="0" disabled>--SELECT BANK --</ng-option>
+                       <ng-option *ngFor="let bank of bankDropdown" [value]="bank.BankID">
+                       <span class="textwrap">{{bank.BankName | uppercase}} -- {{bank.AccountNo}}</span>
+                    </ng-option>
+               </ng-select> 
+            </div>
+
+            <div class="col-4 mt-auto">
+            <button type="submit" class="btn btn-primary btn-raised mb-0 but-reconciliation" (click)="getReconciliationList()">
+                Run Reconciliation
+            </button>
+            </div>
+    
+        </div>
+    </form>
+    <div class="row">
+        <div class="col-8 font-weight-bolder">
+            Transactions (in selected Period)
+        </div>
+        <div class="col-4 font-weight-bolder">
+            Balance (End of selected Period)
+        </div>
+        <div class="col-4">
+            <table class="table table-responsive  table-bordered w-100 table-striped border-0 agingTable mt-2">
+                <thead>
+                    <tr>
+                        <th scope="col">Total Transactions</th>
+                        <th scope="col">Reconciled</th>
+                        <th scope="col">Unreconciled</th>
+                </thead>
+                <tbody>
+                    <ng-container *ngIf="transactionTableOne?.length; else noRecord1">
+                        <tr *ngFor="let transaction of transactionTableOne;let i = index">
+                            <td class="text-center">{{transaction.TotalTransactionsCount}}</td>
+                            <td class="text-center">{{transaction.ReconcileCount}}</td>
+                            <td class="text-center">{{transaction.UnreconciledCount}}</td>
+                        </tr>
+                    </ng-container>
+                    <!-- no data -->
+                    <ng-template #noRecord1>
+                        <tr>
+                            <td class="text-center" colspan="9" style="height: 100px;">No records found</td>
+                        </tr>
+                    </ng-template>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-4">
+            <table class="table table-responsive  table-bordered w-100 table-striped border-0 agingTable mt-2">
+                <thead>
+                    <tr>
+                        <th scope="col" class="reconsile">In Books not in Bank</th>
+                        <th scope="col" class="reconsile">In Bank not in  Books</th>
+                </thead>
+                <tbody>
+                    <ng-container *ngIf="InBookAndBank?.length; else noRecord2">
+                        <tr *ngFor="let transaction of InBookAndBank;let i = index">
+                            <td class="text-center reconsile-row">{{transaction.InBooksNotInBank}}</td>
+                            <td class="text-center reconsile-row">{{transaction.InBankNotInBooks}}</td>
+                        </tr>
+                    </ng-container>
+                    <!-- no data -->
+                    <ng-template #noRecord2>
+                        <tr>
+                            <td class="text-center reconsile-row" colspan="9" style="height: 100px;">No records found</td>
+                        </tr>
+                    </ng-template>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-4">
+            <table class="table table-responsive  table-bordered w-100 table-striped border-0 agingTable mt-2">
+                <thead>
+                    <tr>
+                        <th scope="col" class="unreconsile-head">As per Books</th>
+                        <th scope="col" class="unreconsile-head">As per Bank</th>
+                </thead>
+                <tbody>
+                    <ng-container *ngIf="AsPerBookAndBank?.length; else noRecord3">
+                        <tr *ngFor="let transaction of AsPerBookAndBank;let i = index">
+                            <td class="text-center unreconsile-row">{{transaction.AsPerBooks}}</td>
+                            <td class="text-center unreconsile-row">{{transaction.AsPerBank}}</td>
+                        </tr>
+                    </ng-container>
+                    <!-- no data -->
+                    <ng-template #noRecord3>
+                        <tr>
+                            <td class="text-center unreconsile-row" colspan="9" style="height: 100px;">No records found</td>
+                        </tr>
+                    </ng-template>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 font-weight-bolder">
+            Amounts in Books and not in Bank
+        </div>
+        <div class="col-12">
+            <table class="table table-responsive  table-bordered w-100 table-striped border-0 agingTable mt-2">
+                <thead>
+                    <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">Voucher</th>
+                        <th scope="col">Account</th>
+                        <th scope="col">Mode Of Payment</th>
+                        <th scope="col">Reference #</th>
+                        <th scope="col">Debit</th>
+                        <th scope="col">Credit</th>
+                        <th scope="col">Select</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <ng-container *ngIf="accountInBook?.length; else noRecord1">
+                        <tr *ngFor="let inBook of accountInBook;let i = index">
+                            <td class="text-center">{{inBook.Date | date: commonService.convertToLowerCaseDay(entityDateFormat)}}</td>
+                            <td class="text-center">{{inBook.Voucher}}</td>
+                            <td class="text-center">{{inBook.Account}}</td>
+                            <td class="text-center">{{inBook.ModeOfPayment}}</td>
+                            <td class="text-center">{{inBook.Reference}}</td>
+                            <td class="text-center">{{inBook.Debit}}</td>
+                            <td class="text-center">{{inBook.Credit}}</td>
+                            <td class="text-center">
+                                <input type="checkbox"
+                                (change)="OnClickRadioAccountInBook(i,inBook.Id,'Book', $event)"
+                                [(ngModel)]="inBook.IsCheck" [ngModelOptions]="{standalone: true}" />
+                            </td>
+                        </tr>
+                    </ng-container>
+                    <!-- no data -->
+                    <ng-template #noRecord1>
+                        <tr>
+                            <td class="text-center" colspan="9" style="height: 100px;">No records found</td>
+                        </tr>
+                    </ng-template>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 font-weight-bolder">
+            Amounts in Bank and not in Books
+        </div>
+        <div class="col-12">
+            <table class="table table-responsive  table-bordered w-100 table-striped border-0 agingTable mt-2">
+                <thead>
+                    <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">Reference #</th>
+                        <th scope="col">Deposits</th>
+                        <th scope="col">Withdrawals</th>
+                        <th scope="col">Bank Closing Balance</th>
+                        <th scope="col">Select</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <ng-container *ngIf="accountInBank?.length; else noRecord1">
+                        <tr *ngFor="let inBank of accountInBank;let i = index">
+                            <td class="text-center">{{inBank.Date | date : commonService.convertToLowerCaseDay(entityDateFormat)}}</td>
+                            <td class="text-center">{{inBank.Reference}}</td>
+                            <td class="text-center">{{inBank.Deposits}}</td>
+                            <td class="text-center">{{inBank.Withdrawals}}</td> 
+                            <td class="text-center">{{inBank.ClosingBalance}}</td>
+                            <td class="text-center">
+                                <input type="checkbox"
+                                (change)="OnClickRadioAccountInBank(i,inBank.Id,'Book', $event)"
+                                [(ngModel)]="inBank.IsCheck" [ngModelOptions]="{standalone: true}" />
+                            </td>
+                        </tr>
+                    </ng-container>
+                    <!-- no data -->
+                    <ng-template #noRecord1>
+                        <tr>
+                            <td class="text-center" colspan="9" style="height: 100px;">No records found</td>
+                        </tr>
+                    </ng-template>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="row">
+
+        <div class="col-6">
+            <div class="font-weight-bolder">
+                Matched records Book
+            </div>
+            <table class="table table-responsive  table-bordered w-100 table-striped border-0 agingTable mt-2">
+                <thead>
+                    <tr>
+                        <th scope="col">Book Reference #</th>
+                        <th scope="col">Book Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <ng-container *ngIf="matchedRecordsBook?.length; else noRecord1">
+                        <tr *ngFor="let matchedBook of matchedRecordsBook;let i = index">
+                            <td class="text-center">{{matchedBook.Reference}}</td>
+                            <td class="text-center" >{{matchedBook.Amount}}</td>
+                        </tr>
+                    </ng-container>
+                    <!-- no data -->
+                    <ng-template #noRecord1>
+                        <tr>
+                            <td  class="text-center" colspan="9" style="height: 100px;">No records found</td>
+                        </tr>
+                    </ng-template>
+                </tbody>
+            </table>
+        </div>
+
+
+        <div class="col-6">
+            <div class="font-weight-bolder">
+                Matched records Bank
+            </div>
+            <table class="table table-responsive  table-bordered w-100 table-striped border-0 agingTable mt-2">
+                <thead>
+                    <tr>
+                        <th scope="col">Bank Reference #</th>
+                        <th scope="col">Bank Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <ng-container *ngIf="matchedRecordsBank?.length; else noRecord1">
+                        <tr *ngFor="let matchedBank of matchedRecordsBank;let i = index">
+                            <td class="text-center">{{matchedBank.Reference}}</td>
+                            <td class="text-center">{{matchedBank.Amount}}</td>
+                        </tr>
+                    </ng-container>
+                    <!-- no data -->
+                    <ng-template #noRecord1>
+                        <tr>
+                            <td class="text-center" colspan="9" style="height: 100px;">No records found</td>
+                        </tr>
+                    </ng-template>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 mt-auto text-right">
+            <button type="submit"
+                style="padding: 2px 0px !important;width: 100px;font-size: 14px !important;"
+                class="btn btn-primary btn-raised mb-0" (click)="BankReconcile()">
+                Reconcile
+        </button>
+        </div>
+    </div>
+
+    <!-- <div class="row">
+        <div class="col-12 font-weight-bolder">
+            Reconciled Transactions
+        </div>
+        <div class="col-12">
+            <table class="table table-responsive  table-bordered w-100 table-striped border-0 agingTable mt-2">
+                <thead>
+                    <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">Voucher</th>
+                        <th scope="col">Account</th>
+                        <th scope="col">Mode Of Payment</th>
+                        <th scope="col">Book Reference #</th>
+                        <th scope="col">Bank Reference #</th>
+                        <th scope="col">Bank Date</th>
+                        <th scope="col">Debit</th>
+                        <th scope="col">Credit</th>
+                        <th scope="col">Select</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngIf="reconciledTransaction?.length; else noRecordLast">
+                        <tr *ngFor="let backBookCount of reconciledTransaction;let i = index">
+                            <td class="text-center">{{backBookCount.Date | date : commonService.convertToLowerCaseDay(entityDateFormat)}}</td>
+                            <td class="text-center">{{backBookCount.Voucher}}</td>
+                            <td class="text-center">{{backBookCount.Account}}</td>
+                            <td class="text-center">{{backBookCount.ModeOfPayment}}</td>
+                            <td class="text-center">{{backBookCount.BookReference}}</td>
+                            <td class="text-center">{{backBookCount.BankReference}}</td>
+                            <td class="text-center">{{backBookCount.BankDate | date : commonService.convertToLowerCaseDay(entityDateFormat)}}</td>
+                            <td class="text-center">{{backBookCount.Debit}}</td>
+                            <td class="text-center">{{backBookCount.Credit}}</td>
+                            <td class="text-center">
+                                <input type="checkbox" (change)="OnClickRadio(i,backBookCount.Id,backBookCount, $event)" [(ngModel)]="backBookCount.IsCheck1" [ngModelOptions]="{standalone: true}" />
+                            </td>
+                        </tr>
+                    </ng-container>
+
+                    <ng-template #noRecordLast>
+                        <tr>
+                            <td class="text-center" colspan="11" style="height: 100px;">No records found</td>
+                        </tr>
+                    </ng-template>
+                </tbody>
+            </table>
+        </div>
+    </div> -->
+
+    <!-- <div class="row">
+        <div class="col-12 text-right">
+            <button type="submit"
+            style="padding: 2px 0px !important;width: 120px;font-size: 14px !important;"
+            class="btn btn-primary btn-raised mb-0" (click)="BankUnreconcile()">
+            Un - Reconcile
+        </button>
+        </div>
+    </div> -->
+
+
+</div>

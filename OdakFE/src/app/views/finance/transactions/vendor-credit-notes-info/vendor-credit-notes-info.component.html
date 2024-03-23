@@ -1,0 +1,529 @@
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between headtitle mt-2">
+        <h4 class="ml-2 mt-2">Vendor Credit note</h4>
+
+        <div class="btntop">
+
+            <button *ngIf="isUpdate && !isFinalRecord" type="button"
+                (click)="updateValues()"
+                class="btn btn-warning bmd-btn-edit btn-raised btntop emarginr ng-star-inserted">
+                <i class="material-icons editicon">edit</i>
+            </button>
+
+            <button type="button" class="btn btn-success bmd-btn-edit btn-raised btntop"
+            (click)="goBack()"><i class="material-icons editicon">reply</i>
+                <div class="ripple-container"></div>
+            </button>
+
+            <button *ngIf="isUpdate"
+                class="nav-link dropdown-toggle arrow-none waves-effect nav-user btn bmd-btn-edit btn-raised btntop btnlog"
+                data-placement="bottom" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="material-icons editicon">schedule</i>
+            </button>
+
+            <div style="background-color: aliceblue;width:250px;left:-66px"
+                class="dropdown-menu dropdown-menu  profile-dropdown" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" style="padding:15px;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12"><span>ModifiedOn: {{ModifiedOn | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}</span> |
+                                    <span>Modified By:
+                                        {{ModifiedBy}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:10px;">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12"><span>CreatedOn: {{CreatedOn | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}</span> |
+                                    <span>Created By:
+                                        {{CreatedBy}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <form [formGroup]="vendorCreateForm">
+            <div class="row mt-3 p-4">
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="str">Division</label>
+                        <!-- <select formControlName="DivisionId" (change)="getOfficeList($event.target.value);vendorCreateForm.controls['OfficeId'].setValue('0');
+                            vendorCreateForm.controls['OfficeGST'].setValue('');" name="Division"
+                            class="form-control my-select">
+                            <option disabled value="0">--SELECT DIVISION--</option>
+                            <option *ngFor="let division of divisionList" [value]="division.ID">
+                                {{division.DivisionName | uppercase}}
+                            </option>
+                        </select> -->
+                        <ng-select  class="searchdropdown"  formControlName="DivisionId" [clearable]="false"  (change)="getOfficeList($event);vendorCreateForm.controls['OfficeId'].setValue('0');
+                        vendorCreateForm.controls['OfficeGST'].setValue('');" name="Division">
+                            <ng-option [value]="0" disabled>--SELECT DIVISION--</ng-option>
+                            <ng-container  *ngFor="let division of divisionList">
+                              <ng-option  [value]="division.ID">
+                                <span class="textwrap">{{division.DivisionName | uppercase}}</span>
+                              </ng-option>
+                           </ng-container>
+                        </ng-select>  
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="str">Office</label>
+                        <!-- <select (change)="getOfficeGST($event.target.value);autoCodeGeneration('vendor')"
+                            formControlName="OfficeId" name="Office" class="form-control my-select">
+                            <option disabled value="0">--SELECT OFFICE--</option>
+                            <option *ngFor="let office of officeList" [value]="office.ID">
+                                {{office.OfficeName | uppercase}}
+                            </option>
+                        </select> -->
+                        <ng-select
+                        [(ngModel)]="selectedOfficeId"
+                        (change)="getOfficeGST(selectedOfficeId); autoCodeGeneration('vendor')"
+                        formControlName="OfficeId"
+                        name="Office"
+                        class="searchdropdown">
+                        <ng-option [value]="'0'" disabled>--SELECT OFFICE--</ng-option>
+                        <ng-option *ngFor="let office of officeList" [value]="office.ID">
+                          {{ office.OfficeName | uppercase }}
+                        </ng-option>
+                      </ng-select>                     
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="str">Office GST</label>
+                        <input readonly formControlName="OfficeGST" type="text" id="OfficeGST"
+                            class="form-control w-100" />
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="str">VCN Voucher</label>
+                        <input formControlName="VCNVoucherNumber" readonly type="text" id="Reversal"
+                            class="form-control w-100" />
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="str mb-2">VCN Voucher Date</label>
+                        <mat-form-field class="tillDate mat_date_picker"   appearance="outline" >
+                            <input matInput (click)="VCNVoucherDate.open()" readonly autocomplete="off" [matDatepicker]="VCNVoucherDate"  id="VCNVoucherDate" [placeholder]="entityDateFormat" formControlName="VCNVoucherDate">
+                            <mat-datepicker-toggle matSuffix [for]="VCNVoucherDate"></mat-datepicker-toggle>
+                            <mat-datepicker #VCNVoucherDate></mat-datepicker>
+                        </mat-form-field>
+                        <!-- <input [min]="maxDate" formControlName="VCNVoucherDate" type="date" id="Reversal"
+                            class="form-control w-100" /> -->
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="str">Vendor</label>
+                        <!-- <select (change)="getVendorBranchList($event.target.value, true);
+                        vendorCreateForm.controls['VendorType'].setValue('');vendorCreateForm.controls['VendorGST'].setValue('');
+                        vendorCreateForm.controls['VendorGSTCategory'].setValue('');" formControlName="VendorId"
+                            name="VendorId" class="form-control my-select">
+                            <option disabled value="0">--SELECT VENDOR--</option>
+                            <option *ngFor="let vendor of vendorsList" [value]="vendor.VendorID">
+                                {{vendor.VendorName | uppercase}}
+                            </option>-+
+                        </select> -->
+                        <ng-select  class="searchdropdown"  formControlName="VendorId" [clearable]="false"  (change)="getVendorBranchList($event, true);
+                        vendorCreateForm.controls['VendorType'].setValue('');vendorCreateForm.controls['VendorGST'].setValue('');
+                        vendorCreateForm.controls['VendorGSTCategory'].setValue('');"name="VendorId">
+                            <ng-option [value]="0" disabled>--SELECT VENDOR--</ng-option>
+                            <ng-container   *ngFor="let vendor of vendorsList">
+                              <ng-option [value]="vendor.VendorID">
+                                <span class="textwrap">{{vendor.VendorName | uppercase}}</span>
+                              </ng-option>
+                           </ng-container>
+                        </ng-select>            
+                    </div>
+                </div>
+
+                <!-- <div *ngIf="this.branches == 1" class="col-4">
+                    <label class="str">Vendor Branch </label>
+                      <div class="form-control">
+                        <div disabled >{{this.newOne}}</div>
+                    </div>
+                </div> -->
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="str">Vendor Branch </label>
+                        <!-- <select formControlName="VendorBranchId" (change)="vendorCreateForm.controls['VendorType'].setValue('');
+                        vendorCreateForm.controls['VendorGST'].setValue('');getVendorDetailsInfo($event.target.value);"
+                            name="VendorBranchId" class="form-control my-select">
+                            <option disabled value="0">--SELECT VENDOR BRANCH--</option>
+                            <option *ngFor="let vendor of vendorBranch" [value]="vendor.VendorBranchID">
+                                {{vendor.BranchCode | uppercase}}
+                            </option>
+                        </select> -->
+                        <ng-select  class="searchdropdown"  formControlName="VendorBranchId" [clearable]="false"  (change)="vendorCreateForm.controls['VendorType'].setValue('');
+                        vendorCreateForm.controls['VendorGST'].setValue('');getVendorDetailsInfo($event);"
+                            name="VendorBranchId">
+                            <ng-option [value]="0" disabled>--SELECT VENDOR BRANCH--</ng-option>
+                            <ng-container  *ngFor="let vendor of vendorBranch">
+                              <ng-option [value]="vendor.VendorBranchID">
+                                <span class="textwrap">{{vendor.BranchCode | uppercase}}</span>
+                              </ng-option>
+                           </ng-container>
+                        </ng-select> 
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="str">Vendor Type</label>
+                        <input formControlName="VendorType" readonly class="form-control" type="text" id="VendorType">
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="str">Vendor Invoice #</label>
+                        <input formControlName="VendorInvoice" class="form-control addressht" onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly
+                            id="txtRemarks">
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="str">Vendor Credit Notes #</label>
+                        <input formControlName="VCNNote" type="text" class="form-control addressht" id="txtRemarks">
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="str mb-2">Vendor Credit Notes Date</label>
+                        <mat-form-field class="tillDate mat_date_picker" appearance="outline">
+                            <input matInput autocomplete="off" (click)="VendorCreditNoteDate.open()" readonly [min]="maxDate"  [matDatepicker]="VendorCreditNoteDate"  id="VendorCreditNoteDate" [placeholder]="entityDateFormat" formControlName="VendorCreditNoteDate">
+                            <mat-datepicker-toggle matSuffix [for]="VendorCreditNoteDate"></mat-datepicker-toggle>
+                            <mat-datepicker #VendorCreditNoteDate></mat-datepicker>
+                        </mat-form-field>
+                        <!-- <input [min]="maxDate" formControlName="VendorCreditNoteDate" type="date"
+                            class="form-control addressht" id="txtRemarks"> -->
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label>Vendor GST</label>
+                        <input readonly formControlName="VendorGST" type="text" id="VendorGST"
+                            class="form-control w-100" />
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label>Vendor GST Category </label>
+                        <select
+                            formControlName="VendorGSTCategory" name="GST" class="form-control my-select disable-input">
+                            <option disabled value="">--SELECT VENDOR GST--</option>
+                            <option disabled *ngFor="let gRow of GSTCategoryList" [value]="gRow.Id">
+                                {{gRow.CategoryName | uppercase}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-8"> </div>
+
+                <div class="col-md-8 col-sm-6 col-lg-12 col-xl-12">
+                    <div class="col-md-12 alrt">
+                        <button [disabled]="isUpdateMode" type="submit" class="btn btn-success bmd-btn-fab tblbtngap"
+                            (click)="addRow()"><i class="material-icons editicon">add</i>
+                            <div class="ripple-container"></div>
+                        </button>
+                        <button [disabled]="isUpdateMode" type="submit" class="btn btn-primary bmd-btn-fab tblbtngap"
+                            (click)="OnClickEditValue()"><i class="material-icons editicon">edit</i>
+                            <div class="ripple-container"></div>
+                        </button>
+                        <button [disabled]="isUpdateMode" type="submit" class="btn btn-danger bmd-btn-fab"
+                            (click)="OnClickDeleteValue()"><i class="material-icons editicon">delete</i>
+                            <div class="ripple-container"></div>
+                        </button>
+                    </div>
+
+                    <div class="material-datatables">
+                        <table id="datatable"
+                            class="table table-striped table-bordered table-responsive w-100 table-hover dataTable no-footer text-center"
+                            cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Account </th>
+                                    <th>Rate</th>
+                                    <th>Qty</th>
+                                    <th>Amount</th>
+                                    <th>Currency</th>
+                                    <th>Ex.Rate</th>
+                                    <th>Local Amount</th>
+                                    <th>Taxable</th>
+                                    <th>GST Group %</th>
+                                    <th>Select</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <select formControlName="AccountId" class="form-control my-select">
+                                            <option disabled value="0">--SELECT ACCOUNT--</option>
+                                            <option *ngFor="let name of accountName" [value]="name.ChartOfAccountsId">
+                                                {{name.AccountName | uppercase}}
+                                            </option>
+                                        </select>
+                                    </td>
+                                    <td> <input min="1" formControlName="Rate"
+                                            (ngModelChange)="rateQuantityChangeEvent($event)" class="form-control"
+                                            type="number" id="Rate" />
+                                    </td>
+                                    <td> <input min="1" formControlName="Qty"
+                                            (ngModelChange)="rateQuantityChangeEvent($event)" class="form-control"
+                                            type="number" id="Qty" />
+                                    </td>
+                                    <td> <input readonly formControlName="Amount"
+                                            [value]="vendorCreateForm.value.Rate * vendorCreateForm.value.Qty"
+                                            class="form-control" type="number" id="Amount" />
+                                    </td>
+                                    <td>
+                                        <select (change)="changeCurrencyEvent($event.target.value)"
+                                            formControlName="CurrencyId" class="form-control my-select">
+                                            <option disabled value="0">--SELECT CURRENCY--</option>
+                                            <option *ngFor="let currency of currencyList" [value]="currency.ID">
+                                                {{currency.Currency | uppercase}}
+                                            </option>
+                                        </select>
+                                    </td>
+                                    <td> <input min="1" formControlName="ExRate"
+                                            (ngModelChange)="exchangeRateChangeEvent($event)" class="form-control"
+                                            type="number" id="ExRate" />
+                                    </td>
+                                    <td> <input readonly formControlName="LocalAmount" class="form-control" type="text"
+                                            id="LocalAmount" /> </td>
+                                    <td>
+                                        <select (change)="taxableChangeEvent($event.target.value)"
+                                            formControlName="IsTaxable" class="form-control my-select">
+                                            <option disabled value="">--SELECT TAXABLE--</option>
+                                            <option value=true>YES</option>
+                                            <option value=false>NO</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select formControlName="GSTGroupId" class="form-control my-select">
+                                            <option disabled value="">--SELECT TAX GROUP--</option>
+                                            <option *ngFor="let tax of taxList" [value]="tax.TaxRate">
+                                                {{tax.TaxRate}} %
+                                            </option>
+                                        </select>
+                                    </td>
+                                    <td> </td>
+                                </tr>
+                                <tr *ngFor="let data of pagedItems;let i = index">
+                                    <td>{{data.AccountName}}</td>
+                                    <td>{{data.Rate}}</td>
+                                    <td>{{data.Qty}}</td>
+                                    <td>{{data.Amount}}</td>
+                                    <td>{{data.CurrencyName}}</td>
+                                    <td>{{data.ExRate ? data.ExRate : 1}}</td>
+                                    <td>{{data.LocalAmount}}</td>
+                                    <td>{{data.IsTaxable == true || data.IsTaxable == 'true' ? 'YES' :'NO'}}</td>
+                                    <td>{{data.GSTGroupId ? data.GSTGroupId : 0}} %</td>
+                                    <td>
+                                        <input class="vertal checkbox" type="radio" name="AlertCheck" id="RadioCheck"
+                                            (click)="OnClickRadio(i)" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="row mx-2" style="float:right">
+                            <div class="row page" align="right">
+                                <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10 && pager.totalItems > 10" class="pagination">
+                                    <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                        <a (click)="setPage(1)">First</a>
+                                    </li>
+                                    <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                        <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+                                    </li>
+                                    <li *ngFor="let page of pager.pages"
+                                        [ngClass]="{active:pager.currentPage === page}">
+                                        <a (click)="setPage(page)">{{page}}</a>
+                                    </li>
+                                    <li *ngIf="(pager.totalPages - pager.startPage) > 5 ">
+                                        <a (click)="setPage(pager.startPage + 5)">...</a>
+                                    </li>
+                                    <li *ngIf="(pager.totalPages - pager.startPage) > 5">
+                                        <a (click)="setPage(pager.totalPages)">{{pager.totalPages}}</a>
+                                    </li>
+                                    <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                        <a (click)="setPage(pager.currentPage + 1)">Next</a>
+                                    </li>
+                                    <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                        <a (click)="setPage(pager.totalPages)">Last</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 row p-0">
+                    <div class="col-8">
+                        <div class="col-7 mt-3">
+                            <label class="str">Upload File</label>
+                            <div class="file-upload">
+                                <input type="text" hidden />
+                                <input *ngIf="!isUpdateMode" class="file-upload__input" hidden type="file" name="myFile"
+                                    id="myFile" (change)="fileSelected($event)">
+
+                                <input *ngIf="isUpdateMode" class="file-upload__input" hidden readonly type="text"
+                                    name="myFile" id="myFile" (change)="fileSelected($event)">
+                                <label for="myFile" class="file-upload__button text-center"
+                                    style=" width: 50% !important; border: 1px solid #b1b1b1d1 !important;margin-top: 14px; border-radius: 10px; box-shadow: 0px 0px 5px 0px rgb(202 202 202); background-color: white; font-weight: 600; margin-right: 0.5rem !important;"
+                                    type="button">
+                                    <img class="ml-2" src="assets/images/docupload.png" alt="Upload image"
+                                        style="width: 1rem !important;" />
+                                    Choose File(s)
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-8 col-sm-6 col-lg-4 col-xl-4"> </div>
+
+                        <div class="col-md-9 mt-3">
+                            <table
+                                class="table table-responsive table-striped table-bordered w-100 dataTable no-footer">
+                                <thead class="text-center">
+                                    <tr>
+                                        <th tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                                            aria-label="Name: activate to sort column ascending"
+                                            style="width: 177.575px;">S.No
+                                        </th>
+                                        <th tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                                            aria-label="Name: activate to sort column ascending"
+                                            style="width: 177.575px;" (click)="sort('DivisionName')">File Name</th>
+
+                                        <th tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                                            class="text-center" aria-label="Name: activate to sort column ascending"
+                                            style="width: 177.575px;" (click)="sort('ShortName')">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-center" *ngIf="FileList.length > 0">
+                                    <tr *ngFor="let data of FileList;let i = index">
+                                        <td>{{i + 1}}</td>
+                                        <td id="documentFileName">{{data.FileName}}</td>
+                                        <td class="text-center">
+                                            <button [disabled]="isUpdateMode" type="submit"
+                                                class="btn btn-danger bmd-btn-fab"
+                                                (click)="OnClickDeleteValueFile(i)"><i
+                                                    class="material-icons editicon">delete</i>
+                                                <div class="ripple-container"></div>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tbody *ngIf="FileList.length == 0">
+                                    <tr>
+                                        <td class="text-center" colspan="3">No records found.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                    <div class="col p-0">
+                        <div class="col-md-6 col-sm-6 col-lg-10 col-xl-12 mt-4">
+                            <div class="form-group">
+                                <label>Sub Total</label>
+                                <input formControlName="SubTotal" readonly class="form-control" placeholder="Sub Total"
+                                    type="number" id="SubTotal">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-sm-6 col-lg-10 col-xl-12">
+                            <div class="form-group">
+                                <label>IGST</label>
+                                <input formControlName="IGST" readonly class="form-control" placeholder="IGST"
+                                    type="number" id="SubTotal">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-sm-6 col-lg-10 col-xl-12">
+                            <div class="form-group">
+                                <label>CGST</label>
+                                <input formControlName="CGST" readonly class="form-control" placeholder="CGST"
+                                    type="number" id="SubTotal">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-sm-6 col-lg-10 col-xl-12">
+                            <div class="form-group">
+                                <label>SGST</label>
+                                <input formControlName="SGST" readonly class="form-control" placeholder="SGST"
+                                    type="number" id="SubTotal">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-sm-6 col-lg-10 col-xl-12">
+                            <div class="form-group">
+                                <label>Invoice Amount</label>
+                                <input formControlName="InvoiceAmount" readonly class="form-control"
+                                    placeholder="Invoice Amount" type="number" id="SubTotal">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-sm-6 col-lg-10 col-xl-12">
+                            <div class="form-group">
+                                <label>Invoice Currency</label>
+                                <select [ngClass]=" isUpdate ? 'block-input' : 'block-input'"
+                                    formControlName="InvoiceCurrency" class="form-control my-select">
+                                    <option disabled value="0">--SELECT CURRENCY--</option>
+                                    <option disabled *ngFor="let currency of currencyList" [value]="currency.ID">
+                                        {{currency.Currency | uppercase}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 text-right mt-4">
+                    <button [disabled]="isUpdateMode" type="button"
+                        class="btn btn-primary text-white mr-3 mb-0 col-auto" (click)="saveInfo(1)">
+                        Save
+                    </button>
+                    <button [disabled]="!isUpdateMode1" type="button"
+                        class="btn btn-primary text-white mr-3 mb-0 col-auto"
+                        style="background-color: #19a84c !important;border: #19a84c;border: 1px solid #19a84c !important;"
+                        (click)="saveInfo(2)">
+                        Final
+                    </button>
+                    <button type="button" *ngIf="isUpdate && !isFinalRecord" [disabled]="isUpdateMode" (click)="saveInfo(0,true)"
+                        class="btn btn-warning text-white mr-3 mb-0 col-auto">
+                        Delete
+                    </button>
+                    <button type="button" (click)="saveInfo(3)"
+                        class="btn btn-warning text-white mr-3 mb-0 col-auto">
+                        Cancel
+                    </button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+</div>

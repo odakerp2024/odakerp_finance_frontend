@@ -1,0 +1,144 @@
+<div class="row headtitle">
+    <div class="col-md-12">
+        <h4>Export Manager - Vessel Tasks</h4>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="row enquirynav">
+            <div class="col-md-12">
+                <ul class="nav nav-pills nav-justified" role="tablist">
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" [routerLink]="['/views/exportmanager/bookinglevel/bookinglevel']" role="tab" aria-selected="true">Booking Tasks</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link active show" data-toggle="tab" [routerLink]="['/views/exportmanager/vessellevel/vessellevel']" role="tab" aria-selected="false">Vessel Tasks</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form [formGroup]="searchForm">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tab-content">
+                <div class="tab-pane pt-3 active show" role="tabpanel">
+
+                    <div class="row">
+                        <div class="col-md-9"></div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <select class="form-control my-select">
+                                            <option value="0">Office</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="background-color: lavender;padding-top:13px;">
+                        <div class="col-md-5">
+
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <select class="form-control my-select">
+                                            <option value="0">--Select--</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5 searchtxt">
+                            <input type="text" class="form-control" />
+                        </div>
+                        <div class="col-md-2 searchdash padlr0">
+                            <button type="submit" (click)="onSubmit()" class="btn btn-primary btn-raised mb-0">Search<div class="ripple-container"></div></button>
+                            <button type="submit" (click)="clearSearch()" class="btn btn-raised btn-danger mb-0">Clear<div class="ripple-container"></div></button>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-12 padlr0 bkglvl">
+                                <table id="datatable-buttons" cellpadding="0" cellspacing="0" class="table table-responsive table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                    <thead>
+
+                                        <tr>
+                                            <th rowspan="2">Vessel</th>
+                                            <th rowspan="2">Voyage</th>
+                                            <th rowspan="2">ETD</th>
+                                            <th rowspan="2">No. of <br />Booking</th>
+                                            <th rowspan="2">No. of <br />Containers</th>
+                                            <th colspan="3">Load List <br />(Slot Operator)</th>
+                                            <th colspan="3">Pre-alert (Agents)</th>
+                                            <th colspan="3">Loading Confirmation <br />(Slot Operator)</th>
+                                            <th colspan="3">Customer Onboard <br /> Confirmation (BOLs)</th>
+                                            <th colspan="3">TDR (Agents)</th>
+                                            <th rowspan="2">Status</th>
+                                        </tr>
+                                        <tr>
+                                            <th>Nos</th>
+                                            <th>Draft</th>
+                                            <th>Final</th>
+                                            <th>Nos</th>
+                                            <th>Draft</th>
+                                            <th>Final</th>
+                                            <th>Nos</th>
+                                            <th>Open</th>
+                                            <th>Complete</th>
+                                            <th>Nos</th>
+                                            <th>Open</th>
+                                            <th>Complete</th>
+                                            <th>Nos</th>
+                                            <th>Draft</th>
+                                            <th>Final</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr  *ngFor="let dataItem of pagedItems; let i = index">
+                                            <td class="fsttd">
+                                                <button class="btn btn-primary bmd-btn-fab enqbtn voybtn" (click)="onclickvesselpage(dataItem.VesselID, dataItem.VoyageID)">{{dataItem.VesselName}}</button>
+                                            </td>
+                                            <td class="fsttd">
+                                                {{dataItem.VoyageName}}
+                                            </td>
+                                            <td>
+                                                {{dataItem.ETD}}
+                                            </td>
+                                            <td>
+                                                {{dataItem.BLCount}}
+                                            </td>
+                                            <td>{{dataItem.CntrCount}}</td>
+
+                                            <td>{{dataItem.LoadNos}}</td>
+                                            <td>{{dataItem.LoadDraft}}</td>
+                                            <td>{{dataItem.LoadFinal}}</td>
+                                            <td>{{dataItem.AlertNos}}</td>
+                                            <td>{{dataItem.AlertDraft}}</td>
+                                            <td>{{dataItem.AlertFinal}}</td>
+                                            <td>{{dataItem.LCNos}}</td>
+                                            <td>{{dataItem.LCDraft}}</td>
+                                            <td>{{dataItem.LCFinal}}</td>
+                                            <td>{{dataItem.OnboardNos}}</td>
+                                            <td>{{dataItem.OnboardDraft}}</td>
+                                            <td>{{dataItem.OnboardFinal}}</td>
+                                            <td>{{dataItem.TDRNos}}</td>
+                                            <td>{{dataItem.TDRDraft}}</td>
+                                            <td>{{dataItem.TDRFinal}}</td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

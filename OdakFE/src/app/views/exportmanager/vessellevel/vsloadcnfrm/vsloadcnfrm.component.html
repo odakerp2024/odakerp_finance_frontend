@@ -1,0 +1,208 @@
+<form [formGroup]="vesselForm">
+    <div class="row headtitle">
+        <div class="col-md-9 col-lg-9">
+            <h4 style="margin-top: 6px;">Export Manager - Vessel Tasks</h4>
+        </div>
+
+        <div class="col-md-3 col-lg-3 alrt">
+            <button type="button" class="btn btn-success btntop btn-raised bmd-btn-edit" [routerLink]="['/views/exportmanager/vessellevel/vessellevelview/vessellevelview/']"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top: 2px; margin-bottom: 11px; background-color: lavender; padding: 11px; ">
+        <div class="col-md-3">
+            <div class="row" style="margin-top:5px;">
+                <div class="col-md-12">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item active"><a [routerLink]="['/views/exportmanager/vessellevel/vessellevelview/vessellevelview/']">Vessel Tasks</a></li>
+                            <li class="breadcrumb-item" aria-current="page" style="color:#000000;">Loading Confirmation</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-md-6 alrt" style="font-weight: 600;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <small>Ves/Voy</small>
+                        </div>
+                        <div class="col-md-12">
+                            <span>ACTUARIA</span>-<span>sdw</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2 alrt" style="font-weight: 600;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <small>ETD</small>
+                        </div>
+                        <div class="col-md-12">
+                            <span>
+                                30 Sep 2022
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 alrt" style="font-weight: 600;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <small>Sailing Status</small>
+                        </div>
+                        <div class="col-md-12">
+                            <span>
+                                Pending/30 Sep 2022 19:00 Hrs
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <div class="row bkgltab">
+                <div class="col-md-12 col-lg-12">
+                    <ul class="nav nav-pills nav-justified" role="tablist">
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" (click)="btntabclick(1)" role="tab" aria-selected="false">Load List</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" role="tab" (click)="btntabclick(2)" aria-selected="false">Pre-Alert</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link active" data-toggle="tab" role="tab" (click)="btntabclick(3)" aria-selected="true">Loading Confirmation</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" role="tab" (click)="btntabclick(4)" aria-selected="false">Customer Onboard Confirm</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" role="tab" (click)="btntabclick(5)" aria-selected="false">Terminal Departure Report</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" role="tab" (click)="btntabclick(6)" aria-selected="false">Exceptions</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <div class="tab-content">
+                <div class="tab-pane pt-3 active show" role="tabpanel">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="line_box">
+                                                <div class="text_circle">
+
+                                                    <a class="tvar"><span><i class="fa fa-check" style="margin-top: 0.6rem;"></i></span></a>
+                                                    <label>Status</label>
+                                                </div>
+                                                <div class="text_circle">
+
+                                                    <a class="tvarp"><span><i class="fa fa-thumbs-up" style="margin-top: 0.6rem;"></i></span></a>
+                                                    <label>Load Confirm</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="row">
+                                                <div class="col-md-12 conttable cntralign padlr0">
+                                                    <table id="datatable-buttons" cellpadding="0" cellspacing="0" class="table table-responsive table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                                        <thead>
+                                                            <tr>
+                                                                <th rowspan="2">Slot Operator</th>
+                                                                <th colspan="2">Load List</th>
+                                                                <th colspan="2">Onboarded</th>
+                                                                <th colspan="2">Pending Confirmation</th>
+                                                                <th colspan="2">Not Loaded</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>TEUs </th>
+                                                                <th>Containers </th>
+                                                                <th>TEUs </th>
+                                                                <th>Containers </th>
+                                                                <th>TEUs </th>
+                                                                <th>Containers </th>
+                                                                <th>TEUs </th>
+                                                                <th>Containers </th>
+                                                            </tr>
+                                                        </thead>
+
+                                                        <tbody>
+                                                            <tr *ngFor="let dataItem of pagedItems ;
+                                                                let i = index" (mouseover)="highlightRow(dataItem)">
+                                                                <td> {{dataItem.SlotOperator}}</td>
+                                                                <td>{{dataItem.CntrCount}}</td>
+                                                                <td>{{dataItem.Tues}}</td>
+                                                                <td>{{dataItem.CntrCount}}</td>
+                                                                <td>{{dataItem.Tues}}</td>
+                                                                <td>{{dataItem.CntrCount}}</td>
+                                                                <td>{{dataItem.Tues}}</td>
+                                                                <td>{{dataItem.CntrCount}}</td>
+                                                                <td>{{dataItem.Tues}}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12 bkgtxt">
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <!--<div class="col-md-4">
+                                                                <label>Slot Operator</label>
+                                                                <select class="form-control my-select">
+                                                                    <option>
+                                                                    </option>
+                                                                </select>
+                                                            </div>-->
+                                                            <!--<div class="col-md-4">
+                                                                <label>
+                                                                    Inventory Type
+                                                                </label>
+                                                                <select class="form-control my-select">
+                                                                    <option>
+                                                                    </option>
+                                                                </select>
+                                                            </div>-->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12 text-right">
+                                                    <button type="submit" (click)="OnNextClick()" class="btn btn-success btn-raised vspbtn mb-0">Next<div class="ripple-container"></div></button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

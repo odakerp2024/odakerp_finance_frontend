@@ -1,0 +1,14 @@
+.table>thead>tr>th {
+    width: 11% !important;
+    text-align: center;
+}
+
+.headingtxt {
+    color: #4b5493 !important;
+}
+.subtitle{
+    font-size: 21px;
+}
+::ng-deep .mat-select-placeholder {
+    color: rgba(0, 0, 0, 1) !important;
+  }

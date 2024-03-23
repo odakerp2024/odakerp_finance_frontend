@@ -1,0 +1,241 @@
+<div class="container-fluid">
+        <!-- header start -->
+        <div class="row mt-2 px-3">
+            <div class="col-9">
+                <h4 class="ml-2 mt-2">Employee Mini Master</h4>
+            </div>
+            <div class="col-3 mt-auto">
+                <div class="float-right">
+                    <!-- edit -->
+                    <!-- <button type="button" class="btn btn-warning bmd-btn-edit text-white mr-3"
+                            (click)="enableEdit()">
+                        <i class="material-icons editicon" >edit</i>
+                    </button> -->
+                    <!-- back -->
+                    <button type="button" class="btn btn-success bmd-btn-edit text-white mr-3"
+                    [routerLink]="['/views/finance/master/mini-master/mini-master-view']">
+                        <i class="material-icons editicon">reply</i>
+                    </button>
+                    <!-- clock details -->
+                    <button type="button" class="btn btn-raised bmd-btn-edit" data-placement="bottom" type="button"
+                        id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="material-icons editicon">schedule</i>
+                    </button>
+                    <!-- clock click pop-up -->
+                    <div style="background-color: aliceblue;width:250px;left:-66px"
+                        class="dropdown-menu dropdown-menu  profile-dropdown" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item p-4">
+                            <div class="row">
+                                <!-- <div class="col-md-12">
+                                    <span>ModifiedOn: {{ModifiedOn}}</span> | <span>Modified By: {{ModifiedOn}}</span>
+                                </div> -->
+                            </div>
+                            <div class="row" style="margin-top:10px;">
+                                <div class="col-md-12 ml-4">
+                                    <span>CreatedOn: {{CreatedOn | date : "dd-MM-yyyy"}}</span> 
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- header end -->
+        <div class="card-body" style="padding-top: 0px;">
+
+            <div class="row">
+                <div class="col-md-4">
+                    <ul class="nav nav-pills nav-justified" role="tablist">
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link active show" data-toggle="tab" (click)="CurrentTab('employeeDetails');"
+                                href="#employeeDetails" role="tab" aria-selected="true">Employee Details</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" (click)="CurrentTab('Statutory');"
+                                href="#statutory" role="tab" aria-selected="false">Statutory</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="tab-content">
+                        <div class="tab-pane pt-3 active show" id="employeeDetails" role="tabpanel">
+                            <!-- <form [formGroup]="employeeDetails"> -->
+                                <div class="row">
+                                    <div class="col-3">
+                                        <label class="">Employee Code</label>
+                                        <input disabled type="text" class="form-group w-100 pl-2 disable-input border" readonly [(ngModel)]="employeeDetails.EmployeeCode"/>
+                                    </div>
+    
+                                    <div class="col-3">
+                                        <label class="">Employee Name</label>
+                                        <input disabled type="text" class="w-100 form-group pl-2 disable-input border" readonly [(ngModel)]="employeeDetails.EmployeeName"/>
+                                    </div>
+
+                                    <div class="col-3">
+                                        <label class="">Short Name</label>
+                                        <input disabled type="text" class="w-100 form-group pl-2 disable-input border" readonly [(ngModel)]="employeeDetails.ShortName"/>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="form-group bmd-form-group w-100">
+                                            <label class="">Active</label>
+                                            <select class="form-control my-select disable-input" [(ngModel)]="employeeDetails.Status">
+                                                <option [value]="''" disabled>--SELECT Active--</option>
+                                                <option *ngFor="let status of statusValues" [value]="status.value">
+                                                    {{status.viewValue | uppercase}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-3">
+                                        <label class="">Gender</label>
+                                        <input disabled type="text" class="w-100 form-group pl-2 disable-input border" readonly [(ngModel)]="employeeDetails.Gender"/>
+                                    </div>
+
+                                    <div class="col-3">
+                                            <mat-label class="w-100">Date Of Birth</mat-label>
+                                        <!-- <label class="">Date Of Birth</label> -->
+                                        <!-- <input type="date" class="w-100 form-group py-0 hide-date-icon " [(ngModel)]="employeeDetails.DateofBirth" readonly placeholder="DOB"/> -->
+                                            <!-- <mat-form-field class="paymentDate">
+                                                <input matInput (click)="ValidTillDate.open()" readonly class="w-100 form-group py-0 hide-date-icon " [value]="getFormattedDate(employeeDetails.DateofBirth)" disabled  [matDatepicker]="ValidTillDate"  id="ValidTillDate" placeholder="" formControlName="ValidTillDate">
+                                                <mat-datepicker-toggle matSuffix [for]="ValidTillDate"></mat-datepicker-toggle>
+                                                <mat-datepicker #ValidTillDate></mat-datepicker>
+                                            </mat-form-field> -->
+                                        <input type="text" class="w-100 form-group py-0 hide-date-icon " [value]="getFormattedDate(employeeDetails.DateofBirth)"  disabled placeholder="date of Birth"/>
+                                    </div>
+
+                                    <div class="col-3">
+                                        <label class="">Designation</label>
+                                        <input disabled type="text" class="w-100 form-group pl-2 disable-input border" readonly [(ngModel)]="employeeDetails.Designation"/>
+                                    </div>
+
+                                    <div class="col-3">
+                                        <label class="">Landline</label>
+                                        <input disabled type="tel" class="w-100 form-group pl-2 disable-input border" readonly [(ngModel)]="employeeDetails.Landline"/>
+                                    </div>
+
+                                    <div class="col-3">
+                                        <label class="">Mobile</label>
+                                        <input disabled type="tel" class="w-100 form-group pl-2 disable-input border" readonly [(ngModel)]="employeeDetails.Mobile"/>
+                                    </div>
+
+                                    <div class="col-3">
+                                        <label class="">E-mail</label>
+                                        <input disabled type="email" class="w-100 form-group pl-2 disable-input border" readonly [(ngModel)]="employeeDetails.Email    "/>
+                                    </div>
+
+                                    <div class="col-3">
+                                        <label class="">Date Of Joining</label>
+                                        <input type="text" class="w-100 form-group py-0 hide-date-icon"  [value]="getFormattedDate(employeeDetails.DateOfJoining)" disabled placeholder="DateOf Joining"/>
+                                    </div>
+
+                                    <div class="col-3">
+                                        <label class="">Date Of Confirmation</label>
+                                        <input type="text" class="w-100 form-group py-0 hide-date-icon" [value]="getFormattedDate(employeeDetails.DateOfConfirmation)"  disabled placeholder="DateOf Confirmation"/>
+                                    </div>
+
+                                    <div class="col-3">
+                                        <label class="">Date Of Relieving</label>
+                                        <input type="text" class="w-100 form-group py-0 hide-date-icon"  [value]="getFormattedDate(employeeDetails.DateOfRelieving)" disabled placeholder="Date Of Relieving"/>
+                                    </div>
+
+                                    <div class="col-3"> 
+                                        <div class="form-group bmd-form-group w-100">
+                                            <label class="">Division</label>
+                                            <input disabled type="text" class="w-100 form-group pl-2 disable-input border" readonly [(ngModel)]="employeeDetails.DivisionCode"/>
+                                            <!-- <select class="form-control my-select" readonly [(ngModel)]="employeeDetails.DivisionId" (change)="getOffice($event.target.value)">
+                                                <option [value]="''" disabled>--SELECT DIVISION TYPE--</option>
+                                                <ng-container *ngFor="let division of divisionList">
+                                                    <option *ngIf="division.Active" [value]="division.ID">
+                                                        {{division.DivisionName | uppercase}}
+                                                    </option>
+                                                </ng-container>
+                                            </select> -->
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-3">
+                                        <label class="">Office</label>
+                                        <input disabled type="text" class="w-100 form-group pl-2 disable-input border" readonly [(ngModel)]="employeeDetails.OfficeCode"/>
+                                        <!-- <select class="form-control my-select" readonly [(ngModel)]="employeeDetails.OfficeId">
+                                            <option [value]="''" disabled>--SELECT OFFICE TYPE--</option>
+                                            <ng-container *ngFor="let office of officeList" >
+                                                <option [value]="office.ID">
+                                                    {{office.OfficeName | uppercase}}
+                                                </option>
+                                            </ng-container>
+                                        </select> -->
+                                    </div>
+
+                                    <div class="col-3">
+                                        <label class="">Department</label>
+                                        <input disabled type="text" class="w-100 form-group pl-2 disable-input border" readonly [(ngModel)]="employeeDetails.Department"/>
+                                    </div>
+
+
+
+                                    <div class="col-3">
+                                        <label class="">Reporting To</label>
+                                        <input disabled type="text" class="w-100 form-group pl-2 disable-input border" readonly [(ngModel)]="employeeDetails.ReportingTo"/>
+                                    </div>
+
+
+                                    <div class="col-3">
+                                        <label class="">HOD</label>
+                                        <input disabled type="text" class="w-100 form-group pl-2 disable-input border" readonly [(ngModel)]="employeeDetails.HOD"/>
+                                    </div>
+
+
+                                    <div class="col-3">
+                                        <label class="">SBU/Division Head</label>
+                                        <input disabled type="text" class="w-100 form-group pl-2 disable-input border" readonly [(ngModel)]="employeeDetails.SBUDivisionHead"/>
+                                    </div>
+
+                                </div>
+
+
+                            <!-- </form> -->
+                        </div>
+
+                        <div class="tab-pane pt-3" id="statutory" role="tabpanel">
+                                <!-- <form [formGroup]=""> -->
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <label class="">PAN</label>
+                                            <input disabled type="text" class="w-100 form-group pl-2 disable-input border" readonly [(ngModel)]="employeeDetails.PAN"/>
+                                        </div>
+        
+                                        <div class="col-3">
+                                            <label class="">Aadhar</label>
+                                            <input disabled type="text" class="w-100 form-group pl-2 disable-input border" readonly [(ngModel)]="employeeDetails.Aadhar"/>
+                                        </div>
+        
+                                        <div class="col-3">
+                                            <label class="">PF Number</label>
+                                            <input disabled type="text" class="w-100 form-group pl-2 disable-input border" readonly [(ngModel)]="employeeDetails.PFNumber"/>
+                                        </div>
+        
+                                        <div class="col-3">
+                                            <label class="">ESI Number</label>
+                                            <input disabled type="text" class="w-100 form-group pl-2 disable-input border" readonly [(ngModel)]="employeeDetails.ESINumber"/>
+                                        </div>
+        
+                                        <div class="col-3">
+                                            <label class="">UAN</label>
+                                            <input disabled type="text" class="w-100 form-group pl-2 disable-input border" readonly [(ngModel)]="employeeDetails.UAN"/>
+                                        </div>
+                                    </div>
+    
+                                <!-- </form> -->
+
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>

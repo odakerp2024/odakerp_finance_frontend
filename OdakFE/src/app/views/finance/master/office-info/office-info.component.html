@@ -1,0 +1,566 @@
+<div class="container-fluid p-0">
+    <!-- Header -->
+    <div class="d-flex justify-content-between headtitle mt-2">
+        <h4 class="ml-3 mt-2">Office</h4>
+        <div class="btntop">
+            <button *ngIf="isUpdate" (click)="configurationFormEnable()" type="button"
+                class="btn btn-warning bmd-btn-edit btn-raised btntop emarginr ng-star-inserted">
+                <i class="material-icons editicon">edit</i>
+            </button>
+            <button type="button" class="btn btn-success bmd-btn-edit btn-raised btntop" (click)="officeRoute()"><i
+                    class="material-icons editicon">reply</i>
+                <div class="ripple-container"></div>
+            </button>
+
+            <button *ngIf="isUpdate"
+                class="nav-link dropdown-toggle arrow-none waves-effect nav-user btn bmd-btn-edit btn-raised btntop btnlog"
+                data-placement="bottom" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="material-icons editicon">schedule</i>
+            </button>
+
+
+            <div style="background-color: aliceblue;width:250px;left:-66px"
+                class="dropdown-menu dropdown-menu  profile-dropdown" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" style="padding:15px;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12"><span>ModifiedOn: {{ModifiedOn}}</span> | <span>Modified By:
+                                        {{ModifiedBy}}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:10px;">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12"><span>CreatedOn: {{CreatedOn}}</span> | <span>Created By:
+                                        {{CreatedBy}}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- -------title start--------- -->
+    <div class="row my-3 p-2" style="background-color: lavender;margin: 2px;">
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item active">
+                                <a class="info-title" routerLink="/views/office/office-view">Office </a>
+                            </li>
+                            <li aria-current="page" class="breadcrumb-item lbltxt">
+                                {{selectedTabName == 'Basic' ? 'Office Details':selectedTabName == 'email'?
+                                'E-Mail Alerts':selectedTabName == 'Attach'? 'Attachments':''}}
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row bkgno">
+
+                <div class="col-md-12">
+                    <label [title]="officeDetailsForm.value.OfficeName" class="lbltxt header-text-label"> <span
+                            style="font-weight: lighter !important;">Office Name
+                            :</span> {{officeDetailsForm.value.OfficeName | uppercase }}</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- -------title end------------ -->
+
+    <div class="card p-4">
+        <div class="col-12 ">
+            <form [formGroup]="officeForm">
+
+                <!-- <div *ngIf="isUpdate" class="form-group" style="font-size: 16px;font-weight: 500;">
+                <span>{{officeDetails ? officeDetails.officeId : ''}}</span><span> - </span>
+                <span>{{officeDetails ? officeDetails.officeName :''}}</span>
+            </div> -->
+
+                <div class="row mt-3">
+
+                    <div class="col-8">
+                        <div class="form-group">
+                            <label for="EntityName" class="str">Entity Name</label>
+                            <input formControlName="EntityName" type="text" id="EntityName" readonly
+                                class="form-control w-100" />
+                        </div>
+                    </div>
+
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label for="contactName" class="str">Entity Short Name</label>
+                            <input readonly formControlName="EntityShortName" type="text" id="contactName"
+                                class="form-control w-100" />
+                        </div>
+                    </div>
+
+                    <div class="col-8">
+                        <div class="d-flex">
+                            <div class="form-group w-50">
+                                <label for="city" class="str">Business Location</label>
+                                <select [ngClass]=" isUpdate ? 'block-input' : ''"
+                                    style="cursor: not-allowed !important;pointer-events: none !important; background-color: #e9ecef !important;"
+                                    (change)="locationChanges($event)" formControlName="BusinessLocation"
+                                    class="form-control my-select statuscls" id="exampleFormControlSelect1">
+                                    <option value="" disabled>--SELECT BUSINESS LOCATION--</option>
+                                    <option *ngFor="let country of countryList" [value]="country.CountryName">
+                                        {{country.CountryName | uppercase}}
+                                    </option>
+                                </select>
+
+                            </div>
+                            &nbsp; &nbsp;
+                            <div *ngIf="panCardShow" class="form-group w-50 ">
+                                <label for="zipCode" class="str">CIN (incorporation)</label>
+                                <input readonly formControlName="CIN" type="text" id="zipCode"
+                                    class="form-control w-100" />
+                                <div *ngIf="officeDetailsSubmit && checkError('officeForm','CIN','invalidCin')"
+                                    class="text-danger">
+                                    Invalid CIN number
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-4">
+
+                        <div *ngIf="panCardShow" class="form-group">
+                            <label for="designation" class="str">PAN No</label>
+                            <input readonly formControlName="PANNo" type="text" id="designation"
+                                class="form-control w-100" />
+
+                            <div *ngIf="officeDetailsSubmit && checkError('officeForm','PANNo','invalidPan')"
+                                class="text-danger">
+                                Invalid PAN number
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="col-8">
+                        <div class="form-group">
+                            <label for="address" class="str">Registration Address</label>
+                            <textarea readonly formControlName="RegistrationAddress" id="address" row="4"
+                                class="addressht form-control w-100"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="col-4">
+
+                        <div class="form-group">
+                            <label for="emailId" class="str">Financial Period</label>
+                            <!-- <input formControlName="FinancialYear" type="text" id="emailId"
+            class="form-control w-100 mt-2" /> -->
+                            <select readonly formControlName="FinancialYear"
+                                class="form-control my-select statuscls disable-input" id="emailId">
+                                <option disabled value="">--SELECT FINICAL PERIOD--</option>
+                                <option *ngFor="let finical of finicalList" [value]="finical.FinancialPeriod">
+                                    {{finical.FinancialPeriod | uppercase}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-8">
+                        <div class="d-flex">
+                            <div class="form-group w-50">
+                                <label for="city" class="str">Business Division</label>
+                                <!-- <input formControlName="BusinessDIvision" type="text" id="city"
+            class="form-control w-100" /> -->
+                                <mat-select formControlName="BusinessDIvision" class="form-control my-select statuscls"
+                                    id="city" multiple placeholder="SELECT">
+                                    <!-- <mat-option [value]="''" [disabled]="true">-- SELECT --</mat-option> -->
+                                    <ng-container *ngFor="let division of divisionList">
+                                        <mat-option [disabled]="businessDivisionArray.includes(division.DivisionName)"
+                                            *ngIf="division.Active"
+                                            [value]="division.DivisionName">{{division.DivisionName
+                                            | uppercase}}
+                                        </mat-option>
+                                    </ng-container>
+                                </mat-select>
+                            </div>
+                            <div style="display:flex;align-items:center; margin-top: 18px;">
+                                <span *ngFor="let division of officeForm.value.BusinessDIvision"
+                                    class="px-2 py-1 border border-bark mx-2">{{division | uppercase}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-12">
+
+            <div class="row mt-4 ml-0" style="height: 2.4rem;">
+                <div (click)="checkPermission('Basic')"
+                    [ngClass]=" selectedTabName == 'Basic' ? 'selected-tav-view' : 'not-selected-tav-view'"
+                    class="col-2 text-center select-tav-view">Office Details </div>
+                <div (click)="checkPermission('email')"
+                    [ngClass]=" selectedTabName == 'email' ? 'selected-tav-view' : 'not-selected-tav-view'"
+                    class="col-2 text-center select-tav-view">E-Mail Ids</div>
+                <div (click)="checkPermission('Attach')"
+                    [ngClass]=" selectedTabName == 'Attach' ? 'selected-tav-view' : 'not-selected-tav-view'"
+                    class="col-2 text-center select-tav-view">Document</div>
+            </div>
+
+            <div *ngIf="selectedTabName == 'Basic'" class="Office Details">
+
+                <form [formGroup]="officeDetailsForm">
+                    <div class="row mt-4">
+
+                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+
+                            <div class="form-group">
+                                <label for="contactName" class="str">Sales Office</label>
+                                <select [ngClass]=" isUpdate ? 'block-input' : ''" formControlName="IsSalesOffice"
+                                    name="AccType" id="ddlCountry" class="form-control my-select"
+                                    (change)="salesChanged($event.target.value)">
+                                    <option value="" disabled>--SELECT SALES OFFICE--</option>
+                                    <!-- <option [value]=true>Yes</option>
+                                    <option [value]=false>No</option>  -->
+                                    <option [value]="IsSalesValue">Yes</option>
+                                    <option [value]="!IsSalesValue">No</option>
+                                </select>
+                                <!-- <ng-select class="searchdropdown"  [ngClass]=" isUpdate ? 'block-input' : ''" formControlName="IsSalesOffice"
+                                    [clearable]="false" name="AccType" id="ddlCountry" (change)="salesChanged($event)" >
+                                    <ng-option [value]="''" [disabled]="true">--SELECT SALES OFFICE--</ng-option>
+                                    <ng-option [value]="IsSalesValue">Yes</ng-option>
+                                    <ng-option [value]="!IsSalesValue">No</ng-option>
+     
+                                  </ng-select>   -->
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+
+                            <div class="form-group">
+                                <label for="contactName" class="str">Parent Office</label>
+                                <input [ngClass]=" isUpdate ? 'block-input' : ''"
+                                    *ngIf="officeDetailsForm.value.IsSalesOffice === 'false' || officeDetailsForm.value.IsSalesOffice === false"
+                                    formControlName="ParentOffice" readonly type="text" value="-- Select --"
+                                    class="form-control" />
+                                <select [ngClass]=" isUpdate ? 'block-input' : ''"
+                                    *ngIf="officeDetailsForm.value.IsSalesOffice == 'true' || officeDetailsForm.value.IsSalesOffice == true"
+                                    formControlName="ParentOffice" name="AccType" id="ddlCountry"
+                                    class="form-control my-select">
+                                    <option value="" disabled>--SELECT PARENT OFFICE--</option>
+                                    <option *ngFor="let office of officeList" [value]="+office.ID">{{office.OfficeName |
+                                        uppercase}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+
+                            <div class="form-group">
+                                <label for="contactName" class="str">Active</label>
+                                <!-- <select formControlName="Active" name="AccType" id="ddlCountry"
+                                    class="form-control my-select">
+                                    <option value="" disabled>--SELECT ACTIVE--</option>
+                                    <option *ngFor="let status of statusvalues" [value]="status.value">
+                                        {{status.viewValue | uppercase}}
+                                    </option>
+                                </select> -->
+                                <ng-select class="searchdropdown"  [clearable]="false" 
+                                    formControlName="Active" name="AccType" id="ddlCountry">
+                                    <ng-option [value]="''" [disabled]="true">--SELECT ACTIVE--</ng-option>
+                                    <ng-option *ngFor="let status of statusvalues" [value]="status.value">
+                                        {{status.viewValue | uppercase}}
+                                    </ng-option>
+                                  </ng-select> 
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                            <div class="form-group">
+                                <label for="designation" class="str">Office Code</label>
+                                <input readonly [ngClass]=" isUpdate ? 'block-input' : ''" formControlName="OfficeCode"
+                                    type="text" id="designation" class="form-control w-100" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+
+                            <div class="form-group">
+                                <label for="designation" class="str">Office Name</label>
+                                <input [ngClass]=" isUpdate ? 'block-input' : ''" formControlName="OfficeName"
+                                    type="text" id="designation" class="form-control w-100" />
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+
+                            <div class="form-group">
+                                <label for="designation" class="str">Office Short Name</label>
+                                <input (ngModelChange)="autoCodeGeneration($event)"
+                                    [ngClass]=" isUpdate ? 'block-input' : ''" formControlName="OfficeShortName"
+                                    type="text" id="designation" class="form-control w-100" />
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                            <div class="form-group">
+                                <label for="emailId" class="str">State</label>
+                                <!-- <select [ngClass]=" isUpdate ? 'block-input' : ''"
+                                    class="form-control my-select statuscls" id="ddlStatusv" name="Status"
+                                    formControlName="StateId" placeholder="Status">
+                                    <option value="" disabled>--SELECT STATE--</option>
+                                    <option *ngFor="let state of stateList" [value]="state.ID">
+                                        {{state.StateName | uppercase}}
+                                    </option>
+                                </select> -->
+                                <ng-select class="searchdropdown"  [ngClass]=" isUpdate ? 'block-input' : ''"
+                                    id="ddlStatusv" name="Status" [clearable]="false" formControlName="StateId" placeholder="Status">
+                                    <ng-option [value]="''" [disabled]="true">--SELECT STATE--</ng-option>
+                                    <ng-option *ngFor="let state of stateList" [value]="state.ID" >
+                                        {{state.StateName | uppercase}}
+                                    </ng-option>
+                                  </ng-select> 
+
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                            <div class="form-group">
+                                <label for="emailId" class="str">Pin Code</label>
+                                <input formControlName="PinCode" id="emailId" onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly
+                                    class="form-control w-100 mt-0" />
+                                <div *ngIf="officeDetailsSubmit && checkError('officeDetailsForm','PinCode','pattern')"
+                                    class="text-danger">
+                                    Invalid pin code number.
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                            <div class="form-group">
+                                <label for="emailId" class="">Telephone</label>
+                                <input formControlName="Telephone" type="text" id="emailId"
+                                    class="form-control w-100 mt-0" />
+                                <div *ngIf="officeDetailsSubmit && checkError('officeDetailsForm','Telephone','pattern')"
+                                    class="text-danger">
+                                    Incorrect Telephone number or does not begin with 0.
+                                </div>
+                                <div *ngIf="officeDetailsSubmit && checkError('officeDetailsForm','Telephone','minlength')"
+                                    class="text-danger">
+                                    Telephone number must contain minimum of 12.
+                                </div>
+                                <div *ngIf="officeDetailsSubmit && checkError('officeDetailsForm','Telephone','maxlength')"
+                                    class="text-danger">
+                                    Telephone number must contain maximum of 16.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+
+                            <div class="form-group">
+                                <label for="mobile" class="str">Address</label>
+                                <input formControlName="Address" type="text" id="mobile" class="form-control w-100 " />
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+
+                            <div class="form-group">
+                                <label class="str" for="mobile">GST No</label>
+                                <input [ngClass]=" isUpdate ? 'block-input' : ''" formControlName="GSTNo" type="text"
+                                    id="mobile" class="form-control w-100 " />
+                                <div *ngIf="officeDetailsSubmit && checkError('officeDetailsForm','GSTNo','pattern')"
+                                    class="text-danger">
+                                    Invalid GST number.
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+
+                            <div class="form-group">
+                                <label for="mobile" class="str mb-2">Effective Date</label>
+                                <mat-form-field class="tillDate mat_date_picker"  appearance="outline">
+                                    <input matInput (click)="EffectiveDate.open()" readonly (dateInput)="toDateChange('input', $event)"  formControlName="EffectiveDate" 
+                                    [matDatepicker]="EffectiveDate" [placeholder]="entityDateFormat" [matDatepickerFilter]="filterDates">
+                                    <mat-datepicker-toggle matSuffix [for]="EffectiveDate"></mat-datepicker-toggle>
+                                    <mat-datepicker #EffectiveDate ></mat-datepicker>
+                                </mat-form-field>
+                                <!-- <input [ngClass]=" isUpdate ? 'block-input' : ''" formControlName="EffectiveDate"
+                                    type="date" [min]="minDate" id="mobile" class="form-control w-100 " /> -->
+                            </div>
+                        </div>
+
+
+                        <div class="col-12 text-right mt-4">
+                            <button (click)="saveOfficeDetails()" type="submit"
+                                class="btn btn-primary btn-raised btn-default cntbtn mb-0">{{isUpdate ? 'Update'
+                                :'Save'}}</button>
+                            <button [routerLink]="['/views/finance/financemaster']"
+                                class="btn btn-danger btn-raised cntbtn mb-0">Cancel</button>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+
+            <!--  E-Mail alerts  -->
+
+            <div *ngIf="selectedTabName == 'email'" class="mt-4">
+
+                <!-- <form [formGroup]="invoiceForm" (ngSubmit)="onSubmit()">
+
+                <div class="text-right">
+
+                    <button type="button" class="btn btn-success bmd-btn-edit btn-raised btntop"
+                        (click)="addQuantity()"><i class="material-icons editicon">add</i>
+                        <div class="ripple-container"></div>
+                    </button>
+
+                    <button type="button" class="btn btn-primary bmd-btn-edit btn-raised btntop ml-2"><i
+                            class="material-icons editicon">edit</i>
+                        <div class="ripple-container"></div>
+                    </button>
+
+                    <button (click)="removeQuantity()" type="button"
+                        class="btn btn-danger bmd-btn-edit btn-raised btntop ml-2"><i
+                            class="material-icons editicon">delete</i>
+                        <div class="ripple-container"></div>
+                    </button>
+
+                </div>
+
+                <table class="table table-bordered" formArrayName="quantities">
+                    <tr class="text-center">
+                        <th>S.No</th>
+                        <th>Category</th>
+                        <th>eMail Id</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Select</th>
+                    </tr>
+                    <tr *ngFor="let quantity of quantities().controls; let i=index" [formGroupName]="i">
+                        <td class="text-center"><span>{{i + 1}}</span></td>
+                        <td>
+                            <select name="AccType" formControlName="Category" id="ddlCountry"
+                                class="form-control my-select mt-2">
+                                <option [value]="" [disabled]="true">-- SELECT --</option>
+                                <option *ngFor="let category  of categoryList" [value]="category.Category">
+                                    {{category.Category}}
+                                </option>
+                            </select>
+                        </td>
+                        <td> <input type="text" formControlName="EmailId" class="form-control mt-2"> </td>
+                        <td> <input type="date" [min]="minDate" formControlName="StartDate" class="form-control mt-2">
+                        </td>
+                        <td> <input type="date" [min]="minDate" formControlName="EndDate" class="form-control mt-2">
+                        </td>
+                        <td class="text-center"> <input type="checkbox" (change)="radioChange($event,i)"
+                                style="width:15px" formControlName="checkBox" class="btn btn-danger mt-2"> </td>
+                    </tr>
+                </table>
+                <div class="col-12 text-right mt-4">
+                    <button (click)="saveOfficeDetails()" type="submit"
+                        class="btn btn-primary btn-raised btn-default cntbtn mb-0">Save</button>
+                    <button class="btn btn-danger btn-raised cntbtn mb-0">Cancel</button>
+                </div>
+            </form> -->
+
+                <app-e-mail-table [tableData]="emailData" [OrgId]="officeId" CategoryTypeName="office"
+                    (saveTable)="saveOfficeDetails($event)"></app-e-mail-table>
+            </div>
+
+
+            <div *ngIf="selectedTabName == 'Attach'" class="mt-4">
+                <!-- <form [formGroup]="documentForm">
+                <div class="row">
+                    <div class="form-group col-4">
+                        <label class="str" for="businessLocation">Document Name</label><br>
+                        <select formControlName="DocumentName" name="DocumentName" id="DocumentName"
+                            class="form-control my-select">
+                            <option [value]="" [disabled]="true">-- SELECT --</option>
+                            <option *ngFor="let doc of documentList" [value]="doc.name">
+                                {{doc.name }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-3">
+                        <label class="str" for="dateFormat">Browser File</label><br>
+                        <input type="file" formControlName="FilePath" id="dateFormat" class="form-control p-0" />
+                    </div>
+
+                    <div class="form-group col-5 mt-3">
+                        <button type="submit" (click)="saveOfficeDetails()"
+                            class="btn btn-primary btn-raised btn-default cntbtn mb-0">Upload</button>
+                        <button class="btn btn-danger btn-raised cntbtn mb-0">Cancel</button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="mt-3">
+
+                <h4>Documents</h4>
+
+                <table id="datatable-buttons" class="table table-striped table-bordered w-100 dataTable no-footer"
+                    role="grid" aria-describedby="datatable-buttons_info">
+                    <thead>
+                        <tr role="row">
+                            <th class="actwid" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                                aria-label="Name: activate to sort column ascending" style="width: 177.575px;">
+                                S.No
+                            </th>
+                            <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                                aria-label="Name: activate to sort column ascending" style="width: 177.575px;"
+                                (click)="sort('OrgCode')">
+                                Document Name
+                            </th>
+                            <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                                aria-label="Name: activate to sort column ascending" style="width: 177.575px;"
+                                (click)="sort('OrgCode')">
+                                Files
+                            </th>
+                            <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                                aria-label="Name: activate to sort column ascending" style="width: 177.575px;"
+                                (click)="sort('OrgCode')">
+                                Uploaded On
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr *ngFor="let data of documentListInfo;let i = index">
+                            <td>{{i + 1}}</td>
+                            <td>{{data.DocumentName}}</td>
+                            <td>{{data.FilePath}}</td>
+                            <td>{{data.UploadedOn | date :'y-MM-dd'}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div> -->
+
+                <app-documents [documentList]="documentListInfo" (saveDocumentEvent)="uploadDocument($event)"
+                    (deleteDocumentEvent)="deleteDocument($event)"></app-documents>
+            </div>
+        </div>
+    </div>
+
+</div>

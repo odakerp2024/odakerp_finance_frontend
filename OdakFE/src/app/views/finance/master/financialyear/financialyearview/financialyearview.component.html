@@ -1,0 +1,186 @@
+<div class="container-fluid">
+    <div class="row headtitle rotle mt-1">
+        <div class="col-md-9">
+            <h4 class="ml-2 mt-2">Financial Year Master</h4>
+        </div>
+        <div class="col-md-3 alrt">
+            <button type="button" class="btn btn-success btn-raised bmd-btn-edit btntop" tabindex="0"
+                (click)="checkAddPermission()">
+                <i class="material-icons editicon">add</i>
+                <div class="ripple-container">
+                </div>
+            </button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-9 col-xl-9 mt-2">
+            <div class="card m-b-30">
+                <div class="card-body cpad enqview ">
+
+                    <div class="col-md-12" *ngIf="!Is_DataFound">
+                        <div class="text-center ">
+                            <img src={{imagenotfound}} alt="No Data Found !!" class="imagenodata">
+                        </div>
+                    </div>
+                    <div id="datatable-buttons_wrapper"
+                        class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer" *ngIf="Is_DataFound">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <table id="datatable-buttons"
+                                    class="table table-striped table-bordered w-100 dataTable no-footer text-center" role="grid"
+                                     aria-describedby="datatable-buttons_info">
+                                    <thead>
+                                        <tr role="row">
+                                            <!-- <th class="actwid" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                            colspan="1" aria-label="Name: activate to sort column ascending"
+                                            style="width: 177.575px;">
+                                            S.No
+                                        </th> -->
+                                            <th class="sorting" tabindex="0" aria-controls="datatable-buttons"
+                                                rowspan="1" colspan="1"
+                                                aria-label="Name: activate to sort column ascending"
+                                                 (click)="sort('FinancialYearName')">
+                                                Financial Year
+                                            </th>
+                                            <th class="sorting" tabindex="0" aria-controls="datatable-buttons"
+                                                rowspan="1" colspan="1"
+                                                aria-label="Name: activate to sort column ascending"
+                                                 (click)="sort('FinancialPeriod')">
+                                                Financial Period
+                                            </th>
+
+                                            <th class="sorting" tabindex="0" aria-controls="datatable-buttons"
+                                                rowspan="1" colspan="1"
+                                                aria-label="Name: activate to sort column ascending"
+                                                (click)="sort('IsActive')">
+                                                Active
+                                            </th>
+                                            <!-- <th class="actwid" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                            colspan="1" aria-label="Office: activate to sort column ascending"
+                                            style="width: 129.95px;">Action</th> -->
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+
+                                        <tr *ngFor="let dataItem of pagedItems;let i = index">
+                                            <!-- <td> {{ i + 1*pager.startIndex+1 }}</td> -->
+                                            <td style="color:#0366d6;cursor: pointer;"
+                                            (click)="checkUpdatePerission(dataItem.FinancialYearId)">
+                                                {{dataItem.FinancialYearName}}</td>
+                                            <td>{{dataItem.FinancialPeriod}}</td>
+                                            <td>{{dataItem.Status == 'Active' ? 'Yes' : 'No'}}</td>
+                                            <!-- <td>
+                                            <button class="btn btn-success bmd-btn-fab"
+                                               >
+                                                <i class="material-icons">edit</i>
+                                            </button>
+                                        </td> -->
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row page" align="right">
+                            <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10" class="pagination">
+                                <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                    <a (click)="setPage(1)">First</a>
+                                </li>
+                                <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                    <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+                                </li>
+                                <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                                    <a (click)="setPage(page)">{{page}}</a>
+                                </li>
+                                <li *ngIf="(pager.totalPages - pager.startPage) > 5 ">
+                                    <a (click)="setPage(pager.startPage + 5)">...</a>
+                                </li>
+                                <li *ngIf="(pager.totalPages - pager.startPage) > 5">
+                                    <a (click)="setPage(pager.totalPages)">{{pager.totalPages}}</a>
+                                </li>
+
+                                <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                    <a (click)="setPage(pager.currentPage + 1)">Next</a>
+                                </li>
+                                <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                    <a (click)="setPage(pager.totalPages)">Last</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 mt-2">
+            <form [formGroup]="searchForm">
+                <div class="card m-b-30 sidesearch">
+                    <div class="card-body cpad enqview">
+                        <div class="row">
+                            <!-- <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                            <div class="form-group bmd-form-group">
+                                <select class="form-control my-select" id="ddlCountry" formControlName="CountryID">
+                                    <option value="0" selected>Country</option>
+                                    <option *ngFor="let gRow of dscountryItem" [value]="gRow.ID">
+                                        {{gRow.CountryName}}
+                                    </option>
+
+                                </select>
+                            </div>
+                        </div> -->
+                        
+                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                <div class="form-group bmd-form-group">
+                                    <!-- <select class="form-control my-select" id="ddlFinanicalYear"
+                                        formControlName="FinancialYearName">
+                                        <option value="" [disabled] = "true">--SELECT FINANCIAL YEAR--</option>
+                                        <option *ngFor="let gRow of FillFinancialyear" [value]="gRow.FinancialYearName">
+                                            {{gRow.FinancialYearName | uppercase}}
+                                        </option>
+                                    </select> -->
+
+                                    <ng-select class="searchdropdown" 
+                                        id="ddlFinanicalYear" [clearable]="false" formControlName="FinancialYearName" >
+                                        <ng-option [value]="''" [disabled]="true">--SELECT FINANCIAL YEAR--</ng-option>
+                                        <ng-option *ngFor="let gRow of FillFinancialyear" [value]="gRow.FinancialYearName">
+                                            {{gRow.FinancialYearName | uppercase}}
+                                        </ng-option>
+                                      </ng-select>  
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                <div class="form-group bmd-form-group">
+                                    <!-- <select class="form-control my-select" id="ddlIsActive" formControlName="IsActive">
+                                        <option value="" disabled>--SELECT ACTIVE--</option>
+                                        <option *ngFor="let statusv of statusvalues" [value]="statusv.value">
+                                            {{statusv.viewValue | uppercase}}
+                                        </option>
+                                    </select> -->
+                                    <ng-select class="searchdropdown"  
+                                    id="ddlIsActive" [clearable]="false" formControlName="IsActive">
+                                        <ng-option [value]="''" [disabled]="true">--SELECT ACTIVE--</ng-option>
+                                        <ng-option *ngFor="let statusv of statusvalues" [value]="statusv.value">
+                                            {{statusv.viewValue | uppercase}}
+                                        </ng-option>
+                                      </ng-select>  
+
+                                </div>
+                            </div>
+                            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12 searchbtn alrt text-center mb-3 mt-3">
+                                <button type="submit"
+                                    style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;"
+                                    (click)="onSubmit()" class="btn btn-primary btn-raised mb-0">Search
+                                    <div class="ripple-container"></div>
+                                </button>
+                                <button style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;"
+                                    class="btn btn-raised btn-danger mb-0" (click)="clearSearch()">Clear<div
+                                        class="ripple-container"></div></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

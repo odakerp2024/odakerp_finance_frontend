@@ -1,0 +1,11 @@
+.Active {
+    color: green!important;
+}
+
+.Medium {
+    color: orange!important;
+}
+
+.High {
+    color: red!important;
+}

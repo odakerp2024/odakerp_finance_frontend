@@ -1,0 +1,16 @@
+.table>thead>tr>th {
+    width: 11% !important;
+    text-align: center;
+}
+li{
+    color:#003d79;
+    font-weight: bold;
+    font-size: 20px;
+    /* line-height: 2rem; */
+}
+.con{
+    font-size: 17px;
+    font-weight: 600;
+    color:#003d79;
+    margin-left: 8px;
+}

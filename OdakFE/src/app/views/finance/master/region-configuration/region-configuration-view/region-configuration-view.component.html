@@ -1,0 +1,128 @@
+<div class="container-fluid p-4">
+    <!-- heading -->
+    <div class="row headtitle">
+        <div class="col-9 d-flex justify-content-between">
+            <span class="mt-auto">
+                <h4>Reporting – Regions Configuration</h4>
+            </span>
+            <button class="btn btn-success btn-raised bmd-btn-edit"
+                (click)="checkAddPermission()">
+                <i class="material-icons editicon">add</i>
+            </button>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Table View -->
+        <div class="col-sm-12 col-md-12 col-lg-9 col-xl-9">
+            <div class="card m-b-30">
+                <div class="card-body cpad enqview">
+                    <div class="col-md-12 ">
+                        <table class="table table-responsive table-bordered w-100 table-striped text-center p-3 mt-3 border-0">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Region</th>
+                                    <th scope="col">Division</th>
+                                    <th scope="col">Active</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let regionData of pagedItems;let i = index">
+                                    <td style="color: #0366d6;cursor: pointer;" (click)="checkUpdatePermission(regionData.Id)">
+                                        {{regionData.RegionName}}</td>
+                                    <td>{{regionData.DivisionName}}</td>
+                                    <td>{{regionData.IsActive == true?'YES' :'NO'}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                <div class="row page mr-3 justify-content-end">
+                    <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10" class="pagination">
+                        <li [ngClass]="{disabled:pager.currentPage === 1}">
+                            <a (click)="setPage(1)">First</a>
+                        </li>
+                        <li [ngClass]="{disabled:pager.currentPage === 1}">
+                            <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+                        </li>
+                        <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                            <a (click)="setPage(page)">{{page}}</a>
+                        </li>
+                        <li *ngIf="(pager.totalPages - pager.startPage) > 5 ">
+                            <a (click)="setPage(pager.startPage + 5)">...</a>
+                        </li>
+                        <li *ngIf="(pager.totalPages - pager.startPage) > 5">
+                            <a (click)="setPage(pager.totalPages)">{{pager.totalPages}}</a>
+                        </li>
+
+                        <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                            <a (click)="setPage(pager.currentPage + 1)">Next</a>
+                        </li>
+                        <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                            <a (click)="setPage(pager.totalPages)">Last</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter -->
+        <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3">
+            <form [formGroup]="filterForm">
+                <div class="row pt-4 card">
+                    <div class="col-12">
+                        <div class="form-group bmd-form-group">
+                            <input placeholder="Region" formControlName="Region" type="text" id="Region"
+                                class="form-control w-100" />
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group bmd-form-group">
+                            <!-- <select class="form-control my-select" formControlName="Division">
+                                <option value="0" disabled>--SELECT DIVISION--</option>
+                                <option *ngFor="let division of divisionDropdownList" [value]="division.ID">
+                                    {{division.DivisionName | uppercase}}
+                                </option>
+                            </select> -->
+                            <ng-select class="searchdropdown"  [clearable]="false" formControlName="Division" >
+                                <ng-option [value]="0" [disabled]="true">--SELECT DIVISION--</ng-option>
+                                <ng-option *ngFor="let division of divisionDropdownList" [value]="division.ID">
+                                    <span class="textwrap"> {{division.DivisionName | uppercase}}</span>
+                                </ng-option>
+                              </ng-select>  
+
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group bmd-form-group">
+                            <!-- <select class="form-control my-select" formControlName="IsActive">
+                                <option value=null disabled>--SELECT ACTIVE--</option>
+                                <option value=1>YES</option>
+                                <option value=0>NO</option>
+                            </select> --> 
+                            <ng-select class="searchdropdown" [clearable]="false" formControlName="IsActive">
+                                <ng-option [value]="''" [disabled]="true">--SELECT ACTIVE--</ng-option>
+                                <ng-option *ngFor="let statusv of statusvalues" [value]="statusv.value">
+                                    {{statusv.viewValue | uppercase}}
+                                </ng-option>
+                              </ng-select>
+                        </div>
+                    </div>
+                    <div class="col-md-12 searchbtn alrt text-center mb-3 mt-3">
+                        <button type="submit" style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;"
+                            (click)="getRegionsList()" class="btn btn-primary btn-raised mb-0">
+                            Search
+                            <!-- <div class="ripple-container"></div> -->
+                        </button>
+                        <button style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;"
+                            class="btn btn-raised btn-danger mb-0" (click)="filterFormCreate();getRegionsList()">
+                            Clear
+                            <!-- <div class="ripple-container"></div> -->
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

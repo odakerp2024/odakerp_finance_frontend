@@ -1,0 +1,306 @@
+<div class="container-fluid">
+
+    <div class="row headtitle rotle mt-1">
+        <div class="col-md-9">
+            <h4 class="ml-2 mt-2">Purchase Invoice </h4>
+        </div>
+        <div class="col-md-3 alrt">
+            <button type="button" class="btn btn-success btn-raised bmd-btn-edit btntop" tabindex="0"
+                (click)="createPurchase()">
+                <i class="material-icons editicon">add</i>
+                <div class="ripple-container">
+                </div>
+            </button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-9 mt-2">
+            <div class="card m-b-30">
+                <div class="card-body cpad enqview">
+                    <div class="col-sm-12 ">
+                        <table class="table table-responsive table-striped table-bordered w-100 dataTable no-footer"
+                            style="text-align-last: center;">
+                            <thead>
+                                <tr>
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        style="width: 177.575px;" >PV Number
+                                    </th>
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        style="width: 177.575px;" >PV Date </th>
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        style="width: 177.575px;" >Vendor Type</th>
+
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        style="width: 177.575px;" >Vendor</th>
+
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        style="width: 177.575px;" >Vendor Branch</th>
+
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        style="width: 177.575px;" >Amount</th>
+
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        style="width: 177.575px;" >Currency</th>
+
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        style="width: 177.575px;" >Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let data of pagedItems">
+                                    <td (click)="purchaseInfoRoute(data.Id)" style="color: #0366d6;cursor: pointer;">
+                                        {{data.PINumber}}</td>
+                                    <td>{{data.PIDate | date : commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td>
+                                    <td>{{data.VendorType}}</td>
+                                    
+                                    <td [title]="data.VendorName | uppercase">
+                                        {{ (data.VendorName && data.VendorName.length > 20) ?data.VendorName.slice(0, 20) + '-' : data.VendorName }}
+                                      </td>
+                                    <!-- <td>{{data.VendorName}}</td> -->
+                                    <td>{{data.VendorBranch}}</td>
+                                    <td>{{data.InvoiceAmount}}</td>
+                                    <td>{{data.InvoiceCurrency}}</td>
+                                    <td>
+                                        <div
+                                    [ngClass]="data.Status == 'Confirmed' ? 'badge badge-state-confirm' : data.Status == 'Cancelled' ? 'badge badge-state-cancel' : 'badge badge-state'">
+                                        {{data.Status}}
+                                        </div>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="row page mr-3" align="right">
+                        <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10 && pager.totalItems > 10" class="pagination">
+                            <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                <a (click)="setPage(1)">First</a>
+                            </li>
+                            <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+                            </li>
+                            <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                                <a (click)="setPage(page)">{{page}}</a>
+                            </li>
+                            <li *ngIf="(pager.totalPages - pager.startPage) > 5 ">
+                                <a (click)="setPage(pager.startPage + 5)">...</a>
+                            </li>
+                            <li *ngIf="(pager.totalPages - pager.startPage) > 5">
+                                <a (click)="setPage(pager.totalPages)">{{pager.totalPages}}</a>
+                            </li>
+
+                            <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                <a (click)="setPage(pager.currentPage + 1)">Next</a>
+                            </li>
+                            <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                <a (click)="setPage(pager.totalPages)">Last</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mt-2">
+            <div class="card p-1 pt-4 pb-4 ">
+                <form [formGroup]="purchaseFilter" class="mt-1 mb-1">
+
+
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                        <div class="form-group bmd-form-group">
+                            <!-- <select formControlName="Division" 
+                                class="form-control" name="CategoryId" id="CategoryId">
+                                <option value="0" disabled>--SELECT DIVISION--</option>
+                                <option *ngFor="let division of divisionList" [value]="division.ID">
+                                    {{division.DivisionName | uppercase}}
+                                </option>
+                            </select> -->
+                            <ng-select  class="searchdropdown"  formControlName="Division" [clearable]="false" name="CategoryId" id="CategoryId">
+                                <ng-option [value]="0" disabled>--SELECT DIVISION--</ng-option>
+                                <ng-container  *ngFor="let division of divisionList">
+                                  <ng-option  [value]="division.ID">
+                                    <span class="textwrap">{{division.DivisionName | uppercase}}</span>
+                                  </ng-option>
+                               </ng-container>
+                            </ng-select>                              
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                        <div class="form-group bmd-form-group">
+                            <!-- <select formControlName="Office" class="form-control" name="CategoryId" id="CategoryId">
+                                <option value="0" disabled>--SELECT OFFICE--</option>
+                                <option *ngFor="let office of officeList" [value]="office.ID">
+                                    {{office.OfficeName | uppercase}}
+                                </option>
+                            </select> -->
+                            <ng-select  class="searchdropdown"  formControlName="Office" [clearable]="false" name="CategoryId" id="CategoryId">
+                                <ng-option [value]="0" disabled>--SELECT OFFICE--</ng-option>
+                                <ng-container *ngFor="let office of officeList">
+                                  <ng-option [value]="office.ID">
+                                   <span class="textwrap">{{office.OfficeName | uppercase}}</span>
+                                  </ng-option>
+                                </ng-container>
+                            </ng-select>  
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                        <div class="form-group bmd-form-group">
+                            <input formControlName="PINumber"  type="text" autocomplete="off"
+                                class="form-control" name="Reference" placeholder="PV NUMBER #" maxlength="20">
+                        </div>
+                    </div>
+                  <!-- 
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                        <div class="form-group bmd-form-group">
+                            <input formControlName="PIDate" type="date" class="form-control" name="date">
+                        </div>
+                    </div> -->
+                    <div class="col-md-12" style="margin-top: -7px;">
+                        <div class="form-group bmd-form-group">
+                           <div class="row">
+                                <div class="col-md-6">
+                                 <label class=" mb-3">From</label>
+                                  <div class="input-group">
+                                    <mat-form-field class="tillDate mat_date_picker"  appearance="outline" >
+                                        <input matInput (click)="StartDate.open()" readonly autocomplete="off"  [max]="validTillMinDate" [matDatepicker]="StartDate"  id="StartDate" [placeholder]="entityDateFormat" formControlName="StartDate">
+                                        <mat-datepicker-toggle matSuffix [for]="StartDate"></mat-datepicker-toggle>
+                                        <mat-datepicker #StartDate></mat-datepicker>
+                                    </mat-form-field>
+                                    <!-- <input formControlName="StartDate" (change)="purchaseEvent($event.target.value)" [max]="minDate"  type="date" class="form-control" /> -->
+                                  </div>
+                                </div>
+                                 <div class="col-md-6">
+                                   <label class=" mb-3">Till</label>
+                                   <div class="input-group">
+                                    <mat-form-field  class="tillDate mat_date_picker"  appearance="outline">
+                                        <input matInput (click)="EndDate.open()" readonly autocomplete="off" [min]="purchaseFilter.get('StartDate').value" [matDatepicker]="EndDate"  id="EndDate" [placeholder]="entityDateFormat" formControlName="EndDate">
+                                        <mat-datepicker-toggle matSuffix [for]="EndDate"></mat-datepicker-toggle>
+                                        <mat-datepicker #EndDate></mat-datepicker>
+                                    </mat-form-field>
+                                    <!-- <input formControlName="EndDate"  [min]="validTillMinDate" type="date" class="form-control" /> -->
+                                    </div>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                        <div class="form-group bmd-form-group">
+                            <!-- <select formControlName="VendorType" class="form-control" name="CategoryId" id="CategoryId">
+                                <option value="" disabled>--SELECT VENDOR TYPE--</option>
+                                <option value="Local">LOCAL</option>
+                                <option value="Overseas">OVERSEAS</option>
+                            </select> -->
+                            <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'VendorType'" name="CategoryId" id="CategoryId">
+                            <ng-option [value]="''" disabled>--SELECT VENDOR TYPE--</ng-option>
+                            <ng-option >LOCAL</ng-option>
+                            <ng-option >OVERSEAS</ng-option>                       
+                          </ng-select>  
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                        <div class="form-group bmd-form-group">
+                            <!-- <select formControlName="VendorId" (change)="getVendorBranchList($event.target.value)"
+                                class="form-control" name="active" id="active">
+                                <option value="0" disabled>--SELECT VENDOR--</option>
+                                <option *ngFor="let vendor of vendorsList" [value]="vendor.VendorID">
+                                    {{vendor.VendorName | uppercase}}
+                                </option>
+                            </select> -->
+                            <ng-select class="searchdropdown" [clearable]="false"(change)="getVendorBranchList($event)" 
+                            [formControlName]="'VendorId'"name="active" id="active">
+                            <ng-option [value]="0" disabled>--SELECT VENDOR--</ng-option>
+                            <ng-option *ngFor="let vendor of vendorsList"  [value]="vendor.VendorID">
+                                <span class="textwrap"> {{vendor.VendorName | uppercase}}</span>
+                            </ng-option>
+                          </ng-select>  
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                        <div class="form-group bmd-form-group">
+                            <!-- <select formControlName="VendorBranch" class="form-control" name="active" id="active">
+                                <option value="0" disabled>--SELECT VENDOR BRANCH--</option>
+                                <option *ngFor="let vendor of vendorBranch" [value]="vendor.VendorBranchID">
+                                    {{vendor.BranchCode | uppercase}}
+                                </option>
+                            </select> -->
+                            <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'VendorBranch'"name="active" id="active">
+                            <ng-option [value]="0" disabled>--SELECT VENDOR BRANCH--</ng-option>
+                            <ng-option *ngFor="let vendor of vendorBranch"  [value]="vendor.VendorBranchID">
+                                <span class="textwrap">{{vendor.BranchCode | uppercase}}</span>
+                            </ng-option>
+                          </ng-select>  
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                        <div class="form-group bmd-form-group">
+                            <input formControlName="InvoiceAmount" placeholder="AMOUNT" onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly
+                                class="form-control" name="date">
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                        <div class="form-group bmd-form-group">
+                            <!-- <select formControlName="InvoiceCurrency" class="form-control" name="active" id="active">
+                                <option value="0" disabled>--SELECT CURRENCY--</option>
+                                <option *ngFor="let currency of currencyList" [value]="currency.ID">
+                                    {{currency.Currency | uppercase}}
+                                </option>
+                            </select> -->
+                            <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'InvoiceCurrency'"name="active" id="active">
+                                <ng-option [value]="0" disabled>--SELECT CURRENCY--</ng-option>
+                                <ng-option *ngFor="let currency of currencyList"  [value]="currency.ID">
+                                    <span class="textwrap">{{currency.Currency | uppercase}}</span>
+                                </ng-option>
+                              </ng-select>  
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                        <div class="form-group bmd-form-group">
+                            <!-- <select formControlName="StatusId" class="form-control" name="active" id="active">
+                                <option value="0" disabled>--SELECT STATUS--</option>
+                                <option *ngFor="let status of statusList" [value]="status.Id">
+                                    {{status.StatusName | uppercase}}
+                                </option>
+                            </select> -->
+                            <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'StatusId'"name="active" id="active">
+                                <ng-option [value]="0" disabled>--SELECT STATUS--</ng-option>
+                                <ng-option *ngFor="let status of statusList" [value]="status.Id">
+                                    <span class="textwrap">{{status.StatusName | uppercase}}</span>
+                                </ng-option>
+                              </ng-select> 
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 searchbtn alrt text-center mb-3 mt-3">
+                        <button style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;" type="submit"
+                            (click)="getPurchaseInvoice();" class="btn btn-primary btn-raised mb-0">Search<div
+                                class="ripple-container"></div></button>
+                        <button style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;"
+                            (click)="createPurchaseForm();vendorBranch =[];getPurchaseInvoice();"
+                            class="btn btn-raised btn-danger mb-0">Clear
+                            <div class="ripple-container">
+                            </div>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

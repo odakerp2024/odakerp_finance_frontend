@@ -1,0 +1,191 @@
+<div class="header-title">
+    <div class="row">
+        <div class="col-md-12 col-sm-12  col-lg-12 col-xl-12">
+            <h4>
+                Vessel Tasks - Search
+            </h4>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-9 col-sm-9  col-lg-9 col-xl-9">
+
+        <div class="card">
+            <div class="card-body leftcard">
+                <div id="datatable-buttons_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 bkglvl">
+                            <table id="datatable-buttons" class="table table-responsive table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                <thead>
+                                    <tr role="row">
+                                        <th>
+                                            Vessel
+                                        </th>
+                                        <th>Voyage</th>
+                                        <th>ETD</th>
+                                        <th>Sailed</th>
+                                        <th>No of <br />BOL</th>
+                                        <th>No of<br />Cntrs</th>
+                                        <th>Load List</th>
+                                        <th>
+                                            Pre-alert
+                                        </th>
+                                        <th>Loading <br />Confirmation</th>
+                                        <th>On-board <br />Confirmation</th>
+                                        <th>TDR</th>
+                                        <th>Vessel <br />Task <br />Status</th>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let dataItem of pagedItems ;
+                                        let i = index" (mouseover)="highlightRow(dataItem)"
+                                        [ngClass]="{'highlight' : dataItem.TerminalCode == selectedName}">
+                                        <td class="fsttd">
+                                            <button class="btn btn-primary bmd-btn-fab enqbtn voybtn" (click)="onclickvesselpage(dataItem.VesselID, dataItem.VoyageID)">{{dataItem.VesselName}}</button>
+                                        </td>
+                                        <td class="fsttd">
+                                            {{dataItem.VoyageName}}
+                                        </td>
+                                        <td>
+                                            {{dataItem.ETD}}
+
+                                        </td>
+
+                                        <td>
+                                        </td>
+                                        <td>
+                                            {{dataItem.CntrCount}}
+                                        </td>
+                                        <td>
+                                            {{dataItem.BLCount}}
+
+                                        </td>
+                                        <td>
+                                            NA
+                                        </td>
+                                        <td>
+                                            NA
+                                        </td>
+                                        <td>
+                                            NA
+                                        </td>
+                                        <td>
+                                            NA
+                                        </td>
+                                        <td>NA</td>
+                                        <td>NA</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+        <form [formGroup]="searchForm">
+            <div class="card m-b-30 sidesearch">
+                <div class="card-body cpad eqlfont">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group">
+                                <select class="form-control my-select" id="VesselID" formControlName="VesselID">
+                                    <option value="0">Vessel</option>
+                                    <option *ngFor="let gRow of fillVeslVoyage" [value]="gRow.ID">
+                                        {{gRow.VesselName}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group">
+                                <select class="form-control my-select" id="VoyageID" formControlName="VoyageID">
+                                    <option value="0">Voyage</option>
+                                    <option *ngFor="let gRow of FillVoyageMaster" [value]="gRow.ID">
+                                        {{gRow.VoyageName}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12" style="margin-top:-7px;">
+                            <div class="form-group bmd-form-group">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label style="font-size: 13.5px; color: #605d5d; font-weight:400;">From</label>
+                                        <mat-form-field  class="tillDate">
+                                            <input matInput (click)="ETDDateTo.open()" readonly autocomplete="off" [matDatepicker]="ETDDateFrom"  id="ETDDateFrom" placeholder="" formControlName="ETDDateFrom">
+                                            <mat-datepicker-toggle matSuffix [for]="ETDDateFrom"></mat-datepicker-toggle>
+                                            <mat-datepicker #ETDDateFrom></mat-datepicker>
+                                        </mat-form-field>
+                                        <!-- <input type="date" autocomplete="off" formControlName="ETDDateFrom" id="txtETDFrom" class="form-control" placeholder="ETD - From" /> -->
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label style="font-size: 13.5px; color: #605d5d; font-weight: 400; ">Till</label>
+                                        <mat-form-field  class="tillDate">
+                                            <input matInput (click)="ETDDateTo.open()" readonly autocomplete="off" [matDatepicker]="ETDDateTo"  id="ETDDateTo" placeholder="" formControlName="ETDDateTo">
+                                            <mat-datepicker-toggle matSuffix [for]="ETDDateTo"></mat-datepicker-toggle>
+                                            <mat-datepicker #ETDDateTo></mat-datepicker>
+                                        </mat-form-field>
+                                        <!-- <input type="date" autocomplete="off" formControlName="ETDDateTo" id="txtETDTo" class="form-control" placeholder="ETD - To" /> -->
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!--<div class="col-md-12">
+                            <div class="form-group bmd-form-group">
+                                <select class="form-control my-select" id="ddlContainer" formControlName="CntrID">
+                                    <option value="0">Container No</option>
+                                    <option *ngFor="let gRow of dsCntrNos" [value]="gRow.ID">
+                                        {{gRow.CntrNo}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>-->
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group">
+                                <select class="form-control my-select" id="ddlBL" formControlName="BLID">
+                                    <option value="0">BL No</option>
+                                    <option *ngFor="let gRow of dsBOL" [value]="gRow.ID">
+                                        {{gRow.BLNumber}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group">
+                                <select class="form-control">
+                                    <option value="0">Invoice Number</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-sm-12  col-lg-12 col-xl-12">
+                            <select class="form-control my-select">
+                                <option value="0">
+                                    Vessel Task Status
+                                </option>
+                                <option>
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-12 searchbtn alrt">
+                            <button type="submit" (click)="onSubmit()" class="btn btn-primary btn-raised mb-0">Search<div class="ripple-container"></div></button>
+                            <button type="submit" (click)="clearSearch()" class="btn btn-raised btn-danger mb-0">Clear<div class="ripple-container"></div></button>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+

@@ -1,0 +1,163 @@
+<div class="row headtitle">
+    <div class="col-md-9 col-lg-9">
+        <h4 style="margin-top: 6px;">Export Manager - Vessel Tasks</h4>
+    </div>
+
+    <div class="col-md-3 col-lg-3 alrt">
+        <button type="button" class="btn btn-success btntop btn-raised bmd-btn-edit" [routerLink]="['/views/exportmanager/vessellevel/vessellevelview/vessellevelview/']"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+    </div>
+</div>
+
+<div class="row" style="margin-top: 2px; margin-bottom: 11px; background-color: lavender; padding: 11px; ">
+    <div class="col-md-3">
+        <div class="row" style="margin-top:5px;">
+            <div class="col-md-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item active"><a [routerLink]="['/views/exportmanager/vessellevel/vessellevelview/vessellevelview/']">Vessel Tasks</a></li>
+                        <li class="breadcrumb-item" aria-current="page" style="color:#000000;">Load List</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-9">
+        <div class="row">
+            <div class="col-md-6 alrt" style="font-weight: 600;">
+                <div class="row">
+                    <div class="col-md-12">
+                        <small>Ves/Voy</small>
+                    </div>
+                    <div class="col-md-12">
+                        <span>ACTUARIA</span>-<span>sdw</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 alrt" style="font-weight: 600;">
+                <div class="row">
+                    <div class="col-md-12">
+                        <small>ETD</small>
+                    </div>
+                    <div class="col-md-12">
+                        <span>
+                            30 Sep 2022
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 alrt" style="font-weight: 600;">
+                <div class="row">
+                    <div class="col-md-12">
+                        <small>Sailing Status</small>
+                    </div>
+                    <div class="col-md-12">
+                        <span>
+                            Pending/30 Sep 2022 19:00 Hrs
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 col-lg-12">
+        <div class="row bkgltab">
+            <div class="col-md-12 col-lg-12">
+                <ul class="nav nav-pills nav-justified" role="tablist">
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link active" data-toggle="tab" (click)="btntabclick(1)" role="tab" aria-selected="true">Load List</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" role="tab" (click)="btntabclick(2)" aria-selected="false">Pre-Alert</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" role="tab" (click)="btntabclick(3)" aria-selected="false">Loading Confirmation</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" role="tab" (click)="btntabclick(4)" aria-selected="false">Customer Onboard Confirm</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" role="tab" (click)="btntabclick(5)" aria-selected="false">Terminal Departure Report</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" role="tab" (click)="btntabclick(6)" aria-selected="false">Exceptions</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<form [formGroup]="vesselForm">
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <div class="tab-content">
+                <div class="tab-pane pt-3 active show" role="tabpanel">
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="line_box">
+                                        <div class="text_circle">
+
+                                            <a class="tvar"><span><i class="fa fa-check" style="margin-top: 0.6rem;"></i></span></a>
+                                            <label>Status</label>
+                                        </div>
+                                        <div class="text_circle">
+
+                                            <a class="tvarp"><span><i class="fa fa-envelope" style="margin-top: 0.6rem;"></i></span></a>
+                                            <label>Load List</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12 conttable cntralign padlr0">
+                                    <table id="datatable" cellpadding="0" cellspacing="0" class="table table-responsive table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                        <thead>
+                                            <tr>
+                                                <th rowspan="2">Slot Operator</th>
+                                                <th colspan="2" class="actwid">Space Reserved</th>
+                                                <th rowspan="2">Load List Status - Export</th>
+                                                <th rowspan="2">Load List Status - Transshipment</th>
+                                            </tr>
+
+                                            <tr>
+                                                <th class="actwid">TEUs</th>
+                                                <th class="actwid">MT</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <tr>
+                                                <td>GFS</td>
+                                                <td class="actwid">0</td>
+                                                <td class="actwid">0</td>
+                                                <td>Final,16 Nov 22, 18:00hrs, Admin</td>
+                                                <td>Final,16 Nov 22, 18:00hrs, Admin</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                                <div class="col-md-12 alrt">
+                                    <button type="submit" class="btn btn-primary btntop btn-raised vspbtn" [routerLink]="['/views/exportmanager/vessellevel/vsloadlist/loadlistmail/loadlistmail/']">Next</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

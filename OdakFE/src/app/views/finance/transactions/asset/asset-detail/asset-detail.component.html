@@ -1,0 +1,185 @@
+
+<div class="container-fluid">
+  <!-- header start -->
+  <div class="d-flex justify-content-between headtitle mt-2">
+      <h4 class="ml-2 mt-2" style="color:#003d79">Opening Balances - Asset</h4>
+
+      <div class="btntop">
+
+          <button *ngIf="!isCreate" (click)="enableEdit();isUpdateButtonDisable = false;" type="button"
+          class="btn btn-warning bmd-btn-edit btn-raised btntop emarginr ng-star-inserted">
+          <i class="material-icons editicon">edit</i>
+      </button>
+          <button type="button" class="btn btn-success bmd-btn-edit btn-raised btntop"
+          [routerLink]="['/views/transactions/openingBalances/asset']"
+          ><i class="material-icons editicon">reply</i>
+              <div class="ripple-container"></div>
+          </button>
+
+          <button 
+              class="nav-link dropdown-toggle arrow-none waves-effect nav-user btn bmd-btn-edit btn-raised btntop btnlog"
+              data-placement="bottom" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              <i class="material-icons editicon">schedule</i>
+          </button>
+
+
+          <div style="background-color: aliceblue;width:250px;left:-66px"
+          class="dropdown-menu dropdown-menu  profile-dropdown" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item p-4">
+              <div class="row">
+                  <div class="col-md-12">
+                      <span>ModifiedOn: {{ModifiedOn}}</span> | <span>Modified By:
+                          {{ModifiedBy}}</span>
+                  </div>
+              </div>
+              <div class="row" style="margin-top:10px;">
+                  <div class="col-md-12">
+                      <span>CreatedOn: {{CreatedOn}}</span> | <span>Created By:
+                          {{CreatedBy}}</span>
+                  </div>
+              </div>
+          </a>
+      </div>
+      </div>
+  </div>
+  <!-- header end -->
+  <div class="card-body" style="padding-top: 0px;">
+
+      <div class="row">
+          <div class="col-md-4">
+
+          </div>
+      </div>
+
+      <div class="row">
+          <form [formGroup]="accountAssetForm">
+          <div class="col-md-12">
+              <div class="tab-content">
+                  <div class="tab-pane pt-3 active show" id="employeeDetails" role="tabpanel">
+                      <div class="row">
+                          <div class="col-3">
+                              <label class="">OB Reference #</label>
+                              <input type="text"  [disabled]=" isUpdate ? 'disabled' : ''" formControlName ="OBReference" class="form-group w-100 pl-2 form-control" readonly />
+
+                          </div>
+  
+                          <div class="col-3">
+                              <label class="">OB Date</label>
+                              <input type="text"  [disabled]=" isUpdate ? 'disabled' : ''" formControlName ="OBDate" class="form-group w-100 pl-2 form-control" readonly />
+                          </div>
+                   </div>
+                      
+                          <div class="row">
+                              <!-- <div class="col-3">
+                                  <label class="">Division</label>
+                                  <input  type="text" [ngClass]="isUpdate" [ngClass]=" isUpdate ? 'block-input' : ''" formControlName ="Division" class="form-control form-group w-100 pl-2  "  />
+                              </div> -->
+
+                                       
+
+                            <div class="col-3">  
+                             <label class="str1 mt-0">Division</label>                                 
+                             <ng-select  class="searchdropdown custom"    [ngClass]="isUpdate ? 'block-input' : ''"  formControlName="DivisionId"
+                              (change)="getOfficeList($event);" [clearable]="false" [appendTo]="'body'">
+                             <ng-option [value]="0" disabled>--SELECT DIVISION--</ng-option>
+                             <ng-container  *ngFor="let division of divisionList">
+                             <ng-option  [value]="division.ID">
+                             {{division.DivisionName | uppercase}}
+                             </ng-option>
+                             </ng-container>
+                             </ng-select> 
+                             </div>
+
+                              <!-- <div class="col-3">
+                                  <label class="">Office</label>
+                                  <input  type="text" [ngClass]=" isUpdate ? 'block-input' : ''" formControlName ="Office" class="w-100 form-group pl-2 form-control"/>
+                              </div> -->
+
+                              <div class="col-3">
+                                <label class="str1 mt-0">Office</label>
+                                <ng-select  class="searchdropdown custom"  [ngClass]=" isUpdate ? 'block-input' : ''" formControlName="OfficeId"
+                                [clearable]="false" [appendTo]="'body'">
+                                <ng-option [value]="0" disabled>--SELECT OFFICE--</ng-option>
+                                <ng-container *ngFor="let office of officeList">
+                                <ng-option [value]="office.ID">
+                                    {{office.OfficeName | uppercase}}
+                                </ng-option>
+                               </ng-container>
+                               </ng-select>      
+                            </div>
+
+                              <div class="col-3">
+                                  <label class="">Group</label>
+                                  <input  type="text" formControlName ="Group" readonly [ngClass]=" isUpdate ? 'block-input' : ''" class="w-100 form-group pl-2 form-control"/>
+                              </div>
+
+                              <!-- <div class="col-3">
+                                  <label class="">Account</label>
+                                  <input  type="text" [ngClass]=" isUpdate ? 'block-input' : ''"  formControlName ="AccountName" class="w-100 form-group pl-2 form-control"/>
+                              </div> -->
+                                
+                              <div class="col-3">
+                                <label class="str1 mt-0">Account</label>
+                                <ng-select class="searchdropdown"   
+                                    [ngClass]=" isUpdate ? 'block-input' : ''" formControlName ="AccountName" [clearable]="false" [appendTo]="'body'">
+                                    <ng-option [value]="''" [disabled]="true">--SELECT ACCOUNT--</ng-option>
+                                    <ng-option *ngFor="let account of AccountList" [value]="account.ID">
+                                        {{account.COATypeName | uppercase}}
+                                    </ng-option>
+                                  </ng-select>
+                              </div>
+
+                              <!-- <div class="col-3">
+                                  <label class="">Debit/Credit</label>
+                                  <input  type="text" [ngClass]=" isUpdate ? 'block-input' : ''" RemoveSpecialChars formControlName ="DebitorCredit" class="w-100 form-group pl-2 form-control"/>
+                              </div> -->
+                              <div class="col-3">
+                                <label class="">Debit/Credit</label>                                 
+                                <ng-select class="searchdropdown custom" [ngClass]=" isUpdate ? 'block-input' : ''" formControlName ="DebitorCredit"  [clearable]="false"  [appendTo]="'body'">
+                                  <ng-option [value]="''" disabled>--SELECT Dr/Cr--</ng-option>
+                                  <ng-option *ngFor="let item of debitCreditList" [value]="item.debitCreditName">
+                                    {{ item.debitCreditName | uppercase }}
+                                  </ng-option>
+                                </ng-select>  
+                              </div>
+
+                              <!-- <div class="col-3">
+                                <label class="">Currency</label>
+                                <input  type="tel" [ngClass]=" isUpdate ? 'block-input' : ''" formControlName ="Currency" class="w-100 form-group pl-2 form-control"/>
+                            </div> -->
+                            <div class="col-3">
+                                <label class="str1 mt-0">Currency</label>
+                                  <ng-select class="searchdropdown custom" type="tel" [ngClass]=" isUpdate ? 'block-input' : ''" formControlName ="Currency" [clearable]="false" [appendTo]="'body'">
+                                  <ng-option [value]="''"  [disabled]="true" selected>--SELECT CURRENCY--</ng-option>
+                                  <ng-option *ngFor="let currency of currencyList" [value]="currency.CurrencyID">{{ currency.CurrencyCode | uppercase }}</ng-option>
+                                  </ng-select>
+                            </div>
+                              <div class="col-3">
+                                <label class="">Exchange</label>
+                                <input RemoveSpecialChars onkeypress='return event.charCode >= 48 && event.charCode <= 57' RemoveSpecialChars formControlName ="Exchange"
+                                min="0" numbersOnly class="w-100 form-group py-0 form-control" />
+                              </div>
+
+                            
+
+                              <div class="col-3">
+                                  <label class=""> Amount </label>
+                                  <input RemoveSpecialChars [ngClass]=" isUpdate ? 'block-input' : ''" formControlName ="AmountCCY" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+                                  min="0" numbersOnly type="tel" class="w-100 form-group pl-2 form-control"/>
+                              </div>  
+                   </div>
+                  </div>
+                  
+              </div>
+          </div>
+      </form>
+          <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 text-right mt-4">
+              <button type="button" class="btn btn-primary btn-raised" style="margin-right: 10px;" [disabled]="!isSavemode" (click)="save();" >Save</button>
+      <button style="margin-right: 10px" type="button" class="btn btn-danger btn-raised" (click)="deleteRecord()">Delete</button>
+      <button  type="button" class="btn btn-warning btn-raised" (click)="Cancel()">Cancel</button>
+          </div>
+         
+      </div>
+  </div>
+</div>

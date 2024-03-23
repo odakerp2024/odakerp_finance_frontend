@@ -1,0 +1,130 @@
+<div class="row headtitle">
+    <div class="col-md-9">
+        <h4>Container Type Master</h4>
+    </div>
+    <div class="col-md-3 alrt">
+        <button type="button" class="btn btn-success btntop btn-raised bmd-btn-edit" (click)="onBack()"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+    </div>
+</div>
+
+<form [formGroup]="contypeForm">
+    <div class="card">
+        <div class="card-body ">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label class="str">Container Type</label>
+
+                                <input type="hidden" formControlName="Size" />
+                                <select name="Size" id="ddlSize" formControlName="SizeID" class="form-control my-select">
+                                    <option *ngFor="let contype of dsCntrSizes" [value]="contype.ID">
+                                        {{contype.GeneralName}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label class="str">Equipment Size</label>
+                                <input type="hidden" formControlName="Type" />
+                                <select name="Type" id="ddlType" formControlName="EQTypeID" class="form-control my-select">
+                                    <option *ngFor="let contype of dsCntrTypes" [value]="contype.ID">
+                                        {{contype.GeneralName}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label class="str">ISO Code</label>
+                                <input type="text" name="ISOCode" formControlName="ISOCode" autocomplete="off" id="ddlISOCode" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="str">Length</label>
+                                <input type="number" name="Length" formControlName="Length" autocomplete="off" id="txtTerminalName" ng-model="txtTerminalName" class="form-control">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="str">Width</label>
+                                <input type="number" name="Width" formControlName="Width" autocomplete="off" id="txtTerminalName" ng-model="txtTerminalName" class="form-control">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="str">Height</label>
+                                <input type="number" name="Height" formControlName="Height" autocomplete="off" id="txtTerminalName" ng-model="txtTerminalName" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label class="str">Tare Weight</label>
+                                <input type="number" name="TareWeight" formControlName="TareWeight" autocomplete="off" id="ddlTareWeight" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label class="str">Max. Payload</label>
+                                <input type="number" name="MaxPayload" formControlName="MaxPayload" autocomplete="off" id="ddlMaxPayload" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-2">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label class="str">TEUs</label>
+                                <input type="number" name="TEUS" formControlName="TEUS" autocomplete="off" id="ddlTEUS" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label>Remarks</label>
+                                <input type="text" name="Remarks" formControlName="Remarks" autocomplete="off" id="ddlRemarks" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="card-footer ">
+            <div class="col-md-12" style="text-align:right;">
+                <button type="submit" (click)="onSubmit()" class="btn btn-primary btn-raised mb-0">Submit</button>
+            </div>
+            <input type="hidden" id="HDRegId" ng-model="HDRegId" />
+        </div>
+    </div>
+</form>
+
+

@@ -1,0 +1,11 @@
+th {
+    background-image: linear-gradient(#3a5ba0, #273773) !important;
+    color: #fff !important;
+    width: 1% !important;
+    border: 1px solid #a5a5a5 !important;
+    padding-left: 10px !important;
+}
+td{
+    border: 1px solid #dee2e6;
+    padding-left: 10px !important;
+}

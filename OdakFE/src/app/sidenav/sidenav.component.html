@@ -1,0 +1,467 @@
+<!-- <form [formGroup]="SideNavForm"> -->
+    <div class="left side-menu">
+
+
+        <div class="sidebar-inner slimscrollleft" id="sidebar-main">
+            <div class="dropdown1">
+                <button data-toggle="tooltip" title="Dashboard" [routerLink]="['/views/dashboard']" class="dropbtn1"><mat-icon>dashboard</mat-icon></button>
+            </div>
+            <div class="dropdown1">
+                <button data-toggle="tooltip" title="Liner Agency" (click)="OnClickLink(1)" class="dropbtn1" style="margin-top: 10px!important;"><mat-icon>directions_boat</mat-icon></button>
+            </div>
+            <div class="dropdown1">
+                <button data-toggle="tooltip" title="Freight Forwarding" (click)="OnClickLink(2)" class="dropbtn1"><mat-icon svgIcon="freight"></mat-icon></button>
+            </div>
+            <div class="dropdown1">
+                <button data-toggle="tooltip" title="Finance" (click)="OnClickLink(3)" class="dropbtn1 active"><mat-icon svgIcon="profit"></mat-icon></button>
+            </div>
+            <div class="dropdown1">
+                <button data-toggle="tooltip" title="System Admin" (click)="OnClickLink(4)" class="dropbtn1" style="margin-top: 10px!important;"><mat-icon svgIcon="user"></mat-icon></button>
+            </div>
+            <!--<div class="dropdown1">
+                <button class="dropbtn1"><mat-icon svgIcon="database"></mat-icon></button>
+            </div>-->
+
+            <div class="dropdown">
+                <button class="dropbtn"><i class="material-icons editicon">person</i></button>
+                <div class="dropdown-content">
+                    <a (click)="modal()"><span><i class="material-icons editicon">person</i></span> Profile</a>
+                    <a href="#"><span><i class="material-icons editicon">logout</i></span> Log Out</a>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+        <!--<mat-nav-list>
+
+            <div class="sidebar-inner slimscrollleft" id="sidebar-main">
+
+                <mat-accordion>
+
+
+                    <mat-expansion-panel hideToggle>
+                        <mat-expansion-panel-header class="dashboard">
+                            <mat-panel-title>
+                                <a (click)="OnClickLink(1)"><mat-icon>directions_boat</mat-icon></a>
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+
+                    </mat-expansion-panel>
+
+                    <mat-expansion-panel hideToggle>
+                        <mat-expansion-panel-header class="dashboard">
+                            <mat-panel-title>
+                                <a (click)="OnClickLink(2)"><mat-icon svgIcon="freight"></mat-icon></a>
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+
+                    </mat-expansion-panel>
+
+                    <mat-expansion-panel hideToggle>
+                        <mat-expansion-panel-header class="dashboard">
+                            <mat-panel-title>
+                                <a (click)="OnClickLink(3)"><mat-icon svgIcon="profit"></mat-icon></a>
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+
+                    </mat-expansion-panel>
+
+                    <mat-expansion-panel hideToggle>
+                        <mat-expansion-panel-header class="dashboard">
+                            <mat-panel-title>
+                                <a (click)="OnClickLink(4)"><mat-icon svgIcon="user"></mat-icon></a>
+
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+
+                    </mat-expansion-panel>
+
+
+
+                    <mat-expansion-panel hideToggle>
+                        <mat-expansion-panel-header class="dashboard" style="margin-left:-17px !important; position:absolute;bottom:30px;">
+                            <a class="nav-link waves-effect nav-user" data-toggle="dropdown" href="#" role="button" aria-haspopup="false"
+                               aria-expanded="false">
+                                <mat-icon style="color: #fafafa!important; font-size: 20px!important; background-color: #43506d!important; padding: 6px!important; border-radius: 5px!important;">account_circle</mat-icon>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
+
+
+                                <a class="dropdown-item" href="#">
+                                    <i class="mdi mdi-logout m-r-5 text-muted"></i> Logout
+                                </a>
+                            </div>
+                        </mat-expansion-panel-header>
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </div>
+        </mat-nav-list>-->
+    </div>
+
+    <div class="modal fade seminor-login-modal" data-backdrop="static" id="UserProfile">
+        <div class="modal-dialog modal-dialog-centered dialog1100">
+            <div class="modal-content">
+                <div class="row">
+                    <div class="col-md-12 alrt">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body seminor-login-modal-body cntpopup">
+                    <h6 class="modal-title text-center">USER PROFILE</h6>
+                    <div class="divide3"></div>
+                    <div class="row alogtop">
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>User ID</label>
+                                                <input type="text" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>User Active</label>
+                                                <select name="Status" class="form-control my-select">
+                                                    <option value="0">User Active</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Employee Code</label>
+                                                <select name="Status" class="form-control my-select">
+                                                    <option value="0">Employee Code</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Landing Application</label>
+                                                <select name="Status" class="form-control my-select">
+                                                    <option value="0">Landing Application</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row alogtop">
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Employee Name</label>
+                                                <input type="text" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Short Name</label>
+                                                <input type="text" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Active</label>
+                                                <select name="Status" class="form-control my-select">
+                                                    <option value="0">Active</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Gender</label>
+                                                <select name="Status" class="form-control my-select">
+                                                    <option value="0">Gender</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row alogtop">
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Date of Birth</label>
+                                                <input type="date" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Designation</label>
+                                                <input type="text" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Landline</label>
+                                                <input type="number" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Mobile</label>
+                                                <input type="number" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row alogtop">
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>E-Mail</label>
+                                                <input type="email" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Date of Joining</label>
+                                                <input type="date" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Date of Confirmation</label>
+                                                <input type="date" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Date of Relieving</label>
+                                                <input type="date" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row alogtop">
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Division</label>
+                                                <input type="text" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Office</label>
+                                                <select class="form-control my-select">
+                                                    <option value="0">Office</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Department</label>
+                                                <input type="text" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Reporting To</label>
+                                                <input type="text" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row alogtop">
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>HOD</label>
+                                                <input type="text" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>SBU/Division Head</label>
+                                                <input type="text" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="divide3"></div>
+                    <div class="col-md-12 alrt padlr0 btmrw">
+                        <button data-toggle="tooltip" title="Profile" type="submit" class="btn btn-primary btn-raised cntbtn mb-0" (click)="PartBlCreate();">Save<div class="ripple-container"></div></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- </form> -->

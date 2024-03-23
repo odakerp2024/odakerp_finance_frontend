@@ -1,0 +1,232 @@
+<div class="container-fluid p-0">
+    <div class="row headtitle d-flex justify-content-between mt-2">
+        <div>
+            <h4 class="ml-3 mt-2">TDS Section</h4>
+        </div>
+        <div>
+            <button *ngIf="isUpdate" (click)="fg.enable();isUpdateEnable = true" type="button"
+                class="btn btn-warning bmd-btn-edit btn-raised btntop emarginr ng-star-inserted">
+                <i class="material-icons editicon">edit</i></button>
+
+            <button [ngStyle]="{'margin-right':!isUpdate ? '15px' : '' }" type="button"
+                class="btn btn-success btntop btn-raised bmd-btn-edit" (click)="onBack()"><i
+                    class="material-icons editicon">reply</i>
+                <div class="ripple-container"></div>
+            </button>
+
+            <button *ngIf="isUpdate"
+                class="nav-link dropdown-toggle arrow-none waves-effect nav-user btn bmd-btn-edit btn-raised btntop btnlog"
+                data-placement="bottom" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="material-icons editicon">schedule</i>
+            </button>
+
+
+            <div style="background-color: aliceblue;width:250px;left:-66px"
+                class="dropdown-menu dropdown-menu  profile-dropdown" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" style="padding:15px;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12"><span>ModifiedOn: {{ModifiedOn}}</span> | <span>Modified By:
+                                        {{ModifiedBy}}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:10px;">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12"><span>CreatedOn: {{CreatedOn}}</span> | <span>Created By:
+                                        {{CreatedBy}}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ------title start---------- -->
+    <div class="row my-3 p-2" style="background-color: lavender;margin: 2px;">
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row bkgno">
+                <div class="col-md-12">
+                    <label [title]="fg.value.TaxName" class="lbltxt header-text-label"><span
+                            style="font-weight: lighter !important;">TDS Name :
+                        </span>{{fg.value.TaxName | uppercase}}</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ------title end------------- -->
+
+    <form [formGroup]="fg" name="myForm">
+        <div class="card">
+            <div class="card-body ">
+                <div class="row">
+
+                    <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="str">Rate Code</label>
+                                    <input disabled [ngClass]=" isUpdate ? 'block-input' : ''" type="text"
+                                        formControlName="RateCode" autocomplete="off" id="txtTaxName"
+                                        class="form-control" maxlength="50" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="str">Tax Name</label>
+
+                                    <input (ngModelChange)="autoCodeGeneration($event)"
+                                        [ngClass]=" isUpdate ? 'block-input' : ''" type="text" name="TaxName"
+                                        formControlName="TaxName" autocomplete="off" id="ddlSection"
+                                        class="form-control" maxlength="50" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="str">Rate(%)</label>
+                                    <input [ngClass]=" isUpdate ? 'block-input' : ''" type="text" name="rate"
+                                        formControlName="RatePercentage" autocomplete="off" data-format="#.00"
+                                        id="txtrate" ng-model="txtRate" class="form-control" required maxlength="50"
+                                        (keypress)="decimalFilter($event)">
+
+                                    <!-- <input type="text" name="sacCode" formControlName="SACCode" autocomplete="off" id="txtSACCode" class="form-control"
+                                required maxlength="8"  oninput="this.value=this.value.replace(/[^0-9]/g,'');"> -->
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="str">Section</label>
+                                    
+                                    <ng-select class="searchdropdown"  [clearable]="false" 
+                                    [ngClass]=" isUpdate ? 'block-input' : ''" name="section" formControlName="SectionID" id="ddlSection" >
+                                        <ng-option [value]="0" [disabled]="true">--SELECT TO ACCOUNT--</ng-option>
+
+                                        <ng-option *ngFor="let section of Sectionvalues" [value]="section.SectionID">
+                                            {{section.SectionName | uppercase}} - {{section.SectionDescription | uppercase }}
+                                        </ng-option> 
+                                        
+                                        <!-- <ng-option *ngFor="let section of Sectionvalues" [value]="section.SectionID"  [title]="section.SectionDescription | uppercase">
+                                            {{section.SectionName | uppercase}} - {{(section.SectionDescription && section.SectionDescription.length > 20) ?section.SectionDescription.slice(0, 20) + '-' : section.SectionDescription }}
+                                        </ng-option> -->
+
+
+                                      </ng-select>  
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="str mb-2">Effective Date</label>
+                                    <mat-form-field class="tillDate mat_date_picker"   appearance="outline">
+                                        <input matInput readonly (click)="EffectiveDate.open()"[ngClass]=" isUpdate ? 'disable-datepicker' : ''"  [min]="getToday()" [matDatepicker]="EffectiveDate" [placeholder]="dataFormat" formControlName="EffectiveDate">
+                                        <mat-datepicker-toggle matSuffix [for]="EffectiveDate"></mat-datepicker-toggle>
+                                        <mat-datepicker #EffectiveDate></mat-datepicker>
+                                        </mat-form-field>
+                                    <!-- <input [ngClass]=" isUpdate ? 'block-input' : ''" class="form-control" type="date"
+                                        [max]="getToday()" formControlName="EffectiveDate" id="txtEffectiveDate" /> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="str">Active</label>
+                                    
+                                    <ng-select class="searchdropdown"  [clearable]="false" name="isActive" formControlName="IsActive" id="ddlIsActive">
+                                        <ng-option [value]="''" [disabled]="true">--SELECT ACTIVE--</ng-option>
+                                        <ng-option *ngFor="let status of statusvalues" [value]="status.value">
+                                            {{status.viewValue | uppercase}}
+                                        </ng-option>
+                                      </ng-select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="">Remarks</label>
+                                    <textarea [ngClass]=" isUpdate ? 'block-input' : ''" class="form-control addressht"
+                                        id="txtRemarks" formControlName="Remarks" rows="5"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12" style="text-align:right;">
+                    <button type="submit" *ngIf="isCreate" (click)="onSubmit()" class="btn  btn-raised mb-0"
+                        class="btn btn-primary btn-raised btn-default cntbtn mb-0">Save</button>
+                    <button [disabled]="!isUpdateEnable" *ngIf="isUpdate" (click)="onSubmit()" type="submit"
+                        class="btn btn-primary btn-raised btn-default cntbtn mb-0">Update</button>
+                    <button type="button" (click)="reset()"
+                        class="btn btn-danger btn-raised cntbtn mb-0">Cancel</button>
+                </div>
+                <input type="hidden" id="HDRegId" ng-model="HDRegId" />
+            </div>
+        </div>
+
+
+    </form>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $('.item_price').mask('000.00', { reverse: true });
+    });
+
+
+    $('#price').on('change', function () {
+        var get_price = document.getElementById('price').value;
+        var set_price = parseFloat(get_price).toFixed(2);
+        $('input[name=price').val(set_price);
+    })
+</script>

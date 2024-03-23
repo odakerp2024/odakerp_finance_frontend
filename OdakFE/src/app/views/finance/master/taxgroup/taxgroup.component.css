@@ -1,0 +1,5 @@
+.block-input {
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+    background-color: #e9ecef !important;
+}

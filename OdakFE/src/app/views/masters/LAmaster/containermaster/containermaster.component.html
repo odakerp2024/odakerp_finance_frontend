@@ -1,0 +1,285 @@
+<div class="row headtitle">
+    <div class="col-md-9">
+        <h4>Container Master</h4>
+    </div>
+    <div class="col-md-3 alrt">
+        <button type="button" class="btn btn-success bmd-btn-edit btn-raised btntop" [routerLink]="['/views/masters/LAmaster/containermaster/containermasterview']"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+    </div>
+</div>
+<form [formGroup]="cntrForm">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card ">
+
+                <div class="card-body ">
+                    <div class="row">
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label class="str">Container Number</label>
+                                        <input type="text" autocomplete="off" id="txtCntrNo" formControlName="CntrNo" class="form-control">
+
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label class="str">Container Type</label>
+                                        <select class="form-control my-select" id="ddlSize" formControlName="TypeID" (ngModelChange)="SizeChanged()">
+                                            <option *ngFor="let gRow of dsCntrType" [value]="gRow.ID">
+                                                {{gRow.Size}}
+                                            </option>
+
+                                        </select>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label>ISO Code</label>
+
+                                        <input type="text" id="txtISCCode" disabled formControlName="ISOCode" autocomplete="off" class="form-control ng-pristine ng-untouched ng-valid ng-empty">
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label class="str">Module Type</label>
+                                        <select class="form-control my-select" id="ddlModule" formControlName="ModuleID">
+                                            <option *ngFor="let gRow of dsModule" [value]="gRow.ID">
+                                                {{gRow.GeneralName}}
+                                            </option>
+
+                                        </select>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label class="str">Owning Line</label>
+                                        <select class="form-control my-select" id="ddlLine" formControlName="LineID">
+                                            <option *ngFor="let gRow of dsPrincipal" [value]="gRow.ID">
+                                                {{gRow.LineName}}
+                                            </option>
+
+                                        </select>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3" *ngIf="showpickup">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label>Status </label>
+
+                                        <select class="form-control my-select" id="ddlStatus" formControlName="StatusID">
+                                            <option *ngFor="let status of statusvalues" [value]="status.value">
+                                                {{status.viewValue}}
+                                            </option>
+                                        </select>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label>Remarks</label>
+                                        <input type="text" id="txtRemarks" autocomplete="off" formControlName="Remarks" class="form-control">
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label>&nbsp;</label>
+                                        <span class="bmd-form-group is-filled is-focused">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" formControlName="IsPickUp" (change)="PickUpChange($event)"><span class="checkbox-decorator">
+                                                        <span class="check"></span>
+                                                        <div class="ripple-container"></div>
+                                                    </span> Pick Up
+                                                </label>
+                                            </div>
+                                        </span>
+
+                                        <!--<label>&nbsp;</label>
+                                        <input type="checkbox" ng-true-value="1" ng-false-value="0" formControlName="IsPickUp">
+                                        <label>Pick Up</label>-->
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3" *ngIf="showpickup">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label>Pick Up Location</label>
+
+                                        <select class="form-control" id="ddlPkUpLoc" formControlName="PickUpLocID">
+                                            <option *ngFor="let gRow of dsPortList" [value]="gRow.ID">
+                                                {{gRow.PortCode}}
+                                            </option>
+                                        </select>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3" *ngIf="showpickup">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label>Pick Up  Date</label>
+                                        <mat-form-field  class="paymentDate">
+                                            <input matInput (click)="PickUpDate.open()" readonly autocomplete="off" [matDatepicker]="PickUpDate"  id="PickUpDate" placeholder="" formControlName="PickUpDate">
+                                            <mat-datepicker-toggle matSuffix [for]="PickUpDate"></mat-datepicker-toggle>
+                                            <mat-datepicker #PickUpDate></mat-datepicker>
+                                        </mat-form-field>
+                                        <!-- <input type="date" id="txtPickUpDate" autocomplete="off" formControlName="PickUpDate" class="form-control"> -->
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-3" *ngIf="showpickup">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label> Pick Up Ref#</label>
+                                        <input type="text" id="txtPickUpRef" autocomplete="off" formControlName="PickUpRef" class="form-control">
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label>&nbsp;</label>
+                                        <span class="bmd-form-group is-filled is-focused">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" ng-true-value="1" ng-false-value="0" id="Checkbx" formControlName="IsDropOff" [(ngModel)]="IsCheckBoxDr" (change)="DropOffChange($event)"><span class="checkbox-decorator">
+                                                        <span class="check"></span>
+                                                        <div class="ripple-container"></div>
+                                                    </span> Drop Off
+                                                </label>
+                                            </div>
+                                        </span>
+
+                                        <!--<label>&nbsp;</label>
+                                        <input type="checkbox" ng-true-value="1" ng-false-value="0" formControlName="IsPickUp">
+                                        <label>Pick Up</label>-->
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3" *ngIf="showdropoff">
+                            <div class="form-group" *ngIf="showpickup">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label>Drop Off Location</label>
+
+                                        <select class="form-control my-select" id="ddlDropOffLoc" formControlName="DropOffLocID">
+                                            <option *ngFor="let gRow of dsPortList" [value]="gRow.ID">
+                                                {{gRow.PortCode}}
+                                            </option>
+                                        </select>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3" *ngIf="showdropoff">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label>Drop Off  Date</label>
+                                        <mat-form-field class="paymentDate" >
+                                            <input matInput autocomplete="off" [matDatepicker]="DropOffDate"  id="DropOffDate" placeholder="" formControlName="DropOffDate">
+                                            <mat-datepicker-toggle matSuffix [for]="DropOffDate"></mat-datepicker-toggle>
+                                            <mat-datepicker #DropOffDate></mat-datepicker>
+                                        </mat-form-field>
+                                        <!-- <input type="date" id="txtDropoffDate" autocomplete="off" formControlName="DropOffDate" class="form-control"> -->
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3" *ngIf="showdropoff">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label>Drop Off Ref#</label>
+                                        <input type="text" id="txtDropoffRef" autocomplete="off" formControlName="DropOffRef" class="form-control">
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="ml-auto">
+                            <button type="submit" (click)="OnSubmit();" class="btn btn-primary btn-raised mb-0"><i class="fa fa-save"></i> Save</button>
+                            <input type="hidden" id="HDRegId" ng-model="HDRegId" />
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+</form>
+

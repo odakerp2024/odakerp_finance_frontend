@@ -1,0 +1,1830 @@
+
+<div class="row headtitle">
+    <div class="col-md-9">
+        <h4>Customer Enquiry</h4>
+    </div>
+
+    <div class="col-md-3 alrt">
+
+
+        <button class="nav-link dropdown-toggle arrow-none waves-effect nav-user btn bmd-btn-edit btn-raised btntop btnlog" data-toggle="dropdown" href="#" role="button" aria-haspopup="false"
+                aria-expanded="false">
+            <i class="material-icons editicon">schedule</i>
+        </button>
+        <div class="dropdown-menu dropdown-menu-right profile-dropdown" style="background-color: aliceblue;width:250px;left:-66px">
+
+
+            <a class="dropdown-item" style="padding:15px;">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-12"><span>ModifiedOn: {{ModifiedOn}}</span> | <span>Modified By: {{ModifiedBy}}</span></div>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px;">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-12"><span>CreatedOn: {{CreatedOn}}</span> | <span>Created By: {{CreatedBy}}</span></div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+
+        <button type="button" class="btn btn-warning bmd-btn-edit btn-raised btntop" *ngIf="showEdit" (click)="OnclickeEdit();" style="margin-right:15px;"><i class="material-icons editicon">edit</i></button>
+
+        <button type="button" class="btn btn-success bmd-btn-edit btn-raised btntop" [routerLink]="['/views/enquiries-booking/enquiries/enquiriesview/enquiriesview']"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+
+
+    </div>
+</div>
+
+<form [formGroup]="Formvalues">
+
+    <div class="row">
+        <div class="col-md-12">
+
+            <div class="row enquirynav">
+                <div class="col-md-12">
+                    <ul class="nav nav-pills nav-justified" role="tablist">
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link active show" data-toggle="tab" (click)="onPageTab(1)" id="agencydetails" href="#Enquiry" role="tab" aria-selected="true">Enquiry</a>
+                        </li>
+
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" id="pricipaltab" (click)="onPageTab(2)" href="#Links" role="tab" aria-selected="false">Links</a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+            <div class="row forms">
+                <div class="col-md-12 padlr0">
+
+                    <div class="tab-content" style="padding:0;">
+                        <div class="tab-pane pt-3 active show" id="Enquiry" role="tabpanel">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4 class="enqtitle">Basic Details</h4>
+                                    </div>
+                                </div>
+                                <div class="row" style="border-bottom:2px dashed #ccc; margin-bottom:15px; padding-bottom:10px;">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12 bkgtxt">
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-md-8">
+                                                                <label class="str">Booking Party</label>
+                                                                <select class="form-control my-select" id="CustomerID" formControlName="CustomerID">
+                                                                    <option *ngFor="let gRow of CustomerMasterAllvalues" [value]="gRow.ID">
+                                                                        {{gRow.CustomerName}}
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+
+                                                            <div class="col-md-4">
+                                                                <label class="str">Office Code</label>
+                                                                <select class="form-control my-select" id="OfficeCode" formControlName="OfficeCode">
+                                                                    <option *ngFor="let gRow of OfficeMasterAllvalues" [value]="gRow.ID">
+                                                                        {{gRow.CustomerName}}
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label>Enquiry Number</label>
+                                                                <input class="form-control" type="text" disabled id="EnquiryNo" formControlName="EnquiryNo" />
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label class="str">Enquiry Date</label>
+                                                                <mat-form-field class="paymentDate" >
+                                                                    <input matInput autocomplete="off" (click)="EnquiryDate.open()" readonly [max]="getToday()" [matDatepicker]="EnquiryDate"  id="EnquiryDate" placeholder="" formControlName="EnquiryDate">
+                                                                    <mat-datepicker-toggle matSuffix [for]="EnquiryDate"></mat-datepicker-toggle>
+                                                                    <mat-datepicker #EnquiryDate></mat-datepicker>
+                                                                </mat-form-field>
+                                                                <!-- <input class="form-control" type="date" [max]="getToday()" formControlName="EnquiryDate" id="EnquiryDate" /> -->
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label class="str">Enquiry Status</label>
+                                                                <select class="form-control my-select" disabled id="EnquiryStatusID" formControlName="EnquiryStatusID">
+                                                                    <option *ngFor="let gRow of AllListEnquireStatus" [value]="gRow.ID">
+                                                                        {{gRow.Desc}}
+                                                                    </option>
+
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label class="str">Source</label>
+                                                                <select class="form-control my-select" id="EnquirySourceID" formControlName="EnquirySourceID">
+                                                                    <option *ngFor="let gRow of AllListEnquirySource" [value]="gRow.ID">
+                                                                        {{gRow.Desc}}
+                                                                    </option>
+
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label class="str">Sales Person</label>
+                                                                <select class="form-control my-select" id="SalesPersonID" formControlName="SalesPersonID">
+                                                                    <option *ngFor="let gRow of SalesMasterAllvalues" [value]="gRow.ID">
+                                                                        {{gRow.UserName}}
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label class="str">Agent</label>
+                                                                <select class="form-control my-select" id="NominationID" formControlName="NominationID">
+                                                                    <option *ngFor="let gRow of AgencyMasterAllvalues" [value]="gRow.ID">
+                                                                        {{gRow.AgencyName}}
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+
+
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label class="str">Validity</label>
+                                                                <mat-form-field class="paymentDate" >
+                                                                    <input matInput (click)="ValidTillDate.open()" readonly [min]="getToday()" autocomplete="off" [matDatepicker]="ValidTillDate"  id="ValidTillDate" placeholder="" formControlName="ValidTillDate">
+                                                                    <mat-datepicker-toggle matSuffix [for]="ValidTillDate"></mat-datepicker-toggle>
+                                                                    <mat-datepicker #ValidTillDate></mat-datepicker>
+                                                                </mat-form-field>
+                                                                <!-- <input class="form-control" type="date" [min]="getToday()" formControlName="ValidTillDate" id="ValidTillDate" /> -->
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <label class="str">Commission</label>
+                                                                <select class="form-control my-select" id="BookingCommissionID" formControlName="BookingCommissionID">
+                                                                    <option *ngFor="let gRow of AllListBookingCommission" [value]="gRow.ID">
+                                                                        {{gRow.Desc}}
+                                                                    </option>
+
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 enquiry">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4 class="enqtitle">Shipment Details</h4>
+                                    </div>
+                                </div>
+                                <div class="row" style="border-bottom:2px dashed #ccc; margin-bottom:15px; padding-bottom:10px;">
+                                    <div class="col-md-8">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label>Origin</label>
+                                                            <select class="form-control my-select" formControlName="OriginID" id="OriginID">
+                                                                <option *ngFor="let gRow of PortAllvalues" [value]="gRow.ID">
+                                                                    {{gRow.PortName}}
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label>Load Port</label>
+                                                            <select class="form-control my-select" formControlName="LoadPortID" id="LoadPortID">
+                                                                <option *ngFor="let gRow of PortAllvalues" [value]="gRow.ID">
+                                                                    {{gRow.PortName}}
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label>Discharge Port</label>
+                                                            <select class="form-control my-select" formControlName="DischargePortID" id="DischargePortID">
+                                                                <option *ngFor="let gRow of PortAllvalues" [value]="gRow.ID">
+                                                                    {{gRow.PortName}}
+                                                                </option>
+                                                            </select>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label>Destination</label>
+                                                            <select class="form-control my-select" formControlName="DestinationID" id="DestinationID">
+                                                                <option *ngFor="let gRow of PortAllvalues" [value]="gRow.ID">
+                                                                    {{gRow.PortName}}
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label>Route</label>
+                                                            <select class="form-control my-select" formControlName="RouteID" id="RouteID">
+                                                                <option *ngFor="let gRow of FillRouteTypes" [value]="gRow.ID">
+                                                                    {{gRow.GeneralName}}
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label>Delivery Terms</label>
+                                                            <select class="form-control my-select" formControlName="DeliveryTermsID" id="DeliveryTermsID">
+                                                                <option *ngFor="let gRow of FillDeliveryTerms" [value]="gRow.ID">
+                                                                    {{gRow.GeneralName}}
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label>Transshipment Port</label>
+                                                            <select class="form-control my-select" formControlName="TranshipmentPortID" id="TranshipmentPortID">
+                                                                <option *ngFor="let gRow of PortAllvalues" [value]="gRow.ID">
+                                                                    {{gRow.PortName}}
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+
+                                        <div class="row">
+                                            <div class="col-md-12 padlr0 conttable">
+                                                <table id="datatable-buttons" cellpadding="0" cellspacing="0" class="table table-responsive table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                                    <thead>
+                                                        <tr role="row">
+                                                            <th>S.No</th>
+                                                            <th>Container Type</th>
+                                                            <th>Nos</th>
+
+                                                            <th class="actwid">Action</th>
+
+                                                        </tr>
+                                                    </thead>
+
+
+                                                    <tbody>
+                                                        <tr *ngFor="let gRow of DynamicCntrNoGrid; let i= index let last=last">
+                                                            <td> {{i+1}}</td>
+                                                            <td class="other">
+                                                                <select class="form-control" [disabled]="ControlDisplay" [(ngModel)]="gRow.CntrTypeID" (ngModelChange)="dropdowOnSelect(gRow)" [ngModelOptions]="{standalone: true}">
+                                                                    <option value="0">--Select--</option>
+                                                                    <option *ngFor="let gRow of fillCntrType" [value]="gRow.ID">
+                                                                        {{gRow.CntrTypes}}
+                                                                    </option>
+                                                                </select>
+                                                            </td>
+                                                            <td class="other"><input type="number" min="0" [disabled]="ControlDisplay" autocomplete="off" id="txtNumbers" (change)="OnClickCntrChageAllValues(gRow,i);" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.Nos" class="form-control" /></td>
+                                                            <td class="alc">
+                                                                <button class="btn btn-success bmd-btn-fab" [disabled]="ControlDisplay" *ngIf="last" (click)="btnAddCntrNoGrid(gRow,i)">
+                                                                    <i class="material-icons">add</i>
+                                                                </button>
+                                                                <button class="btn btn-danger bmd-btn-fab" [disabled]="ControlDisplay" (click)="DynamicDeleteCntrTypesGrid(DynamicCntrNoGrid,i,gRow.ID)">
+                                                                    <i class="material-icons">delete</i>
+                                                                </button>
+                                                            </td>
+
+                                                        </tr>
+                                                    </tbody>
+
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-12 enquiry">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4 class="enqtitle">Cargo Details</h4>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label>Commodity</label>
+                                                            <input type="text" class="form-control" formControlName="Commodity" id="Commodity" />
+                                                            <!--<select class="form-control my-select" formControlName="CargoID" id="CargoID">
+                                                                <option *ngFor="let gRow of fillCargo" [value]="gRow.ID">
+                                                                    {{gRow.CommodityName}}
+                                                                </option>
+                                                            </select>-->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label>Gross Weight(Kgs)</label>
+                                                            <input type="number" id="CargoWeight" formControlName="CargoWeight" class="form-control" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!--<div class="col-md-4">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label>Hs Code</label>
+                                                            <input type="text" id="HSCode" formControlName="HSCode" class="form-control" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>-->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <label>Hazardous</label>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <label class="check">
+                                                        <input type="radio" id="HazarOpt" name="HazarOpt" [value]="1" (click)="OnclickHazaropt(1)" formControlName="HazarOpt" [(ngModel)]="HazarOpt" />
+                                                        <span>No</span>
+                                                    </label>
+                                                    <label class="check" style="margin-left:20px;">
+                                                        <input type="radio" id="HazarOpt1" name="HazarOpt" [value]="2" (click)="OnclickHazaropt(2)" formControlName="HazarOpt" [(ngModel)]="HazarOpt" />
+                                                        <span>Yes</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <label>Reefer</label>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <label class="check">
+                                                        <input type="radio" id="ReeferOpt" name="ReeferOpt" [value]="1" (click)="OnclickReeferOpt(1)" formControlName="ReeferOpt" />
+                                                        No
+                                                    </label>
+                                                    <label class="check" style="margin-left:20px;">
+                                                        <input type="radio" id="ReeferOpt1" name="ReeferOpt" [value]="2" (click)="OnclickReeferOpt(2)" formControlName="ReeferOpt" />
+                                                        Yes
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <label>OOG</label>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    <label class="check">
+                                                        <input type="radio" id="OOGOpt" name="OOGOpt" [value]="1" (click)="OnclickOOGOpt(1)" formControlName="OOGOpt" />
+                                                        No
+                                                    </label>
+                                                    <label class="check" style="margin-left:20px;">
+                                                        <input type="radio" id="OOGOpt1" name="OOGOpt" [value]="2" (click)="OnclickOOGOpt(2)" formControlName="OOGOpt" />
+                                                        Yes
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                            <div class="col-md-12" style="border-bottom:2px dashed #ccc; margin-bottom:15px; padding-bottom:10px;">
+
+
+                                <div class="row enquirynav">
+                                    <div class="col-md-12">
+                                        <ul class="nav nav-pills nav-justified" role="tablist">
+                                            <li class="nav-item waves-effect waves-light">
+                                                <a class="nav-link active show" data-toggle="tab" href="#haz" role="tab" *ngIf="HazardousHidvalue" aria-selected="true">Hazardous</a>
+                                            </li>
+                                            <li class="nav-item waves-effect waves-light">
+                                                <a class="nav-link" data-toggle="tab" href="#ref" role="tab" *ngIf="RefferHidvalue" aria-selected="false">Reefer</a>
+                                            </li>
+                                            <li class="nav-item waves-effect waves-light">
+                                                <a class="nav-link" data-toggle="tab" href="#out" role="tab" *ngIf="OutGaugeHidvalue" aria-selected="false">Out Of Gauge</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 enquiry padlr0">
+                                        <div class="tab-content" style="padding: 0px 20px;">
+                                            <div class="tab-pane pt-3 active show" id="haz" *ngIf="HazardousHidvaluegrid" role="tabpanel">
+                                                <div class="row">
+                                                    <div class="col-md-12 padlr0 conttable">
+                                                        <table id="datatable-buttons" cellpadding="0" cellspacing="0" class="table table-responsive table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Cargo</th>
+
+                                                                    <th>Hazardous Class</th>
+                                                                    <th>MCO Number</th>
+                                                                    <th class="actwid">Action</th>
+                                                                </tr>
+                                                            </thead>
+
+
+                                                            <tbody>
+                                                                <tr *ngFor="let gRow of DynamicHazardousGrid; let i= index let last=last">
+                                                                    <td>
+                                                                        <select class="form-control" [disabled]="ControlDisplay" [(ngModel)]="gRow.CommodityID" [ngModelOptions]="{standalone: true}" id="HazardousCargoID">
+                                                                            <option *ngFor="let gRow of fillCargo" [value]="gRow.ID">
+                                                                                {{gRow.CommodityName}}
+                                                                            </option>
+                                                                        </select>
+                                                                    </td>
+
+                                                                    <td> <input type="text" [disabled]="ControlDisplay" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.HazarClass" /></td>
+                                                                    <td><input type="text" [disabled]="ControlDisplay" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.HazarMCONo" /></td>
+                                                                    <td class="actwid">
+                                                                        <button class="btn btn-success bmd-btn-fab" *ngIf="last" (click)="btnAddHazardousGrid(gRow,i)">
+                                                                            <i class="material-icons">add</i>
+                                                                        </button>
+                                                                        <button class="btn btn-danger bmd-btn-fab" *ngIf="!last" (click)="DeleteAddHazardousGrid(DynamicHazardousGrid,i,gRow.SID)">
+                                                                            <i class="material-icons">delete</i>
+                                                                        </button>
+
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+
+                                                        </table>
+
+                                                    </div>
+
+
+
+
+
+                                                </div>
+                                            </div>
+
+                                            <div class="tab-pane pt-3 show" id="ref" *ngIf="RefferHidvaluegrid" role="tabpanel">
+                                                <div class="row">
+                                                    <div class="col-md-12 padlr0 conttable">
+                                                        <table id="datatable-buttons" cellpadding="0" cellspacing="0" class="table table-responsive table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Cargo</th>
+                                                                    <th>Temperature</th>
+                                                                    <th>Humidity</th>
+                                                                    <th>Ventilation</th>
+
+                                                                    <th class="actwid">Action</th>
+                                                                </tr>
+                                                            </thead>
+
+
+                                                            <tbody>
+                                                                <tr id="btnReffer" *ngFor="let gRow of DynamicReeferGrid; let i= index let last=last">
+                                                                    <td>
+                                                                        <select class="form-control" [disabled]="ControlDisplay" [(ngModel)]="gRow.CommodityID" [ngModelOptions]="{standalone: true}" id="ReeferCargoID">
+                                                                            <option *ngFor="let gRow of fillCargo" [value]="gRow.ID">
+                                                                                {{gRow.CommodityName}}
+                                                                            </option>
+                                                                        </select>
+                                                                    </td>
+                                                                    <td> <input type="text" [disabled]="ControlDisplay" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.Temperature" /></td>
+                                                                    <td> <input type="text" [disabled]="ControlDisplay" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.Humidity" /></td>
+                                                                    <td> <input type="text" [disabled]="ControlDisplay" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.Ventilation" /></td>
+
+                                                                    <td class="actwid">
+                                                                        <button class="btn btn-success bmd-btn-fab" *ngIf="last" (click)="btnAddRefferGrid(gRow,i)">
+                                                                            <i class="material-icons">add</i>
+                                                                        </button>
+                                                                        <button class="btn btn-danger bmd-btn-fab" *ngIf="!last" (click)="DynamicRefferDeleteGrid(DynamicReeferGrid,i,gRow.SID)">
+                                                                            <i class="material-icons">delete</i>
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+
+                                                        </table>
+
+                                                    </div>
+
+                                                    <div>
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="tab-pane pt-3 show" id="out" *ngIf="OutGaugeHidvaluegrid" role="tabpanel">
+
+                                                <div class="row">
+                                                    <div class="col-md-12 padlr0 conttable">
+                                                        <table id="datatable-buttons" cellpadding="0" cellspacing="0" class="table table-responsive table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Gauge</th>
+
+                                                                    <th>Cargo Length</th>
+                                                                    <th>Cargo Width</th>
+                                                                    <th>Cargo Height</th>
+                                                                    <th class="actwid">Action</th>
+                                                                </tr>
+                                                            </thead>
+
+
+                                                            <tbody>
+                                                                <tr id="btnOutGaugeCargo" *ngFor="let gRow of DynamicOutGaugeCargoGrid; let i= index let last=last">
+                                                                    <td>
+                                                                        <select class="form-control" [disabled]="ControlDisplay" [(ngModel)]="gRow.CommodityID" [ngModelOptions]="{standalone: true}" id="ReeferCargoID">
+                                                                            <option *ngFor="let gRow of fillCargo" [value]="gRow.ID">
+                                                                                {{gRow.CommodityName}}
+                                                                            </option>
+                                                                        </select>
+                                                                    </td>
+
+                                                                    <td> <input type="text" [disabled]="ControlDisplay" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.Length" /></td>
+                                                                    <td> <input type="text" [disabled]="ControlDisplay" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.Width" /></td>
+                                                                    <td><input type="text" [disabled]="ControlDisplay" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.Height" /></td>
+                                                                    <td class="actwid">
+                                                                        <button class="btn btn-success bmd-btn-fab" *ngIf="last" (click)="btnAddOutGaugeCargoGrid(gRow,i)">
+                                                                            <i class="material-icons">add</i>
+                                                                        </button>
+                                                                        <button class="btn btn-danger bmd-btn-fab" *ngIf="!last" (click)="DynamicOutGaugeCargoDeleteGrid(DynamicOutGaugeCargoGrid,i,gRow.SID)">
+                                                                            <i class="material-icons">delete</i>
+                                                                        </button>
+
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+
+                                                        </table>
+
+                                                    </div>
+
+
+
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 enquiry">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4 class="enqtitle">Rate and Charges</h4>
+                                    </div>
+                                </div>
+
+                                <div class="row enquirynav">
+                                    <div class="col-md-12">
+                                        <ul class="nav nav-pills nav-justified" role="tablist">
+                                            <li class="nav-item waves-effect waves-light">
+                                                <a class="nav-link active show" data-toggle="tab" href="#ocean" role="tab" aria-selected="true">Ocean Freight</a>
+                                            </li>
+                                            <li class="nav-item waves-effect waves-light">
+                                                <a class="nav-link" data-toggle="tab" href="#slot" role="tab" aria-selected="false">Slot</a>
+                                            </li>
+                                            <!--<li class="nav-item waves-effect waves-light">
+                                                <a class="nav-link" data-toggle="tab" href="#land" role="tab" aria-selected="false">Landside Charges</a>
+                                            </li>-->
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="row" style="border-bottom:2px dashed #ccc; margin-bottom:15px; padding-bottom:10px;">
+                                    <div class="col-md-12 enquiry padlr0">
+                                        <div class="tab-content" style="padding: 0px 20px;">
+                                            <div class="tab-pane pt-3 active show" id="ocean" role="tabpanel">
+                                                <div class="row">
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label>Payment Terms</label>
+                                                                    <select class="form-control my-select" id="PayTermsID" formControlName="PayTermsID">
+                                                                        <option *ngFor="let gRow of AllListPaymentTerms" [value]="gRow.ID">
+                                                                            {{gRow.Desc}}
+                                                                        </option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-12 padlr0 conttable rate cntralign">
+                                                        <table id="datatable-buttons" cellpadding="0" cellspacing="0" class="table table-striped table-bordered w-100 dataTable no-footer" style="border-top: none;">
+                                                            <thead>
+
+                                                                <tr>
+                                                                    <th rowspan="3" class="gry alc">Container Type</th>
+                                                                    <th rowspan="3" class="gry alc">Nos</th>
+                                                                    <th rowspan="3" class="gry alc">Cargo Type</th>
+                                                                    <th rowspan="3" class="gry alc">Currency</th>
+                                                                    <th colspan="2" style="background-color: #013d799e !important; font-weight: 500; color: #fff; font-size: 15px; text-align: center;">Billing Rate</th>
+                                                                    <th colspan="2" style="background-color: #6d9156 !important; font-weight: 500; color: #fff; font-size: 15px; text-align: center;">Manifest Rate</th>
+                                                                    <th style="background-color: #013d799e !important; font-weight: 500; color: #fff; font-size: 15px; text-align: center;">Booking Commission</th>
+
+                                                                </tr>
+                                                                <tr>
+
+                                                                    <th colspan="2" style="background-color: #013d799e !important; background-image:none!important;">Ocean Freight Per Unit</th>
+
+                                                                    <th colspan="2" style="background-color: #6d9156 !important; background-image: none !important;">Manifest Rate Per Unit</th>
+                                                                    <th style="background-color: #013d799e !important; background-image: none !important; ">Commission Per Unit</th>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th class="ble alc" style="background-color: #013d799e !important; background-image: none !important;">Amount</th>
+                                                                    <th class="ble alc" style="background-color: #013d799e !important; background-image: none !important;">Break-up</th>
+                                                                    <th class="grn alc" style="background-color: #6d9156 !important; background-image: none !important;">Amount</th>
+                                                                    <th class="grn alc" style="background-color: #6d9156 !important; background-image: none !important;">Break-up</th>
+                                                                    <th class="org alc" style="background-color: #013d799e !important; background-image: none !important;">Amount</th>
+                                                                </tr>
+
+
+                                                            </thead>
+
+
+                                                            <tbody>
+                                                                <tr *ngFor="let gRow of fillFreightDynamicgrid; let i= index let last=last">
+                                                                    <td>
+                                                                        <select class="form-control" disabled [(ngModel)]="gRow.CntrTypeID" (ngModelChange)="FreightCntrCheck(gRow)" [ngModelOptions]="{standalone: true}" id="ddlCntrTypeFreight">
+                                                                            <option value="0">--Select--</option>
+                                                                            <option *ngFor="let gRow of fillCntrType" [value]="gRow.ID">
+                                                                                {{gRow.CntrTypes}}
+                                                                            </option>
+                                                                        </select>
+                                                                    </td>
+
+                                                                    <td><input [(ngModel)]="gRow.Nos" disabled (change)="FreightNosCheck(gRow)" type="number" class="form-control" [ngModelOptions]="{standalone: true}" /></td>
+                                                                    <td>
+                                                                        <select class="form-control" [disabled]="ControlDisplay" (change)="FreightCommodityCheck(gRow)" [(ngModel)]="gRow.CommodityID" [ngModelOptions]="{standalone: true}" id="FreightCargoID">
+                                                                            <option *ngFor="let gRow of FillCommodity" [value]="gRow.ID">
+                                                                                {{gRow.GeneralName}}
+                                                                            </option>
+                                                                        </select>
+                                                                    </td>
+                                                                    <td>
+                                                                        <select class="form-control" [disabled]="ControlDisplay" [(ngModel)]="gRow.CurrencyID" [ngModelOptions]="{standalone: true}" id="FreightCurrencyID">
+                                                                            <option *ngFor="let gRow of CurrencyValue" [value]="gRow.ID">
+                                                                                {{gRow.Currency}}
+                                                                            </option>
+                                                                        </select>
+                                                                    </td>
+                                                                    <td><input [(ngModel)]="gRow.PerAmount" [disabled]="ControlDisplay" type="number" class="form-control" [ngModelOptions]="{standalone: true}" /></td>
+                                                                    <td>
+                                                                        <button class="btn btn-success bmd-btn-fab" [disabled]="ControlDisplayGrid" (click)="Freightbreakup()">
+                                                                            <i class="material-icons">list</i>
+                                                                        </button>
+                                                                    </td>
+                                                                    <td><input [(ngModel)]="gRow.ManifestPerAmount" [disabled]="ControlDisplay" type="number" class="form-control" [ngModelOptions]="{standalone: true}" /></td>
+                                                                    <td>
+                                                                        <button class="btn btn-success bmd-btn-fab" [disabled]="ControlDisplayGrid" (click)="Menifestbreakup()">
+                                                                            <i class="material-icons">list</i>
+                                                                        </button>
+                                                                    </td>
+                                                                    <td><input [(ngModel)]="gRow.CommPerAmount" [disabled]="disapleFreightCommision" type="number" class="form-control" [ngModelOptions]="{standalone: true}" /></td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="modal fade seminor-login-modal" data-backdrop="static" id="FreightBrackupChargesModal">
+                                                <div class="modal-dialog modal-dialog-centered dialog700">
+                                                    <div class="modal-content">
+                                                        <div class="row">
+                                                            <div class="col-md-12 alrt">
+                                                                <button type="button" class="close" data-dismiss="modal">
+                                                                    <span><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Modal body -->
+                                                        <div class="modal-body seminor-login-modal-body">
+                                                            <h5 class="modal-title text-center">Freight Break up</h5>
+
+                                                            <div class="row">
+                                                                <div class="col-sm-12 padlr0">
+                                                                    <table id="datatable-buttons" class="det table table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                                                        <thead>
+                                                                            <tr>
+
+                                                                                <th>Charges</th>
+                                                                                <th>Currency</th>
+                                                                                <th>Amount</th>
+                                                                                <!--<th>Action</th>-->
+
+                                                                            </tr>
+                                                                        </thead>
+
+                                                                        <tbody>
+                                                                            <tr *ngFor="let gRow of fillFreightBrackup; let i= index let last=last">
+
+                                                                                <td>
+                                                                                    <select class="form-control" [(ngModel)]="gRow.ChargeCodeID" [ngModelOptions]="{standalone: true}" id="RevenuCargoID">
+                                                                                        <option *ngFor="let gRow of ChargeCodeAllvalues" [value]="gRow.ID">
+                                                                                            {{gRow.ChargeCode}}
+                                                                                        </option>
+                                                                                    </select>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <select class="form-control" [(ngModel)]="gRow.CurrencyID" [ngModelOptions]="{standalone: true}" id="FreightCurrencyID">
+                                                                                        <option *ngFor="let gRow of CurrencyValue" [value]="gRow.ID">
+                                                                                            {{gRow.Currency}}
+                                                                                        </option>
+                                                                                    </select>
+                                                                                </td>
+                                                                                <td><input [(ngModel)]="gRow.Amount" [disabled]="ControlDisplay" type="number" class="form-control" [ngModelOptions]="{standalone: true}" /></td>
+                                                                                <!--<td class="actwid">
+                                                                                    <button class="btn btn-success bmd-btn-fab" *ngIf="last" (click)="btnAddFreightBrackupDynamicgrid(gRow,i)">
+                                                                                        <i class="material-icons">add</i>
+                                                                                    </button>
+                                                                                    <button class="btn btn-danger bmd-btn-fab" *ngIf="!last" (click)="btnDeleteFreightBrackupDynamicgrid(fillFreightBrackup,i,gRow.SID)">
+                                                                                        <i class="material-icons">delete</i>
+                                                                                    </button>
+
+                                                                                </td>-->
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <div class="col-md-12 alrt">
+                                                                    <button type="button" class="btn btn-raised btn-success" (click)="OnclickFreightBrackupRecordSave();">SUBMIT</button>
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+
+
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+                                            <div class="modal fade seminor-login-modal" data-backdrop="static" id="ManifestBrackupChargesModal">
+                                                <div class="modal-dialog modal-dialog-centered dialog700">
+                                                    <div class="modal-content">
+                                                        <div class="row">
+                                                            <div class="col-md-12 alrt">
+                                                                <button type="button" class="close" data-dismiss="modal">
+                                                                    <span><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Modal body -->
+                                                        <div class="modal-body seminor-login-modal-body">
+                                                            <h5 class="modal-title text-center">Manifest Break up</h5>
+
+                                                            <div class="row">
+                                                                <div class="col-sm-12 padlr0">
+                                                                    <table id="datatable-buttons" class="det table table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>Charges</th>
+                                                                                <th>Currency</th>
+                                                                                <th>Amount</th>
+                                                                                <!--<th>Action</th>-->
+
+                                                                            </tr>
+                                                                        </thead>
+
+                                                                        <tbody>
+                                                                            <tr *ngFor="let gRow of fillManifestBrackup; let i= index let last=last">
+
+                                                                                <td>
+                                                                                    <select class="form-control" [(ngModel)]="gRow.ChargeCodeID" [ngModelOptions]="{standalone: true}" id="RevenuCargoID">
+                                                                                        <option *ngFor="let gRow of ChargeCodeAllvalues" [value]="gRow.ID">
+                                                                                            {{gRow.ChargeCode}}
+                                                                                        </option>
+                                                                                    </select>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <select class="form-control" [(ngModel)]="gRow.CurrencyID" [ngModelOptions]="{standalone: true}" id="FreightCurrencyID">
+                                                                                        <option *ngFor="let gRow of CurrencyValue" [value]="gRow.ID">
+                                                                                            {{gRow.Currency}}
+                                                                                        </option>
+                                                                                    </select>
+                                                                                </td>
+                                                                                <td><input [(ngModel)]="gRow.Amount" type="number" class="form-control" [ngModelOptions]="{standalone: true}" /></td>
+                                                                                <!--<td class="actwid">
+                                                                                    <button class="btn btn-success bmd-btn-fab" *ngIf="last" (click)="btnAddManifestBrackupDynamicgrid(gRow,i)">
+                                                                                        <i class="material-icons">add</i>
+                                                                                    </button>
+                                                                                    <button class="btn btn-danger bmd-btn-fab" *ngIf="!last" (click)="btnDeleteManifestBrackupDynamicgrid(fillManifestBrackup,i,gRow.SID)">
+                                                                                        <i class="material-icons">delete</i>
+                                                                                    </button>
+
+                                                                                </td>-->
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <div class="col-md-12 alrt">
+                                                                    <button type="button" class="btn btn-raised btn-success" (click)="OnclickfreightManifestBrackupRecordSave();">SUBMIT</button>
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+
+
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="modal fade seminor-login-modal" data-backdrop="static" id="slotFreightBrackupChargesModal">
+                                                <div class="modal-dialog modal-dialog-centered dialog700">
+                                                    <div class="modal-content">
+                                                        <div class="row">
+                                                            <div class="col-md-12 alrt">
+                                                                <button type="button" class="close" data-dismiss="modal">
+                                                                    <span><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Modal body -->
+                                                        <div class="modal-body seminor-login-modal-body">
+                                                            <h5 class="modal-title text-center">Slot Freight Break up</h5>
+
+                                                            <div class="row">
+                                                                <div class="col-sm-12 padlr0">
+                                                                    <table id="datatable-buttons" class="det table table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                                                        <thead>
+                                                                            <tr>
+
+                                                                                <th>Charges</th>
+                                                                                <th>Currency</th>
+                                                                                <th>Amount</th>
+                                                                                <!--<th>Action</th>-->
+
+                                                                            </tr>
+                                                                        </thead>
+
+                                                                        <tbody>
+                                                                            <tr *ngFor="let gRow of fillSlotFreightBrackup; let i= index let last=last">
+
+                                                                                <td>
+                                                                                    <select class="form-control" [(ngModel)]="gRow.ChargeCodeID" [ngModelOptions]="{standalone: true}" id="RevenuCargoID">
+                                                                                        <option *ngFor="let gRow of ChargeCodeAllvalues" [value]="gRow.ID">
+                                                                                            {{gRow.ChargeCode}}
+                                                                                        </option>
+                                                                                    </select>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <select class="form-control" [(ngModel)]="gRow.CurrencyID" [ngModelOptions]="{standalone: true}" id="FreightCurrencyID">
+                                                                                        <option *ngFor="let gRow of CurrencyValue" [value]="gRow.ID">
+                                                                                            {{gRow.Currency}}
+                                                                                        </option>
+                                                                                    </select>
+                                                                                </td>
+                                                                                <td><input [(ngModel)]="gRow.Amount" type="number" class="form-control" [ngModelOptions]="{standalone: true}" /></td>
+                                                                                <!--<td class="actwid">
+                                                                                    <button class="btn btn-success bmd-btn-fab" *ngIf="last" (click)="btnAddSlotFreightBrackupDynamicgrid(gRow,i)">
+                                                                                        <i class="material-icons">add</i>
+                                                                                    </button>
+                                                                                    <button class="btn btn-danger bmd-btn-fab" *ngIf="!last" (click)="btnDeleteSlotFreightBrackupDynamicgrid(fillSlotFreightBrackup,i,gRow.SID)">
+                                                                                        <i class="material-icons">delete</i>
+                                                                                    </button>
+
+                                                                                </td>-->
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <div class="col-md-12 alrt">
+                                                                    <button type="button" class="btn btn-raised btn-success" (click)="OnclickSlotFreightRecordSave();">SUBMIT</button>
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+
+
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="modal fade seminor-login-modal" data-backdrop="static" id="SlotManifestBrackupChargesModal">
+                                                <div class="modal-dialog modal-dialog-centered dialog700">
+                                                    <div class="modal-content">
+                                                        <div class="row">
+                                                            <div class="col-md-12 alrt">
+                                                                <button type="button" class="close" data-dismiss="modal">
+                                                                    <span><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Modal body -->
+                                                        <div class="modal-body seminor-login-modal-body">
+                                                            <h5 class="modal-title text-center">Slot Manifest Break up</h5>
+
+                                                            <div class="row">
+                                                                <div class="col-sm-12 padlr0">
+                                                                    <table id="datatable-buttons" class="det table table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                                                        <thead>
+                                                                            <tr>
+
+                                                                                <th>Charges</th>
+                                                                                <th>Currency</th>
+                                                                                <th>Amount</th>
+                                                                                <!--<th>Action</th>-->
+
+                                                                            </tr>
+                                                                        </thead>
+
+                                                                        <tbody>
+                                                                            <tr *ngFor="let gRow of fillSlotManifestBrackup; let i= index let last=last">
+
+                                                                                <td>
+                                                                                    <select class="form-control" [(ngModel)]="gRow.ChargeCodeID" [ngModelOptions]="{standalone: true}" id="RevenuCargoID">
+                                                                                        <option *ngFor="let gRow of ChargeCodeAllvalues" [value]="gRow.ID">
+                                                                                            {{gRow.ChargeCode}}
+                                                                                        </option>
+                                                                                    </select>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <select class="form-control" [(ngModel)]="gRow.CurrencyID" [ngModelOptions]="{standalone: true}" id="FreightCurrencyID">
+                                                                                        <option *ngFor="let gRow of CurrencyValue" [value]="gRow.ID">
+                                                                                            {{gRow.Currency}}
+                                                                                        </option>
+                                                                                    </select>
+                                                                                </td>
+                                                                                <td><input [(ngModel)]="gRow.Amount" type="number" class="form-control" [ngModelOptions]="{standalone: true}" /></td>
+                                                                                <!--<td class="actwid">
+                                                                                    <button class="btn btn-success bmd-btn-fab" *ngIf="last" (click)="btnAddSlotManifestBrackupDynamicgrid(gRow,i)">
+                                                                                        <i class="material-icons">add</i>
+                                                                                    </button>
+                                                                                    <button class="btn btn-danger bmd-btn-fab" *ngIf="!last" (click)="btnDeleteSlotManifestBrackupDynamicgrid(fillSlotManifestBrackup,i,gRow.SID)">
+                                                                                        <i class="material-icons">delete</i>
+                                                                                    </button>
+
+                                                                                </td>-->
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <div class="col-md-12 alrt">
+                                                                    <button type="button" class="btn btn-raised btn-success" (click)="OnclickSlotManifestbrackupRecordSave();">SUBMIT</button>
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+
+
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="tab-pane pt-3 show" id="slot" role="tabpanel">
+
+                                                <div class="row">
+                                                    <div class="col-md-12 conttable cntralign padlr0 rate">
+                                                        <table id="datatable-buttons" cellpadding="0" cellspacing="0" class="table table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+
+                                                            <thead>
+
+                                                                <tr>
+                                                                    <th rowspan="3" class="gry alc">Container Type</th>
+                                                                    <th rowspan="3" class="gry alc">Nos</th>
+                                                                    <th rowspan="3" class="gry alc">Cargo Type</th>
+                                                                    <th rowspan="3" class="gry alc">Currency</th>
+                                                                    <th colspan="2" style="background-color: #013d799e !important; font-weight: 500; color: #fff; font-size: 15px; text-align: center;">Billing Rate</th>
+                                                                    <th colspan="2" style="background-color: #6d9156 !important; font-weight: 500; color: #fff; font-size: 15px; text-align: center;">Manifest Rate</th>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th colspan="2" style="background-color: #013d799e !important; background-image:none!important;">Slot Per Unit</th>
+                                                                    <th colspan="2" style="background-color: #6d9156 !important; background-image: none !important;">Slot Per Unit</th>
+                                                                </tr>
+                                                                <tr>
+                                                                    <th class="ble alc" style="background-color: #013d799e !important; background-image: none !important;">Amount</th>
+                                                                    <th class="ble alc" style="background-color: #013d799e !important; background-image: none !important;">Break-up</th>
+                                                                    <th class="grn alc" style="background-color: #6d9156 !important; background-image: none !important;">Amount</th>
+                                                                    <th class="grn alc" style="background-color: #6d9156 !important; background-image: none !important;">Break-up</th>
+                                                                </tr>
+                                                            </thead>
+
+                                                            <tbody>
+                                                                <tr *ngFor="let gRow of fillSlotDynamicgrid; let i= index let last=last">
+                                                                    <td>
+                                                                        <select class="form-control" disabled [(ngModel)]="gRow.CntrTypeID" (ngModelChange)="SlotCntrCheck(gRow)" [ngModelOptions]="{standalone: true}" id="ddlCntrTypeFreight">
+                                                                            <option value="0">--Select--</option>
+                                                                            <option *ngFor="let gRow of fillCntrType" [value]="gRow.ID">
+                                                                                {{gRow.CntrTypes}}
+                                                                            </option>
+                                                                        </select>
+                                                                    </td>
+                                                                    <td><input [(ngModel)]="gRow.Nos" disabled type="number" (change)="SlotNosCheck(gRow)" class="form-control" [ngModelOptions]="{standalone: true}" /></td>
+                                                                    <td>
+                                                                        <select class="form-control" [(ngModel)]="gRow.CommodityID" (ngModelChange)="SlotCommodityCheck(gRow)" [ngModelOptions]="{standalone: true}" id="FreightCargoID">
+                                                                            <option *ngFor="let gRow of FillCommodity" [value]="gRow.ID">
+                                                                                {{gRow.GeneralName}}
+                                                                            </option>
+                                                                        </select>
+                                                                    </td>
+                                                                    <td>
+                                                                        <select class="form-control" [disabled]="ControlDisplay" [(ngModel)]="gRow.CurrencyID" [ngModelOptions]="{standalone: true}" id="FreightCurrencyID">
+                                                                            <option *ngFor="let gRow of CurrencyValue" [value]="gRow.ID">
+                                                                                {{gRow.Currency}}
+                                                                            </option>
+                                                                        </select>
+                                                                    </td>
+                                                                    <td><input [(ngModel)]="gRow.PerAmount" [disabled]="ControlDisplay" type="number" class="form-control" [ngModelOptions]="{standalone: true}" /></td>
+                                                                    <td>
+                                                                        <button class="btn btn-success bmd-btn-fab" [disabled]="ControlDisplayGrid" (click)="SlotFreightbreakup()">
+                                                                            <i class="material-icons">list</i>
+                                                                        </button>
+                                                                    </td>
+                                                                    <td><input [(ngModel)]="gRow.ManifestPerAmount" [disabled]="ControlDisplay" type="number" class="form-control" [ngModelOptions]="{standalone: true}" /></td>
+                                                                    <td>
+                                                                        <button class="btn btn-success bmd-btn-fab" [disabled]="ControlDisplayGrid" (click)="SlotManifestbreakup()">
+                                                                            <i class="material-icons">list</i>
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <div class="col-md-12">
+
+
+                                <div class="row enquirynav">
+                                    <div class="col-md-12">
+                                        <ul class="nav nav-pills nav-justified" role="tablist">
+                                            <li class="nav-item waves-effect waves-light">
+                                                <a class="nav-link active show" data-toggle="tab" href="#ship" role="tab" aria-selected="true">Shipment Terms</a>
+                                            </li>
+                                            <li class="nav-item waves-effect waves-light">
+                                                <a class="nav-link" data-toggle="tab" href="#ves" role="tab" aria-selected="false">Vessel Details</a>
+                                            </li>
+                                            <li class="nav-item waves-effect waves-light">
+                                                <a class="nav-link" data-toggle="tab" href="#princ" role="tab" aria-selected="false">Principal/Agents/Slots</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 enquiry padlr0">
+                                        <div class="tab-content" style="padding: 0px 20px;">
+                                            <div class="tab-pane pt-3 active show" id="ship" role="tabpanel">
+                                                <div class="col-md-12">
+
+                                                    <div class="row">
+
+                                                        <div class="col-md-12 conttable padlr0">
+                                                            <table id="datatable-buttons" class="table table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Container Type</th>
+                                                                        <th colspan="2"></th>
+                                                                        <th colspan="3">Special Charges</th>
+                                                                        <!--<th class="actwid">Action</th>-->
+                                                                    </tr>
+                                                                </thead>
+
+
+                                                                <tbody>
+                                                                    <tr *ngFor="let gRow of DynamicShimpmentPOLGrid; let i= index let last=last">
+                                                                        <td>
+
+                                                                            <select class="form-control" disabled [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.CntrTypeID">
+                                                                                <option value="0">--Select--</option>
+                                                                                <option *ngFor="let gRow of fillCntrType" [value]="gRow.ID">
+                                                                                    {{gRow.CntrTypes}}
+                                                                                </option>
+                                                                            </select>
+                                                                        </td>
+                                                                        <td>
+
+                                                                            <label class="check">
+                                                                                POL Charges
+                                                                            </label>
+                                                                        </td>
+                                                                        <td>
+                                                                            <select class="form-control" [(ngModel)]="gRow.ChargeOPT" [disabled]="ControlDisplay" (ngModelChange)="POLDropdownOnChange(gRow);" [ngModelOptions]="{standalone: true}" id="ddlStdSplV">
+                                                                                <!--(ngModelChange)="StdSplChanged($event,i)">
+                                                                                >-->
+                                                                                <option value="0">--Select--</option>
+                                                                                <option *ngFor="let gRow of StdSplvalues" [value]="gRow.ID">
+                                                                                    {{gRow.Desc}}
+                                                                                </option>
+                                                                            </select>
+                                                                        </td>
+                                                                        <td>
+                                                                            <select class="form-control" [(ngModel)]="gRow.CurrencyID" [disabled]="gRow.ChargeOPT==1 || ControlDisplay" [ngModelOptions]="{standalone: true}" id="FreightCurrencyID">
+                                                                                <option *ngFor="let gRow of CurrencyValue" [value]="gRow.ID">
+                                                                                    {{gRow.Currency}}
+                                                                                </option>
+                                                                            </select>
+                                                                        </td>
+                                                                        <td><input type="text" class="form-control" [disabled]="gRow.ChargeOPT==1 || ControlDisplay" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.Amount2" /></td>
+
+                                                                        <td><input type="text" class="form-control" [disabled]="gRow.ChargeOPT==1 || ControlDisplay" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.Remarks" /></td>
+
+                                                                    </tr>
+                                                                    <tr *ngFor="let gRow of DynamicShimpmentPODGrid; let i= index let last=last">
+                                                                        <td>
+                                                                            <select class="form-control" disabled id="ddlStandedPODCntrType" (change)="ShipmentPODCntrCheck(gRow);" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.CntrTypeID">
+                                                                                <option value="0">--Select--</option>
+                                                                                <option *ngFor="let gRow of fillCntrType" [value]="gRow.ID">
+                                                                                    {{gRow.CntrTypes}}
+                                                                                </option>
+                                                                            </select>
+                                                                        </td>
+                                                                        <td>
+                                                                            <label class="check">
+                                                                                POD Charges
+                                                                            </label>
+                                                                        </td>
+                                                                        <td>
+
+                                                                            <select class="form-control" [disabled]="ControlDisplay" (ngModelChange)="PODDropdownOnChange(gRow);" [(ngModel)]="gRow.ChargeOPT" [ngModelOptions]="{standalone: true}" id="ddlStdSplV">
+                                                                                <option value="0">--Select--</option>
+                                                                                <option *ngFor="let gRow of StdSplvaluesNew" [value]="gRow.ID">
+                                                                                    {{gRow.Desc}}
+                                                                                </option>
+                                                                            </select>
+
+                                                                        </td>
+                                                                        <td>
+                                                                            <select class="form-control" [(ngModel)]="gRow.CurrencyID" [disabled]="gRow.ChargeOPT==1 || ControlDisplay" [ngModelOptions]="{standalone: true}" id="CurrencyID">
+                                                                                <option *ngFor="let gRow of CurrencyValue" [value]="gRow.ID">
+                                                                                    {{gRow.Currency}}
+                                                                                </option>
+                                                                            </select>
+                                                                        </td>
+                                                                        <td><input type="text" class="form-control" [disabled]="gRow.ChargeOPT==1 || ControlDisplay" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.Amount2" /></td>
+
+                                                                        <td><input type="text" class="form-control" [disabled]="gRow.ChargeOPT==1 || ControlDisplay" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.Remarks" /></td>
+
+                                                                    </tr>
+                                                                </tbody>
+                                                                <!--<pagination-controls (pageChange)="p = $event"></pagination-controls>-->
+                                                            </table>
+                                                        </div>
+                                                    </div>
+
+
+
+                                                    <div class="row" style="border-bottom:2px dashed #ccc; margin-bottom:15px; padding-bottom:10px;">
+
+                                                        <div class="col-md-12 padlr0 enqradbtn">
+                                                            <div class="form-group">
+                                                                <div class="row">
+                                                                    <div class="col-md-2">
+                                                                        <label>Free Days - Origin</label>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <label class="check">
+                                                                            <input type="radio" id="FreeDayOrigin" name="FreeDayOrigin" (click)="StandardOrgChange(1)" [value]="1" formControlName="FreeDayOrigin">
+                                                                            Standard
+                                                                        </label>
+                                                                        <label class="check" style="margin-left:20px;">
+                                                                            <input type="radio" id="FreeDayOrigin1" name="FreeDayOrigin" (click)="StandardOrgChange(2)" [value]="2" formControlName="FreeDayOrigin">
+                                                                            Special
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="col-md-7">
+                                                                        <input type="text" class="form-control" id="NumberOfDays" formControlName="NumberOfDays" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12 padlr0 enqradbtn">
+                                                            <div class="form-group">
+                                                                <div class="row">
+                                                                    <div class="col-md-2">
+                                                                        <label>Free Days - Destination</label>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <label class="check">
+                                                                            <input type="radio" id="FreeDayDestination" name="FreeDayDestination" (click)="StandardDestination(1)" [value]="1" formControlName="FreeDayDestination">
+                                                                            Standard
+                                                                        </label>
+                                                                        <label class="check" style="margin-left:20px;">
+                                                                            <input type="radio" id="FreeDayDestination1" name="FreeDayDestination" (click)="StandardDestination(2)" [value]="2" formControlName="FreeDayDestination">
+                                                                            Special
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="col-md-7">
+                                                                        <input type="text" class="form-control" id="NumberOfDaysDestin" formControlName="NumberOfDaysDestin" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12 padlr0 enqradbtn">
+                                                            <div class="form-group">
+                                                                <div class="row">
+                                                                    <div class="col-md-2">
+                                                                        <label>Damage Scheme</label>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <label class="check">
+                                                                            <input type="radio" id="DamageScheme" name="DamageScheme" (click)="StandardDamageSchema(1)" [value]="1" formControlName="DamageScheme">
+                                                                            Standard
+                                                                        </label>
+                                                                        <label class="check" style="margin-left:20px;">
+                                                                            <input type="radio" id="DamageScheme1" name="DamageScheme" (click)="StandardDamageSchema(2)" [value]="2" formControlName="DamageScheme">
+                                                                            Special
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="col-md-7">
+                                                                        <input type="text" class="form-control" id="txtDamageScheme" formControlName="txtDamageScheme" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12 padlr0 enqradbtn">
+                                                            <div class="form-group">
+                                                                <div class="row">
+                                                                    <div class="col-md-2">
+                                                                        <label>Security Deposit</label>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <label class="check">
+                                                                            <input type="radio" id="SecurityDeposit" name="SecurityDeposit" (click)="StandardSecurityDeposit(1)" [value]="1" formControlName="SecurityDeposit">
+                                                                            Standard
+                                                                        </label>
+                                                                        <label class="check" style="margin-left:20px;">
+                                                                            <input type="radio" id="SecurityDeposit1" name="SecurityDeposit" (click)="StandardSecurityDeposit(2)" [value]="2" formControlName="SecurityDeposit">
+                                                                            Special
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="col-md-7">
+                                                                        <input type="text" class="form-control" id="txtSecurityDeposit" formControlName="txtSecurityDeposit" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12 padlr0 enqradbtn">
+                                                            <div class="form-group">
+                                                                <div class="row">
+                                                                    <div class="col-md-2">
+                                                                        <label>BOL Requirement</label>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <label class="check">
+                                                                            <input type="radio" id="BOLRequirement" name="BOLRequirement" (click)="StandardBOLRequirment(1)" [value]="1" formControlName="BOLRequirement">
+                                                                            Standard
+                                                                        </label>
+                                                                        <label class="check" style="margin-left:20px;">
+                                                                            <input type="radio" id="BOLRequirement1" name="BOLRequirement" (click)="StandardBOLRequirment(2)" [value]="2" formControlName="BOLRequirement">
+                                                                            Special
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="col-md-7">
+                                                                        <input type="text" class="form-control" id="txtBOLRequirement" formControlName="txtBOLRequirement" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+
+                                                </div>
+                                            </div>
+
+                                            <div class="tab-pane pt-3 show" id="ves" role="tabpanel">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="row">
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <label>Vessel</label>
+                                                                            <select class="form-control my-select" formControlName="VesselID" id="VesselID">
+                                                                                <option *ngFor="let gRow of fillVeslVoyage" [value]="gRow.ID">
+                                                                                    {{gRow.VesselName}}
+                                                                                </option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <label>Voyage</label>
+                                                                            <select class="form-control my-select" formControlName="VoyagID" id="VoyagID">
+                                                                                <option *ngFor="let gRow of FillVoyageMaster" [value]="gRow.ID">
+                                                                                    {{gRow.VoyageName}}
+                                                                                </option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!--<div class="col-md-4">
+                                                                <div class="form-group">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12">
+                                                                            <label>Transhipment Port</label>
+                                                                            <select class="form-control my-select" formControlName="TranshipmentPortID" id="TranshipmentPortID">
+                                                                                <option *ngFor="let gRow of PortAllvalues" [value]="gRow.ID">
+                                                                                    {{gRow.PortName}}
+                                                                                </option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>-->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="tab-pane pt-3 show" id="princ" role="tabpanel">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label>Principal</label>
+                                                                    <select class="form-control my-select" id="PrincibalID" formControlName="PrincibalID">
+                                                                        <option *ngFor="let gRow of fillPricibleMasterAllvalues" [value]="gRow.ID">
+                                                                            {{gRow.CustomerName}}
+                                                                        </option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label>Customer Contract</label>
+                                                                    <select class="form-control my-select" id="CustomerContract" formControlName="CustomerContractID">
+                                                                        <option *ngFor="let gRow of fileCustomerContactMaster" [value]="gRow.ID">
+                                                                            {{gRow.ContractNo}}
+                                                                        </option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label>Liner Contract</label>
+                                                                    <select class="form-control my-select" id="LineContract" formControlName="LineContractID">
+                                                                        <option *ngFor="let gRow of fileLinerMaster" [value]="gRow.ID">
+                                                                            {{gRow.RequestNo}}
+                                                                        </option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="tab-pane pt-3" id="Links" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-4">
+                                </div>
+                            </div>
+                            <div class="col-md-12" style="text-align:right;">
+                                <!--<button type="submit" (click)="OnSubmit();" class="btn btn-primary btn-raised mb-0"><i class="fa fa-save"></i>Save</button>-->
+                            </div>
+                            <input type="hidden" id="HDRegId" ng-model="HDRegId" />
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-md-12" *ngIf="showReason">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-responsive table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Reason</th>
+                            <th>Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{Reason}}</td>
+                            <td>{{Remarks}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="col-md-12" style="border-bottom: 2px dashed #de703a69; margin-bottom: 15px; padding-bottom: 10px;">
+        <div class="col-md-12 padlr0">
+            <div class="row" style="border-bottom:2px dashed #ccc; margin-bottom:15px; padding-bottom:10px;">
+                <div class="col-md-12 padlr0">
+                    <h4 class="enqtitle">Attachments</h4>
+                </div>
+
+                <div class="col-md-12 conttable padlr0 cntralign">
+                    <div class="material-datatables">
+                        <table class="table table-striped table-bordered table-hover" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Attachment Name</th>
+                                    <th>Attach File</th>
+
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+
+                                        <input type="text" class="form-control" id="txtAttachName" [(ngModel)]="AttachName" [ngModelOptions]="{standalone: true}">
+                                    </td>
+
+                                    <td>
+                                        <!--<span class="input-group-addon">
+                                        <i class="fa fa-upload">-->
+                                        <input type="file" class="file-upload" id="txtAttachFile" [(ngModel)]="AttachFile" (change)="onFileSelected($event)" [ngModelOptions]="{standalone: true}">
+                                        <!--</i>-->
+                                        <!--</span>-->
+                                        <span class='label label-info' id="upload-file-info"></span>
+                                        <!--<input type="hidden" id="HDArrayIndex" class="form-control" ng-model="HDArrayIndex" />
+                                        <input type="hidden" id="HDIDv" class="form-control" ng-model="AID" />-->
+                                    </td>
+
+                                    <td class="td-actions text-right entrygrid">
+                                        <button type="button" rel="tooltip" (click)="AddAttach(gRow)" class="btn btn-success bmd-btn-fab" data-original-title="" title="">
+                                            <i class="material-icons">add</i>
+                                        </button>
+
+                                    </td>
+                                </tr>
+                                <tr *ngFor="let gRow of DynamicGridAttachLink; let i= index">
+
+
+
+                                    <td>
+                                        {{gRow.AttachName}}
+
+                                        <!--<a href="#" ng-click="DownloadFile(gRow.FileName);" style="text-decoration:underline;"></a>-->
+
+                                    </td>
+                                    <td>
+
+                                        {{gRow.AttachFile}}
+                                        <!--<input type="hidden" id="HDID" class="form-control" ng-model="gRow.AID" />-->
+                                    </td>
+                                    <td class="td-actions text-right">
+                                        <button type="button" rel="tooltip" (click)="RemoveAttach(DynamicGridAttachLink,$index,gRow.AID)" class="btn btn-danger bmd-btn-fab" data-original-title="" title="">
+                                            <i class="material-icons">delete</i>
+                                        </button>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+    </div>
+
+    <div class="modal fade seminor-login-modal" data-backdrop="static" id="CancelReason">
+        <div class="modal-dialog modal-dialog-centered dialogsmall">
+            <div class="modal-content">
+                <div class="row">
+                    <div class="col-md-12 alrt">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+                        </button>
+                    </div>
+                </div>
+
+
+                <div class="modal-body seminor-login-modal-body cntpopup">
+                    <h5 class="modal-title text-center">Cancel Reason</h5>
+
+                    <div class="row">
+                        <div class="col-sm-12 padlr0">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Cancel Reason</label>
+                                                <select class="form-control my-select" style="text-transform: capitalize;" id="ddlCancel" formControlName="CancelReasonID">
+                                                    <option value="0">Cancel Reason</option>
+                                                    <option *ngFor="let gRow of ddlCancelItem" [value]="gRow.ID">
+                                                        {{gRow.GeneralName}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Remarks</label>
+                                                <textarea class="form-control" id="txtCancelReason" formControlName="CancelReason" style="height:80px!important;background-color:#fff!important;" rows="5" placeholder="Remarks"></textarea>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="divide"></div>
+                        <div class="col-md-12 searchbtn alc">
+                            <button type="submit" (click)="onSubmitCancel()" class="btn btn-success btn-raised mb-0">Save<div class="ripple-container"></div></button>
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div class="modal fade seminor-login-modal" data-backdrop="static" id="RejectReason">
+        <div class="modal-dialog modal-dialog-centered dialogsmall">
+            <div class="modal-content">
+                <div class="row">
+                    <div class="col-md-12 alrt">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+                        </button>
+                    </div>
+                </div>
+
+
+                <div class="modal-body seminor-login-modal-body cntpopup">
+                    <h5 class="modal-title text-center">Lost Reason</h5>
+
+                    <div class="row">
+                        <div class="col-sm-12 padlr0">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Lost Reason</label>
+                                                <select class="form-control my-select" style="text-transform:capitalize;" id="ddlReject" formControlName="RejectReasonID">
+                                                    <option value="0">Lost Reason</option>
+                                                    <option *ngFor="let gRow of ddlRejectItem" [value]="gRow.ID">
+                                                        {{gRow.GeneralName}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Remarks</label>
+                                                <textarea class="form-control" id="txtRejectReason" formControlName="RejectReason" style="height:80px!important;background-color:#fff!important;" rows="5" placeholder="Remarks"></textarea>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="divide"></div>
+                        <div class="col-md-12 searchbtn alc">
+                            <button type="submit" (click)="onSubmitReject()" class="btn btn-success btn-raised mb-0">Save<div class="ripple-container"></div></button>
+
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-12 searchbtn alrt">
+        <button type="submit" (click)="onSubmit()" [disabled]="disableSave" *ngIf="showSave" class="btn btn-primary btn-raised mb-0">Save<div class="ripple-container"></div></button>
+        <button type="submit" (click)="onApprove()" [disabled]="disableApprove" *ngIf="showApprove" class="btn btn-success btn-raised mb-0">Confirm<div class="ripple-container"></div></button>
+        <button type="submit" (click)="onReject()" [disabled]="disableReject" *ngIf="showReject" class="btn btn-danger btn-raised mb-0">Lost<div class="ripple-container"></div></button>
+        <button type="submit" (click)="onCancel()" [disabled]="disableCancel" *ngIf="showCancel" class="btn btn-warning btn-raised mb-0">Cancel<div class="ripple-container"></div></button>
+        <input type="hidden" id="RegId" />
+    </div>
+
+</form>
+
+
+

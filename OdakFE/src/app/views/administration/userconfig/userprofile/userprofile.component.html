@@ -1,0 +1,294 @@
+<div class="row headtitle">
+    <div class="col-md-9">
+        <h4></h4>
+    </div>
+    <div class="col-md-3 alrt">
+        <button type="button" class="btn btn-success btn-raised bmd-btn-edit btntop" [routerLink]="['/views/administration/userconfig/userprofile/userprofileview']"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+    </div>
+</div>
+
+<form [formGroup]="userForm">
+    <div class="card">
+        <div class="card-body ">
+            <div class="row">
+                <div class="col-md-6">
+                    <ul class="nav nav-pills nav-justified" role="tablist">
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link active show" data-toggle="tab" href="#home-1" role="tab" aria-selected="true">USER DETAILS</a>
+                        </li>
+                        <li class="nav-item waves-effect waves-light">
+                            <a class="nav-link" data-toggle="tab" href="#profile-1" role="tab" aria-selected="false">ROLE DETAILS</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="tab-content">
+                        <div class="tab-pane pt-3 active show" id="home-1" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>User ID</label>
+                                                <input type="text" id="txtUserID" name="UserID" formControlName="UserID" class="form-control" />
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>User Name</label>
+                                                <input type="text" id="txtUserName" name="UserName" autocomplete="off" formControlName="UserName" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Password</label>
+                                                <input type="text" id="txtPassword" name="Password" autocomplete="off" formControlName="Password" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>DOB</label>
+                                                <mat-form-field class="paymentDate" >
+                                                    <input matInput (click)="DOB.open()" readonly autocomplete="off" [matDatepicker]="DOB" placeholder="" formControlName="DOB">
+                                                    <mat-datepicker-toggle matSuffix [for]="DOB"></mat-datepicker-toggle>
+                                                    <mat-datepicker #DOB></mat-datepicker>
+                                                </mat-form-field>
+                                                <!-- <input type="date" autocomplete="off" id="txtDOB" name="DOB" formControlName="DOB" class="form-control"> -->
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Gender</label>
+                                                <select class="form-control my-select" id="ddlGender" name="Gender" formControlName="Gender">
+                                                    <option *ngFor="let gRow of GenderValues" [value]="gRow.ID">
+                                                        {{gRow.Desc}}
+                                                    </option>
+                                                </select>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Martial Status</label>
+                                                <select class="form-control my-select" id="ddlMartial" name="MartialStatus" formControlName="MartialStatus">
+                                                    <option *ngFor="let gRow of MartialValues" [value]="gRow.ID">
+                                                        {{gRow.Desc}}
+                                                    </option>
+
+                                                </select>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Address</label>
+                                                <textarea class="form-control addressht" name="Address" formControlName="Address" rows="5"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--<div class="col-md-4">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Branch</label>
+                                                <select class="form-control my-select" id="ddlBranch" name="BranchID" formControlName="BranchID">
+                                                    <option *ngFor="let gRow of Branch" [value]="gRow.ID">
+                                                        {{gRow.CityName}}
+                                                    </option>
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>-->
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Division</label>
+                                                <select class="form-control my-select" id="ddlDivision" name="DivID" formControlName="DivID">
+                                                    <option *ngFor="let gRow of Division" [value]="gRow.ID">
+                                                        {{gRow.Name}}
+                                                    </option>
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Department</label>
+                                                <select class="form-control my-select" id="ddlDepartment" name="DepID" formControlName="DepID">
+                                                    <option *ngFor="let gRow of Department" [value]="gRow.ID">
+                                                        {{gRow.Name}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Designation</label>
+                                                <select class="form-control my-select" id="ddlDesignation" name="DesID" formControlName="DesID">
+                                                    <option *ngFor="let gRow of Designation" [value]="gRow.ID">
+                                                        {{gRow.Name}}
+                                                    </option>
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Date of Join</label>
+                                                <mat-form-field  >
+                                                    <input matInput (click)="DOJ.open()" readonly  autocomplete="off" [matDatepicker]="DOJ" placeholder="" formControlName="DOJ">
+                                                    <mat-datepicker-toggle matSuffix [for]="DOJ"></mat-datepicker-toggle>
+                                                    <mat-datepicker #DOJ></mat-datepicker>
+                                                </mat-form-field>
+                                                <!-- <input type="date" autocomplete="off" id="DateofJoin" name="DOJ" formControlName="DOJ" class="form-control"> -->
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Email ID</label>
+                                                <input type="text" autocomplete="off" id="txtEmailID" name="EmailID" formControlName="EmailID" class="form-control">
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Mobile Number</label>
+                                                <input type="text" autocomplete="off" id="txtMobile" name="MobNo" formControlName="MobNo" class="form-control">
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12  col-lg-12 col-xl-12">
+                                    <h4 class="enqtitle">Office Location</h4>
+                                </div>
+                                <div class="col-md-12 col-sm-12  col-lg-12 col-xl-12 conttbl">
+
+                                    <div class="material-datatables">
+                                        <table class="table table-striped table-bordered table-hover" cellspacing="0">
+                                            <thead>
+                                                <tr>
+                                                    <th>S.No</th>
+                                                    <th style="width:50%!important;">Office Location</th>
+                                                    <th class="actwid">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                    </td>
+                                                    <td class="other">
+                                                        <input type="hidden" id="HDIDv" class="form-control" [(ngModel)]="UID" />
+                                                        <select class="form-control my-select" [(ngModel)]="OffLocID" id="ddlOffice" [ngModelOptions]="{standalone: true}">
+                                                            <option *ngFor="let gRow of ddGeoLocationItem" [value]="gRow.ID">
+                                                                {{gRow.OfficeLoc}}
+                                                            </option>
+                                                        </select>
+                                                    </td>
+
+                                                    <td class="actwid" style="width:initial!important;">
+                                                        <button type="submit" (click)="AddOffice();" class="btn btn-success bmd-btn-fab"><i class="material-icons">add</i></button>
+
+
+
+                                                    </td>
+                                                </tr>
+                                                <tr *ngFor="let gRow of DynamicOfficeLocation; let i= index">
+                                                    <td> {{i+1}}</td>
+                                                    <td class="txtright">
+                                                        {{gRow.OfficeLoc}}
+                                                    </td>
+                                                    <td class="actwid">
+                                                        <button type="button" rel="tooltip" (click)="OnclickOfficeSelectvalues(DynamicOfficeLocation,i)" class="btn btn-success bmd-btn-fab" data-original-title="" title="">
+                                                            <i class="material-icons">edit</i>
+                                                        </button>
+                                                        <button type="button" (click)="OnclickOfficeRemove(DynamicOfficeLocation,i,gRow.UID)" rel="tooltip" class="btn btn-danger bmd-btn-fab">
+                                                            <i class="material-icons">delete</i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+
+                                        </table>
+
+                                    </div>
+                                    <div class="col-md-12">
+
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+                            <div class="card-footer ">
+                                <div class="col-md-12" style="text-align:right;">
+                                    <button type="submit" (click)="Recordsave();" class="btn btn-primary btn-raised mb-0">Submit</button>
+                                </div>
+                                <input type="hidden" formControlName="ID" name="ID" id="ID" />
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</form>

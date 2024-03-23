@@ -1,0 +1,806 @@
+<div *ngIf="!isShow" class="row headtitle">
+    <div class="col-md-9 col-sm-9 col-lg-9 col-xl-9">
+        <h4>Finance Master</h4>
+    </div>
+</div>
+<div *ngIf="!isShow" class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4 panelbox">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Finance</div>
+                    <div class="panel-body">
+                        <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                            <button type="button" class="btn btn-link"
+                                [routerLink]="['/views/finance/master/bank-account/bank-accountview']"
+                                style="font-size: 14px; color: blue">
+                                <i class="fa fa-angle-double-right"></i> Bank Account Details
+                            </button>
+                            <div style="border-bottom: dashed 1px;"></div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                            <button type="button" class="btn btn-link"
+                                [routerLink]="['/views/finance/master/chartaccounts/chartaccountsView']"
+                                style="font-size: 14px; color: blue"><i class="fa fa-angle-double-right"></i> Chart Of
+                                Accounts</button>
+                            <div style="border-bottom: dashed 1px;"></div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                            <button type="button" class="btn btn-link"
+                                [routerLink]="['/views/finance/master/chartaccountcode/chartaccountcodelist']"
+                                style="font-size: 14px; color: blue"><i class="fa fa-angle-double-right"></i> Chart of
+                                Accounts Code Auto Generation Setting</button>
+                            <div style="border-bottom: dashed 1px;"></div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                            <button type="button" class="btn btn-link"
+                                [routerLink]="['/views/finance/master/chargecode/chargecodeview']"
+                                style="font-size: 14px; color: blue"><i class="fa fa-angle-double-right"></i> Charge
+                                Code / Tariff</button>
+                            <div style="border-bottom: dashed 1px;"></div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                            <button type="button" class="btn btn-link"
+                                [routerLink]="['/views/finance/master/exchangerate/exchangerateview']"
+                                style="font-size: 14px; color: blue"><i class="fa fa-angle-double-right"></i> Exchange
+                                Rate</button>
+                            <div style="border-bottom: dashed 1px;"></div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                            <button type="button" class="btn btn-link"
+                                [routerLink]="['/views/finance/financialyearview']"
+                                style="font-size: 14px; color: blue"><i class="fa fa-angle-double-right"></i> Financial
+                                Year</button>
+                            <div style="border-bottom: dashed 1px;"></div>
+                        </div>
+
+                        <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                            <button type="button" class="btn btn-link"
+                                [routerLink]="['/views/finance/master/SAC/SACview']"
+                                style="font-size: 14px; color: blue"><i class="fa fa-angle-double-right"></i> SAC
+                                Master</button>
+                            <div style="border-bottom: dashed 1px;"></div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                            <button type="button" class="btn btn-link"
+                                [routerLink]="['/views/finance/master/taxlist/taxlistView']"
+                                style="font-size: 14px; color: blue"><i class="fa fa-angle-double-right"></i> Tax
+                                Type</button>
+                            <div style="border-bottom: dashed 1px;"></div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                            <button type="button" class="btn btn-link"
+                                [routerLink]="['/views/finance/master/taxgroup/taxgroupview']"
+                                style="font-size: 14px; color: blue"><i class="fa fa-angle-double-right"></i> Tax
+                                Group</button>
+                            <div style="border-bottom: dashed 1px;"></div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                            <button type="button" class="btn btn-link"
+                                [routerLink]="['/views/finance/master/tds/tdsview']"
+                                style="font-size: 14px; color: blue"><i class="fa fa-angle-double-right"></i>
+                                TDS</button>
+                            <!-- <div style="border-bottom: dashed 1px;"></div> -->
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4 panelbox">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Operation</div>
+                    <div class="panel-body">
+                        <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                            <button type="button" class="btn btn-link"
+                                [routerLink]="['/views/finance/Customer/Customerview']"
+                                style="font-size: 14px; color: blue">
+                                <i class="fa fa-angle-double-right"></i> Customer
+                            </button>
+                            <div style="border-bottom: dashed 1px;"></div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                            <button type="button" class="btn btn-link"
+                                [routerLink]="['/views/finance/master/organization/organizationview']"
+                                style="font-size: 14px; color: blue"><i class="fa fa-angle-double-right"></i>
+                                Organization</button>
+                            <div style="border-bottom: dashed 1px;"></div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                            <button type="button" class="btn btn-link"
+                                [routerLink]="['/views/finance/Vendor/Vendorview']"
+                                style="font-size: 14px; color: blue"><i class="fa fa-angle-double-right"></i>
+                                Vendor</button>
+                            <div style="border-bottom: dashed 1px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div *ngIf="isShow">
+    <div class="container-fluid p-0 ">
+        <!-- <div class="bg row justify-content-space-evenly">
+
+            <div (click)="selectedTabName = 'Workspace';currentModule('Workspace')"
+                [ngClass]=" selectedTabName == 'Workspace' ? 'primary' : 'secondary'" class="col-md-2 card m-3 p-2">
+                <img height="40px" width="40px" src="../../../../assets/images/icon/workspace.png" alt="logo">
+                <h5 class="text-center mt-2">My Workspace</h5>
+            </div>
+
+            <div (click)="selectedTabName = 'Transactions';currentModule('Transactions')"
+                [ngClass]=" selectedTabName == 'Transactions' ? 'primary' : 'secondary'" class="col-md-2 card m-3 p-2">
+                <img height="40px" width="40px" src="../../../../assets/images/icon/Transcations.png" alt="logo">
+                <h5 class="text-center mt-2">Transactions</h5>
+            </div>
+
+            <div (click)="selectedTabName = 'Dashboards';currentModule('Dashboards')"
+                [ngClass]=" selectedTabName == 'Dashboards' ? 'primary' : 'secondary'" class="col-md-2 card m-3 p-2">
+                <img height="40px" width="40px" src="../../../../assets/images/icon/Dashboard.png" alt="logo">
+                <h5 class="text-center mt-2">Dashboards</h5>
+            </div>
+
+            <div (click)="selectedTabName = 'Reports';currentModule('Reports')"
+                [ngClass]=" selectedTabName == 'Reports' ? 'primary' : 'secondary'" class="col-md-2 card m-3 p-2">
+                <img height="40px" width="40px" src="../../../../assets/images/icon/Reports.png" alt="logo">
+                <h5 class="text-center mt-2">Reports</h5>
+            </div>
+
+            <div (click)="selectedTabName = 'Masters';currentModule('Masters')"
+                [ngClass]=" selectedTabName == 'Masters' ? 'primary' : 'secondary'" class="col-md-2 card m-3 p-2">
+                <img height="40px" width="40px" src="../../../../assets/images/icon/Masters.png" alt="logo">
+                <h5 class="text-center mt-2">Masters</h5>
+            </div>
+        </div> -->
+        <div class="card">
+            <div *ngIf="selectedTabName === 'Masters'" class="container-fluid pt-4">
+                <div class="row ">
+
+                    <div class="col-md-3 panelbox">
+                        <div class="panel panel-default">
+                            <div class="title pl-3 panel-heading" style="text-align: center;">Organization Structure
+                            </div>
+
+                            <div class="panel-body">
+                                <div class="col-md-12">
+                                    <button class=" btn btn-link" (click)="routePage('Entity')">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Entity
+                                    </button>
+                                    <div style="border-bottom: 1px dashed;"></div>
+
+                                </div>
+
+                                <div class="col-md-12">
+                                    <button class=" btn btn-link" (click)="routePage('Division')">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Division
+                                    </button>
+                                    <div style="border-bottom: 1px dashed;"></div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <button class=" btn btn-link" (click)="routePage('office')">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Office
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 panelbox">
+                        <div class="panel panel-default">
+                            <div class="title  pl-3 panel-heading" style="text-align: center;">Parties</div>
+                            <div class="panel-body">
+                                <div class="col-md-12">
+                                    <button (click)="routePage('Customers')" class=" btn btn-link">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Customers
+                                    </button>
+                                    <div style="border-bottom: 1px dashed;"></div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <button (click)="routePage('Vendors')" class=" btn btn-link">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Vendors
+                                    </button>
+                                    <div style="border-bottom: 1px dashed;"></div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <button (click)="routePage('party')" class=" btn btn-link">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Party Mapping
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 panelbox">
+                        <div class="panel panel-default">
+                            <div class="title  pl-3 panel-heading" style="text-align: center;">Banking</div>
+                            <div class="panel-body">
+                                <div class="col-md-12">
+                                    <button class=" btn btn-link"
+                                        [routerLink]="['/views/finance/master/bank-account/bank-accountview']">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Banking Master
+                                    </button>
+                                    <div style="border-bottom: 1px dashed;"></div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <button (click)="routePage('Templates')" class=" btn btn-link">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Templates
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 panelbox">
+                        <div class="panel panel-default">
+                            <div class="title  pl-3 panel-heading" style="text-align: center;">Chart of Accounts</div>
+
+                            <div class="panel-body">
+
+
+                                <div class="col-md-12">
+                                    <button (click)="routePage('COANumberRange')" class=" btn btn-link">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        COA Number Range
+                                    </button>
+                                    <div style="border-bottom: 1px dashed;"></div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <button (click)="routePage('COAType')" class=" btn btn-link">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        COA Type
+                                    </button>
+                                    <div style="border-bottom: 1px dashed;"></div>
+                                </div>
+                                <div class="col-md-12">
+                                    <button class=" btn btn-link" (click)="routePage('COA Master')">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        COA Master
+                                    </button>
+                                    <div style="border-bottom: 1px dashed;"></div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <button (click)="routePage('Ledger')" class=" btn btn-link">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Ledger Mapping
+                                    </button>
+                                    <div style="border-bottom: 1px dashed;"></div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <button class=" btn btn-link">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Distribution Rules
+                                    </button>
+                                    <!-- <div style="border-bottom: 1px dashed;"></div> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 panelbox">
+                        <div class="panel panel-default">
+                            <div class="title  pl-3 panel-heading" style="text-align: center;">Charges & Taxes</div>
+
+                            <div class="panel-body">
+                                <div class="col-md-12">
+                                    <button class=" btn btn-link" (click)="routePage('ChargeCode')">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Charge Code
+                                    </button>
+                                    <div style="border-bottom: 1px dashed;"></div>
+                                </div>
+                                <div class="col-md-12">
+                                    <button class=" btn btn-link" (click)="routePage('TaxType')">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Tax Type
+                                    </button>
+                                    <div style="border-bottom: 1px dashed;"></div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <button class=" btn btn-link" (click)="routePage('TaxGroup')">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Tax Group
+                                    </button>
+                                    <div style="border-bottom: 1px dashed;"></div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <button class=" btn btn-link" (click)="routePage('TDS')">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        TDS
+                                    </button>
+                                    <div style="border-bottom: 1px dashed;"></div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <button class=" btn btn-link" (click)="routePage('SAC')">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        SAC Master
+                                    </button>
+                                    <!-- <div style="border-bottom: 1px dashed;"></div> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 panelbox">
+                        <div class="panel panel-default">
+                            <div class="title pl-3 panel-heading" style="text-align: center;">Opening Balance</div>
+
+                            <div class="panel-body">
+                                <div class="col-md-12">
+                                    <button class="btn btn-link" (click)="routePage('AccountReceivable')">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Accounts Receivable
+                                    </button>
+                                    <div style="border-bottom: 1px dashed"></div>
+                                </div>
+                            </div>
+
+                            <div class="panel-body">
+                                <div class="col-md-12">
+                                    <button class="btn btn-link" (click)="routePage('AccountPayable')">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Accounts Payable
+                                    </button>
+                                    <div style="border-bottom: 1px dashed"></div>
+                                </div>
+                            </div>
+
+                            <div class="panel-body">
+                                <div class="col-md-12">
+                                    <button class="btn btn-link" (click)="routePage('Asset')">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Asset
+                                    </button>
+                                    <div style="border-bottom: 1px dashed"></div>
+                                </div>
+                            </div>
+
+                            <div class="panel-body">
+                                <div class="col-md-12">
+                                    <button class="btn btn-link" (click)="routePage('Expenses')">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Expenses
+                                    </button>
+                                    <div style="border-bottom: 1px dashed"></div>
+                                </div>
+                            </div>
+
+                            <div class="panel-body">
+                                <div class="col-md-12">
+                                    <button class="btn btn-link" (click)="routePage('Bank')">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Bank
+                                    </button>
+                                    <div style="border-bottom: 1px dashed"></div>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="col-md-12">
+                                    <button class="btn btn-link" (click)="routePage('Liability')">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Liability
+                                    </button>
+                                    <div style="border-bottom: 1px dashed"></div>
+                                </div>
+                            </div>
+
+                            <div class="panel-body">
+                                <div class="col-md-12">
+                                    <button class="btn btn-link" (click)="routePage('Equity')">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Equity
+                                    </button>
+                                    <div style="border-bottom: 1px dashed"></div>
+                                </div>
+                            </div>
+
+                            <div class="panel-body">
+                                <div class="col-md-12">
+                                    <button class="btn btn-link" (click)="routePage('Income')">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Income
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-md-3 panelbox">
+                        <div class="panel panel-default">
+                            <div class="title pl-3 panel-heading" style="text-align: center;">Currencies </div>
+                            <div class="panel-body">
+                                <div class="col-md-12">
+                                    <!-- <button class=" btn btn-link">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Currencies
+                                    </button> -->
+                                </div>
+
+                                <div class="col-md-12">
+                                    <button (click)="routePage('Exchange Rate Pair')" class=" btn btn-link">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Exchange Rate Pair
+                                    </button>
+                                    <div style="border-bottom: 1px dashed;"></div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <button (click)="routePage('Exchange Rate')" class=" btn btn-link">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Exchange Rate
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 panelbox">
+                        <div class="panel panel-default">
+                            <div class="title pl-3 panel-heading" style="text-align: center;">Asset</div>
+
+                            <div class="panel-body">
+                                <div class="col-md-12">
+                                    <button class=" btn btn-link">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Asset Management
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 panelbox">
+                        <div class="panel panel-default">
+                            <div class="title pl-3 panel-heading" style="text-align: center;">Employee</div>
+
+                            <div class="panel-body">
+                                <div class="col-md-12">
+                                    <button class=" btn btn-link" (click)="routePage('EmployeeMiniMaster')">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Mini Master
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 panelbox">
+                        <div class="panel panel-default">
+                            <div class="title pl-3 panel-heading" style="text-align: center;">App.Configuration</div>
+
+                            <div class="panel-body">
+                                <div class="col-md-12">
+                                    <button class=" btn btn-link" (click)="routePage('FinancialYear')">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Financial Year
+                                    </button>
+                                    <div style="border-bottom: 1px dashed;"></div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <button (click)="routePage('CreditApproval')" class=" btn btn-link">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Credit Approval Setup
+                                    </button>
+                                    <div style="border-bottom: 1px dashed;"></div>
+                                </div>
+                                <div class="col-md-12">
+                                    <button (click)="routePage('Aging')" class="btn btn-link">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Aging Configuration
+                                    </button>
+                                    <div style="border-bottom: 1px dashed;"></div>
+                                </div>
+                                <div class="col-md-12">
+                                    <button class=" btn btn-link" (click)="routePage('Region')">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Region Configuration
+                                    </button>
+                                    <div style="border-bottom: 1px dashed;"></div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-md-3 panelbox">
+                        <div class="panel panel-default">
+                            <div class="title pl-3 panel-heading" style="text-align: center;">System Configuration</div>
+
+                            <div class="panel-body">
+                                <div class="col-md-12">
+                                    <button (click)="routePage('NumberRange')" class=" btn btn-link">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Number Range
+                                    </button>
+                                    <div style="border-bottom: 1px dashed;"></div>
+                                </div>
+                                <div class="col-md-12">
+                                    <button class=" btn btn-link">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Report & Dashboard
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div *ngIf="selectedTabName === 'Transactions'" class="container-fluid pt-4">
+                <div class="row">
+
+                    <div class="col-md-3 panelbox">
+                        <div class="panel panel-default">
+                            <div class="title pl-3 panel-heading" style="text-align: center;">Banking and Payments</div>
+                            <div class="panel-body">
+                                <div class="col-md-12">
+                                    <button class="btn btn-link" (click)="routePage('transactions-banking')">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Banking
+                                    </button>
+                                    <div style="border-bottom: 1px dashed"></div>
+                                </div>
+                                <div class="col-md-12">
+                                    <button class="btn btn-link" (click)="routePage('payment-batch')">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Payment Batch
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 panelbox">
+                        <div class="panel panel-default">
+                            <div class="title pl-3 panel-heading" style="text-align: center;">Credit Review</div>
+                            <div class="panel-body">
+                                <div class="col-md-12">
+                                    <button (click)="routePage('Credit-Review')" class="btn btn-link">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Credit Review
+                                    </button>
+                                    <div style="border-bottom: 1px dashed"></div>
+                                </div>
+                                <div class="col-md-12">
+                                    <button (click)="routePage('Credit-Revise-Revoke')" class="btn btn-link">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Credit Revise and Revoke
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 panelbox">
+                        <div class="panel panel-default">
+                            <div class="title pl-3 panel-heading" style="text-align: center;">Vouchers</div>
+                            <div class="panel-body">
+                                <div class="col-md-12">
+                                    <button class="btn btn-link" (click)="routePage('receipt')">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Receipt Voucher
+                                    </button>
+                                    <div style="border-bottom: 1px dashed"></div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <button class="btn btn-link" (click)="routePage('payment')">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Payment Voucher
+                                    </button>
+                                    <div style="border-bottom: 1px dashed"></div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <button class="btn btn-link" (click)="routePage('journal')">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Journal Voucher
+                                    </button>
+                                    <div style="border-bottom: 1px dashed"></div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <button class="btn btn-link" (click)="routePage('contra')">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Contra Voucher
+                                    </button>
+                                    <div style="border-bottom: 1px dashed"></div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <button (click)="routePage('Adjustment')" class="btn btn-link">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Adjustment Voucher
+                                    </button>
+                                    <div style="border-bottom: 1px dashed"></div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <button (click)="routePage('voucher')" class="btn btn-link">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Voucher Reversals
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 panelbox">
+                        <div class="panel panel-default">
+                            <div class="title pl-3 panel-heading" style="text-align: center;">Invoices and Netting off
+                            </div>
+                            <div class="panel-body">
+                                <div class="col-md-12">
+                                    <button (click)="routePage('purchase-invoice')" class="btn btn-link">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Purchase Invoice (Admin)
+                                    </button>
+                                    <div style="border-bottom: 1px dashed"></div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <button (click)="routePage('vendorNotes')" class="btn btn-link">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Vendor Credit Note
+                                    </button>
+                                    <div style="border-bottom: 1px dashed"></div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <button class="btn btn-link">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Miscellanious Invoice/Debit note
+                                    </button>
+                                    <div style="border-bottom: 1px dashed"></div>
+                                </div>
+                                <div class="col-md-12">
+                                    <button class="btn btn-link">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Interdivision Billing
+                                    </button>
+                                    <div style="border-bottom: 1px dashed"></div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <button class="btn btn-link" (click)="routePage('InvoiceAR')">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Invoices set off AR
+                                    </button>
+                                    <div style="border-bottom: 1px dashed"></div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <button class="btn btn-link" (click)="routePage('InvoiceAP')">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Invoices set off AP
+                                    </button>
+                                    <!-- <div style="border-bottom: 1px dashed"></div> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 panelbox">
+                        <div class="panel panel-default">
+                            <div class="title pl-3 panel-heading" style="text-align: center;">Operational Request(s)
+                            </div>
+
+                            <div class="panel-body">
+                                <div class="col-md-12">
+                                    <button class="btn btn-link" (click)="routePage('credit-application')">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Credit Application
+                                    </button>
+                                    <div style="border-bottom: 1px dashed"></div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <button class="btn btn-link" (click)="routePage('payment-request')">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Payment Request
+                                    </button>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 panelbox">
+                        <div class="panel panel-default">
+                            <div class="title pl-3 panel-heading" style="text-align: center;">Controls</div>
+
+                            <div class="panel-body">
+                                <div class="col-md-12">
+                                    <button class="btn btn-link" (click)="routePage('transactionLocks')">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Transaction Locks
+                                    </button>
+                                    <div style="border-bottom: 1px dashed"></div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <button class="btn btn-link">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Logs & Audit Trails
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 panelbox">
+                        <div class="panel panel-default">
+                            <div class="title pl-3 panel-heading" style="text-align: center;">Taxes</div>
+
+                            <div class="panel-body">
+                                <div class="col-md-12">
+                                    <button class="btn btn-link">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        GST IRN
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 panelbox">
+                        <div class="panel panel-default">
+                            <div class="title pl-3 panel-heading" style="text-align: center;">Order(s)</div>
+
+                            <div class="panel-body">
+                                <div class="col-md-12">
+                                    <button (click)="routePage('purchase')" class=" btn btn-link">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Purchase Order
+                                    </button>
+                                    <div style="border-bottom: 1px dashed;"></div>
+                                </div>
+                                <!-- =====================================-->
+                                <!-- <div class="col-md-12">
+                                    <button class=" btn btn-link">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Cost Order
+                                    </button>
+                                    <div style="border-bottom: 1px dashed;"></div>
+                                </div> -->
+                                <!-- =====================================-->
+
+                                <div class="col-md-12">
+                                    <button (click)="routePage('internal')" class=" btn btn-link">
+                                        <i class="fa fa-angle-double-right"></i>
+                                        Internal Order
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

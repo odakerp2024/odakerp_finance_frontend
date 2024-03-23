@@ -1,0 +1,34 @@
+p {
+    font-family: Lato;
+}
+
+.inp {
+    width: 360px;
+}
+
+.parent {
+    position: relative;
+}
+
+.child {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.fixed {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+
+.chkvalues {
+    float: left;
+    padding-left: 20px;
+}
+
+label.chkbox {
+    line-height: 1;
+    font-size: 15px;
+}

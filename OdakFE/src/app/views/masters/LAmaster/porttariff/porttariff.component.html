@@ -1,0 +1,1150 @@
+
+
+<div class="row headtitle">
+    <div class="col-md-9">
+        <h4>Port/Liner Tariff</h4>
+    </div>
+
+    <div class="col-md-3 alrt">
+
+        <button type="button" class="btn btn-success btn-raised bmd-btn-edit btntop" [routerLink]="['/views/masters/LAmaster/porttariff/porttariffview']"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+
+    </div>
+</div>
+<form [formGroup]="portTariffForm">
+
+    <div class="row">
+
+        <div class="col-12">
+            <div class="card m-b-30">
+                <div class="card-body">
+
+                    <div class="row">
+                        <div class="col-md-12 searchbtn alrt padlr0">
+                            <button type="submit" (click)="onSubmit()" class="btn btn-info btn-raised mb-0">Revision<div class="ripple-container"></div></button>
+                            <button type="submit" (click)="clearSearch()" class="btn btn-raised btn-success mb-0">Copy Tariff<div class="ripple-container"></div></button>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label class="str">Principle Name</label>
+                                        <select class="form-control my-select" formControlName="PrincibleID" id="ddlPrinciplev">
+
+                                            <option *ngFor="let gRow of CustomerMasterAllvalues" [value]="gRow.ID">
+                                                {{gRow.CustomerName}}
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label class="str">Effective From</label>
+                                        <mat-form-field class="paymentDate" >
+                                            <input matInput (click)="EffectiveDate.open()" readonly autocomplete="off" [matDatepicker]="EffectiveDate"  id="EffectiveDate" placeholder="" formControlName="EffectiveDate">
+                                            <mat-datepicker-toggle matSuffix [for]="EffectiveDate"></mat-datepicker-toggle>
+                                            <mat-datepicker #EffectiveDate></mat-datepicker>
+                                        </mat-form-field>
+                                        <!-- <input type="date" name="txtEffectiveDate" formControlName="EffectiveDate" class="form-control" /> -->
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label class="str">Port</label>
+                                        <select class="form-control my-select" formControlName="PortID" id="ddlPortv">
+                                            <option *ngFor="let gRow of PortAllvalues" [value]="gRow.ID">
+                                                {{gRow.PortName}}
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label class="str">Terminal</label>
+                                        <select class="form-control my-select" id="ddlTerminal" formControlName="TerminalID">
+                                            <option *ngFor="let gRow of AllHandlingTermsvalues" [value]="gRow.ID">
+                                                {{gRow.TerminalName}}
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label class="str">Equipment Type</label>
+                                        <select class="form-control my-select" id="ddlEquipmentType" formControlName="EquipmentTypeID">
+                                            <option *ngFor="let gRow of CntrTypesvalues" [value]="gRow.ID">
+                                                {{gRow.CntrTypes}}
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label>Remarks</label>
+                                        <textarea class="form-control txtarea" formControlName="Remarks" rows="6"></textarea>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 searchbtn alrt padlr0">
+                        <button type="submit" (click)="onSubmit()" class="btn btn-primary btn-raised mb-0">Search<div class="ripple-container"></div></button>
+                        <button type="submit" (click)="clearSearch()" class="btn btn-raised btn-danger mb-0">Upload<div class="ripple-container"></div></button>
+                    </div>
+
+                </div>
+
+                <div class="card-body porttarifftab">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <ul class="nav nav-pills nav-justified" role="tablist">
+                                <li class="nav-item waves-effect waves-light">
+                                    <a class="nav-link active show" data-toggle="tab" (click)="btnTariffRate(1);" href="#revenue" role="tab" aria-selected="true">Revenue</a>
+                                </li>
+                                <li class="nav-item waves-effect waves-light">
+                                    <a class="nav-link" data-toggle="tab" href="#revenue" (click)="btnTariffRate(2);" role="tab" aria-selected="false">Liner Cost</a>
+                                </li>
+                                <li class="nav-item waves-effect waves-light">
+                                    <a class="nav-link" data-toggle="tab" href="#revenue" (click)="btnTariffRate(3);" role="tab" aria-selected="false">Terminal Cost</a>
+                                </li>
+                                <li class="nav-item waves-effect waves-light">
+                                    <a class="nav-link" data-toggle="tab" href="#detention" (click)="btnTariffRate(4);" role="tab" aria-selected="false">Detention</a>
+                                </li>
+                                <li class="nav-item waves-effect waves-light">
+                                    <a class="nav-link" data-toggle="tab" href="#Storage" (click)="btnTariffRate(5);" role="tab" aria-selected="false">Storage</a>
+                                </li>
+                                <li class="nav-item waves-effect waves-light">
+                                    <a class="nav-link" data-toggle="tab" href="#ihc" (click)="btnTariffRate(6);" role="tab" aria-selected="false">IHC</a>
+                                </li>
+                                <li class="nav-item waves-effect waves-light">
+                                    <a class="nav-link" data-toggle="tab" href="#revenue" (click)="btnTariffRate(7);" role="tab" aria-selected="false">Others</a>
+                                </li>
+                                <li class="nav-item waves-effect waves-light">
+                                    <a class="nav-link" data-toggle="tab" href="#principle" (click)="btnTariffRate(8);" role="tab" aria-selected="false">Principle Agreement</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="row porttariff">
+                        <div class="col-md-12">
+                            <div class="tab-content">
+                                <div class="tab-pane pt-3 active show" id="revenue" role="tabpanel">
+
+                                    <div id="datatable-buttons_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+                                        <div class="row tblrow1">
+                                            <div class="col-sm-12 padlr0 tablevar">
+                                                <table id="datatable-buttons" class="table table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                                    <thead>
+                                                        <tr role="row">
+                                                            <th class="sorting actwid" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" style="width: 177.575px;">
+                                                                S.No
+                                                            </th>
+                                                            <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" style="width: 177.575px;">
+                                                                Shipment Type
+                                                            </th>
+                                                            <th>Tariff Type</th>
+                                                            <th>Charge Code</th>
+                                                            <th>Commodity</th>
+                                                            <th>Basis</th>
+                                                            <th>Currency</th>
+                                                            <th>Service Type</th>
+                                                            <th>Amount</th>
+                                                            <th class="actwid">Action</th>
+
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="actwid"></td>
+
+                                                            <td class="other">
+                                                                <input type="hidden" id="HDIDv" [(ngModel)]="TID" class="form-control" />
+                                                                <input type="hidden" id="HDArrayIndex" [(ngModel)]="HDArrayIndex" class="form-control" />
+
+
+
+                                                                <select class="form-control my-select" [(ngModel)]="ShipmentTypeID" id="ddlShipmentType">
+                                                                    <option value="0">--Select--</option>
+                                                                    <option *ngFor="let gRow of ShipmentType" [value]="gRow.ID">
+                                                                        {{gRow.Desc}}
+                                                                    </option>
+                                                                </select>
+                                                            </td>
+                                                            <td class="big1">
+                                                                <select class="form-control my-select tblddl" id="ddlTariffType">
+                                                                    <option value="0">--Select--</option>
+                                                                    <option *ngFor="let gRow of FillGeneralMaster" [value]="gRow.ID">
+                                                                        {{gRow.GeneralName}}
+                                                                    </option>
+                                                                </select>
+                                                            </td>
+                                                            <td class="big">
+                                                                <select class="form-control my-select" id="ddlChargeCode" [(ngModel)]="ddlChargeCode">
+                                                                    <option value="0">--Select--</option>
+                                                                    <option *ngFor="let gRow of ChargeCodeAllvalues" [value]="gRow.ID">
+                                                                        {{gRow.ChargeCode}}
+                                                                    </option>
+                                                                </select>
+                                                            </td>
+                                                            <td class="other">
+                                                                <select class="form-control my-select other" id="ddlCommodity">
+                                                                    <option value="0">--Select--</option>
+                                                                    <option *ngFor="let gRow of CommodityAllvalues" [value]="gRow.ID">
+                                                                        {{gRow.GeneralName}}
+                                                                    </option>
+                                                                </select>
+                                                            </td>
+
+                                                            <td class="other">
+                                                                <select class="form-control my-select other" id="ddlBasis">
+                                                                    <option value="0">--Select--</option>
+                                                                    <option *ngFor="let gRow of BasicBindValues" [value]="gRow.ID">
+                                                                        {{gRow.name}}
+                                                                    </option>
+                                                                </select>
+                                                            </td>
+                                                            <td class="other">
+                                                                <select class="form-control my-select other" id="ddlCurrency">
+                                                                    <option value="0">--Select--</option>
+                                                                    <option *ngFor="let gRow of CurrencyValue" [value]="gRow.ID">
+                                                                        {{gRow.Currency}}
+                                                                    </option>
+
+                                                                </select>
+                                                            </td>
+                                                            <td class="other">
+                                                                <select class="form-control my-select other" id="ddlServiceType" formControlName="ServiceType">
+                                                                    <option value="0">--Select--</option>
+                                                                    <option *ngFor="let gRow of ServiceTypeAllvalues" [value]="gRow.ID">
+                                                                        {{gRow.GeneralName}}
+                                                                    </option>
+                                                                </select>
+                                                            </td>
+                                                            <td class="other"><input type="number" autocomplete="off" id="txtAmount" [(ngModel)]="Amount" class="form-control" /></td>
+                                                            <td class="alc actwid">
+                                                                <button class="btn btn-success bmd-btn-fab" (click)="OnClickAddValue();">
+                                                                    <i class="material-icons">add</i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-12 padlr0 tablevar">
+                                                <table id="datatable-buttons" class="tablegrid table table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                                    <thead>
+                                                        <tr role="row">
+                                                            <th>S.No</th>
+                                                            <th> Shipment Type</th>
+                                                            <th>Tariff Type</th>
+                                                            <th>Charge Code</th>
+                                                            <th>Commodity</th>
+                                                            <th>Basis</th>
+                                                            <th>Currency</th>
+                                                            <th>Service Type</th>
+                                                            <th>Amount</th>
+                                                            <th class="actwid">Action</th>
+
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody>
+                                                        <tr *ngFor="let gRow of DynamicGrid; let i= index">
+                                                            <td> {{i+1}}</td>
+                                                            <td>{{gRow.ShipmentType}}</td>
+                                                            <td>{{gRow.TariffType}}</td>
+                                                            <td>{{gRow.ChargeCode}}</td>
+                                                            <td>{{gRow.Commodity}}</td>
+                                                            <td>{{gRow.Basis}}</td>
+                                                            <td>{{gRow.Currency}}</td>
+                                                            <td>{{gRow.ServiceType}}</td>
+                                                            <td>
+                                                                {{gRow.Amount}}
+
+                                                            </td>
+                                                            <td class="alc actwid">
+                                                                <button type="button" *ngIf="gRow.ISSlab==1" ng-true-value="1" ng-false-value="0" rel="tooltip" (click)="SelectTariffBrakup(DynamicGrid,i,gRow.TID)" class="btn btn-primary btn-round" data-original-title="" title="">
+                                                                    <i class="material-icons">app_registration</i>
+                                                                </button>
+
+                                                                <button type="button" rel="tooltip" (click)="OnclickSelectvalues(DynamicGrid,i)" class="btn btn-success btn-round" data-original-title="" title="">
+                                                                    <i class="material-icons">edit</i>
+                                                                </button>
+                                                                <button type="button" rel="tooltip" (click)="OnclickTariffRemove(DynamicGrid,i,gRow.TID)" class="btn btn-danger btn-round" data-original-title="" title="">
+                                                                    <i class="material-icons">delete</i>
+                                                                </button>
+                                                                <!--<input type="hidden" id="HDID" class="form-control" [(ngModel)]="gRow.TID" />-->
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+                                <div class="tab-pane pt-3" id="detention" role="tabpanel">
+                                    <div id="datatable-buttons_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+                                        <div class="row det tblrow">
+                                            <div class="col-md-4 brt">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label class="str">Charges</label>
+                                                            <select class="form-control my-select" formControlName="DetenCharges" id="ddlDetenCharges">
+                                                                <option value="0">--Selected--</option>
+                                                                <option *ngFor="let gRow of ChargeCodeDetentionAllvalues" [value]="gRow.ID">
+                                                                    {{gRow.ChargeCode}}
+                                                                </option>
+                                                            </select>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 brt">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label>Starting Move</label>
+                                                            <select class="form-control my-select" id="ddlDDExpStMove" formControlName="ddlStartingMove">
+                                                                <option value="1">RELEASE TO SHIPPER</option>
+                                                            </select>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 brt">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label>Ending Move</label>
+                                                            <select class="form-control my-select" id="ddlDDExpEndMove" formControlName="ddlEndingMove">
+                                                                <option value="2">LADEN CONTAINER GATED IN</option>
+                                                            </select>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row tblrow1">
+                                            <div> Tariff Details Export</div>
+                                            <div class="col-md-12 tablevar padlr0">
+                                                <table class="det table table-striped table-bordered w-100 dataTable no-footer">
+                                                    <thead>
+                                                        <tr>
+
+                                                            <th>S.No</th>
+                                                            <th>Slab From</th>
+                                                            <th>Slab To</th>
+                                                            <th>Currency</th>
+                                                            <th>Amount</th>
+                                                            <th class="actwid">Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        <tr *ngFor="let gRow of DynamicDetentionGrid; let i= index; let last=last">
+
+                                                            <td>{{i+1}}</td>
+                                                            <td><input [(ngModel)]="gRow.SlabFrom" type="number" class="form-control" [ngModelOptions]="{standalone: true}" /></td>
+                                                            <td><input type="number" class="form-control" [(ngModel)]="gRow.SlabTo" [ngModelOptions]="{standalone: true}" /></td>
+                                                            <td>
+
+                                                                <select class="form-control my-select other" id="ddlDetentionExpCurrency" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.CurrencyID">
+                                                                    <option value="0">--Select--</option>
+                                                                    <option *ngFor="let gRow of CurrencyValue" [value]="gRow.ID">
+                                                                        {{gRow.Currency}}
+                                                                    </option>
+
+                                                                </select>
+
+                                                            </td>
+                                                            <td><input type="number" autocomplete="off" class="form-control" [(ngModel)]="gRow.Amount" [ngModelOptions]="{standalone: true}" /></td>
+                                                            <td class="alc actwid">
+                                                                <button class="btn btn-success bmd-btn-fab" *ngIf="last" (click)="AddDetentionRow(gRow,i)">
+                                                                    <i class="material-icons">add</i>
+                                                                </button>
+                                                                <button class="btn btn-danger bmd-btn-fab" *ngIf="!last" (click)="OnclickTariffExpDetention(DynamicDetentionGrid,i,gRow.SLID)">
+                                                                    <i class="material-icons">delete</i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                        <div class="row det tblrow">
+                                            <div class="col-md-4 brt">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label class="str">Charges</label>
+                                                            <select class="form-control my-select" formControlName="DetenImpCharges" id="ddlDetenImpCharges">
+                                                                <option value="0">--Select--</option>
+                                                                <option *ngFor="let gRow of ChargeCodeDetentionAllvalues" [value]="gRow.ID">
+                                                                    {{gRow.ChargeCode}}
+                                                                </option>
+                                                            </select>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 brt">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label>Starting Move</label>
+                                                            <select class="form-control my-select" id="ddlDDImpStMove" formControlName="ddlImpStartingMove">
+                                                                <option value="1">Discharge</option>
+                                                            </select>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 brt">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label>Ending Move</label>
+                                                            <select class="form-control my-select" id="ddlDDImpEndMove" formControlName="ddlImpEndingMove">
+                                                                <option value="2">Empty Return</option>
+                                                            </select>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="row tblrow1">
+                                            <div> Tariff Details Import</div>
+                                            <div class="col-md-12 padlr0 tablevar">
+                                                <table class="det table table-striped table-bordered w-100 dataTable no-footer">
+                                                    <thead>
+                                                        <tr>
+
+                                                            <th>S.No</th>
+                                                            <th>Slab From</th>
+                                                            <th>Slab To</th>
+                                                            <th>Currency</th>
+                                                            <th>Amount</th>
+                                                            <th class="actwid">Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        <tr *ngFor="let gRow of DynamicDetentionGridImp; let i= index; let last=last">
+
+                                                            <td>{{i+1}}</td>
+                                                            <td><input [(ngModel)]="gRow.SlabFrom" type="number" class="form-control" [ngModelOptions]="{standalone: true}" /></td>
+                                                            <td><input type="number" class="form-control" [(ngModel)]="gRow.SlabTo" [ngModelOptions]="{standalone: true}" /></td>
+                                                            <td>
+
+                                                                <select class="form-control my-select other" id="ddlDetentionExpCurrency" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.CurrencyID">
+                                                                    <option value="0">--Select--</option>
+                                                                    <option *ngFor="let gRow of CurrencyValue" [value]="gRow.ID">
+                                                                        {{gRow.Currency}}
+                                                                    </option>
+
+                                                                </select>
+
+                                                            </td>
+                                                            <td><input type="number" autocomplete="off" class="form-control" [(ngModel)]="gRow.Amount" [ngModelOptions]="{standalone: true}" /></td>
+                                                            <td class="alc actwid">
+                                                                <button class="btn btn-success bmd-btn-fab" *ngIf="last" (click)="AddDetentionRowImp(gRow,i)">
+                                                                    <i class="material-icons">add</i>
+                                                                </button>
+                                                                <button class="btn btn-danger bmd-btn-fab" *ngIf="!last" (click)="OnclickTariffImpDetention(DynamicDetentionGridImp,i,gRow.SLID)">
+                                                                    <i class="material-icons">delete</i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
+                                <div class="tab-pane pt-3" id="Storage" role="tabpanel">
+                                    <div id="datatable-buttons_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+
+
+                                        <div class="row tblrow1">
+                                            <div> Tariff Details Export/Laden</div>
+                                            <div class="col-md-12 tablevar padlr0">
+                                                <table class="det table table-striped table-bordered w-100 dataTable no-footer">
+                                                    <thead>
+                                                        <tr>
+
+                                                            <th>S.No</th>
+                                                            <th>Slab From</th>
+                                                            <th>Slab To</th>
+                                                            <th>Currency</th>
+                                                            <th>Amount</th>
+                                                            <th class="actwid">Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        <tr *ngFor="let gRow of DynamicStorageExpLadenGrid; let i= index; let last=last">
+
+                                                            <td>{{i+1}}</td>
+                                                            <td><input [(ngModel)]="gRow.SlabFrom" type="number" class="form-control" [ngModelOptions]="{standalone: true}" /></td>
+                                                            <td><input type="number" class="form-control" [(ngModel)]="gRow.SlabTo" [ngModelOptions]="{standalone: true}" /></td>
+                                                            <td>
+
+                                                                <select class="form-control my-select other" id="ddlStorageExpLadenCurrency" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.CurrencyID">
+                                                                    <option value="0">--Select--</option>
+                                                                    <option *ngFor="let gRow of CurrencyValue" [value]="gRow.ID">
+                                                                        {{gRow.Currency}}
+                                                                    </option>
+
+                                                                </select>
+
+                                                            </td>
+                                                            <td><input type="number" autocomplete="off" class="form-control" [(ngModel)]="gRow.Amount" [ngModelOptions]="{standalone: true}" /></td>
+                                                            <td class="alc actwid">
+                                                                <button class="btn btn-success bmd-btn-fab" *ngIf="last" (click)="AddStorageExpLadenRow(gRow,i)">
+                                                                    <i class="material-icons">add</i>
+                                                                </button>
+                                                                <button class="btn btn-danger bmd-btn-fab" *ngIf="!last" (click)="onclickstrageDelete(DynamicStorageExpLadenGrid,i,gRow.SLID,1)">
+                                                                    <i class="material-icons">delete</i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row tblrow1">
+                                            <div> Tariff Details Export/Empty</div>
+                                            <div class="col-md-12 tablevar padlr0">
+                                                <table class="det table table-striped table-bordered w-100 dataTable no-footer">
+                                                    <thead>
+                                                        <tr>
+
+                                                            <th>S.No</th>
+                                                            <th>Slab From</th>
+                                                            <th>Slab To</th>
+                                                            <th>Currency</th>
+                                                            <th>Amount</th>
+                                                            <th class="actwid">Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        <tr *ngFor="let gRow of DynamicStorageExpEmptyGrid; let i= index; let last=last">
+
+                                                            <td>{{i+1}}</td>
+                                                            <td><input [(ngModel)]="gRow.SlabFrom" type="number" class="form-control" [ngModelOptions]="{standalone: true}" /></td>
+                                                            <td><input type="number" class="form-control" [(ngModel)]="gRow.SlabTo" [ngModelOptions]="{standalone: true}" /></td>
+                                                            <td>
+
+                                                                <select class="form-control my-select other" id="ddlStorageExpEmptyCurrency" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.CurrencyID">
+                                                                    <option value="0">--Select--</option>
+                                                                    <option *ngFor="let gRow of CurrencyValue" [value]="gRow.ID">
+                                                                        {{gRow.Currency}}
+                                                                    </option>
+
+                                                                </select>
+
+                                                            </td>
+                                                            <td><input type="number" autocomplete="off" class="form-control" [(ngModel)]="gRow.Amount" [ngModelOptions]="{standalone: true}" /></td>
+                                                            <td class="alc actwid">
+                                                                <button class="btn btn-success bmd-btn-fab" *ngIf="last" (click)="AddDynamicStorageExpEmptyGrd(gRow,i)">
+                                                                    <i class="material-icons">add</i>
+                                                                </button>
+                                                                <button class="btn btn-danger bmd-btn-fab" *ngIf="!last" (click)="onclickstrageDelete(DynamicStorageExpEmptyGrid,i,gRow.SLID,2)">
+                                                                    <i class="material-icons">delete</i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row tblrow1">
+                                            <div> Tariff Details Import/Laden</div>
+                                            <div class="col-md-12 tablevar padlr0">
+                                                <table class="det table table-striped table-bordered w-100 dataTable no-footer">
+                                                    <thead>
+                                                        <tr>
+
+                                                            <th>S.No</th>
+                                                            <th>Slab From</th>
+                                                            <th>Slab To</th>
+                                                            <th>Currency</th>
+                                                            <th>Amount</th>
+                                                            <th class="actwid">Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        <tr *ngFor="let gRow of DynamicStorageImpLadenGrid; let i= index; let last=last">
+
+                                                            <td>{{i+1}}</td>
+                                                            <td><input [(ngModel)]="gRow.SlabFrom" type="number" class="form-control" [ngModelOptions]="{standalone: true}" /></td>
+                                                            <td><input type="number" class="form-control" [(ngModel)]="gRow.SlabTo" [ngModelOptions]="{standalone: true}" /></td>
+                                                            <td>
+
+                                                                <select class="form-control my-select other" id="ddlStorageImpLadenCurrency" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.CurrencyID">
+                                                                    <option value="0">--Select--</option>
+                                                                    <option *ngFor="let gRow of CurrencyValue" [value]="gRow.ID">
+                                                                        {{gRow.Currency}}
+                                                                    </option>
+
+                                                                </select>
+
+                                                            </td>
+                                                            <td><input type="number" autocomplete="off" class="form-control" [(ngModel)]="gRow.Amount" [ngModelOptions]="{standalone: true}" /></td>
+                                                            <td class="alc actwid">
+                                                                <button class="btn btn-success bmd-btn-fab" *ngIf="last" (click)="AddStorageImpLadenRow(gRow,i)">
+                                                                    <i class="material-icons">add</i>
+                                                                </button>
+                                                                <button class="btn btn-danger bmd-btn-fab" *ngIf="!last" (click)="onclickstrageDelete(DynamicStorageImpLadenGrid,i,gRow.SLID,3)">
+                                                                    <i class="material-icons">delete</i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="row tblrow1">
+                                            <div> Tariff Details Import/Empty</div>
+                                            <div class="col-md-12 tablevar padlr0">
+                                                <table class="det table table-striped table-bordered w-100 dataTable no-footer">
+                                                    <thead>
+                                                        <tr>
+
+                                                            <th>S.No</th>
+                                                            <th>Slab From</th>
+                                                            <th>Slab To</th>
+                                                            <th>Currency</th>
+                                                            <th>Amount</th>
+                                                            <th class="actwid">Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        <tr *ngFor="let gRow of DynamicStorageImpEmptyGrid; let i= index; let last=last">
+
+                                                            <td>{{i+1}}</td>
+                                                            <td><input [(ngModel)]="gRow.SlabFrom" type="number" class="form-control" [ngModelOptions]="{standalone: true}" /></td>
+                                                            <td><input type="number" class="form-control" [(ngModel)]="gRow.SlabTo" [ngModelOptions]="{standalone: true}" /></td>
+                                                            <td>
+
+                                                                <select class="form-control my-select other" id="ddlStorageImpEmptyCurrency" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.CurrencyID">
+                                                                    <option value="0">--Select--</option>
+                                                                    <option *ngFor="let gRow of CurrencyValue" [value]="gRow.ID">
+                                                                        {{gRow.Currency}}
+                                                                    </option>
+
+                                                                </select>
+
+                                                            </td>
+                                                            <td><input type="number" autocomplete="off" class="form-control" [(ngModel)]="gRow.Amount" [ngModelOptions]="{standalone: true}" /></td>
+                                                            <td class="alc actwid">
+                                                                <button class="btn btn-success bmd-btn-fab" *ngIf="last" (click)="AddDynamicStorageImpEmptyGrd(gRow,i)">
+                                                                    <i class="material-icons">add</i>
+                                                                </button>
+                                                                <button class="btn btn-danger bmd-btn-fab" *ngIf="!last" (click)="onclickstrageDelete(DynamicStorageImpEmptyGrid,i,gRow.SLID,4)">
+                                                                    <i class="material-icons">delete</i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
+
+
+                                <div class="tab-pane pt-3" id="ihc" role="tabpanel">
+                                    <div id="datatable-buttons_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+                                        <div class="row tblrow1">
+                                            <div> IHC  Included</div>
+                                            <div class="col-md-12 tablevar padlr0">
+                                                <table class="det table table-striped table-bordered w-100 dataTable no-footer">
+                                                    <thead>
+                                                        <tr>
+
+                                                            <th>S.No</th>
+                                                            <th>Slab From</th>
+                                                            <th>Slab To</th>
+                                                            <th>Currency</th>
+                                                            <th>Revenu Amount</th>
+                                                            <th>Actual Cost</th>
+                                                            <th></th>
+                                                            <th>Line Cost</th>
+                                                            <th class="actwid">Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        <tr *ngFor="let gRow of DynamicIHCGrid; let i= index; let last=last">
+
+                                                            <td>{{i+1}}</td>
+                                                            <td><input [(ngModel)]="gRow.SlabFrom" type="number" autocomplete="off" class="form-control" [ngModelOptions]="{standalone: true}" /></td>
+                                                            <td><input type="number" autocomplete="off" class="form-control" [(ngModel)]="gRow.SlabTo" [ngModelOptions]="{standalone: true}" /></td>
+                                                            <td>
+
+                                                                <select class="form-control my-select other" id="ddlIHCCurrency" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.CurrencyID">
+                                                                    <option value="0">--Select--</option>
+                                                                    <option *ngFor="let gRow of CurrencyValue" [value]="gRow.ID">
+                                                                        {{gRow.Currency}}
+                                                                    </option>
+
+                                                                </select>
+
+                                                            </td>
+                                                            <td><input type="number" autocomplete="off" class="form-control" [(ngModel)]="gRow.RevenueAmount" [ngModelOptions]="{standalone: true}" /></td>
+                                                            <td><input type="number" autocomplete="off" class="form-control" [(ngModel)]="gRow.CostAmount" [ngModelOptions]="{standalone: true}" /></td>
+                                                            <td>
+                                                                <button class="btn btn-primary bmd-btn-fab" (click)="btnIFCChargesBrackupRow(DynamicIHCGrid,i,gRow.SLID)">
+                                                                    <i class="material-icons">list</i>
+                                                                </button>
+                                                            </td>
+                                                            <td><input type="number" autocomplete="off" class="form-control" [(ngModel)]="gRow.LineAmount" [ngModelOptions]="{standalone: true}" /></td>
+                                                            <td class="alc actwid">
+                                                                <button class="btn btn-success bmd-btn-fab" *ngIf="last" (click)="AddIHCRow(gRow,i)">
+                                                                    <i class="material-icons">add</i>
+                                                                </button>
+                                                                <button class="btn btn-danger bmd-btn-fab" *ngIf="!last" (click)="onclickTraiffIHCChargesDelete(DynamicIHCGrid,i,gRow.SLID)">
+                                                                    <i class="material-icons">delete</i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="divide"></div>
+                    <div class="row">
+                        <div class="col-md-12 alrt">
+                            <button type="button" class="btn btn-raised btn-success" (click)="OnclickRecordSave();">SUBMIT</button>
+                        </div>
+                        <input type="hidden" id="RegId" [(ngModel)]="RegId" name="RegId" />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="modal fade seminor-login-modal" data-backdrop="static" id="RevenuDOChargesModal">
+            <div class="modal-dialog modal-dialog-centered dialog1100">
+                <div class="modal-content">
+                    <div class="row">
+                        <div class="col-md-12 alrt">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body seminor-login-modal-body">
+                        <h5 class="modal-title text-center">DO CHARGES</h5>
+
+                        <div class="row">
+                            <div class="col-sm-12 padlr0">
+                                <table id="datatable-buttons" class="det table table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                    <thead>
+                                        <tr>
+                                            <th>S.No</th>
+                                            <th>Slab Upto</th>
+                                            <th>Currency</th>
+                                            <th>Amount</th>
+                                            <th>Action</th>
+
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr *ngFor="let gRow of DynamicRevenuDOChargesGrid; let i= index; let last=last">
+                                            <td>{{i+1}}</td>
+                                            <td><input type="number" autocomplete="off" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.SlabUpto" /></td>
+                                            <td>
+
+                                                <select class="form-control my-select other" id="ddlDOCurrency" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.CurrencyID">
+                                                    <option value="0">--Select--</option>
+                                                    <option *ngFor="let gRow of CurrencyValue" [value]="gRow.ID">
+                                                        {{gRow.Currency}}
+                                                    </option>
+                                                </select>
+
+                                            </td>
+                                            <td><input type="number" autocomplete="off" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.Amount" /></td>
+                                            <td class="alc actwid">
+
+                                                <button class="btn btn-danger bmd-btn-fab" *ngIf="!last" (click)="BtnClickDOChargeDelete(DynamicRevenuDOChargesGrid,i,gRow.SLID);">
+                                                    <i class="material-icons">delete</i>
+                                                </button>
+                                                <button class="btn btn-success bmd-btn-fab" *ngIf="last" (click)="BtnClickRevenuDOCharges(gRow,i);">
+                                                    <i class="material-icons">add</i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 alrt">
+                                <button type="button" class="btn btn-raised btn-success" (click)="OnclickTariffDORecordSave(DynamicRevenuDOChargesGrid);">SUBMIT</button>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade seminor-login-modal" data-backdrop="static" id="THCCostChargesModal">
+            <div class="modal-dialog modal-dialog-centered dialog1100">
+                <div class="modal-content">
+                    <div class="row">
+                        <div class="col-md-12 alrt">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body seminor-login-modal-body">
+                        <h5 class="modal-title text-center">THC COSTINGS</h5>
+
+                        <div class="row">
+                            <div class="col-sm-12 padlr0">
+                                <table id="datatable-buttons" class="table table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                    <thead>
+                                        <tr>
+                                            <th>S.No</th>
+                                            <th>Charges</th>
+                                            <th>Shipment Type</th>
+                                            <th>Commodity</th>
+                                            <th>Cntr Type</th>
+                                            <th>Currency</th>
+                                            <th>Amount</th>
+                                            <th>Ex.Rate</th>
+                                            <th>Local Amt</th>
+                                            <th>Action</th>
+
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr *ngFor="let gRow of DynamicTHCChargesGrid; let i= index; let last=last">
+                                            <td>{{i+1}}</td>
+                                            <td>
+                                                <select class="form-control my-select other" id="ddlTHCChargeCode" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.ChargeCodeID">
+                                                    <option value="0">--Select--</option>
+                                                    <option *ngFor="let gRow of ChargeCodeAllvalues" [value]="gRow.ID">
+                                                        {{gRow.ChargeCode}}
+                                                    </option>
+                                                </select>
+                                            </td>
+
+                                            <td>
+                                                <select class="form-control my-select other" id="ddlTHCShipmentType" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.ShipmentID">
+                                                    <option value="0">--Select--</option>
+                                                    <option *ngFor="let gRow of FillShipmentTypes" [value]="gRow.ID">
+                                                        {{gRow.GeneralName}}
+                                                    </option>
+                                                </select>
+                                            </td>
+
+                                            <td>
+                                                <select class="form-control my-select other" id="ddlTHCCommodity" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.CommodityID">
+                                                    <option value="0">--Select--</option>
+                                                    <option *ngFor="let gRow of CommodityAllvalues" [value]="gRow.ID">
+                                                        {{gRow.GeneralName}}
+                                                    </option>
+                                                </select>
+                                            </td>
+
+                                            <td>
+                                                <select class="form-control my-select other" id="ddlCntrTypes" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.CntrType">
+                                                    <option value="0">--Select--</option>
+                                                    <option *ngFor="let gRow of CntrTypesvalues" [value]="gRow.ID">
+                                                        {{gRow.CntrTypes}}
+                                                    </option>
+                                                </select>
+                                            </td>
+
+
+                                            <td>
+
+                                                <select class="form-control my-select other" id="ddlDOCurrency" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.CurrencyID">
+                                                    <option value="0">--Select--</option>
+                                                    <option *ngFor="let gRow of CurrencyValue" [value]="gRow.ID">
+                                                        {{gRow.Currency}}
+                                                    </option>
+                                                </select>
+
+                                            </td>
+                                            <td><input type="number" autocomplete="off" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.Amount" /></td>
+                                            <td><input type="number" autocomplete="off" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.ExRate" /></td>
+                                            <td><input type="number" autocomplete="off" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.LocalAmount" /></td>
+
+                                            <td class="alc">
+
+                                                <button class="btn btn-danger bmd-btn-fab" *ngIf="!last" (click)="BtnClickTHCChargeDelete(DynamicTHCChargesGrid,i,gRow.SLID);">
+                                                    <i class="material-icons">delete</i>
+                                                </button>
+                                                <button class="btn btn-success bmd-btn-fab" *ngIf="last" (click)="BtnClickTHCCharges(gRow,i);">
+                                                    <i class="material-icons">add</i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 alrt">
+                                <button type="button" class="btn btn-raised btn-success" (click)="OnclickTariffTHCRecordSave(DynamicTHCChargesGrid);">SUBMIT</button>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade seminor-login-modal" data-backdrop="static" id="IFCBrackupChargesModal">
+            <div class="modal-dialog modal-dialog-centered dialog1100">
+                <div class="modal-content">
+                    <div class="row">
+                        <div class="col-md-12 alrt">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body seminor-login-modal-body">
+                        <h5 class="modal-title text-center">IFC CHARGES</h5>
+
+                        <div class="row">
+                            <div class="col-sm-12 padlr0">
+                                <table id="datatable-buttons" class="table table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                    <thead>
+                                        <tr>
+                                            <th>S.No</th>
+                                            <th>Charges</th>
+                                            <th>Payment To</th>
+                                            <th>Amount</th>
+                                            <th>Action</th>
+
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr *ngFor="let gRow of DynamicIHCBrackupChargesGrid; let i= index; let last=last">
+                                            <td>{{i+1}}</td>
+                                            <td>
+                                                <select class="form-control my-select other" id="ddlIFCChargeCode" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.ChargeCodeID">
+                                                    <option value="0">--Select--</option>
+                                                    <option *ngFor="let gRow of ChargeCodeAllvalues" [value]="gRow.ID">
+                                                        {{gRow.ChargeCode}}
+                                                    </option>
+                                                </select>
+                                            </td>
+
+                                            <td>
+                                                <select class="form-control my-select other" id="ddlPaymentTo" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.PaymentTo">
+                                                    <option value="0">--Select--</option>
+                                                    <option *ngFor="let gRow of fillPaymentTo" [value]="gRow.ID">
+                                                        {{gRow.GeneralName}}
+                                                    </option>
+                                                </select>
+                                            </td>
+                                            <td><input type="number" autocomplete="off" class="form-control" [ngModelOptions]="{standalone: true}" [(ngModel)]="gRow.Amount" /></td>
+
+                                            <td class="alc">
+
+                                                <button class="btn btn-danger bmd-btn-fab" *ngIf="!last">
+                                                    <i class="material-icons">delete</i>
+                                                </button>
+                                                <button class="btn btn-success bmd-btn-fab" *ngIf="last" (click)="BtnClickIFCBrackupCharges(gRow,i);">
+                                                    <i class="material-icons">add</i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12 alrt">
+                                <button type="button" class="btn btn-raised btn-success" (click)="OnclickTariffBrackupIHCRecordSave(DynamicIHCBrackupChargesGrid);">SUBMIT</button>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="modal fade seminor-login-modal" data-backdrop="static" id="AgreementModal">
+            <div class="modal-dialog modal-dialog-centered dialog1100">
+                <div class="modal-content">
+                    <div class="row">
+                        <div class="col-md-12 alrt">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body seminor-login-modal-body">
+                        <h5 class="modal-title text-center">PRINCIPAL AGREEMENT</h5>
+
+                        <div class="row">
+                            <div class="col-sm-12 padlr0">
+                                <table id="datatable-buttons" class="table table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                    <thead>
+                                        <tr>
+                                            <th>S.No</th>
+                                            <th>Agreement Type</th>
+                                            <th>Tariff Type</th>
+                                            <th>Commission Type</th>
+                                            <th>Shipment Type</th>
+                                            <th>Charge</th>
+                                            <th>Currency</th>
+                                            <th>Cntr Type</th>
+                                            <th>Amount</th>
+
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+
+                                        <tr *ngFor="let gRow of FreightCommDynamicGrid; let i= index; let last=last">
+                                            <td>{{i+1}}</td>
+                                            <td>{{gRow.AgreementType}}</td>
+                                            <td>{{gRow.TariffType}}</td>
+                                            <td>{{gRow.CommissionType}}</td>
+                                            <td>{{gRow.ShipmentType}}</td>
+                                            <td>{{gRow.ChargeType}}</td>
+                                            <td>{{gRow.Currency}}</td>
+                                            <td>{{gRow.CntrType}}</td>
+                                            <td>{{gRow.Amount}}</td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</form>

@@ -1,0 +1,254 @@
+<div class="constiner card p-4">
+
+    <div class="row mt-4 pb-4 border-bottom">
+        <div class="col-12">
+            <h5>Statement Upload</h5>
+        </div>
+        <div class="col-3">
+            <label class="str">Bank</label>
+            <!-- <select class="form-control my-select" [(ngModel)]="selectedBank" (change)="getBankTemplateURL($event.target.value)">
+                <option [value]="''" disabled>--SELECT BANK--</option>
+                <option *ngFor="let bank of bankList" [value]="bank.BankID">
+                    {{bank.BankName | uppercase}} - {{bank.AccountNo | uppercase}} 
+                </option>
+            </select> -->
+            <ng-select class="searchdropdown" [clearable]="false"  [(ngModel)]="selectedBank" (change)="getBankTemplateURL($event)" [placeholder]="'--SELECT BANK--'">
+                <ng-option [value]="' '" disabled>--SELECT BANK--</ng-option>
+                <ng-option *ngFor="let bank of bankList" [value]="bank.BankID">
+                    {{ bank.BankName | uppercase }} - {{ bank.AccountNo | uppercase }}
+                </ng-option>
+            </ng-select>            
+        </div>
+        <div class="col-auto">
+            <label class="str">Browse File</label>
+
+            <div class="file-upload">
+                <input type="text" hidden />
+                <input class="file-upload__input" hidden type="file" name="myFile" id="myFile"
+                    (change)="fileSelected($event)">
+                <label for="myFile" class="file-upload__button text-center W-100 px-4"
+                    style="border: 1px solid #b1b1b1d1 !important; border-radius: 10px; box-shadow: 0px 0px 5px 0px rgb(202 202 202); background-color: white; font-weight: 600; margin-right: 0.5rem !important;"
+                    type="button">
+                    <img class="ml-2" src="assets/images/docupload.png" alt="Upload image"
+                        style="width: 1rem !important;" />
+                    Upload File
+                </label>
+
+                <!-- Download template was commented -->
+
+                <!-- <button type="button" (click)="downloadTemplateFile()" style="border: 1px solid #b1b1b1d1 !important; border-radius: 10px; box-shadow: 0px 0px 5px 0px rgb(202 202 202); background-color: white; font-weight: 600; margin-right: 0.5rem !important;">
+                    <img class="ml-2" src="assets/images/download.png" alt="Upload image"
+                    style="width: 1rem !important;" />
+                    Download Template
+                </button> -->
+
+                <!-- <label class="px-2" for="downloadPath">
+                    <span class="text-danger btn-link pr-4"  (click)="downloadTemplateFile()">Download Template</span>
+               </label> -->
+            </div>
+            <div>{{file?.name}}</div>
+        </div>
+        <div class="col-2">
+            <label class="str mb-2">Statement uploaded till</label><br>
+            <mat-form-field class="tillDate mat_date_picker"   appearance="outline" >
+                <input matInput (click)="StatementUploadedDatedp.open()" readonly autocomplete="off" [matDatepicker]="StatementUploadedDatedp"  id="StatementUploadedDate" [placeholder]="entityDateFormat" [(ngModel)]="StatementUploadedDate" [max]="currentDate">
+                <mat-datepicker-toggle matSuffix [for]="StatementUploadedDatedp"></mat-datepicker-toggle>
+                <mat-datepicker #StatementUploadedDatedp></mat-datepicker>
+            </mat-form-field>
+            <!-- <input type="date" name="" id="" class="py-0 w-50 pr-2 form-control w-100" [(ngModel)]="StatementUploadedDate" [max]="currentDate"> -->
+        </div>
+        <div class="col-3 m-auto">
+            <button type="submit"           
+            (click)="uploadFile()" class="btn btn-primary btn-raised mb-0">
+            Upload
+        </button>
+        <button 
+            class="btn btn-raised btn-danger mb-0" (click)="clearUpload()">
+            Cancel
+        </button>
+        </div>
+
+    </div>
+    <form [formGroup]="bankSummaryDetailsForm">
+    <div class="row my-4">
+
+        <div class="col-12">
+            <h5>Statement Review</h5>
+        </div>
+        
+        <div class="col-3">
+            <label class="str mb-2">Period</label><br>
+            <div class="d-flex">
+                <div class="w-50 pr-2">
+                    <mat-form-field class="tillDate mat_date_picker"   appearance="outline" >
+                        <input matInput (click)="fromPeriod.open()" readonlyautocomplete="off" [max]="fromMaxDate" [matDatepicker]="fromPeriod"  id="fromPeriod" 
+                        [placeholder]="entityDateFormat" formControlName="fromPeriod">
+                        <mat-datepicker-toggle matSuffix [for]="fromPeriod"></mat-datepicker-toggle>
+                        <mat-datepicker #fromPeriod></mat-datepicker>
+                    </mat-form-field>
+                    <!-- <input type="date" name="" id="" class="py-0 w-100 pr-2 form-control" formControlName="fromPeriod" [max]="fromMaxDate" > -->
+                </div>
+                <div class="w-50 mb-2">
+                    <mat-form-field class="tillDate mat_date_picker"   appearance="outline" >
+                        <input matInput (click)="toPeriod.open()" readonly autocomplete="off" [max]="toMaxDate" (change)="updateFromDate($event.target.value);" [matDatepicker]="toPeriod"  id="toPeriod" 
+                        [placeholder]="entityDateFormat" formControlName="toPeriod">
+                        <mat-datepicker-toggle matSuffix [for]="toPeriod"></mat-datepicker-toggle>
+                        <mat-datepicker #toPeriod></mat-datepicker>
+                    </mat-form-field>
+                    <!-- <input type="date" name="" id="" class="py-0 w-100 form-control" formControlName="toPeriod"  [max]="toMaxDate" (change)="updateFromDate($event.target.value);"> -->
+                </div>
+            </div>
+            <!-- <select class="form-control my-select">
+                <option [value]="0" disabled>--SELECT PERIOD--</option>
+                <option *ngFor="let division of divisionDropdown" [value]="division.ReportId">
+                    {{division.ReportName | uppercase}}
+                </option>
+            </select> -->
+        </div>
+
+        <div class="col-2 ">  
+            <label class="str">Division</label>
+
+
+            <mat-select formControlName="divisionId" placeholder="Select Division(s)"
+                    class="form-control "  multiple >
+                <mat-option #allSelected (click)="toggleAllSelection()" [value]="0">All</mat-option>
+                <ng-container *ngFor="let division of divisionDropdown">
+                <mat-option   [value]="division.ID" (click)="tosslePerOne(allSelected.viewValue)">
+                    {{division.DivisionName | uppercase}}
+                </mat-option>
+            </ng-container>
+            </mat-select>
+       </div>
+        <div class="col-2">
+            <label class="str">Office</label>
+
+            <mat-select [placeholder]=" officeDropdown.length?  'Select Office' : 'Select Division'" formControlName="officeId"
+            class="form-control" multiple>
+                <mat-option #allSelected1 *ngIf="officeDropdown.length" (click)="toggleAllSelectionOffiece()" [value]="0">All</mat-option>
+                <ng-container *ngFor="let office of officeDropdown">
+                <mat-option  [value]="office.ID" (click)="tosslePerOneOffice(allSelected.viewValue)">
+                    {{office.OfficeName | uppercase}}
+                </mat-option>
+            </ng-container>
+            </mat-select>
+        </div>
+
+        <div class="col-2">
+            <label class="str">Bank</label>
+            <!-- <select class="form-control my-select" formControlName="bankId">
+                <option [value]="''" disabled>--SELECT BANK--</option>
+                <option *ngFor="let bank of bankDropdown" [value]="bank.BankID">
+                    {{bank.BankName | uppercase}} -- {{bank.AccountNo}}
+                </option>
+            </select> -->
+            <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'bankId'">
+                <ng-option [value]="''" disabled>--SELECT BANK --</ng-option>
+                   <ng-option *ngFor="let bank of bankDropdown" [value]="bank.BankID">
+                   <span class="textwrap">{{bank.BankName | uppercase}} -- {{bank.AccountNo}}</span>
+                </ng-option>
+           </ng-select> 
+        </div>
+
+        <div class="col-3  m-auto">
+            <button type="submit"
+                (click)="getExcelUploadList()" class="btn btn-primary btn-raised mb-0">
+               Search Statement
+            </button>
+        </div>
+    </div>
+</form>
+
+    <div class="row">
+        <div class="col-8"></div>
+        <div class="col-4 font-weight-bolder text-right d-flex justify-content-end">
+            Export as
+            <img width="22px" height="22px" class="exportAs mx-1 align-baseline" src="../../../../assets/images/icon/file-pdf-solid.jpeg" (click)="downloadAsPDF()" alt="logo">
+            <img width="22px" height="22px" class="exportAs mx-1 align-baseline" src="../../../../assets/images/icon/file-csv-solid.jpeg" (click)="downloadAsCSV()" alt="logo">
+            <img width="22px" height="22px" class="exportAs mx-1 align-baseline" src="../../../../assets/images/icon/file-excel-solid.jpeg" (click)="downloadAsExcel()" alt="logo">
+        </div>
+
+    </div>
+    <div class="row  mb-4"></div>
+    <div class="row ">
+        <div class="col-12  table-responsive">
+            <table id="bankStatementTable" class="table table-bordered w-100 table-striped border-0 agingTable mt-2 text-center">
+                <thead>
+                    <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">Bank Reference #</th>
+                        <th scope="col">Cheque No</th>
+                        <th scope="col">Deposits</th>
+                        <th scope="col">Withdrawals</th>
+                        <th scope="col">Bank Closing Balance</th>
+                        <th scope="col">Reconciliation Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngIf="bankStatementTablePagedItems?.length; else noRecord">
+                        <tr *ngFor="let bankStatement of bankStatementTablePagedItems;let i = index">
+                            <!-- <td>
+                                <input type="radio" (click)="OnClickRadio(i)" />
+                            </td> -->
+                            <td class="text-center">{{bankStatement.StatementDate | date : commonService.convertToLowerCaseDay(entityDateFormat)}}</td>
+
+                            <td  class="text-center" [title]="bankStatement.BankReference | uppercase">
+                                {{ (bankStatement.BankReference && bankStatement.BankReference.length > 25) ? bankStatement.BankReference.slice(0, 25) + '-' : (bankStatement.BankReference|| '-') }}
+                              </td>
+                            <!-- <td class="text-center">{{bankStatement.BankReference ? bankStatement.BankReference : '-'}}</td> -->
+                              <td  class="text-center" [title]="bankStatement.ChequeDetails | uppercase">
+                                {{ (bankStatement.ChequeDetails && bankStatement.ChequeDetails.length > 25) ? bankStatement.ChequeDetails.slice(0, 25) + '-'  : (bankStatement.ChequeDetails|| '-') }}
+                              </td>
+                            <!-- <td class="text-center">{{bankStatement.BankReference ? bankStatement.BankReference : '-'}}</td> -->
+                            <td class="text-center">{{bankStatement.Deposits ? bankStatement.Deposits : '-'}}</td>
+                            <td class="text-center">{{bankStatement.Withdrawals ? bankStatement.Withdrawals : '-'}}</td>
+                            <td class="text-center">{{bankStatement.BankClosingBalance ? bankStatement.BankClosingBalance : '-'}}</td>
+                            <td class="text-center">
+                                <div
+                                    [ngClass]="bankStatement.IsReconcile == true ? 'badge badge-state-confirm' : 'badge badge-state'">
+                                    {{bankStatement.IsReconcile? 'Reconcile' : 'Un-reconcile'}}
+                                </div>
+                            </td>
+                            <!-- <td class="text-center">{{bankStatement.IsReconcile ? 'Reconcile' : 'Un-reconcile'}}</td> -->
+                        </tr>
+                    </ng-container>
+                    <!-- no data -->
+                    <ng-template #noRecord>
+                        <tr>
+                            <td class="text-center" colspan="7" style="height: 100px;">No records found</td>
+                        </tr>
+                    </ng-template>
+                </tbody>
+            </table>
+            <div>
+                <div class="row page mb-3" *ngIf="asd1">
+                    <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10" class="pagination mt-2 mb-0">
+                        <li [ngClass]="{disabled:pager.currentPage === 1}">
+                            <a (click)="setPage(1)">First</a>
+                        </li>
+                        <li [ngClass]="{disabled:pager.currentPage === 1}">
+                            <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+                        </li>
+                        <li *ngFor="let page of pager.pages"
+                            [ngClass]="{active:pager.currentPage === page}">
+                            <a (click)="setPage(page)">{{page}}</a>
+                        </li>
+                        <li *ngIf="(pager.totalPages - pager.startPage) > 5 ">
+                            <a (click)="setPage(pager.startPage + 5)">...</a>
+                        </li>
+                        <li *ngIf="(pager.totalPages - pager.startPage) > 5">
+                            <a (click)="setPage(pager.totalPages)">{{pager.totalPages}}</a>
+                        </li>
+
+                        <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                            <a (click)="setPage(pager.currentPage + 1)">Next</a>
+                        </li>
+                        <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                            <a (click)="setPage(pager.totalPages)">Last</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

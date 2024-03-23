@@ -1,0 +1,546 @@
+<div class="container-fluid p-0">
+    <div class="row headtitle m-2 d-flex justify-content-between mt-2">
+        <h4 class="ml-2 mt-2">Tax Type</h4>
+
+        <div class="btntop">
+            <button *ngIf="isUpdate" (click)="Taxgroupform.enable();isUpdateEnable = true" type="button"
+                class="btn btn-warning bmd-btn-edit btn-raised btntop emarginr ng-star-inserted">
+                <i class="material-icons editicon">edit</i></button>
+
+            <button type="button" class="btn btn-success btntop btn-raised bmd-btn-edit" (click)="onBack()">
+                <i class="material-icons editicon">reply</i>
+                <div class="ripple-container"></div>
+            </button>
+
+            <button *ngIf="isUpdate"
+                class="nav-link dropdown-toggle arrow-none waves-effect nav-user btn bmd-btn-edit btn-raised btntop btnlog"
+                data-placement="bottom" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="material-icons editicon">schedule</i>
+            </button>
+
+
+            <div style="background-color: aliceblue;width:250px;left:-66px"
+                class="dropdown-menu dropdown-menu  profile-dropdown" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" style="padding:15px;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12"><span>ModifiedOn: {{ModifiedOn}}</span> | <span>Modified By:
+                                        {{ModifiedBy}}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:10px;">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12"><span>CreatedOn: {{CreatedOn}}</span> | <span>Created By:
+                                        {{CreatedBy}}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- --------title start-------- -->
+    <div class="row my-3 p-2" style="background-color: lavender;margin: 2px;">
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row bkgno">
+                <div class="col-md-12">
+                    <label [title]="Taxgroupform.value.Taxtypename" class="lbltxt header-text-label"><span
+                            style="font-weight: lighter !important;">Tax Type Name :
+                        </span>{{Taxgroupform.value.Taxtypename | uppercase}}</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- --------title end----------- -->
+
+    <div class="card p-4">
+        <div class="row mt-4 ml-0 mb-3" style="height: 2.4rem;">
+            <div (click)="checkPermission('Basic')"
+                [ngClass]="selectedTabName == 'Basic' ? 'selected-tav-view' : 'not-selected-tav-view'"
+                class="col-2 text-center select-tav-view">Basic Details </div>
+            <div (click)="checkPermission('GL')"
+                [ngClass]="selectedTabName == 'GL' ? 'selected-tav-view' : 'not-selected-tav-view'"
+                class="col-2 text-center select-tav-view">GL Mapping</div>
+
+        </div>
+
+
+        <div *ngIf="selectedTabName == 'Basic'">
+            <form [formGroup]="Taxgroupform">
+                <div class="card">
+                    <div class="card-body ">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                                <label class="str">Tax Code</label><br>
+                                <input readonly [ngClass]=" isUpdate ? 'block-input' : ''" type="text"
+                                    name="taxtypename" formControlName="TaxCode" autocomplete="off" id="taxtypename"
+                                    (paste)="(false)" ng-model="taxtypename" class="form-control" maxlength="80">
+                            </div>
+
+                            <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                                <label class="str">Country</label>
+
+                                <ng-select class="searchdropdown" [ngClass]="isUpdate ? 'block-input' : ''"
+                                    [clearable]="false" formControlName="Country" id="ddlCountry">
+                                    <ng-option [value]="0" [disabled]="true">--SELECT COUNTRY--</ng-option>
+                                    <ng-option *ngFor="let gRow  of AccTypecontrys" [value]="gRow.ID">
+                                        {{gRow.CountryName | uppercase}}
+                                    </ng-option>
+                                </ng-select>
+                            </div>
+
+                            <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                                <label class="str">Nature of Payment</label>
+                                <input [ngClass]=" isUpdate ? 'block-input' : ''" type="text" name="taxtypename"
+                                    formControlName="Taxtypename" autocomplete="off" id="taxtypename" (paste)="(false)"
+                                    ng-model="taxtypename" class="form-control" maxlength="80">
+                            </div>
+
+                            <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4 mt-3">
+                                <label class="str">Short Name</label>
+                                <input (ngModelChange)="autoCodeGeneration($event)"
+                                    [ngClass]=" isUpdate ? 'block-input' : ''" type="text" formControlName="shortName"
+                                    autocomplete="off" class="form-control" maxlength="80">
+                            </div>
+
+                            <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4 mt-3">
+                                <label class="str mb-2">Effective Date</label>
+                                <mat-form-field class="tillDate mat_date_picker" appearance="outline">
+                                    <input matInput (click)="EffectiveDate.open()" [min]="getToday()" readonly
+                                        [ngClass]=" isUpdate ? 'disable-datepicker' : ''"
+                                        [matDatepicker]="EffectiveDate" formControlName="EffectiveDate"
+                                        [placeholder]="entityDateFormat" style="font:small-caption">
+                                    <mat-datepicker-toggle matSuffix [for]="EffectiveDate"></mat-datepicker-toggle>
+                                    <mat-datepicker #EffectiveDate></mat-datepicker>
+                                </mat-form-field>
+                                <!-- <input [ngClass]=" isUpdate ? 'block-input' : ''" type="date" name="effectivedate"
+                                [max]="getToday()" formControlName="EffectiveDate" autocomplete="off" id="effectivedate"
+                                ng-model="effectivedate" class="form-control"> -->
+                            </div>
+
+                            <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4 mt-3">
+                                <label class="str">Active</label>
+
+
+                                <ng-select class="searchdropdown" name="Status" [clearable]="false"
+                                    formControlName="Status" id="ddlStatus">
+                                    <ng-option [value]="''" [disabled]="true">--SELECT ACTIVE--</ng-option>
+                                    <ng-option *ngFor="let status of statusvalues" [value]="status.value">
+                                        {{status.viewValue | uppercase}}
+                                    </ng-option>
+                                </ng-select>
+                            </div>
+
+
+                            <!-- <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4 mt-3">
+                        <label class="str">Active</label>
+    
+                        <select name="Status" formControlName="Status" id="ddlStatus" class="form-control my-select">
+                            <option [value]="null">-- Select Status --</option>
+                            <option *ngFor="let status of statusvalues" [value]="status.value">
+                                {{status.viewValue}}
+                            </option>
+                        </select>
+                    </div> -->
+
+                            <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4 mt-3">
+
+                                <mat-select [ngClass]=" isUpdate ? 'block-input' : ''" formControlName="Associatedtax"
+                                    (ngModelChange)="taxChanges($event)" placeholder="Associated Tax"
+                                    class="form-control" multiple>
+                                    <mat-option *ngFor="let gRow of AccTypeassociated" [value]="gRow.AssociatedTypeID">
+                                        {{gRow.AssociatedType | uppercase}}
+                                    </mat-option>
+                                </mat-select>
+
+
+                            </div>
+
+                            <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4 mt-3">
+                                <label>Selected Associated Tax</label><br>
+
+                                <mat-chip-set class="example-chip" cdkDropList cdkDropListOrientation="horizontal">
+                                    <mat-chip style="margin-right: 7px;font-size: 16px;padding: 4px;"
+                                        class="example-box" *ngFor="let chip of chipsList">
+                                        {{chip.AssociatedType | uppercase}}
+                                    </mat-chip>
+                                </mat-chip-set>
+
+                            </div>
+
+
+                            <!-- <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                        <div class="form-group bmd-form-group">
+                            <div class="row">
+                                <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                    <label class="str">Country</label>
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                                <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                    <select name="AccType" formControlName="Country" id="ddlCountry"
+                                        class="form-control my-select">
+                                        <option [value]="null">-- Select Country --</option>
+                                        <option *ngFor="let gRow  of AccTypecontrys" [value]="gRow.ID">
+                                            {{gRow.CountryName}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+
+                            <!-- <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                        <div class="form-group bmd-form-group">
+                            <div class="row">
+                                <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                    <label class="str">Tax Name</label>
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                                <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                    <input type="text" name="taxtypename" formControlName="Taxtypename" autocomplete="off"
+                                        id="taxtypename" (paste)="(false)" ng-model="taxtypename" class="form-control"
+                                        maxlength="80">
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+
+
+                            <!-- <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                        <div class="form-group bmd-form-group">
+                            <div class="row">
+                                <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                    <label class="str">Effective Date</label>
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                                <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                                    <input type="date" [min]="getToday()" name="effectivedate"
+                                        formControlName="EffectiveDate" autocomplete="off" id="effectivedate"
+                                        ng-model="effectivedate" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+
+                            <!-- <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                        <div class="form-group bmd-form-group">
+                            <div class="row">
+                                <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                    <label class="str">Active</label>
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                                <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7 input-field">
+                                    <select name="Status" formControlName="Status" id="ddlStatus"
+                                        class="form-control my-select">
+                                        <option [value]="null">-- Select Status --</option>
+                                        <option *ngFor="let status of statusvalues" [value]="status.value">
+                                            {{status.viewValue}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+
+                            <!-- <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                        <div class="form-group bmd-form-group">
+                            <div class="row">
+                                <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                                    <label class="str">Associated Tax</label>
+                                </div>
+                                <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                                <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+    
+                                    <mat-select formControlName="Associatedtax" placeholder="Associated Tax"
+                                        class="form-control" multiple>
+                                        <mat-option *ngFor="let gRow  of AccTypeassociated" [value]="gRow.AssociatedTypeID">
+                                            {{gRow.AssociatedType}}
+                                        </mat-option>
+                                    </mat-select>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+
+                        </div>
+                    </div>
+
+
+                    <div class="mb-3">
+                        <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12" style="text-align:right;">
+
+                            <button *ngIf="isCreate" (click)="onSubmit()" type="submit"
+                                class="btn btn-primary btn-raised btn-default cntbtn mb-0">Save</button>
+                            <!-- style="background-color:green;color:white;margin-right:12px;" -->
+                            <button [disabled]="!isUpdateEnable" *ngIf="isUpdate" (click)="onSubmit()" type="submit"
+                                class="btn btn-primary btn-raised btn-default cntbtn mb-0">Update</button>
+                            <button type="button" (click)="reset()"
+                                class="btn btn-danger btn-raised cntbtn mb-0">Cancel</button>
+                        </div>
+                        <input type="hidden" id="HDRegId" ng-model="HDRegId" />
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div *ngIf="selectedTabName == 'GL'">
+
+            <form [formGroup]="GLMappingform">
+
+                <!-- <div class="card"> -->
+                <!-- <div class="card-body "> -->
+                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 ">
+                    <div class="row">
+                        <div class="col-md-12 alrt">
+                            <button type="submit" class="btn btn-success bmd-btn-fab tblbtngap"
+                                [disabled]="!isUpdateEnable" (click)="DynamicGridAddRow()"><i
+                                    class="material-icons editicon">add</i>
+                                <div class="ripple-container"></div>
+                            </button>
+                            <button type="submit" class="btn btn-primary bmd-btn-fab tblbtngap"
+                                [disabled]="!isUpdateEnable" (click)="OnClickEditValue()"><i
+                                    class="material-icons editicon">edit</i>
+                                <div class="ripple-container"></div>
+                            </button>
+                            <!-- <button type="submit" class="btn btn-danger bmd-btn-fab" [disabled]="isUpdateEnable"
+                                    (click)="DynamicGridDeleteRow()"><i class="material-icons editicon">delete</i>
+                                    <div class="ripple-container"></div>
+                                </button> -->
+                        </div>
+                        <div class="col-12 table-wrapper">
+                            <!-- <form [formGroup]="linkedGLForm"> -->
+                            <table class="bend-table" style="max-height: 500px;"
+                                class="table table-responsive  table-bordered w-100 table-striped border-0 agingTable mt-2">
+                                <thead class="text-center">
+                                    <tr class="header-position-sticky">
+                                        <th class="actwid text-center">S.No</th>
+                                        <th class="text-center">Associated Tax</th>
+                                        <th class="text-center">Transaction Type</th>
+                                        <th class="text-center">Office</th>
+                                        <th class="text-center">Account</th>
+                                        <th class="text-center">Sub ledger</th>
+                                        <th class="text-center">Status</th>
+                                        <th class="text-center">Select</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="text-center"></td>
+                                        <td class="text-center bestfit-width">
+                                            <ng-select class="searchdropdown" [clearable]="false" [appendTo]="'body'"
+                                                formControlName="AssociatedtaxId" [disabled]="isUpdateEnable">
+                                                <ng-option [value]="0" [disabled]="true">--SELECT
+                                                    Associated Tax--</ng-option>
+                                                <ng-option *ngFor="let gRow of chipsList"
+                                                    [value]="gRow.AssociatedTypeID">
+                                                    {{gRow.AssociatedType | uppercase}}
+                                                </ng-option>
+                                            </ng-select>
+
+                                        </td>
+
+                                        <td class="text-center best-fit-width">
+                                            <ng-select class="searchdropdown" [appendTo]="'body'" [clearable]="false"
+                                                [disabled]="isUpdateEnable" formControlName="TransactionType">
+                                                <ng-option [value]="0" [disabled]="true">--SELECT Transaction
+                                                    Type--</ng-option>
+                                                <ng-option *ngFor="let item of transactionTypeList"
+                                                    [value]="item.value">
+                                                    {{item.viewValue | uppercase}}
+                                                </ng-option>
+                                            </ng-select>
+
+                                        </td>
+
+                                        <td class="text-center bestfit-width">
+                                            <ng-select class="searchdropdown" [appendTo]="'body'" [clearable]="false"
+                                                [disabled]="isUpdateEnable" formControlName="OfficeId">
+                                                <ng-option [value]="0" [disabled]="true">--SELECT OFFICE
+                                                    Account--</ng-option>
+                                                <ng-option *ngFor="let gRow of OfficeList" [value]="gRow.ID">
+                                                    {{gRow.OfficeName | uppercase}}
+                                                </ng-option>
+                                            </ng-select>
+
+                                        </td>
+
+                                        <td class="text-center bestfit-width">
+                                            <ng-select class="searchdropdown" [appendTo]="'body'" [clearable]="false"
+                                                [disabled]="isUpdateEnable" (change)="GetCOAAccountMappingList($event)"
+                                                formControlName="AccountId">
+                                                <ng-option [value]="0" [disabled]="true">--SELECT Account
+                                                    Type--</ng-option>
+                                                <ng-option *ngFor="let gRow of AccountList" [value]="gRow.ID">
+                                                    {{gRow.AccountName | uppercase}}
+                                                </ng-option>
+                                            </ng-select>
+
+                                        </td>
+
+                                        <td class="text-center bestfit-width">
+                                            <ng-select class="searchdropdown" [appendTo]="'body'" [clearable]="false"
+                                                formControlName="SubLedgerId">
+                                                <ng-option [value]="0" [disabled]="true">--SELECT Sub
+                                                    Ledger--</ng-option>
+                                                <ng-option *ngFor="let gRow of SubLedgerList" [value]="gRow.ID">
+                                                    {{gRow.AccountName | uppercase}}
+                                                </ng-option>
+                                            </ng-select>
+
+                                        </td>
+
+                                        <td class="text-center">
+                                            <ng-select class="searchdropdown" [appendTo]="'body'" [clearable]="false"
+                                                [disabled]="isUpdateEnable" formControlName="Status" id="ddlStatus">
+                                                <ng-option [value]="''" [disabled]="true">--SELECT
+                                                    ACTIVE--</ng-option>
+                                                <ng-option *ngFor="let status of statusvalues" [value]="status.value">
+                                                    {{status.viewValue | uppercase}}
+                                                </ng-option>
+                                            </ng-select>
+                                        </td>
+
+                                        <td class="text-center"></td>
+                                    </tr>
+                                    <tr *ngFor="let gRow of DynamicGrid; let i= index let last=last">
+                                        <td class="other text-center"> {{i+1}}</td>
+                                        <td class="other text-center">
+                                            <!-- Linked GL -->
+                                            <!-- (ngModelChange)="dropdowOnSelect(gRow)" -->
+                                            <!-- <select class="form-control cursor_blocked" [disabled]="ControlDisplay"
+                                                        [(ngModel)]="gRow.ActivityId" [ngModelOptions]="{standalone: true}">
+                                                        <option disabled value="0">--SELECT Activity--</option>
+                                                        <option *ngFor="let gRow of ActivityList" [value]="gRow.ID">
+                                                            {{gRow.Name | uppercase}}
+                                                        </option>
+                                                    </select> -->
+                                            {{gRow.AssociatedTaxName}}
+                                        </td>
+                                        <td class="other text-center">
+                                            <!-- Linked GL -->
+                                            <!-- (ngModelChange)="dropdowOnSelect(gRow)" -->
+                                            <!-- <select class="form-control cursor_blocked" [disabled]="ControlDisplay"
+                                                        [(ngModel)]="gRow.TransactionType"
+                                                        [ngModelOptions]="{standalone: true}">
+                                                        <option disabled value="0">--SELECT Transaction Type--</option>
+                                                        <option *ngFor="let gRow of TransactionTypeList" [value]="gRow.ID">
+                                                            {{gRow.GroupName | uppercase}}
+                                                        </option>
+                                                    </select> -->
+                                            {{gRow.TransactionTypeName}}
+                                        </td>
+
+                                        <td class="other text-center">
+
+                                            <!-- <select class="form-control cursor_blocked" [disabled]="ControlDisplay"
+                                                        [(ngModel)]="gRow.WIP" [ngModelOptions]="{standalone: true}">
+                                                        <option disabled value="0">--SELECT WIP --</option>
+                                                        <option *ngFor="let gRow of WIPList" [value]="gRow.ID">
+                                                            {{gRow.AccountName | uppercase}}
+                                                        </option>
+                                                    </select> -->
+                                            {{gRow.OfficeName}}
+                                        </td>
+                                        <td class="other text-center">
+
+                                            <!-- <select class="form-control cursor_blocked" [disabled]="ControlDisplay"
+                                                        [(ngModel)]="gRow.ProvisionAccountId"
+                                                        [ngModelOptions]="{standalone: true}">
+                                                        <option disabled value="0">--SELECT Provision Account --</option>
+                                                        <option *ngFor="let gRow of divisionList" [value]="gRow.ID">
+                                                            {{gRow.DivisionName | uppercase}}
+                                                        </option>
+                                                    </select> -->
+                                            {{gRow.AccountName}}
+                                        </td>
+                                        <td class="other text-center">
+
+                                            <!-- <select class="form-control cursor_blocked" [disabled]="ControlDisplay"
+                                                        [(ngModel)]="gRow.ActualAccountId"
+                                                        [ngModelOptions]="{standalone: true}">
+                                                        <option disabled value="0">--SELECT Actual Account --</option>
+                                                        <option *ngFor="let gRow of divisionList" [value]="gRow.ID">
+                                                            {{gRow.DivisionName | uppercase}}
+                                                        </option>
+                                                    </select> -->
+                                            {{gRow.SubLedgerName}}
+                                        </td>
+
+                                        <td class="other text-center">
+
+                                            <!-- <select class="form-control cursor_blocked" [disabled]="ControlDisplay"
+                                                        [(ngModel)]="gRow.Status" [ngModelOptions]="{standalone: true}">
+                                                        <option disabled value="0">--SELECT ACTIVE --</option>
+                                                        <option *ngFor="let gRow of divisionList" [value]="gRow.ID">
+                                                            {{gRow.DivisionName | uppercase}}
+                                                        </option>
+                                                    </select> -->
+                                            {{gRow.StatusName}}
+                                        </td>
+                                        <td class="other text-center">
+                                            <!-- Deselect -->
+                                            <!-- <input type="checkbox" [ngModelOptions]="{standalone: true}"
+                                                        [(ngModel)]="gRow.IsSelected" ng-true-value="1" ng-false-value="0"
+                                                        id="chkDeselect"> -->
+
+                                            <input class="vertal checkbox" type="radio" name="AlertCheck"
+                                                id="RadioCheck" (click)="radioChange($event,i)" />
+                                        </td>
+                                        <!-- <td class="alc">
+                                                    <button class="btn btn-success bmd-btn-fab" [disabled]="ControlDisplay"
+                                                        *ngIf="last" (click)="DynamicGridAddRow(gRow,i)">
+                                                        <i class="material-icons">add</i>
+                                                    </button>
+                                                    <button class="btn btn-danger bmd-btn-fab" [disabled]="ControlDisplay"
+                                                        (click)="DynamicGridDeleteRow(DynamicGrid,i,gRow.ID)">
+                                                        <i class="material-icons">delete</i>
+                                                    </button>
+                                                </td> -->
+
+                                    </tr>
+                                </tbody>
+
+                            </table>
+                            <!-- </form> -->
+                        </div>
+                    </div>
+                </div>
+                <!-- </div> -->
+            </form>
+
+
+            <div class="mb-3">
+                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12" style="text-align:right;">
+
+                    <button *ngIf="isCreate" (click)="onSubmit()" type="submit"
+                        class="btn btn-primary btn-raised btn-default cntbtn mb-0">Save</button>
+                    <!-- style="background-color:green;color:white;margin-right:12px;" -->
+                    <button [disabled]="!isUpdateEnable" *ngIf="isUpdate" (click)="onSubmit()" type="submit"
+                        class="btn btn-primary btn-raised btn-default cntbtn mb-0">Update</button>
+                    <button type="button" (click)="reset()"
+                        class="btn btn-danger btn-raised cntbtn mb-0">Cancel</button>
+                </div>
+                <input type="hidden" id="HDRegId" ng-model="HDRegId" />
+            </div>
+            <!-- </div> -->
+        </div>
+    </div>
+
+</div>

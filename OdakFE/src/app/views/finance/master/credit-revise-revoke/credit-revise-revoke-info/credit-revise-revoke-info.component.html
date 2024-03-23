@@ -1,0 +1,362 @@
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between headtitle mt-2">
+        <h4 class="ml-2 mt-2">Credit Revise - Revoke </h4>
+
+        <div class="btntop">
+            <button type="button" class="btn btn-warning bmd-btn-edit btn-raised btntop emarginr ng-star-inserted"
+            *ngIf="!isFinaled" (click)="enableEdit()">
+                <i class="material-icons editicon">edit</i>
+            </button>
+
+            <button [routerLink]="['/views/credit-Review/credit-revoke']" type="button"
+                class="btn btn-success bmd-btn-edit btn-raised btntop"><i class="material-icons editicon">reply</i>
+                <div class="ripple-container"></div>
+            </button>
+
+            <button
+                class="nav-link dropdown-toggle arrow-none waves-effect nav-user btn bmd-btn-edit btn-raised btntop btnlog"
+                data-placement="bottom" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="material-icons editicon">schedule</i>
+            </button>
+
+            <div style="background-color: aliceblue;width:250px;left:-66px"
+                class="dropdown-menu dropdown-menu  profile-dropdown" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" style="padding:15px;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12"><span>ModifiedOn: {{ModifiedOn | date : commonService.convertToLowerCaseDay(entityDateFormat)}}</span>
+                                    | <span>Modified By:
+                                        {{ModifiedBy}}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:10px;">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12"><span>CreatedOn: {{CreatedOn | date : commonService.convertToLowerCaseDay(entityDateFormat)}}</span> |
+                                    <span>Created By:
+                                        {{CreatedBy}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <form [formGroup]="reviseAndRevokeForm">
+            <div class="row mt-3 p-4">
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="str">Previous Application Number</label>      
+                        <input type="text" id="" class="form-control w-100 disable-input"
+                            formControlName="PreviousApplicationNumber" />
+                        <!-- <select name="Division" class="form-control my-select">
+                            <option disabled value="0">--SELECT APPLICATION NUMBER--</option>
+                        </select> -->
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <label class="str">Request Type </label><br>
+                    <div class="row ml-1 disabled-content">
+                        <div class="form-check">
+                            <input type="radio" formControlName="IsRevise" class="form-check-input" id="radio2" 
+                            name="IsRevise" [value]="true" (click)="setRevise()">
+                            <label class="form-check-label" for="radio2">Revise</label>
+                        </div>
+                        <div class="form-check ml-1">
+                            <input type="radio" class="form-check-input" formControlName="IsRevoke" id="radio3"
+                            name="IsRevoke" [value]="true" (click)="setRevoke()">
+                            <label class="form-check-label" for="radio3">Revoke</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngIf="reviseAndRevokeForm.value.IsRevise" class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <label class="str">Revision Type </label><br>
+                    <div class="row ml-1">
+                        <div class="form-check">
+                            <input type="radio" class="form-check-input" formControlName="IsTemp" id="radior1"
+                                [value]="true" (click)="setTemp()">
+                            <label class="form-check-label" for="radior1">Temp</label>
+                        </div>
+
+                        <div class="form-check ml-1">
+                            <input type="radio" class="form-check-input" formControlName="IsPermanent" id="radior2"
+                                [value]="true" (click)="setPermanent()">
+                            <label class="form-check-label" for="radior2">Permanent</label>
+                        </div>
+                    </div>
+                </div>
+                <!-- formControlName key missing (Revision Till)-->
+                <div *ngIf="reviseAndRevokeForm.value.IsRevise" class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="str mb-3">Revision Till </label>
+                        <mat-form-field  class="tillDate mat_date_picker" appearance="outline">
+                            <input matInput (click)="RevisionTill.open()" readonly autocomplete="off" [max]="maxDate" [matDatepicker]="RevisionTill"  id="RevisionTill" placeholder="" formControlName="RevisionTill">
+                            <mat-datepicker-toggle matSuffix [for]="RevisionTill"></mat-datepicker-toggle>
+                            <mat-datepicker #RevisionTill></mat-datepicker>
+                        </mat-form-field>
+                        <!-- <input [max]="maxDate" type="date" formControlName="RevisionTill"
+                            class="form-control w-100 " /> -->
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group"> 
+                        <label class="str">New Application Number </label>
+                        <input readonly type="text" class="form-control w-100 input-disable"
+                            formControlName="NewApplicationNumber" />
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="str mb-2">Application Date </label>
+                        <mat-form-field  class="tillDate mat_date_picker disable-datepicker" appearance="outline">
+                            <input matInput (click)="ApplicationDate.open()" readonly autocomplete="off" [max]="maxDate" [matDatepicker]="ApplicationDate"  id="ApplicationDate" placeholder="" formControlName="ApplicationDate">
+                            <mat-datepicker-toggle matSuffix [for]="ApplicationDate"></mat-datepicker-toggle>
+                            <mat-datepicker #ApplicationDate></mat-datepicker>
+                        </mat-form-field>
+                        <!-- <input readonly [max]="maxDate" type="date" formControlName="ApplicationDate" id="InvoiceDate"
+                            class="form-control w-100 " /> -->
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="str">Status</label>
+                        <select name="Status" class="form-control my-select disable-input" formControlName="StatusId">
+                            <option disabled value="">--SELECT STATUS--</option>
+                            <ng-container *ngFor="let division of ApplictionStatusList">
+                                <option [value]="division.Id">
+                                    {{division.Status | uppercase}}
+                                </option>
+                            </ng-container>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="">Customer</label>
+                        <select name="Branch" class="form-control my-select disable-input" formControlName="CustomerId">
+                            <option disabled value="0">--SELECT CUSTOMER--</option>
+                            <ng-container *ngFor="let customer of CustomerList">
+                                <option [value]="customer.CustomerID">
+                                    {{customer.CustomerName | uppercase}}
+                                </option>
+                            </ng-container>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="">Customer Branch</label> 
+                        <select name="Branch" class="form-control my-select disable-input"
+                            formControlName="CustomerBranchId">
+                            <option disabled value="">--SELECT CUSTOMER BRANCH--</option>
+                            <ng-container *ngFor="let customer of CustomerBranchList">
+                                <option [value]="customer.CustomerBranchID">
+                                    {{customer.BranchCode | uppercase}}
+                                </option>
+                            </ng-container>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="">Customer Primary contact</label>
+                        <input readonly class="form-control disable-input" type="text"
+                            formControlName="CustomerPrimaryContact">
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="">Division</label>
+                        <select formControlName="DivisionId" class="form-control my-select disable-input">
+                            <option [value]="0" disabled>--SELECT DIVISION TYPE--</option>
+                            <ng-container *ngFor="let division of divisionList">
+                                <option *ngIf="division.Active" [value]="division.ID">
+                                    {{division.DivisionName | uppercase}}
+                                </option>
+                            </ng-container>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="">Office</label>
+                        <select formControlName="OfficeId" class="form-control disable-input"
+                            (change)="getAutoCodeGeneration()">
+                            <option value="0" disabled>--SELECT OFFICE--</option>
+                            <option *ngFor="let office of officeList" [value]="office.ID">
+                                {{office.OfficeName | uppercase}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="">Sales Person </label>
+                        <input class="form-control disable-input" type="text" id="" formControlName="SalesPersonId">
+                    </div>
+                </div>
+
+                <div class="col-12 row pr-0" *ngIf="reviseAndRevokeForm.value.IsRevise">
+
+                    <!-- current credit Limit -->
+                    <ng-component [ngTemplateOutlet]="currentCreditLimit"></ng-component>
+
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 mt-3">
+                        <h6>Proposed Credit Limit </h6>
+                    </div>
+
+                    <div class="col-md-4 col-sm-6 col-lg-4 col-xl-4">
+                        <div class="form-group">
+                            <label class="str">Credit Limit (Days) </label>
+                            <!-- <input class="form-control" type="text" formControlName="ProposedCreditLimitDays"> -->
+                            <select class="form-control my-select" formControlName="ProposedCreditLimitDays">
+                                <option [value]="''" disabled>--SELECT CREDIT AMOUNT--</option>
+                                <option *ngFor="let  credit of creditLimit" [value]=credit.MaxCreditDays>
+                                    {{credit.MaxCreditDays}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-sm-6 col-lg-4 col-xl-4">
+                        <div class="form-group">
+                            <label class="str">Credit Limit (Amount)</label>
+                            <!-- <input class="form-control" type="text" formControlName="CurrentPostDatedCheque"> -->
+                            <select class="form-control my-select" formControlName="ProposedCreditLimitAmount">
+                                <option [value]="''" disabled>--SELECT CREDIT AMOUNT--</option>
+                                <option *ngFor="let  credit of creditLimit" [value]=credit.MaxCreditAmount>
+                                    {{credit.MaxCreditAmount}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-sm-6 col-lg-4 col-xl-4">
+                        <div class="form-group">
+                            <label class="str">With Post Dated Cheque ? </label>
+                            <!-- <input class="form-control" type="text" formControlName="ProposedPostDatedCheque"> -->
+
+                            <select class="form-control my-select" formControlName="ProposedPostDatedCheque">
+                                <option [value] = "" disabled>--SELECT TRADE--</option>
+                                <ng-container *ngFor="let status of statusValues">
+                                    <option [value]="status.value">
+                                        {{status.viewValue | uppercase}}
+                                    </option>
+                                </ng-container>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+
+                <ng-template #currentCreditLimit>
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 mt-3">
+                        <h6>Current Credit Limit </h6>
+                    </div>
+
+                    <div class="col-md-4 col-sm-6 col-lg-4 col-xl-4">
+                        <div class="form-group">
+                            <label class="">Credit Limit (Days)</label>
+                            <input class="form-control disable-input" type="text"
+                                formControlName="CurrentCreditLimitDays">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-sm-6 col-lg-4 col-xl-4">
+                        <div class="form-group">
+                            <label class="">Credit Limit (Amount)</label>
+                            <input class="form-control disable-input" type="text"
+                                formControlName="CurrentCreditLimitAmount">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-sm-6 col-lg-4 col-xl-4">
+                        <div class="form-group">
+                            <label class="">With Post Dated Cheque ? </label>
+                            <!-- <input class="form-control" type="text" formControlName="CurrentPostDatedCheques"> -->
+                            <!-- <input class="form-control" type="text" formControlName="ProposedPostDatedCheque"> -->
+
+
+                            <select class="form-control disable-input" formControlName="CurrentPostDatedCheque">
+                                <option value="" disabled>--SELECT TRADE--</option>
+                                <ng-container *ngFor="let status of statusValues">
+                                    <option [value]="status.value">
+                                        {{status.viewValue | uppercase}}
+                                    </option>
+                                </ng-container>
+                            </select>
+                        </div>
+                    </div>
+                </ng-template>
+
+
+
+                <div class="col-12 row pr-0" *ngIf="reviseAndRevokeForm.value.IsRevoke">
+                    <ng-component [ngTemplateOutlet]="currentCreditLimit"></ng-component>
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 mt-3">
+                        <h6>Request Details </h6>
+                    </div>
+
+                    <div class="col-md-4 col-sm-6 col-lg-4 col-xl-4">
+                        <div class="form-group">
+                            <label class="str">Reason for Revoking </label>
+                            <input class="form-control" type="text" formControlName="ReasonForRevoking">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label>Remarks</label>
+                        <textarea class="form-control addressht" id="" rows="5" formControlName="Remarks"></textarea>
+                    </div>
+                </div>
+
+                <div class="col-12 row p-0">
+                    <div class="col-12" [ngClass]=" !isEditMode ? 'disabled-content' : ''">
+                        
+                        <app-documents [documentList]="documentList" (saveDocumentEvent)="uploadDocument($event)"
+                            (deleteDocumentEvent)="deleteDocument($event)"></app-documents>
+
+                    </div>
+                </div>
+
+                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 text-right mt-4">
+                    <button type="button" class="btn btn-primary text-white mr-3 mb-0 col-auto"  [ngClass]="isFinaled? 'disable-input--style': ''"
+                        (click)="confirmFunction(ReviseRevokeType.SAVE_TYPE)">
+                        Save
+                    </button>
+                    <button type="button" class="btn btn-primary text-white mr-3 mb-0 col-auto" [ngClass]="!isUpdate || isFinaled? 'disable-input--style': ''"
+                        style="background-color: #19a84c !important;border: #19a84c;border: 1px solid #19a84c !important;"
+                        (click)="confirmFunction(ReviseRevokeType.SUBMIT_TYPE)">
+                        Submit for Approval
+                    </button>
+                    <button type="button" [routerLink]="['/views/credit-Review/credit-revoke']"
+                        class="btn btn-warning text-white mr-3 mb-0 col-auto">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>

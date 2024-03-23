@@ -1,0 +1,461 @@
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between headtitle mt-2">
+        <h4 class="ml-2 mt-2">Payment Request</h4>
+    
+        <div class="btntop">
+    
+            <button *ngIf="!IsFinal" type="button"
+                class="btn btn-warning bmd-btn-edit btn-raised btntop emarginr ng-star-inserted" (click)="enableEdit()">
+                <i class="material-icons editicon">edit</i>
+            </button>
+    
+            <button type="button" class="btn btn-success bmd-btn-edit btn-raised btntop"
+                [routerLink]="['/views/transactions/payment-request/payment-request-view']"><i class="material-icons editicon">reply</i>
+                <div class="ripple-container"></div>
+            </button>
+    
+            <button
+                class="nav-link dropdown-toggle arrow-none waves-effect nav-user btn bmd-btn-edit btn-raised btntop btnlog"
+                data-placement="bottom" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="material-icons editicon">schedule</i>
+            </button>
+    
+    
+            <div style="background-color: aliceblue;width:250px;left:-66px"
+                class="dropdown-menu dropdown-menu  profile-dropdown" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" style="padding:15px;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12"><span>ModifiedOn: {{ModifiedOn | date: commonService.convertToLowerCaseDay(entityDateFormat)}}</span> 
+                                    | <span>Modified By: {{UpdatedBy}}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:10px;">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12"><span>CreatedOn: {{CreatedOn | date: commonService.convertToLowerCaseDay(entityDateFormat)}}</span> 
+                                    | <span>Created By: {{CreatedBy}}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <form [formGroup]="paymentRequestForm">
+        <div class="card mt-2 p-4">
+            <!-- <div class="row">
+                <div class="col-12">
+                    <h4 class="mt-2">Payment Request</h4>
+                </div>
+            </div> -->
+            <div class="row">
+                <div class="col-4">
+                    <label class="str">Payment Request #</label>
+                    <input type="text" class="w-100 disable-input pl-1" placeholder="" formControlName="PRNumber" />
+                </div>
+
+                <div class="col-4">
+                    <label class="str mb-2">Request Date /Time</label>
+                    <!-- <input type="text" class="w-100 disable-input" placeholder="" formControlName="RequestDateAndTime" />                                               -->
+               <mat-form-field class="tillDate mat_date_picker   disable-input--nostyle"   appearance="outline" >
+                  <input matInput   readonly   disabled  id="RequestDateAndTime" [placeholder]="entityDateFormat" formControlName="RequestDateAndTime">
+                  <mat-datepicker-toggle matSuffix [for]="RequestDateAndTime"></mat-datepicker-toggle>
+                  <mat-datepicker #RequestDateAndTime></mat-datepicker>
+                </mat-form-field>       
+                </div>
+
+                <div class="col-4">
+                    <label class="str">Request Status</label>
+                    <!-- <input type="text" class="w-100 disable-input" placeholder="" formControlName="RequestStatusId" /> -->
+
+                    <select class="form-control my-select disable-input" formControlName="StatusId">
+                        <option [value]="0" disabled>--SELECT STATUS--</option>
+                        <ng-container *ngFor="let status of requestStatus">
+                            <option [value]="status.Id">
+                                {{status.Status | uppercase}}
+                            </option>
+                        </ng-container>
+                    </select>
+                </div>
+                <div class="col-4">
+                    <div class="form-group bmd-form-group w-100">
+                        <label class="str">Division</label>
+                        <!-- <select (ngModelChange)="getOfficeList($event)" class="form-control my-select" [ngClass]="!isEditMode ? 'disable-input' : ''"
+                        formControlName="DivisionId">
+                            <option [value]="0" disabled>--SELECT DIVISION--</option>
+                            <ng-container *ngFor="let division of divisionList">
+                                <option *ngIf="division.Active" [value]="division.ID">
+                                    {{division.DivisionName | uppercase}}
+                                </option>
+                            </ng-container>
+                        </select> -->
+                        <ng-select  class="searchdropdown" [ngClass]="!isEditMode ? 'disable-input' : ''" formControlName="DivisionId"
+                        (ngModelChange)="getOfficeList($event)" [clearable]="false">
+                     <ng-option [value]="0" [disabled]="true">--SELECT DIVISION TYPE--</ng-option>
+                     <ng-container  *ngFor="let division of divisionList">
+                       <ng-option *ngIf="division.Active" [value]="division.ID">
+                          {{division.DivisionName | uppercase}}
+                       </ng-option>
+                    </ng-container>
+                 </ng-select> 
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label class="str">Office</label>
+                    <!-- <select class="form-control my-select" formControlName="OfficeId" [ngClass]="!isEditMode ? 'disable-input' : ''"
+                    (change)="getAutoCodeGeneration()">
+                        <option [value]="0" disabled>--SELECT OFFICE--</option>
+                        <ng-container *ngFor="let office of officeList">
+                            <option [value]="office.ID">
+                                {{office.OfficeName | uppercase}}
+                            </option>
+                        </ng-container>
+                    </select> -->
+                    <ng-select  class="searchdropdown" [ngClass]="!isEditMode ? 'disable-input' : ''" formControlName="OfficeId" 
+                    (change)="getAutoCodeGeneration()" [clearable]="false">
+                     <ng-option [value]="0" disabled>--SELECT OFFICE--</ng-option>
+                     <ng-container *ngFor="let office of officeList">
+                       <ng-option [value]="office.ID">
+                         {{office.OfficeName | uppercase}}
+                       </ng-option>
+                     </ng-container>
+                 </ng-select> 
+                </div>
+                <div class="col-4">
+                    <div class="form-group bmd-form-group w-100">
+                        <label class="str">Vendor</label>
+                        <!-- <select formControlName="VendorId" class="form-control my-select" [ngClass]="!isEditMode ? 'disable-input' : ''">
+                            <option disabled  [value]="0">--SELECT VENDOR CODE--</option>
+                            <option *ngFor="let group of vendarList"
+                                [value]="group.VendorID">
+                                {{group.VendorCode | uppercase}} -- {{group.VendorName | uppercase}}
+                            </option>
+                        </select> -->
+                        <ng-select  class="searchdropdown"  formControlName="VendorId" [clearable]="false" [ngClass]="!isEditMode ? 'disable-input' : ''"
+                        >
+                            <ng-option [value]="0" disabled>--SELECT VENDOR CODE--</ng-option>
+                            <ng-container *ngFor="let group of vendarList">
+                              <ng-option  [value]="group.VendorID">
+                                <span class="textwrap">{{group.VendorCode | uppercase}} -- {{group.VendorName | uppercase}}</span>
+                              </ng-option>
+                           </ng-container>
+                        </ng-select>    
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label class="str">Requester</label>
+                    <!-- <input type="text" class="w-100 disable-input" placeholder="" formControlName="Requester" /> -->
+                    <input type="text" class="w-100 disable-input pl-2" placeholder="Request Type" formControlName="Requester">
+                </div>
+                <div class="col-4">
+                    <label class="str">Request Type</label>       
+                    <!-- <select class="form-control my-select" formControlName="RequestType" [ngClass]="!isEditMode ? 'disable-input' : ''"
+                    (change)="setRequesterType($event.target.value)">
+                        <option [value]="''" disabled>--SELECT REQUEST TYPE--</option>
+                        <ng-container *ngFor="let type of requesterTypeList">
+                            <option [value]="type.RequestType">
+                                {{type.RequestType | uppercase}}
+                            </option>
+                        </ng-container>
+                    </select> -->
+                    <ng-select  class="searchdropdown"  formControlName="RequestType" [clearable]="false" [ngClass]="!isEditMode ? 'disable-input' : ''"
+                    (change)="setRequesterType($event)">
+                        <ng-option [value]="''" disabled>--SELECT REQUEST TYPE--</ng-option>
+                        <ng-container  *ngFor="let type of requesterTypeList">
+                          <ng-option  [value]="type.RequestType">
+                            <span class="textwrap">{{type.RequestType | uppercase}}</span>
+                          </ng-option>
+                       </ng-container>
+                    </ng-select> 
+                </div>
+                <div class="col-4">
+                    <div class="form-group bmd-form-group w-100">
+                        <label class="str">Amount </label>
+                        <div class="d-flex">
+                            <input onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly class=" form-control amount mr-2 " 
+                            [ngClass]="this.isAgainstInvoice ? 'disable-input' : ''" appDynamicDecimal formControlName="Amount" RemoveSpecialChars/>
+                            <select [(ngModel)]="Currency" [ngModelOptions]="{ standalone: true }"
+                             class="form-control my-select w-50 m-0 disable-input">
+                                <option disabled [value]="null">-- Select Currency --</option>
+                                <option *ngFor="let gRow  of currencyList" [value]="gRow.CurrencyName">
+                                    {{gRow.CurrencyName}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group bmd-form-group w-100">
+                        <label class="str">Payment Mode</label>
+                        <!-- <select class="form-control my-select" formControlName="PaymentModeId" [ngClass]="!isEditMode ? 'disable-input' : ''">
+                            <option [value]="''" disabled>--Payment Mode--</option>
+                            <option *ngFor="let payment of paymentModeList" [value]="payment.Id">
+                                {{payment.PaymentMode | uppercase}}
+                            </option>
+                        </select> -->
+                        <ng-select  class="searchdropdown"  formControlName="PaymentModeId" [clearable]="false" [ngClass]="!isEditMode ? 'disable-input' : ''">
+                            <ng-option [value]="''" disabled>--Payment Mode--</ng-option>
+                            <ng-container *ngFor="let payment of paymentModeList">
+                              <ng-option [value]="payment.Id">
+                                <span class="textwrap">{{payment.PaymentMode | uppercase}}</span>
+                              </ng-option>
+                           </ng-container>
+                        </ng-select>  
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group bmd-form-group w-100">
+                        <label class="str">Request Priority</label>
+                        <!-- <select class="form-control my-select" formControlName="RequestPriorityId" [ngClass]="!isEditMode ? 'disable-input' : ''">
+                            <option [value]="''" disabled>--SELECT Request Type--</option>
+                            <ng-container *ngFor="let priority of priorityRequest">
+                                <option [value]="priority.Id">
+                                    {{priority.PaymentPriority}}
+                                </option>
+                            </ng-container>
+                        </select> -->
+                        <ng-select  class="searchdropdown"  formControlName="RequestPriorityId" [clearable]="false" [ngClass]="!isEditMode ? 'disable-input' : ''">
+                            <ng-option [value]="''" disabled>--SELECT Request Type--</ng-option>
+                            <ng-container *ngFor="let priority of priorityRequest">
+                              <ng-option [value]="priority.Id">
+                                <span class="textwrap">{{priority.PaymentPriority | uppercase}}</span>
+                              </ng-option>
+                           </ng-container>
+                        </ng-select>  
+                    </div>
+                </div>
+                
+            </div>
+            <!-- table -->
+            <ng-container *ngIf="isAgainstInvoice">
+                <div class="row">
+                    <div class="col-md-12 alrt">
+                        <button [disabled]="!isEditMode" type="submit" class="btn btn-success bmd-btn-fab tblbtngap"  data-target="#exampleModalCenter" data-toggle="modal" data-target=".bd-example-modal-xl"
+                        (click)="getAgentInvoice()">
+                            <i class="material-icons editicon">add</i>
+                            <div class="ripple-container"></div>
+                        </button>
+                        <button [disabled]="!isEditMode" type="submit" class="btn btn-danger bmd-btn-fab" (click)="deleteInvoiceSelected()">
+                            <i class="material-icons editicon">delete</i>
+                            <div class="ripple-container"></div>
+                        </button>
+                        <!-- Model popup -->
+                        <div class="modal fade bd-example-modal-xl" id="exampleModalCenter" tabindex="-1" role="dialog"
+                            aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+                                <div class="modal-content bg-white">
+                                    <div class="modal-header border-bottom">
+                                        <h4 class="pophead">Vendor Invoices Payment Due</h4>
+                                        <button id="closeModalButton" type="button" class="close" data-dismiss="modal" #closeBtn
+                                            aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <table style="max-height: 500px;"
+                                        class="table table-responsive  table-bordered w-100 table-striped border-0 agingTable mt-2">
+                                        <thead>
+                                            <tr class="header-position-sticky">
+                                                <th class="text-center">Vendor Invoice #</th>
+                                                <th class="text-center" scope="col">Due Date</th>
+                                                <th class="text-center" scope="col">Purchase Invoice #</th>
+                                                <th class="text-center" scope="col">Currency</th>
+                                                <th class="text-center" scope="col">Invoice Amount</th>
+                                                <th class="text-center" scope="col">TDS</th>
+                                                <th class="text-center" scope="col">Net Amount</th>
+                                                <!-- <th class="text-center" scope="col">Job</th> -->
+                                                <th class="text-center" scope="col">Select</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- all Invoice -->
+                                            <ng-container *ngIf="allInvoices.length > 0 else noRecord">
+                                                <tr *ngFor="let invoice of allInvoices; let i = index " class="text-center border-0">
+                                                    <td>{{invoice.VendorInvoice}}</td>
+                                                    <td>{{invoice.DueDate | date:'dd-MM-YYYY'}}</td>
+                                                    <td>{{invoice.PurchaseInvoice}}</td>
+                                                    <td>{{invoice.Currency}}</td>
+                                                    <td>{{invoice.InvoiceAmount}}</td>
+                                                    <td>{{invoice.TDSAmount}}</td>
+                                                    <td>{{invoice.NetAmount}}</td>
+                                                    <td>
+                                                        <input type="checkbox" 
+                                                         [(ngModel)]="invoice.isChecked" [ngModelOptions]="{standalone: true}"  />
+                                                    </td>
+                                                </tr>
+                                            </ng-container>
+                                            <!-- no data -->
+                                            <ng-template #noRecord>
+                                                <tr>
+                                                    <td class="text-center" colspan="8" style="height: 100px;">No Records Found
+                                                    </td>
+                                                </tr>
+                                            </ng-template>
+                                        </tbody>
+                        
+                                    </table>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-primary" (click)="getSelectedInvoice()">ADD</button>
+                                        <!-- <button type="button" class="btn btn-secondary mx-2" data-dismiss="modal" >Close</button> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <table style="max-height: 500px;"
+                            class="table table-responsive  table-bordered w-100 table-striped border-0 agingTable mt-2">
+                            <thead class="text-center">
+                                <tr class="header-position-sticky" role="row">
+                                    <th class="align-middle" rowspan="2" colspan="1">Vendor Invoice #</th>
+                                    <th class="align-middle"  rowspan="2" colspan="1" >Vendor Invoice Due Date</th>
+                                    <th class="align-middle" rowspan="2" colspan="1" >Purchase Invoice #</th>
+                                    <!-- <th class="text-center" scope="col">Amount</th> -->
+                                    <th class="align-middle"  rowspan="2" colspan="1" >Job No</th>
+                                    <th class="align-middle"  rowspan="2" colspan="1" >Job Outstanding</th>
+                                    <th class="align-middle"  rowspan="2" colspan="1" >Booking Party</th>
+                                    <th class="align-middle"  rowspan="1" colspan="2" >Credit Terms </th>
+                                    <th class="align-middle" rowspan="2" colspan="1" >Attachment</th>
+                                    <th class="align-middle"  rowspan="2" colspan="1" >Select</th>
+                                </tr>
+                                <tr>
+                                    <th scope="col">Credit Days</th>
+                                    <th scope="col">Credit Limit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- seleted Invoice -->
+                                <ng-container>
+                                    <tr *ngFor="let invoice of selectedInvoices; let i = index" class="text-center border-0">
+                                        <td >{{invoice.VINumber}}</td>
+                                        <td>{{invoice.VIDueDate | date:'dd-MM-YYYY'}}</td>
+                                        <td>{{invoice.PurchaseInvoice}}</td>
+                                        <!-- <td>{{invoice.Amount}}</td> -->
+                                        <td>{{invoice.VendorInvoice}}</td>
+                                        <td>{{invoice.VendorInvoice}}</td>
+                                        <td>{{invoice.VendorInvoice}}</td> 
+                                        <td>{{invoice.CreditDays || '-'}}</td>
+                                        <td>{{invoice.CreditLimit || '-'}}</td>
+                                        <td>{{invoice.Attachment || '-'}}</td>
+                                        <td>
+                                         <input type="radio" class="vertal checkbox" name="AlertCheck" (click)="markInvoiceSelected(i)"  />
+                                        </td>
+                                    </tr>
+                                </ng-container>
+                                <!-- no data -->
+                                <ng-template #noRecord>
+                                    <tr>
+                                        <td class="text-center" colspan="8" style="height: 100px;">No Records Found</td>
+                                    </tr>
+                                </ng-template>
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </ng-container>
+
+            <div class="row">
+
+            <div class="col-sm-12 col-md-6  col-lg-4 col-xl-4 mt-2">
+                <label>Request Remarks</label><br>
+                <input type="text" class="w-100" placeholder="" [ngClass]="!isEditMode ? 'disable-input' : ''" formControlName="RequestRemarks" />
+            </div>
+
+            <div class="col-sm-12 col-md-6  col-lg-4 col-xl-4 mt-2">
+                <label>Approval Rejection Remarks (if any)</label>
+                <input type="text" class="w-100" [ngClass]="isEditMode ? 'disable-input' : ''" placeholder="" formControlName="RequestRejectionRemarks" />
+            </div>
+        </div>
+            <!-- documents -->
+            <div class="row mt-3 "></div>
+            <div class="row mb-2  "  [ngClass]=" !isEditMode ? 'disabled-content' : ''" >
+                <h6 class="col-12">Documents</h6>
+                    <div class="col-12 mt-2 ">
+                        <app-documents   [documentList]="documentInfo" (saveDocumentEvent)="uploadDocument($event) "
+                        (deleteDocumentEvent)="deleteDocument($event)" >
+                        <tr  *ngFor="let payment of documentInfo; let i = index" class="text-center border-0">
+                             
+                            <td [title]="payment.DocumentName | uppercase">
+                                {{ (payment.DocumentName && payment.DocumentName.length > 20) ? payment.DocumentName.slice(0, 20) + '-' : payment.DocumentName }}
+                              </td>
+                            <td >{{payment.FilePath}}</td>UploadedOn
+                           
+                            <td >{{payment.UpdateOn | date:'dd-MM-YYYY' }}</td>  
+                        </tr>
+                    </app-documents>
+                    </div>
+            </div>
+
+        </div>
+
+        <!-- common exchange rate template -->
+        <div class="col-12 pt-4 pb-4">
+            <div class="float-right d-flex">
+
+                <!-- New Draft -->
+                <div *ngIf=" this.paymentRequestForm.value.StatusId == 8 ">
+                    <button type="button" class="btn btn-primary text-white mr-3 mb-0 col-auto" 
+                        [ngClass]=" !isEditMode ? 'disable-input--style' : ''"
+                        (click)="confirmFunction(paymentRequesType.SAVE_TYPE)">
+                        Save
+                    </button>
+    
+                    <button style="background-color: #19a84c !important;border: #19a84c !important;" 
+                        [ngClass]=" !isEditMode || !isUpdate  ? 'disable-input--style' : ''"
+                        class="btn btn-primary text-white mr-3 mb-0 col-auto " (click)="confirmFunction(paymentRequesType.SUBMIT_TYPE)">
+                        Submit
+                    </button>
+                </div>
+
+                <!-- Pending Approval -->
+                <div *ngIf=" this.paymentRequestForm.value.StatusId == 9">
+                    <button type="button" class="btn btn-primary text-white mr-3 mb-0 col-auto"
+                        [ngClass]=" !isEditMode ? 'disable-input--style' : ''"
+                        (click)="confirmFunction(paymentRequesType.WITHDRAW_REQUEST_TYPE)">
+                        Withdraw Request
+                    </button>
+                </div>
+
+                <!-- Pending Payment -->
+                <!-- <div *ngIf=" this.paymentRequestForm.value.StatusId == 10 ">
+                    <button type="button" class="btn btn-primary text-white mr-3 mb-0 col-auto"
+                        [ngClass]=" !isEditMode ? 'disable-input--style' : ''"
+                        (click)="confirmFunction(paymentRequesType.WITHDRAW_REQUEST_TYPE)">
+                        Withdraw Request
+                    </button>
+
+                    <button type="button" class="btn btn-primary text-white mr-3 mb-0 col-auto"
+                        [ngClass]=" !isEditMode ? 'disable-input--style' : ''"
+                        (click)="confirmFunction(paymentRequesType.HOLD_PAYMENT_TYPE)">
+                        Hold Payment
+                    </button>
+                </div> -->
+
+                <!-- Payment On hold -->
+                <!-- <div *ngIf=" this.paymentRequestForm.value.StatusId == 11 ">
+                    <button type="button" class="btn btn-primary text-white mr-3 mb-0 col-auto"
+                        [ngClass]=" !isEditMode ? 'disable-input--style' : ''"
+                        (click)="confirmFunction(paymentRequesType.WITHDRAW_REQUEST_TYPE)">
+                        Withdraw Request
+                    </button>
+
+                    <button type="button" class="btn btn-primary text-white mr-3 mb-0 col-auto"
+                        [ngClass]=" !isEditMode ? 'disable-input--style' : ''"
+                        (click)="confirmFunction(paymentRequesType.RELEASE_HOLD_TYPE)">
+                        Release Hold
+                    </button>
+                </div> -->
+
+                <button type="button" class="btn btn-warning text-white mr-3 mb-0 col-auto"
+                [routerLink]="['/views/transactions/payment-request/payment-request-view']">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

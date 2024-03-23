@@ -1,0 +1,195 @@
+<div class="container-fluid">
+
+    <div class="row headtitle rotle mt-1">
+        <div class="col-md-9">
+            <h4 class="ml-2 mt-2">TDS Master</h4>
+        </div>
+        <div class="col-md-3 alrt">
+            <button type="button" class="btn btn-success btn-raised bmd-btn-edit btntop" tabindex="0"
+                (click)="checkAddPermission()">
+                <i class="material-icons editicon">add</i>
+                <div class="ripple-container">
+                </div>
+            </button>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-9 col-xl-9 mt-2">
+            <div class="card m-b-30">
+                <div class="card-body cpad enqview">
+
+                    <div class="col-md-12" *ngIf="!Is_DataFound">
+                        <div class="text-center ">
+                            <img src={{imagenotfound}} alt="No Data Found !!" class="imagenodata">
+                        </div>
+                    </div>
+                    <div id="datatable-buttons_wrapper"
+                        class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer" *ngIf="Is_DataFound">
+                        <div class="row">
+                            <div class="col-md-12 alrt">
+                                <!--<span style="font-size:13px; margin-right:0px;">Download</span><a ng-click="btnPrint();" style="color:#18aa08;font-size:16px; margin-right:20px;"> <i class="fa fa-file-excel-o"></i></a>-->
+                            </div>
+                            <div class="col-sm-12">
+                                <table id="datatable-buttons"
+                                    class="table table-striped table-bordered w-100 dataTable no-footer text-center" role="grid"
+                                    aria-describedby="datatable-buttons_info">
+                                    <thead>
+                                        <tr role="row">
+                                            <!-- <th class="actwid" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                            colspan="1" aria-label="Name: activate to sort column ascending"
+                                            style="width: 177.575px;">
+                                            S.No
+                                        </th> -->
+                                            <th class="sorting" tabindex="0" aria-controls="datatable-buttons"
+                                                rowspan="1" colspan="1"
+                                                aria-label="Name: activate to sort column ascending"
+                                                 (click)="sort('TaxName')">
+                                                Tax Name
+                                            </th>
+                                            <th class="sorting" tabindex="0" aria-controls="datatable-buttons"
+                                                rowspan="1" colspan="1"
+                                                aria-label="Name: activate to sort column ascending"
+                                                 (click)="sort('RatePercentage')">
+                                                Rate (%)
+                                            </th>
+                                            <th class="sorting" tabindex="0" aria-controls="datatable-buttons"
+                                                rowspan="1" colspan="1"
+                                                aria-label="Name: activate to sort column ascending"
+                                                 (click)="sort('SectionName')">
+                                                Section
+                                            </th>
+                                            <th class="sorting" tabindex="0" aria-controls="datatable-buttons"
+                                                rowspan="1" colspan="1"
+                                                aria-label="Name: activate to sort column ascending"
+                                                 (click)="sort('Status')">
+                                                Active
+                                            </th>
+                                            <!-- <th class="actwid" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                            colspan="1" aria-label="Office: activate to sort column ascending"
+                                            style="width: 129.95px;">Action</th> -->
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+
+                                        <tr *ngFor="let dataItem of pagedItems;let i = index">
+                                            <!-- <td> {{ i + 1*pager.startIndex+1 }}</td> -->
+                                            <td (click)="checkUpdatePerission(dataItem.TDSRatesId)"
+                                                style="color:#0366d6;cursor: pointer;">
+                                                {{dataItem.TaxName }}</td>
+                                            <td>{{dataItem.RatePercentage}}</td>
+                                            <td>{{dataItem.SectionName}}</td>
+                                            <td>{{dataItem.Status == 'Active' ? 'Yes' : 'No'}}</td>
+                                            <!-- <td>
+                                            <button class="btn btn-success bmd-btn-fab"
+                                                [routerLink]="['/views/finance/master/tds']"
+                                                [queryParams]="{id: dataItem.   }" queryParamsHandling="merge">
+                                                <i class="material-icons">edit</i>
+                                            </button>
+                                        </td> -->
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row page" align="right">
+                            <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10 && pager.totalItems > 10" class="pagination">
+                                <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                    <a (click)="setPage(1)">First</a>
+                                </li>
+                                <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                    <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+                                </li>
+                                <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                                    <a (click)="setPage(page)">{{page}}</a>
+                                </li>
+                                <li *ngIf="(pager.totalPages - pager.startPage) > 5 ">
+                                    <a (click)="setPage(pager.startPage + 5)">...</a>
+                                </li>
+                                <li *ngIf="(pager.totalPages - pager.startPage) > 5">
+                                    <a (click)="setPage(pager.totalPages)">{{pager.totalPages}}</a>
+                                </li>
+
+                                <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                    <a (click)="setPage(pager.currentPage + 1)">Next</a>
+                                </li>
+                                <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                    <a (click)="setPage(pager.totalPages)">Last</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 mt-2">
+            <form [formGroup]="fg">
+                <div class="card m-b-30 sidesearch">
+                    <div class="card-body cpad enqview">
+                        <div class="row">
+
+                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                <div class="form-group bmd-form-group">
+                                    <input type="text" name="nTaxName" formControlName="TaxName" autocomplete="off"
+                                        placeholder="Tax Name" id="txtTaxName" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                <div class="form-group bmd-form-group">
+                                    <input type="text" name="nRate" formControlName="RatePercentage" autocomplete="off"
+                                        placeholder="Rate(%)" id="txtRate" class="form-control">
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                <div class="form-group bmd-form-group">
+                                    <!-- <input type="text" name="nSection" formControlName="SectionName" autocomplete="off" 
+                                placeholder="Section" id="txtSection" class="form-control" > -->
+
+                                   
+                                    <ng-select class="searchdropdown"  
+                                     name="section" [clearable]="false" formControlName="SectionID" id="ddlSection" >
+                                        <ng-option [value]="0" [disabled]="true">--SELECT SECTION--</ng-option>
+                                        <ng-option *ngFor="let section of Sectionvalues" [value]="section.SectionID">
+                                            {{section.SectionName | uppercase}}
+                                        </ng-option>
+                                      </ng-select>  
+
+
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                <div class="form-group bmd-form-group">
+                                   
+                                    <ng-select class="searchdropdown" 
+                                        name="isActive" [clearable]="false" formControlName="IsActive" id="ddlIsActive">
+                                        <ng-option [value]="''" [disabled]="true">--SELECT ACTIVE--</ng-option>
+                                        <ng-option *ngFor="let status of statusvalues" [value]="status.value">
+                                            {{status.viewValue | uppercase}}
+                                        </ng-option>
+                                      </ng-select>  
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 searchbtn alrt text-center mb-3 mt-3">
+                                <button style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;"
+                                    type="submit" (click)="onSubmit()" class="btn btn-primary btn-raised mb-0">Search
+                                    <div class="ripple-container"></div>
+                                </button>
+                                <button style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;"
+                                    class="btn btn-raised btn-danger mb-0" (click)="clearSearch()">Clear<div
+                                        class="ripple-container"></div></button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,199 @@
+
+<div class="row headtitle">
+    <div class="col-md-9">
+        <h4>Open Slot-Space Management </h4>
+    </div>
+    <div class="col-md-3 alrt">
+        <button type="button" class="btn btn-success btntop btn-raised bmd-btn-edit" [routerLink]="['/views/slotmanagement/slotmanagement']"><i class="material-icons editicon">add</i><div class="ripple-container"></div></button>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-9">
+        <div class="card m-b-30">
+            <div class="card-body leftcard">
+
+                <div id="datatable-buttons_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+
+                    <div class="row">
+                        <div class="col-sm-12 scrtbl">
+                            <table id="datatable-buttons" class="table table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                <thead>
+                                    <tr role="row">
+                                        <th class="actwid" valign="middle" tabindex="0" aria-controls="datatable-buttons" rowspan="2" colspan="1" aria-label="Name: activate to sort column ascending">
+                                            S.No
+                                        </th>
+                                        <th valign="middle" tabindex="0" aria-controls="datatable-buttons" rowspan="2" colspan="1" aria-label="Name: activate to sort column ascending">
+                                            Vessel
+                                        </th>
+                                        <th rowspan="2" valign="middle">Voyage</th>
+                                        <!--<th rowspan="2" valign="middle" >VOA</th>-->
+                                        <!--<th rowspan="2" valign="middle" >POD</th>-->
+                                        <th rowspan="2" valign="middle">ETA</th>
+                                        <th rowspan="2" valign="middle">ETD</th>
+                                        <th rowspan="2" valign="middle">Sailing</th>
+                                        <th colspan="2" align="center" scope="colgroup">Planning</th>
+                                        <th colspan="4" halign="center" scope="colgroup">Status</th>
+                                        <th rowspan="2" halign="center" scope="colgroup">Action</th>
+                                    </tr>
+                                    <tr>
+
+                                        <th scope="col">TUES</th>
+                                        <th scope="col">MT</th>
+                                        <th scope="col">Booking</th>
+                                        <th scope="col">Pickup</th>
+                                        <th scope="col">Gate-In</th>
+                                        <th scope="col">Loadout</th>
+
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+
+                                    <tr role="row" *ngFor="let dataItem of pagedItems;let i = index">
+                                        <td> {{ i + 1*pager.startIndex+1 }}</td>
+                                        <td>{{dataItem.VesselName}}</td>
+                                        <td>{{dataItem.Voyage}}</td>
+                                        <!--<td>{{dataItem.VOA}}</td>-->
+                                        <!--<td>{{dataItem.POD}}</td>-->
+                                        <td>{{dataItem.ETA}}</td>
+                                        <td>{{dataItem.ETD}}</td>
+                                        <td>{{dataItem.Sailing}}</td>
+                                        <td>{{dataItem.Teus}}</td>
+                                        <td>{{dataItem.MT}}</td>
+                                        <td>{{dataItem.Booking}}</td>
+                                        <td>{{dataItem.Pickup}}</td>
+                                        <td>{{dataItem.GateIn}}</td>
+                                        <td>{{dataItem.LoadOut}}</td>
+                                        <td class="alc">
+                                            <!--<button class="btn btn-success bmd-btn-fab" (click)="OnClickEdit(dataItem.ID)"><i class="material-icons">edit</i></button>-->
+                                            <button class="btn btn-success bmd-btn-fab" [routerLink]="['/views/slotmanagement/slotmanagement']" [queryParams]="{id: dataItem.ID}" queryParamsHandling="merge">
+                                                <i class="material-icons">edit</i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row page" align="right">
+
+                        <!-- pager -->
+                        <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10" class="pagination">
+                            <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                <a (click)="setPage(1)">First</a>
+                            </li>
+                            <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+                            </li>
+                            <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                                <a (click)="setPage(page)">{{page}}</a>
+                            </li>
+                            <li *ngIf="(pager.totalPages - pager.startPage) > 5 ">
+                                <a (click)="setPage(pager.startPage + 5)">...</a>
+                            </li>
+                            <li *ngIf="(pager.totalPages - pager.startPage) > 5">
+                                <a (click)="setPage(pager.totalPages)">{{pager.totalPages}}</a>
+                            </li>
+
+                            <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                <a (click)="setPage(pager.currentPage + 1)">Next</a>
+                            </li>
+                            <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                <a (click)="setPage(pager.totalPages)">Last</a>
+                            </li>
+                        </ul>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <form [formGroup]="searchForm">
+            <div class="card m-b-30 sidesearch">
+                <div class="card-body cpad">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group">
+                                <select class="form-control my-select" id="ddlVoyage" formControlName="VoyageID">
+                                    <option value="0">Vessel/Voyage</option>
+                                    <option *ngFor="let gRow of ddlVoyageItem" [value]="gRow.ID">
+                                        {{gRow.Voyage}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <label> ETA Between</label>
+                            <div class="form-group bmd-form-group">
+                                <div class="row">
+
+                                    <div class="col-md-6">
+                                        <mat-form-field class="paymentDate" >
+                                            <input matInput (click)="ETAfrom.open()" readonly autocomplete="off" [matDatepicker]="ETAfrom"  id="ETAfrom" placeholder="" formControlName="ETAfrom">
+                                            <mat-datepicker-toggle matSuffix [for]="ETAfrom"></mat-datepicker-toggle>
+                                            <mat-datepicker #ETAfrom></mat-datepicker>
+                                        </mat-form-field>
+                                        <!-- <input type="date" autocomplete="off" class="form-control" formControlName="ETAfrom" placeholder="ETA - From" /> -->
+                                    </div>
+                                    <label> </label>
+                                    <div class="col-md-6">
+                                        <mat-form-field  class="paymentDate">
+                                            <input matInput (click)="ETAto.open()" readonly autocomplete="off" [matDatepicker]="ETAto"  id="ETAto" placeholder="" formControlName="ETAto">
+                                            <mat-datepicker-toggle matSuffix [for]="ETAto"></mat-datepicker-toggle>
+                                            <mat-datepicker #ETAto></mat-datepicker>
+                                        </mat-form-field>
+                                        <!-- <input type="date" autocomplete="off" class="form-control" formControlName="ETAto" placeholder="ETA - To" /> -->
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label> ETD Between</label>
+                            <div class="form-group bmd-form-group">
+                                <div class="row">
+
+                                    <div class="col-md-6">
+                                        <mat-form-field class="paymentDate" >
+                                            <input matInput (click)="ETDfrom.open()" readonly autocomplete="off" [matDatepicker]="ETDfrom"  id="ETDfrom" placeholder="" formControlName="ETDfrom">
+                                            <mat-datepicker-toggle matSuffix [for]="ETDfrom"></mat-datepicker-toggle>
+                                            <mat-datepicker #ETDfrom></mat-datepicker>
+                                        </mat-form-field>
+                                        <!-- <input type="date" autocomplete="off" class="form-control" formControlName="ETDfrom" placeholder="ETD - From" /> -->
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <mat-form-field class="paymentDate" >
+                                            <input matInput (click)="ETDto.open()" readonly autocomplete="off" [matDatepicker]="ETDto"  id="ETDto" placeholder="" formControlName="ETDto">
+                                            <mat-datepicker-toggle matSuffix [for]="ETDto"></mat-datepicker-toggle>
+                                            <mat-datepicker #ETDto></mat-datepicker>
+                                        </mat-form-field>
+                                        <!-- <input type="date" autocomplete="off" class="form-control" formControlName="ETDto" placeholder="ETD - To" /> -->
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-12 searchbtn alrt">
+                            <button type="submit" (click)="onSubmit()" class="btn btn-primary btn-raised mb-0">Search<div class="ripple-container"></div></button>
+                            <button type="submit" (click)="clearSearch()" class="btn btn-raised btn-danger mb-0">Clear<div class="ripple-container"></div></button>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

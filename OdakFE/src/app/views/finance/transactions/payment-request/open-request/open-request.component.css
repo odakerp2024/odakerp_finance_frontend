@@ -1,0 +1,25 @@
+select, select.custom-file-control, select.form-control {
+    -moz-appearance: auto;
+    -webkit-appearance: auto;
+}
+
+
+.btndrop.col-2 {
+    flex: 0 0 20%;
+    max-width: 20%;
+}
+
+.con{
+    font-size: 17px;
+    font-weight: 600;
+    color:#003d79;
+    margin-left: 8px;
+}
+
+.textInput::placeholder {
+    font-size: 10%;
+  }
+
+  .placeholder-small::placeholder {
+    font-size: 14px; /* Adjust the font size as needed */
+  }

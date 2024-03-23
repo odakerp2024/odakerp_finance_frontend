@@ -1,0 +1,114 @@
+
+
+<div class="row headtitle">
+    <div class="col-md-9">
+        <h4>BOL Print</h4>
+    </div>
+</div>
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4 panelbox">
+                <form [formGroup]="pdfForm">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">BL PDF Files</div>
+                        <div class="panel-body">
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-link" (click)="aclpdf()" style="font-size: 14px; color: blue"><i class="fa fa-angle-double-right"></i>  Allied Container Lines</button>
+                                <div style="border-bottom: dashed 1px;"></div>
+                            </div>
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-link" (click)="bsspdf()" style="font-size: 14px; color: blue"><i class="fa fa-angle-double-right"></i>  BSS Container Lines</button>
+                                <div style="border-bottom: dashed 1px;"></div>
+                            </div>
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-link" (click)="cargoplanpdf()" style="font-size: 14px; color: blue"><i class="fa fa-angle-double-right"></i>  Cargo Plan</button>
+                                <div style="border-bottom: dashed 1px;"></div>
+                            </div>
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-link" (click)="emapdf()" style="font-size: 14px; color: blue"><i class="fa fa-angle-double-right"></i>  EMA</button>
+                                <div style="border-bottom: dashed 1px;"></div>
+                            </div>
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-link" (click)="hawkpdf()" style="font-size: 14px; color: blue"><i class="fa fa-angle-double-right"></i>  HAWK</button>
+                                <div style="border-bottom: dashed 1px;"></div>
+                            </div>
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-link" (click)="mjpdf()" style="font-size: 14px; color: blue"><i class="fa fa-angle-double-right"></i>  M&J</button>
+                                <div style="border-bottom: dashed 1px;"></div>
+                            </div>
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-link" (click)="merchantpdf()" style="font-size: 14px; color: blue"><i class="fa fa-angle-double-right"></i>  Merchant</button>
+                                <div style="border-bottom: dashed 1px;"></div>
+                            </div>
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-link" (click)="naviopdf()" style="font-size: 14px; color: blue"><i class="fa fa-angle-double-right"></i>  Navio</button>
+                                <div style="border-bottom: dashed 1px;"></div>
+                            </div>
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-link" (click)="seahorsepdf()" style="font-size: 14px; color: blue"><i class="fa fa-angle-double-right"></i>  Sea Horse Shipping</button>
+                                <div style="border-bottom: dashed 1px;"></div>
+                            </div>
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-link" (click)="shipnerpdf()" style="font-size: 14px; color: blue"><i class="fa fa-angle-double-right"></i>  Shipner</button>
+                                <div style="border-bottom: dashed 1px;"></div>
+                            </div>
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-link" (click)="taruspdf()" style="font-size: 14px; color: blue"><i class="fa fa-angle-double-right"></i>  Tarus Lines</button>
+                                <div style="border-bottom: dashed 1px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-4 panelbox">
+                <form [formGroup]="pdfForm">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">BL PDF Files</div>
+                        <div class="panel-body">
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-link" (click)="aquaticpdf()" style="font-size: 14px; color: blue"><i class="fa fa-angle-double-right"></i>  Aquatic Line</button>
+                                <div style="border-bottom: dashed 1px;"></div>
+                            </div>
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-link" (click)="uslpdf()" style="font-size: 14px; color: blue"><i class="fa fa-angle-double-right"></i>  USL</button>
+                                <div style="border-bottom: dashed 1px;"></div>
+                            </div>
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-link" (click)="sbepdf()" style="font-size: 14px; color: blue"><i class="fa fa-angle-double-right"></i>  SBE</button>
+                                <div style="border-bottom: dashed 1px;"></div>
+                            </div>
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-link" (click)="lmtpdf()" style="font-size: 14px; color: blue"><i class="fa fa-angle-double-right"></i>  LMT</button>
+                                <div style="border-bottom: dashed 1px;"></div>
+                            </div>
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-link" (click)="srspdf()" style="font-size: 14px; color: blue"><i class="fa fa-angle-double-right"></i>  SRS</button>
+                                <div style="border-bottom: dashed 1px;"></div>
+                            </div>
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-link" (click)="tetrapdf()" style="font-size: 14px; color: blue"><i class="fa fa-angle-double-right"></i>  Tetra</button>
+                                <div style="border-bottom: dashed 1px;"></div>
+                            </div>
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-link" (click)="sealloydpdf()" style="font-size: 14px; color: blue"><i class="fa fa-angle-double-right"></i>  Sealloyd</button>
+                                <div style="border-bottom: dashed 1px;"></div>
+                            </div>
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-link" (click)="imlpdf()" style="font-size: 14px; color: blue"><i class="fa fa-angle-double-right"></i>  IML</button>
+                                <div style="border-bottom: dashed 1px;"></div>
+                            </div>
+
+                            <div class="col-md-12">
+                               
+                                <button type="button" class="btn btn-link" (click)="naviopdfnew()" style="font-size: 14px; color: blue"><i class="fa fa-angle-double-right"></i>  naviopdfnew</button>
+                                <div style="border-bottom: dashed 1px;"></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

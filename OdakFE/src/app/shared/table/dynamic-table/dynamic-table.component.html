@@ -1,0 +1,44 @@
+<!-- [formGroup]="dynamicForm" -->
+<form>
+  <table class="table table-responsive   table-bordered w-100 table-striped border-0 agingTable mb-0">
+    <thead>
+        <tr>
+            <th scope="col" *ngFor="let header of headers">{{header.header}}</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td *ngFor="let header of headers">
+              <!-- formControlName="From" -->
+                <input autocomplete="off" [type]="header.type" name="header.header" [id]="header.header" >
+            </td>
+            <td></td>
+        </tr>
+        <ng-container *ngIf="tableData.length; else noRecord">
+          <ng-container *ngFor="let agingData of tableData;let i = index">
+            <tr>
+              <!-- <td class="py-1">{{i + 1}}</td> -->
+            <ng-container *ngFor="let header of headers">
+              <td>{{agingData[header.key]}}</td>
+            </ng-container>
+
+          
+            <td class="px-1 m-auto" >
+              <input *ngIf="tableType != 'list'" type="radio" (click)="OnClickRadio(i)" name="select" />
+            </td> 
+          
+          </tr>
+          </ng-container>
+        </ng-container>
+        <!-- no data -->
+        <ng-template #noRecord>
+            <!-- <tr>
+                <td colspan="5" style="height: 200px;">No records found</td>
+            </tr> -->
+        </ng-template>
+    </tbody>
+</table>
+</form>
+
+<!-- {{data | json}} -->

@@ -1,0 +1,181 @@
+<div class="container-fluid p-0">
+    <div class="row headtitle mt-2">
+        <div class="col-md-9 col-sm-9 col-lg-9 col-xl-9">
+            <h4 class="ml-2 mt-2">COA - Type</h4>
+        </div>
+        <div class="col-md-3 col-sm-3 col-lg-3 col-xl-3 alrt ">
+
+            <button *ngIf="!isCreate" (click)="coaForm.enable();isUpdateButtonDisable = false;" type="button"
+                class="btn btn-warning bmd-btn-edit btn-raised btntop emarginr ng-star-inserted">
+                <i class="material-icons editicon">edit</i>
+            </button>
+
+            <button type="button" class="btn btn-success btntop btn-raised bmd-btn-edit" (click)="onBack()"><i
+                    class="material-icons editicon">reply</i>
+                <div class="ripple-container"></div>
+            </button>
+
+            <button *ngIf="!isCreate"
+                class="nav-link dropdown-toggle arrow-none waves-effect nav-user btn bmd-btn-edit btn-raised btntop btnlog"
+                data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                <i class="material-icons editicon">schedule</i>
+            </button>
+            <div class="dropdown-menu dropdown-menu-right profile-dropdown"
+                style="background-color: aliceblue;width:250px;left:-66px">
+                <a class="dropdown-item" style="padding:15px;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12"><span>ModifiedOn: {{ModifiedOn}}</span> | <span>Modified By:
+                                        {{ModifiedBy}}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:10px;">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12"><span>CreatedOn: {{CreatedOn}}</span> | <span>Created By:
+                                        {{CreatedBy}}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- -------title start--------- -->
+    <div class="row my-3 p-2" style="background-color: lavender;margin: 2px;">
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row bkgno">
+                <div class="col-md-12">
+                    <label [title]="coaForm.value.COATypeName" class="lbltxt header-text-label"><span
+                            style="font-weight: lighter !important;">COA Type :
+                        </span>{{coaForm.value.COATypeName | uppercase}}</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- --------title end----------- -->
+
+    <form [formGroup]="coaForm">
+        <div class="card">
+            <div class="card-body ">
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="str">COA Type Code</label>
+                                    <input readonly [ngClass]=" isUpdate ? 'block-input' : ''"
+                                        formControlName="COATypeCOde" class="form-control w-100" type="text"
+                                        id="finicalPeriod" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="str">COA Group</label>
+                                 
+                                    <ng-select class="searchdropdown"   
+                                    [ngClass]=" isUpdate ? 'block-input' : ''" [clearable]="false" formControlName="COAGroup"
+                                        name="isActive" id="ddlIsActive" >
+                                        <ng-option [value]="''" [disabled]="true">--SELECT COA GROUP--</ng-option>
+                                        <ng-option *ngFor="let cao of coaGroupList" [value]="cao.ID">
+                                            {{cao.GroupName | uppercase}}
+                                        </ng-option>
+                                      </ng-select>  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="str">COA Type</label>
+                                    <input [ngClass]=" isUpdate ? 'block-input' : ''" formControlName="COATypeName"
+                                        class="form-control w-100" type="text" id="finicalPeriod" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="str">Short Name</label>
+                                    <input (ngModelChange)="autoCodeGeneration($event)"
+                                        [ngClass]=" isUpdate ? 'block-input' : ''" formControlName="ShortName"
+                                        class="form-control w-100" type="text" id="finicalPeriod" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="str">Active</label>
+                                    
+                                    <ng-select class="searchdropdown"  
+                                    formControlName="Active" [clearable]="false" name="isActive" id="ddlIsActive" >
+                                        <ng-option [value]="''" [disabled]="true">--SELECT ACTIVE--</ng-option>
+                                        <ng-option *ngFor="let status of statusvalues" [value]="status.value">
+                                            {{status.viewValue | uppercase}}
+                                        </ng-option>
+                                      </ng-select>  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Remarks</label>
+                                    <textarea [ngClass]=" isUpdate ? 'block-input' : ''"
+                                        class="form-control croinputtext" style="height:100px!important;"
+                                        placeholder="Notes" formControlName="Remarks"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12" style="text-align:right;">
+                    <button *ngIf="isCreate" type="submit" (click)="onSubmit()"
+                        class="btn btn-primary btn-raised mb-0 m-r-15">Save</button>
+
+                    <button *ngIf="!isCreate" [disabled]="isUpdateButtonDisable" type="submit" (click)="onSubmit()"
+                        class="btn btn-primary btn-raised mb-0 m-r-15">Update</button>
+
+                    <button type="button" [routerLink]="['/views/coa-type/cao-type-view']" (click)="coaForm.reset()"
+                        class="btn btn-danger  btn-raised mb-0">Cancel</button>
+                </div>
+                <input type="hidden" id="HDRegId" ng-model="HDRegId" />
+            </div>
+        </div>
+    </form>
+</div>

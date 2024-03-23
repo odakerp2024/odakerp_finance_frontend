@@ -1,0 +1,885 @@
+
+
+<div class="row headtitle">
+    <div class="col-md-9">
+        <h4>Customer Contracts</h4>
+    </div>
+    <div class="col-md-3 alrt">
+        <button class="nav-link dropdown-toggle arrow-none waves-effect nav-user btn bmd-btn-edit btn-raised btntop btnlog" data-toggle="dropdown" role="button" aria-haspopup="false"
+                aria-expanded="false">
+            <i class="material-icons editicon">schedule</i>
+        </button>
+        <div class="dropdown-menu dropdown-menu-right profile-dropdown alog">
+
+
+            <a class="dropdown-item">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-12"><span>ModifiedOn: {{ModifiedOn}}</span> | <span>Modified By: {{ModifiedBy}}</span></div>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row alogtop">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-12"><span>CreatedOn: {{CreatedOn}}</span> | <span>Created By: {{CreatedBy}}</span></div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <button type="button" *ngIf="showEdit" class="btn btn-warning bmd-btn-edit btn-raised btntop" (click)="OnclickeEdit()" style="margin-right:15px;"><i class="material-icons editicon">edit</i></button>
+        <button type="button" class="btn btn-success bmd-btn-edit btn-raised btntop" [routerLink]="['/views/enquiries-booking/customercontract/customercontractview/customercontractview']"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">
+
+        <div class="row enquirynav">
+            <div class="col-md-12">
+                <ul class="nav nav-pills nav-justified" role="tablist">
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link active show" data-toggle="tab" (click)="onPageTab(1)" id="agencydetails" href="#Enquiry" role="tab" aria-selected="true">Contract</a>
+                    </li>
+
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" id="pricipaltab" (click)="onPageTab(2)" href="#Links" role="tab" aria-selected="false">Links</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+        <div class="row forms">
+            <div class="col-md-12 padlr0">
+                <form [formGroup]="contractForm">
+                    <div class="tab-content" style="padding:0;">
+                        <div class="tab-pane pt-3 active show" id="Enquiry" role="tabpanel">
+                            <div class="col-md-12" style="border-bottom: 2px dashed #de703a69; margin-bottom: 15px; padding-bottom: 10px;">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4 class="enqtitle">Basic Details</h4>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label>Customer</label>
+                                                    <select class="form-control my-select" id="ddlCustomer" formControlName="CustomerID">
+                                                        <option *ngFor="let gRow of ddlCustomerItem" [value]="gRow.ID">
+                                                            {{gRow.CustomerName}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label>Principal</label>
+                                                    <select class="form-control my-select" id="ddlPrincipal" formControlName="PrincipalID">
+                                                        <option *ngFor="let gRow of ddlPrincipalItem" [value]="gRow.ID">
+                                                            {{gRow.PrincipalName}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label>Office Location</label>
+                                                    <select class="form-control my-select" id="ddlOfficeLocation" formControlName="OfficeLocation">
+                                                        <option *ngFor="let gRow of OfficeMasterAllvalues" [value]="gRow.ID">
+                                                            {{gRow.CustomerName}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label>Contract Date</label>
+                                                    <mat-form-field class="paymentDate" >
+                                                        <input matInput [max]="getToday()" (click)="ContractDate.open()" readonly  autocomplete="off" [matDatepicker]="ContractDate"  id="ddlContractDate" placeholder="" formControlName="ContractDate">
+                                                        <mat-datepicker-toggle matSuffix [for]="ContractDate"></mat-datepicker-toggle>
+                                                        <mat-datepicker #ContractDate></mat-datepicker>
+                                                    </mat-form-field>
+                                                    <!-- <input type="date" [max]="getToday()" name="txtContractDate" id="ddlContractDate" formControlName="ContractDate" class="form-control" /> -->
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label>Contract Number</label>
+                                                    <input type="text" class="form-control" disabled formControlName="ContractNo" />
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label>Sales Person</label>
+                                                    <select class="form-control my-select" id="ddlSalesPerson" formControlName="SalesPersonID">
+                                                        <option *ngFor="let gRow of ddlSalesPersonItem" [value]="gRow.ID">
+                                                            {{gRow.UserName}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label>Valid Till</label>
+                                                    <mat-form-field class="paymentDate" >
+                                                        <input matInput [min]="getToday()"  autocomplete="off" [matDatepicker]="ValidTill"  id="ddlValidTill" placeholder="" formControlName="ValidTill">
+                                                        <mat-datepicker-toggle matSuffix [for]="ValidTill"></mat-datepicker-toggle>
+                                                        <mat-datepicker #ValidTill></mat-datepicker>
+                                                    </mat-form-field>
+                                                    <!-- <input type="date" [min]="getToday()" name="txtValidTill" id="ddlValidTill" formControlName="ValidTill" class="form-control" /> -->
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label>Status</label>
+                                                    <select class="form-control" disabled id="ddlStatusv" formControlName="Status">
+                                                        <option value="0">Status</option>
+                                                        <option *ngFor="let status of statusvalues" [value]="status.value">
+                                                            {{status.viewValue}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label>Rate Request No</label>
+                                                    <select class="form-control my-select" id="ddlRateReqNo" formControlName="RRID">
+                                                        <option *ngFor="let gRow of ddlRRItem" [value]="gRow.ID">
+                                                            {{gRow.RequestNo}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="col-md-12" style="border-bottom: 2px dashed #de703a69; margin-bottom: 15px; padding-bottom: 10px;">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4 class="enqtitle">Shipment Details</h4>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 padlr0">
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <label>Origin</label>
+                                                        <select class="form-control my-select" id="ddlOrigin" formControlName="OriginID">
+                                                            <option *ngFor="let gRow of ddlOriginItem" [value]="gRow.ID">
+                                                                {{gRow.PortName}}
+                                                            </option>
+                                                        </select>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <label>Load Port</label>
+                                                        <select class="form-control my-select" id="ddlLoadPort" formControlName="LoadPortID">
+                                                            <option *ngFor="let gRow of ddlLoadPortItem" [value]="gRow.ID">
+                                                                {{gRow.PortName}}
+                                                            </option>
+                                                        </select>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <label>Discharge Port</label>
+                                                        <select class="form-control my-select" id="ddlDischargePort" formControlName="DischargePortID">
+                                                            <option *ngFor="let gRow of ddlDischargePortItem" [value]="gRow.ID">
+                                                                {{gRow.PortName}}
+                                                            </option>
+                                                        </select>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <label>Destination</label>
+                                                        <select class="form-control my-select" id="ddlDestination" formControlName="DestinationID">
+                                                            <option *ngFor="let gRow of ddlDestinationItem" [value]="gRow.ID">
+                                                                {{gRow.PortName}}
+                                                            </option>
+                                                        </select>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <label>Route</label>
+                                                        <select class="form-control my-select" id="ddlRoute" formControlName="RouteID">
+                                                            <option *ngFor="let gRow of ddlRouteItem" [value]="gRow.ID">
+                                                                {{gRow.GeneralName}}
+                                                            </option>
+                                                        </select>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <label>Delivery Terms</label>
+                                                        <select class="form-control my-select" id="ddlTerms" formControlName="DeliveryTermsID">
+                                                            <option *ngFor="let gRow of ddlTermsItem" [value]="gRow.ID">
+                                                                {{gRow.GeneralName}}
+                                                            </option>
+                                                        </select>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+
+                                    <div class="row">
+                                        <div class="col-sm-12 padlr0 conttable cntralign">
+                                            <table id="datatable-buttons" cellpadding="0" cellspacing="0" class="table table-responsive table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="ble" rowspan="2">Container Type</th>
+                                                        <th class="ble" rowspan="2">Nos</th>
+                                                        <th class="ble" rowspan="2">Cargo Type</th>
+                                                        <th class="ble" rowspan="2">Currency</th>
+                                                        <th class="ble">Ocean Freight(Per Unit)</th>
+                                                        <th class="ble">Slot(Per Container)</th>
+                                                        <th class="ble" colspan="2">POD Charges(Per Container)</th>
+                                                        <th class="ble" rowspan="3" colspan="3">Action</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th class="ble">Amount</th>
+                                                        <th class="ble">Amount</th>
+                                                        <th class="ble">Std/Spl</th>
+                                                        <th class="ble">Amount(Incase of Spl.)</th>
+
+                                                    </tr>
+                                                </thead>
+
+
+                                                <tbody>
+                                                    <tr *ngFor="let dynamic of dynamicContainerArray; let i = index; let last=last;">
+
+                                                        <td class="txtbox1">
+                                                            <select class="form-control" [disabled]="ControlDisplay" id="ddlContainerType" [(ngModel)]="dynamicContainerArray[i].ContainerTypeID" [ngModelOptions]="{standalone: true}">
+                                                                <option value="0">--Select--</option>
+                                                                <option *ngFor="let dynamic of ddlContainerItem" [value]="dynamic.ID">
+                                                                    {{dynamic.Size}}
+                                                                </option>
+                                                            </select>
+
+                                                        </td>
+                                                        <td class="txtbox2">
+                                                            <input type="text" [disabled]="ControlDisplay" id="txtNos" [(ngModel)]="dynamicContainerArray[i].Nos" class="form-control" [ngModelOptions]="{standalone: true}" />
+                                                        </td>
+                                                        <td class="txtbox1">
+                                                            <select class="form-control" [disabled]="ControlDisplay" id="ddlCargoType" [(ngModel)]="dynamicContainerArray[i].CargoTypeID" [ngModelOptions]="{standalone: true}">
+                                                                <option value="0">--Select--</option>
+                                                                <option *ngFor="let dynamic of ddlCargoItem" [value]="dynamic.ID">
+                                                                    {{dynamic.GeneralName}}
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                        <td class="txtbox1">
+                                                            <select [disabled]="ControlDisplay" class="form-control other" id="ddlOceanCurrency" [(ngModel)]="dynamicContainerArray[i].OceanCurrencyID" [ngModelOptions]="{standalone: true}">
+                                                                <option value="0">--Select--</option>
+                                                                <option *ngFor="let dynamic of ddlCurrencyItem" [value]="dynamic.ID">
+                                                                    {{dynamic.Currency}}
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                        <td class="txtbox1">
+                                                            <input [disabled]="ControlDisplay" type="text" id="txtOceanAmount" [(ngModel)]="dynamicContainerArray[i].OceanAmount" class="form-control" [ngModelOptions]="{standalone: true}" />
+                                                        </td>
+
+                                                        <td class="txtbox1">
+                                                            <input [disabled]="ControlDisplay" type="text" id="txtSlotAmount" [(ngModel)]="dynamicContainerArray[i].SlotAmount" class="form-control" [ngModelOptions]="{standalone: true}" />
+                                                        </td>
+
+
+
+                                                        <td class="txtbox1">
+                                                            <select [disabled]="ControlDisplay" class="form-control" id="ddlPODStd" [(ngModel)]="dynamicContainerArray[i].PODStdID" [ngModelOptions]="{standalone: true}">
+                                                                <option value="0">Status</option>
+                                                                <option *ngFor="let stdspl of StdSplvalues" [value]="stdspl.value">
+                                                                    {{stdspl.viewValue}}
+                                                                </option>
+                                                            </select>
+
+                                                        </td>
+                                                        <td class="txtbox1">
+                                                            <input [disabled]="ControlDisplay" type="text" id="txtPODAmount" [(ngModel)]="dynamicContainerArray[i].PODAmount" class="form-control" [ngModelOptions]="{standalone: true}" />
+                                                        </td>
+
+                                                        <td class="alc actwid txtact">
+                                                            <button [disabled]="ControlDisplay" class="btn btn-success bmd-btn-fab" *ngIf="last" (click)="OnClickAddValue(dynamic,i);">
+                                                                <i class="material-icons">add</i>
+                                                            </button>
+                                                            <button [disabled]="ControlDisplay" type="button" (click)="deleteRow(dynamicContainerArray,i,dynamic.CID)" rel="tooltip" class="btn btn-danger bmd-btn-fab">
+                                                                <i class="material-icons">delete</i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+
+                                                </tbody>
+
+                                            </table>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-6" style="margin-top:15px;">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label>Free Days-Origin</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="col-md-12 form-check">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <input class="form-check-input" type="radio" (click)="StandardOrgChange(1)" [value]="1" formControlName="FreeDaysOriginType" name="FreeDaysOriginType" id="OriginChk1" checked>
+                                                            <label class="form-check-label">
+                                                                Standard
+                                                            </label>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <input class="form-check-input" type="radio" (click)="StandardOrgChange(2)" [value]="2" formControlName="FreeDaysOriginType" name="FreeDaysOriginType" id="OriginChk2">
+                                                            <label class="form-check-label">
+                                                                Special
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="text" id="txtFreeDaysOrigin" class="form-control" formControlName="FreeDaysOrigin" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label>Free Days-Destination</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="col-md-12 form-check">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <input class="form-check-input" type="radio" (click)="StandardDestChange(1)" [value]="1" formControlName="FreeDaysDestinationType" name="FreeDaysDestinationType" id="DestChk1" checked>
+                                                            <label class="form-check-label">
+                                                                Standard
+                                                            </label>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <input class="form-check-input" type="radio" (click)="StandardDestChange(2)" [value]="2" formControlName="FreeDaysDestinationType" name="FreeDaysDestinationType" id="DestChk2">
+                                                            <label class="form-check-label">
+                                                                Special
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="text" id="txtFreeDaysDestination" class="form-control" formControlName="FreeDaysDestination" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label>Damage Scheme</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="col-md-12 form-check">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <input class="form-check-input" type="radio" (click)="StandardDamChange(1)" [value]="1" formControlName="DamageSchemeType" name="DamageSchemeType" id="DamChk1" checked>
+                                                            <label class="form-check-label">
+                                                                Standard
+                                                            </label>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <input class="form-check-input" type="radio" (click)="StandardDamChange(2)" [value]="2" formControlName="DamageSchemeType" name="DamageSchemeType" id="DamChk2">
+                                                            <label class="form-check-label">
+                                                                Special
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="text" id="txtDamageScheme" class="form-control" formControlName="DamageScheme" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label>Security Deposit</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="col-md-12 form-check">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <input class="form-check-input" type="radio" (click)="StandardDepChange(1)" [value]="1" formControlName="SecDepositType" name="SecDepositType" id="DepChk1" checked>
+                                                            <label class="form-check-label">
+                                                                Standard
+                                                            </label>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <input class="form-check-input" type="radio" (click)="StandardDepChange(2)" [value]="2" formControlName="SecDepositType" name="SecDepositType" id="DepChk2">
+                                                            <label class="form-check-label">
+                                                                Special
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="text" id="txtSecDeposit" class="form-control" formControlName="SecDeposit" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label>BOL Requirement</label>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="col-md-12 form-check">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <input class="form-check-input" type="radio" (click)="StandardBOLReqChange(1)" [value]="1" formControlName="BOLReqType" name="BOLReqType" id="BOLChk1" checked>
+                                                            <label class="form-check-label">
+                                                                Standard
+                                                            </label>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <input class="form-check-input" type="radio" (click)="StandardBOLReqChange(2)" [value]="2" formControlName="BOLReqType" name="BOLReqType" id="BOLChk2">
+                                                            <label class="form-check-label">
+                                                                Special
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="text" id="txtBOLReq" class="form-control" formControlName="BOLReq" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-12 padlr0">
+                                    <div class="row" style="border-bottom:2px dashed #ccc; margin-bottom:15px; padding-bottom:10px;">
+                                        <div class="col-md-12">
+                                            <h4 class="enqtitle">Attachments</h4>
+                                        </div>
+                                        <div class="col-md-12 conttable cntralign">
+
+                                            <div class="material-datatables">
+                                                <table class="table table-striped table-bordered table-hover" cellspacing="0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Attachment Name</th>
+                                                            <th>Attach File</th>
+
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="attch">
+
+                                                                <input type="text" [disabled]="ControlDisplay" class="form-control" id="txtAttachName" [(ngModel)]="AttachName" [ngModelOptions]="{standalone: true}">
+                                                            </td>
+
+                                                            <td>
+                                                                <input [disabled]="ControlDisplay" type="file" class="file-upload" id="txtAttachFile" [(ngModel)]="AttachFile" (change)="onFileSelected($event)" [ngModelOptions]="{standalone: true}">
+                                                                <span class='label label-info' id="upload-file-info"></span>
+                                                            </td>
+
+                                                            <td class="actwid">
+                                                                <button type="button" [disabled]="ControlDisplay" rel="tooltip" (click)="AddAttach(gRow)" class="btn btn-success bmd-btn-fab" data-original-title="" title="">
+                                                                    <i class="material-icons">add</i>
+                                                                </button>
+
+                                                            </td>
+                                                        </tr>
+                                                        <tr *ngFor="let gRow of DynamicGridAttachLink; let i= index">
+
+
+
+                                                            <td>
+                                                                {{gRow.AttachName}}
+                                                            </td>
+                                                            <td>
+
+                                                                {{gRow.AttachFile}}
+
+                                                            </td>
+                                                            <td class="actwid">
+                                                                <button type="button" rel="tooltip" [disabled]="ControlDisplay" (click)="RemoveAttach(DynamicGridAttachLink,i,gRow.AID)" class="btn btn-danger bmd-btn-fab" data-original-title="" title="">
+                                                                    <i class="material-icons">delete</i>
+                                                                </button>
+
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+
+                                                </table>
+
+                                            </div>
+
+
+
+                                        </div>
+                                    </div>
+                                    <!--<div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Attachment Description</label>
+                                                <input type="text" class="form-control" />
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label>&nbsp;</label>
+                                            <input type="file" />
+                                        </div>
+                                        <div class="col-md-2" style="text-align:right;">
+                                            <label>&nbsp;</label>
+                                            <button class="btn btn-success bmd-btn-fab" style="margin-top:20px;">
+                                                <i class="material-icons">add</i>
+                                            </button>
+                                        </div>
+                                    </div>-->
+
+
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-12" style="border-bottom: 2px dashed #de703a69; margin-bottom: 15px; padding-bottom: 10px;">
+
+
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4 class="enqtitle">Remarks</h4>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 padlr0">
+
+                                    <div class="row">
+
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <textarea class="form-control" id="txtRemarks" formControlName="Remarks" style="height:50px!important;" rows="5" placeholder="Notes"></textarea>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-12" *ngIf="showCancelReason">
+                                        <table class="table table-responsive table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Cancel Reason</th>
+                                                    <th>Remarks</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>{{cancelreasonvalue}}</td>
+                                                    <td>{{cancelreason}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                    <div class="col-md-12" *ngIf="showRejectReason">
+                                        <table class="table table-responsive table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Lost Reason</th>
+                                                    <th>Remarks</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>{{rejectreasonvalue}}</td>
+                                                    <td>{{rejectreason}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="divide"></div>
+                            <div class="col-md-12 searchbtn alrt">
+                                <button type="submit" (click)="onSubmit()" [disabled]="disableSave" *ngIf="showSave" class="btn btn-primary btn-raised mb-0">Save<div class="ripple-container"></div></button>
+                                <button type="submit" (click)="onApprove(idc)" [disabled]="disableApprove" *ngIf="showApprove" class="btn btn-success btn-raised mb-0">Confirm<div class="ripple-container"></div></button>
+                                <button type="submit" (click)="OnRejectModal()" [disabled]="disableReject" *ngIf="showReject" id="btnReject" class="btn btn-danger btn-raised mb-0">Lost<div class="ripple-container"></div></button>
+                                <button type="submit" (click)="OnCancelModal()" [disabled]="disableCancel" *ngIf="showCancel" class="btn btn-warning btn-raised btn-default mb-0">Cancel<div class="ripple-container"></div></button>
+
+
+                            </div>
+
+                            <div class="modal fade seminor-login-modal" data-backdrop="static" id="CancelReason">
+                                <div class="modal-dialog modal-dialog-centered dialogsmall">
+                                    <div class="modal-content">
+                                        <div class="row">
+                                            <div class="col-md-12 alrt">
+                                                <button type="button" class="close" data-dismiss="modal">
+                                                    <span><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+                                                </button>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="modal-body seminor-login-modal-body cntpopup">
+                                            <h5 class="modal-title text-center">Cancel Reason</h5>
+
+                                            <div class="row">
+                                                <div class="col-sm-12 padlr0">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <label>Cancel Reason</label>
+                                                                        <select class="form-control my-select" style="text-transform: capitalize;" id="ddlCancel" formControlName="CancelReasonID">
+                                                                            <option value="0">Cancel Reason</option>
+                                                                            <option *ngFor="let gRow of ddlCancelItem" [value]="gRow.ID">
+                                                                                {{gRow.GeneralName}}
+                                                                            </option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <label>Remarks</label>
+                                                                        <textarea class="form-control" id="txtCancelReason" formControlName="Reason" style="height:80px!important;background-color:#fff!important;" rows="5" placeholder="Remarks"></textarea>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="divide"></div>
+                                                <div class="col-md-12 searchbtn alc">
+                                                    <button type="submit" (click)="onCancel()" class="btn btn-success btn-raised mb-0">Save<div class="ripple-container"></div></button>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal fade seminor-login-modal" data-backdrop="static" id="RejectReason">
+                                <div class="modal-dialog modal-dialog-centered dialogsmall">
+                                    <div class="modal-content">
+                                        <div class="row">
+                                            <div class="col-md-12 alrt">
+                                                <button type="button" class="close" data-dismiss="modal">
+                                                    <span><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+                                                </button>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="modal-body seminor-login-modal-body cntpopup">
+                                            <h5 class="modal-title text-center">Lost Reason</h5>
+
+                                            <div class="row">
+                                                <div class="col-sm-12 padlr0">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <label>Lost Reason</label>
+                                                                        <select class="form-control my-select" style="text-transform:capitalize;" id="ddlReject" formControlName="RejectReasonID">
+                                                                            <option value="0">Lost Reason</option>
+                                                                            <option *ngFor="let gRow of ddlRejectItem" [value]="gRow.ID">
+                                                                                {{gRow.GeneralName}}
+                                                                            </option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <label>Remarks</label>
+                                                                        <textarea class="form-control" id="txtRejectReason" formControlName="RejectReason" style="height:80px!important;background-color:#fff!important;" rows="5" placeholder="Remarks"></textarea>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                                <div class="divide"></div>
+                                                <div class="col-md-12 searchbtn alc">
+                                                    <button type="submit" (click)="onReject()" class="btn btn-success btn-raised mb-0">Save<div class="ripple-container"></div></button>
+
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane pt-3" id="Links" role="tabpanel">
+                            <div class="row">
+                                <div class="col-md-4">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+

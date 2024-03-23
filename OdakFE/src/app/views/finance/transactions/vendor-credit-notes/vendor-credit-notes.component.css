@@ -1,0 +1,11 @@
+
+:host ::ng-deep .mat_date_picker .mat-form-field-infix {
+    padding: 0px !important;
+}
+:host ::ng-deep .mat-form-field-outline{
+    border: 1px solid #a9a9a9 !important;
+
+ }
+ :host ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+    color: transparent !important;
+}

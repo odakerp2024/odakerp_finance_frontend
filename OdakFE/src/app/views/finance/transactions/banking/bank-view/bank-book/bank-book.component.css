@@ -1,0 +1,9 @@
+.table>thead>tr>th {
+    width: 11% !important;
+    text-align: center;
+}
+
+.exportAs {
+    width: 30px;
+    height: 30px;
+}

@@ -1,0 +1,405 @@
+<div class="row headtitle">
+    <div class="col-md-9">
+        <h4>Agency Master</h4>
+    </div>
+    <div class="col-md-3 alrt">
+        <button type="button" class="btn btn-success bmd-btn-edit btn-raised btntop" [routerLink]="['/views/masters/LAmaster/agencymaster/agencymasterview']"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body ">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card ">
+
+                    <div class="card-body ">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <ul class="nav nav-pills nav-justified" role="tablist">
+                                    <li class="nav-item waves-effect waves-light">
+                                        <a class="nav-link active show" data-toggle="tab" (click)="onPageTab(1)"  id="agencydetails" href="#profile-1" role="tab" aria-selected="true">AGENCY DETAILS</a>
+                                    </li>
+
+                                    <li class="nav-item waves-effect waves-light">
+                                        <a class="nav-link" data-toggle="tab" id="pricipaltab" (click)="onPageTab(2)"  href="#profile-2" role="tab" aria-selected="false">PRINCIPAL MAPPING</a>
+                                    </li>
+                                    <li class="nav-item waves-effect waves-light">
+                                        <a class="nav-link" data-toggle="tab" id="portdtls" (click)="onPageTab(3)" href="#profile-3" role="tab" aria-selected="false">PORT DETAILS</a>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 padlr0">
+
+                                <div class="tab-content" style="padding:0;">
+                                    <div class="tab-pane pt-3 active show" id="profile-1" role="tabpanel">
+                                        <form [formGroup]="agencyForm" (ngSubmit)="onSubmit()">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="row" style="margin-left:15px; margin-right:15px;">
+
+                                                        <div class="col-md-12" style="border:1px solid #ccc; margin-top:20px; margin-bottom:20px; padding-bottom:15px;">
+                                                            <div class="col-md-12 padlr0">
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <div class="row">
+                                                                                <div class="col-md-12">
+                                                                                    <label class="str">Agency Code</label>
+
+                                                                                    <input type="text" id="txtAgencyCode" formControlName="AgencyCode" class="form-control ng-pristine ng-untouched ng-valid ng-empty">
+                                                                                </div>
+
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <div class="row">
+                                                                                <div class="col-md-12">
+                                                                                    <label class="str">Agency Name</label>
+
+                                                                                    <input type="text" id="txtAgencyName" formControlName="AgencyName" class="form-control ng-pristine ng-untouched ng-valid ng-empty">
+                                                                                </div>
+
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-12 padlr0">
+                                                                <div class="row">
+                                                                    <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                            <div class="row">
+                                                                                <div class="col-md-12">
+                                                                                    <label class="str">Country</label>
+                                                                                    <select class="form-control my-select" id="ddlCountryv" formControlName="CountryID" (ngModelChange)="CountryChanged()">
+                                                                                        <option *ngFor="let gRow of dscountryItem" [value]="gRow.ID">
+                                                                                            {{gRow.CountryName}}
+                                                                                        </option>
+
+                                                                                    </select>
+
+                                                                                </div>
+
+
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                            <div class="row">
+                                                                                <div class="col-md-12">
+                                                                                    <label class="str">City</label>
+
+                                                                                </div>
+                                                                                <select class="form-control my-select" id="ddlCity" formControlName="CityID">
+                                                                                    <option *ngFor="let gRow of dsCityItem" [value]="gRow.ID">
+                                                                                        {{gRow.CityName}}
+                                                                                    </option>
+
+                                                                                </select>
+
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                            <div class="row">
+                                                                                <div class="col-md-12">
+                                                                                    <label>State</label>
+                                                                                    <select class="form-control my-select" id="ddlState" formControlName="StateID">
+                                                                                        <option *ngFor="let gRow of dsStateItem" [value]="gRow.ID">
+                                                                                            {{gRow.StateName}}
+                                                                                        </option>
+
+                                                                                    </select>
+                                                                                </div>
+
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+
+                                                            <div class="col-md-12 padlr0">
+                                                                <div class="row">
+                                                                    <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                            <div class="row">
+                                                                                <div class="col-md-12">
+                                                                                    <label>Tax/GST Number</label>
+                                                                                    <input type="text" id="txtTanNo" formControlName="TaxGSTNo" autocomplete="off" class="form-control ng-pristine ng-untouched ng-valid ng-empty">
+                                                                                </div>
+
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                            <div class="row">
+                                                                                <div class="col-md-12">
+                                                                                    <label class="str">Pin Code</label>
+                                                                                    <input type="number" id="txtPincode" formControlName="PinCode" autocomplete="off" class="form-control ng-pristine ng-untouched ng-valid ng-empty">
+                                                                                </div>
+
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                            <div class="row">
+                                                                                <div class="col-md-12">
+                                                                                    <label class="str">Email</label>
+                                                                                    <input type="text" id="txtEmailDetail" formControlName="EmailDetail" autocomplete="off" class="form-control ng-pristine ng-untouched ng-valid ng-empty">
+
+                                                                                </div>
+
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12 padlr0">
+                                                                <div class="row">
+
+                                                                    <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                            <div class="row">
+                                                                                <div class="col-md-12">
+                                                                                    <label>Tel No *</label>
+
+                                                                                    <input type="number" id="txtTelNo" formControlName="TelNo" autocomplete="off" class="form-control ng-pristine ng-untouched ng-valid ng-empty">
+                                                                                </div>
+
+
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <div class="form-group">
+                                                                            <div class="row">
+                                                                                <div class="col-md-12">
+                                                                                    <label>Status *</label>
+
+                                                                                    <select class="form-control my-select" id="ddlStatus" formControlName="Status">
+                                                                                        <option *ngFor="let status of statusvalues" [value]="status.value">
+                                                                                            {{status.viewValue}}
+                                                                                        </option>
+                                                                                    </select>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-12 padlr0">
+                                                                <div class="form-group">
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <label>Address</label>
+
+                                                                            <textarea id="txtAddress" formControlName="Address" autocomplete="off" rows="5" style="height:100px!important;" ng-model="txtAddress" class="form-control"></textarea>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <label>Note</label>
+                                                                            <textarea id="txtNote" formControlName="Notes" autocomplete="off" rows="5" style="height:100px!important;" ng-model="txtNote" class="form-control"></textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            
+                                                <div class="card-footer ">
+                                                    <div class="col-md-12 alrt">
+                                                        <button type="submit" (click)="OnSubmit()" class="btn btn-primary btn-raised mb-0"><i class="fa fa-save"></i> Submit</button>
+                                                    </div>
+
+                                                </div>
+                                          
+                                        </form>
+                                    </div>
+                                    <div class="tab-pane pt-3" id="profile-2" role="tabpanel">
+                                        <div class="row">
+                                            <div class="col-md-12">
+
+
+                                                <div class="row">
+                                                    <div class="col-md-8">
+                                                        <div class="form-group">
+                                                            <div class="col-md-12">
+                                                                <label>Principal Name</label>
+                                                                <input type="hidden" id="HDIDv" class="form-control" [(ngModel)]="PID" />
+                                                                <select class="form-control my-select" [(ngModel)]="PrincipalID" id="ddlPrincipal" [ngModelOptions]="{standalone: true}">
+                                                                    <option *ngFor="let gRow of dsPrList" [value]="gRow.ID">{{gRow.PrincipalName}}</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <div class="col-md-12">
+                                                                <label></label>
+                                                                <button type="submit" (click)="AddPrLink();" class="btn btn-fill btn-success btn-raised" style="margin-top:20px;">
+                                                                    ADD
+                                                                </button>
+                                                                </div>
+                                                            </div>
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                    </div>
+
+
+                                            </div>
+
+
+                                        </div>
+
+                                        <div class="row" style="padding-top:20px;">
+                                            <div class="col-md-12">
+                                                <div class="material-datatables" style="width:100%;">
+
+                                                    <table class="table table-striped table-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>S.No</th>
+                                                                <th>Principal Name</th>
+
+
+
+                                                                <th class="disabled-sorting text-right actwid">Actions</th>
+                                                            </tr>
+                                                        </thead>
+
+                                                        <tbody>
+
+
+                                                            <tr *ngFor="let gRow of DynamicGrid; let i= index">
+                                                                <td> {{i+1}}</td>
+                                                                <td class="txtright">
+                                                                    {{gRow.PrincipalName}}
+
+                                                                </td>
+
+
+                                                                <td class="td-actions text-right bindgrid">
+
+                                                                    <!--<button type="button" rel="tooltip" (click)="SelectPrvalues(DynamicGrid,i)" class="btn btn-success btn-round" data-original-title="" title="">
+                                                                        <i class="material-icons">edit</i>
+                                                                    </button>-->
+                                                                    <button type="button" rel="tooltip" (click)="RemovePrValues(DynamicGrid,i,gRow.PID)" class="btn btn-danger bmd-btn-fab" data-original-title="" title="">
+                                                                        <i class="material-icons">delete</i>
+                                                                    </button>
+                                                                </td>
+
+                                                            </tr>
+
+
+                                                        </tbody>
+
+
+                                                    </table>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                   
+                                            <div class="col-md-12" style="text-align:right;">
+                                                <button type="submit" (click)="OnSubmitPr();" class="btn btn-primary btn-raised mb-0"><i class="fa fa-save"></i>Save</button>
+                                            </div>
+                                            <input type="hidden" id="HDRegId" ng-model="HDRegId" />
+                                        </div>
+                                   
+                                    <div class="tab-pane pt-3" id="profile-3" role="tabpanel">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label>Port </label>
+                                                            <input type="hidden" id="HDIDv" class="form-control" [(ngModel)]="CID" />
+                                                            <select class="form-control my-select" [(ngModel)]="PortID" id="ddlPort" [ngModelOptions]="{standalone: true}">
+                                                                <option *ngFor="let gRow of dsPortList" [value]="gRow.ID">{{gRow.PortCode}}</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="divide"></div>
+                                                        <div class="col-md-12 alrt">
+                                                            <button type="submit" class="btn btn-fill btn-success btn-raised" (click)="AddPort();">
+                                                                <i class="material-icons add">add</i>
+                                                                Add
+                                                            </button>
+
+
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="col-md-8">
+                                                <div class="material-datatables">
+
+                                                    <table class="table table-striped table-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                                                        <thead>
+                                                            <tr>
+
+                                                                <th>Ports</th>
+                                                                <th class="disabled-sorting text-right actwid">Action</th>
+                                                            </tr>
+                                                        </thead>
+
+                                                        <tbody>
+
+                                                            <tr *ngFor="let gRow of DynamicGridPorts; let i= index">
+                                                                <td>{{gRow.PortName}}</td>
+                                                                <td class="td-actions text-right">
+
+                                                                    <button type="submit" rel="tooltip" class="btn btn-danger bmd-btn-fab" data-original-title="" title="" (click)="RemovePortValues(DynamicGridPorts,i,gRow.CID);">
+                                                                        <i class="material-icons">delete</i>
+                                                                    </button>
+
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+
+                                          
+                                                <div class="col-md-12 alrt">
+                                                    <button type="submit" (click)="OnSubmitPort();" class="btn btn-primary btn-raised mb-0"><i class="fa fa-save"></i> Save </button>
+                                                </div>
+                                                <input type="hidden" id="HDRegId" ng-model="HDRegId" />
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

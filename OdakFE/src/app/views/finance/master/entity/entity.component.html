@@ -1,0 +1,504 @@
+<div class="container-fluid headtitle p-0">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between">
+        <h4 class="ml-2 mt-2">Entity</h4>
+        <div class="btntop">
+            <!-- <button *ngIf="isUpdate" (click)="configurationFormEnable()" type="button"
+                class="btn btn-warning bmd-btn-edit btn-raised btntop emarginr ng-star-inserted">
+                <i class="material-icons editicon">edit</i>
+            </button> -->
+
+            <button type="button" class="btn btn-success bmd-btn-edit btn-raised btntop" (click)="entityRoute()"><i
+                    class="material-icons editicon">reply</i>
+                <div class="ripple-container"></div>
+            </button>
+
+            <button *ngIf="isUpdate"
+                class="nav-link dropdown-toggle arrow-none waves-effect nav-user btn bmd-btn-edit btn-raised btntop btnlog"
+                data-placement="bottom" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="material-icons editicon">schedule</i>
+            </button>
+
+
+            <div style="background-color: aliceblue;width:250px;left:-66px"
+                class="dropdown-menu dropdown-menu  profile-dropdown" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" style="padding:15px;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12"><span>ModifiedOn: {{ModifiedOn}}</span> | <span>Modified By:
+                                        {{ModifiedBy}}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:10px;">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12"><span>CreatedOn: {{CreatedOn}}</span> | <span>Created By:
+                                        {{CreatedBy}}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- ------title start---------- -->
+
+    <div class="row my-3 p-2" style="background-color: lavender;margin: 2px;">
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item active">
+                                <a class="info-title" routerLink="/views/finance/financemaster">Entity </a>
+                            </li>
+                            <li aria-current="page" class="breadcrumb-item lbltxt">
+                                {{selectedTabName == 'company' ? 'Company Details': selectedTabName == 'configuration' ?
+                                'Configuration':selectedTabName == 'email'? 'E-Mail Ids':selectedTabName == 'documents'?
+                                'Documents':''}}</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row bkgno">
+                <div class="col-md-12">
+                    <label [title]="companyForm.value.companyName" class="lbltxt header-text-label"> <span
+                            style="font-weight: lighter !important;">Entity Name
+                            :
+                        </span> {{
+                        companyForm.value.companyName | uppercase }} </label>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- --------title end----------- -->
+
+    <div class="card p-4">
+
+        <!-- Tab view -->
+        <div class="d-flex mt-4" style="height: 2.4rem;">
+            <div (click)="selectedTabName = 'company'"
+                [ngClass]="selectedTabName == 'company' ? 'selected-tav-view' : 'not-selected-tav-view'"
+                matTooltip="Company Details" class="text-center select-tav-view mr-3">Company Details </div>
+            <div (click)="selectedTabName = 'configuration'" matTooltip="Configuration"
+                [ngClass]=" selectedTabName == 'configuration' ? 'selected-tav-view' : 'not-selected-tav-view'"
+                class="select-tav-view text-center mr-3">
+                Configuration </div>
+            <div (click)="checkPermission('email')"
+                [ngClass]="selectedTabName == 'email' ? 'selected-tav-view' : 'not-selected-tav-view'"
+                matTooltip="E-Mail Ids" class="select-tav-view text-center mr-3">E-Mail Ids</div>
+            <div (click)="checkPermission('documents')"
+                [ngClass]=" selectedTabName == 'documents' ? 'selected-tav-view' : 'not-selected-tav-view'"
+                matTooltip="Documents" class="select-tav-view title text-center mr-3">Documents </div>
+        </div>
+
+
+        <!-- Tab content -->
+
+        <div *ngIf="selectedTabName == 'company'" class="mt-4">
+            <form [formGroup]="companyForm">
+                <div class="row">
+                    <div class="col-8">
+
+                        <div class="form-group">
+                            <label class="str" for="companyName">Company Name</label><br>
+                            <input formControlName="companyName" class="form-control w-100" type="text"
+                                id="companyName" />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="str" for="companyShortName">Company Short Name</label><br>
+                            <input formControlName="companyShortName" class="form-control w-100" type="text"
+                                id="companyShortName" />
+                        </div>
+
+                        <div class="form-group">
+                            <label class="str" for="address">Address</label><br>
+                            <textarea formControlName="address" id="address" row="4"
+                                class="addressht form-control w-100"></textarea>
+                        </div>
+
+                        <div class="d-flex">
+                            <div class="form-group w-50">
+                                <label class="str">City</label>
+                                <!-- <select formControlName="city" class="form-control my-select" id="ddlCityv">
+                                <option> select </option>
+                                <option> Check 01 </option>
+                                <option> Check 02</option>
+                            </select> -->
+                                <input formControlName="city" type="text" id="city" class="form-control w-100" />
+                            </div> &nbsp; &nbsp;
+
+                            <div class="form-group w-50 ml-4">
+                                <label class="str" for="zipCode">Zip Code</label><br>
+                                <input formControlName="zipCode" type="text" id="zipCode" class="form-control w-100" />
+                            </div>
+                        </div>
+
+                        <div class="d-flex">
+                            <div class="form-group w-50">
+                                <label class="str" for="poBox">P.O Box</label><br>
+                                <input formControlName="poBox" type="text" id="poBox" class="form-control w-100" />
+                            </div> &nbsp; &nbsp;
+                            <div class="form-group w-50 ml-4">
+                                <label class="str" for="country">Country</label><br>
+                                <!-- <select formControlName="country" class="form-control my-select" id="ddlCityv">
+                                <option> select </option>
+                                <option> Check 01 </option>
+                                <option> Check 02</option>
+                            </select> -->
+                                <input formControlName="country" type="text" id="country" class="form-control w-100" />
+                            </div>
+                        </div>
+
+                        <div class="d-flex">
+                            <div class="form-group w-50">
+                                <label class="str" for="telephone1">Telephone (1)</label><br>
+                                <input formControlName="telephone1" type="text" id="telephone1"
+                                    class="form-control w-100" />
+                            </div> &nbsp; &nbsp;
+                            <div class="form-group w-50 ml-4">
+                                <label class="str" for="telephone2">Telephone (2)</label><br>
+                                <input formControlName="telephone2" type="text" id="telephone2"
+                                    class="form-control w-100" />
+                            </div>
+                        </div>
+
+                        <div class="d-flex">
+                            <div class="form-group w-50">
+                                <label class="str" for="eMail">eMail Id</label><br>
+                                <input formControlName="eMail" type="text" id="eMail" class="form-control w-100" />
+                            </div> &nbsp; &nbsp;
+                            <div class="form-group w-50 ml-4">
+                                <label class="str" for="URL">URL</label><br>
+                                <input formControlName="URL" type="text" id="URL" class="form-control w-100" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-4" style="padding-left: 4rem;padding-right: 0rem;">
+                        <div class="col-12">
+                            <label>Logo</label><br>
+                            <div class="d-flex justify-content-center" style=" height: 10rem !important; border: 2px solid #9e9e9e!important;
+                            margin-bottom: 2rem!important;">
+                                <img *ngIf="companyForm.value.logo" [src]="companyForm.value.logo" alt="">
+                                <img *ngIf="!companyForm.value.logo" src="assets/images/icon/logo.jpg" alt="">
+                            </div>
+                        </div>
+
+                        <div
+                            style="background-color: #f6f6f6; padding-left: 1rem; padding-right: 1rem; padding-top: 0.5rem;padding-bottom: 10px;">
+                            <h4 class="text-center font-weight-bold">Contact Details</h4>
+                            <div class="form-group">
+                                <label class="str" for="contactName">Contact Name</label><br>
+                                <input formControlName="contactName" type="text" id="contactName"
+                                    class="form-control w-100" />
+                            </div>
+
+                            <div class="form-group">
+                                <label class="str" for="designation">Designation</label><br>
+                                <input formControlName="designation" type="text" id="designation"
+                                    class="form-control w-100" />
+                            </div>
+
+                            <div class="form-group">
+                                <label class="str" class="str" for="emailId">eMail Id</label><br>
+                                <input formControlName="emailId" type="text" id="emailId" class="form-control w-100" />
+                            </div>
+
+                            <div class="form-group">
+                                <label class="str" for="mobile">Mobile</label><br>
+                                <input formControlName="mobile" type="text" id="mobile" class="form-control w-100" />
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div *ngIf="selectedTabName == 'configuration'" class="mt-4">
+            <form [formGroup]="configurationForm">
+                <div class="row">
+                    <div class="form-group col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                        <label class="str" for="businessLocation">Business Location</label>
+                        <select formControlName="businessLocation" class="form-control my-select statuscls"
+                            (ngModelChange)="currencyChanged($event)" id="exampleFormControlSelect1">
+                            <option value="" disabled selected>--SELECT Business Location--</option>
+                            <option *ngFor="let country of countryList" [value]="country.CountryName">
+                                {{country.CountryName | uppercase}}
+                            </option>
+                        </select>
+
+                    </div>
+
+                    <div *ngIf="selectedCurrency == 'INDIA'" class="form-group col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                        <!-- <div *ngIf="selectedCurrency == 'INR - INDIAN RUPEE'" class="form-group col-md-6 col-sm-6 col-lg-4 col-xl-4"> -->
+                        <label class="str" for="cin">CIN (Incorporation)</label><br>
+                        <input formControlName="CIN" class="form-control w-100" type="text" id="cin" />
+                        <div *ngIf="configurationSubmit && checkError('configurationForm','CIN','invalidCin')"
+                            class="text-danger">
+                            Invalid CIN number
+                        </div>
+                        <!-- <div *ngIf=" configurationSubmit && configurationForm.controls.CIN.errors.invalidCin">Invalid CIN number</div> -->
+                    </div>
+
+                    <div *ngIf="selectedCurrency == 'INDIA'" class="form-group col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                        <!-- <div *ngIf="selectedCurrency == 'INR - INDIAN RUPEE'" class="form-group col-md-6 col-sm-6 col-lg-4 col-xl-4"> -->
+                        <label class="str" for="panNo">PAN NO</label><br>
+                        <input formControlName="panNo" class="form-control w-100" type="text" id="panNo" />
+                        <!-- <div *ngIf="configurationSubmit && tab2.panNo.errors?.pattern" class="text-danger">
+                      PAN number should have 10 characters old
+                    </div> -->
+                        <div *ngIf="configurationSubmit && checkError('configurationForm','panNo','invalidPan')"
+                            class="text-danger">
+                            Invalid PAN number
+                        </div>
+                        <!-- <div *ngIf="configurationSubmit && configurationForm.controls.panNo.errors.invalidPan">Invalid PAN number1</div> -->
+                    </div>
+
+                    <div class="form-group col-12">
+                        <label class="str" for="address">Registration address</label><br>
+                        <textarea formControlName="address" class="form-control w-50 addressht" id="address"></textarea>
+                    </div>
+                    <br>
+
+                    <div class="form-group col-md-6 col-sm-6 col-lg-4 col-xl-4  bmd-form-group">
+                        <label class="str" for="exampleFormControlSelect1">Financial Period</label>
+                        <!-- <select [ngClass]="isUpdate ? 'cursor_blocked' : ''" formControlName="finicalPeriod"
+                            class="form-control my-select statuscls" id="exampleFormControlSelect1">
+                            <option disabled value="">--SELECT FINICAL PERIOD--</option>
+                            <option *ngFor="let finical of finicalList" [value]="finical.Months">
+                                {{finical.Months | uppercase}}
+                            </option>
+                        </select> -->
+                        <input formControlName="finicalPeriod" class="form-control w-100" type="text" id="finicalPeriod" />
+                    </div>
+
+                    <div class="form-group col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                        <label class="str" for="currency">Currency</label><br>
+                        <!-- <select formControlName="currency" class="form-control my-select" id="ddlCityv"> -->
+                            <!-- <option [value]="null">--- Select the Currency --- </option> -->
+                            <!-- <option *ngFor="let cnr of currencyList" [value]="cnr.Currency">{{cnr.Currency}}
+                            </option>
+                        </select> -->
+                        <input formControlName="currency" class="form-control w-100" type="text" id="currency" />
+
+                    </div>
+
+                    <div class="form-group col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                        <label class="str" for="currencyFormat">Currency Format</label><br>
+                        <select formControlName="currencyFormat" class="form-control my-select" id="currencyFormat">
+                            <!-- <option [value]="null">--- Select the Currency --- </option> -->
+                            <option *ngFor="let cnr of currencyFormat" [value]="cnr.ID">{{cnr.CurrenecyFormat}}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                        <label class="str" for="noFractions">No of Fractions</label><br>
+                        <input formControlName="noFractions" onkeydown="return event.keyCode !== 69"
+                            class="form-control w-100" type="number" id="noFractions" />
+                    </div>
+
+                    <div class="form-group col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                        <label class="str" for="dateFormat">Date Format</label><br>
+                        <!-- <input [min]="minDate" formControlName="dateFormat" class="form-control w-100" type="date"
+                        id="dateFormat" /> -->
+                        <select formControlName="dateFormat" name="dateFormat" id="dateFormat"
+                            class="form-control my-select">
+                            <option [value]="null">-- Select --</option>
+                            <option *ngFor="let type of dateFormatType" [value]="type.ID">
+                                {{type.DateFormat | uppercase}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <div  *ngIf="selectedTabName != 'configuration'" class=" col-12 text-right mt-4">
+                    <button type="submit" (click)=saveConfiguration();
+                        class="btn btn-primary btn-raised btn-default cntbtn mb-0" *ngIf="!isUpdate">Save</button>
+                    <button type="submit" (click)=saveConfiguration();
+                        class="btn btn-primary btn-raised btn-default cntbtn mb-0" [disabled]="!isUpdateEnable"
+                        *ngIf="isUpdate">Update</button>
+                    <button (click)="restForm()" class="btn btn-danger btn-raised cntbtn mb-0"
+                        [routerLink]="['/views/finance/financemaster']">Cancel</button>
+                </div>
+
+            </form>
+        </div>
+
+        <div *ngIf="selectedTabName == 'email'" class="mt-4">
+
+            <!-- <form [formGroup]="productForm" #myForm="ngForm" (ngSubmit)="onSubmit()">
+
+            <div class="text-right">
+                <button type="button" class="btn btn-success bmd-btn-edit btn-raised btntop"
+                    [disabled]="!productForm.valid" (click)="addQuantity()"><i class="material-icons editicon">add</i>
+                    <div class="ripple-container"></div>
+                </button>
+
+                <button (click)="editEmailId = true" type="button"
+                    class="btn btn-primary bmd-btn-edit btn-raised btntop ml-2"><i
+                        class="material-icons editicon">edit</i>
+                    <div class="ripple-container"></div>
+                </button>
+
+                <button (click)="removeQuantity()" type="button"
+                    class="btn btn-danger bmd-btn-edit btn-raised btntop ml-2"><i
+                        class="material-icons editicon">delete</i>
+                    <div class="ripple-container"></div>
+                </button>
+
+            </div>
+
+            <table class="table table-bordered" formArrayName="quantities">
+                <tr class="text-center">
+                    <th>S.No</th>
+                    <th>Category</th>
+                    <th>eMail Id</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Select</th>
+                </tr>
+                <tr *ngFor="let quantity of quantities().controls; let i=index" [formGroupName]="i">
+                    <td class="text-center"><span>{{i + 1}}</span></td>
+                    <td>
+                        <select name="AccType" formControlName="Category" id="ddlCountry"
+                            [ngClass]="{ 'invalid-input' : !f()[i].controls.Category.valid && f()[i].controls.Category.touched ,
+                        'cursor_blocked' : !(f()[i].controls.checkBox.value && editEmailId)  && (f()[i].controls.ID.value != 0)}" class="form-control m-1 my-select">
+                            <option [value]="null">-- Select category --</option>
+                            <option *ngFor="let category  of categoryList" [value]="category.Category">
+                                {{category.Category}}
+                            </option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text"
+                            [ngClass]="{'invalid-input' : !f()[i].controls.EmailId.valid && f()[i].controls.EmailId.touched ,
+                      'cursor_blocked' :!(f()[i].controls.checkBox.value && editEmailId)  && f()[i].controls.ID.value != 0}"
+                            formControlName="EmailId" class="form-control m-1">
+                    </td>
+                    <td>
+                        <input
+                            [ngClass]="{ 'invalid-input' :!f()[i].controls.StartDate.valid && f()[i].controls.StartDate.touched ,
+                      'cursor_blocked' :!(f()[i].controls.checkBox.value && editEmailId)  && f()[i].controls.ID.value != 0}"
+                            type="date" [min]="minDate" formControlName="StartDate" class="form-control m-1">
+                    </td>
+                    <td> <input
+                            [ngClass]="{'invalid-input': !f()[i].controls.EndDate.valid && f()[i].controls.EndDate.touched ,
+                      'cursor_blocked' :!(f()[i].controls.checkBox.value && editEmailId)  &&  f()[i].controls.ID.value != 0}"
+                            type="date" [min]="minDate" formControlName="EndDate" class="form-control m-1">
+                    </td>
+                    <td class="text-center">
+                        <input type="radio" (change)="radioChange($event,i)" id="emailSelect" [value]="checkBox"
+                            name="emailSelect" class="m-auto" class=" mt-2">
+                    </td>
+                </tr>
+            </table>
+
+            <div class="col-12 text-right mt-4">
+                <button *ngIf="!editEmailId" type="submit" [disabled]="!productForm.dirty" (click)="saveEmailDetails()"
+                    class="btn btn-primary btn-raised btn-default cntbtn mb-0">Save</button>
+
+                <button *ngIf="editEmailId" type="submit" (click)="updateEmailDetails()"
+                    class="btn btn-primary btn-raised btn-default cntbtn mb-0">Save</button>
+
+                <button class="btn btn-danger btn-raised cntbtn mb-0">Cancel</button>
+            </div>
+        </form> -->
+            <app-e-mail-table [tableData]="emailData" [OrgId]="companyDetailId" (saveTable)="updateEmailDetails($event)"
+                CategoryTypeName="entity"></app-e-mail-table>
+
+        </div>
+
+        <div *ngIf="selectedTabName == 'documents'" class="mt-4">
+
+            <!-- <form [formGroup]="documentForm">
+            <div class="row">
+                <div class="form-group col-4">
+                    <label class="str" for="businessLocation">Document Name</label><br>
+                    <select formControlName="DocumentName" name="DocumentName" id="DocumentName"
+                        class="form-control my-select">
+                        <option *ngFor="let doc of documentList" [value]="doc.name">
+                            {{doc.name }}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group col-3">
+                    <label class="str" for="dateFormat">Browser File</label><br>
+                    <input type="file" formControlName="FilePath" id="dateFormat"
+                        class="form-control p-0 file-upload--customBorder" />
+                </div>
+
+                <div class="form-group col-5 mt-3">
+                    <button type="submit" (click)="uploadDocument()"
+                        class="btn btn-primary btn-raised btn-default cntbtn mb-0">Upload</button>
+                    <button [routerLink]="['/views/finance/financemaster']"
+                        class="btn btn-danger btn-raised cntbtn mb-0">Cancel</button>
+                </div>
+            </div>
+        </form>
+
+        <div class="mt-3">
+
+            <h4>Documents</h4>
+
+            <table id="datatable-buttons" class="table table-striped table-bordered w-100 dataTable no-footer"
+                role="grid" aria-describedby="datatable-buttons_info">
+                <thead>
+                    <tr role="row">
+                        <th class="actwid" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                            aria-label="Name: activate to sort column ascending" style="width: 177.575px;">
+                            S.No
+                        </th>
+                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                            aria-label="Name: activate to sort column ascending" style="width: 177.575px;"
+                            (click)="sort('OrgCode')">
+                            Document Name
+                        </th>
+                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                            aria-label="Name: activate to sort column ascending" style="width: 177.575px;"
+                            (click)="sort('OrgCode')">
+                            Files
+                        </th>
+                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                            aria-label="Name: activate to sort column ascending" style="width: 177.575px;"
+                            (click)="sort('OrgCode')">
+                            Uploaded On
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let data of documentListInfo;let i = index">
+                        <td>{{i + 1}}</td>
+                        <td>{{data.DocumentName}}</td>
+                        <td>{{data.FilePath}}</td>
+                        <td>{{data.uploadedOn | date :'y-MM-dd'}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div>-------------------------------------------</div> -->
+
+            <app-documents [documentList]="documentInfo" (saveDocumentEvent)="uploadDocument($event)"
+                (deleteDocumentEvent)="deleteDocument($event)"></app-documents>
+        </div>
+    </div>
+
+</div>

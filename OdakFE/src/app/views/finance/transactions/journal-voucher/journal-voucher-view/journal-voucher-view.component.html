@@ -1,0 +1,253 @@
+<div class="p-4">
+    <div class="row headtitle">
+        <div class="col-9 d-flex justify-content-between">
+            <span class="mt-auto">
+                <h4>Journal Voucher</h4>
+            </span>
+            <button (click)="CreateNew()" class="btn btn-success btn-raised bmd-btn-edit">
+                <i class="material-icons editicon">add</i>
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <!-- Table View -->
+        <div class="col-sm-12 col-md-9">
+            <div class=" mr-3 card">
+                <div class="row">
+                    <div class="col-12">
+                        <table class="table table-responsive   table-bordered w-100 table-striped  p-3 mt-3 border-0">
+                            <thead class="text-center">
+                                <tr role="row">
+                                    <th class="align-middle" id="th1" rowspan="2" colspan="1" tabindex="0">
+                                        JV Number
+                                    </th>
+                                    <th class="align-middle" id="th2" rowspan="2" colspan="1">
+                                        JV Date
+                                    </th>
+                                    <th class="align-middle" id="th3" rowspan="2" colspan="1">
+                                        Account
+                                    </th>
+                                    <th class="align-middle" scope="col">Currency</th>
+                                    <th class="align-middle" scope="col">Amount</th>
+                                    <th class="sorting align-middle" id="th6" rowspan="2" colspan="1">
+                                        Status
+                                    </th>
+                                    <th class="sorting align-middle" tabindex="0" aria-controls="datatable-buttons" rowspan="2" colspan="1"
+                                    aria-label="Name: activate to sort column ascending"
+                                      >
+                                       Copy
+                                   </th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-center">
+                                <tr *ngFor="let journal of pagedItems;let i = index">
+                                    <td (click)="editJournal(journal.Id)" style="color: #0366d6;cursor: pointer;">
+                                        {{journal.JournalNumber}}
+                                    </td>
+                                    <td>{{journal.JournalDate | date :commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td>
+                                    
+                                    <td [title]="journal.AccountName | uppercase">
+                                        {{ (journal.AccountName && journal.AccountName.length > 20) ?journal.AccountName.slice(0, 20) + '-' : journal.AccountName }}
+                                      </td>
+                                    <!-- <td>{{journal.AccountName}}</td> -->
+                                    <td>{{journal.CurrencyName}}</td>
+                                    <td>{{journal.Amount}}</td>
+                                    <td>
+                                        <div
+                                    [ngClass]="journal.Status == 'Confirmed' ? 'badge badge-state-confirm' : journal.Status == 'Cancelled' ? 'badge badge-state-cancel' : 'badge badge-state'">
+                                        {{journal.Status}}
+                                        </div>
+                                    </td>
+                                         <td>
+                                        <button (click)="copyPaste(journal.Id, true)"
+                                            class="btn btn-primary bmd-btn-fab">
+                                            <i class="material-icons">filter_none</i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                <div style=" width: 100%;justify-content: end;" class="row page">
+                    <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10" class="pagination">
+                        <li [ngClass]="{disabled:pager.currentPage === 1}">
+                            <a (click)="setPage(1)">First</a>
+                        </li>
+                        <li [ngClass]="{disabled:pager.currentPage === 1}">
+                            <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+                        </li>
+                        <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                            <a (click)="setPage(page)">{{page}}</a>
+                        </li>
+                        <li *ngIf="(pager.totalPages - pager.startPage) > 5 ">
+                            <a (click)="setPage(pager.startPage + 5)">...</a>
+                        </li>
+                        <li *ngIf="(pager.totalPages - pager.startPage) > 5">
+                            <a (click)="setPage(pager.totalPages)">{{pager.totalPages}}</a>
+                        </li>
+
+                        <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                            <a (click)="setPage(pager.currentPage + 1)">Next</a>
+                        </li>
+                        <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                            <a (click)="setPage(pager.totalPages)">Last</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter -->
+        <div style="height: 356px;" class="col-sm-12 col-xs-12 col-md-3">
+            <form [formGroup]="filterForm" class="">
+                <div class="row pt-4 card">
+                    <div class="col-12">
+                        <div class="form-group bmd-form-group w-100">
+                            <!-- <select class="form-control my-select"
+                                formControlName="DivisionId">
+                                <option [value]="0" disabled>--SELECT DIVISION--</option>
+                                <option *ngFor="let division of divisionList" [value]="division.ID">
+                                    {{division.DivisionName | uppercase}}
+                                </option>
+                            </select> -->
+                            <ng-select  class="searchdropdown custom"  formControlName="DivisionId" [clearable]="false">
+                                <ng-option [value]="0" disabled>--SELECT DIVISION--</ng-option>
+                                <ng-container  *ngFor="let division of divisionList">
+                                  <ng-option  *ngIf="division.Active"  [value]="division.ID">
+                                    <span class="textwrap"> {{division.DivisionName | uppercase}}</span>
+                                  </ng-option>
+                               </ng-container>
+                            </ng-select> 
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-group bmd-form-group w-100">
+                            <!-- <select class="form-control my-select" formControlName="OfficeId">
+                                <option [value]="0" disabled>--SELECT OFFICE--</option>
+                                <option *ngFor="let office of officeList" [value]="office.ID">
+                                    {{office.OfficeName | uppercase}}
+                                </option>
+                            </select> -->
+                            <ng-select  class="searchdropdown custom"  formControlName="OfficeId" [clearable]="false">
+                                <ng-option [value]="0" disabled>--SELECT OFFICE TYPE--</ng-option>
+                                <ng-container *ngFor="let office of officeList">
+                                  <ng-option [value]="office.ID">
+                                    <span class="textwrap">{{office.OfficeName | uppercase}}</span>
+                                  </ng-option>
+                                </ng-container>
+                            </ng-select> 
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-group bmd-form-group">
+                            <input type="text" class="w-100" formControlName="JournalVoucherNumber"
+                                placeholder="VOUCHER NUMBER" />
+                        </div>
+                    </div>
+
+                    <!-- <div class="col-12">
+                        <div class="form-group bmd-form-group">
+                            <input [max]="maxDate" type="date" class="w-100 p-0" formControlName="JournalVoucherDate"
+                                placeholder="voucher Date" />
+                        </div>
+                    </div> -->
+                    <div class="col-md-12" style="margin-top: -7px;">
+                        <div class="form-group bmd-form-group">
+                           <div class="row">
+                                <div class="col-md-6">
+                                 <label class=" mb-3">From</label>
+                                 <div class="input-group">
+                                    <mat-form-field  class="tillDate mat_date_picker"  appearance="outline">
+                                        <input matInput (click)="StartDate.open()" readonly autocomplete="off"  [max]="validTillMinDate" [matDatepicker]="StartDate"  id="StartDate" [placeholder]="entityDateFormat" formControlName="StartDate">
+                                        <mat-datepicker-toggle matSuffix [for]="StartDate"></mat-datepicker-toggle>
+                                        <mat-datepicker #StartDate></mat-datepicker>
+                                    </mat-form-field>
+                                 <!-- <input formControlName="StartDate" (change)="journalEvent($event.target.value)" [max]="minDate" type="date" class="form-control"
+                                 placeholder="voucher Date" /> -->
+                                </div>
+                                 </div>
+                                 <div class="col-md-6">
+                                   <label class=" mb-3">Till</label>
+                                   <div class="input-group">
+                                    <mat-form-field class="tillDate mat_date_picker"  appearance="outline">
+                                        <input matInput autocomplete="off" (click)="EndDate.open()" readonly [matDatepicker]="EndDate"  [min]="filterForm.get('StartDate').value" id="EndDate" [placeholder]="entityDateFormat" formControlName="EndDate">
+                                        <mat-datepicker-toggle matSuffix [for]="EndDate"></mat-datepicker-toggle>
+                                        <mat-datepicker #EndDate></mat-datepicker>
+                                    </mat-form-field>
+                                   <!-- <input formControlName="EndDate" [min]="validTillMinDate" type="date" class="form-control"
+                                   placeholder=" voucher Date" /> -->
+                                 </div>
+                                </div>
+                             </div>
+                         </div>
+                     </div>
+                    <div class="col-12">
+                        <div class="form-group bmd-form-group">
+                            <!-- <select class="form-control my-select" formControlName="AccountId">
+                                <option value='' disabled>--SELECT ACCOUNT--</option>
+                                <option *ngFor="let name of accountName" [value]="name.ChartOfAccountsId">
+                                    {{name.AccountName | uppercase}}
+                                </option>
+                            </select> -->
+                            <ng-select class="searchdropdown custom"  formControlName="AccountId"[clearable]="false" >
+                                <ng-option [value]="''" [disabled]="true">--SELECT ACCOUNT--</ng-option>
+                                <ng-option  *ngFor="let name of accountName" [value]="name.ChartOfAccountsId">
+                                    <span class="textwrap"> {{name.AccountName | uppercase}}</span>
+                                </ng-option>
+                            </ng-select>   
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-group bmd-form-group">
+                            <!-- <select class="form-control my-select" formControlName="CurrencyId">
+                                <option value=0 disabled>--SELECT CURRENCY--</option>
+                                <option *ngFor="let currency of currencyList" [value]="currency.ID">
+                                    {{currency.Currency | uppercase}}
+                                </option>
+                            </select> -->
+                            <ng-select class="searchdropdown custom"  formControlName="CurrencyId" [clearable]="false">
+                                <ng-option [value]="0" [disabled]="true">--SELECT CURRENCY--</ng-option>
+                                <ng-option *ngFor="let currency of currencyList"  [value]="currency.ID">
+                                    <span class="textwrap">{{currency.Currency | uppercase}}</span>
+                                </ng-option>
+                            </ng-select>  
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-group bmd-form-group">
+                            <!-- <select class="form-control my-select" formControlName="Status">
+                                <option value='' disabled>--SELECT STATUS--</option>
+                                <option *ngFor="let data of statusList" [value]=data.ID>
+                                    {{data.StatusName | uppercase}}
+                                </option>
+                            </select> -->
+                            <ng-select class="searchdropdown custom"  formControlName="Status" [clearable]="false">
+                                <ng-option [value]="''" [disabled]="true">--SELECT STATUS--</ng-option>
+                                <ng-option *ngFor="let data of statusList"   [value]=data.ID>
+                                    <span class="textwrap">{{data.StatusName | uppercase}}</span>
+                                </ng-option>
+                            </ng-select>  
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 searchbtn alrt text-center mb-3 mt-3">
+                        <button type="submit" style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;"
+                            (click)="getJournalList()" class="btn btn-primary btn-raised mb-0">
+                            Search
+                        </button>
+                        <button style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;"
+                            class="btn btn-raised btn-danger mb-0" (click)="filterFormCreate();getJournalList()">
+                            Clear
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

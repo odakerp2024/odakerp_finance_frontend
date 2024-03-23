@@ -1,0 +1,137 @@
+<div class="constiner card p-4">
+    <form [formGroup]="bankUnReconciliationForm">
+        <div class="row mb-5">
+            <div class="col-4">
+                <label class="str mb-2">Period</label>
+                <div class="d-flex">
+                    <div class="w-50 pr-2">
+                        <mat-form-field  class="tillDate mat_date_picker"   appearance="outline" >
+                            <input matInput (click)="fromMaxDate.open()" readonly autocomplete="off" [matDatepicker]="fromMaxDate"  id="fromMaxDate" [placeholder]="entityDateFormat" [max]="fromMaxDate" formControlName="fromPeriod" >
+                            <mat-datepicker-toggle matSuffix [for]="fromMaxDate"></mat-datepicker-toggle>
+                            <mat-datepicker #fromMaxDate></mat-datepicker>
+                        </mat-form-field>
+                        <!-- <input type="date" name="" id="" class="py-0 w-100 pr-2 form-control" [max]="fromMaxDate"  formControlName="fromPeriod"> -->
+                    </div>
+                    <div class="w-50">
+                        <mat-form-field class="tillDate mat_date_picker"   appearance="outline" >
+                            <input matInput (click)="toPeriod.open()" readonly autocomplete="off"  [matDatepicker]="toPeriod"  id="toPeriod" [placeholder]="entityDateFormat" [max]="toMaxDate" formControlName="toPeriod" (change)="updateFromDate($event.target.value)">
+                            <mat-datepicker-toggle matSuffix [for]="toPeriod"></mat-datepicker-toggle>
+                            <mat-datepicker #toPeriod></mat-datepicker>
+                        </mat-form-field>
+                        <!-- <input type="date" name="" id="" class="py-0 w-100 form-control"  [max]="toMaxDate" formControlName="toPeriod" (change)="updateFromDate($event.target.value)"> -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-4">
+                <label class="str">Division</label>
+              
+                <mat-select formControlName="divisionId" placeholder="Select Division(s)"
+                class="form-control" multiple >
+                    <mat-option #allSelected (click)="toggleAllSelection()" [value]="0">All</mat-option>
+                    <ng-container *ngFor="let division of divisionDropdown">
+                    <mat-option   [value]="division.ID" (click)="tosslePerOne(allSelected.viewValue)">
+                        {{division.DivisionName | uppercase}}
+                    </mat-option>
+                </ng-container>
+                </mat-select>
+            </div>
+
+            <div class="col-4">
+                <label class="str">Office</label>
+
+                <mat-select [placeholder]=" officeDropdown.length?  'Select Office' : 'Select Division'"  formControlName="officeId"
+                class="form-control" multiple>
+                    <mat-option #allSelected1 *ngIf="officeDropdown.length"  (click)="toggleAllSelectionOffiece()" [value]="0">All</mat-option>
+                    <ng-container *ngFor="let office of officeDropdown">
+                    <mat-option  [value]="office.ID" (click)="tosslePerOneOffice(allSelected.viewValue)">
+                        {{office.OfficeName | uppercase}}
+                    </mat-option>
+                </ng-container>
+                </mat-select>
+            </div>
+
+            <div class="col-4">
+                <label class="str">Bank</label>
+                <!-- <select class="form-control my-select" formControlName="bankId"  >
+                    <option [value]="''" disabled>--SELECT BANK--</option>
+                    <option *ngFor="let bank of bankDropdown" [value]="bank.BankID">
+                        {{bank.BankName | uppercase}} -- {{bank.AccountNo}}
+                    </option>
+                </select> -->
+                <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'bankId'">
+                    <ng-option [value]="''" disabled>--SELECT BANK --</ng-option>
+                       <ng-option *ngFor="let bank of bankDropdown" [value]="bank.BankID">
+                       <span class="textwrap">{{bank.BankName | uppercase}} -- {{bank.AccountNo}}</span>
+                    </ng-option>
+               </ng-select> 
+            </div>
+
+            <div class="col-4 mt-auto">
+                <button type="submit"
+                style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;"
+                class="btn btn-primary btn-raised mb-0" (click)="getReconciliationList()">
+                List
+            </button>
+            </div>
+        </div>
+    </form>
+    <div class="row">
+        <div class="col-12 font-weight-bolder">
+            Reconciled Transactions
+        </div>
+        <div class="col-12">    
+            <table class="table table-responsive  table-bordered w-100 table-striped border-0 agingTable mt-2">
+                <thead>
+                    <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">Voucher</th>
+                        <th scope="col">Account</th>
+                        <th scope="col">Mode Of Payment</th>
+                        <th scope="col">Book Reference #</th>
+                        <th scope="col">Bank Reference #</th>
+                        <th scope="col">Bank Date</th>
+                        <th scope="col">Debit</th>
+                        <th scope="col">Credit</th>
+                        <th scope="col">Select</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngIf="reconciledTransaction?.length; else noRecord1">
+                        <tr *ngFor="let backBookCount of reconciledTransaction;let i = index">
+                            <td class="text-center">{{backBookCount.Date | date : commonService.convertToLowerCaseDay(entityDateFormat)}}</td>
+                            <td class="text-center">{{backBookCount.Voucher}}</td>
+                            <td class="text-center">{{backBookCount.Account}}</td>
+                            <td class="text-center">{{backBookCount.ModeOfPayment}}</td>
+                            <td class="text-center">{{backBookCount.BookReference}}</td>
+                            <td class="text-center">{{backBookCount.BankReference}}</td>
+                            <td class="text-center">{{backBookCount.BankDate | date : commonService.convertToLowerCaseDay(entityDateFormat)}}</td>
+                            <td class="text-center">{{backBookCount.Debit}}</td>
+                            <td class="text-center">{{backBookCount.Credit}}</td>
+                            <td class="text-center">
+                                <input type="checkbox" (change)="OnClickRadio(i,backBookCount.Id,backBookCount, $event)" [(ngModel)]="backBookCount.IsCheck1" [ngModelOptions]="{standalone: true}" />
+
+                            </td>
+                        </tr>
+                    </ng-container>
+                    <!-- no data -->
+                    <ng-template #noRecord1>
+                        <tr>
+                            <td class="text-center" colspan="10" style="height: 100px;">No records found</td>
+                        </tr>
+                    </ng-template>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 text-right">
+            <button type="submit"
+            style="padding: 2px 0px !important;width: 120px;font-size: 14px !important;"
+            class="btn btn-primary btn-raised mb-0" (click)="BankUnreconcile()">
+            Un - Reconcile
+        </button>
+        </div>
+    </div>
+</div>

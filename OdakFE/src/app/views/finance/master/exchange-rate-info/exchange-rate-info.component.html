@@ -1,0 +1,165 @@
+<div class="row headtitle">
+    <div class="col-md-9 col-sm-9 col-lg-9 col-xl-9">
+        <h4 class="mt-1">Exchange Rate Pair</h4>
+    </div>
+    <div class="col-md-3 col-sm-3 col-lg-3 col-xl-3 alrt">
+
+        <button *ngIf="isUpdate" (click)="fg.enable();isDisableMode = false" type="button"
+            class="btn btn-warning bmd-btn-edit btn-raised btntop emarginr ng-star-inserted">
+            <i class="material-icons editicon">edit</i>
+        </button>
+
+        <button type="button" class="btn btn-success btntop btn-raised bmd-btn-edit" (click)="onBack()"><i
+                class="material-icons editicon">reply</i>
+            <div class="ripple-container"></div>
+        </button>
+
+        <button *ngIf="isUpdate"
+            class="nav-link dropdown-toggle arrow-none waves-effect nav-user btn bmd-btn-edit btn-raised btntop btnlog"
+            data-placement="bottom" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">
+            <i class="material-icons editicon">schedule</i>
+        </button>
+
+        <div style="background-color: aliceblue;width:250px;left:-66px"
+            class="dropdown-menu dropdown-menu  profile-dropdown" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" style="padding:15px;">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-12"><span>ModifiedOn: {{ModifiedOn}}</span> | <span>Modified By:
+                                    {{ModifiedBy}}</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:10px;">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-12"><span>CreatedOn: {{CreatedOn}}</span> | <span>Created By:
+                                    {{CreatedBy}}</span></div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+    </div>
+</div>
+
+<!-- -------title start--------- -->
+<div class="row my-3 p-2" style="background-color: lavender;margin: 2px;">
+    <div class="col-md-3">
+        <div class="row">
+            <div class="col-md-12">
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="row">
+        </div>
+    </div>
+    <div class="col-md-3" style="font-weight: 600;">
+        <div class="row bkgno">
+            <div class="col-md-12">
+
+            </div>
+            <div class="col-md-12">
+                <label [title]="fg.value.ToCurrency" class="lbltxt header-text-label"><span
+                        style="font-weight: lighter !important;">Exchange Pair : </span>{{fg.value.FromCurrency |
+                    uppercase }} - {{fg.value.ToCurrency | uppercase
+                    }}</label>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- --------title end----------- -->
+
+<form [formGroup]="fg">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                <label class="str">From Currency</label>
+                                <!-- <select [ngClass]=" isUpdate ? 'block-input' : ''" name="isActive"
+                                    formControlName="FromCurrency" id="ddlIsActive" class="form-control my-select">
+                                    <option disabled value=""> --SELECT FROM CURRENCY--</option>
+                                    <option *ngFor="let currency of currencyList" [value]="currency.CurrencyCode">
+                                        {{currency.Currency | uppercase}}
+                                    </option>
+                                </select> -->
+
+                                <ng-select class="searchdropdown" [ngClass]=" isUpdate ? 'block-input' : ''" readonly [clearable]="false" name="isActive"
+                                    formControlName="FromCurrency" id="ddlIsActive" [appendTo]="'body'">
+                                    <ng-option value="" [disabled]= "true">--SELECT FROM CURRENCY--</ng-option>
+                                    <ng-option *ngFor="let currency of currencyList" [value]="currency.CurrencyCode">
+                                        {{currency.Currency | uppercase}}
+                                    </ng-option>
+                                  </ng-select>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                <label class="str">To Currency</label>
+                                <!-- <select [ngClass]=" isUpdate ? 'block-input' : ''" name="isActive"
+                                    formControlName="ToCurrency" id="ddlIsActive" class="form-control my-select">
+                                    <option disabled value=""> --SELECT TO CURRENCY--</option>
+                                    <option *ngFor="let currency of currencyList" [value]="currency.CurrencyCode">
+                                        {{currency.Currency | uppercase}}
+                                    </option>
+                                </select> -->
+                                <ng-select class="searchdropdown" [attr.disabled]="isCopied ? 'disabled' : null" 
+                                formControlName="ToCurrency" [clearable]="false" id="ddlIsActive"  [appendTo]="'body'">
+                                    <ng-option  value="" [disabled]= "true">--SELECT TO CURRENCY--</ng-option>
+                                    <ng-option *ngFor="let currency of currencyList" [value]="currency.CurrencyCode">
+                                        {{currency.Currency | uppercase}}
+                                    </ng-option>
+                                  </ng-select>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                                <label class="str">Active</label>
+                                <!-- <select name="isActive" formControlName="Active" id="ddlIsActive"
+                                    class="form-control my-select">
+                                    <option disabled [value]="''"> --SELECT ACTIVE--</option>
+                                    <option *ngFor="let status of statusValues" [value]="status.value">
+                                        {{status.label | uppercase}}
+                                    </option>
+                                </select> -->
+                                <ng-select class="searchdropdown"  
+                                formControlName="Active" [clearable]="false" id="ddlIsActive" >
+                                    <ng-option value="" [disabled]="true">--SELECT ACTIVE--</ng-option>
+                                    <ng-option *ngFor="let status of statusValues" [value]="status.value">
+                                        {{status.label | uppercase}}
+                                    </ng-option>
+                                  </ng-select>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12" style="text-align:right;">
+                <button type="submit" [disabled]="isDisableMode" (click)="onSubmit()"
+                    class="btn btn-primary btn-raised mb-0  m-r-15">Save</button>
+                <button type="button" (click)="reset()" class="btn btn-danger btn-raised mb-0">Cancel</button>
+            </div>
+            <input type="hidden" id="HDRegId" ng-model="HDRegId" />
+        </div>
+    </div>
+</form>

@@ -1,0 +1,191 @@
+<div class="container-fluid">
+
+    <div class="row headtitle rotle mt-1">
+        <div class="col-md-9">
+            <h4 class="ml-2 mt-2">Internal Order </h4>
+        </div>
+        <div class="col-md-3 alrt">
+            <button (click)="CreateValue()" type="button"
+                class="btn btn-success btn-raised bmd-btn-edit btntop" tabindex="0">
+                <i class="material-icons editicon">add</i>
+                <div class="ripple-container">
+                </div>
+            </button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-9 col-xl-9 mt-2">
+            <div class="card m-b-30">
+                <div class="card-body cpad enqview">
+                    <div class="col-sm-12 ">
+                        <table
+                            class="table table-responsive table-striped table-bordered w-100 dataTable no-footer text-center">
+                            <thead>
+                                <tr>
+                                    <th tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1"> IO#</th>
+
+                                    <th tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1"> IO Date</th>
+
+                                    <th tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1"> Description</th>
+
+                                    <th tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1"> Valid till</th>
+
+                                    <th tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1"> IO Status</th>
+
+                                    <th tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1"> Validity</th>
+
+                                    <th tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1"> Copy</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let data of pagedItems">
+                                    <td (click)="editOrder(data.Id,false)" style="color: #0366d6;cursor: pointer;">
+                                        {{data.InternalNumber}}</td>
+                                    <td>{{data.InternalDate | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td>
+                                    <!-- <td>{{data.InternalDescription}}</td> -->
+                                    <td [title]="data.InternalDescription| uppercase">
+                                        {{ (data.InternalDescription && data.InternalDescription.length > 20) ? data.InternalDescription .slice(0, 20) + '-' : data.InternalDescription }}
+                                    </td>
+                                    <td>{{data.ValidTill | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td>
+                                    <td>
+                                        <div
+                                            [ngClass]="data.InternalStatusId == '2' ? 'badge badge-state-confirm' : 'badge badge-state'">
+                                            {{data.InternalStatus}}
+                                        </div>
+                                    </td>
+                                    <!-- <td>{{data.InternalStatus}}</td> -->
+                                    <td>{{data.Validity}}</td>
+                                    <td>
+                                        <button (click)="editOrder(data.Id,true)" class="btn btn-primary bmd-btn-fab">
+                                            <i class="material-icons">filter_none</i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="row page mr-2" align="right">
+                        <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10" class="pagination">
+                            <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                <a (click)="setPage(1)">First</a>
+                            </li>
+                            <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+                            </li>
+                            <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                                <a (click)="setPage(page)">{{page}}</a>
+                            </li>
+                            <li *ngIf="(pager.totalPages - pager.startPage) > 5 ">
+                                <a (click)="setPage(pager.startPage + 5)">...</a>
+                            </li>
+                            <li *ngIf="(pager.totalPages - pager.startPage) > 5">
+                                <a (click)="setPage(pager.totalPages)">{{pager.totalPages}}</a>
+                            </li>
+                            <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                <a (click)="setPage(pager.currentPage + 1)">Next</a>
+                            </li>
+                            <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                <a (click)="setPage(pager.totalPages)">Last</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 mt-2">
+            <div class="card p-1 pt-4 pb-4 ">
+                <form [formGroup]="internalFilter" class="mt-1 mb-1">
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                        <div class="form-group bmd-form-group">
+                            <input formControlName="InternalNumber" type="text" autocomplete="off" class="form-control"
+                                name="io" placeholder="IO#">
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                        <div class="form-group bmd-form-group">
+                            <input formControlName="InternalDescription" type="text" autocomplete="off"
+                                class="form-control" name="Description" placeholder="Description">
+                        </div>
+                    </div>
+
+                    <!-- <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12"> -->
+                        <!-- <label>InternalDate</label> -->
+                        <!-- <div class="form-group bmd-form-group">
+                            <mat-form-field  class="tillDate mat_date_picker"   appearance="outline">
+                                <input matInput (click)="InternalDate.open()" readonly autocomplete="off" [matDatepicker]="InternalDate"  id="InternalDate" [placeholder]="entityDateFormat" formControlName="InternalDate">
+                                <mat-datepicker-toggle matSuffix [for]="InternalDate"></mat-datepicker-toggle>
+                                <mat-datepicker #InternalDate></mat-datepicker>
+                            </mat-form-field> -->
+                            <!-- <input [max]="maxDate" formControlName="InternalDate" type="date" autocomplete="off"
+                                class="form-control"> -->
+                        <!-- </div> -->
+                    <!-- </div> -->
+                    <div class="col-md-12" style="margin-top: -7px;">
+                        <div class="form-group bmd-form-group"> 
+                           <div class="row">                       
+                               <div class="col-md-6">
+                                   <label class="str ">From</label>
+                                    <mat-form-field class="tillDate  mat_date_picker"   appearance="outline" >
+                                      <input matInput (click)="StartDate.open()" readonly  [matDatepicker]="StartDate" [placeholder]="entityDateFormat"  [max]="validTillMinDate" [value]="minDate"
+                                      formControlName="StartDate">
+                                      <mat-datepicker-toggle matSuffix [for]="StartDate"></mat-datepicker-toggle>
+                                      <mat-datepicker #StartDate></mat-datepicker>
+                                     </mat-form-field>
+                                </div>
+                           <div class="col-md-6">
+                                <label class="str ">Till</label>
+                                <mat-form-field class="tillDate mat_date_picker"   appearance="outline" >
+                                   <input matInput (click)="EndDate.open()" readonly  [matDatepicker]="EndDate" [placeholder]="entityDateFormat"  [min]="internalFilter.get('StartDate').value"
+                                    formControlName="EndDate">
+                                   <mat-datepicker-toggle matSuffix [for]="EndDate"></mat-datepicker-toggle>
+                                   <mat-datepicker #EndDate></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>     
+                </div>                     
+
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                        <div class="form-group bmd-form-group">
+                            <!-- <select formControlName="StatusId" class="form-control" name="active" id="active">
+                                <option value="0" disabled>--SELECT IO STATUS--</option>
+                                <option *ngFor="let data of statusList" [value]="data.ID">{{data.StatusName |
+                                    uppercase}}</option>
+                            </select> -->
+                            <ng-select class="searchdropdown" [attr.disabled]="isCopied ? 'disabled' : null" [clearable]="false"   formControlName="StatusId" >
+                                <ng-option [value]="0" [disabled]="true">--SELECT IO STATUS--</ng-option>
+                                <ng-option *ngFor="let data of statusList" [value]="data.ID">
+                                    {{data.StatusName | uppercase}}
+                                </ng-option>
+                              </ng-select> 
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 searchbtn alrt text-center mb-3 mt-3">
+                        <button (click)="getInternalOrderList()"
+                            style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;" type="submit"
+                            class="btn btn-primary btn-raised mb-0">Search<div class="ripple-container"></div></button>
+                        <button (click)="createInternalForm();getInternalOrderList()"
+                            style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;"
+                            class="btn btn-raised btn-danger mb-0">Clear
+                            <div class="ripple-container">
+                            </div>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

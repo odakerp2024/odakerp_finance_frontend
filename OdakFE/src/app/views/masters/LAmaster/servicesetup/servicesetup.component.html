@@ -1,0 +1,213 @@
+<div class="row headtitle">
+    <div class="col-md-9">
+        <h4>Service Setup</h4>
+    </div>
+    <div class="col-md-3 alrt">
+        <button type="button" class="btn btn-success btn-raised btntop bmd-btn-edit" [routerLink]="['/views/masters/LAmaster/servicesetup/servicesetupview']"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+    </div>
+</div>
+
+<form [formGroup]="ServiceForm">
+    <div class="card">
+        <div class="card-body ">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Route</label>
+                            </div>
+                            <div class="col-md-1">:</div>
+                            <div class="col-md-7">
+                                <input type="text" name="ServiceName" id="ServiceName" formControlName="ServiceName" autocomplete="off" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Office Location</label>
+                            </div>
+                            <div class="col-md-1">:</div>
+                            <div class="col-md-7">
+                                <select class="form-control my-select" id="ddlGeoLocationv" formControlName="OffLocID">
+                                    <option *ngFor="let gRow of ddGeoLocationItem" [value]="gRow.ID">
+                                        {{gRow.OfficeLoc}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Date Effective From</label>
+                            </div>
+                            <div class="col-md-1">:</div>
+                            <div class="col-md-7">
+                                <mat-form-field class="paymentDate" >
+                                    <input matInput (click)="DtEffective.open()" readonly autocomplete="off" [matDatepicker]="DtEffective"  id="DtEffective" placeholder="" formControlName="DtEffective">
+                                    <mat-datepicker-toggle matSuffix [for]="DtEffective"></mat-datepicker-toggle>
+                                    <mat-datepicker #DtEffective></mat-datepicker>
+                                </mat-form-field>
+                                <!-- <input type="date" name="txtDtFrom" id="ddlDtEffective" formControlName="DtEffective" autocomplete="off" class="form-control"> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label>Status</label>
+                            </div>
+                            <div class="col-md-1">:</div>
+                            <div class="col-md-7">
+                                <select class="form-control my-select" name="Status" formControlName="StatusID" id="ddlStatusv">
+                                    <option *ngFor="let status of statusvalues" [value]="status.value">
+                                        {{status.viewValue}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th colspan="4">Route Details</th>
+                            </tr>
+                            <tr>
+                                <th rowspan="2">Action</th>
+                                <th rowspan="2">Port</th>
+                                <th colspan="2">Transit Time</th>
+                            </tr>
+                            <tr>
+                                <th>HH</th>
+                                <th>MM</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                          
+                            <tr *ngFor="let dynamic of dynamicArray; let i = index; let last=last;">
+                                <td>
+                                    <button type="button" (click)="addRow(i)" *ngIf="last" class="btn btn-success bmd-btn-fab"><i class="material-icons">add</i></button>
+                                    <button type="button" *ngIf="!last" (click)="deleteRow(dynamicArray,i,dynamic.ID)" rel="tooltip" class="btn btn-danger bmd-btn-fab">
+                                        <i class="material-icons">delete</i>
+                                    </button>
+                                </td>
+                                <td>
+                                    <select class="form-control my-select" id="ddlPortv" [(ngModel)]="dynamicArray[i].PortID" [ngModelOptions]="{standalone: true}">
+                                        <option *ngFor="let gRow of ddPortItem" [value]="gRow.ID">
+                                            {{gRow.PortName}}
+                                        </option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="number" [(ngModel)]="dynamicArray[i].HH" class="form-control" [ngModelOptions]="{standalone: true}" />
+                                </td>
+                                <td>
+                                    <input type="number" disabled [(ngModel)]="dynamicArray[i].MM"  class="form-control" [ngModelOptions]="{standalone: true}" />
+                                </td>
+                            </tr>
+                          
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-8">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th rowspan="2">S.No</th>
+                                        <th rowspan="2">Operator</th>
+                                        <th rowspan="2">Slot Reference</th>
+                                        <th colspan="2">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <input type="hidden" id="HDIDv" [(ngModel)]="TID" class="form-control" />
+                                            <input type="hidden" id="HDArrayIndex" [(ngModel)]="HDArrayIndex" class="form-control" />
+                                        </td>
+                                        <td>
+                                            <select class="form-control my-select" id="ddlOperator" [(ngModel)]="OperatorID">
+                                                <option *ngFor="let gRow of ddlOperatorItem" [value]="gRow.ID">
+                                                    {{gRow.CustomerName}}
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="form-control my-select" id="ddlSlotRef" [(ngModel)]="SlotRefID">
+                                                <option *ngFor="let gRow of ddlOperatorItem" [value]="gRow.ID">
+                                                    {{gRow.CustomerName}}
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td class="alc">
+                                            <button class="btn btn-success bmd-btn-fab" (click)="OnClickAddValue();">
+                                                <i class="material-icons">add</i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                 <div class="row">
+                     <div class="col-md-12">
+                         <table class="tablegrid table table-striped table-bordered w-100 dataTable no-footer">
+                             <thead>
+                                 <tr role="row">
+                                     <th>S.No</th>
+                                     <th>Operator</th>
+                                     <th>Slot Reference</th>
+                                     <th class="actwid">Action</th>
+
+                                 </tr>
+                             </thead>
+
+                             <tbody>
+                                 <tr *ngFor="let gRow of dynamicOperatorArray; let i= index;">
+                                     <td> {{i+1}}</td>
+                                     <td>{{gRow.Operator}}</td>
+                                     <td>{{gRow.SlotRef}}</td>
+                                   
+                                     <td class="alc actwid">
+                                         <button type="button" rel="tooltip" (click)="OnclickOpeartorSelectvalues(dynamicOperatorArray,i)" class="btn btn-success bmd-btn-fab" data-original-title="" title="">
+                                             <i class="material-icons">edit</i>
+                                         </button>
+                                         <button type="button" rel="tooltip" (click)="OnclickOperatorRemove(dynamicOperatorArray,i,gRow.OID)" class="btn btn-danger bmd-btn-fab" data-original-title="" title="">
+                                             <i class="material-icons">delete</i>
+                                         </button>
+                                     </td>
+                                 </tr>
+                             </tbody>
+                         </table>
+                     </div>
+                 </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="card-footer ">
+            <div class="col-md-12" style="text-align:right;">
+                <button type="submit" (click)="onSubmit()" class="btn btn-primary btn-raised mb-0">Submit</button>
+            </div>
+            <input type="hidden" id="HDRegId" ng-model="HDRegId" />
+        </div>
+    </div>
+</form>
+

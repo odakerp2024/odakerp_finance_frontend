@@ -1,0 +1,30 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Globals } from 'src/app/globals';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CreditReviewService {
+  constructor(private http: HttpClient, private globals: Globals) { }
+
+  public authToken = "";
+
+  loadToken() {
+    const token = localStorage.getItem('Token');
+    this.authToken = token;
+  }
+
+  createAuthHeader() {
+    this.loadToken();
+    const headers = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${this.authToken}`
+    );
+    return { headers };
+  }
+
+  getById(FormValue: any) {
+    return this.http.post(this.globals.APIURL + '/CreditReview/GetCreditReviewById/', FormValue);
+  }
+}

@@ -1,0 +1,193 @@
+<div class="container-fluid p-0">
+
+    <div class="d-flex justify-content-between headtitle mt-2">
+        <h4 class="ml-2 mt-2">Templates</h4>
+
+        <div class="btntop">
+
+            <button *ngIf="isUpdate" (click)="templateCreateForm.enable();isEditMode =false;" type="button"
+                class="btn btn-warning bmd-btn-edit btn-raised btntop emarginr ng-star-inserted">
+                <i class="material-icons editicon">edit</i>
+            </button>
+
+            <button type="button" class="btn btn-success bmd-btn-edit btn-raised btntop"
+                [routerLink]="['/views/template/template-view']"><i class="material-icons editicon">reply</i>
+                <div class="ripple-container"></div>
+            </button>
+
+            <button *ngIf="isUpdate"
+                class="nav-link dropdown-toggle arrow-none waves-effect nav-user btn bmd-btn-edit btn-raised btntop btnlog"
+                data-placement="bottom" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="material-icons editicon">schedule</i>
+            </button>
+
+
+            <div style="background-color: aliceblue;width:250px;left:-66px"
+                class="dropdown-menu dropdown-menu  profile-dropdown" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" style="padding:15px;">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12"><span>ModifiedOn: {{ModifiedOn}}</span> | <span>Modified By:
+                                        {{ModifiedBy}}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:10px;">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-12"><span>CreatedOn: {{CreatedOn}}</span> | <span>Created By:
+                                        {{CreatedBy}}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ------title start---------- -->
+
+    <div class="row my-3 p-2" style="background-color: lavender;margin: 2px;">
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12">
+                    <nav aria-label="breadcrumb">
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row bkgno">
+                <div class="col-md-12">
+                    <label [title]="templateCreateForm.value.TemplateName" class="lbltxt header-text-label"><span
+                            style="font-weight: lighter !important;">Template Name :
+                        </span>{{templateCreateForm.value.TemplateName | uppercase}}</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- --------title end----------- -->
+
+    <div class="card p-4">
+
+        <form [formGroup]="templateCreateForm">
+            <div class="row mt-4">
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="str">Template Number</label>
+                        <input readonly formControlName="TemplateNo" type="text" id="TemplateNumber"
+                            class="form-control w-100" />
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class=" form-group">
+                        <label class="str" for="Name">Template Name</label>
+                        <input [ngClass]=" isUpdate ? 'block-input' : ''" (ngModelChange)="autoCodeGeneration($event)"
+                            formControlName="TemplateName" type="text" id="Name" class="form-control w-100" />
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="str" for="Status">Category</label>
+                        <!-- <select [ngClass]=" isUpdate ? 'block-input' : ''" formControlName="CategoryId" name="Status"
+                            class="form-control my-select">
+                            <option disabled value="">--SELECT CATEGORY--</option>
+                            <option *ngFor="let category of templateCategoryList" [value]="category.Id">
+                                {{category.CategoryName | uppercase}}
+                            </option>
+                        </select> -->
+                        <ng-select class="searchdropdown" [clearable]="false"  
+                            [ngClass]=" isUpdate ? 'block-input' : ''" formControlName="CategoryId" name="Status">
+                            <ng-option [value]="''" [disabled]="true">--SELECT CATEGORY--</ng-option>
+                            <ng-option *ngFor="let category of templateCategoryList" [value]="category.Id">
+                                {{category.CategoryName | uppercase}}
+                            </ng-option>
+                          </ng-select>  
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class=" form-group">
+                        <label class="str" for="Party">File Type</label>
+                        <!-- <select (ngModelChange)="fileTypeSelected($event)" [ngClass]=" isUpdate ? 'block-input' : ''"
+                            formControlName="FileTypeId" name="Party" class="form-control my-select">
+                            <option disabled value="">--SELECT FILE TYPE--</option>
+                            <option *ngFor="let data of templateFileTypeList" [value]="data.Id">{{data.FileTypeName}}
+                            </option>
+                        </select> -->
+                        <ng-select class="searchdropdown"  [clearable]="false"
+                        (ngModelChange)="fileTypeSelected($event)" [ngClass]=" isUpdate ? 'block-input' : ''"
+                            formControlName="FileTypeId" name="Party" >
+                            <ng-option [value]="''" [disabled]="true">--SELECT FILE TYPE--</ng-option>
+                            <ng-option *ngFor="let data of templateFileTypeList" [value]="data.Id">
+                                {{data.FileTypeName}}
+                            </ng-option>
+                          </ng-select>  
+                    </div>
+                </div>
+
+                <div class="col-md-4 uploadpage">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class='file'>
+                                <label for='input-file'>
+                                    <img src="assets/images/docupload.png" style="width: 1rem !important;" />
+                                    <span style="margin-left: 10px;"> Choose
+                                        File(s)</span>
+                                </label>
+                                <input *ngIf="!isUpdate" (change)="fileSelected($event)" id='input-file' type="file"
+                                    class="file-upload">
+                            </div>
+                            <div style="margin-left: 20px;margin-top: 10px;font-weight: 500;">
+                                {{templateCreateForm.value.FileUrl}}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="str" for="Status">Active</label>
+                        <!-- <select (change)="onChange($event.target.value)" formControlName="Active" name="Status"
+                            class="form-control my-select">
+                            <option disabled value="">--SELECT ACTIVE--</option>
+                            <option value=1>YES</option>
+                            <option value=0>NO</option>
+                        </select> -->
+                        <ng-select class="searchdropdown" [clearable]="false"  
+                            (change)="onChange($event.target.value)" formControlName="Active" name="Status" >
+                            <ng-option [value]="" [disabled]="true">--SELECT ACTIVE--</ng-option>
+                            <ng-option [value]=1>YES </ng-option>
+                            <ng-option  [value]=0>NO </ng-option>
+                          </ng-select>  
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label>Remarks</label>
+                        <textarea [ngClass]=" isUpdate ? 'block-input' : ''" formControlName="Remarks"
+                            class="form-control addressht" id="txtRemarks" rows="5"></textarea>
+                    </div>
+                </div>
+
+                <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 text-right mt-4">
+                    <button [disabled]="isEditMode" (click)="saveTemplate()" type="submit"
+                        class="btn btn-primary btn-raised btn-default cntbtn mb-0">Save</button>
+                    <button [routerLink]="['/views/template/template-view']"
+                        class="btn btn-danger btn-raised cntbtn mb-0">Cancel</button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+</div>

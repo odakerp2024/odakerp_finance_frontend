@@ -1,0 +1,253 @@
+<div class="container-fluid">
+    <!-- header start -->
+    <div class="row mt-2">
+        <div class="col-9">
+            <h4 class="ml-2 mt-2">Transaction Locks</h4>
+        </div>
+        <div class="col-3 mt-auto">
+            <div class="float-right">
+                <!-- edit -->
+                <button (click)="enableEdit()" type="button"
+                    class="btn btn-warning bmd-btn-edit text-white mr-3">
+                    <i class="material-icons editicon">edit</i>
+                </button>
+                <!-- back -->
+                <button type="button" class="btn btn-success bmd-btn-edit text-white mr-3"
+                    [routerLink]="['/views/transactions/transaction-locks/transaction-locks-view']">
+                    <i class="material-icons editicon">reply</i>
+                </button>
+                <!-- clock details -->
+                <button type="button" class="btn btn-raised bmd-btn-edit" data-placement="bottom" type="button"
+                    id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="material-icons editicon">schedule</i>
+                </button>
+                <!-- clock click pop-up -->
+                <div style="background-color: aliceblue;width:250px;left:-66px"
+                    class="dropdown-menu dropdown-menu  profile-dropdown" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item p-4">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span>ModifiedOn: {{ModifiedOn | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}</span> | <span>Modified By:
+                                    {{ModifiedBy}}</span>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:10px;">
+                            <div class="col-md-12">
+                                <span>CreatedOn: {{CreatedOn | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}</span> | <span>Created By:
+                                    {{CreatedBy}}</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- header end -->
+
+
+    <!-- Table start -->
+    <div class="card m-2 p-4">
+        <form [formGroup]="transactionLockForm">
+            <div class="row">
+                <div class="col-4">
+                    <div class="form-group bmd-form-group w-100">
+                        <label class="str">Financial Year</label>
+                        <!-- <select formControlName="FinancialYear" (ngModelChange)="finalYearEvent($event)"
+                            class="form-control my-select"  (click)="getgeneratebutton(); ">
+                            <option value="" disabled>--SELECT FINANCIAL YEAR--</option>
+                            <option *ngFor="let Final of finalYearList" [value]="Final.FinancialYearId">
+                                {{Final.FinancialYearName | uppercase}}
+                            </option>
+                        </select> -->
+                        <!-- <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'FinancialYear'" (ngModelChange)="finalYearEvent($event)"
+                        (click)="getgeneratebutton()" (change)=" checkRecordIsExit($event)">
+                            <ng-option [value]="0" [disabled]="true">--SELECT FINANCIAL YEAR--</ng-option>
+                              <ng-option  *ngFor="let Final of finalYearList" [value]="Final.FinancialYearId">
+                              <span class="textwrap">{{Final.FinancialYearName | uppercase}}</span>
+                             </ng-option>
+                         </ng-select>  -->
+                         <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'FinancialYear'" (ngModelChange)="finalYearEvent($event)" (change)="checkRecordIsExit($event)">
+                             <ng-option [value]="0" [disabled]="true">--SELECT FINANCIAL YEAR--</ng-option>
+                               <ng-option  *ngFor="let Final of finalYearList" [value]="Final.FinancialYearId" >
+                               <span class="textwrap">{{Final.FinancialYearName | uppercase}}</span>
+                              </ng-option>
+                          </ng-select> 
+                    </div>
+                </div>
+
+                <div class="col-4">
+                    <label class="str mb-2"> FY Start Date</label>
+                    <mat-form-field class="tillDate mat_date_picker disable-input--nostyle"  appearance="outline" style="font:small-caption">
+                        <input matInput (click)="FYStartDate.open()"  autocomplete="off" disabled readonly [matDatepicker]="FYStartDate"  [min]="minDate" [placeholder]="entityDateFormat"  id="FYStartDate" formControlName="FYStartDate">
+                        <mat-datepicker-toggle matSuffix [for]="FYStartDate"></mat-datepicker-toggle>
+                        <mat-datepicker #FYStartDate></mat-datepicker>
+                    </mat-form-field>
+                      <!-- <input formControlName="FYStartDate" type="date" readonly class="w-100 py-0 form-control"
+                        [min]="minDate" placeholder=" current Date" /> -->
+                </div>
+
+                <div class="col-4">
+                    <label class="str mb-2"> FY End Date</label>
+                    <mat-form-field  class="tillDate mat_date_picker disable-input--nostyle"   appearance="outline" style="font:small-caption">
+                        <input matInput (click)="FYEndDate.open()"autocomplete="off" readonly [matDatepicker]="FYEndDate" [min]="minDate" [placeholder]="entityDateFormat"   id="FYEndDate"  formControlName="FYEndDate">
+                        <mat-datepicker-toggle matSuffix [for]="FYEndDate"></mat-datepicker-toggle>
+                        <mat-datepicker #FYEndDate></mat-datepicker>
+                    </mat-form-field>
+                    <!-- <input formControlName="FYEndDate"  type="date" readonly class="w-100 py-0 form-control"
+                        [min]="minDate" placeholder=" current Date" /> -->
+                </div>
+                <!-- generatePeriodButton = false;makeGeneratePeriodButton = true; -->
+                <div class="col-4">
+                    <div class="form-group bmd-form-group w-100">
+                        <label class="str">Period Type</label>
+                        <!-- <select formControlName="PeriodType" class="form-control my-select"
+                            (click)="items.clear();getgeneratebutton() ">
+                            <option value="0" disabled>--SELECT PERIOD--</option>
+                            <option *ngFor="let period of periodList" [value]="period.PeriodTypeId">
+                                {{period.PeriodType | uppercase}}
+                            </option>
+                        </select> -->
+                        <ng-select class="searchdropdown"  [clearable]="false" [formControlName]="'PeriodType'" (change)="getgeneratebutton()" (disabled)="!generatePeriodButton && !isSavemode">
+                            <ng-option  [value]="0" disabled>--SELECT PERIOD--</ng-option>
+                              <ng-option   *ngFor="let period of periodList"  [value]="period.PeriodTypeId">
+                              <span class="textwrap">{{period.PeriodType | uppercase}}</span>
+                             </ng-option>
+                         </ng-select> 
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12 p-0">
+                    <!-- generatePeriodButton = true;makeGeneratePeriodButton = false  [disabled]="generatePeriodButton"-->
+                    <div class="float-left mt-3 ml-3">
+                        <button type="submit" class="btn btn-primary btn-raised mb-0"
+                            [disabled]= "generatePeriodButton "
+                            (click)="getPeriodList(1);">
+                            Generate Periods
+                         </button>
+                        <button [disabled]="!makeGeneratePeriodButton" class="btn btn-raised btn-success mb-0"
+                            (click)="getPeriodList(2); "  >
+                            Make Generated Periods Final
+                        </button>
+                    </div>
+
+                    <table class="table table-responsive table-bordered w-100 table-striped  p-3 mt-3 border-0">
+                        <thead class="text-center">
+                            <tr role="row">
+                                <th class="align-middle" id="th1" rowspan="2" colspan="1" tabindex="0">
+                                    Period No
+                                </th>
+                                <th class="align-middle" id="th2" rowspan="2" colspan="1">
+                                    Period Name
+                                </th>
+                                <th class="align-middle" id="th3" rowspan="2" colspan="1">
+                                    From Date
+                                </th>
+                                <th class="align-middle" id="th4" rowspan="2" colspan="1">
+                                    To Date
+                                </th>
+                                <th class="align-middle" id="th5" rowspan="2" colspan="1">
+                                    Status
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody formArrayName="periodArray" class="text-center">
+                            <ng-container *ngIf="PeriodTypeList.length; else noRecord">
+                                <tr *ngFor="let period of transactionLockForm.get('periodArray').controls; let i = index"
+                                    [formGroupName]="i">
+                                    <td> <input class="text-center border-0" formControlName="PeriodNo" readonly
+                                            [value]="period.InvoiceNumber" type="text">
+                                    </td>
+                                    <td> <input class="text-center border-0" formControlName="PeriodName" readonly
+                                            [value]="period.InvoiceNumber" type="text">
+                                    </td>
+                                    <td> 
+                                        <!-- <input class="text-center border-0" formControlName="FromDate" readonly
+                                            [value]="period.InvoiceNumber" type="text"> -->
+                                        {{transactionLockForm.get('periodArray').at(i).value.FromDate | date : commonDataService.convertToLowerCaseDayMonth(entityDateFormat)}}
+                                        
+                                    </td>
+                                     
+                                    <td> 
+                                        <!-- <input class="text-center border-0" formControlName="ToDate" readonly
+                                            [value]="period.InvoiceNumber" type="text"> -->
+                                        {{transactionLockForm.get('periodArray').at(i).value.ToDate | date : commonDataService.convertToLowerCaseDayMonth(entityDateFormat)}}
+                                    </td>
+                                    <td>
+                                        <select formControlName="StatusId" class="form-control my-select " style="text-align: center">
+                                            <option value="1">OPEN</option>
+                                            <option value="2">CLOSE</option>
+                                        </select>
+                                    </td>
+                                    <!-- <td>
+                                        <select formControlName="StatusId" class="form-control my-select " style="width: 150px;">
+                                            <option  disabled value="">--SELECT STATUS--</option>
+                                            <option value="1">CLOSE</option>
+                                            <option value="0">OPEN</option>
+                                        </select> -->
+                                          <!-- <select class="form-control my-select" formControlName="Status">
+                                <option value='0' disabled>--SELECT STATUS--</option>
+                                <option *ngFor="let data of statusList" [value]=data.Id>{{data.Status |
+                                    uppercase}}
+                                </option>
+                            </select> --> 
+                                    <!-- </td> -->
+                                </tr>
+                            </ng-container>
+
+                            <ng-template #noRecord>
+                                <tr>
+                                    <td class="text-center" colspan="5">No Records Found</td>
+                                </tr>
+                            </ng-template>
+                        </tbody>
+                    </table>
+
+                    <div style="justify-content: end;" class="row page w-100">
+                        <ul *ngIf="pager?.pages && pager?.pages.length" class="pagination">
+                            <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                <a (click)="setPage(1)">First</a>
+                            </li>
+                            <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+                            </li>
+                            <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                                <a (click)="setPage(page)">{{page}}</a>
+                            </li>
+                            <li *ngIf="(pager.totalPages - pager.startPage) > 5 ">
+                                <a (click)="setPage(pager.startPage + 5)">...</a>
+                            </li>
+                            <li *ngIf="(pager.totalPages - pager.startPage) > 5">
+                                <a (click)="setPage(pager.totalPages)">{{pager.totalPages}}</a>
+                            </li>
+
+                            <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                <a (click)="setPage(pager.currentPage + 1)">Next</a>
+                            </li>
+                            <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                <a (click)="setPage(pager.totalPages)">Last</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row ">
+                <div class="col-12 ">
+                    <div class="float-right pr-2">
+                        <button [disabled]="!isSavemode"
+                        type="submit" class="btn btn-primary btn-raised mb-0" (click)="save()">
+                            Save
+                        </button>
+                        <button class="btn btn-raised btn-danger mb-0"
+                            [routerLink]="['/views/transactions/transaction-locks/transaction-locks-view']">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,26 @@
+#documentFileName {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.form-control.credit{
+    background: rgb(208, 252, 208) !important;
+    font-size: large !important;
+    font-weight: bolder;
+}
+.form-control.debit {
+    background: rgb(208, 252, 208) !important;
+    font-size: large !important;
+    font-weight: bolder !important;
+}
+.form-group .difference{
+    background: rgb(208, 252, 208) !important;
+    font-size: large !important;
+    font-weight: bolder !important;
+}
+:host ::ng-deep .mat-form-field-outline{
+    background:  #e9ecef !important;
+
+ }
+ 
+

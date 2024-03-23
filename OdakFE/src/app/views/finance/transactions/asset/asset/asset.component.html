@@ -1,0 +1,235 @@
+
+
+<div class="container-fluid">
+
+    <div class="row headtitle rotle mt-1">
+        <div class="col-md-6">
+            <h4 class="ml-2 mt-2" style="color:#003d79">Opening Balances - Asset </h4>
+        </div>
+
+        <div class="col-md-3 alrt">
+            <label style="float: left; margin-top: 15px;">
+                Download a 
+                <a href="https://odakfn.odaksolutions.in/assets/Uploads/Asset Template.xlsx">Sample File</a>
+            </label>
+
+            <button data-target="#exampleModalCenter1" data-toggle="modal" (click)="autoCodeGeneration($event)" (click)="openPopup();"
+            type="submit"
+            class="btn btn-raised btn-success btn-default cntbtn mb-0"
+          >
+            <span class="uploadBtn">Upload</span>
+                <img style="cursor: pointer;" width="22px" height="22px" class="exportAs mx-1 align-baseline"
+                    src="../../../../assets/images/upload.png"  alt="logo">
+            </button>
+        </div>
+    </div>
+
+    <form [formGroup]="uploadForm">
+
+    <div class="modal hide fade in" id="exampleModalCenter1" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static" 
+                    aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document" style="width: 50%; ">
+                        <div class="modal-content" style="background-color: #e3eff7 !important;">
+                            <div class="modal-header border-bottom">
+                                <h6>Upload File</h6>
+                                <button (click)="closeModal()" id="closeModalButton" type="button" class="close" data-dismiss="modal" #closeBtn
+                                    aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body mt-4" style="padding-bottom: 0px !important; ">
+                                <div class="row" >
+                                
+                                        <div class="col-6" style="margin-bottom: 15px;">
+                                           
+                                            <input disabled type="text" formControlName="RegistrationCode" class="form-group w-100 pl-2 disable-input border" placeholder="Registration Code" readonly />
+                                        </div>
+
+                                        <div class="col-6">
+                                            <input matInput class="form-group w-100 pl-2  border" (click)="UploadDate.open()"  autocomplete="off"  [matDatepicker]="UploadDate"  id="UploadDate" [placeholder]="entityDateFormat" formControlName="UploadDate">
+                                            <mat-datepicker-toggle matSuffix [for]="UploadDate"></mat-datepicker-toggle>
+                                            <mat-datepicker #UploadDate readonly style="position: relative; top: 10px; left: 0;"></mat-datepicker>
+
+                                            <!-- <input disabled type="text" formControlName="UploadDate" class="form-group w-100 pl-2 disable-input border" readonly placeholder="Date"/> -->
+                                        </div>                                     
+<!-- 
+                                        <div class="col-6">
+                                           
+                                            <input disabled type="text" formControlName="UploadDate" class="form-group w-100 pl-2 disable-input border" readonly placeholder="Date"/>
+                                        </div> -->
+
+                                        <!-- <div class="col-4">
+                                        </div> -->
+
+                                        <div class="col-5" style="margin-bottom: 15px;">
+
+                                        
+                                            <input formControlName="FileName" class="file-upload__input" hidden type="file" name="myFile" id="myFile"
+                                                (change)="documentSelected($event)">
+                                            <label for="myFile" class="file-upload__button text-center w-100"
+                                                style="border: 1px solid #b1b1b1d1 !important; border-radius: 10px; box-shadow: 0px 0px 5px 0px rgb(202 202 202); background-color: white; font-weight: 600; margin-right: 0.5rem !important;"
+                                                type="button">
+                                                <img class="ml-2" src="assets/images/docupload.png" alt="Upload image"
+                                                    style="width: 1rem !important;" />
+                                                Choose File(s)
+                                            </label>
+                                        </div>
+
+                                         <!-- 
+                                        <div class="col-2">
+                                           
+
+                                            <a href="{{this.ImportUrl}}">
+                                                <img class="ml-2" src="assets/images/download.png" alt="Upload image"
+                                                style="width: 1.5rem !important;" />
+                                                Import
+                                            </a>
+                                        </div> -->
+
+                                        <div class="col-2">
+                                           
+                                            <button type="button" class="btn btn-danger btn-raised" style="margin-left: 10px; height: 30px;" (click)="popUpClear()">Clear</button>
+                                        </div>
+
+                                    <div class="col-6">
+                                        <div>
+                                            {{this.uploadForm.value.FileName ? this.uploadForm.value.FileName : 'No file(s) selected'}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary btn-raised" style="margin-right: 10px;" (click)="save()">Save</button>
+                                <button (click)="closeModal()" type="button" class="btn btn-danger btn-raised" data-dismiss="modal" >Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-9 col-xl-9 mt-2">
+            <div class="card m-b-30">
+                <div class="card-body cpad enqview">
+                    <div class="col-sm-12">
+                        <table class="table table-responsive table-striped table-bordered w-100 dataTable no-footer">
+                            <thead>
+                                <tr>
+                                    <th tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        >OB Reference#</th>
+
+                                    <th tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        >OB Date</th>
+
+                                    <th tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                       >Group</th>
+
+                                    <th tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                         >Account Name</th>
+
+                                         <th tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                         colspan="1" aria-label="Name: activate to sort column ascending"
+                                        >CR/DR</th>
+ 
+                                     <th tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                         colspan="1" aria-label="Name: activate to sort column ascending"
+                                          >Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tbody *ngIf="pagedItems.length > 0">
+                                <tr *ngFor="let data of pagedItems">
+                                    <td (click)="editDivision(data.Id)" style="color: #0366d6;cursor: pointer;">
+                                        {{data.OBReference }}</td>
+                                    <td>{{data.OBDate     | date
+                                        : commonService.convertToLowerCaseDay(
+                                            entityDateFormat
+                                          ) }}</td>
+                                    <td>{{data.GroupName }}</td>
+                                    <td>{{data.AccountName }}</td>
+                                    <td>{{data.CRDR}}</td>
+                                    <td>{{data.Amount }}</td>
+                                </tr>
+                            </tbody>
+                            <tbody *ngIf="pagedItems.length === 0">
+                                <tr>
+                                  <td colspan="6">No Records Found</td>
+                                </tr>
+                              </tbody>
+                        </table>
+                    </div>
+                </div>
+           
+
+            <div style="justify-content: end;" class="row page w-100">
+                <ul *ngIf="pager.pages && pager?.pages?.length && pager.totalItems > 10"  class="pagination">
+                    <li [ngClass]="{disabled:pager.currentPage === 1}">
+                        <a (click)="setPage(1)">First</a>
+                    </li>
+                    <li [ngClass]="{disabled:pager.currentPage === 1}">
+                        <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+                    </li>
+                    <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                        <a (click)="setPage(page)">{{page}}</a>
+                    </li>
+                    <li *ngIf="(pager.totalPages - pager.startPage) > 5 ">
+                        <a (click)="setPage(pager.startPage + 5)">...</a>
+                    </li>
+                    <li *ngIf="(pager.totalPages - pager.startPage) > 5">
+                        <a (click)="setPage(pager.totalPages)">{{pager.totalPages}}</a>
+                    </li>
+        
+                    <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                        <a (click)="setPage(pager.currentPage + 1)">Next</a>
+                    </li>
+                    <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                        <a (click)="setPage(pager.totalPages)">Last</a>
+                    </li>
+                </ul>
+            </div>
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 mt-2">
+            <div class="card p-1 pt-4 pb-4 ">
+                <form [formGroup]="accountAssetForm" class="mt-1 mb-1">
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                        <div class="form-group bmd-form-group">
+                            <input  type="text" autocomplete="off" class="form-control" formControlName ="AccountName"
+                                name="acctCode" placeholder="Account Name" >
+                        </div>
+                    </div>
+
+                   
+
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                        <div class="form-group bmd-form-group">
+                            <input onkeypress='return event.charCode >= 48 && event.charCode <= 57' formControlName ="Amount"
+                            min="0" numbersOnly autocomplete="off" class="form-control" min="1"
+                                name="acctCode" placeholder="Amount" RemoveSpecialChars>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 searchbtn alrt text-center mb-3 mt-3">
+                        <button style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;" type="submit" (click)="search()"
+                            class="btn btn-primary btn-raised mb-0">Search<div
+                                class="ripple-container"></div></button>
+                        <button style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;"
+                            class="btn btn-raised btn-danger mb-0" (click)="clear();"
+                           >Clear
+                            <div class="ripple-container">
+                            </div>
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+    
+</div>

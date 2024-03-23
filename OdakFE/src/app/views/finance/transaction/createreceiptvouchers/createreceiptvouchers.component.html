@@ -1,0 +1,330 @@
+<div class="row headtitle">
+    <div class="col-xs-9 col-md-9">
+        <h4>Receipt Vouchers</h4>
+    </div>
+    <div class="col-xs-3 col-md-3 alrt">
+        <button type="button" class="btn btn-success btntop btn-raised bmd-btn-edit" (click)="onBack()"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+    </div>
+</div>
+
+<form [formGroup]="createReceiptVoucherForm">
+    <div class="card">
+        <div class="card-body ">
+
+            <div class="row">
+
+                <div class="col-md-6 col-xs-12">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-5 col-xs-12">
+                                <label>Office Code</label>
+                            </div>
+                            <div class="col-md-7 col-xs-12">
+                                <input type="text" name="OrganizationOfficeCode" formControlName="OrganizationOfficeCode" autocomplete="off" id="txtOrganizationOfficeCode" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xs-12">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-5 col-xs-12">
+                                <label>Transaction</label>
+                            </div>
+                            <div class="col-md-7 col-xs-12">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xs-12">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-5 col-xs-12">
+                                <label>Receipt #</label>
+                            </div>
+                            <div class="col-md-7 col-xs-12">
+                                <input type="text" name="ReceiptNumber"  formControlName="ReceiptNumber" autocomplete="off" id="txtReceiptNumber" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xs-12">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-5 col-xs-12">
+                                <label>Receipt Date</label>
+                            </div>
+                            <div class="col-md-7 col-xs-12">
+                                <input type="text" name="ReceiptDate" formControlName="ReceiptDate" autocomplete="off" id="txtReceiptDate" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xs-12">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-5 col-xs-12">
+                                <label class="str">3rd Party</label>
+                            </div>
+                            <div class="col-md-7 col-xs-12">
+                                <select class="form-control my-select" id="ddlThirdParty" formControlName="ThirdPartyId">
+                                    <option [ngValue]="null" selected disabled>Select 3rd Party Customer</option>
+                                    <option *ngFor="let customer of customerList" [value]="customer.CustomerId">
+                                        {{customer.CustomerName}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xs-12">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-5 col-xs-12">
+                                <label class="str">Customer Name</label>
+                            </div>
+                            <div class="col-md-7 col-xs-12">
+                                <select class="form-control my-select" id="ddlCustomer" formControlName="CustomerId">
+                                    <option [ngValue]="null" selected disabled>Select Customer</option>
+                                    <option *ngFor="let customer of customerList" [value]="customer.CustomerId">
+                                        {{customer.CustomerName}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xs-12">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-5 col-xs-12">
+                                <label class="str">Office</label>
+                            </div>
+                            <div class="col-md-7 col-xs-12">
+                                <select class="form-control my-select" id="ddlOffice" formControlName="CustomerBranchId">
+                                    <option [ngValue]="null" selected disabled>Select Office</option>
+                                    <option *ngFor="let office of customerOfficeList" [value]="office.CustomerBranchId">
+                                        {{office.BranchCode}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xs-12">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-5 col-xs-12">
+                                <label>TDS Applicable</label>
+                            </div>
+                            <div class="col-md-7 col-xs-12">
+                                Yes/No
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xs-12">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-5 col-xs-12">
+                                <label class="str">Currency</label>
+                            </div>
+                            <div class="col-md-7 col-xs-12">
+                                <select class="form-control my-select" id="ddlCurrency" formControlName="CurrencyId">
+                                    <option [ngValue]="null" selected disabled>Select Currency</option>
+                                    <option *ngFor="let currency of currencyList" [value]="currency.ID">
+                                        {{currency.CurrencyCode}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xs-12">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-5 col-xs-12">
+                                <label class="str">Mode of Payment</label>
+                            </div>
+                            <div class="col-md-7 col-xs-12">
+                                <select class="form-control my-select" id="ddlModeOfPayment" formControlName="PaymentModeId">
+                                    <option [ngValue]="null" selected disabled>Select Payment Mode</option>
+                                    <option *ngFor="let paymentmode of modeOfPaymentList" [value]="paymentmode.ID">
+                                        {{paymentmode.GeneralName}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xs-12">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-5 col-xs-12">
+                                <label>Deposit To</label>
+                            </div>
+                            <div class="col-md-7 col-xs-12">
+                                <select class="form-control my-select" id="ddlDepositTo" formControlName="DepositTo">
+                                    <option [ngValue]="null" selected disabled>Select Bank</option>
+                                    <option *ngFor="let bank of bankList" [value]="bank.BankID">
+                                        {{bank.BankName}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xs-12">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-5 col-xs-12">
+                                <label>TAN</label>
+                            </div>
+                            <div class="col-md-7 col-xs-12">
+                                <input type="text" name="TANNumber"  formControlName="TANNumber" autocomplete="off" id="txtTANNumber" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xs-12">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-5 col-xs-12">
+                                <label class="str">Amount Received</label>
+                            </div>
+                            <div class="col-md-7 col-xs-12">
+                                <input type="text" formControlName="AmountReceived" name="AmountReceived" autocomplete="off" id="txtAmountReceived" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xs-12">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-5 col-xs-12">
+                                <label>Refernce</label>
+                            </div>
+                            <div class="col-md-7 col-xs-12">
+                                <input type="text" name="ReferenceNumber" formControlName="ReferenceNumber" autocomplete="off" id="txtReferenceNumber" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xs-12">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-5 col-xs-12">
+                                <label>Bank Charges (if any)</label>
+                            </div>
+                            <div class="col-md-7 col-xs-12">
+                                <input type="text" name="BankCharges" formControlName="BankCharges" autocomplete="off" id="txtBankChargesIfAny" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-md-12">
+                    <hr class="solid">
+                </div>
+
+                <div class="col-md-6 col-xs-12">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-5 col-xs-12">
+                                <label>Search Invoices</label>
+                            </div>
+                            <div class="col-md-7 col-xs-12">
+                                <input type="text" name="SearchInvoices" formControlName="SearchInvoices" autocomplete="off" id="txtSearchInvoices" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-xs-12">
+                    <button type="button" (click)="ClearAllAmount();" class="btn btn-fill btn-success btn-raised">
+                        Clear All Amount
+                    </button>
+                </div>
+
+                <div class="col-xs-12 col-md-12">
+                    <hr class="solid">
+                </div>
+
+                <div class="col-md-3 col-xs-12">
+                    <div class="form-group bmd-form-group">
+                        <label>Attached Files</label>
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-xs-12">
+                    <div class="form-group bmd-form-group">
+                        <label>Exchange Rate</label>
+                        <select class="form-control my-select" id="ddlExchangeRate" formControlName="ExchangeRateId">
+                            <option [ngValue]="null" selected disabled>Select Exchange Rate</option>
+                            <option *ngFor="let exchangeRate of exchangeRateList" [value]="exchangeRate.ExchangeRateId">
+                                {{exchangeRate.CurrencyPair}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-xs-12">
+                    <div class="form-group bmd-form-group">
+                        <label>Local Amount</label>
+                        <input type="text" name="LocalAmount" autocomplete="off" id="txtLocalAmount" class="form-control">
+                    </div>
+                </div>
+
+                <div class="col-md-2 col-xs-12">
+                    <div class="form-group bmd-form-group">
+                        <label>Reverse Voucher</label>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-md-12">
+                    <hr class="solid">
+                </div>
+
+                <div class="col-md-9 col-xs-12">
+                    <div class="form-group bmd-form-group">
+                        <div class="row">
+                            <div class="col-md-4 col-xs-12">
+                                <label>Remarks</label>
+                            </div>
+                            <div class="col-md-8 col-xs-12">
+                                <input type="text" name="Remarks" autocomplete="off" id="txtRemarks" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="card-footer">
+            <div class="col-xs-12 col-md-12" style="text-align: right;">
+                <button type="submit" (click)="onSubmit();" class="btn btn-fill btn-success btn-raised">
+                    Save
+                </button> &nbsp;&nbsp;
+                <button type="button" (click)="onCancel();" class="btn btn-primary btn-raised">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</form>

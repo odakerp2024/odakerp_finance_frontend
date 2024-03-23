@@ -1,0 +1,1447 @@
+<div class="row headtitle">
+    <div class="col-md-9 col-lg-9">
+        <h4 style="margin-top: 6px;">Export Manager - Booking Tasks</h4>
+    </div>
+   
+    <div class="col-md-3 col-lg-3 alrt">
+        <!--<button type="button" class="btn btn-success btntop btn-raised bmd-btn-edit" (click)="btnBackOnclick();"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>-->
+        <button type="button" class="btn btn-success btntop btn-raised bmd-btn-edit" [routerLink]="['/views/exportmanager/bookinglevel/bookinglevelview/bookinglevelview']"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+    </div>
+</div>
+<div class="row" style="margin-top: 2px; margin-bottom: 11px; background-color: lavender; padding: 11px; ">
+    <div class="col-md-3">
+        <div class="row" style="margin-top:5px;">
+            <div class="col-md-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item active"><a href="#" [routerLink]="['/views/exportmanager/bookinglevel/bookinglevelview/bookinglevelview/']">Booking Tasks</a></li>
+                        <li class="breadcrumb-item" aria-current="page" style="color:#000000;">Booking</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-9">
+        <div class="row">
+            <div class="col-md-3" style="font-weight: 600;">
+                <div class="row bkgno">
+                    <div class="col-md-12">
+                        <small>Booking No</small>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="lbltxt">{{bkgNo}}</label>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-3" style="font-weight: 600;">
+                <div class="row bkgparty">
+                    <div class="col-md-12">
+                        <small>Booking Party</small>
+                    </div>
+                    <div class="col-md-12">
+                        <span>
+                            <label class="lbltxt">{{bkgparty}}</label>
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+         
+
+            <div class="col-md-3" style="font-weight: 600;">
+                <div class="row bkgfpod">
+                    <div class="col-md-12">
+                        <small>FPOD</small>
+                    </div>
+                    <div class="col-md-12">
+                        <span>
+                            <label class="lbltxt">{{destination}}</label>
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-3" style="font-weight: 600;">
+                <div class="row bkgves">
+                    <div class="col-md-12">
+                        <small>Ves/Voy</small>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="lbltxt">{{vesselname}}-{{voyageno}}</label>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 col-lg-12">
+        <div class="row bkgltab">
+            <div class="col-md-12 col-lg-12">
+                <!--<ul class="nav nav-pills nav-justified" role="tablist">
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link active" data-toggle="tab" [routerLink]="['/views/exportmanager/bookinglevel/bookings/bookings']" role="tab" aria-selected="false">Booking</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link show" data-toggle="tab" [routerLink]="['/views/exportmanager/bookinglevel/containers/containers']" role="tab" aria-selected="true">Container(s)</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" [routerLink]="['/views/exportmanager/bookinglevel/loadlist/haz/haz']" role="tab" aria-selected="false">Docs for Load List</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" [routerLink]="['/views/exportmanager/bookinglevel/bol/bol']" role="tab" aria-selected="false">Bill of Lading</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" [routerLink]="['/views/exportmanager/bookinglevel/blrelease/blrelease']" role="tab" aria-selected="false">BOL Release</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" [routerLink]="['/views/exportmanager/bookinglevel/exphandling/exphandling']" role="tab" aria-selected="false">Exceptions Handling</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" [routerLink]="['/views/exportmanager/bookinglevel/invoices/invoices']" role="tab" aria-selected="false">Invoices</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" [routerLink]="['/views/exportmanager/bookinglevel/attach/attach']" role="tab" aria-selected="false">Attachments</a>
+                    </li>
+
+                </ul>-->
+                <ul class="nav nav-pills nav-justified" role="tablist">
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link active" data-toggle="tab" (click)="btntabclick(1)" role="tab" aria-selected="false">Booking</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link show" data-toggle="tab" (click)="btntabclick(2)" role="tab" aria-selected="true">Container(s)</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link show" data-toggle="tab" (click)="btntabclick(9)" role="tab" aria-selected="true">BOL Allotment</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" (click)="btntabclick(3)" role="tab" aria-selected="false">Docs for Load List</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" (click)="btntabclick(4)" role="tab" aria-selected="false">Bill of Lading</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" (click)="btntabclick(5)" role="tab" aria-selected="false">BOL Release</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" (click)="btntabclick(6)" role="tab" aria-selected="false">Exceptions</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" (click)="btntabclick(7)" role="tab" aria-selected="false">Invoices</a>
+                    </li>
+                    <li class="nav-item waves-effect waves-light">
+                        <a class="nav-link" data-toggle="tab" (click)="btntabclick(8)" role="tab" aria-selected="false">Attachments</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<form [formGroup]="bookingForm">
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <div class="tab-content">
+                <div class="tab-pane pt-3 active show" role="tabpanel">
+
+                    <div class="row">
+                        <div class="col-md-12 col-lg-12">
+                            <div class="row forms">
+                                <div class="col-md-12 col-lg-12 padlr0">
+
+                                    <div class="tab-content" style="padding:0;">
+                                        <div class="tab-pane pt-3 active show" id="Enquiry" role="tabpanel">
+                                            <div class="col-md-12 col-lg-12">
+                                                <div class="row">
+                                                    <div class="col-md-12 col-lg-12">
+                                                        <h4 class="enqtitle">Basic Details</h4>
+                                                    </div>
+                                                </div>
+                                                <div class="row" style="border-bottom:2px dashed #ccc; margin-bottom:15px; padding-bottom:10px;">
+                                                    <div class="col-md-12 col-lg-12">
+                                                        <div class="form-group">
+                                                            <div class="row">
+                                                                <div class="col-md-12 col-lg-12 bkgtxt">
+                                                                    <div class="form-group">
+                                                                        <div class="row">
+                                                                            <div class="col-md-4 col-lg-4">
+                                                                                <div class="row">
+
+                                                                                    <div class="col-md-12">
+                                                                                        <label>Booking Party</label>
+                                                                                    </div>
+                                                                                    <div class="col-md-12">
+                                                                                        <label class="lbltxt">{{bkgparty}}</label>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-4 col-lg-4">
+                                                                                <div class="row">
+
+                                                                                    <div class="col-md-12">
+                                                                                        <label>Office Code</label>
+                                                                                    </div>
+                                                                                    <div class="col-md-12">
+                                                                                        <label class="lbltxt">{{officecode}}</label>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-4 col-lg-4">
+                                                                    <div class="form-group">
+                                                                        <div class="row">
+                                                                            <div class="col-md-12 col-lg-12">
+                                                                                <div class="row">
+                                                                                    <div class="col-md-12">
+                                                                                        <label>Booking Number</label>
+                                                                                    </div>
+                                                                                    <div class="col-md-12">
+                                                                                        <label class="lbltxt">{{bkgNo}}</label>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-4 col-lg-4">
+                                                                    <div class="form-group">
+                                                                        <div class="row">
+
+                                                                            <div class="col-md-12 col-lg-12">
+                                                                                <div class="row">
+                                                                                    <div class="col-md-12">
+                                                                                        <label>Booking Date</label>
+                                                                                    </div>
+                                                                                    <div class="col-md-12">
+                                                                                        <label class="lbltxt">{{bkgdate}}</label>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+
+
+                                                                <div class="col-md-4 col-lg-4">
+                                                                    <div class="form-group">
+                                                                        <div class="row">
+                                                                            <div class="col-md-12 col-lg-12">
+                                                                                <div class="row">
+                                                                                    <div class="col-md-12">
+                                                                                        <label>Booking Commission</label>
+                                                                                    </div>
+                                                                                    <div class="col-md-12">
+                                                                                        <label class="lbltxt">{{bkgcommission}}</label>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-4 col-lg-4">
+                                                                    <div class="form-group">
+                                                                        <div class="row">
+                                                                            <div class="col-md-12 col-lg-12">
+                                                                                <div class="row">
+                                                                                    <div class="col-md-12">
+                                                                                        <label>Enquiry Number</label>
+                                                                                    </div>
+                                                                                    <div class="col-md-12">
+                                                                                        <label class="lbltxt">{{enqNo}}</label>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-4 col-lg-4">
+                                                                    <div class="form-group">
+                                                                        <div class="row">
+                                                                            <div class="col-md-12 col-lg-12">
+                                                                                <div class="row">
+                                                                                    <div class="col-md-12">
+                                                                                        <label>Source</label>
+                                                                                    </div>
+                                                                                    <div class="col-md-12">
+                                                                                        <label class="lbltxt">{{source}}</label>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-4 col-lg-4" *ngIf="DivSalesPerson">
+                                                                    <div class="form-group">
+                                                                        <div class="row">
+                                                                            <div class="col-md-12 col-lg-12">
+                                                                                <div class="row">
+                                                                                    <div class="col-md-12">
+                                                                                        <label>Sales Person</label>
+                                                                                    </div>
+                                                                                    <div class="col-md-12">
+                                                                                        <label class="lbltxt">{{salesPerson}}</label>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-4 col-lg-4" *ngIf="DivAgent">
+                                                                    <div class="form-group">
+                                                                        <div class="row">
+                                                                            <div class="col-md-12 col-lg-12">
+                                                                                <div class="row">
+                                                                                    <div class="col-md-12">
+                                                                                        <label>Agent</label>
+                                                                                    </div>
+                                                                                    <div class="col-md-12">
+                                                                                        <label class="lbltxt">{{Agent}}</label>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+                                            <div class="col-md-12 col-lg-12 enquiry">
+                                                <div class="row">
+                                                    <div class="col-md-12 col-lg-12">
+                                                        <h4 class="enqtitle">Shipment Details</h4>
+                                                    </div>
+                                                </div>
+                                                <div class="row shiptable" style="border-bottom:2px dashed #ccc; margin-bottom:15px; padding-bottom:10px;">
+                                                    <div class="col-md-9 col-lg-9">
+                                                        <div class="row">
+
+                                                            <div class="col-md-6 col-lg-6">
+                                                                <div class="form-group">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12 col-lg-12">
+                                                                            <div class="row">
+                                                                                <div class="col-md-12">
+                                                                                    <label>Origin</label>
+                                                                                </div>
+                                                                                <div class="col-md-12">
+                                                                                    <label class="lbltxt">{{origin}}</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 col-lg-6">
+                                                                <div class="form-group">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12 col-lg-12">
+                                                                            <div class="row">
+                                                                                <div class="col-md-12">
+                                                                                    <label>Load Port</label>
+                                                                                </div>
+                                                                                <div class="col-md-12">
+                                                                                    <label class="lbltxt">{{loadPort}}</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-6 col-lg-6">
+                                                                <div class="form-group">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12 col-lg-12">
+                                                                            <div class="row">
+                                                                                <div class="col-md-12">
+                                                                                    <label>Discharge Port</label>
+                                                                                </div>
+                                                                                <div class="col-md-12">
+                                                                                    <label class="lbltxt">{{dischargePort}}</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-6 col-lg-6">
+                                                                <div class="form-group">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12 col-lg-12">
+                                                                            <div class="row">
+                                                                                <div class="col-md-12">
+                                                                                    <label>Destination</label>
+                                                                                </div>
+                                                                                <div class="col-md-12">
+                                                                                    <label class="lbltxt">{{destination}}</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-6 col-lg-6">
+                                                                <div class="form-group">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12 col-lg-12">
+                                                                            <div class="row">
+                                                                                <div class="col-md-12">
+                                                                                    <label>Route</label>
+                                                                                </div>
+                                                                                <div class="col-md-12">
+                                                                                    <label class="lbltxt">{{routes}}</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-6 col-lg-6">
+                                                                <div class="form-group">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12 col-lg-12">
+                                                                            <div class="row">
+                                                                                <div class="col-md-12">
+                                                                                    <label>Delivery Terms</label>
+                                                                                </div>
+                                                                                <div class="col-md-12">
+                                                                                    <label class="lbltxt">{{deliveryTerms}}</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-2 col-lg-2">
+                                                        <div class="col-sm-12 padlr0 conttableview">
+                                                            <table id="datatable-buttons" cellpadding="0" cellspacing="0" class="tablegrid table-responsive table table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                                                <thead>
+                                                                    <tr role="row">
+                                                                        <th class="actwid" style="width:0%!important;">S.No</th>
+                                                                        <th style="width:0%!important;">Container Type</th>
+                                                                        <th style="width:0%!important;">Nos</th>
+
+                                                                    </tr>
+                                                                </thead>
+
+                                                                <tbody>
+                                                                    <tr *ngFor="let dataItem of excntr;let i = index">
+
+                                                                        <td class="actwid">{{ i + 1 }}</td>
+                                                                        <td style="width:113px!important;">{{dataItem.CntrType}}</td>
+                                                                        <td>{{dataItem.Nos}}</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-md-12 col-lg-12 enquiry">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <h4 class="enqtitle">Cargo Details</h4>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12 col-lg-12">
+                                                        <div class="row">
+                                                            <div class="col-md-4 col-lg-4">
+                                                                <div class="form-group">
+                                                                    <div class="row">
+
+                                                                        <div class="col-md-12 col-lg-12">
+                                                                            <div class="row">
+                                                                                <div class="col-md-12">
+                                                                                    <label>Commodity</label>
+                                                                                </div>
+                                                                                <div class="col-md-12">
+                                                                                    <label class="lbltxt">{{commodity}}</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="col-md-4 col-lg-4">
+                                                                <div class="form-group">
+                                                                    <div class="row">
+                                                                        <div class="col-md-12 col-lg-12">
+                                                                            <div class="row">
+                                                                                <div class="col-md-12">
+                                                                                    <label>Gross Weight</label>
+                                                                                </div>
+                                                                                <div class="col-md-12">
+                                                                                    <label class="lbltxt">{{grosswt}}</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <!--<div class="col-md-4 col-lg-4">
+                                                                <div class="form-group">
+                                                                    <div class="row">
+
+                                                                        <div class="col-md-12 col-lg-12">
+                                                                            <div class="row">
+                                                                                <div class="col-md-12">
+                                                                                    <label>HS Code</label>
+                                                                                </div>
+                                                                                <div class="col-md-12">
+                                                                                    <label class="lbltxt">{{hscode}}</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>-->
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <div class="row">
+                                                                <div class="col-md-3">
+                                                                    <label>Hazardous</label>
+                                                                </div>
+                                                                <div class="col-md-8">
+                                                                    <label class="check">
+                                                                        <input type="radio" [attr.disabled]="bookingForm.HazarOpt === 2" name="HazarOpt" [value]="1" (click)="OnclickHazaropt(1)" formControlName="HazarOpt" />
+                                                                        <span>No</span>
+                                                                    </label>
+                                                                    <label class="check" style="margin-left:20px;">
+                                                                        <input type="radio" [attr.disabled]="bookingForm.HazarOpt === 1" name="HazarOpt" [value]="2" (click)="OnclickHazaropt(2)" formControlName="HazarOpt" />
+                                                                        <span>Yes</span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <div class="row">
+                                                                <div class="col-md-3">
+                                                                    <label>Reefer</label>
+                                                                </div>
+                                                                <div class="col-md-8">
+                                                                    <label class="check">
+                                                                        <input type="radio" [attr.disabled]="bookingForm.ReeferOpt === 2" name="ReeferOpt" [value]="1" (click)="OnclickReeferOpt(1)" formControlName="ReeferOpt" />
+                                                                        No
+                                                                    </label>
+                                                                    <label class="check" style="margin-left:20px;">
+                                                                        <input type="radio" [attr.disabled]="bookingForm.ReeferOpt === 1" name="ReeferOpt" [value]="2" (click)="OnclickReeferOpt(2)" formControlName="ReeferOpt" />
+                                                                        Yes
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <div class="row">
+                                                                <div class="col-md-3">
+                                                                    <label>Oog</label>
+                                                                </div>
+                                                                <div class="col-md-8">
+                                                                    <label class="check">
+                                                                        <input type="radio" name="OOGOpt" [attr.disabled]="bookingForm.OOGOpt === 2" [value]="1" (click)="OnclickOOGOpt(1)" formControlName="OOGOpt" />
+                                                                        No
+                                                                    </label>
+                                                                    <label class="check" style="margin-left:20px;">
+                                                                        <input type="radio" name="OOGOpt" [attr.disabled]="bookingForm.OOGOpt === 1" [value]="2" (click)="OnclickOOGOpt(2)" formControlName="OOGOpt" />
+                                                                        Yes
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
+                                            <div class="col-md-12 col-lg-12" style="border-bottom:2px dashed #ccc; margin-bottom:15px; padding-bottom:10px;">
+
+
+                                                <div class="row enquirynav">
+                                                    <div class="col-md-12">
+                                                        <ul class="nav nav-pills nav-justified" role="tablist">
+                                                            <li class="nav-item waves-effect waves-light">
+                                                                <a class="nav-link active show" data-toggle="tab" href="#haz" role="tab" *ngIf="HazardousHidvalue" aria-selected="true">Hazardous</a>
+                                                            </li>
+                                                            <li class="nav-item waves-effect waves-light">
+                                                                <a class="nav-link" data-toggle="tab" href="#ref" role="tab" *ngIf="RefferHidvalue" aria-selected="false">Reefer</a>
+                                                            </li>
+                                                            <li class="nav-item waves-effect waves-light">
+                                                                <a class="nav-link" data-toggle="tab" href="#out" role="tab" *ngIf="OutGaugeHidvalue" aria-selected="false">Out Of Gauge</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12 col-lg-12 enquiry padlr0">
+                                                        <div class="tab-content" style="padding: 0px 20px;">
+                                                            <div class="tab-pane pt-3 active show" id="haz" *ngIf="HazardousHidvaluegrid" role="tabpanel">
+                                                                <div class="row">
+
+                                                                    <div class="col-md-12 col-lg-12 conttableview">
+                                                                        <table id="datatable-buttons" cellpadding="0" cellspacing="0" class="tablegrid table-responsive table table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th class="alc">Cargo</th>
+                                                                                    <th class="alc">Hazardous Class</th>
+                                                                                    <th class="alc">MCO Number</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <tr *ngFor="let dataItem of exhaz;let i = index">
+                                                                                    <td>{{dataItem.CommodityName}}</td>
+                                                                                    <td>{{dataItem.HazardousClass}}</td>
+                                                                                    <td>{{dataItem.MCONumber}}</td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="tab-pane pt-3 show" id="ref" *ngIf="RefferHidvaluegrid" role="tabpanel">
+                                                                <div class="row">
+                                                                    <div class="col-md-12 col-lg-12 conttableview">
+                                                                        <table id="datatable-buttons" cellpadding="0" cellspacing="0" class="tablegrid table-responsive table table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th class="alc">Out Gauge Cargo</th>
+                                                                                    <th class="alc">Cargo Lenght</th>
+                                                                                    <th class="alc">Cargo Width</th>
+                                                                                    <th class="alc">Cargo Height</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <tr *ngFor="let dataItem of exreefer;let i = index">
+                                                                                    <td>{{dataItem.CommodityName}}</td>
+                                                                                    <td>{{dataItem.Temperature}}</td>
+                                                                                    <td>{{dataItem.Ventilation}}</td>
+                                                                                    <td>{{dataitem.Humidity}}</td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+
+
+
+
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="tab-pane pt-3 show" id="out" *ngIf="OutGaugeHidvaluegrid" role="tabpanel">
+                                                                <div class="row">
+                                                                    <div class="col-md-12 col-lg-12 conttableview">
+                                                                        <table id="datatable-buttons" cellpadding="0" cellspacing="0" class="tablegrid table-responsive table table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th class="alc">Temperature</th>
+                                                                                    <th class="alc">Humidity</th>
+                                                                                    <th class="alc">Ventilation</th>
+                                                                                    <th class="alc">Cargo</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                <tr *ngFor="let dataItem of exout;let i = index">
+                                                                                    <td>{{dataItem.CommodityName}}</td>
+                                                                                    <td>{{dataItem.CargoLenght}}</td>
+                                                                                    <td>{{dataItem.CargoWidth}}</td>
+                                                                                    <td>{{dataItem.CargoHeight}}</td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                    <div>
+
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-12 col-lg-12 enquiry">
+                                                <div class="row">
+                                                    <div class="col-md-12 col-lg-12">
+                                                        <h4 class="enqtitle">Rate and Charges</h4>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row enquirynav">
+                                                    <div class="col-md-12 col-lg-12">
+                                                        <ul class="nav nav-pills nav-justified" role="tablist">
+                                                            <li class="nav-item waves-effect waves-light">
+                                                                <a class="nav-link active show" data-toggle="tab" href="#ocean" role="tab" aria-selected="true">Ocean Freight</a>
+                                                            </li>
+                                                            <li class="nav-item waves-effect waves-light">
+                                                                <a class="nav-link" data-toggle="tab" href="#slot" role="tab" aria-selected="false">Slot</a>
+                                                            </li>
+                                                          
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="row" style="border-bottom:2px dashed #ccc; margin-bottom:15px; padding-bottom:10px;">
+                                                    <div class="col-md-12 col-lg-12 enquiry padlr0">
+                                                        <div class="tab-content" style="padding: 0px 20px;">
+                                                            <div class="tab-pane pt-3 active show" id="ocean" role="tabpanel">
+                                                                <div class="row">
+                                                                    <div class="col-md-6 col-lg-6">
+                                                                        <div class="form-group">
+                                                                            <div class="row">
+                                                                                <div class="col-md-12 col-lg-12">
+                                                                                    <div class="row">
+                                                                                        <div class="col-md-12">
+                                                                                            <label>Payment Terms</label>
+                                                                                        </div>
+                                                                                        <div class="col-md-12">
+                                                                                            <label class="lbltxt">{{paymentterms}}</label>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="row">
+                                                                    <div class="col-md-12 col-lg-12 padlr0 conttableview">
+                                                                        <table id="datatable-buttons" cellpadding="0" cellspacing="0" class="table table-responsive table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <td colspan="4" style="background-image: none !important; background-color: gainsboro!important; font-weight: 500; color: #000; font-size: 15px; "></td>
+                                                                                    <td colspan="2" style="background-color: #cfddec !important; font-weight: 500; color: #000; font-size: 15px; text-align: center ">Billing Rate</td>
+                                                                                    <td colspan="2" style="background-color: #d5e5cc !important; font-weight: 500; color: #000; font-size: 15px; text-align: center ">Manifest Rate</td>
+                                                                                    <td colspan="1" style="background-color: #e8ebc7 !important; font-weight: 500; color: #000; font-size: 15px; text-align: center ">Booking Commission</td>
+
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <th class="gry alc" rowspan="2">Container Type</th>
+                                                                                    <th class="gry alc" rowspan="2">Nos</th>
+                                                                                    <th class="gry alc" rowspan="2">Cargo Type</th>
+                                                                                    <th class="gry alc" rowspan="2">Currency</th>
+                                                                                    <th class="alc" colspan="2" style="background-color: #cfddec !important; background-image: none !important; ">Ocean Freight Per Unit</th>
+                                                                                    <th class="grn alc" colspan="2" style="background-color: #d5e5cc !important; background-image: none !important;">Manifest Rate Per Unit</th>
+                                                                                    <th class="org alc" colspan="1" style="background-color: #e8ebc7 !important; background-image: none !important; ">Commission Per Unit</th>
+
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <th class="ble alc" style="background-color: #cfddec !important; background-image: none !important;">Amount</th>
+                                                                                    <th class="ble alc" style="background-color: #cfddec !important; background-image: none !important;">Break-up</th>
+                                                                                    <th class="grn alc" style="background-color: #d5e5cc !important; background-image: none !important;">Amount</th>
+                                                                                    <th class="grn alc" style="background-color: #d5e5cc !important; background-image: none !important;">Break-up</th>
+                                                                                    <th class="org alc" style="background-color: #e8ebc7 !important; background-image: none !important;">Amount</th>
+                                                                                </tr>
+                                                                           
+                                                                            </thead>
+
+
+                                                                            <tbody>
+                                                                                <tr *ngFor="let dataItem of exocean;let i = index">
+                                                                                    <td>{{dataItem.CntrType}}</td>
+                                                                                    <td>{{dataItem.Nos}}</td>
+
+                                                                                    <td>{{dataItem.CommodityName}}</td>
+                                                                                    <td>{{dataItem.Currency}}</td>
+                                                                                    <td class="alrt">{{dataItem.FrtChargePerAmt}}</td>
+                                                                                    <td></td>
+                                                                                    <td class="alrt">{{dataItem.ManifestAmt}}</td>
+                                                                                    <td></td>
+                                                                                    <td class="alrt">{{dataItem.CommissionPerAmt}}</td>
+
+                                                                                </tr>
+
+
+                                                                           
+
+                                                                            </tbody>
+
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="tab-pane pt-3 show" id="slot" role="tabpanel">
+                                                                <div class="col-md-12 col-lg-12">
+
+                                                                    <div class="row">
+                                                                        <div class="col-sm-12 col-lg-12 padlr0 conttableview">
+                                                                            <table id="datatable-buttons" cellpadding="0" cellspacing="0" class="table table-responsive table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                                                                <thead>
+                                                                                    <tr>
+                                                                                        <td colspan="4" style="background-image: none !important; background-color: gainsboro!important; font-weight: 500; color: #000; font-size: 15px; "></td>
+                                                                                        <td colspan="2" style="background-color: #cfddec !important; font-weight: 500; color: #000; font-size: 15px; text-align: center ">Billing Rate</td>
+                                                                                        <td colspan="2" style="background-color: #d5e5cc !important; font-weight: 500; color: #000; font-size: 15px; text-align: center ">Manifest Rate</td>
+
+
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <th class="gry alc" rowspan="2">Container Type</th>
+                                                                                        <th class="gry alc" rowspan="2">Nos</th>
+                                                                                        <th class="gry alc" rowspan="2">Cargo Type</th>
+                                                                                        <th class="gry alc" rowspan="2">Currency</th>
+                                                                                        <th class="alc" colspan="2" style="background-color: #cfddec !important; background-image: none !important; ">Ocean Freight Per Unit</th>
+                                                                                        <th class="grn alc" colspan="2" style="background-color: #d5e5cc !important; background-image: none !important;">Manifest Rate Per Unit</th>
+
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <th class="ble alc" style="background-color: #cfddec !important; background-image: none !important;">Amount</th>
+                                                                                        <th class="ble alc" style="background-color: #cfddec !important; background-image: none !important;">Break-up</th>
+                                                                                        <th class="grn alc" style="background-color: #d5e5cc !important; background-image: none !important;">Amount</th>
+                                                                                        <th class="grn alc" style="background-color: #d5e5cc !important; background-image: none !important;">Break-up</th>
+
+                                                                                    </tr>
+                                                                               
+                                                                                </thead>
+
+
+                                                                                <tbody>
+                                                                                    <tr *ngFor="let dataItem of exslot;let i = index">
+                                                                                        <td>{{dataItem.CntrType}}</td>
+                                                                                        <td>{{dataItem.Nos}}</td>
+                                                                                        <td>{{dataItem.CommodityName}}</td>
+                                                                                        <td>{{dataItem.Currency}}</td>
+                                                                                        <td class="alrt">{{dataItem.FrtChargePerAmt}}</td>
+                                                                                        <td class="alrt">{{dataItem.FrtChargePerAmtTotal}}</td>
+                                                                                        <td class="alrt">{{dataItem.ManifestAmt}}</td>
+                                                                                        <td class="alrt">{{dataItem.ManifestAmtTotal}}</td>
+
+
+                                                                                    </tr>
+
+                                                                                 
+
+                                                                                </tbody>
+
+                                                                            </table>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+
+                                                        
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+
+
+
+                                            <div class="col-md-12 col-lg-12">
+
+
+                                                <div class="row enquirynav">
+                                                    <div class="col-md-12 col-lg-12">
+                                                        <ul class="nav nav-pills nav-justified" role="tablist">
+                                                            <li class="nav-item waves-effect waves-light">
+                                                                <a class="nav-link active show" data-toggle="tab" href="#ship" role="tab" aria-selected="true">Shipment Terms</a>
+                                                            </li>
+                                                            <li class="nav-item waves-effect waves-light">
+                                                                <a class="nav-link" data-toggle="tab" href="#ves" role="tab" aria-selected="false">Vessel Details</a>
+                                                            </li>
+                                                            <li class="nav-item waves-effect waves-light">
+                                                                <a class="nav-link" data-toggle="tab" href="#princ" role="tab" aria-selected="false">Principal/Agents/Slots</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12 col-lg-12 enquiry padlr0">
+                                                        <div class="tab-content" style="padding: 0px 20px;">
+                                                            <div class="tab-pane pt-3 active show" id="ship" role="tabpanel">
+                                                                <div class="col-md-12 col-lg-12 padlr0">
+
+                                                                    <div class="row">
+
+                                                                        <div class="col-md-12 col-lg-12 conttableview padlr0">
+                                                                            <table id="datatable-buttons" cellpadding="0" cellspacing="0" class="table table-responsive table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                                                                <thead>
+                                                                                    <tr>
+                                                                                        <th>Container Type</th>
+                                                                                        <th colspan="2"></th>
+                                                                                        <th colspan="3">Special Charges</th>
+                                                                                    </tr>
+                                                                                </thead>
+
+
+                                                                                <tbody>
+                                                                                    <tr *ngFor="let dataItem of expol;let i = index">
+                                                                                        <td>{{dataItem.CntrType}}</td>
+                                                                                        <td>POL Charges</td>
+                                                                                        <td>{{dataItem.PolCharges}}</td>
+                                                                                        <td>{{dataItem.Currency}}</td>
+                                                                                        <td class="alrt">{{dataItem.Amount2}}</td>
+                                                                                        <td>{{dataItem.Remarks}}</td>
+                                                                                    </tr>
+                                                                                    <tr *ngFor="let dataItem of expod;let i = index">
+                                                                                        <td>{{dataItem.CntrType}}</td>
+                                                                                        <td>POL Charges</td>
+                                                                                        <td>{{dataItem.PolCharges}}</td>
+                                                                                        <td>{{dataItem.Currency}}</td>
+                                                                                        <td class="alrt">{{dataItem.Amount2}}</td>
+                                                                                        <td>{{dataItem.Remarks}}</td>
+                                                                                    </tr>
+
+                                                                                </tbody>
+
+                                                                            </table>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="row" style="border-bottom:2px dashed #ccc; margin-bottom:15px; padding-bottom:10px; margin-top:20px;">
+
+                                                                        <div class="col-md-12 padlr0 enqradbtn">
+                                                                            <div class="form-group">
+                                                                                <div class="row">
+                                                                                    <div class="col-md-2">
+                                                                                        <label>Free Days - Origin</label>
+                                                                                    </div>
+                                                                                    <div class="col-md-3">
+                                                                                        <label class="check">
+                                                                                            <input type="radio" name="FreeDayOrigin"  [attr.disabled]="bookingForm.FreeDayOrigin === 1" (click)="StandardOrgChange(1)" [value]="1" formControlName="FreeDayOrigin">
+                                                                                            Standard
+                                                                                        </label>
+                                                                                        <label class="check" style="margin-left:20px;">
+                                                                                            <input type="radio" name="FreeDayOrigin"  [attr.disabled]="bookingForm.FreeDayOrigin === 2" (click)="StandardOrgChange(2)" [value]="2" formControlName="FreeDayOrigin">
+                                                                                            Special
+                                                                                        </label>
+                                                                                    </div>
+                                                                                    <div class="col-md-7">
+                                                                                        <input type="text" class="form-control" formControlName="FreeDaysOrignValue" disabled />
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-12 padlr0 enqradbtn">
+                                                                            <div class="form-group">
+                                                                                <div class="row">
+                                                                                    <div class="col-md-2">
+                                                                                        <label>Free Days - Destination</label>
+                                                                                    </div>
+                                                                                    <div class="col-md-3">
+                                                                                        <label class="check">
+                                                                                            <input type="radio" name="FreeDayDestination" [attr.disabled]="bookingForm.FreeDayDestination === 1" (click)="StandardDestination(1)" [value]="1" formControlName="FreeDayDestination">
+                                                                                            Standard
+                                                                                        </label>
+                                                                                        <label class="check" style="margin-left:20px;">
+                                                                                            <input type="radio" name="FreeDayDestination" [attr.disabled]="bookingForm.FreeDayDestination === 2" (click)="StandardDestination(2)" [value]="2" formControlName="FreeDayDestination">
+                                                                                            Special
+                                                                                        </label>
+                                                                                    </div>
+                                                                                    <div class="col-md-7">
+                                                                                        <input type="text" class="form-control" formControlName="FreeDaysDesValue" disabled />
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-12 padlr0 enqradbtn">
+                                                                            <div class="form-group">
+                                                                                <div class="row">
+                                                                                    <div class="col-md-2">
+                                                                                        <label>Damage Scheme</label>
+                                                                                    </div>
+                                                                                    <div class="col-md-3">
+                                                                                        <label class="check">
+                                                                                            <input type="radio" name="DamageScheme" [attr.disabled]="bookingForm.DamageScheme === 1" (click)="StandardDamageSchema(1)" [value]="1" formControlName="DamageScheme">
+                                                                                            Standard
+                                                                                        </label>
+                                                                                        <label class="check" style="margin-left:20px;">
+                                                                                            <input type="radio" name="DamageScheme" [attr.disabled]="bookingForm.DamageScheme === 2" (click)="StandardDamageSchema(2)" [value]="2" formControlName="DamageScheme">
+                                                                                            Special
+                                                                                        </label>
+                                                                                    </div>
+                                                                                    <div class="col-md-7">
+                                                                                        <input type="text" class="form-control" formControlName="DamageSchemeValue" disabled />
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-12 padlr0 enqradbtn">
+                                                                            <div class="form-group">
+                                                                                <div class="row">
+                                                                                    <div class="col-md-2">
+                                                                                        <label>Security Deposit</label>
+                                                                                    </div>
+                                                                                    <div class="col-md-3">
+                                                                                        <label class="check">
+                                                                                            <input type="radio" name="SecurityDeposit" [attr.disabled]="bookingForm.SecurityDeposit === 1" (click)="StandardSecurityDeposit(1)" [value]="1" formControlName="SecurityDeposit">
+                                                                                            Standard
+                                                                                        </label>
+                                                                                        <label class="check" style="margin-left:20px;">
+                                                                                            <input type="radio" name="SecurityDeposit" [attr.disabled]="bookingForm.SecurityDeposit === 2" (click)="StandardSecurityDeposit(2)" [value]="2" formControlName="SecurityDeposit">
+                                                                                            Special
+                                                                                        </label>
+                                                                                    </div>
+                                                                                    <div class="col-md-7">
+                                                                                        <input type="text" class="form-control" formControlName="SecurityDepositValue" disabled />
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-md-12 padlr0 enqradbtn">
+                                                                            <div class="form-group">
+                                                                                <div class="row">
+                                                                                    <div class="col-md-2">
+                                                                                        <label>BOL Requirement</label>
+                                                                                    </div>
+                                                                                    <div class="col-md-3">
+                                                                                        <label class="check">
+                                                                                            <input type="radio" name="BOLRequirement" [attr.disabled]="bookingForm.BOLRequirement === 1" (click)="StandardBOLRequirment(1)" [value]="1" formControlName="BOLRequirement">
+                                                                                            Standard
+                                                                                        </label>
+                                                                                        <label class="check" style="margin-left:20px;">
+                                                                                            <input type="radio" name="BOLRequirement" [attr.disabled]="bookingForm.BOLRequirement === 2" (click)="StandardBOLRequirment(2)" [value]="2" formControlName="BOLRequirement">
+                                                                                            Special
+                                                                                        </label>
+                                                                                    </div>
+                                                                                    <div class="col-md-7">
+                                                                                        <input type="text" class="form-control" formControlName="BolReqValue" disabled />
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <!--<div class="row" style="border-bottom:2px dashed #ccc; margin-bottom:15px; padding-bottom:10px; margin-top:20px;">
+
+                                                                        <div class="col-md-12 col-lg-12 padlr0 conttable charges">
+                                                                            <table class="table table-responsive table-bordered">
+                                                                                <tbody>
+                                                                                    <tr>
+                                                                                        <td>Free Days - Origin</td>
+                                                                                        <td>{{freedaysorigin}}</td>
+                                                                                        <td>{{freedaysoriginvalue}}</td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>Free Days - Destination</td>
+                                                                                        <td>{{freedaysdes}}</td>
+                                                                                        <td>{{freedaysdesvalue}}</td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>Damage Scheme</td>
+                                                                                        <td>{{damagescheme}}</td>
+                                                                                        <td>{{damageschemevalue}}</td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>Security Deposit</td>
+                                                                                        <td>{{securitydeposit}}</td>
+                                                                                        <td>{{securitydepositvalue}}</td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td>BOL Requirement</td>
+                                                                                        <td>{{bolreq}}</td>
+                                                                                        <td>{{bolreqvalue}}</td>
+                                                                                    </tr>
+                                                                                </tbody>
+
+
+                                                                            </table>
+
+                                                                        </div>
+
+                                                                    </div>-->
+
+
+
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="tab-pane pt-3 show" id="ves" role="tabpanel">
+                                                                <div class="row">
+                                                                    <div class="col-md-12 col-lg-12">
+                                                                        <div class="row">
+                                                                            <div class="col-md-4 col-lg-4">
+                                                                                <div class="form-group">
+                                                                                    <div class="row">
+                                                                                        <!--<div class="col-md-3">
+                                                                                            <label>Vessel</label>
+                                                                                        </div>-->
+                                                                                        <div class="col-md-12 col-lg-12">
+                                                                                            <div class="row">
+                                                                                                <div class="col-md-12">
+                                                                                                    <label>Vessel</label>
+                                                                                                </div>
+                                                                                                <div class="col-md-12">
+                                                                                                    <label class="lbltxt">{{vesselname}}</label>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+
+                                                                                    </div>
+
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="col-md-4 col-lg-4">
+                                                                                <div class="form-group">
+                                                                                    <div class="row">
+                                                                                        <!--<div class="col-md-3">
+                                                                                            <label>Voyage</label>
+                                                                                        </div>-->
+                                                                                        <div class="col-md-12">
+                                                                                            <div class="row">
+                                                                                                <div class="col-md-12">
+                                                                                                    <label>Voyage</label>
+                                                                                                </div>
+                                                                                                <div class="col-md-12">
+                                                                                                    <label class="lbltxt">{{voyageno}}</label>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+
+                                                                                    </div>
+
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div class="col-md-4 col-lg-4">
+                                                                                <div class="form-group">
+                                                                                    <div class="row">
+                                                                                        <!--<div class="col-md-3">
+                                                                                            <label>POL Terminal</label>
+                                                                                        </div>-->
+                                                                                        <div class="col-md-12 col-lg-12">
+                                                                                            <div class="row">
+                                                                                                <div class="col-md-12">
+                                                                                                    <label>POL Terminal</label>
+                                                                                                </div>
+                                                                                                <div class="col-md-12">
+                                                                                                    <label class="lbltxt">{{polterminal}}</label>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+
+                                                                                    </div>
+
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-4 col-lg-4">
+                                                                                <div class="form-group">
+                                                                                    <div class="row">
+                                                                                        <!--<div class="col-md-3">
+                                                                                            <label>TS Vessel</label>
+                                                                                        </div>-->
+                                                                                        <div class="col-md-12 col-lg-12">
+                                                                                            <div class="row">
+                                                                                                <div class="col-md-12">
+                                                                                                    <label>TS Vessel</label>
+                                                                                                </div>
+                                                                                                <div class="col-md-12">
+                                                                                                    <label class="lbltxt">{{tsvessel}}</label>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+
+                                                                                    </div>
+
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-md-4 col-lg-4">
+                                                                                <div class="form-group">
+                                                                                    <div class="row">
+                                                                                        <!--<div class="col-md-3">
+                                                                                            <label>TS Voyage</label>
+                                                                                        </div>-->
+                                                                                        <div class="col-md-12 col-lg-12">
+                                                                                            <div class="row">
+                                                                                                <div class="col-md-12">
+                                                                                                    <label>TS Voyage</label>
+                                                                                                </div>
+                                                                                                <div class="col-md-12">
+                                                                                                    <label class="lbltxt">{{tsvoyage}}</label>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+
+                                                                                    </div>
+
+                                                                                </div>
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+
+
+
+
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="tab-pane pt-3 show" id="princ" role="tabpanel">
+                                                                <div class="row">
+                                                                    <div class="col-md-4 col-lg-4">
+                                                                        <div class="form-group">
+                                                                            <div class="row">
+                                                                                <!--<div class="col-md-3">
+                                                                                    <label>Principal</label>
+                                                                                </div>-->
+                                                                                <div class="col-md-12 col-lg-12">
+                                                                                    <div class="row">
+                                                                                        <div class="col-md-12">
+                                                                                            <label>Principal</label>
+                                                                                        </div>
+                                                                                        <div class="col-md-12">
+                                                                                            <label class="lbltxt">{{principal}}</label>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-4 col-lg-4">
+                                                                        <div class="form-group">
+                                                                            <div class="row">
+                                                                                <!--<div class="col-md-3">
+                                                                                    <label>Customer Contract</label>
+                                                                                </div>-->
+                                                                                <div class="col-md-12 col-lg-12">
+                                                                                    <div class="row">
+                                                                                        <div class="col-md-12">
+                                                                                            <label>Customer Contract</label>
+                                                                                        </div>
+                                                                                        <div class="col-md-12">
+                                                                                            <label class="lbltxt">{{customercontractno}}</label>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+
+
+                                                                    <div class="col-md-4 col-lg-4">
+                                                                        <div class="form-group">
+                                                                            <div class="row">
+                                                                                <!--<div class="col-md-3">
+                                                                                    <label>Liner Contract</label>
+                                                                                </div>-->
+                                                                                <div class="col-md-12 col-lg-12">
+                                                                                    <div class="row">
+                                                                                        <div class="col-md-12">
+                                                                                            <label>Liner Contract</label>
+                                                                                        </div>
+                                                                                        <div class="col-md-12">
+                                                                                            <label class="lbltxt">{{linercontractno}}</label>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+
+
+
+                                                                    <div class="col-md-4 col-lg-4">
+                                                                        <div class="form-group">
+                                                                            <div class="row">
+                                                                              
+                                                                                <div class="col-md-12 col-lg-12">
+                                                                                    <div class="row">
+                                                                                        <div class="col-md-12">
+                                                                                            <label>POD Agent</label>
+                                                                                        </div>
+                                                                                        <div class="col-md-12">
+                                                                                            <label class="lbltxt">{{podagent}}</label>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-4 col-lg-4">
+                                                                        <div class="form-group">
+                                                                            <div class="row">
+                                                                               
+                                                                                <div class="col-md-12 col-lg-12">
+                                                                                    <div class="row">
+                                                                                        <div class="col-md-12">
+                                                                                            <label>FPOD Agent</label>
+                                                                                        </div>
+                                                                                        <div class="col-md-12">
+                                                                                            <label class="lbltxt">{{fpodagent}}</label>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-4 col-lg-4">
+                                                                        <div class="form-group">
+                                                                            <div class="row">
+                                                                          
+                                                                                <div class="col-md-12 col-lg-12">
+                                                                                    <div class="row">
+                                                                                        <div class="col-md-12">
+                                                                                            <label>TS Port 1 Agent</label>
+                                                                                        </div>
+                                                                                        <div class="col-md-12">
+                                                                                            <label class="lbltxt">{{tsport1}}</label>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-4 col-lg-4">
+                                                                        <div class="form-group">
+                                                                            <div class="row">
+                                                                          
+                                                                                <div class="col-md-12 col-lg-12">
+                                                                                    <div class="row">
+                                                                                        <div class="col-md-12">
+                                                                                            <label>TS Port 2 Agent</label>
+                                                                                        </div>
+                                                                                        <div class="col-md-12">
+                                                                                            <label class="lbltxt">{{tsport2}}</label>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-4 col-lg-4">
+                                                                        <div class="form-group">
+                                                                            <div class="row">
+                                                                                <div class="col-md-12 col-lg-12">
+                                                                                    <label>Ownership</label>
+                                                                                </div>
+                                                                                <div class="col-md-12 col-lg-12">
+                                                                                    <label class="lbltxt">{{ownership}}</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-4 col-lg-4">
+                                                                        <div class="form-group">
+                                                                            <div class="row">
+                                                                        
+                                                                                <div class="col-md-12 col-lg-12">
+                                                                                    <div class="row">
+                                                                                        <div class="col-md-12">
+                                                                                            <label>Slot Operator</label>
+                                                                                        </div>
+                                                                                        <div class="col-md-12">
+                                                                                            <label class="lbltxt">{{slotoperator}}</label>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="col-md-4 col-lg-4">
+                                                                        <div class="form-group">
+                                                                            <div class="row">
+                                                                                <div class="col-md-12 col-lg-12">
+                                                                                    <label>Slot Operator Fixed</label>
+                                                                                </div>
+                                                                                <div class="col-md-12 col-lg-12">
+                                                                                    <label class="lbltxt">{{fixed}}</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div>
+
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

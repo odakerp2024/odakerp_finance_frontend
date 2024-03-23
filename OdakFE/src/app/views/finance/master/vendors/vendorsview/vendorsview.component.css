@@ -1,0 +1,22 @@
+.bg-white {
+    background-color: white !important;
+}
+.b-none-imp {
+    border: none !important;
+}
+
+.badge-state-confirm {
+    color: #fff !important;
+    background-color: #395626 !important;
+    padding: 5px 0.4em !important;
+    font-size: 85% !important;
+    width: 85% !important;
+}
+
+.badge-state {
+    color: #fff !important;
+    background-color: #2f4685 !important;
+    padding: 5px 0.4em !important;
+    font-size: 85% !important;
+    width: 85% !important;
+}

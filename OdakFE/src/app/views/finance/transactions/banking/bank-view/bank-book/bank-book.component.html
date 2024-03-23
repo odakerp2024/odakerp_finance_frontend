@@ -1,0 +1,349 @@
+<div class="constiner card p-4">
+    <form [formGroup]="bankBookDetails">
+        <div class="row mb-4">
+            <div class="col-4">
+                <label class="str mb-2">Period</label>
+                <div class="d-flex">
+                    <div class="w-50 pr-2">
+                        <mat-form-field class="tillDate mat_date_picker" appearance="outline">
+                            <input matInput [formControl]="fromPeriod" (click)="fromPeriod.open()" readonly
+                                autocomplete="off" [max]="fromMaxDate" [matDatepicker]="fromPeriod" id="fromPeriod"
+                                [placeholder]="entityDateFormat" formControlName="fromPeriod">
+                            <mat-datepicker-toggle matSuffix [for]="fromPeriod"></mat-datepicker-toggle>
+                            <mat-datepicker #fromPeriod></mat-datepicker>
+                        </mat-form-field>
+                        <!-- <input type="date" name="" id="" class="py-0 w-100 pr-2 form-control" [max]="fromMaxDate"
+                            formControlName="fromPeriod"> -->
+                    </div>
+                    <div class="w-50">
+                        <mat-form-field class="tillDate mat_date_picker" appearance="outline">
+                            <input matInput (click)="toPeriod.open()" readonly autocomplete="off" [max]="toMaxDate"
+                                (change)="updateFromDate($event.target.value)" [matDatepicker]="toPeriod" id="toPeriod"
+                                [placeholder]="entityDateFormat" formControlName="toPeriod">
+                            <mat-datepicker-toggle matSuffix [for]="toPeriod"></mat-datepicker-toggle>
+                            <mat-datepicker #toPeriod></mat-datepicker>
+                        </mat-form-field>
+                        <!-- <input type="date" name="" id="" class="py-0 w-100 form-control" [max]="toMaxDate"
+                            formControlName="toPeriod" (change)="updateFromDate($event.target.value)"> -->
+                    </div>
+                </div>
+                <!-- <select class="form-control my-select">
+                    <option [value]="0" disabled>--SELECT PERIOD--</option>
+                    <option *ngFor="let division of divisionDropdown" [value]="division.ReportId">
+                        {{division.ReportName | uppercase}}
+                    </option>
+                </select> -->
+            </div>
+
+            <div class="col-4">
+                <label class="str">Division</label>
+
+
+                <mat-select formControlName="divisionId" placeholder="Select Division" class="form-control" multiple>
+                    <mat-option #allSelected (click)="toggleAllSelection()" [value]="0">All</mat-option>
+                    <ng-container *ngFor="let division of divisionDropdown">
+                        <mat-option [value]="division.ID" (click)="tosslePerOne(allSelected.viewValue)">
+                            {{division.DivisionName | uppercase}}
+                        </mat-option>
+                    </ng-container>
+                </mat-select>
+            </div>
+
+            <div class="col-4">
+                <label class="str">Office</label>
+                <mat-select [placeholder]=" officeDropdown.length ? 'Select Office' : ' Select Division'"
+                    formControlName="officeId" class="form-control" multiple>
+                    <mat-option #allSelected1 *ngIf="officeDropdown.length" (click)="toggleAllSelectionOffiece()"
+                        [value]="0">All</mat-option>
+                    <ng-container *ngFor="let office of officeDropdown">
+                        <mat-option [value]="office.ID" (click)="tosslePerOneOffice(allSelected.viewValue)">
+                            {{office.OfficeName | uppercase}}
+                        </mat-option>
+                    </ng-container>
+                </mat-select>
+            </div>
+
+            <div class="col-4">
+                <label class="str">Bank</label>
+                <!-- <select class="form-control my-select" formControlName="bankId">
+                    <option [value]="0" disabled>--SELECT BANK --</option>
+                    <option *ngFor="let bank of bankDropdown" [value]="bank.BankID">
+                        {{bank.BankName | uppercase}} -- {{bank.AccountNo}}
+                    </option>
+                </select> -->
+                <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'bankId'">
+                    <ng-option [value]="0" disabled>--SELECT BANK --</ng-option>
+                    <ng-option *ngFor="let bank of bankDropdown" [value]="bank.BankID">
+                        <span class="textwrap">{{bank.BankName | uppercase}} -- {{bank.AccountNo}}</span>
+                    </ng-option>
+                </ng-select>
+            </div>
+
+            <div class="col-3 mt-auto">
+                <button type="submit" (click)="getBankBookList()" class="btn btn-primary btn-raised mb-0 ">
+                    Search Book
+                </button>
+            </div>
+
+        </div>
+    </form>
+
+    <div class="row mb-4">
+        <div class="col-12 d-flex justify-content-between align-items-center  font-weight-bolder">
+            <div class="p-1">Balances</div>
+            <div class="p-1">Currency: <span>{{bankCurrency | uppercase}}</span></div>
+        </div>
+        <div class="col-12 table-responsive">
+            <table class="table table-bordered w-100 table-striped border-0 agingTable mt-2">
+                <thead>
+                    <tr>
+                        <th scope="col" rowspan="2">Opening Balance</th>
+                        <th scope="col" colspan="2">Period Transaction</th>
+                        <th scope="col" rowspan="2">Closing Balance</th>
+                    </tr>
+                    <tr>
+                        <th scope="col">Debit</th>
+                        <th scope="col">Credit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngIf="bankBookMiniStatement?.length; else noRecord">
+                        <tr *ngFor="let bookMiniStatement of bankBookMiniStatement;let i = index">
+                            <!-- <td>
+                                <input type="radio" (click)="OnClickRadio(i)" />
+                            </td> -->
+                            <td class="text-center">{{bookMiniStatement.OpeningBalance}}</td>
+                            <td class="text-center">{{bookMiniStatement.TotalDebit}}</td>
+                            <td class="text-center">{{bookMiniStatement.TotalSum}}</td>
+                            <td class="text-center">{{bookMiniStatement.ClosingBalance}}</td>
+                        </tr>
+                    </ng-container>
+                    <!-- no data -->
+                    <ng-template #noRecord>
+                        <tr>
+                            <td class="text-center" colspan="4" style="height: 100px;">No records found</td>
+                        </tr>
+                    </ng-template>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+
+    <div class="row">
+        <div class="col-12">
+            <div class="row p-0">
+                <div class="col"></div>
+                <div class="col text-center font-weight-bolder">
+                    BANK BOOK – FROM :{{this.bankBookDetails.value.fromPeriod | date:
+                    commonService.convertToLowerCaseDay(entityDateFormat)}} TO
+                    {{this.bankBookDetails.value.toPeriod
+                    | date: commonService.convertToLowerCaseDay(entityDateFormat)}}
+                </div>
+                <div class="col text-right font-weight-bolder d-flex justify-content-end">
+                    <div>
+                        Export as:
+                    </div>
+                    <div>
+                        <img width="22px" height="22px" class="exportAs mx-1 align-baseline"
+                            src="../../../../assets/images/icon/file-pdf-solid.jpeg" (click)="downloadAsPDF()"
+                            alt="logo">
+                        <img width="22px" height="22px" class="exportAs mx-1 align-baseline"
+                            src="../../../../assets/images/icon/file-csv-solid.jpeg" (click)="downloadAsCSV()"
+                            alt="logo">
+                        <img width="22px" height="22px" class="exportAs mx-1 align-baseline"
+                            src="../../../../assets/images/icon/file-excel-solid.jpeg" (click)="downloadAsExcel()"
+                            alt="logo">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-3"></div>
+    </div>
+    <div class="row  mb-5"></div>
+    <form [formGroup]="filterForm" class="">
+        <div class="row">
+
+            <div class="col-3 m-auto ">
+
+                <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'SearchBy'"
+                    (ngModelChange)="resetValue()">
+                    <ng-option [value]="''" disabled>--SELECT REPORT TYPE--</ng-option>
+                    <ng-option *ngFor="let column of filterColumnNames" [value]="column.name">
+                        <span class="textwrap">{{column.display_name | uppercase}}</span>
+                    </ng-option>
+                </ng-select>
+            </div>
+
+
+            <div class="col text-center font-weight-bolder">
+                <div class="form-group bmd-form-group">
+                    <input type="date" *ngIf="filterForm.value.SearchBy === 'Date'" formControlName="SearchByValue"
+                        class="w-100 pl-2 pt-0 pb-0 pr-0 form-control">
+                    <input type="text"
+                        *ngIf="filterForm.value.SearchBy !== 'Date' && filterForm.value.SearchBy !== 'ReconcileStatus'"
+                        name="" formControlName="SearchByValue" id="" class="w-100 pl-2">
+                    <select class="form-control my-select" formControlName="SearchByValue"
+                        *ngIf="filterForm.value.SearchBy !== 'Date' && filterForm.value.SearchBy == 'ReconcileStatus'">
+                        <option [value]="0" disabled>--SELECT TYPE --</option>
+                        <option [value]="1">
+                            Reconcile
+                        </option>
+                        <option [value]="0">
+                            Un-reconcile
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="col text-right font-weight-bolder d-flex justify-content-end">
+                <button type="submit" style="padding: 2px 0px !important;width: 35%;font-size: 14px !important;"
+                    (click)="filter()" class="btn btn-primary btn-raised mb-0">
+                    Search
+                </button>
+                <button style="padding: 2px 0px !important;width: 35%;font-size: 14px !important;"
+                    class="btn btn-raised btn-danger mb-0" (click)="filterFormCreate();getBankBookList();">
+                    Clear
+                </button>
+            </div>
+
+        </div>
+    </form>
+    <div class="row  mb-3"></div>
+    <div class="row mb-4">
+        <div class="col-12 table-responsive">
+            <table id="bankBookTable" class="table  table-bordered w-100 table-striped border-0 agingTable mt-2">
+                <thead>
+                    <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">Voucher</th>
+                        <th scope="col">Party</th>
+                        <th scope="col">Payment Mode</th>
+                        <th scope="col">Reference #</th>
+                        <th scope="col">Bank Date</th>
+                        <th scope="col">Debit</th>
+                        <th scope="col">Credit</th>
+                        <th scope="col">Reconciliation Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <ng-container *ngIf="bankBookCountPagedItems?.length; else noRecord1">
+                        <tr *ngFor="let backBookCount of bankBookCountPagedItems;let i = index">
+                            <td class="text-center">{{backBookCount.Date | date :
+                                commonService.convertToLowerCaseDay(entityDateFormat)}}</td>
+                            <td class="text-center">{{backBookCount.Voucher}}</td>
+
+                            <td class="text-center" [title]="backBookCount.Party | uppercase">
+                                {{ (backBookCount.Party && backBookCount.Party.length > 20) ?
+                                backBookCount.Party.slice(0, 20) + '-' : backBookCount.Party }}
+                            </td>
+
+                            <!-- <td class="text-center">{{backBookCount.Party}}</td> -->
+                            <td class="text-center">{{backBookCount.PaymentType}}</td>
+                            <td class="text-center">{{backBookCount.Reference ? backBookCount.Reference : '-'}}</td>
+                            <td class="text-center">{{backBookCount.FinalDate | date :
+                                commonService.convertToLowerCaseDay(entityDateFormat)}}</td>
+                            <td class="text-center">
+                                {{ backBookCount.VoucherName == 'Receipt Voucher' ? backBookCount.Debit: '-' }}
+                            </td>
+                            <td class="text-center">
+                                {{backBookCount.VoucherName == 'Payment Voucher' ? backBookCount.Credit: '-' }}
+                            </td>
+                            <td
+                                [ngClass]="backBookCount.ReconcileStatus == true ? 'badge badge-state-confirm' : 'badge badge-state'">
+                                {{backBookCount.ReconcileStatus? 'Reconcile' : 'Un-reconcile'}}
+                            </td>
+                            <!-- <td class="text-center">{{backBookCount.ReconcileStatus? 'Reconcile' : 'Un-reconcile'}}</td> -->
+                        </tr>
+                    </ng-container>
+                    <!-- no data -->
+                    <ng-template #noRecord1>
+                        <tr>
+                            <td class="text-center" colspan="9" style="height: 100px;">No records found</td>
+                        </tr>
+                    </ng-template>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div>
+        <div class="row page mb-3" *ngIf="bankBookCountPagedItems1?.length > 10">
+            <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10" class="pagination mt-2 mb-0">
+                <li [ngClass]="{disabled:pager.currentPage === 1}">
+                    <a (click)="setPage(1)">First</a>
+                </li>
+                <li [ngClass]="{disabled:pager.currentPage === 1}">
+                    <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+                </li>
+                <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                    <a (click)="setPage(page)">{{page}}</a>
+                </li>
+                <li *ngIf="(pager.totalPages - pager.startPage) > 5 ">
+                    <a (click)="setPage(pager.startPage + 5)">...</a>
+                </li>
+                <li *ngIf="(pager.totalPages - pager.startPage) > 5">
+                    <a (click)="setPage(pager.totalPages)">{{pager.totalPages}}</a>
+                </li>
+                <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                    <a (click)="setPage(pager.currentPage + 1)">Next</a>
+                </li>
+                <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                    <a (click)="setPage(pager.totalPages)">Last</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- <div class="col-3"> -->
+    <!-- Filter -->
+    <!-- <form [formGroup]="filterForm" class="">
+                <div class="card">
+                    <div class="row p-3">
+                        <div class="col-12 mt-2">
+                            <div class="form-group bmd-form-group">
+                                <select class="form-control my-select" formControlName="SearchBy"
+                                    (ngModelChange)="resetValue()">
+                                    <option [value]="''" disabled>--SELECT REPORT TYPE--</option>
+                                    <option *ngFor="let column of filterColumnNames" [value]="column.name">
+                                        {{column.display_name | uppercase}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-12">
+
+                            <div class="form-group bmd-form-group">
+                                <input type="date" *ngIf="filterForm.value.SearchBy === 'Date'"
+                                    formControlName="SearchByValue" class="w-100 pl-2 pt-0 pb-0 pr-0 form-control">
+                                <input type="text"
+                                    *ngIf="filterForm.value.SearchBy !== 'Date' && filterForm.value.SearchBy !== 'ReconcileStatus'"
+                                    name="" formControlName="SearchByValue" id="" class="w-100 pl-2">
+                                <select class="form-control my-select" formControlName="SearchByValue"
+                                    *ngIf="filterForm.value.SearchBy !== 'Date' && filterForm.value.SearchBy == 'ReconcileStatus'">
+                                    <option [value]="0" disabled>--SELECT TYPE --</option>
+                                    <option [value]="1">
+                                        Reconcile
+                                    </option>
+                                    <option [value]="0">
+                                        Un-reconcile
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12 searchbtn alrt text-center mt-3">
+                            <button type="submit"
+                                style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;"
+                                (click)="filter()" class="btn btn-primary btn-raised mb-0">
+                                Search
+                            </button>
+                            <button style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;"
+                                class="btn btn-raised btn-danger mb-0" (click)="filterFormCreate();getBankBookList();">
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form> -->
+    <!-- </div> -->
+    <!-- </div>
+</div> -->

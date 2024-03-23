@@ -1,0 +1,146 @@
+<div class="row headtitle">
+    <div class="col-md-9">
+        <h4>Component Master</h4>
+    </div>
+    <div class="col-md-3 alrt">
+        <button type="button" class="btn btn-success btntop btn-raised bmd-btn-edit" [routerLink]="['/views/masters/LAmaster/componentmaster/componentmaster']"><i class="material-icons editicon">add</i><div class="ripple-container"></div></button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-9">
+        <div class="card m-b-30">
+            <div class="card-body leftcard">
+                <div id="datatable-buttons_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+                    <div class="row">
+                        <div class="col-md-12" style="text-align:right;">
+                            <span style="font-size:13px; margin-right:0px;">Download</span><a ng-click="btnPrint();" style="color:#18aa08;font-size:16px; margin-right:20px;"> <i class="fa fa-file-excel-o"></i></a>
+                        </div>
+                        <div class="col-sm-12">
+                            <table id="datatable-buttons" class="table table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                <thead>
+                                    <tr role="row">
+                                        <th class="actwid" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" style="width: 177.575px;">
+                                            S.No
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" style="width: 177.575px;" (click)="sort('ComponentCode')">
+                                            Component Code
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" style="width: 177.575px;" (click)="sort('ComponentDescription')">
+                                            Component Description
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" style="width: 177.575px;" (click)="sort('Assembly')">
+                                            Assembly
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" style="width: 50px;" (click)="sort('StatusResult')">
+                                            Status
+                                        </th>
+                                        <th class="actwid" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 129.95px;">Action</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    <tr *ngFor="let dataItem of pagedItems ;
+                                        let i = index" (mouseover)="highlightRow(dataItem)"
+                                        [ngClass]="{'highlight' : dataItem.ComponentCode == selectedName}">
+                                        <td> {{ i + 1 }}</td>
+                                        <td>{{dataItem.ComponentCode}}</td>
+                                        <td>{{dataItem.ComponentDescription}}</td>
+                                        <td>{{dataItem.Assembly}}</td>
+                                        <td>{{dataItem.StatusResult}}</td>
+                                        <td class="alc">
+                                            <button class="btn btn-success bmd-btn-fab" [routerLink]="['/views/masters/LAmaster/componentmaster/componentmaster']" [queryParams]="{id: dataItem.ID}" queryParamsHandling="merge">
+                                                <i class="material-icons">edit</i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row page" align="right">
+                        <div class="col-md-12 alrt">
+
+                            <!-- pager -->
+                            <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10" class="pagination">
+                                <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                    <a (click)="setPage(1)">First</a>
+                                </li>
+                                <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                    <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+                                </li>
+                                <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                                    <a (click)="setPage(page)">{{page}}</a>
+                                </li>
+                                <li *ngIf="(pager.totalPages - pager.startPage) > 5 ">
+                                    <a (click)="setPage(pager.startPage + 5)">...</a>
+                                </li>
+                                <li *ngIf="(pager.totalPages - pager.startPage) > 5">
+                                    <a (click)="setPage(pager.totalPages)">{{pager.totalPages}}</a>
+                                </li>
+
+                                <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                    <a (click)="setPage(pager.currentPage + 1)">Next</a>
+                                </li>
+                                <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                    <a (click)="setPage(pager.totalPages)">Last</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!--<pagination-controls (pageChange)="p = $event" class="float-right"></pagination-controls>-->
+                        <!--<pagination-controls (pageChange)="p = $event" class="float-right"></pagination-controls>-->
+                        <!--<div class="col-sm-12 col-md-5"><div class="dataTables_info" id="datatable-buttons_info" role="status" aria-live="polite">Showing 1 to 10 of 57 entries</div></div><div class="col-sm-12 col-md-7"><div class="dataTables_paginate paging_simple_numbers" id="datatable-buttons_paginate"><ul class="pagination"><li class="paginate_button page-item previous disabled" id="datatable-buttons_previous"><a href="#" aria-controls="datatable-buttons" data-dt-idx="0" tabindex="0" class="page-link">Previous</a></li><li class="paginate_button page-item active"><a href="#" aria-controls="datatable-buttons" data-dt-idx="1" tabindex="0" class="page-link">1</a></li><li class="paginate_button page-item "><a href="#" aria-controls="datatable-buttons" data-dt-idx="2" tabindex="0" class="page-link">2</a></li><li class="paginate_button page-item "><a href="#" aria-controls="datatable-buttons" data-dt-idx="3" tabindex="0" class="page-link">3</a></li><li class="paginate_button page-item "><a href="#" aria-controls="datatable-buttons" data-dt-idx="4" tabindex="0" class="page-link">4</a></li><li class="paginate_button page-item "><a href="#" aria-controls="datatable-buttons" data-dt-idx="5" tabindex="0" class="page-link">5</a></li><li class="paginate_button page-item "><a href="#" aria-controls="datatable-buttons" data-dt-idx="6" tabindex="0" class="page-link">6</a></li><li class="paginate_button page-item next" id="datatable-buttons_next"><a href="#" aria-controls="datatable-buttons" data-dt-idx="7" tabindex="0" class="page-link">Next</a></li></ul></div></div>-->
+                    </div>
+                    <!--<div class="row"><div class="col-sm-12 col-md-5"><div class="dataTables_info" id="datatable-buttons_info" role="status" aria-live="polite">Showing 1 to 10 of 40 entries</div></div><div class="col-sm-12 col-md-7"><div class="dataTables_paginate paging_simple_numbers" id="datatable-buttons_paginate"><ul class="pagination"><li class="paginate_button page-item previous disabled" id="datatable-buttons_previous"><a href="#" aria-controls="datatable-buttons" data-dt-idx="0" tabindex="0" class="page-link">Previous</a></li><li class="paginate_button page-item active"><a href="#" aria-controls="datatable-buttons" data-dt-idx="1" tabindex="0" class="page-link">1</a></li><li class="paginate_button page-item "><a href="#" aria-controls="datatable-buttons" data-dt-idx="2" tabindex="0" class="page-link">2</a></li><li class="paginate_button page-item "><a href="#" aria-controls="datatable-buttons" data-dt-idx="3" tabindex="0" class="page-link">3</a></li><li class="paginate_button page-item "><a href="#" aria-controls="datatable-buttons" data-dt-idx="4" tabindex="0" class="page-link">4</a></li><li class="paginate_button page-item "><a href="#" aria-controls="datatable-buttons" data-dt-idx="5" tabindex="0" class="page-link">5</a></li><li class="paginate_button page-item "><a href="#" aria-controls="datatable-buttons" data-dt-idx="6" tabindex="0" class="page-link">6</a></li><li class="paginate_button page-item next" id="datatable-buttons_next"><a href="#" aria-controls="datatable-buttons" data-dt-idx="7" tabindex="0" class="page-link">Next</a></li></ul></div></div></div>-->
+                </div>
+            </div>
+        </div>
+    </div> <!-- end col -->
+
+    <div class="col-md-3">
+        <form [formGroup]="searchForm">
+            <div class="card m-b-30 sidesearch">
+                <div class="card-body cpad">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group">
+                                <input type="text" formControlName="ComponentCode" class="form-control" placeholder="Component Code">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group">
+                                <input type="text" formControlName="ComponentDescription" class="form-control" placeholder="Component Description">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group">
+                                <select class="form-control my-select">
+                                    <option hidden value="" disabled selected>Assembly</option>
+                                    <option *ngFor="let arow of dsassemblyItem" [value]="arow.ID">
+                                        {{arow.Assembly}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group bmd-form-group">
+                                <select class="form-control my-select">
+                                    <option hidden value="" disabled selected>Status</option>
+                                    <option *ngFor="let status of statusvalues" [value]="status.value">
+                                        {{status.viewValue}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12 searchbtn alrt">
+                            <button type="submit" (click)="onSubmit()" class="btn btn-primary btn-raised mb-0">Search<div class="ripple-container"></div></button>
+                            <button type="submit" (click)="clearSearch()" class="btn btn-raised btn-danger mb-0">Clear<div class="ripple-container"></div></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

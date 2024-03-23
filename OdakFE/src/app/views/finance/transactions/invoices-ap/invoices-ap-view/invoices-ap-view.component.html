@@ -1,0 +1,204 @@
+<div class="p-4">
+    <div class="row headtitle">
+        <div class="col-9 d-flex justify-content-between">
+            <span class="mt-auto">
+                <h4>Invoice Setoff AP</h4>
+            </span>
+            <button (click)="CreateNew()" class="btn btn-success btn-raised bmd-btn-edit">
+                <i class="material-icons editicon">add</i>
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <!-- Table View -->
+        <div class="col-sm-12 col-md-9">
+            <div class=" mr-3 card">
+                <div class="row">
+                    <div class="col-12">
+                        <table
+                            class="table table-responsive   table-bordered w-100 table-striped  p-3 mt-3 border-0 text-center">
+                            <thead>
+                                <tr role="row">
+                                    <th id="th1" tabindex="0">
+                                        AP Set Off Reference #
+                                    </th>
+                                    <th id="th2">
+                                        Setoff Date
+                                    </th>
+                                    <th id="th3">
+                                        Vendor
+                                    </th>
+                                    <th id="th4" scope="col">Amount</th>
+                                    <th id="th5">
+                                        Status
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-container *ngIf="pagedItems?.length != 0; else noRecord">
+                                    <tr *ngFor="let invoiceAP of pagedItems;let i = index">
+                                        <td (click)="editInvoice(invoiceAP.OutStandingInvoiceId)"
+                                            style="color: #0366d6;cursor: pointer;">
+                                            {{invoiceAP.ReferenceNo}}
+                                        </td>
+                                        <td>{{invoiceAP.OutStandingReferenceDate | date :commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td>
+                                        
+                                        <td [title]="invoiceAP.Vendor | uppercase">
+                                            {{ (invoiceAP.Vendor && invoiceAP.Vendor.length > 20) ?invoiceAP.Vendor.slice(0, 20) + '-' : invoiceAP.Vendor }}
+                                          </td>
+                                          
+                                        <!-- <td>{{invoiceAP.Vendor}}</td> -->
+                                        <td>{{invoiceAP.Amount}}</td>
+                                        <td>
+                                            <div
+                                        [ngClass]="invoiceAP.Status == 'Confirmed' ? 'badge badge-state-confirm' : invoiceAP.Status == 'Cancelled' ? 'badge badge-state-cancel' : 'badge badge-state'">
+                                        {{invoiceAP.Status |
+                                            uppercase}}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </ng-container>
+                                <ng-template #noRecord>
+                                    <tr>
+                                        <td class="text-center" colspan="5">No records found</td>
+                                    </tr>
+                                </ng-template>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                <div class="row page w-100 justify-content-end">
+                    <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10" class="pagination">
+                        <li [ngClass]="{disabled:pager.currentPage === 1}">
+                            <a (click)="setPage(1)">First</a>
+                        </li>
+                        <li [ngClass]="{disabled:pager.currentPage === 1}">
+                            <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+                        </li>
+                        <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                            <a (click)="setPage(page)">{{page}}</a>
+                        </li>
+                        <li *ngIf="(pager.totalPages - pager.startPage) > 5 ">
+                            <a (click)="setPage(pager.startPage + 5)">...</a>
+                        </li>
+                        <li *ngIf="(pager.totalPages - pager.startPage) > 5">
+                            <a (click)="setPage(pager.totalPages)">{{pager.totalPages}}</a>
+                        </li>
+
+                        <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                            <a (click)="setPage(pager.currentPage + 1)">Next</a>
+                        </li>
+                        <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                            <a (click)="setPage(pager.totalPages)">Last</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter -->
+        <div class="col-sm-12 col-xs-12 col-md-3 card">
+            <form [formGroup]="filterForm" class="">
+                <div class="row pt-4">
+                    <div class="col-12">
+                        <div class="form-group bmd-form-group">
+                            <input type="text" class="w-100" formControlName="ReferenceNo"
+                                placeholder="AP set off Reference #" />
+                        </div>
+                    </div>
+
+                    <!-- <div class="col-12">
+                        <div class="form-group bmd-form-group">
+                            <input [max]="minDate" type="date" class="w-100 p-0 pl-2"
+                                formControlName="OutStandingReferenceDate" />
+                        </div>
+                    </div> -->
+
+                    <div class="col-md-12" style="margin-top: -7px;">
+                        <div class="form-group bmd-form-group">
+                           <div class="row">
+                                <div class="col-md-6">
+                                 <label class=" mb-3">From</label>
+                                 <div class="input-group">
+                                    <mat-form-field  class="tillDate mat_date_picker"  appearance="outline">
+                                        <input matInput (click)="StartDate.open()" readonly autocomplete="off"  [max]="validTillMinDate"  [matDatepicker]="StartDate"  id="StartDate" [placeholder]="entityDateFormat" formControlName="StartDate">
+                                        <mat-datepicker-toggle matSuffix [for]="StartDate"></mat-datepicker-toggle>
+                                        <mat-datepicker #StartDate></mat-datepicker>
+                                    </mat-form-field>
+                                 <!-- <input formControlName="StartDate" (change)="invoicevent($event.target.value)" [max]="minDate"  type="date" class="form-control"
+                                 placeholder="voucher Date" /> -->
+                                </div>
+                                </div>
+                                 <div class="col-md-6">
+                                   <label class=" mb-3">Till</label>
+                                   <div class="input-group">
+                                    <mat-form-field class="tillDate mat_date_picker"  appearance="outline" >
+                                        <input matInput (click)="EndDate.open()" readonly autocomplete="off" [min]="filterForm.get('StartDate').value"[matDatepicker]="EndDate"  id="EndDate" [placeholder]="entityDateFormat" formControlName="EndDate">
+                                        <mat-datepicker-toggle matSuffix [for]="EndDate"></mat-datepicker-toggle>
+                                        <mat-datepicker #EndDate></mat-datepicker>
+                                    </mat-form-field>
+                                   <!-- <input formControlName="EndDate" [min]="validTillMinDate" type="date" class="form-control"
+                                   placeholder=" voucher Date" /> -->
+                                   </div>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                    
+                    <div class="col-12">
+                        <div class="form-group bmd-form-group">
+                            <!-- <select class="form-control my-select" formControlName="PartyId">
+                                <option value='0' disabled>--SELECT VENDOR--</option>
+                                <option *ngFor="let vendor of vendorsList" [value]="vendor.VendorID">
+                                    {{vendor.VendorName | uppercase}}
+                                </option>
+                            </select> -->
+                            <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'PartyId'">
+                                <ng-option [value]="0" disabled>--SELECT VENDOR--</ng-option>
+                                <ng-option *ngFor="let vendor of vendorsList" [value]="vendor.VendorID">
+                                    <span class="textwrap"> {{vendor.VendorName | uppercase}}</span>
+                                </ng-option>
+                            </ng-select> 
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-group bmd-form-group">
+                            <input class="w-100" placeholder="Amount" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+                                formControlName="TotalDebitAmount" />
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-group bmd-form-group">
+                            <!-- <select class="form-control my-select" formControlName="StatusId">
+                                <option value='0' disabled>--SELECT STATUS--</option>
+                                <option *ngFor="let data of statusList" [value]='data.Id'>{{data.StatusName |
+                                    uppercase}}</option>
+                            </select> -->
+                           <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'StatusId'">
+                                <ng-option [value]="0" disabled>--SELECT STATUS--</ng-option>
+                                <ng-option *ngFor="let data of statusList" [value]='data.Id'>
+                                    <span class="textwrap">{{data.StatusName |
+                                        uppercase}}</span>
+                                </ng-option>
+                            </ng-select> 
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 searchbtn alrt text-center mb-3 mt-3">
+                        <button type="submit" style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;"
+                            (click)="getAPListInfo()" class="btn btn-primary btn-raised mb-0">
+                            Search
+                        </button>
+                        <button style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;"
+                            class="btn btn-raised btn-danger mb-0" (click)="createFilterForm();getAPListInfo()">
+                            Clear
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

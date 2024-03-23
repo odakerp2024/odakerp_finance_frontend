@@ -1,0 +1,159 @@
+<div class="row headtitle">
+    <div class="col-md-9 col-sm-9 col-lg-9 col-xl-9">
+        <h4>Port Master</h4>
+    </div>
+    <div class="col-md-3 col-sm-3 col-lg-3 col-xl-3 alrt">
+        <button type="button" class="btn btn-success btn-raised btntop bmd-btn-edit" (click)="onBack()"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+    </div>
+</div>
+
+<form [formGroup]="portForm">
+
+<div class="card">
+    <div class="card-body ">
+        <div class="row">
+            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                            <label class="str">Port Code</label>
+                        </div>
+                        <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                        <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                            <input type="text" id="PortCode" name="PortCode" autocomplete="off" formControlName="PortCode" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                            <label class="str">Port Name</label>
+                        </div>
+                        <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                        <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                            <input type="text" formControlName="PortName" autocomplete="off" name="PortName" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                            <label class="str">Country </label>
+                        </div>
+                        <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                        <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+
+
+                            <select class="form-control my-select" id="ddlCountry" name="ddlCountry" formControlName="CountryID" (ngModelChange)="CountryChange()">
+                                <option *ngFor="let gRow of dscountryItem" [value]="gRow.ID">
+                                    {{gRow.CountryName}}
+                                </option>
+
+                            </select>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                            <label>Office Location</label>
+                        </div>
+                        <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                        <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                            <select class="form-control my-select" id="ddlGeoLocation" formControlName="OffLocID">
+                                <option *ngFor="let gRow of ddGeoLocationItem" [value]="gRow.ID">
+                                    {{gRow.OfficeLoc}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--<div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                    <label>Main Ports</label>
+                </div>
+                <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                    <select class="form-control"></select>
+                </div>
+            </div>
+        </div>
+    </div>-->
+
+
+            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-4 col-lg-4 col-xl-4">
+                            <label>Status</label>
+                        </div>
+                        <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                        <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7">
+                            <select class="form-control my-select" id="ddlStatus" formControlName="Status">
+                                <option *ngFor="let status of statusvalues" [value]="status.value">
+                                    {{status.viewValue}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 col-xl-3">
+                <div class="form-group">
+                    <div class="row">
+
+                        <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                            <span class="bmd-form-group is-filled is-focused">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" id="SeaChk" ng-true-value="1" ng-false-value="0" formControlName="IsSeaPort"><span class="checkbox-decorator">
+                                            <span class="check"></span>
+                                            <div class="ripple-container"></div>
+                                        </span> Sea Port
+                                    </label>
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-lg-3 col-xl-3">
+                <div class="form-group">
+                    <div class="row">
+
+                        <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                            <span class="bmd-form-group is-filled is-focused">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" ng-true-value="1" ng-false-value="0" formControlName="IsICDPort"><span class="checkbox-decorator"><span class="check"></span><div class="ripple-container"></div></span> ICD Port
+                                    </label>
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer ">
+        <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12" style="text-align:right;">
+            <button type="submit" (click)="onSubmit()"  class="btn btn-primary btn-raised mb-0">Submit</button>
+        </div>
+        <!--<input type="hidden" id="HDRegId" formControlName="HDRegId" />-->
+    </div>
+</div>
+
+</form>

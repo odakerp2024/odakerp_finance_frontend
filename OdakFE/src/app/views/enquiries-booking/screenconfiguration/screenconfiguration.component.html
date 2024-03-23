@@ -1,0 +1,112 @@
+<div class="row headtitle">
+    <div class="col-md-9">
+        <h4>Screen Configuration</h4>
+    </div>
+
+    <div class="col-md-3 alrt">
+
+        <button type="button" class="btn btn-success btn-raised bmd-btn-edit btntop" [routerLink]="['/views/enquiries-booking/customercontract/customercontract/']"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="card m-b-30">
+            <div class="card-body">
+
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="str">Search Type</label>
+                                    <select class="form-control"></select>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="str">Status</label>
+                                    <select class="form-control"></select>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2 searchbtn alrt padlr0" style="padding-top:21px!important;">
+
+                        <button type="submit" (click)="onClear()" class="btn btn-danger btn-raised mb-0">Clear<div class="ripple-container"></div></button>
+                        <button type="submit" (click)="onSubmit()" class="btn btn-primary btn-raised mb-0">Search<div class="ripple-container"></div></button>
+                        <button type="button" class="btn btn-success btn-raised bmd-btn-edit btntop" [routerLink]="['/views/enquiries-booking/customercontract/customercontract/']"><i class="material-icons editicon">add</i></button>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 scrtbl">
+                        <table id="datatable-buttons" class="table table-striped table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                            <thead>
+                                <tr role="row">
+                                    <th>
+                                        Screen
+                                    </th>
+                                    <th>
+                                        Status
+                                    </th>
+                                    <th class="actwid">Action</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                <tr>
+                                    <td>Enquiry</td>
+                                    <td>Active</td>
+                                    <td>
+                                        <button class="btn btn-success bmd-btn-fab" [routerLink]="['/views/masters/LAmaster/agencymaster/agencymaster']">
+                                            <i class="material-icons">add</i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Principal Rate Approval</td>
+                                    <td>Active</td>
+                                    <td>
+                                        <button class="btn btn-success bmd-btn-fab" [routerLink]="['/views/masters/LAmaster/agencymaster/agencymaster']">
+                                            <i class="material-icons">add</i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Customer Contract</td>
+                                    <td>Active</td>
+                                    <td>
+                                        <button class="btn btn-success bmd-btn-fab" [routerLink]="['/views/masters/LAmaster/agencymaster/agencymaster']">
+                                            <i class="material-icons">add</i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+
+
+</div>
+
+
+
+
+

@@ -1,0 +1,409 @@
+<div class="row headtitle">
+
+    <div class="col-md-9 col-sm-9  col-lg-9 col-xl-9">
+        <h4>Voyage Master</h4>
+    </div>
+    <div class="col-md-3 col-sm-3  col-lg-3 col-xl-3 alrt">
+        <button type="button" class="btn btn-success bmd-btn-edit btn-raised btntop" [routerLink]="['/views/masters/LAmaster/voyage/voyageview']"><i class="material-icons editicon">reply</i><div class="ripple-container"></div></button>
+    </div>
+
+</div>  
+
+
+<div class="row forms">
+    <div class="col-md-12 col-sm-12  col-lg-12 col-xl-12 padlr0">
+        <form [formGroup]="Voyageform">
+            <div class="tab-content" style="padding:0;">
+                <div class="tab-pane pt-3 active show" id="Enquiry" role="tabpanel">
+                    <div class="col-md-12 col-sm-12  col-lg-12 col-xl-12" style="border-bottom: 2px dashed #de703a69; margin-bottom: 15px; padding-bottom: 10px;">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12  col-lg-12 col-xl-12">
+                                <h4 class="enqtitle">Sailing Details</h4>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-3 col-sm-3  col-lg-3 col-xl-3">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12  col-lg-12 col-xl-12">
+                                            <label class="str">Vessel</label>
+                                            <select name="Country_name" id="ddlVessel" formControlName="VesselID" class="form-control my-select">
+                                                <option *ngFor="let gRow of ddlVesselItem" [value]="gRow.ID">
+                                                    {{gRow.VesselName}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-3  col-lg-3 col-xl-3">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12  col-lg-12 col-xl-12">
+                                            <label class="str">Voyage Number</label>
+                                            <input type="text" formControlName="VoyageNo" autocomplete="off" class="form-control" />
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 col-sm-3  col-lg-3 col-xl-3">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12  col-lg-12 col-xl-12">
+                                            <label class="str">ETA</label>
+                                            <mat-form-field  class="paymentDate">
+                                                <input matInput (click)="ETA.open()" readonly autocomplete="off" [matDatepicker]="ETA"  id="ETA" placeholder="" formControlName="ETA">
+                                                <mat-datepicker-toggle matSuffix [for]="ETA"></mat-datepicker-toggle>
+                                                <mat-datepicker #ETA></mat-datepicker>
+                                            </mat-form-field>
+                                            <!-- <input type="date" formControlName="ETA" autocomplete="off" class="form-control" /> -->
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 col-sm-3  col-lg-3 col-xl-3">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12  col-lg-12 col-xl-12">
+                                            <label>ETD</label>
+                                            <mat-form-field  class="paymentDate">
+                                                <input matInput (click)="ETD.open()" readonly autocomplete="off" [matDatepicker]="ETD"  id="ETD" placeholder="" formControlName="ETD">
+                                                <mat-datepicker-toggle matSuffix [for]="ETD"></mat-datepicker-toggle>
+                                                <mat-datepicker #ETD></mat-datepicker>
+                                            </mat-form-field>
+                                            
+                                            <!-- <input type="date" formControlName="ETD" autocomplete="off" class="form-control" /> -->
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-3  col-lg-3 col-xl-3">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12  col-lg-12 col-xl-12">
+                                            <label>ATA</label>
+                                            <mat-form-field  class="paymentDate">
+                                                <input matInput (click)="ATA.open()" readonly autocomplete="off" [matDatepicker]="ATA"  id="ATA" placeholder="" formControlName="ATA">
+                                                <mat-datepicker-toggle matSuffix [for]="ATA"></mat-datepicker-toggle>
+                                                <mat-datepicker #ATA></mat-datepicker>
+                                            </mat-form-field>
+                                            <!-- <input type="date" formControlName="ATA" autocomplete="off" class="form-control" /> -->
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 col-sm-3  col-lg-3 col-xl-3">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12  col-lg-12 col-xl-12">
+                                            <label>ATD</label>
+                                            <mat-form-field class="paymentDate" >
+                                                <input matInput (click)="ATD.open()" readonly autocomplete="off" [matDatepicker]="ATD"  id="ATD" placeholder="" formControlName="ATD">
+                                                <mat-datepicker-toggle matSuffix [for]="ATD"></mat-datepicker-toggle>
+                                                <mat-datepicker #ATD></mat-datepicker>
+                                            </mat-form-field>
+                                            <!-- <input type="date" formControlName="ATD" autocomplete="off" class="form-control" /> -->
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-3 col-sm-3  col-lg-3 col-xl-3">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12  col-lg-12 col-xl-12">
+                                            <label class="str">Port</label>
+                                            <select name="Country_name" id="ddlPort" formControlName="PortID" class="form-control my-select">
+                                                <option *ngFor="let gRow of ddlPortValues" [value]="gRow.ID">
+                                                    {{gRow.PortName}}
+                                                </option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-3  col-lg-3 col-xl-3">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12  col-lg-12 col-xl-12">
+                                            <label>Cut Off Date</label>
+                                            <mat-form-field  class="paymentDate">
+                                                <input matInput autocomplete="off" [matDatepicker]="CutOffDate"  id="CutOffDate" placeholder="" formControlName="CutOffDate">
+                                                <mat-datepicker-toggle matSuffix [for]="CutOffDate"></mat-datepicker-toggle>
+                                                <mat-datepicker #CutOffDate></mat-datepicker>
+                                            </mat-form-field>
+                                            <!-- <input type="date" formControlName="CutOffDate" autocomplete="off" class="form-control" /> -->
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!--<div class="col-md-3 col-sm-3  col-lg-3 col-xl-3">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12  col-lg-12 col-xl-12">
+                                            <label class="str">Rotation No</label>
+                                            <input type="number" formControlName="RotationNo" autocomplete="off" class="form-control" />
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>-->
+
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-md-12 col-sm-12  col-lg-12 col-xl-12" style="border-bottom: 2px dashed #de703a69; margin-bottom: 15px; padding-bottom: 10px;">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6  col-lg-6 col-xl-6">
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12  col-lg-12 col-xl-12">
+                                        <h4 class="enqtitle">Terminal</h4>
+                                    </div>
+                                    <div class="col-md-12 col-sm-12  col-lg-12 col-xl-12 conttbl">
+
+                                        <div class="material-datatables">
+                                            <table class="table table-striped table-bordered table-hover" cellspacing="0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>S.No</th>
+                                                        <th style="width:50%!important;">Terminal Name</th>
+                                                        <th>Rotation No</th>
+                                                        <th class="actwid">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+
+                                                        </td>
+                                                        <td class="other">
+
+                                                            <!--<input type="hidden" id="HDIDv" class="form-control" [(ngModel)]="TID" />-->
+                                                            <select class="form-control my-select" [(ngModel)]="TerminalID" id="ddlTerminal" [ngModelOptions]="{standalone: true}">
+                                                                <option *ngFor="let gRow of ddlterminalItem" [value]="gRow.ID">
+                                                                    {{gRow.TerminalName}}
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            
+                                                            <input type="number" id="txtRotationNo" [(ngModel)]="RotationNo" autocomplete="off" class="form-control" [ngModelOptions]="{standalone: true}" />
+                                                        </td>
+
+                                                        <td class="actwid" style="width:initial!important;">
+                                                            <button type="submit" (click)="AddTerminal();" class="btn btn-success bmd-btn-fab"><i class="material-icons">add</i></button>
+                                                               
+                                                           
+
+                                                        </td>
+                                                    </tr>
+                                                    <tr *ngFor="let gRow of DynamicTerminalMaster; let i= index">
+                                                        <td> {{i+1}}</td>
+                                                        <td class="txtright">
+                                                            {{gRow.TerminalName}}
+                                                        </td>
+                                                        <td>
+                                                            {{gRow.RotationNo}}
+                                                        </td>
+                                                        <td class="actwid">
+                                                            <button type="button" (click)="OnclickTerminalSelectvalues(DynamicTerminalMaster,i)" rel="tooltip" class="btn btn-success bmd-btn-fab" data-original-title="" title="">
+                                                                <i class="material-icons">edit</i>
+                                                            </button>
+                                                            <button type="button" (click)="OnclickTerminalRemove(DynamicTerminalMaster,i,gRow.TID)" rel="tooltip" class="btn btn-danger bmd-btn-fab">
+                                                                <i class="material-icons">delete</i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            
+                                            </table>
+
+                                        </div>
+                                        <div class="col-md-12">
+                                            <!--<div class="material-datatables" style="width:100%;">
+
+                                                <table class="table table-striped table-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>S.No</th>
+                                                            <th>Terminal Name</th>
+                                                            <th>Rotation No</th>
+                                                            <th class="disabled-sorting text-right actwid">Action</th>
+                                                            </tr>
+                                                            </thead>                                               
+
+                                                    <tbody>
+                                                      
+                                                    </tbody>
+                                                </table>
+
+                                            </div>-->
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                           
+                                <div class="col-md-6 col-sm-6  col-lg-6 col-xl-6">
+                                    <div class="row">
+                                        <div class="col-md-12 col-sm-12  col-lg-12 col-xl-12">
+                                            <h4 class="enqtitle">Voyage Notes</h4>
+                                        </div>
+                                        <div class="col-md-12 col-sm-12  col-lg-12 col-xl-12 conttbl">
+
+                                            <div class="material-datatables">
+                                                <table class="table table-striped table-bordered table-hover" cellspacing="0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="width:50%!important;">Voyage Notes type</th>
+                                                            <th style="width:50%!important;">Notes</th>
+
+                                                            <th style="width:initial!important;">Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let dynamic of DynamicVoyageNoteMaster; let i = index; let last=last;">
+                                                            <td>
+                                                                <select class="form-control" id="ddlVoyageNote" [(ngModel)]="DynamicVoyageNoteMaster[i].NotesType" [ngModelOptions]="{standalone: true}" style="width:100%!important;">
+                                                                    <option *ngFor="let gRow of ddlVoyageNoteItem" [value]="gRow.ID">
+                                                                        {{gRow.VoyageNoteTypes}}
+                                                                    </option>
+                                                                </select>
+                                                            </td>
+
+                                                            <td>
+                                                                <input type="text" id="txtNote" [(ngModel)]="DynamicVoyageNoteMaster[i].Notes" [ngModelOptions]="{standalone: true}">
+
+                                                            </td>
+
+                                                            <td class="actwid">
+                                                                <button type="button" (click)="AddVoyage(i)" *ngIf="last" class="btn btn-success bmd-btn-fab"><i class="material-icons">add</i></button>
+                                                                <button type="button" *ngIf="!last" (click)="deleteRowVoyageNote(DynamicVoyageNoteMaster,i,dynamic.ID)" rel="tooltip" class="btn btn-danger bmd-btn-fab">
+                                                                    <i class="material-icons">delete</i>
+                                                                </button>
+
+                                                            </td>
+                                                        </tr>
+
+                                                    </tbody>
+
+                                                </table>
+
+                                            </div>
+
+
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                    </div>
+                    <div class="col-md-12 col-sm-12  col-lg-12 col-xl-12">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12  col-lg-12 col-xl-12">
+                                <h4 class="enqtitle">Manifest Details</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-sm-12  col-lg-12 col-xl-12 padlr0">
+
+                            <div class="row">
+                                <div class="col-md-3 col-sm-3  col-lg-3 col-xl-3">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12 col-sm-12  col-lg-12 col-xl-12">
+                                                <label>EGM Date</label>
+                                                <mat-form-field class="paymentDate" >
+                                                    <input matInput autocomplete="off" [matDatepicker]="EGMDate"  id="EGMDate" placeholder="" formControlName="EGMDate">
+                                                    <mat-datepicker-toggle matSuffix [for]="EGMDate"></mat-datepicker-toggle>
+                                                    <mat-datepicker #EGMDate></mat-datepicker>
+                                                </mat-form-field>
+                                                <!-- <input type="date" formControlName="EGMDate" autocomplete="off" class="form-control" /> -->
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-3  col-lg-3 col-xl-3">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12 col-sm-12  col-lg-12 col-xl-12">
+                                                <label>EGM Number</label>
+                                                <input type="number" formControlName="EGMNo" autocomplete="off" class="form-control" />
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-3  col-lg-3 col-xl-3">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12 col-sm-12  col-lg-12 col-xl-12">
+                                                <label>IGM Date</label>
+                                                <mat-form-field class="paymentDate" >
+                                                    <input matInput autocomplete="off" [matDatepicker]="IGMDate"  id="IGMDate" placeholder="" formControlName="IGMDate">
+                                                    <mat-datepicker-toggle matSuffix [for]="IGMDate"></mat-datepicker-toggle>
+                                                    <mat-datepicker #IGMDate></mat-datepicker>
+                                                </mat-form-field>
+                                                <!-- <input type="date" formControlName="IGMDate" autocomplete="off" class="form-control" /> -->
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-3  col-lg-3 col-xl-3">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12 col-sm-12  col-lg-12 col-xl-12">
+                                                <label>IGM Number</label>
+                                                <input type="number" formControlName="IGMNo" autocomplete="off" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer ">
+                    <div class="col-md-12 col-sm-12  col-lg-12 col-xl-12" style="text-align:right;">
+                        <button type="submit" (click)="onSubmit()" class="btn btn-primary btn-raised mb-0">Submit</button>
+                    </div>
+                    <input type="hidden" id="HDRegId" ng-model="HDRegId" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+

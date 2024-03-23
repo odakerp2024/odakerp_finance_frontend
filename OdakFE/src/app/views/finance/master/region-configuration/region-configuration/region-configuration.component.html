@@ -1,0 +1,152 @@
+<div class="container-fluid">
+    <!-- header start -->
+    <div class="row mt-2">
+        <div class="col-9">
+            <h4 class="ml-2 mt-2">Reporting – Regions Configuration</h4>
+        </div>
+        <div class="col-3 mt-auto">
+            <div class="float-right">
+                <!-- edit -->
+                <button type="button" *ngIf="isUpdate" (click)="fg.enable();isUpdateEnable = false" (click)="regionConfigForm.enable();isUpdateMode = false"
+                    class="btn btn-warning bmd-btn-edit text-white mr-3">
+                    <i class="material-icons editicon">edit</i>
+                </button>
+                <!-- back -->
+                <button type="button" class="btn btn-success bmd-btn-edit text-white mr-3">
+                    <i class="material-icons editicon" [routerLink]="['/views/region/region-view']">reply</i>
+                </button>
+                <!-- clock details -->
+                <button type="button" class="btn btn-raised bmd-btn-edit" data-placement="bottom" type="button"
+                    id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="material-icons editicon">schedule</i>
+                </button>
+                <!-- clock click pop-up -->
+                <div style="background-color: aliceblue;width:250px;left:-66px"
+                    class="dropdown-menu dropdown-menu  profile-dropdown" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item p-4">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span>ModifiedOn: {{ModifiedOn}}</span> | <span>Modified By: {{ModifiedOn}}</span>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:10px;">
+                            <div class="col-md-12">
+                                <span>CreatedOn: {{CreatedOn}}</span> | <span>Created By: {{CreatedBy}}</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- header end -->
+
+    <!-- -------title start--------- -->
+    <div class="row my-3 p-2" style="background-color: lavender;margin: 2px;">
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="row bkgno">
+                <div class="col-md-12">
+                    <label [title]="RegionName" class="lbltxt header-text-label"><span
+                            style="font-weight: lighter !important;">Region Name :
+                        </span>{{RegionName | uppercase}}</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ------title end------------- -->
+
+    <!-- Form start -->
+    <div class="row card mt-4 p-3">
+        <form [formGroup]="regionConfigForm">
+            <div class="col-12">
+                <div class="row pt-3 pb-3 mb-4">
+                    <div class="col-4 ">
+                        <label class="str">Division</label>
+                        <ng-select class="searchdropdown"  [clearable]="false" (ngModelChange)="getOfficeList($event)"
+                             formControlName="DivisionId" readonly [ngClass]=" isUpdate ? 'disable-input' : ''">
+                            <ng-option [value]="''" [disabled]="true">--SELECT REPORT TYPE--</ng-option>
+                            <ng-option  *ngFor="let division of divisionDropdownList" [value]="division.ID">
+                                <span class="textwrap">  {{division.DivisionName | uppercase}}</span>
+                            </ng-option>
+                          </ng-select>      
+                    </div>
+
+                    <div class="col-4">
+                        <label class="str">Region Name </label>
+                        <input (click)="RegionName = $event.target.value" [ngClass]=" isUpdate ? 'disable-input' : ''"
+                            type="text" class="form-control" formControlName="RegionName" />
+                    </div>
+                    <div class="col-4">
+                        <label class="str">Short Name</label>
+                        <input [ngClass]=" isUpdate ? 'disable-input' : ''" type="text" class="form-control"
+                            formControlName="ShortName" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-4 ">
+                        <label class="str">Office</label>
+
+
+                        <mat-select  formControlName="OfficeId" 
+                            placeholder="Select Office" class="form-control" multiple  [ngClass]=" isUpdate ? 'disable-input' : ''">
+                            <ng-container *ngFor="let office of officeList">
+                                <mat-option [value]="office.ID">
+                                    {{office.OfficeName | uppercase}}
+                                </mat-option>
+                            </ng-container>
+                        </mat-select>
+                        <!-- <ng-select  class="searchdropdown"  formControlName="OfficeId" [clearable]="false" multiple>
+                            <ng-option [value]="0" disabled>--SELECT OFFICE--</ng-option>
+                            <ng-container  *ngFor="let office of officeList" >
+                              <ng-option  [value]="office.ID">
+                                <span class="textwrap">{{office.OfficeName | uppercase}}</span>
+                              </ng-option>
+                           </ng-container>
+                        </ng-select>  -->
+                    </div>
+                    <div class="col-4 ">
+                        <label class="str">Active</label>
+                        <!-- <select class="form-control my-select" formControlName="IsActive">
+                            <option value="" disabled>--SELECT STATE--</option>
+                            <option *ngFor="let state of statusValue" [value]="state.value">
+                                {{state.viewValue | uppercase}}
+                            </option>
+                        </select> -->
+                        <ng-select class="searchdropdown" [attr.disabled]="isCopied ? 'disabled' : null" [clearable]="false"  formControlName="IsActive" >
+                            <ng-option [value]="''" [disabled]="true">--SELECT STATE--</ng-option>
+                            <ng-option *ngFor="let state of statusValue" [value]="state.value">
+                                {{state.viewValue | uppercase}}
+                            </ng-option>
+                          </ng-select> 
+                    </div>
+                    <div class="col-4">
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 pt-4 pb-4">
+                <div class="float-right">
+                    <button [disabled]="isUpdateMode" type="button" (click)="save()"
+                        class="btn btn-primary text-white mr-3 mb-0 col-auto">
+                        Save
+                    </button>
+                    <button [routerLink]="'/views/region/region-view'" type="button"
+                        class="btn btn-warning text-white mr-3 mb-0 col-auto">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
