@@ -479,6 +479,7 @@ export class CustomerComponent implements OnInit {
 
 
   ngOnInit(): void {
+    debugger
     this.getLedgerMappingParentAccountList();
     //------ ledger maping validate conditions are removed due to mapped account in customer itself --08-03-2024
     // this.getModuleType();
@@ -2020,6 +2021,7 @@ export class CustomerComponent implements OnInit {
   }
 
   async getCustomerSourceList() {
+    debugger
     var service = `${this.globals.APIURL}/Customer/GetSalesSource`;
     await this.dataService.post(service, {}).subscribe((result: any) => {
       this.sourceList = [];
@@ -2031,6 +2033,7 @@ export class CustomerComponent implements OnInit {
   }
 
   sourceChanged(event) {
+    debugger
     if (event == 'Overseas Agent' || event == 'Local Sales') {
       this.isSalesPICDropDown = true;
       var service = `${this.globals.APIURL}/Customer/${event == 'Overseas Agent' ? 'GetSalesAgent' : event == 'Local Sales' ? 'GetSalesEmployee' : ''}`;
@@ -2052,16 +2055,16 @@ export class CustomerComponent implements OnInit {
       validation += "<span style='color:red;'>*</span> <span>Please select source </span></br>"
     }
 
-    if (this.fg.value.Source != 'Corporate' && this.fg.value.Source != 'Import Customer') {
-      if (this.fg.value.SalesPIC === "") {
+    if (this.fg.value.Source == 'Local Sales') {
+      if (this.fg.value.SalesPIC == "") {
         validation += "<span style='color:red;'>*</span> <span>Please select Sales PIC</span></br>"
       }
     }
-    if (this.fg.value.Source === 'Corporate' || this.fg.value.Source === 'Import Customer') {
-      if (this.fg.value.SalesPIC === "") {
-        validation += "<span style='color:red;'>*</span> <span>Please Enter Sales PIC</span></br>"
-      }
-    }
+    // if (this.fg.value.Source === 'Corporate' || this.fg.value.Source === 'Import Customer') {
+    //   if (this.fg.value.SalesPIC === "") {
+    //     validation += "<span style='color:red;'>*</span> <span>Please Enter Sales PIC</span></br>"
+    //   }
+    // }
     if (this.fg.value.EffectiveSalesDate === "") {
       validation += "<span style='color:red;'>*</span> <span>Please select Effective Date</span></br>"
     }

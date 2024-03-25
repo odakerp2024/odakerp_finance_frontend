@@ -27,8 +27,12 @@ export class LoginService {
     getUserLoginList(payload: any) {
         return this.http.post<any>(this.globals.APIURLFF + '/Login/ValidateLogin/', payload);
     }
-    
-    
+    getUserPermissionUpdateList(payload: any) {
+        return this.http.post<any>(this.globals.APIURLFF + '/Login/GeneratePermissionObject_Update/', payload);
+    }
+    getUserPermissionCombinedList(payload: any) {
+        return this.http.post<any>(this.globals.APIURLFF + '/Login/GetUserPermissionObjectCombinedRoles/', payload);
+    }
     GetAllMenuList(payload: any): Observable<any> {
         return this.http.post<any>(this.globals.APIURLFF + '/Login/GetHeaderMenu', payload);
     }
@@ -62,13 +66,6 @@ export class LoginService {
         return this.http.post<any>(this.globals.APIURLFF + '/Login/GeneratePermissionObject/', payload);
     }
 
-    getUserPermissionUpdateList(payload: any) {
-        return this.http.post<any>(this.globals.APIURLFF + '/Login/GeneratePermissionObject_Update/', payload);
-    }
-
-    getUserPermissionCombinedList(payload: any) {
-        return this.http.post<any>(this.globals.APIURLFF + '/Login/GetUserPermissionObjectCombinedRoles/', payload);
-    }
 }
 
 

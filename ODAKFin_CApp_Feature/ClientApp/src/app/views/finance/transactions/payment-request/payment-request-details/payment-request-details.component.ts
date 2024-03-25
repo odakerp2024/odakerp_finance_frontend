@@ -452,8 +452,8 @@ markInvoiceSelected(index){
   }
 
   viewListPage(){
-    this.router.navigate(['/views/transactions/payment-request/payment-request-view']);
-  }
+     this.router.navigate(['/views/transactions/payment-request/payment-request-view']);
+      }
 
   checkValidation(){
     const paymentRequestForm = this.paymentRequestForm.value;
@@ -546,7 +546,6 @@ markInvoiceSelected(index){
             break;
           case paymentRequesType.WITHDRAW_REQUEST_TYPE:
             this.confirmWithdrawRequest();
-            this.viewListPage();
             break;
           // case paymentRequesType.HOLD_PAYMENT_TYPE:
           //   this.setHoldPaymentStatus();
@@ -579,9 +578,15 @@ markInvoiceSelected(index){
       reverseButtons: false,
       allowOutsideClick: false
     }).then(async (result) => {
+      if (result.isConfirmed) {
       this.setWithdrawRequestStatus();
       this.save();
+      this.viewListPage();
+    } else {
+      this.samePage(); // Add your else condition here
+    }
     });
+    
   }
 
   // setPending Approval

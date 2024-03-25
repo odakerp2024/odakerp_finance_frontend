@@ -46,6 +46,7 @@ export class BankComponent implements OnInit {
   file1: any;
   formattedErrorMessages: any;
   resultValues: any[];
+  TemplateUploadURL = this.globals.TemplateUploadURL;
 
   constructor(
     public commonDataService: CommonService,

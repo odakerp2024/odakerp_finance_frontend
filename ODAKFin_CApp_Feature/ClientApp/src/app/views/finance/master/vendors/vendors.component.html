@@ -939,17 +939,13 @@
                                                                             <div class="w-100 mr-2 ml-2">
                                                                                 <label class="str">Account
                                                                                     Number</label>
-                                                                                <!-- </div>
-                                                                <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
-                                                                <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7"> -->
-                                                                                <input type="text" (paste)="(false)"
+                                                                                   <input type="text" (paste)="(false)"
                                                                                     name="bankAcctName"
                                                                                     formControlName="AccountNumberId"
                                                                                     autocomplete="off"
                                                                                     id="txtBankAcctName"
                                                                                     ng-model="txtBankAcctName"
                                                                                     class="form-control"
-                                                                                    (keypress)="special($event)"
                                                                                     maxlength="20">
                                                                             </div>
                                                                         </div>
@@ -1200,6 +1196,16 @@
                                                                                         autocomplete="off"
                                                                                         class="form-control">
                                                                                 </td>
+                                                                                <!-- <td>
+                                                                                    <input type="text"
+                                                                                        [(ngModel)]="dataItem.CurrencyName"
+                                                                                        disabled
+                                                                                        [ngModelOptions]="{standalone: true}"
+                                                                                        autocomplete="off"
+                                                                                        class="form-control">
+                                                                                </td> -->
+
+                                                                                
                                                                                 <td>
                                                                                     <select
                                                                                         [(ngModel)]="+dataItem.CurrencyId"

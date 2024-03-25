@@ -46,6 +46,7 @@ export class AssetComponent implements OnInit {
   file1: any;
   resultValues: any[];
   formattedErrorMessages: any;
+  TemplateUploadURL = this.globals.TemplateUploadURL;
   constructor(
     public commonDataService: CommonService,
     private datePipe: DatePipe,

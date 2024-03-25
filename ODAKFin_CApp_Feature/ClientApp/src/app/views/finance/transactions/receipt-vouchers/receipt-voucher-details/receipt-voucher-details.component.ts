@@ -360,7 +360,6 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
         this.ExchangeRatePairList = [];
         let info = result.data.Table[0];
         await this.getVoucherList(info.CustomerId, false, info.CustomerId, info.PaymentbythirdParty);
-debugger
         // ! set currency name based on currency id and set in receivedCurrencyName variable
         let toCurrency = this.currencyList.find(x => x.ID == info.AmountTypeId);
         this.receivedCurrencyName = toCurrency.CurrencyCode;

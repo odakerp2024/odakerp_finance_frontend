@@ -828,10 +828,10 @@
                                                                         <div class="row">
                                                                             <div class="col-md-12">
                                                                                 <label
-                                                                                    *ngIf="fg.value.Source != 'Corporate' && fg.value.Source != 'Import Customer'"
-                                                                                    class="str">Sales PIC</label>
+                                                                                    *ngIf="fg.value.Source != 'Local Sales'"
+                                                                                    >Sales PIC</label>
                                                                                 <label
-                                                                                    *ngIf="fg.value.Source == 'Corporate' || fg.value.Source == 'Import Customer'"
+                                                                                    *ngIf="fg.value.Source == 'Local Sales'"
                                                                                     class="str"> Sales PIC</label> 
                                                                                 <select *ngIf="isSalesPICDropDown"
                                                                                     formControlName="SalesPIC"
@@ -844,7 +844,7 @@
                                                                                         [value]="data.OverseasAgentName ? data.OverseasAgentName : data.EmployeeName">
                                                                                         {{data.OverseasAgentName ?
                                                                                         data.OverseasAgentName :
-                                                                                        data.EmployeeName}}
+                                                                                        data.EmployeeName | uppercase }}
                                                                                     </option>
                                                                                 </select>
 
