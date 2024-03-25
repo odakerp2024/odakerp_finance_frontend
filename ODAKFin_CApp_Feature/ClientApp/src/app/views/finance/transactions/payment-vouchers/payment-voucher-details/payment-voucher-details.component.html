@@ -1,0 +1,1156 @@
+<div class="container-fluid">
+    <!-- header start -->
+    <div class="row mt-2">
+        <div class="col-9">
+            <h4 class="ml-2 mt-2">Payment Voucher - Invoice</h4>
+        </div>
+        <div class="col-3 mt-auto">
+            <div class="float-right">
+                <!-- edit   [disable] = "!isEditMode" -->
+                <button type="button" class="btn btn-warning bmd-btn-edit text-white mr-3"
+                    *ngIf="!IsFinal && !isEditMode" (click)="enableEdit()">
+                    <i class="material-icons editicon">edit</i>
+                </button>
+                <!-- back -->
+                <button type="button" class="btn btn-success bmd-btn-edit text-white mr-3" (click)="Cancel()">
+                    <i class="material-icons editicon">reply</i>
+                </button>
+                <!-- clock details -->
+                <button type="button" class="btn btn-raised bmd-btn-edit" data-placement="bottom" type="button"
+                    id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="material-icons editicon">schedule</i>
+                </button>
+                <!-- clock click pop-up -->
+                <div style="background-color: aliceblue;width:250px;left:-66px"
+                    class="dropdown-menu dropdown-menu  profile-dropdown" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item p-4">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span>ModifiedOn: {{ModifiedOn}}</span> | <span>Modified By: {{ModifiedOn}}</span>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:10px;">
+                            <div class="col-md-12">
+                                <span>CreatedOn: {{CreatedOn | date: entityDateFormat }}</span> | <span>Created By:
+                                    {{CreatedBy}}</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- header end -->
+
+    <!-- Table start -->
+    <form [formGroup]="paymentForm">
+        <div class="card mt-2 p-4">
+            <!-- <div class="row">
+                <div class="col-12">
+                    <h4 class="mt-2">Payment Details</h4>
+                </div>
+            </div> -->
+
+
+            <div formGroupName="Table">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="row w-100 mr-2 ml-2">
+
+                            <input formControlName="IsVendor" [value]="true" mdbRadio (click)="setVendor(1)"
+                                class="form-control mr-2" type="radio" name="flexRadioDefault1"
+                                id="flexRadioDefault1" />
+                            <label class="mr-1 fontstyles" for="flexRadioDefault1">Vendor</label>
+
+                            <input formControlName="IsAccount" [value]="true" mdbRadio (click)="setVendor(2)"
+                                class="form-control mr-2" type="radio" name="flexRadioDefault2"
+                                id="flexRadioDefault2" />
+                            <label class="mr-1 fontstyles" for="flexRadioDefault2">Account</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group bmd-form-group w-100">
+                            <label class="str fontstyles">Division</label>
+                            <!-- <select class="form-control my-select" formControlName="DivisionId" [ngClass]="isCopied ? 'disable-input' : ''" 
+                            (change)="getOffice($event.target.value); clearSameCurrenyBankList()">
+                            <option [value]="''" disabled>--SELECT DIVISION TYPE--</option>
+                            <ng-container *ngFor="let division of divisionList">
+                                <option *ngIf="division.Active" [value]="division.ID">
+                                    {{division.DivisionName | uppercase}}
+                                </option>
+                            </ng-container>
+                        </select> -->
+                            <ng-select class="searchdropdown custom" [ngClass]="isCopied ? 'disable-input' : ''"
+                                formControlName="DivisionId" (change)="getOffice($event) ;clearSameCurrenyBankList()"
+                                [clearable]="false">
+                                <ng-option [value]="''" disabled>--SELECT DIVISION TYPE--</ng-option>
+                                <ng-container *ngFor="let division of divisionList">
+                                    <ng-option *ngIf="division.Active" [value]="division.ID">
+                                        {{division.DivisionName | uppercase}}
+                                    </ng-option>
+                                </ng-container>
+                            </ng-select>
+                        </div>
+                    </div>
+
+                    <div class="col-4">
+                        <label class="str fontstyles">Office</label>
+                        <!-- <select class="form-control my-select" formControlName="OfficeId" 
+                        [ngClass]="isCopied ? 'disable-input' : ''"  (change)="getBankList(true);">
+                        <option [value]="''" disabled>--SELECT OFFICE TYPE--</option>
+                        <ng-container *ngFor="let office of officeList">
+                            <option [value]="office.ID">
+                                {{office.OfficeName | uppercase}}
+                            </option>
+                        </ng-container>
+                    </select> -->
+                        <ng-select class="searchdropdown custom" [ngClass]="isCopied ? 'disable-input' : ''"
+                            formControlName="OfficeId" (change)="getBankList(true);" [clearable]="false">
+                            <ng-option [value]="''" disabled>--SELECT OFFICE TYPE--</ng-option>
+                            <ng-container *ngFor="let office of officeList">
+                                <ng-option [value]="office.ID">
+                                    {{office.OfficeName | uppercase}}
+                                </ng-option>
+                            </ng-container>
+                        </ng-select>
+                    </div>
+
+                    <div class="col-4">
+                        <label class="str fontstyles">Payment Voucher for</label><br>
+                        <div class="form-check form-check-inline d-flex">
+
+                            <!-- [disabled]="!isEditMode"  
+                        need to add later below -->
+                            <div *ngIf="isUpdate" class="row ml-1">
+
+                                <label class="d-flex" *ngIf="paymentType == 'IsBill'">
+                                    <input class="mr-2" type="radio" name="payment" [value]="true"
+                                        (click)="setPaymentVoucherRadio('IsBill')" [(ngModel)]="isPaymentForBill"
+                                        [ngModelOptions]="{standalone: true}">
+                                    <span class="mr-4">Bill</span>
+                                </label>
+                                <label class="d-flex" *ngIf="paymentType == 'IsOnAccount'">
+                                    <input class="mr-2" type="radio" name="ra" [value]="false" [disabled]="!isEditMode"
+                                        (click)="setPaymentVoucherRadio('IsOnAccount')" [(ngModel)]="isPaymentForBill"
+                                        [ngModelOptions]="{standalone: true}">
+                                    <span>On Account</span>
+                                </label>
+
+                            </div>
+
+                            <div *ngIf="!isUpdate" class="row ml-1">
+                                <label class="d-flex">
+                                    <input class="mr-2" type="radio" name="payment" [value]="true"
+                                        [ngClass]="isCopied ? 'disable-input' : ''"
+                                        (click)="setPaymentVoucherRadio('IsBill')" [(ngModel)]="isPaymentForBill"
+                                        [ngModelOptions]="{standalone: true}">
+                                    <span class="mr-4">Bill</span>
+                                </label>
+                                <label class="d-flex">
+                                    <input class="mr-2" type="radio" name="ra" [value]="false" [disabled]="!isEditMode"
+                                        [ngClass]="isCopied ? 'disable-input' : ''"
+                                        (click)="setPaymentVoucherRadio('IsOnAccount')" [(ngModel)]="isPaymentForBill"
+                                        [ngModelOptions]="{standalone: true}">
+                                    <span>On Account</span>
+                                </label>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="col-4">
+                        <label class="str fontstyles">Payment Voucher Number</label>
+                        <!-- {{paymentForm.value.paymentVoucherNumber}} -->
+                        <input disabled type="text" class="w-100 pl-2 disable-input border"
+                            formControlName="PaymentVoucherNumber" />
+                    </div>
+
+                    <div class="col-4">
+                        <label class="str mb-2 fontstyles">Payment Voucher Date</label>
+                        <mat-form-field class="tillDate mat_date_picker disable-datepicker" appearance="outline">
+                            <input matInput (click)="PaymentVoucherDate.open()" style="margin-bottom: 3px;"
+                                autocomplete="off" [matDatepicker]="PaymentVoucherDate" id="PaymentVoucherDate"
+                                [placeholder]="entityDateFormat" formControlName="PaymentVoucherDate">
+                            <mat-datepicker-toggle matSuffix [for]="PaymentVoucherDate"></mat-datepicker-toggle>
+                            <mat-datepicker #PaymentVoucherDate></mat-datepicker>
+                        </mat-form-field>
+                        <!-- <input type="date" class="w-100 py-0 hide-date-icon " formControlName="PaymentVoucherDate"
+                        [ngClass]="isCopied ? 'disable-input' : ''" [min]="minDate" readonly placeholder=" current Date" /> -->
+                    </div>
+
+                    <!-- <div class="col-4"></div> -->
+
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label class="str fontstyles">Status</label>
+                            <select [ngClass]=" isUpdate ? 'block-input' : 'block-input'" readonly
+                                formControlName="StatusId" name="Status"
+                                class="form-control my-select disable-input--nostyle">
+                                <option disabled value="">--SELECT STATUS--</option>
+                                <option disabled *ngFor="let status of statusList" [value]="status.Id">
+                                    {{status.StatusName | uppercase}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="segment"></div>
+
+                <div class="row">
+
+                    <div class="col-4">
+                        <div class="form-group bmd-form-group w-100">
+                            <label class="str fontstyles">Vendor Name</label>
+                            <!-- <select class="form-control my-select" formControlName="VendorId" [ngClass]="isCopied ? 'disable-input' : ''" 
+                            (change)="getVendorBranch($event.target.value); getInvoiceList($event.target.value)">
+                            <option [value]="''" disabled>--SELECT VENDOR--</option>
+                            <ng-container *ngFor="let vendor of vendorUniqueList">
+                                <option *ngIf="vendor.OnboradName === 'CONFIRMED'" [value]="vendor.VendorID">
+                                    {{vendor.VendorCode | uppercase}} - {{vendor.VendorName | uppercase}}
+                                </option>
+                            </ng-container>
+                        </select> -->
+                            <ng-select class="searchdropdown custom" formControlName="VendorId"
+                                [ngClass]="!IsVendorEnable ? 'disable-input': ''"
+                                (change)="getVendorBranch($event);getInvoiceList($event)" [clearable]="false">
+                                <ng-option [value]="''" disabled>--SELECT VENDOR--</ng-option>
+                                <ng-container *ngFor="let vendor of vendorUniqueList">
+                                    <ng-option
+                                        *ngIf="vendor.OnboradName === 'CONFIRMED' && vendor.VendorStatus === true && vendor.BranchSTatus === true"
+                                        [value]="vendor.VendorID">
+                                        {{ vendor.VendorCode | uppercase }} - {{ vendor.VendorName | uppercase }}
+                                    </ng-option>
+                                </ng-container>
+                            </ng-select>
+                        </div>
+                    </div>
+
+
+
+                    <!-- <div *ngIf="this.branches == 1" class="col-4">
+                    <label class="str">Vendor Branch</label>
+                      <div class="form-control">
+                        <div disabled >{{this.newOne}}</div>
+                    </div>
+                </div> -->
+
+
+                    <div class="col-4">
+                        <label class="str fontstyles">Vendor Branch</label>
+                        <!-- <input  disabled type="text" class="w-100" placeholder="Vendor Branch"/> -->
+                        <!-- <select class="form-control my-select" formControlName="VendorBranch"
+                        [ngClass]="isCopied ? 'disable-input' : ''"  (change)="getVendorTan($event.target.value)">
+                        <option [value]="''" disabled>--SELECT VENDOR BRANCH--</option>
+                        <option *ngFor="let vendor of vendorBranch" [value]="vendor.BranchCode">
+                            {{vendor.BranchCode | uppercase}}
+                        </option>
+                    </select> -->
+                        <ng-select class="searchdropdown custom" formControlName='VendorBranch'
+                            [ngClass]="!IsBranchEnable ? 'disable-input' : ''" (change)="getVendorTan($event)"
+                            [clearable]="false">
+                            <ng-option [value]="''" [disabled]="true">--SELECT VENDOR BRANCH--</ng-option>
+                            <ng-option *ngFor="let vendor of vendorBranch" [value]="vendor.BranchCode">
+                                {{ vendor.CityName | uppercase }}
+                            </ng-option>
+                        </ng-select>
+                    </div>
+
+                    <div class="col-4">
+
+                    </div>
+
+                    <!-- <div class="col-4">
+                    <label class="str fontstyles ">Vendor TAN</label>
+                    <input disabled type="text" class="w-100 pl-2 disable-input border" placeholder="" readonly
+                        formControlName="VendorTan" />
+                </div> -->
+
+                    <!-- <div class="col-4">
+                    <div class="form-group bmd-form-group w-100">
+                        <label class="str">Amount Paid</label>
+                        <div class="d-flex">
+                            <input type="number" class="w-50 mr-2" appDynamicDecimal formControlName="AmountPaid"
+                                (change)="calculateAmount($event.target.value);calculateFinalTotal()" />
+                            <select class="form-control my-select w-50 m-0" formControlName="CurrencyId"
+                                (change)="setCurrencyId($event.target.value); getExchangeRate()">
+                                <option selected disabled>--SELECT CURRENCY--</option>
+                                <option *ngFor="let currency of currencyList" [value]="currency.CurrencyID">
+                                    {{currency.CurrencyCode | uppercase}} - {{currency.CurrencyName |uppercase}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div> -->
+                    <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                                <label class="str fontstyles">Currency</label>
+                                <ng-select class="searchdropdown custom" [formControlName]="'CurrencyId'"
+                                    (change)="setCurrencyId($event); getExchangeRate()" [clearable]="false">
+                                    <ng-option [value]="''" [disabled]="true" selected>--SELECT CURRENCY--</ng-option>
+                                    <ng-option *ngFor="let currency of currencyList" [value]="currency.ID">{{
+                                        currency.CurrencyCode | uppercase }}</ng-option>
+                                </ng-select>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                                <div class="form-group">
+                                    <label class="str fontstyles">Amount Paid</label>
+                                    <input
+                                        onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                        min="0" numbersOnly
+                                        (ngModelChange)="amountChange($event); summaryAmountCalculation()"
+                                        appDynamicDecimal class="form-control my-select amount w-200 m-0"
+                                        formControlName="AmountPaid" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-4">
+                        <div class="form-group bmd-form-group w-100">
+                            <label class="fontstyles">Exchange Rate</label>
+                            <input [ngClass]="!IsExchangeRateEnable ? 'disable-input' : ''"
+                                (ngModelChange)="summaryAmountCalculation()"
+                                onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                min="0" numbersOnly appDynamicDecimal class=" form-control mt-1"
+                                formControlName="ExchangeRate" />
+                        </div>
+                    </div>
+                </div>
+                <div class="segment"></div>
+
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group bmd-form-group w-100">
+                            <label class="str fontstyles">Paid From</label>
+                            <!-- <select class="form-control my-select" formControlName="PaidfromId"
+                            [ngClass]="isCopied ? 'disable-input' : ''" >
+                            <option [value]="''" disabled>--SELECT AMOUNT PAID--</option> 
+                            <ng-container *ngFor="let bank of sameCurrencyBankList">
+                                <option *ngIf="bank.StatusID == 1"  [value]="bank.BankID">
+                                    {{bank.BankName | uppercase}} - {{bank.AccountNo | uppercase}}
+                                </option>
+                            </ng-container>                            
+                        </select> -->
+                            <!-- <ng-select class="searchdropdown custom" formControlName="PaidfromId" [ngClass]="{'disable-input': isCopied}" [clearable]="false">
+                            <ng-option [value]="''" disabled>--SELECT AMOUNT PAID--</ng-option>
+                            <ng-container *ngFor="let bank of sameCurrencyBankList">
+                              <ng-option *ngIf="bank.StatusID === 1" [value]="bank.BankID">
+                                {{ bank.BankName | uppercase }} - {{ bank.AccountNo | uppercase }}
+                              </ng-option>
+                            </ng-container>
+                          </ng-select>      -->
+
+                            <ng-select class="searchdropdown" id="ddlStatusv" name="Status" [clearable]="false"
+                                formControlName="PaidfromId" placeholder="Status">
+                                <ng-option [value]="''" [disabled]="true">--SELECT STATE--</ng-option>
+                                <ng-option *ngFor="let bank of sameCurrencyBankList" [value]="bank.BankID">
+                                    {{ bank.BankName | uppercase }} - {{ bank.AccountNo | uppercase }}
+                                </ng-option>
+                            </ng-select>
+                        </div>
+                    </div>
+
+                    <div class="col-4">
+                        <div class="form-group bmd-form-group w-100">
+                            <label class="str fontstyles">Mode of Payment</label>
+                            <!-- <select class="form-control my-select" formControlName="ModeofPaymentId"
+                            [ngClass]="isCopied ? 'disable-input' : ''" >
+                            <option [value]="''" disabled>--Mode Of Payment--</option>
+                            <option *ngFor="let payment of paymentModeList" [value]="payment.Id">
+                                {{payment.PaymentType | uppercase}}
+                            </option>
+                        </select> -->
+                            <ng-select class="my-select" [formControlName]="'ModeofPaymentId'"
+                                [ngClass]="{'disable-input': isCopied}" [clearable]="false">
+                                <ng-option [value]="''" [disabled]="true">--Mode Of Payment--</ng-option>
+                                <ng-option *ngFor="let payment of paymentModeList" [value]="payment.Id">{{
+                                    payment.PaymentType | uppercase }}</ng-option>
+                            </ng-select>
+                        </div>
+                    </div>
+
+                    <div class="col-4">
+
+                        <label *ngIf="paymentForm.value.Table.ModeofPaymentId != 2" class="str fontstyles">Reference
+                            No</label>
+                        <label *ngIf="paymentForm.value.Table.ModeofPaymentId == 2">Reference No</label>
+                        <input type="text" class="w-100" placeholder="" formControlName="ReferenceNo" />
+                    </div>
+
+
+                    <!-- 
+                        <div class="col-4">
+                            <label>Bank Charges (if any)</label>
+                            <div class="d-flex">
+                                <input type="number" appDynamicDecimal class="w-50 mr-2" formControlName="BankCharges" />
+                                <select class="form-control my-select w-50 m-0" formControlName="BankCurrencyId"
+                                    (change)="setBankCharge($event.target.value)">
+                                    <option selected disabled>--SELECT CURRENCY--</option>
+                                    <option *ngFor="let currency of currencyList" [value]="currency.CurrencyID">
+                                        {{currency.CurrencyCode | uppercase}} 
+                                    </option>
+                                </select>
+                            </div>
+                        </div> -->
+
+                    <div class="col-4">
+                        <label class="fontstyles">Bank Charges (if any)</label>
+                        <input onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                            (ngModelChange)="summaryAmountCalculation()" min="0" numbersOnly appDynamicDecimal
+                            class=" form-control mt-1" formControlName="BankCharges" />
+                    </div>
+
+                    <div class="col-4">
+                        <label for="" class="fontstyles">Payment Remarks</label><br>
+                        <textarea class="p-1 inputs " name="" id="" cols="50" rows="2" [disabled]="!isEditMode"
+                            formControlName="Remarks"></textarea>
+                    </div>
+
+                </div>
+
+                <div class="segment"></div>
+
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group bmd-form-group w-100">
+                            <label class="str fontstyles">TDS Deducted</label>
+                            <ng-select class="searchdropdown custom" [ngClass]="isCopied ? 'disable-input' : ''"
+                                [formControlName]="'TdsDeducted'" (change)="setDueBill($event)" [clearable]="false">
+                                <ng-option [value]="''" [disabled]="true">--SELECT TDS--</ng-option>
+                                <ng-option *ngFor="let status of statusValues" [value]="status.value">
+                                    {{ status.viewValue | uppercase }}
+                                </ng-option>
+                            </ng-select>
+                        </div>
+                    </div>
+
+                    <div class="col-4">
+                        <div class="form-group bmd-form-group w-100">
+                            <label class="fontstyles">TDS Amount (INR)</label>
+                            <input [ngClass]="!IsTDSEnable ? 'disable-input' : ''"
+                                (ngModelChange)="summaryAmountCalculation()"
+                                onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                min="0" numbersOnly appDynamicDecimal class=" form-control mt-1"
+                                formControlName="TDSAmount" />
+                        </div>
+                    </div>
+
+                    <div class="col-4">
+
+                    </div>
+
+                    <div class="col-4">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                                <label class="fontstyles">Ex.Gain (DR)</label>
+                                <input [ngClass]="!IsExGainEnable ? 'disable-input' : ''"
+                                    (ngModelChange)="summaryAmountCalculation()"
+                                    onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                    min="0" numbersOnly appDynamicDecimal class=" form-control mt-1"
+                                    formControlName="ExGain" />
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
+                                <label class="fontstyles">Ex.Loss (CR)</label>
+                                <input [ngClass]="!IsExLossEnable ? 'disable-input' : ''"
+                                    (ngModelChange)="summaryAmountCalculation()"
+                                    onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                    min="0" numbersOnly appDynamicDecimal class=" form-control mt-1"
+                                    formControlName="ExLoss" />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- table -->
+
+            <ng-container *ngIf="paymentType == 'IsBill' && !isAccountType">
+                <div class="row">
+
+
+
+                    <div class="col-12 pt-4">
+                        <!-- <input type="text" name="" id="" class="mr-4" style="height: 35px;" (keyup.enter)="addInvoiceId($event.target.value)" (keyup.,)="addInvoiceId($event.target.value)" [(ngModel)]="invoiceSearch" [ngModelOptions]="{standalone: true}">
+                        <button class="btn btn-primary" (click)="searchInvoices()">Search</button> -->
+                        <!-- Your HTML template -->
+                        <!-- <textarea name="" 
+                            id=""
+                            class="mr-4"
+                            cols="50" row ="1"
+                            (keyup)="onInputKeyUp($event)"
+                            [(ngModel)]="invoiceSearch"
+                            [ngModelOptions]="{ standalone: true }"></textarea> -->
+                        <!-- <input 
+                        type="text"
+                        name=""
+                        id=""
+                        class="mr-4"
+                        style="height: 35px;width : 250px"
+                        (keyup)="onInputKeyUp($event)"
+                        [(ngModel)]="invoiceSearch"
+                        [ngModelOptions]="{ standalone: true }"
+                        > -->
+                        <textarea #autoResizeTextArea name="" id="" class="mr-4"
+                            style="width: 32.4rem; overflow-y: hidden;" (keyup)="onInputKeyUp($event)"
+                            (input)="onTextareaInput($event)" [(ngModel)]="invoiceSearch" placeholder="Invoice No"
+                            class="inputs" [ngModelOptions]="{ standalone: true } "></textarea>
+                        <!-- <button class="btn btn-primary d-none" (click)="test()">test1</button> -->
+                        <button class="btn btn-primary  ml-1 mb-4" (click)="searchInvoices(true)">Search</button>
+
+                        <button class="btn btn-warning text-white ml-3 mb-4" (click)="clearInvoices()">Clear</button>
+                        <div>
+                            <span *ngFor="let ids of searchedInvoiceIds; let i = index">
+                                <span class="mr-2 chips">
+                                    {{ids}}
+                                    <i class="mdi mdi-close p-2" (click)="remove(i, ids)"></i>
+                                </span>
+                            </span>
+
+                        </div>
+                    </div>
+
+                    <div class="col-12 table-wrapper">
+                        <table class="bend-table" style="max-height: 500px;"
+                            class="table table-responsive  table-bordered w-100 table-striped border-0 agingTable mt-2">
+                            <thead class="text-center">
+                                <tr class="header-position-sticky">
+                                    <th class="text-center">S.NO</th>
+                                    <th class="text-center" scope="col">Invoice No</th>
+                                    <th class="text-center" scope="col">Date</th>
+                                    <th class="text-center" scope="col">Currency</th>
+                                    <th class="text-center" scope="col">Invoice Amount <br>(ICY)</th>
+                                    <th class="text-center" scope="col">Due Amount <br>(ICY)</th>
+                                    <th class="text-center" scope="col">Invoice Amount <br>(CCY)</th>
+                                    <!-- <th  class="text-center" scope="col">Bill Amount (L)</th> -->
+                                    <th class="text-center" scope="col">Due Amount <br>(CCY)</th>
+                                    <!-- <th  class="text-center" scope="col">Due Amount (L)</th> -->
+                                    <th class="text-center" scope="col">TDS</th>
+                                    <th class="text-center" style="min-width: 90px;" scope="col">Payment</th>
+                                    <th class="text-center" scope="col">Select</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-container *ngIf="paymentDetailsTableList.length; else noRecord">
+                                    <tr *ngFor="let due of paymentDetailsTableList;let i = index"
+                                        [ngClass]="getIsChecked(i) ? 'checked-row' : ''">
+                                        <td class="text-center">{{ i + 1 }}</td>
+                                        <td class="text-center">{{due.InvoiceNumber}}</td>
+                                        <!-- <td>{{due.date | date: commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td> -->
+                                        <td class="text-center">{{due.BillDate |
+                                            date:commonDataService.convertToLowerCaseDay(entityDateFormat) }}</td>
+
+                                        <td class="text-center">{{due.Currency}}</td>
+                                        <td class="text-center">{{due.BillAmount }}</td>
+                                        <td class="text-center">
+                                            {{due.DueAmount}}
+                                            <!-- <input class="w-100" [ngClass]="isEditDueBill ? '' : 'disable-input'"
+                                                type="number" [(ngModel)]="due.DueAmount"
+                                                [ngModelOptions]="{standalone: true}"> -->
+                                        </td>
+                                        <td class="text-center">{{due.InvoiceAmountCCY }}</td>
+                                        <!-- <td class="text-center">{{due.BillAmountLocal }}</td> -->
+                                        <td class="text-center">
+                                            {{due.DueAmountCCY}}
+                                        </td>
+
+                                        <!-- <td class="text-center">{{due.DueAmountLocal}}</td> -->
+                                        <td class="text-center">
+                                            <input class="w-100 disable-input"
+                                                [ngClass]=" IsFinal || !isTds || !isEditMode ? 'disable-input' : ''"
+                                                type="number"
+                                                (change)="getDueAmount($event.target.value, due.BillAmount, due.Payment, i, due.DueAmount,'tds');summaryAmountCalculation()"
+                                                [(ngModel)]="due.TDS" [ngModelOptions]="{standalone: true}">
+                                            <!-- {{due.tds}} -->
+                                        </td>
+                                        <td class="text-center">
+                                            <!-- {{due.payment}} -->
+                                            <input min="1" class="w-100"
+                                                (change)="getDueAmount(due.TDS, due.BillAmount,$event.target.value, i, due.DueAmount,'payment');summaryAmountCalculation()"
+                                                type="number" [(ngModel)]="due.Payment"
+                                                [ngClass]="IsFinal || !isEditMode || !due.IsCheck ? 'disable-input' : ''"
+                                                [ngModelOptions]="{standalone: true}" step="0.001">
+
+                                        </td>
+                                        <td>
+                                            <input
+                                                (click)="OnClickRadio(i, due.InvoiceNumber, due.IsCheck);setInitalPaymentAmount(i, due);calculateFinalTotal();"
+                                                [(ngModel)]="due.IsCheck" [ngModelOptions]="{standalone: true}"
+                                                type="checkbox"
+                                                [ngClass]=" !isEditMode ? 'disable-input--nostyle' : ''" />
+                                        </td>
+                                    </tr>
+                                </ng-container>
+                                <!-- no data -->
+                                <ng-template #noRecord>
+                                    <tr>
+                                        <td class="text-center" colspan="8" style="height: 10px;">No records found</td>
+                                    </tr>
+                                </ng-template>
+                            </tbody>
+                            <tfoot>
+                                <tr class="footer-position-sticky">
+                                    <td colspan="9" class="text-right">
+                                        <span style="font-size: large;">Total Amount : </span>
+                                    </td>
+                                    <td style="font-size: large;font-weight:bold; background-color: rgb(192, 247, 192);"
+                                        class="text-center" colspan="2">
+                                        {{selectedInvoiceTotal}}
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <div class="col-5 mt-auto">
+                        <ng-template [ngTemplateOutlet]="documentTemp"></ng-template>
+                    </div>
+                    <!-- <div class="col-4 mt-auto" *ngIf="!isSameCurrency">
+                        <ng-template [ngTemplateOutlet]="exchangeRate"></ng-template>
+                    </div> -->
+                    <div class="col-3 mt-auto mb-3" *ngIf="!isSameCurrency">
+                        <label class="str">Local Amount</label>
+                        <input disabled type="text" appDynamicDecimal class="w-100 form-control local"
+                            placeholder="Local Amount" [(ngModel)]="TotalAmount" [ngModelOptions]="{standalone: true}"
+                            (change)="updateAmount($event.target.value)" />
+                    </div>
+                </div>
+            </ng-container>
+
+            <!-- <ng-container > -->
+            <div formGroupName="Table4" *ngIf="isAccountType">
+                <div class="row">
+                    <div class="col-md-12 alrt">
+                        <button type="submit" class="btn btn-success bmd-btn-fab tblbtngap" [disabled]="isUpdateEnable"
+                            (click)="DynamicGridAddRow()"><i class="material-icons editicon">add</i>
+                            <div class="ripple-container"></div>
+                        </button>
+                        <button type="submit" class="btn btn-primary bmd-btn-fab tblbtngap" [disabled]="isUpdateEnable"
+                            (click)="OnClickEditValue()"><i class="material-icons editicon">edit</i>
+                            <div class="ripple-container"></div>
+                        </button>
+                        <button type="submit" class="btn btn-danger bmd-btn-fab" [disabled]="isUpdateEnable"
+                            (click)="DynamicGridDeleteRow()"><i class="material-icons editicon">delete</i>
+                            <div class="ripple-container"></div>
+                        </button>
+                    </div>
+                    <div class="col-12 table-wrapper">
+                        <table class="bend-table" style="max-height: 500px;"
+                            class="table table-responsive  table-bordered w-100 table-striped border-0 agingTable mt-2">
+                            <thead class="text-center">
+                                <tr class="header-position-sticky">
+                                    <th class="text-center">S.NO</th>
+                                    <th class="text-center" scope="col">Account</th>
+                                    <th class="text-center" scope="col">DR/CR</th>
+                                    <th class="text-center" scope="col">Currency</th>
+                                    <th class="text-center" scope="col">ROE</th>
+                                    <th class="text-center" scope="col">Amount (FCY)</th>
+                                    <th class="text-center" scope="col">Amount (CCY)</th>
+                                    <th class="text-center" scope="col">Narration</th>
+                                    <th class="text-center" scope="col">Select</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td class="text-center bestfit-width">
+
+                                        <ng-select class="searchdropdown" [clearable]="false" [appendTo]="'body'"
+                                            [items]="AccountList" bindLabel="AccountName" bindValue="ChartOfAccountsId"
+                                            groupBy="GroupName" formControlName="AccountId">
+                                            <ng-template ng-optgroup let-item="item">
+                                                {{item.GroupName | uppercase}}
+                                            </ng-template>
+                                        </ng-select>
+
+                                        <!-- <ng-select class="searchdropdown" [clearable]="false" [appendTo]="'body'"
+                                            formControlName="AccountId" [disabled]="isUpdateEnable">
+                                            <ng-container>
+                                                <optgroup *ngFor="let ddlAccType of groupedCoaTypeList | keyvalue"
+                                                    [label]="ddlAccType.key">
+                                                    <option *ngFor="let type of ddlAccType.value"
+                                                        [value]="type.ChartOfAccountsId">
+                                                        {{ type.AccountName | uppercase }}
+                                                    </option>
+                                                </optgroup>
+                                            </ng-container>
+                                        </ng-select> -->
+                                        <!-- <ng-option [value]="0" [disabled]="true">--SELECT
+                                                Account--</ng-option>
+                                            <ng-option *ngFor="let gRow of AccountList"
+                                                [value]="gRow.ChartOfAccountsId">
+                                                {{gRow.AccountName | uppercase}}
+                                            </ng-option> -->
+                                    </td>
+
+                                    <td class="text-center best-fit-width">
+                                        <ng-select class="searchdropdown" [appendTo]="'body'" [clearable]="false"
+                                            formControlName="TransactionType">
+                                            <ng-option [value]="0" [disabled]="true">--SELECT
+                                                DR/CR--</ng-option>
+                                            <ng-option *ngFor="let currency of debitCreditList" [value]="currency.Id">
+                                                {{ currency.TransactionName | uppercase }}
+                                            </ng-option>
+                                        </ng-select>
+
+                                    </td>
+
+                                    <td class="text-center bestfit-width">
+                                        <ng-select class="searchdropdown" [appendTo]="'body'" [clearable]="false"
+                                            formControlName="CurrencyId" id="ddlStatus">
+                                            <ng-option [value]="''" [disabled]="true">--SELECT
+                                                CURRENCY--</ng-option>
+                                            <ng-option *ngFor="let currency of currencyList" [value]="currency.ID">
+                                                {{ currency.CurrencyCode | uppercase }}
+                                            </ng-option>
+                                        </ng-select>
+
+                                    </td>
+
+                                    <td class="text-center bestfit-width">
+                                        <input type="text"
+                                            onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                            min="0" numbersOnly appDynamicDecimal class="w-100 form-control"
+                                            placeholder="ROE" [formControlName]="'ROE'" />
+
+                                    </td>
+
+                                    <td class="text-center bestfit-width">
+                                        <input type="text"
+                                            onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                            min="0" numbersOnly appDynamicDecimal class="w-100 form-control"
+                                            placeholder="Amount_LCR" [formControlName]="'Amount_LCR'" />
+
+                                    </td>
+
+                                    <td class="text-center best-fit-width">
+                                        <input
+                                            [value]="paymentForm.value.Table4.ROE * paymentForm.value.Table4.Amount_LCR"
+                                            type="text"
+                                            onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                            min="0" numbersOnly appDynamicDecimal class="w-100 form-control" readonly
+                                            placeholder="Amount_CCR" [formControlName]="'Amount_CCR'" />
+                                    </td>
+
+                                    <td class="text-center best-fit-width">
+                                        <input type="text" appDynamicDecimal class="w-100 form-control"
+                                            placeholder="Narration" [formControlName]="'Narration'" />
+                                    </td>
+
+                                    <td> </td>
+
+                                </tr>
+                                <tr *ngFor="let due of accountDetailsTableList;let i = index">
+                                    <td class="text-center">{{ i + 1 }}</td>
+                                    <td class="text-center">{{due.AccountName}}</td>
+                                    <td class="text-center">{{due.TransactionTypeName }}</td>
+                                    <td class="text-center">{{due.CurrencyName}}</td>
+                                    <td class="text-center">{{due.ROE}}</td>
+                                    <td class="text-center">{{due.Amount_LCR }}</td>
+                                    <td class="text-center">{{due.Amount_CCR }}</td>
+                                    <td class="text-center"> {{due.Narration}}
+                                    </td>
+                                    <td class="text-center">
+                                        <input class="vertal checkbox" type="radio" name="AlertCheck" id="RadioCheck"
+                                            (click)="radioChange($event,i)" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                    <!-- <div class="col-4 mb-2">
+                        <label>Total Debit</label>
+                        <input [(ngModel)]="TotalDebit" [ngModelOptions]="{standalone: true}" readonly
+                            class="form-control color " autocomplete="off" type="text">
+                    </div>
+                    <div class="col-4">
+                        <label>Total Credit</label>
+                        <input [(ngModel)]="TotalCredit" [value]="paymentForm.value.Table.AmountPaid"
+                            [ngModelOptions]="{standalone: true}" readonly class="form-control color" autocomplete="off"
+                            type="text">
+                    </div>
+                    <div class="col-4">
+                        <label>Difference</label>
+                        <input [(ngModel)]="AmountDifference" [ngModelOptions]="{standalone: true}" readonly
+                            class="form-control color" autocomplete="off" type="text">
+                    </div> -->
+
+                    <div class="col-5 mt-auto">
+                        <ng-template [ngTemplateOutlet]="documentTemp"></ng-template>
+                    </div>
+                    <!-- <div class="col-4 mt-auto" *ngIf="!isSameCurrency">
+                        <ng-template [ngTemplateOutlet]="exchangeRate"></ng-template>
+                    </div> -->
+                    <!-- <div class="col-3 mt-auto mb-3" *ngIf="!isSameCurrency">
+                        <label class="str">Local Amount</label>
+                        <input disabled type="text" appDynamicDecimal class="w-100 form-control local"
+                            placeholder="Local Amount" [(ngModel)]="TotalAmount" [ngModelOptions]="{standalone: true}"
+                            (change)="updateAmount($event.target.value)" />
+                    </div> -->
+
+                </div>
+
+                <!-- <div class="row mt-4">
+                    <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                        <label>Total Debit</label>
+                        <input formControlName="TotalDebit" readonly class="form-control debit " autocomplete="off"
+                            type="text">
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                        <label>Total Credit</label>
+                        <input formControlName="TotalCredit" readonly class="form-control credit" autocomplete="off"
+                            type="text">
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                        <label>Difference</label>
+                        <input formControlName="AmountDifference" readonly class="form-control difference"
+                            autocomplete="off" type="text">
+                    </div>
+
+                    <div class="col-md-12 col-sm-12 col-lg-4 col-xl-4 mt-2">
+                        <label>Remarks</label>
+                        <textarea [ngClass]=" isUpdate ? 'block-input' : ''" formControlName="Remarks"
+                            class="form-control addressht" rows="3"></textarea>
+
+
+                    </div>
+                </div> -->
+
+                <!-- </ng-container> -->
+
+                <ng-template #account>
+                    <div formGroupName="Table2">
+                        <!-- <div class="row">
+                        <div class="col-8">
+                            <label>Payment Remarks</label><br>
+                            <textarea name="" id="" cols="50" rows="2" [disabled]="!isEditMode" formControlName="OnAccountRemarks"></textarea>
+                        </div>
+                        <div class="col-4 mt-auto"> </div>
+                    </div> -->
+                        <div class="row">
+                            <div class="col-5 mt-auto">
+                                <ng-template [ngTemplateOutlet]="documentTemp"></ng-template>
+                            </div>
+                            <div class="col-4 mt-auto" *ngIf="!isSameCurrency">
+                                <ng-template [ngTemplateOutlet]="exchangeRate"></ng-template>
+                            </div>
+                            <div class="col-3 mt-auto mb-3" *ngIf="!isSameCurrency">
+                                <label class="">Amount</label>
+                                <input type="number" style="text-transform: initial !important;" appDynamicDecimal
+                                    readonly class="w-100 form-control local" placeholder="Company Currency"
+                                    [(ngModel)]="TotalAmount" [ngModelOptions]="{standalone: true}"
+                                    (change)="updateAmount($event.target.value)" />
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </div>
+
+            <div class="col-12 row p-0">
+                <div class="col-7">
+                    <div class="col-7 mt-3">
+
+                    </div>
+                </div>
+                <div class="col-5 p-0">
+                    <div class="table-wrapper">
+                        <table class="bend-table" style="max-height: 500px;"
+                            class="table table-responsive  table-bordered w-100 table-striped border-0 agingTable mt-2">
+                            <thead class="text-center">
+                                <tr>
+                                    <th class="text-center" scope="col">Summary</th>
+                                    <th class="text-center" scope="col">Debit (CCY)</th>
+                                    <th class="text-center" scope="col">Credit (CCY)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-center">
+                                        <label>Amount Paid</label>
+                                    </td>
+                                    <td class="text-center">
+                                        <label>0</label>
+                                    </td>
+                                    <td *ngIf="this.paymentForm.value.Table.IsVendor" class="text-center">
+                                        <label>{{this.paymentForm.value.Table.AmountPaid *
+                                            (!this.paymentForm.value.Table.ExchangeRate ? 0 :
+                                            this.paymentForm.value.Table.ExchangeRate )
+                                            }}</label>
+                                    </td>
+                                    <td *ngIf="!this.paymentForm.value.Table.IsVendor" class="text-center">
+                                        <label>{{(this.paymentForm.value.Table.AmountPaid *
+                                            (!this.paymentForm.value.Table.ExchangeRate ? 0 :
+                                            this.paymentForm.value.Table.ExchangeRate))
+                                            }}</label>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td class="text-center">
+                                        <label>Customer</label>
+                                    </td>
+
+                                    <td *ngIf="this.paymentForm.value.Table.IsVendor && !this.isPaymentForBill"
+                                        class="text-center">
+                                        <label>{{(this.paymentForm.value.Table.AmountPaid *
+                                            (!this.paymentForm.value.Table.ExchangeRate ? 0 :
+                                            this.paymentForm.value.Table.ExchangeRate
+                                            ))
+                                            }}
+                                        </label>
+                                    </td>
+                                    <td *ngIf="this.paymentForm.value.Table.IsVendor && !this.isPaymentForBill"
+                                        class="text-center">
+                                        <label>0</label>
+                                    </td>
+
+                                    <td *ngIf="this.paymentForm.value.Table.IsVendor && this.isPaymentForBill"
+                                        class="text-center">
+                                        <label>0</label>
+                                    </td>
+                                    
+                                    <td *ngIf="this.paymentForm.value.Table.IsVendor && this.isPaymentForBill"
+                                        class="text-center">
+                                        <label>{{ this.paymentForm.value.Table.TotalPaymentAmount
+                                            }}
+                                        </label>
+                                    </td>
+
+                                    <td *ngIf="!this.paymentForm.value.Table.IsVendor" class="text-center">
+                                        <label>{{
+                                            this.TotalDebit
+                                            }}</label>
+                                    </td>
+                                    <td *ngIf="!this.paymentForm.value.Table.IsVendor" class="text-center">
+                                        <label>0</label>
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="text-center">
+                                        <label>TDS</label>
+                                    </td>
+                                    <td class="text-center">
+                                        <label>0</label>
+                                    </td>
+                                    <td class="text-center">
+                                        <label>{{this.paymentForm.value.Table.TDSAmount}}</label>
+                                    </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="text-center">
+                                        <label>Bank Charges</label>
+                                    </td>
+                                    <td class="text-center">
+                                        <label>0</label>
+                                    </td>
+                                    <td class="text-center">
+                                        <label>{{(this.paymentForm.value.Table.BankCharges *
+                                            (!this.paymentForm.value.Table.ExchangeRate ? 0 :
+                                            this.paymentForm.value.Table.ExchangeRate))}}</label>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td class="text-center">
+                                        <label>Ex. Rate Gain</label>
+                                    </td>
+                                    <td class="text-center">
+                                        <label>0</label>
+                                    </td>
+                                    <td class="text-center">
+                                        <label>{{this.paymentForm.value.Table.ExGain}}</label>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td class="text-center">
+                                        <label>Ex. Rate Loss</label>
+                                    </td>
+                                    <td class="text-center">
+                                        <label>{{this.paymentForm.value.Table.ExLoss}}</label>
+                                    </td>
+                                    <td class="text-center">
+                                        <label>0</label>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td style="font-size: large;font-weight:bold; background-color: rgb(192, 247, 192);"
+                                        colspan="1" class="text-center">
+                                        <span style="font-size: large;">Total (INR) </span>
+                                    </td>
+                                    <td style="font-size: large;font-weight:bold; background-color: rgb(192, 247, 192);"
+                                        colspan="1" class="text-center">
+                                        <span
+                                            style="font-size: large;">{{this.paymentForm.value.Table.TotalDebit}}</span>
+                                    </td>
+                                    <td style="font-size: large;font-weight:bold; background-color: rgb(192, 247, 192);"
+                                        colspan="1" class="text-center">
+                                        <span style="font-size: large;">
+                                            {{this.paymentForm.value.Table.TotalCredit}}
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+
+            <div class="col-12 pt-4 pb-4">
+                <!-- || paymentForm.value.Table.value.AmountPaid !== paymentForm.value.Table.value.TotalAmount  -->
+                <div class="float-right">
+                    <!-- [ngClass]=" !isEditMode || !isSameAmount  ? 'disable-input--nostyle save-disable---style' : ''" -->
+                    <button type="button" class="btn btn-primary text-white mr-3 mb-0 col-auto" (click)="submit()">
+                        Save
+                    </button>
+                    <button type="button"
+                        [ngClass]=" !isUpdate || !isEditMode || (!isSameAmount && !isPaymentForBill) ? 'disable-input--nostyle final-disable--style' : ''"
+                        class="btn btn-success text-white mr-3 mb-0 col-auto" (click)="finalSubmit()">
+                        Final
+                    </button>
+                    <button type="button" *ngIf="isUpdate && !IsFinal" (click)="submit(true)"
+                        [ngClass]="!isEditMode  ? 'disable-input--style' : ''"
+                        class="btn btn-warning text-white mr-3 mb-0 col-auto">
+                        Delete
+                    </button>
+
+                    <button type="button" (click)="Cancel()" class="btn btn-warning text-white mr-3 mb-0 col-auto">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+
+        </div>
+        <!-- common document upload template -->
+        <ng-template #documentTemp>
+            <div class="row" formGroupName="document">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-6">
+                            <label>Upload File</label>
+                            <div class="file-upload">
+                                <input type="text" formControlName="FilePath" hidden />
+                                <input class="file-upload__input" hidden type="file" name="myFile" id="myFile"
+                                    (change)="documentSelected($event)">
+                                <label for="myFile" class="file-upload__button text-center w-100"
+                                    style="border: 1px solid #b1b1b1d1 !important; border-radius: 10px; box-shadow: 0px 0px 5px 0px rgb(202 202 202); background-color: white; font-weight: 600; margin-right: 0.5rem !important;"
+                                    type="button">
+                                    <img class="ml-2" src="assets/images/docupload.png" alt="Upload image"
+                                        style="width: 1rem !important;" />
+                                    Choose File(s)
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-6 mt-auto d-flex">
+                            <!-- <button type="button" class="btn btn-primary text-white mr-3 mb-0 col-auto" (click)="uploadDocument()">Upload</button> -->
+                            <!-- <button type="button" class="btn btn-warning text-white mr-3 mb-0 col-auto">Cancel</button> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <!-- <div class="col-md-12 alrt">
+                        <button type="submit" class="btn btn-danger bmd-btn-fab mt-2" (click)="deleteDocument()"><i
+                                class="material-icons editicon">delete</i>
+                            <div class="ripple-container"></div>
+                        </button>
+                    </div> -->
+                    <table class="table table-responsive  table-bordered w-100 table-striped border-0 agingTable mt-2">
+                        <thead>
+                            <tr>
+                                <th scope="col">S.No</th>
+                                <th scope="col">File Name</th>
+                                <th>Select</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ng-container *ngIf="documentTableList.length; else noRecord2">
+                                <tr *ngFor="let document of documentTableList;let i = index">
+                                    <td>{{ i + 1 }}</td>
+                                    <td>{{ document.DocumentName }}</td>
+                                    <td class="alc actwid chktbl">
+                                        <!-- <input class="vertal checkbox" type="radio" name="AlertCheck" id="RadioCheck"
+                                            (click)="onFileSelected(i)" /> -->
+                                        <button type="submit" class="btn btn-danger bmd-btn-fab mt-2"
+                                            (click)="deleteDocument(i)"><i class="material-icons editicon">delete</i>
+                                            <div class="ripple-container"></div>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                            <ng-template #noRecord2>
+                                <tr>
+                                    <td class="text-center" colspan="3">No Records Found</td>
+                                </tr>
+                            </ng-template>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </ng-template>
+
+        <!-- common exchange rate template -->
+        <!-- <ng-template #exchangeRate>
+            <div>
+                <label class="">Exchange Rates</label>
+
+                <button type="button" class="btn btn-warning bmd-btn-fab text-white mr-3 mb-0"
+                    style="margin-left: 60px;" (click)="editclick()">
+
+                    <i class="material-icons editicon">edit</i>
+                </button>
+
+                <button [disabled]="!exchangeRateInput" *ngIf="showExchangeRate" type="submit"
+                    style="margin-left: 80px;" class="btn btn-success bmd-btn-fab text-white mr-3 mb-0"
+                    (click)="CurrentExRate()"><i class="material-icons editicon">add</i>
+                </button><br>
+
+                <table class="table table-responsive  table-bordered w-100 table-striped border-0 agingTable mt-2">
+                    <thead>
+                        <tr>
+                            <th scope="col">Rate Pair</th>
+                            <th scope="col">Rate</th>
+                            <th *ngIf="showExchangeRate" scope="col">Updated Rate</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngIf="exchangePairDetails.length; else noRecord2">
+                            <tr *ngFor="let exchange of exchangePairDetails;let i = index">
+                                <td>{{exchange.RatePair}}</td>
+                                <td>{{exchange.Rate}}</td>
+                                <td *ngIf="showExchangeRate">
+                                    <input [(ngModel)]="exchangeRateInput" [ngModelOptions]="{standalone: true}"
+                                        appDynamicDecimal class="form-control w-100" autocomplete="off"
+                                        type="text">{{exchange.CurrentExRate}}
+                                </td>
+
+                            </tr>
+                        </ng-container>
+                        <ng-template #noRecord2>
+                            <tr>
+                                <td class="text-center" colspan="3">No Records Found</td>
+                            </tr>
+                        </ng-template>
+                    </tbody>
+                </table>
+            </div>
+        </ng-template> -->
+
+    </form>
+</div>
