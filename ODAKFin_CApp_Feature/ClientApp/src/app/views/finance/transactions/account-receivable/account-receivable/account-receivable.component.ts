@@ -46,6 +46,7 @@ export class AccountReceivableComponent implements OnInit {
   resultValues: any;
   formattedErrorMessages: string;
   isAccess: boolean = false;
+  TemplateUploadURL = this.globals.TemplateUploadURL;
 
   openPopup() {
     debugger
@@ -90,7 +91,10 @@ export class AccountReceivableComponent implements OnInit {
     this.CreateForm();
     this.getPaymentReceivableList();
     this.getNumberRange();
+  
   }
+
+  
 
   CreateForm() {
     this.amountReceivableForm = this.fb.group({
@@ -182,6 +186,8 @@ export class AccountReceivableComponent implements OnInit {
   search() {
     this.getPaymentReceivableList()
   }
+
+
 
 
   getNumberRange() {
@@ -276,6 +282,8 @@ export class AccountReceivableComponent implements OnInit {
       });
     }
   }
+
+  
 
   updateFormattedErrorMessages(): void {
     const groupedErrors: { [key: string]: string[] } = {};

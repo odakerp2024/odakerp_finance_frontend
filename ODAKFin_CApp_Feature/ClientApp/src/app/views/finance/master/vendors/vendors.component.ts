@@ -1339,6 +1339,7 @@ export class VendorsComponent implements OnInit {
   }
 
   EditModeValueBInd(response) {
+    debugger
     this.vendorDetailsById = response;
     var tblcount: number = 0;
     if (response['data'].Table.length > 0) {
@@ -3207,13 +3208,13 @@ export class VendorsComponent implements OnInit {
       validation += '<span style=\'color:red;\'>*</span> <span>Please Select Country </span></br>'
     }
 
-    // if (!this.fg.value.SwiftCode) {
-    //   validation += '<span style=\'color:red;\'>*</span> <span>Please enter Swift/IBAN Code </span></br>'
-    // }
-
-    if (this.fg.value.IFSCCode && this.fg.controls.IFSCCode.errors) {
-      validation += '<span style=\'color:red;\'>*</span> <span>Please Enter Valid IFSC Number</span></br>';
+    if (!this.fg.value.SwiftCode) {
+      validation += '<span style=\'color:red;\'>*</span> <span>Please enter Swift/IBAN Code </span></br>'
     }
+
+    // if (this.fg.value.IFSCCode && this.fg.controls.IFSCCode.errors) {
+    //   validation += '<span style=\'color:red;\'>*</span> <span>Please Enter Valid IFSC Number</span></br>';
+    // }
 
     if (!this.fg.value.bankIsActive) {
       validation += '<span style=\'color:red;\'>*</span> <span>Please Select Active </span></br>'

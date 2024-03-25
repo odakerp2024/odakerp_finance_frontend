@@ -207,6 +207,9 @@ export class AccountReceivableDetailsComponent implements OnInit {
     if (this.accountReceivableForm.value.InvoiceAmountCCY == "") {
       validation += "<span style='color:red;'>*</span> <span>Please Enter InvoiceAmountCCY</span></br>"
     }
+    if (this.accountReceivableForm.value.Exchange == "") {
+      validation += "<span style='color:red;'>*</span> <span>Please Enter Exchange</span></br>"
+    }
     if (validation != "") {
       Swal.fire(validation)
       return false;

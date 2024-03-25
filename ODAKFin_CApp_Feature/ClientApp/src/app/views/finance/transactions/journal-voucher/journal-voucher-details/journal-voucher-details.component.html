@@ -206,7 +206,9 @@
                                                     <ng-select class="searchdropdown custom" formControlName="Currency"  [clearable]="false"  [appendTo]="'body'">
                                                         <ng-option [value]="0" disabled>--SELECT CURRENCY--</ng-option>
                                                         <ng-option *ngFor="let currency of currencyList" [value]="currency.ID">
-                                                          {{ currency.Currency | uppercase }}
+                                                          <!-- {{ currency.Currency | uppercase }} -->
+                                                          {{ currency.Currency.split(' - ')[0] | uppercase }}
+
                                                         </ng-option>
                                                       </ng-select>                                                      
                                                 </td>

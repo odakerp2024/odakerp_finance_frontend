@@ -45,6 +45,7 @@ export class LiabilityComponent implements OnInit {
   file1: any;
   resultValues: any;
   formattedErrorMessages: string;
+  TemplateUploadURL = this.globals.TemplateUploadURL;
 
   constructor(
     public commonDataService: CommonService,

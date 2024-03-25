@@ -270,6 +270,9 @@ export class AccountPayableDetailsComponent  implements OnInit {
       if (this.accountPayableForm.value.InvoiceAmountCCY == "") {
         validation += "<span style='color:red;'>*</span> <span>Please Enter InvoiceAmountCCY</span></br>"
       }
+      if (this.accountPayableForm.value.Exchange == "") {
+        validation += "<span style='color:red;'>*</span> <span>Please Enter Exchange</span></br>"
+      }
       if (validation != "") {
         Swal.fire(validation)
         return false;

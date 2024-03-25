@@ -142,7 +142,7 @@
                                 <ng-select  class="searchdropdown custom" formControlName="CurrencyId" (change)="setCurrencyId($event); getExchangeRate()" [clearable]="false">
                                 <ng-option [value]="''" [disabled]="true">--SELECT CURRENCY--</ng-option>
                                 <ng-option *ngFor="let currency of currencyList" [value]="currency.CurrencyID">
-                                  {{ currency.CurrencyCode | uppercase }} - {{ currency.CurrencyName | uppercase }}
+                                  {{ currency.CurrencyCode | uppercase }}
                                 </ng-option>
                               </ng-select>                              
                             </div>     
