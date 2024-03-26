@@ -232,6 +232,7 @@ export class VendorsComponent implements OnInit {
   isEmailids: boolean = false;
   isInterfaces: boolean = false;
   parentAccountList: any[];
+  entityCurrencyID: any;
 
   constructor(private router: Router, private route: ActivatedRoute, private fb: FormBuilder, private ms: MastersService
     , private commonservice: CommonService, private VendorService: VendorService, private fy: FinancialyearService,
@@ -841,7 +842,7 @@ export class VendorsComponent implements OnInit {
       BankAccountCode: '',
       bankShortName: '',
       AccountNumberId: '',
-      CurrencyId: 1,
+      CurrencyId: 0,
       IFSCCode: ['', [Validators.pattern(this.patternService.IFSCPattern)]],
       bankCountryId: 0,
       SwiftCode: '',
@@ -1155,6 +1156,9 @@ export class VendorsComponent implements OnInit {
 
         if (entitySelectedCurrency) {
           this.creditDetailsForm.controls.Currency.setValue(entitySelectedCurrency.ID);
+          this.fg.controls.CurrencyId.setValue(entitySelectedCurrency.ID);
+
+          // this.entityCurrencyID = entitySelectedCurrency.ID
         }
       }
     }, error => { });

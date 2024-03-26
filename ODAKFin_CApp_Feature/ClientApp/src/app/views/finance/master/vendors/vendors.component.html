@@ -960,26 +960,23 @@
                                                                     <div class="form-group bmd-form-group">
                                                                         <div class="row">
                                                                             <div class="w-100 mr-2 ml-2">
-                                                                                <label class="str">Currency</label>
+                                                                                <label class="str">Currency123</label>
                                                                                 <!-- </div>
                                                                 <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
                                                                 <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7 input-field"> -->
-                                                                                <select formControlName="CurrencyId"
-                                                                                    id="ddlOffice"
-                                                                                    class="form-control my-select">
-                                                                                    <option disabled [value]="null">--
-                                                                                        Select Currency --</option>
-                                                                                    <!-- <option *ngFor="let gRow  of AccTypecurrency" [value]="gRow.CurrencyID">
-                                                                            {{gRow.CurrencyName}}
-                                                                        </option> -->
-                                                                                    <option
-                                                                                        *ngFor="let gRow of currencyList"
-                                                                                        [value]="gRow.ID">
-                                                                                        {{gRow.CurrencyName}} -
-                                                                                        {{gRow.CurrencyCode}}
-                                                                                    </option>
-                                                                                </select>
 
+
+
+                                                                                <ng-select formControlName="CurrencyId"
+                                                                                id="ddlOffice" class="searchdropdown" >
+                                                                                    <ng-option disabled [value]="null">--
+                                                                                        Select Currency --</ng-option>
+                                                                                    <ng-option *ngFor="let gRow of currencyList"
+                                                                                    [value]="gRow.ID">
+                                                                                    {{gRow.CurrencyName}} -
+                                                                                    {{gRow.CurrencyCode}}
+                                                                                    </ng-option>
+                                                                                    </ng-select>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -1201,7 +1198,7 @@
                                                                                         class="form-control">
                                                                                 </td>
                                                                                 <td>
-                                                                                    <select
+                                                                                    <!-- <select
                                                                                         [(ngModel)]="+dataItem.CurrencyId"
                                                                                         disabled
                                                                                         [ngModelOptions]="{standalone: true}"
@@ -1215,7 +1212,20 @@
                                                                                             {{gRow.CurrencyName}} -
                                                                                             {{gRow.CurrencyCode}}
                                                                                         </option>
-                                                                                    </select>
+                                                                                    </select> -->
+
+                                                                                <ng-select [(ngModel)]="+dataItem.CurrencyId"
+                                                                                    disabled 
+                                                                                    [ngModelOptions]="{standalone: true}">
+                                                                                    <ng-option disabled [value]="null">
+                                                                                        -- Select Currency --</ng-option>
+                                                                                    <ng-option *ngFor="let gRow of currencyList"
+                                                                                    [value]="gRow.ID">
+                                                                                    {{gRow.CurrencyName}} -
+                                                                                    {{gRow.CurrencyCode}}
+                                                                                    </ng-option>
+                                                                                </ng-select>
+
                                                                                 </td>
                                                                                 <td>
                                                                                     <!-- <input type="text" [(ngModel)]="dataItem.IsActive" disabled [ngModelOptions]="{standalone: true}"
@@ -1414,7 +1424,7 @@
                                                                                 <!-- <input type="text" name="currency" formControlName="Currency"
                                                                                     autocomplete="off" id="txtCurrency" ng-model="txtCurrency"
                                                                                     class="form-control"> -->
-                                                                                <select name="currency" id="txtCurrency"
+                                                                                <!-- <select name="currency" id="txtCurrency"
                                                                                     formControlName="AccountCurrencyId"
                                                                                     class="form-control my-select">
                                                                                     <option [value]="''" disabled>
@@ -1427,7 +1437,20 @@
                                                                                         {{gRow.CurrencyCode |
                                                                                         uppercase}}
                                                                                     </option>
-                                                                                </select>
+                                                                                </select> -->
+
+
+                                                                                <ng-select name="currency" id="txtCurrency"
+                                                                                formControlName="AccountCurrencyId" class="searchdropdown">
+                                                                                    <ng-option [value]="''" disabled>
+                                                                                        --SELECT--</ng-option>
+                                                                                    <ng-option *ngFor="let gRow of currencyList"
+                                                                                    [value]="gRow.ID">
+                                                                                    {{gRow.CurrencyName}} -
+                                                                                    {{gRow.CurrencyCode}}
+                                                                                    </ng-option>
+                                                                                    </ng-select>
+
                                                                             </div>
                                                                         </div>
                                                                     </div>
