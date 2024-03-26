@@ -201,6 +201,8 @@ import { VendorsComponent } from './views/finance/master/vendors/vendors.compone
 import { ChartaccountcodeviewComponent } from './views/finance/master/chartaccountcode/chartaccountcodeview/chartaccountcodeview.component';
 import { ChartaccountcodelistComponent } from './views/finance/master/chartaccountcode/chartaccountcodelist.component';
 import { LamasterComponent } from './views/masters/LAmaster/lamaster.component';
+import { ProvisionViewComponent } from './views/finance/transactions/provision/provision-view/provision-view.component';
+import { ProvisionDetailComponent } from './views/finance/transactions/provision/provision-detail/provision-detail.component';
 const routes: Routes = [
 
     { path: '', redirectTo: "/login", pathMatch: 'full' },
@@ -398,6 +400,8 @@ const routes: Routes = [
             { path: 'exportmanager/vessellevel/vsloadcnfrm/loadcnfrmsts/loadcnfrmsts', component: LoadcnfrmstsComponent },
             { path: 'inventory/inventory', component: InventoryComponent },
             { path: 'exportmanager/vessellevel/vsloadlist/loadlistmail/loadlistmail', component: LoadlistmailComponent },
+            { path: 'finance/transactions/provision/provision-view', component: ProvisionViewComponent },
+            { path: 'finance/transactions/provision/provision-detail', component: ProvisionDetailComponent },
 
             /* Finance Module - Start */
             { path: 'finance/financemaster', component: FinanceMasterComponent },
@@ -504,6 +508,7 @@ const routes: Routes = [
             { path: 'transactions/openingBalances', loadChildren: () => import('./views/finance/transactions/liability/liability.module').then(m => m.LiabilityModule) },
             { path: 'transactions/openingBalances', loadChildren: () => import('./views/finance/transactions/equity/equity.module').then(m => m.EquityModule) },
             { path: 'transactions/openingBalances', loadChildren: () => import('./views/finance/transactions/income/income.module').then(m => m.IncomeModule) },
+            { path: 'provision', loadChildren: () => import('./views/finance/transactions/provision/provision.module').then(m => m.ProvisionModule) },
 
 
 

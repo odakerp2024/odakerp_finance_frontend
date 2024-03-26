@@ -547,6 +547,10 @@ export class FinanceMasterComponent implements OnInit {
     else if (routePage == 'internal') {
       SubfunctionID = 533;
     }
+    else if (routePage == 'provision') {
+      // SubfunctionID = 533;
+      this.router.navigate(['views/finance/transactions/provision/provision-view']);
+    }
 
     const userID = localStorage.getItem("UserID");
     const paylod = {

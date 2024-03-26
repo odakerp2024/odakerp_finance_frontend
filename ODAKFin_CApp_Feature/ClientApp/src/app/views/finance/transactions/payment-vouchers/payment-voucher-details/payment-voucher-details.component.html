@@ -420,7 +420,7 @@
                         <div class="form-group bmd-form-group w-100">
                             <label class="str fontstyles">TDS Deducted</label>
                             <ng-select class="searchdropdown custom" [ngClass]="isCopied ? 'disable-input' : ''"
-                                [formControlName]="'TdsDeducted'" (change)="setDueBill($event)" [clearable]="false">
+                                [formControlName]="'TdsDeducted'" (change)="setDueBill($event);" [clearable]="false">
                                 <ng-option [value]="''" [disabled]="true">--SELECT TDS--</ng-option>
                                 <ng-option *ngFor="let status of statusValues" [value]="status.value">
                                     {{ status.viewValue | uppercase }}
@@ -560,9 +560,9 @@
 
                                         <!-- <td class="text-center">{{due.DueAmountLocal}}</td> -->
                                         <td class="text-center">
-                                            <input class="w-100 disable-input"
-                                                [ngClass]=" IsFinal || !isTds || !isEditMode ? 'disable-input' : ''"
-                                                type="number"
+                                            <input class="w-100"
+                                                [ngClass]="IsFinal  || !isTds || !isEditMode || !due.IsCheck ? 'disable-input' : ''"
+                                                numbersOnly appDynamicDecimal
                                                 (change)="getDueAmount($event.target.value, due.BillAmount, due.Payment, i, due.DueAmount,'tds');summaryAmountCalculation()"
                                                 [(ngModel)]="due.TDS" [ngModelOptions]="{standalone: true}">
                                             <!-- {{due.tds}} -->
@@ -570,14 +570,16 @@
                                         <td class="text-center">
                                             <!-- {{due.payment}} -->
                                             <input min="1" class="w-100"
+                                                onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
                                                 (change)="getDueAmount(due.TDS, due.BillAmount,$event.target.value, i, due.DueAmount,'payment');summaryAmountCalculation()"
-                                                type="number" [(ngModel)]="due.Payment"
+                                                numbersOnly appDynamicDecimal [(ngModel)]="due.Payment"
                                                 [ngClass]="IsFinal || !isEditMode || !due.IsCheck ? 'disable-input' : ''"
                                                 [ngModelOptions]="{standalone: true}" step="0.001">
 
                                         </td>
                                         <td>
                                             <input
+                                                onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
                                                 (click)="OnClickRadio(i, due.InvoiceNumber, due.IsCheck);setInitalPaymentAmount(i, due);calculateFinalTotal();"
                                                 [(ngModel)]="due.IsCheck" [ngModelOptions]="{standalone: true}"
                                                 type="checkbox"
@@ -644,7 +646,7 @@
                             <thead class="text-center">
                                 <tr class="header-position-sticky">
                                     <th class="text-center">S.NO</th>
-                                    <th class="text-center" scope="col">Account</th>
+                                    <th style="min-width: 200px;" class="text-center" scope="col">Account</th>
                                     <th class="text-center" scope="col">DR/CR</th>
                                     <th class="text-center" scope="col">Currency</th>
                                     <th class="text-center" scope="col">ROE</th>
@@ -872,7 +874,7 @@
                             <tbody>
                                 <tr>
                                     <td class="text-center">
-                                        <label>Amount Paid</label>
+                                        <label>Bank</label>
                                     </td>
                                     <td class="text-center">
                                         <label>0</label>
@@ -893,7 +895,7 @@
 
                                 <tr>
                                     <td class="text-center">
-                                        <label>Customer</label>
+                                        <label>Vendor</label>
                                     </td>
 
                                     <td *ngIf="this.paymentForm.value.Table.IsVendor && !this.isPaymentForBill"
@@ -910,17 +912,19 @@
                                         <label>0</label>
                                     </td>
 
-                                    <td *ngIf="this.paymentForm.value.Table.IsVendor && this.isPaymentForBill"
-                                        class="text-center">
-                                        <label>0</label>
-                                    </td>
-                                    
+
                                     <td *ngIf="this.paymentForm.value.Table.IsVendor && this.isPaymentForBill"
                                         class="text-center">
                                         <label>{{ this.paymentForm.value.Table.TotalPaymentAmount
                                             }}
                                         </label>
                                     </td>
+
+                                    <td *ngIf="this.paymentForm.value.Table.IsVendor && this.isPaymentForBill"
+                                        class="text-center">
+                                        <label>0</label>
+                                    </td>
+
 
                                     <td *ngIf="!this.paymentForm.value.Table.IsVendor" class="text-center">
                                         <label>{{
@@ -937,11 +941,18 @@
                                     <td class="text-center">
                                         <label>TDS</label>
                                     </td>
-                                    <td class="text-center">
+                                    <td *ngIf="!this.paymentForm.value.Table.IsVendor" class="text-center">
                                         <label>0</label>
                                     </td>
-                                    <td class="text-center">
+                                    <td *ngIf="!this.paymentForm.value.Table.IsVendor" class="text-center">
                                         <label>{{this.paymentForm.value.Table.TDSAmount}}</label>
+                                    </td>
+                                    
+                                    <td *ngIf="this.paymentForm.value.Table.IsVendor" class="text-center">
+                                        <label>0</label>
+                                    </td>
+                                    <td *ngIf="this.paymentForm.value.Table.IsVendor" class="text-center">
+                                        <label>{{this.paymentForm.value.Table.TotalTDSAmount}}</label>
                                     </td>
 
                                 </tr>

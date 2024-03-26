@@ -620,7 +620,7 @@ export class PaymentVoucherDetailsComponent implements OnInit {
       return
     }
 
-    if (this.AmountDifference == 0) {
+    if (this.AmountDifference != 0) {
       Swal.fire("Amount mismatch");
       return
     }
@@ -633,10 +633,10 @@ export class PaymentVoucherDetailsComponent implements OnInit {
     }
 
 
-    if (this.isPaymentForBill && !this.isSameAmount) {
-      Swal.fire("Invoice Total Not Match With Amount Paid.");
-      return
-    }
+    // if (this.isPaymentForBill && !this.isSameAmount) {
+    //   Swal.fire("Invoice Total Not Match With Amount Paid.");
+    //   return
+    // }
 
     const paymentValidation = this.paymentDetailsValidation();
     if (paymentValidation !== '') {
@@ -847,6 +847,8 @@ export class PaymentVoucherDetailsComponent implements OnInit {
       ExLoss: tableData.EX_Loss_CR,
     }
 
+    this.isTds = tableData.TdsDeducted ? true : false;
+
     // set exchange rate 
     if (tableData.CurrentExRate) {
       this.showExchangeRate = true;
@@ -915,7 +917,7 @@ export class PaymentVoucherDetailsComponent implements OnInit {
       value.AccountName = table4Data[i].AccountName;
       value.CurrencyName = table4Data[i].CurrencyName;
       value.TransactionTypeName = table4Data[i].TransactionTypeName;
-      
+
       this.accountDetailsTableList.push(value);
     }
 
@@ -1185,7 +1187,7 @@ export class PaymentVoucherDetailsComponent implements OnInit {
           if (TAN_no) {
             this.paymentForm.controls['Table'].controls['VendorTan'].setValue(TAN_no);
             this.paymentForm.controls['Table'].controls['TdsDeducted'].setValue(1);  // set YES to TDS
-            this.isTds = false;
+            this.isTds = true;
           } else {
             this.paymentForm.controls['Table'].controls['TdsDeducted'].setValue(0);  // set NO to TDS
             this.isTds = false;
@@ -1319,9 +1321,9 @@ export class PaymentVoucherDetailsComponent implements OnInit {
   setDueBill(value) {
     debugger
     if (value == 0) {
-      this.isTds = true;
-    } else {
       this.isTds = false;
+    } else {
+      this.isTds = true;
     }
 
   }
@@ -1700,7 +1702,7 @@ export class PaymentVoucherDetailsComponent implements OnInit {
           await this.getExchangeRate(this.entityCurrencyCode, isDiffCurrencyInvoice.CurrencyCode);
           this.isSameCurrency = false;
         }
-
+debugger
         // const val = this.exchangePairDetails;
         result.data.Table.forEach((invoice) => {
           const due = {
@@ -1913,17 +1915,17 @@ export class PaymentVoucherDetailsComponent implements OnInit {
       validation += "<span style='color:red;'>*</span> <span>Please enter Reference No.</span></br>"
     }
 
-    if (this.isPaymentForBill && !this.isSameAmount && Table.IsVendor) {
-      validation += "<span style='color:red;'>*</span> <span>Invoice Total Not Match With Amount Paid.</span></br>"
-      // Swal.fire("Invoice Total Not Match With Amount Paid.");
-      // return
-    }
+    // if (this.isPaymentForBill && !this.isSameAmount && Table.IsVendor) {
+    //   validation += "<span style='color:red;'>*</span> <span>Invoice Total Not Match With Amount Paid.</span></br>"
+    //   // Swal.fire("Invoice Total Not Match With Amount Paid.");
+    //   // return
+    // }
 
-    if (this.isPaymentForBill && !this.isSameAmount && Table.IsVendor) {
-      validation += "<span style='color:red;'>*</span> <span>Invoice Total Not Match With Amount Paid.</span></br>"
-      // Swal.fire("Invoice Total Not Match With Amount Paid.");
-      // return
-    }
+    // if (this.isPaymentForBill && !this.isSameAmount && Table.IsVendor) {
+    //   validation += "<span style='color:red;'>*</span> <span>Invoice Total Not Match With Amount Paid.</span></br>"
+    //   // Swal.fire("Invoice Total Not Match With Amount Paid.");
+    //   // return
+    // }
 
     return validation;
   }
@@ -1943,6 +1945,22 @@ export class PaymentVoucherDetailsComponent implements OnInit {
 
   getIsChecked(i) {
     if (i !== undefined) {
+
+
+
+      const inputData = this.paymentDetailsTableList[i].Payment;
+      const enteredDecimalCount = inputData % 1 !== 0 ? inputData.toString().split('.')[1]?.length || 0 : 0;
+      if (enteredDecimalCount > this.entityFraction) {
+        const fixedDecimal = inputData.toFixed(this.entityFraction);
+        this.paymentDetailsTableList[i].Payment = fixedDecimal;
+      }
+
+      const inputData1 = this.paymentDetailsTableList[i].TDS;
+      const enteredDecimalCount1 = inputData1 % 1 !== 0 ? inputData1.toString().split('.')[1]?.length || 0 : 0;
+      if (enteredDecimalCount1 > this.entityFraction) {
+        const fixedDecimal1 = inputData1.toFixed(this.entityFraction);
+        this.paymentDetailsTableList[i].TDS = fixedDecimal1
+      }
 
       return this.paymentDetailsTableList[i].IsCheck == 0 ? false : true;
     }
@@ -2131,8 +2149,19 @@ export class PaymentVoucherDetailsComponent implements OnInit {
       // this.isAccountType = false;
 
       // TotalTDS = this.paymentForm.value.Table.TDSAmount
+      // let info = this.paymentDetailsTableList.filter(x => x.IsCheck == true);
+      // var totalAmountCal = 0;
+      // var totalTDSAmount = 0;
+      // var totalPaymentAmount = 0;
+      // info.forEach(element => {
+      //   TotalCredit += Number(element.TDS),
+      //   TotalTDS += Number(element.TDS),
+      //   TotalDebit += Number(element.Payment)
+      // });
 
       TotalDebit = Number(this.paymentForm.value.Table.TotalPaymentAmount) + Number(this.paymentForm.value.Table.ExLoss)
+
+      TotalCredit += Number(this.paymentForm.value.Table.TotalTDSAmount);
     } else if (this.paymentForm.value.Table.IsVendor && !this.isPaymentForBill) {
       TotalDebit = Number(this.paymentForm.value.Table.TDSAmount) + Number(this.paymentForm.value.Table.ExLoss)
     } else if (this.paymentForm.value.Table.IsAccount) {
@@ -2144,9 +2173,7 @@ export class PaymentVoucherDetailsComponent implements OnInit {
         } else {
           TotalCredit += Number(element.Amount_CCR);
         }
-        // totalAmountCal += Number(element.TDS) + Number(element.Payment);
-        // totalTDSAmount += Number(element.TDS),
-        //   totalPaymentAmount += Number(element.Payment)
+        // TotalTDS += Number(element.),
       });
 
     }
@@ -2159,9 +2186,13 @@ export class PaymentVoucherDetailsComponent implements OnInit {
 
     this.paymentForm.controls['Table'].controls['TotalCredit'].setValue(TotalCredit.toFixed(this.entityFraction))
     this.paymentForm.controls['Table'].controls['TotalDebit'].setValue(TotalDebit.toFixed(this.entityFraction))
-    this.TotalDebit = Number(TotalDebit.toFixed(this.entityFraction));
+    // this.paymentForm.controls['Table'].controls['TotalTDSAmount'].setValue(TotalTDS.toFixed(this.entityFraction))
+    this.TotalDebit = Number(this.TotalDebit
+      .toFixed(this.entityFraction));
 
-    this.AmountDifference = (this.TotalDebit - this.TotalDebit);
+    this.AmountDifference = (this.TotalDebit - this.TotalCredit);
+
+    this.isSameAmount = this.AmountDifference == 0 ? true : false;
   }
 
 }

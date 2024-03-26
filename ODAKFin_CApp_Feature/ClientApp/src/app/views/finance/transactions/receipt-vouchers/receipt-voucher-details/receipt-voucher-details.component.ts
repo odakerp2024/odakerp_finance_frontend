@@ -1390,14 +1390,15 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
       var totalTDSAmount = 0;
       var totalPaymentAmount = 0;
       info.forEach(element => {
-        totalAmount += Number(element.TDS) + Number(element.Payment);
-        totalTDSAmount += Number(element.TDS),
-          totalPaymentAmount += Number(element.Payment)
+        totalAmount += Number(element.TDS) + (Number(element.Payment) * Number(element.ExchangeRate));
+        totalTDSAmount += (Number(element.TDS) * Number(element.ExchangeRate)),
+          totalPaymentAmount += (Number(element.Payment) * Number(element.ExchangeRate))
       });
       this.receiptForm.controls['TotalTDSAmount'].patchValue(totalTDSAmount.toFixed(this.entityFraction));
       this.receiptForm.controls['TotalPaymentAmount'].patchValue(totalPaymentAmount.toFixed(this.entityFraction));
       this.totalAmount = totalAmount;
     }
+    this.summaryAmountCalculation();
   }
 
   invoiceNumberSearch(event) {
@@ -1526,6 +1527,23 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
         return 0; // no change in order
       }
     });
+    paymentDetailsArray.forEach(a => {
+
+      const inputData = +a.Payment;
+      const enteredDecimalCount = inputData % 1 !== 0 ? inputData.toString().split('.')[1]?.length || 0 : 0;
+      if (enteredDecimalCount > this.entityFraction) {
+        const fixedDecimal = inputData.toFixed(this.entityFraction);
+        a.Payment = fixedDecimal;
+      }
+
+      const inputData1 = +a.TDS;
+      const enteredDecimalCount1 = inputData1 % 1 !== 0 ? inputData1.toString().split('.')[1]?.length || 0 : 0;
+      if (enteredDecimalCount1 > this.entityFraction) {
+        const fixedDecimal1 = inputData1.toFixed(this.entityFraction);
+        a.TDS = fixedDecimal1
+      }
+    });
+
     // Update the FormArray with the sorted values.
     this.receiptForm.controls.paymentDetailsArray.patchValue(paymentDetailsArray);
     if (i !== undefined) {
@@ -1550,7 +1568,7 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
       this.receiptForm.controls['IsOnAccount'].setValue(true);
       this.receiptForm.controls['IsSecurityDeposit'].setValue(false);
       this.receiptForm.controls['TDSAmount'].setValue(0);
-      
+
       this.receiptForm.controls['TotalPaymentAmount'].setValue(0);
       this.receiptForm.controls['TotalTDSAmount'].setValue(0);
 
@@ -1582,16 +1600,16 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
       TotalTDS = this.receiptForm.value.TotalTDSAmount
 
       TotalCredit = Number((!this.receiptForm.value.TotalPaymentAmount ? 0 :
-        Number(this.receiptForm.value.TotalPaymentAmount)) + Number(TotalTDS) + Number(this.receiptForm.value.ExLoss));
+        Number(this.receiptForm.value.TotalPaymentAmount)) + Number(this.receiptForm.value.ExLoss));
     } else {
       TotalTDS = this.receiptForm.value.TDSAmount;
 
       TotalCredit = Number((this.receiptForm.value.AmountReceived * (!this.receiptForm.value.ExchangeRate ? 0 : this.receiptForm.value.ExchangeRate))
-         + Number(TotalTDS) + Number(this.receiptForm.value.ExLoss));
+        + Number(TotalTDS) + Number(this.receiptForm.value.ExLoss));
     }
 
     TotalDebit = Number((this.receiptForm.value.AmountReceived * (!this.receiptForm.value.ExchangeRate ? 0 : this.receiptForm.value.ExchangeRate))
-      + (!this.receiptForm.value.TDSAmount ? 0 : TotalTDS) + (this.receiptForm.value.BankCharges * (!this.receiptForm.value.ExchangeRate ? 0 : this.receiptForm.value.ExchangeRate))
+      + (!this.receiptForm.value.TDSAmount ? 0 : TotalTDS) + Number(TotalTDS) + (this.receiptForm.value.BankCharges * (!this.receiptForm.value.ExchangeRate ? 0 : this.receiptForm.value.ExchangeRate))
       + Number(this.receiptForm.value.ExGain));
 
     this.receiptForm.controls['TotalDebit'].setValue(TotalDebit.toFixed(this.entityFraction));

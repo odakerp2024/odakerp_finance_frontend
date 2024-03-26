@@ -586,19 +586,18 @@
                                                 [value]="journal.Currency" type="text">
                                         </td>
                                         <td>
-                                            <input min="1"
+                                            <input min="1" numbersOnly appDynamicDecimal onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
                                                 [ngClass]=" !isShowTDSColumn || !isEditMode || !getIsChecked(i) ? 'disable-input' : ''"
                                                 class="text-center border-0" formControlName="TDS" [value]="journal.TDS"
-                                                type="number"
                                                 (change)="getDueAmount( i,'tds'); onSelectEvent();summaryAmountCalculation()">
 
                                         </td>
                                         <td>
-                                            <input min="1" numbersOnly appDynamicDecimal
+                                            <input min="1" onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47' appDynamicDecimal  numbersOnly 
                                                 [ngClass]="[ !isEditMode || !getIsChecked(i) ? 'disable-input' : '',]"
                                                 (change)="getDueAmount(i,'Payment');onSelectEvent();summaryAmountCalculation()"
                                                 class="text-center payment-textbox" [value]="journal.Payment"
-                                                formControlName="Payment" type="number">
+                                                formControlName="Payment">
                                         </td>
                                         <td>
                                             <input (change)=" setInitalPaymentAmount(i);onSelectEvent();"
@@ -1006,7 +1005,7 @@
                             <tbody>
                                 <tr>
                                     <td class="text-center">
-                                        <label>Amount Paid</label>
+                                        <label>Bank</label>
                                     </td>
                                     <td class="text-center">
                                         <label>{{this.receiptForm.value.AmountReceived *
