@@ -214,25 +214,34 @@
                                                 </td>
 
                                                 <td>
-                                                    <input onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47' min="0" numbersOnly formControlName="ROE" class="form-control w-100"
-                                                        autocomplete="off">
+                                                        <input
+                                                        onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                                        min="0" numbersOnly
+                                                        appDynamicDecimal class="form-control my-select amount w-100 mr-0"
+                                                        formControlName="ROE"/>
                                                 </td>
 
                                                 <td>
-                                                    <input formControlName="Amount" class="form-control w-100"
-                                                        autocomplete="off" onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47' min="0" numbersOnly>
+                                                     <input
+                                                        onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                                        min="0" numbersOnly 
+                                                        appDynamicDecimal class="form-control my-select amount w-100 mr-0"
+                                                        formControlName="Amount"/>
+                                                    </td>
+
+                                                <td>
+                                                    <input [value]="(journalForm.value.ROE && journalForm.value.Amount) ? (journalForm.value.ROE * journalForm.value.Amount).toFixed(3) : '0'"
+                                                    formControlName="CompanyCurrencyAmount"
+                                                    class="form-control w-100" readonly autocomplete="off"
+                                                    onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly>
                                                 </td>
 
                                                 <td>
-                                                    <input [value]="journalForm.value.ROE * journalForm.value.Amount"
-                                                        formControlName="CompanyCurrencyAmount"
-                                                        class="form-control w-100" readonly autocomplete="off"
-                                                        onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly>
-                                                </td>
-
-                                                <td>
-                                                    <input formControlName="Narration" class="form-control w-100"
-                                                        autocomplete="off" type="text">
+                                                    <input
+                                                        onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                                        min="0" numbersOnly 
+                                                        appDynamicDecimal class="form-control my-select amount w-100 mr-0"
+                                                        formControlName="Narration"/>
                                                 </td>
                                                 <td>
 
