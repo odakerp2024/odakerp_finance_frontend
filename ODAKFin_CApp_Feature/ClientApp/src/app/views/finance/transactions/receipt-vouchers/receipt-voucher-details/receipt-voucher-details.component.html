@@ -1046,7 +1046,9 @@
                                         <label>TDS</label>
                                     </td>
                                     <td *ngIf="!this.receiptForm.value.IsInvoice" class="text-center">
-                                        <label>{{this.receiptForm.value.TDSAmount}}</label>
+                                        <label>
+                                            {{this.receiptForm.value.TDSAmount}}
+                                        </label>
                                     </td>
                                     <td *ngIf="!this.receiptForm.value.IsInvoice" class="text-center">
                                         <label>0</label>

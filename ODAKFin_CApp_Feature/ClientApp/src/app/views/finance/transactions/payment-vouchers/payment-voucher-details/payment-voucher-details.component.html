@@ -220,7 +220,6 @@
                                 <ng-option [value]="''" disabled>--SELECT VENDOR--</ng-option>
                                 <ng-container *ngFor="let vendor of vendorUniqueList">
                                     <ng-option
-                                        *ngIf="vendor.OnboradName === 'CONFIRMED' && vendor.VendorStatus === true && vendor.BranchSTatus === true"
                                         [value]="vendor.VendorID">
                                         {{ vendor.VendorCode | uppercase }} - {{ vendor.VendorName | uppercase }}
                                     </ng-option>
@@ -253,7 +252,7 @@
                             [ngClass]="!IsBranchEnable ? 'disable-input' : ''" (change)="getVendorTan($event)"
                             [clearable]="false">
                             <ng-option [value]="''" [disabled]="true">--SELECT VENDOR BRANCH--</ng-option>
-                            <ng-option *ngFor="let vendor of vendorBranch" [value]="vendor.BranchCode">
+                            <ng-option *ngFor="let vendor of vendorBranch" [value]="vendor.CityName">
                                 {{ vendor.CityName | uppercase }}
                             </ng-option>
                         </ng-select>
@@ -614,12 +613,12 @@
                     <!-- <div class="col-4 mt-auto" *ngIf="!isSameCurrency">
                         <ng-template [ngTemplateOutlet]="exchangeRate"></ng-template>
                     </div> -->
-                    <div class="col-3 mt-auto mb-3" *ngIf="!isSameCurrency">
+                    <!-- <div class="col-3 mt-auto mb-3" *ngIf="!isSameCurrency">
                         <label class="str">Local Amount</label>
                         <input disabled type="text" appDynamicDecimal class="w-100 form-control local"
                             placeholder="Local Amount" [(ngModel)]="TotalAmount" [ngModelOptions]="{standalone: true}"
                             (change)="updateAmount($event.target.value)" />
-                    </div>
+                    </div> -->
                 </div>
             </ng-container>
 
@@ -941,17 +940,17 @@
                                     <td class="text-center">
                                         <label>TDS</label>
                                     </td>
-                                    <td *ngIf="!this.paymentForm.value.Table.IsVendor" class="text-center">
+                                    <td *ngIf="(!this.paymentForm.value.Table.IsVendor && !isPaymentForBill) ||  (this.paymentForm.value.Table.IsVendor && !isPaymentForBill)" class="text-center">
                                         <label>0</label>
                                     </td>
-                                    <td *ngIf="!this.paymentForm.value.Table.IsVendor" class="text-center">
+                                    <td *ngIf="(!this.paymentForm.value.Table.IsVendor && !isPaymentForBill) ||  (this.paymentForm.value.Table.IsVendor && !isPaymentForBill)" class="text-center">
                                         <label>{{this.paymentForm.value.Table.TDSAmount}}</label>
                                     </td>
                                     
-                                    <td *ngIf="this.paymentForm.value.Table.IsVendor" class="text-center">
+                                    <td *ngIf="this.paymentForm.value.Table.IsVendor && isPaymentForBill" class="text-center">
                                         <label>0</label>
                                     </td>
-                                    <td *ngIf="this.paymentForm.value.Table.IsVendor" class="text-center">
+                                    <td *ngIf="this.paymentForm.value.Table.IsVendor  && isPaymentForBill" class="text-center">
                                         <label>{{this.paymentForm.value.Table.TotalTDSAmount}}</label>
                                     </td>
 

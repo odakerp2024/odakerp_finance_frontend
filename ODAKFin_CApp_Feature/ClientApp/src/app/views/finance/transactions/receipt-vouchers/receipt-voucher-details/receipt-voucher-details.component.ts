@@ -472,7 +472,13 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
           this.IsTDSEnable = true;
         }
         else if (info.IsSecurityDeposit) { this.paymentVoucherType = 'Security Deposit'; this.paymentType = 'security'; this.IsTDSEnable = true; }
-        else { this.paymentVoucherType = 'Invoice'; this.paymentType = 'invoice'; this.createPaymentDetailsPayload(result.data.Table1, info.Rate); this.onSelectEvent(); this.IsTDSEnable = false; }
+        else {
+          this.paymentVoucherType = 'Invoice';
+          this.paymentType = 'invoice';
+          this.createPaymentDetailsPayload(result.data.Table1, info.Rate);
+          this.onSelectEvent();
+          this.IsTDSEnable = false;
+        }
         if (result.data.Table2.length > 0) this.voucherFileList = result.data.Table2;
 
         this.receiptForm.disable();
@@ -1266,7 +1272,7 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
       //     invoceObj.DueAmountCCY =  (+invoceObj.TDS + +invoceObj.Payment) * exchangeRate
       //   }
       if (this.isFinalMode) {
-        invoceObj.DueAmount = data.DueAmount.toFixed(this.entityFraction);
+        invoceObj.DueAmount = Number(data.DueAmount).toFixed(this.entityFraction);
       } else {
         // const exchangeRate = this.ExchangeRatePairList.length ? +this.ExchangeRatePairList[0].Rate : 0
         invoceObj.InvoiceAmountCCY = Number(invoceObj.InvoiceAmount) * (data.ExchangeRate ? data.ExchangeRate : 1);
