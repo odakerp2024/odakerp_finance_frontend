@@ -146,6 +146,7 @@ export class VendorsComponent implements OnInit {
   reasonList: any;
   companyDetailId: any;
   entityCurrency: any;
+  entityCurrencyID: any;
   savedVendorsCode: any[]
 
   gstCategoryInput = {
@@ -232,7 +233,6 @@ export class VendorsComponent implements OnInit {
   isEmailids: boolean = false;
   isInterfaces: boolean = false;
   parentAccountList: any[];
-  entityCurrencyID: any;
 
   constructor(private router: Router, private route: ActivatedRoute, private fb: FormBuilder, private ms: MastersService
     , private commonservice: CommonService, private VendorService: VendorService, private fy: FinancialyearService,
@@ -272,7 +272,6 @@ export class VendorsComponent implements OnInit {
   }
 
   checkPermission(value) {
-    debugger
     if (value == 'tabBranch' && this.isBranchDetails == true) {
       this.Current_Tab = 'tabBranch'
     } else if (value == 'tabbankDetails' && this.isBankDetails == true) {
@@ -305,7 +304,6 @@ export class VendorsComponent implements OnInit {
       SubfunctionID: value
     }
     this.commonservice.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
       if (route == 'Branch Details') {
 
         if (data.length > 0) {
@@ -493,7 +491,6 @@ export class VendorsComponent implements OnInit {
       SubfunctionID: value
     }
     this.commonservice.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
 
       if (route == 'Branch Details') {
 
@@ -791,7 +788,6 @@ export class VendorsComponent implements OnInit {
       // this.generateVendorCode(2, 0); // Branch_Code
     }
 
-    debugger
     this.fg = this.fb.group({
 
       // Vendor (main page)
@@ -866,7 +862,7 @@ export class VendorsComponent implements OnInit {
       PANNo: ['', [Validators.pattern(this.patternService.panPattern)]],
       SourceOfSupply: '',
       PlaceofSupplyCity: 0,
-      AccountCurrencyId: '',
+      AccountCurrencyId: 0,
       CompanyStatus: 0,
       SourceOfSupply1: 1,
       SourceOfSupply2: 1,
@@ -1123,12 +1119,10 @@ export class VendorsComponent implements OnInit {
   }
   // get entity organization
   getEntityOrganization() {
-    debugger
     const service = `${this.globals.APIURL}/Organization/GetOrganizationEntityId`;
     return new Promise((resolve, reject) => {
       this.dataService.post(service, { 'OrgId': this.companyDetailId }).subscribe((result: any) => {
         if (result.data.Table1.length > 0) {
-          debugger
           this.entityCurrency = result.data.Table1[0].Currency;
           this.getCurrency();
           // console.log('entityCurrency',this.entityCurrency);
@@ -1149,16 +1143,16 @@ export class VendorsComponent implements OnInit {
     let service = `${this.globals.SaApi}/SystemAdminApi/GetCurrency`
     this.dataService.post(service, {}).subscribe((result: any) => {
       if (result.length > 0) {
-        debugger
         this.currencyList = result;
         // const entitySelectedCurrency = this.currencyList.find(c => c.Currency == this.entityCurrency);
         const entitySelectedCurrency = this.currencyList.find(c => c.Currency.toUpperCase() === this.entityCurrency.toUpperCase());
 
         if (entitySelectedCurrency) {
           this.creditDetailsForm.controls.Currency.setValue(entitySelectedCurrency.ID);
-          this.fg.controls.CurrencyId.setValue(entitySelectedCurrency.ID);
+          this.fg.controls.CurrencyId.setValue(entitySelectedCurrency.ID); 
+          this.fg.controls.AccountCurrencyId.setValue(entitySelectedCurrency.ID);
 
-          // this.entityCurrencyID = entitySelectedCurrency.ID
+          this.entityCurrencyID = entitySelectedCurrency.ID
         }
       }
     }, error => { });
@@ -1280,7 +1274,7 @@ export class VendorsComponent implements OnInit {
     this.fg.controls.GSTNumber.setValue('');
     this.fg.controls.LegalName.setValue('');
     this.fg.controls.CompanyStatus.setValue(0);
-    this.fg.controls.AccountCurrencyId.setValue('');
+    this.fg.controls.AccountCurrencyId.setValue(this.entityCurrencyID);
     this.fg.controls.PANNo.setValue('');
     this.fg.controls.TANNo.setValue('');
     this.fg.controls.MSMONo.setValue('');
@@ -3483,7 +3477,6 @@ export class VendorsComponent implements OnInit {
   }
 
   getLedgerMappingParentAccountList() {
-    debugger
     const payload = {
       ModuleType: 2
     }

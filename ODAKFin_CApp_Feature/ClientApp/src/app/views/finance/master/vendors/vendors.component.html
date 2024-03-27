@@ -962,13 +962,10 @@
                                                                             <div class="w-100 mr-2 ml-2">
                                                                                 <label class="str">Currency</label>
                                                                                 <!-- </div>
-                                                                <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
-                                                                <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7 input-field"> -->
-
-
-
+                                                                 <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
+                                                                 <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7 input-field"> -->
                                                                                 <ng-select formControlName="CurrencyId"
-                                                                                id="ddlOffice" class="searchdropdown" >
+                                                                                id="ddlOffice" [clearable]="false" class="searchdropdown" >
                                                                                     <ng-option disabled [value]="null">--
                                                                                         Select Currency --</ng-option>
                                                                                     <ng-option *ngFor="let gRow of currencyList"
@@ -1440,7 +1437,7 @@
                                                                                 </select> -->
 
 
-                                                                                <ng-select name="currency" id="txtCurrency"
+                                                                                <ng-select name="currency" id="txtCurrency" [clearable]="false"
                                                                                 formControlName="AccountCurrencyId" class="searchdropdown">
                                                                                     <ng-option [value]="''" disabled>
                                                                                         --SELECT--</ng-option>
