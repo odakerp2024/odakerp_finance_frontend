@@ -26,6 +26,7 @@ export class JournalVoucherDetailsComponent implements OnInit {
   ModifiedBy: string = '';
   entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
+  entityCurrency = this.commonDataService.getLocalStorageEntityConfigurable('Currency');
   statusList: any = [];
   journalForm: FormGroup;
   divisionList: any = [];
@@ -171,7 +172,7 @@ export class JournalVoucherDetailsComponent implements OnInit {
       AccountId: [0],
       AccountName: [''],
       DrCrId: [0],
-      Currency: [1],
+      Currency: [0],
       CurrencyName: [''],
       ROE: [''],
       Amount: [],
@@ -326,6 +327,11 @@ export class JournalVoucherDetailsComponent implements OnInit {
       if (result.length > 0) {
         this.currencyList = result;
       }
+      const entitySelectedCurrency = this.currencyList.find(c => c.Currency.toUpperCase() === this.entityCurrency.toUpperCase());
+
+      if (entitySelectedCurrency) {
+        this.journalForm.controls.Currency.setValue(entitySelectedCurrency.ID);
+      }
     }, error => { });
   }
 
@@ -432,7 +438,7 @@ export class JournalVoucherDetailsComponent implements OnInit {
     this.journalForm.controls['AccountId'].setValue(0);
     this.journalForm.controls['AccountName'].setValue('');
     this.journalForm.controls['DrCrId'].setValue(0);
-    this.journalForm.controls['Currency'].setValue(1);
+    this.journalForm.controls['Currency'].setValue(this.entityCurrency);
     this.journalForm.controls['CurrencyName'].setValue('');
     this.journalForm.controls['ROE'].setValue('');
     this.journalForm.controls['Amount'].setValue('');

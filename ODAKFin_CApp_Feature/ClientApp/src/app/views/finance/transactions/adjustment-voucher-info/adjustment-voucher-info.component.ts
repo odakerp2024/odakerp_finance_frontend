@@ -48,6 +48,8 @@ export class AdjustmentVoucherInfoComponent implements OnInit {
   payload: any = {};
   isFinalRecord: boolean = false;
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
+  entityCurrency = this.commonDataService.getLocalStorageEntityConfigurable('Currency');
+  entityCurrency1 = this.commonDataService.getLocalStorageEntityConfigurable('Currency').substring(0, 3);
   AdjustmentForm: any;
   accountMappingIds: any;
   selectedAccountItemObj = {}
@@ -160,7 +162,7 @@ export class AdjustmentVoucherInfoComponent implements OnInit {
       AccountType: [0],
       AccountId: [0],
       DrCrId: [0],
-      Currency:  [1],
+      Currency:  [0],
       ROE:  ['1'],
       Amount: [],
       CompanyCurrencyAmount: [0],
@@ -561,8 +563,8 @@ export class AdjustmentVoucherInfoComponent implements OnInit {
     this.AdjustmentCreateForm.controls['AccountId'].setValue(0);
     this.AdjustmentCreateForm.controls['AccountType'].setValue(0);
     this.AdjustmentCreateForm.controls['DrCrId'].setValue(0);
-    this.AdjustmentCreateForm.controls['Currency'].setValue(1);
-    this.AdjustmentCreateForm.controls['ROE'].setValue('1');
+    this.AdjustmentCreateForm.controls['Currency'].setValue(this.entityCurrency1);
+    this.AdjustmentCreateForm.controls['ROE'].setValue('');
     this.AdjustmentCreateForm.controls['Amount'].setValue('');
     this.AdjustmentCreateForm.controls['CompanyCurrencyAmount'].setValue(0);
     this.AdjustmentCreateForm.controls['Narration'].setValue('');
@@ -695,6 +697,10 @@ export class AdjustmentVoucherInfoComponent implements OnInit {
       this.currencyList = [];
       if (result.length > 0) {
         this.currencyList = result;
+      }
+      const entitySelectedCurrency = this.currencyList.find(c => c.Currency.toUpperCase() === this.entityCurrency.toUpperCase());
+      if (entitySelectedCurrency) {
+        this.AdjustmentCreateForm.controls.Currency.setValue(entitySelectedCurrency.ID);
       }
     }, error => { });
   }
