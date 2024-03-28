@@ -1,1 +1,280 @@
-<p>provision-detail works!</p>
+<div class="container-fluid">
+    <!-- header start -->
+    <div class="row mt-2">
+        <div class="col-9">
+            <h4 class="ml-2 mt-2">Provisions</h4>
+        </div>
+        <div class="col-3 mt-auto">
+            <div class="float-right">
+                <!-- edit   [disable] = "!isEditMode" -->
+                <button type="button" class="btn btn-warning bmd-btn-edit text-white mr-3"
+                    *ngIf="!IsFinal && !isEditMode" (click)="enableEdit()">
+                    <i class="material-icons editicon">edit</i>
+                </button>
+                <!-- back -->
+                <button type="button" class="btn btn-success bmd-btn-edit text-white mr-3" (click)="Cancel()">
+                    <i class="material-icons editicon">reply</i>
+                </button>
+                <!-- clock details -->
+                <button type="button" class="btn btn-raised bmd-btn-edit" data-placement="bottom" type="button"
+                    id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="material-icons editicon">schedule</i>
+                </button>
+                <!-- clock click pop-up -->
+                <div style="background-color: aliceblue;width:250px;left:-66px"
+                    class="dropdown-menu dropdown-menu  profile-dropdown" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item p-4">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <span>ModifiedOn: {{ModifiedOn}}</span> | <span>Modified By: {{ModifiedOn}}</span>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:10px;">
+                            <div class="col-md-12">
+                                <span>CreatedOn: {{CreatedOn | date: entityDateFormat }}</span> | <span>Created By:
+                                    {{CreatedBy}}</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- header end -->
+
+    <form [formGroup]="ProvisionForm">
+        <div class="card mt-2 p-4">
+
+            <div formGroupName="Table">
+                <div class="row">
+                    <div class="col-4">
+                        <div class="form-group bmd-form-group w-100">
+                            <label class="str fontstyles">Division</label>
+                            <ng-select class="searchdropdown custom" [ngClass]="isCopied ? 'disable-input' : ''"
+                                formControlName="DivisionId" (change)="getOffice($event);" [clearable]="false">
+                                <ng-option [value]="''" disabled>--SELECT DIVISION TYPE--</ng-option>
+                                <ng-container *ngFor="let division of divisionList">
+                                    <ng-option *ngIf="division.Active" [value]="division.ID">
+                                        {{division.DivisionName | uppercase}}
+                                    </ng-option>
+                                </ng-container>
+                            </ng-select>
+                        </div>
+                    </div>
+
+                    <div class="col-4">
+                        <label class="str fontstyles">Office</label>
+                        <ng-select class="searchdropdown custom" [ngClass]="isCopied ? 'disable-input' : ''"
+                            formControlName="OfficeId" [clearable]="false">
+                            <ng-option [value]="''" disabled>--SELECT OFFICE TYPE--</ng-option>
+                            <ng-container *ngFor="let office of officeList">
+                                <ng-option [value]="office.ID">
+                                    {{office.OfficeName | uppercase}}
+                                </ng-option>
+                            </ng-container>
+                        </ng-select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <h5 class="ml-2 mt-2" style="color: #2f4685;">Provision Details </h5>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4">
+                        <label class="str fontstyles">Provision Number</label>
+                        <!-- {{paymentForm.value.paymentVoucherNumber}} -->
+                        <input disabled type="text" class="w-100 pl-2 disable-input border" formControlName="Number" />
+                    </div>
+
+                    <div class="col-4">
+                        <label class="str mb-2 fontstyles">Payment Voucher Date</label>
+                        <mat-form-field class="tillDate mat_date_picker disable-datepicker" appearance="outline">
+                            <input matInput (click)="PaymentVoucherDate.open()" style="margin-bottom: 3px;"
+                                autocomplete="off" [matDatepicker]="PaymentVoucherDate" id="PaymentVoucherDate"
+                                [placeholder]="entityDateFormat" formControlName="Date">
+                            <mat-datepicker-toggle matSuffix [for]="PaymentVoucherDate"></mat-datepicker-toggle>
+                            <mat-datepicker #PaymentVoucherDate></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-4">
+                        <div class="form-group">
+                            <label class="str fontstyles">Status</label>
+                            <select [ngClass]=" isUpdate ? 'block-input' : 'block-input'" readonly
+                                formControlName="Status" name="Status"
+                                class="form-control my-select disable-input--nostyle">
+                                <option disabled value="">--SELECT STATUS--</option>
+                                <option disabled *ngFor="let status of statusValues" [value]="status.value">
+                                    {{status.viewValue | uppercase}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div formGroupName="Table1">
+                <div class="row">
+                    <div class="col-md-12 alrt">
+                        <button type="submit" class="btn btn-success bmd-btn-fab tblbtngap" [disabled]="isUpdateEnable"
+                            (click)="DynamicGridAddRow()"><i class="material-icons editicon">add</i>
+                            <div class="ripple-container"></div>
+                        </button>
+                        <button type="submit" class="btn btn-primary bmd-btn-fab tblbtngap" [disabled]="isUpdateEnable"
+                            (click)="OnClickEditValue()"><i class="material-icons editicon">edit</i>
+                            <div class="ripple-container"></div>
+                        </button>
+                        <button type="submit" class="btn btn-danger bmd-btn-fab" [disabled]="isUpdateEnable"
+                            (click)="DynamicGridDeleteRow()"><i class="material-icons editicon">delete</i>
+                            <div class="ripple-container"></div>
+                        </button>
+                    </div>
+                    <div class="col-12 table-wrapper">
+                        <table class="bend-table" style="max-height: 500px;"
+                            class="table table-responsive  table-bordered w-100 table-striped border-0 agingTable mt-2">
+                            <thead class="text-center">
+                                <tr class="header-position-sticky">
+                                    <th class="text-center">S.NO</th>
+                                    <th style="min-width: 200px;" class="text-center" scope="col">Account</th>
+                                    <th class="text-center" scope="col">Rate</th>
+                                    <th class="text-center" scope="col">Qty</th>
+                                    <th class="text-center" scope="col">Amount</th>
+                                    <th class="text-center" scope="col">Currency</th>
+                                    <th class="text-center" scope="col">Ex.Rate</th>
+                                    <th class="text-center" scope="col">Amount (CCR)</th>
+                                    <th class="text-center" scope="col">Select</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td class="text-center bestfit-width">
+
+                                        <ng-select class="searchdropdown" [clearable]="false" [appendTo]="'body'"
+                                            [items]="AccountList" bindLabel="AccountName" bindValue="ChartOfAccountsId"
+                                            groupBy="GroupName" formControlName="Account">
+                                            <ng-template ng-optgroup let-item="item">
+                                                {{item.GroupName | uppercase}}
+                                            </ng-template>
+                                        </ng-select>
+                                    </td>
+
+                                    <td class="text-center bestfit-width">
+                                        <input type="text"
+                                            onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                            min="0" numbersOnly appDynamicDecimal class="w-100 form-control"
+                                            placeholder="Rate" [formControlName]="'Rate'" />
+
+                                    </td>
+
+                                    <td class="text-center bestfit-width">
+                                        <input type="text"
+                                            onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                            min="0" numbersOnly appDynamicDecimal class="w-100 form-control"
+                                            placeholder="Qty" [formControlName]="'Qty'" />
+                                    </td>
+
+                                    <td class="text-center bestfit-width">
+                                        <input type="text"
+                                            onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                            min="0" numbersOnly appDynamicDecimal class="w-100 form-control"
+                                            placeholder="Amount" [formControlName]="'Amount'" />
+                                    </td>
+
+                                    <td class="text-center bestfit-width">
+                                        <ng-select class="searchdropdown" [appendTo]="'body'" [clearable]="false"
+                                            formControlName="Currency" id="ddlStatus">
+                                            <ng-option [value]="''" [disabled]="true">--SELECT
+                                                CURRENCY--</ng-option>
+                                            <ng-option *ngFor="let currency of currencyList" [value]="currency.ID">
+                                                {{ currency.CurrencyCode | uppercase }}
+                                            </ng-option>
+                                        </ng-select>
+
+                                    </td>
+
+                                    <td class="text-center bestfit-width">
+                                        <input type="text"
+                                            onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                            min="0" numbersOnly appDynamicDecimal class="w-100 form-control"
+                                            placeholder="Exchange Rate" [formControlName]="'ExchangeRate'" />
+
+                                    </td>
+
+                                    <td class="text-center bestfit-width">
+                                        <input type="text"
+                                            onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                            min="0" numbersOnly appDynamicDecimal class="w-100 form-control"
+                                            placeholder="AmountCCR" [formControlName]="'AmountCCR'" />
+
+                                    </td>
+
+                                    <td> </td>
+
+                                </tr>
+                                <tr *ngFor="let due of provisionItemsTableList;let i = index">
+                                    <td class="text-center">{{ i + 1 }}</td>
+                                    <td class="text-center">{{due.AccountName}}</td>
+                                    <td class="text-center">{{due.Rate }}</td>
+                                    <td class="text-center">{{due.Qty}}</td>
+                                    <td class="text-center">{{due.Amount}}</td>
+                                    <td class="text-center">{{due.CurrencyName }}</td>
+                                    <td class="text-center">{{due.ExchangeRate }}</td>
+                                    <td class="text-center"> {{due.AmountCCR}} </td>
+                                    <td class="text-center">
+                                        <input class="vertal checkbox" type="radio" name="AlertCheck" id="RadioCheck"
+                                            (click)="radioChange($event,i)" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4">
+                        <label>Remarks</label>
+                        <textarea [ngClass]=" isUpdate ? 'block-input' : ''" formControlName="Remarks"
+                            class="form-control addressht" rows="3"></textarea>
+                    </div>
+                    <div class="col-4"></div>
+                    
+                    <div class="col-4">
+                        <label>Total</label>
+                        <input [(ngModel)]="TotalAmount" [ngModelOptions]="{standalone: true}" readonly class="form-control difference" autocomplete="off"
+                            type="text">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 pt-4 pb-4">
+                <!-- || paymentForm.value.Table.value.AmountPaid !== paymentForm.value.Table.value.TotalAmount  -->
+                <div class="float-right">
+                    <!-- [ngClass]=" !isEditMode || !isSameAmount  ? 'disable-input--nostyle save-disable---style' : ''" -->
+                    <button type="button" class="btn btn-primary text-white mr-3 mb-0 col-auto" (click)="submit()">
+                        Save
+                    </button>
+                    <button type="button"
+                        [ngClass]=" !isUpdate || !isEditMode || (!isSameAmount && !isPaymentForBill) ? 'disable-input--nostyle final-disable--style' : ''"
+                        class="btn btn-success text-white mr-3 mb-0 col-auto" (click)="finalSubmit()">
+                        Final
+                    </button>
+                    <button type="button" *ngIf="isUpdate && !IsFinal" (click)="submit(true)"
+                        [ngClass]="!isEditMode  ? 'disable-input--style' : ''"
+                        class="btn btn-warning text-white mr-3 mb-0 col-auto">
+                        Delete
+                    </button>
+
+                    <button type="button" (click)="Cancel()" class="btn btn-warning text-white mr-3 mb-0 col-auto">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+
+
+        </div>
+    </form>
+</div>

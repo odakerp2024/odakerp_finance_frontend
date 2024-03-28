@@ -452,3 +452,11 @@ export class TransactionTypeView {
         { value: 3, viewValue: 'RCM' },
     ];
 }
+
+export class Provision {
+    glvalues: StatusNew[] = [
+        { value: 1, viewValue: 'Draft' },
+        { value: 2, viewValue: 'Final' },
+        { value: 3, viewValue: 'Closed' },
+    ];
+}

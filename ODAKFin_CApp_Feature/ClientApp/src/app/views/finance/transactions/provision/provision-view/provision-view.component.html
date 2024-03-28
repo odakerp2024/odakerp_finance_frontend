@@ -6,7 +6,7 @@
         </div>
         <div class="col-md-3 alrt">
             <button type="button" class="btn btn-success btn-raised bmd-btn-edit btntop" tabindex="0"
-                (click)="createPurchase()">
+                (click)="createProvision()">
                 <i class="material-icons editicon">add</i>
                 <div class="ripple-container">
                 </div>
@@ -49,21 +49,19 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="let data of pagedItems">
-                                    <td (click)="purchaseInfoRoute(data.Id)" style="color: #0366d6;cursor: pointer;">
-                                        {{data.PINumber}}</td>
-                                    <td>{{data.PIDate | date :
+                                    <td style="color: #0366d6;cursor: pointer;">
+                                        {{data.ProvisionNumber}}</td>
+                                    <td>{{data.ProvisionDate | date :
                                         commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td>
-                                    <td>{{data.VendorType}}</td>
+                                    <td>{{data.Amount}}</td>
 
                                     <td [title]="data.VendorName | uppercase">
-                                        {{ (data.VendorName && data.VendorName.length > 20) ?data.VendorName.slice(0,
-                                        20) + '-' : data.VendorName }}
+                                       {{data.CostBookedSofar}}
                                     </td>
-                                    <!-- <td>{{data.VendorName}}</td> -->
-                                    <td>{{data.VendorBranch}}</td>
-                                    <td>
+                                    <td>{{data.Balance}}</td>
+                                    <td>                                      
                                         <div
-                                            [ngClass]="data.Status == 'Confirmed' ? 'badge badge-state-confirm' : data.Status == 'Cancelled' ? 'badge badge-state-cancel' : 'badge badge-state'">
+                                            [ngClass]="data.Status == 'Complete' ? 'badge badge-state-confirm' : data.Status == 'Closed' ? 'badge badge-state-pending' : 'badge badge-state'">
                                             {{data.Status}}
                                         </div>
                                     </td>
@@ -73,7 +71,7 @@
                         </table>
                     </div>
 
-                    <div class="row page mr-3" align="right">
+                    <!-- <div class="row page mr-3" align="right">
                         <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10 && pager.totalItems > 10"
                             class="pagination">
                             <li [ngClass]="{disabled:pager.currentPage === 1}">
@@ -99,7 +97,7 @@
                                 <a (click)="setPage(pager.totalPages)">Last</a>
                             </li>
                         </ul>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -110,14 +108,15 @@
 
 
                     <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
-                        <div class="form-group bmd-form-group">
-                            <ng-select  class="searchdropdown"  formControlName="Division" [clearable]="false" name="CategoryId" id="CategoryId">
-                                <ng-option [value]="0" disabled>--SELECT DIVISION--</ng-option>
-                                <ng-container  *ngFor="let division of divisionList">
-                                  <ng-option  [value]="division.ID">
-                                    <span class="textwrap">{{division.DivisionName | uppercase}}</span>
-                                  </ng-option>
-                               </ng-container>
+                        <div class="form-group bmd-form-group w-100">
+                            <label class="str fontstyles">Division</label>
+                            <ng-select class="searchdropdown custom" formControlName="Division" (change)="getOffice($event);" [clearable]="false">
+                                <ng-option [value]="''" disabled>--SELECT DIVISION TYPE--</ng-option>
+                                <ng-container *ngFor="let division of divisionList">
+                                    <ng-option *ngIf="division.Active" [value]="division.ID">
+                                        {{division.DivisionName | uppercase}}
+                                    </ng-option>
+                                </ng-container>
                             </ng-select>
                         </div>
                     </div>
@@ -163,9 +162,9 @@
                                 <div class="col-md-6">
                                     <label class=" mb-3">From</label>
                                     <div class="input-group">
-                                        <mat-form-field class="tillDate mat_date_picker" appearance="outline">
-                                            <input matInput (click)="StartDate.open()" readonly autocomplete="off"
-                                                [max]="validTillMinDate" [matDatepicker]="StartDate" id="StartDate"
+                                        <mat-form-field class="tillDate mat_date_picker disable-datepicker" appearance="outline">
+                                            <input matInput (click)="StartDate.open()" style="margin-bottom: 3px;"
+                                                autocomplete="off" [matDatepicker]="StartDate" id="StartDate"
                                                 [placeholder]="entityDateFormat" formControlName="StartDate">
                                             <mat-datepicker-toggle matSuffix [for]="StartDate"></mat-datepicker-toggle>
                                             <mat-datepicker #StartDate></mat-datepicker>
@@ -200,12 +199,6 @@
 
                     <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
                         <div class="form-group bmd-form-group">
-                            <!-- <select formControlName="StatusId" class="form-control" name="active" id="active">
-                                <option value="0" disabled>--SELECT STATUS--</option>
-                                <option *ngFor="let status of statusList" [value]="status.Id">
-                                    {{status.StatusName | uppercase}}
-                                </option>
-                            </select> -->
                             <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'StatusId'"
                                 name="active" id="active">
                                 <ng-option [value]="0" disabled>--SELECT STATUS--</ng-option>

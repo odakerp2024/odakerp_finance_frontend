@@ -219,8 +219,7 @@
                                 (change)="getVendorBranch($event);getInvoiceList($event)" [clearable]="false">
                                 <ng-option [value]="''" disabled>--SELECT VENDOR--</ng-option>
                                 <ng-container *ngFor="let vendor of vendorUniqueList">
-                                    <ng-option
-                                        [value]="vendor.VendorID">
+                                    <ng-option [value]="vendor.VendorID">
                                         {{ vendor.VendorCode | uppercase }} - {{ vendor.VendorName | uppercase }}
                                     </ng-option>
                                 </ng-container>
@@ -667,25 +666,6 @@
                                                 {{item.GroupName | uppercase}}
                                             </ng-template>
                                         </ng-select>
-
-                                        <!-- <ng-select class="searchdropdown" [clearable]="false" [appendTo]="'body'"
-                                            formControlName="AccountId" [disabled]="isUpdateEnable">
-                                            <ng-container>
-                                                <optgroup *ngFor="let ddlAccType of groupedCoaTypeList | keyvalue"
-                                                    [label]="ddlAccType.key">
-                                                    <option *ngFor="let type of ddlAccType.value"
-                                                        [value]="type.ChartOfAccountsId">
-                                                        {{ type.AccountName | uppercase }}
-                                                    </option>
-                                                </optgroup>
-                                            </ng-container>
-                                        </ng-select> -->
-                                        <!-- <ng-option [value]="0" [disabled]="true">--SELECT
-                                                Account--</ng-option>
-                                            <ng-option *ngFor="let gRow of AccountList"
-                                                [value]="gRow.ChartOfAccountsId">
-                                                {{gRow.AccountName | uppercase}}
-                                            </ng-option> -->
                                     </td>
 
                                     <td class="text-center best-fit-width">
@@ -940,17 +920,21 @@
                                     <td class="text-center">
                                         <label>TDS</label>
                                     </td>
-                                    <td *ngIf="(!this.paymentForm.value.Table.IsVendor && !isPaymentForBill) ||  (this.paymentForm.value.Table.IsVendor && !isPaymentForBill)" class="text-center">
+                                    <td *ngIf="(!this.paymentForm.value.Table.IsVendor && !isPaymentForBill) ||  (this.paymentForm.value.Table.IsVendor && !isPaymentForBill)"
+                                        class="text-center">
                                         <label>0</label>
                                     </td>
-                                    <td *ngIf="(!this.paymentForm.value.Table.IsVendor && !isPaymentForBill) ||  (this.paymentForm.value.Table.IsVendor && !isPaymentForBill)" class="text-center">
+                                    <td *ngIf="(!this.paymentForm.value.Table.IsVendor && !isPaymentForBill) ||  (this.paymentForm.value.Table.IsVendor && !isPaymentForBill)"
+                                        class="text-center">
                                         <label>{{this.paymentForm.value.Table.TDSAmount}}</label>
                                     </td>
-                                    
-                                    <td *ngIf="this.paymentForm.value.Table.IsVendor && isPaymentForBill" class="text-center">
+
+                                    <td *ngIf="this.paymentForm.value.Table.IsVendor && isPaymentForBill"
+                                        class="text-center">
                                         <label>0</label>
                                     </td>
-                                    <td *ngIf="this.paymentForm.value.Table.IsVendor  && isPaymentForBill" class="text-center">
+                                    <td *ngIf="this.paymentForm.value.Table.IsVendor  && isPaymentForBill"
+                                        class="text-center">
                                         <label>{{this.paymentForm.value.Table.TotalTDSAmount}}</label>
                                     </td>
 

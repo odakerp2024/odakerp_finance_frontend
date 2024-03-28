@@ -39,7 +39,7 @@ export class ProvisionViewComponent implements OnInit {
     this.getDivisionList();
     this.getOfficeList();
     this.getStatusDropDownList();
-    this.getProvisionInvoice();
+    this.getProvisionList();
   }
 
   createProvisoinForm() {
@@ -54,7 +54,7 @@ export class ProvisionViewComponent implements OnInit {
     });
   }
 
-  getProvisionInvoice() {
+  getProvisionList() {
     var service = `${this.globals.APIURL}/Provision/GetProvisionList`;
     this.dataService.post(service, this.provisionFilter.value).subscribe((result: any) => {
       this.provisionList = [];
@@ -105,5 +105,40 @@ export class ProvisionViewComponent implements OnInit {
         }
     }, error => { });
   } 
+
+  createProvision(){
+    const userID = localStorage.getItem("UserID");
+    const paylod = {
+      userID: Number(userID),
+      Ref_Application_Id: "4",
+      SubfunctionID: 511,
+    }
+
+    this.router.navigate(['/views/provision/provision-detail']);
+
+    // this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
+    //   if (data.length > 0) {
+    //     console.log("PermissionObject", data);
+
+    //     if (data[0].SubfunctionID == paylod.SubfunctionID) {
+
+    //       if (data[0].Create_Opt != 2) {
+    //           Swal.fire('Please Contact Administrator');            
+    //       }
+    //       else {
+    //         this.router.navigate(['/views/purchase-admin-info/purchase-invoice-info']);
+    //       }
+    //     }
+    //     else {
+    //       Swal.fire('Please Contact Administrator');
+    //     }
+    //   }
+    //   else {
+    //     Swal.fire('Please Contact Administrator');
+    //   }
+    // }, err => {
+    //   console.log('errr----->', err.message);
+    // });
+  }
 
 }
