@@ -767,8 +767,14 @@ export class AdjustmentVoucherInfoComponent implements OnInit {
       validation += "<span style='color:red;'>*</span> <span>Please select upload file.</span></br>"
     }
 
-    if(!this.accountValidation()){
-      validation += "<span style='color:red;'>*</span> <span>It should have at least one COA account and one customer or vendor in the Adjustment Table.</span></br>"
+    if(this.COAValidation()){
+      validation += "<span style='color:red;'>*</span> <span>Please select at least a Customer or Vendor to adjust</span></br>"
+    }
+    if(this.CustomerValidation()){
+      validation += "<span style='color:red;'>*</span> <span>Please select at least a COA Master or Vendor to adjust</span></br>"
+    }
+    if(this.VendorValidation()){
+      validation += "<span style='color:red;'>*</span> <span>Please select at least a COA Master or Customer to adjust</span></br>"
     }
 
     if (validation != "") {
@@ -864,14 +870,38 @@ export class AdjustmentVoucherInfoComponent implements OnInit {
     });
   }
 
-  // * check its having both COA and customer or vendor
-
-  accountValidation(){
-      const isCoaAccount = this.AdjustmentTableList.some((item) => {  return item.AccountType == "COA MASTER" });
-      const isCustomer = this.AdjustmentTableList.some((item) => { return item.AccountType == "CUSTOMER"});
-      const isVendor =  this.AdjustmentTableList.some((item) => { return item.AccountType == "VENDOR"});
-      return(isCoaAccount && (isCustomer ||  isVendor))
+  // * check its having COA and customer or vendor matching the scenerio
+CustomerValidation(){
+    debugger
+    const isCoaAccount1 = this.AdjustmentTableList.some((item) => {  return item.DrCrName == "Dr" && item.AccountType == "CUSTOMER" });
+    const isCoaAccount = this.AdjustmentTableList.some((item) => {  return item.DrCrName == "Cr" && item.AccountType == "CUSTOMER" });
+    const isCusdtomer = this.AdjustmentTableList.some((item) => { return item.AccountType == "COA MASTER" || item.AccountType == "VENDOR"});
+      return((isCoaAccount && isCoaAccount1 && !isCusdtomer)
+   ) 
   }
+
+  VendorValidation(){
+    debugger
+    const isCoaAccount1 = this.AdjustmentTableList.some((item) => {  return item.DrCrName == "Dr" && item.AccountType == "VENDOR" });
+    const isCoaAccount = this.AdjustmentTableList.some((item) => {  return item.DrCrName == "Cr" && item.AccountType == "VENDOR" });
+    const isCusdtomer = this.AdjustmentTableList.some((item) => { return item.AccountType == "COA MASTER" || item.AccountType == "CUSTOMER"});
+      return((isCoaAccount && isCoaAccount1 && !isCusdtomer)
+   ) 
+  }
+
+  COAValidation(){
+    debugger
+    const isCoaAccount1 = this.AdjustmentTableList.some((item) => {  return item.DrCrName == "Dr" && item.AccountType == "COA MASTER" });
+    const isCoaAccount = this.AdjustmentTableList.some((item) => {  return item.DrCrName == "Cr" && item.AccountType == "COA MASTER" });
+    const isCusdtomer = this.AdjustmentTableList.some((item) => { return item.AccountType == "CUSTOMER" || item.AccountType == "VENDOR"});
+      return((isCoaAccount && isCoaAccount1 && !isCusdtomer)
+   ) 
+  }
+    
+   
+    
+
+  
 
   adjustmentVoucherEdit(id?: number) {
     this.router.navigate(['/views/Adjustment-info/Adjustment-Voucher-info', { id: id, isUpdate: true }]);

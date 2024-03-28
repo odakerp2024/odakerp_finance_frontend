@@ -151,7 +151,7 @@
                                <label class="str fontstyles" >Amount</label>
                                  <input
                                   onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
-                                  min="0" numbersOnly (change)="calculateLocalAmount(); CurrentExRate()" 
+                                  min="0" numbersOnly (change)="calculateLocalAmount()" 
                                   appDynamicDecimal class="form-control my-select amount w-100 mr-0"
                                   formControlName="AmountPaid"/>
                             </div>
@@ -180,6 +180,41 @@
                     </div>  
                 </div>
            -->
+           <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+            <div class="form-group">
+                <label class="str">Exchange Rates</label>
+                <input
+                    *ngIf="!isSameCurrency"
+                    onkeypress="return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47"
+                    min="0"
+                    numbersOnly
+                    (change)="calculateLocalAmount()"
+                    appDynamicDecimal
+                    class="form-control w-100"
+                    formControlName="Exchange"
+                    [ngClass]="isEditMode ? 'enable-input' : ''"
+
+                />
+                <input
+                    *ngIf="isSameCurrency"
+                    (change)="calculateLocalAmount()"
+                    onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                    min="0"
+                    numbersOnly
+                    class="form-control w-100"
+                    formControlName="Exchange"
+                    [ngClass]="isEditMode ? 'disable-input' : ''"
+                />
+            </div>
+        </div>
+        
+
+          <div class="col-4 mt-auto mb-3">
+            <label class="">Local Amount</label>
+           <input type="text" class="w-100" appDynamicDecimal style="text-transform: initial !important;" 
+            class="form-control local w-100 " readonly min="0"
+            formControlName="TotalAmount" placeholder="Local Amount" />
+        </div>
 
                 <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group">
@@ -203,13 +238,6 @@
 
                 <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group">
-                        <label>Remarks</label>
-                        <textarea class="form-control addressht" id="txtRemarks" rows="5"
-                            formControlName="Remarks"></textarea>
-                    </div>
-                </div>
-                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
-                    <div class="form-group">
                         <label class="str">Status</label>
                         <select [ngClass]=" isUpdate ? 'block-input' : 'block-input'" readonly formControlName="StatusId" name="Status" class="form-control my-select disable-input--nostyle">
                             <option disabled value="">--SELECT STATUS--</option>
@@ -220,12 +248,19 @@
                     </div>
                 </div>
 
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label>Remarks</label>
+                        <textarea class="form-control addressht" id="txtRemarks" rows="5"
+                            formControlName="Remarks"></textarea>
+                    </div>
+                </div>
+                
+
                 <!-- <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4"> </div> -->
-                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4"> </div>
 
-
-
-                <div class="col-4 mt-auto">
+                <!-- <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4"> </div> -->
+                 <div class="col-4 mt-auto">
                     <div class="row">
                         <div class="col-12">
                             <div class="row">
@@ -294,59 +329,8 @@
                     </div>
                 </div>
 
-                <div class="col-4 mt-auto">
-               
-                    <div *ngIf="!isSameCurrency" >
-                    <label class="">Exchange Rates</label>
-                        <!-- <button type="submit" class="btn btn-success bmd-btn-fab float-right" (click)="addExchangeRate()">
-                            <i class="material-icons editicon">add</i>
-                        </button> -->
-                        <button  type="button"
-                        class="btn btn-warning bmd-btn-fab text-white mr-3 mb-0" style = "margin-left: 60px;" (click)="disableField()">
-                         <i class="material-icons editicon">edit</i>
-                        </button>
-
-
-                        <button *ngIf="showExchangeRate" [disabled] = "contraForm.value.CurrentExRate == 0" type="submit" style = "margin-left: 80px;" class="btn btn-success bmd-btn-fab text-white mr-3 mb-0"
-                        (click)="CurrentExRate()"><i class="material-icons editicon">add</i>
-                        </button><br>
-                        
-                        <table
-                            class="table table-responsive  table-bordered w-100 table-striped border-0 agingTable mt-2">
-                            <thead class="text-center">
-                                <tr>
-                                    <th scope="col">Rate Pair</th>
-                                    <th scope="col">Rate</th>
-                                    <th *ngIf="showExchangeRate" scope="col">Updated Rate</th>
-                                </tr>
-                            </thead>
-                            <tbody class="text-center">
                 
-                                <ng-container *ngIf="exchangePairDetails?.length; else noRecord2">
-                                    <tr *ngFor="let exchange of exchangePairDetails;let i = index">
-                                        <td>{{exchange.CurrencyPair}}</td>
-                                        <td>{{exchange.Rate}}</td>
-                                        <td *ngIf="showExchangeRate">
-                                            <input formControlName="CurrentExRate"  appDynamicDecimal class="form-control w-100"
-                                             autocomplete="off" type="text">{{exchange.CurrentExRate}}
-                                        </td>
-                                    </tr>
-                                </ng-container>
-                                <ng-template #noRecord2>
-                                    <tr>
-                                        <td class="text-center" colspan="3">No records found</td>
-                                    </tr>
-                                </ng-template>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="col-3 mt-auto mb-3">
-                    <label class="">Local Amount</label>
-                    <input type="text" class="w-100" appDynamicDecimal style="text-transform: initial !important;" 
-                    class="form-control local w-100 " readonly min="0"
-                    formControlName="TotalAmount" placeholder="Local Amount" />
-                </div>
+                
 
 
                 <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 text-right mt-4">

@@ -24,6 +24,7 @@ export class JournalVoucherDetailsComponent implements OnInit {
   CreatedOn: string = '';
   CreatedBy: string = '';
   ModifiedBy: string = '';
+  entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
   statusList: any = [];
   journalForm: FormGroup;
@@ -172,7 +173,7 @@ export class JournalVoucherDetailsComponent implements OnInit {
       DrCrId: [0],
       Currency: [1],
       CurrencyName: [''],
-      ROE: ['1'],
+      ROE: [''],
       Amount: [],
       CompanyCurrencyAmount: [0],
       Narration: [''],
@@ -392,10 +393,10 @@ export class JournalVoucherDetailsComponent implements OnInit {
         DrCrName: DrCrId.TransactionName,
         Currency: info.Currency,
         CurrencyName: currency.CurrencyCode,
-        ROE: info.ROE,
-        Amount: info.Amount,
-        CompanyCurrencyAmount: Number(info.ROE) * Number(info.Amount),
-        Narration: info.Narration
+        ROE: Number(info.ROE).toFixed(this.entityFraction),
+        Amount: Number(info.Amount).toFixed(this.entityFraction),
+        CompanyCurrencyAmount: ((Number(info.ROE) * Number(info.Amount)).toFixed(this.entityFraction)),
+        Narration: Number(info.Narration).toFixed(this.entityFraction),
       }
 
       this.journalTableList[this.editSelectedIdex] = editValue
@@ -416,10 +417,10 @@ export class JournalVoucherDetailsComponent implements OnInit {
       DrCrName: DrCrId.TransactionName,
       Currency: info.Currency,
        CurrencyName: currency.CurrencyCode,
-      ROE: info.ROE,
-      Amount: info.Amount,
-      CompanyCurrencyAmount: Number(info.ROE) * Number(info.Amount),
-      Narration: info.Narration
+      ROE: Number(info.ROE) % 1 !== 0 ? Number(info.ROE).toFixed(this.entityFraction) : info.ROE,
+      Amount: Number(info.Amount) % 1 !== 0 ? Number(info.Amount).toFixed(this.entityFraction) : info.Amount,
+      CompanyCurrencyAmount: Number(info.ROE) % 1 !== 0 ? (Number(info.ROE) * Number(info.Amount)).toFixed(this.entityFraction): Number(info.ROE) * Number(info.Amount),
+      Narration: Number(info.Narration) % 1 !== 0 ? Number(info.Narration).toFixed(this.entityFraction) : info.Narration,
     });
     this.resetJournalTable();
     this.calculateTotalDebitAndCredit();
@@ -433,7 +434,7 @@ export class JournalVoucherDetailsComponent implements OnInit {
     this.journalForm.controls['DrCrId'].setValue(0);
     this.journalForm.controls['Currency'].setValue(1);
     this.journalForm.controls['CurrencyName'].setValue('');
-    this.journalForm.controls['ROE'].setValue('1');
+    this.journalForm.controls['ROE'].setValue('');
     this.journalForm.controls['Amount'].setValue('');
     this.journalForm.controls['CompanyCurrencyAmount'].setValue(0);
     this.journalForm.controls['Narration'].setValue('');
@@ -446,9 +447,10 @@ export class JournalVoucherDetailsComponent implements OnInit {
     var totalCredit = 0;
     var totalDebit = 0;
     var totalDifference = 0;
-    for (let data of debit) totalDebit += Number(data.CompanyCurrencyAmount);
-    for (let data of credit) totalCredit += Number(data.CompanyCurrencyAmount);
-    totalDifference = Math.abs(totalCredit - totalDebit);
+    for (let data of debit) totalDebit += Number(Number(data.CompanyCurrencyAmount).toFixed(this.entityFraction));
+    for (let data of credit) totalCredit += Number(Number(data.CompanyCurrencyAmount).toFixed(this.entityFraction));
+     totalDifference = Math.abs(totalCredit - totalDebit);
+    totalDifference = Number(totalDifference.toFixed(this.entityFraction));
     this.AmountDifference = totalDifference;
 
     this.journalForm.controls['TotalDebit'].setValue(totalDebit);
