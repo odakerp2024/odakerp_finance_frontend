@@ -1,22 +1,22 @@
-<!-- <form [formGroup]="SideNavForm"> -->
+<form [formGroup]="SideNavForm">
     <div class="left side-menu">
 
 
         <div class="sidebar-inner slimscrollleft" id="sidebar-main">
-            <div class="dropdown1">
+            <!--<div class="dropdown1">
                 <button data-toggle="tooltip" title="Dashboard" [routerLink]="['/views/dashboard']" class="dropbtn1"><mat-icon>dashboard</mat-icon></button>
+            </div>-->
+            <div class="dropdown1">
+                <button data-toggle="tooltip" title="Liner Agency" (click)="BindTokenValues(1)" class="dropbtn1" style="margin-top: 10px!important;"><mat-icon>directions_boat</mat-icon></button>
             </div>
             <div class="dropdown1">
-                <button data-toggle="tooltip" title="Liner Agency" (click)="OnClickLink(1)" class="dropbtn1" style="margin-top: 10px!important;"><mat-icon>directions_boat</mat-icon></button>
+                <button data-toggle="tooltip" title="Freight Forwarding" (click)="BindTokenValues(2)" class="dropbtn1"><mat-icon svgIcon="freight"></mat-icon></button>
             </div>
             <div class="dropdown1">
-                <button data-toggle="tooltip" title="Freight Forwarding" (click)="OnClickLink(2)" class="dropbtn1"><mat-icon svgIcon="freight"></mat-icon></button>
+                <button data-toggle="tooltip" title="Finance" (click)="BindTokenValues(3)" class="dropbtn1 active"><mat-icon svgIcon="profit"></mat-icon></button>
             </div>
             <div class="dropdown1">
-                <button data-toggle="tooltip" title="Finance" (click)="OnClickLink(3)" class="dropbtn1 active"><mat-icon svgIcon="profit"></mat-icon></button>
-            </div>
-            <div class="dropdown1">
-                <button data-toggle="tooltip" title="System Admin" (click)="OnClickLink(4)" class="dropbtn1" style="margin-top: 10px!important;"><mat-icon svgIcon="user"></mat-icon></button>
+                <button data-toggle="tooltip" title="System Admin" (click)="BindTokenValues(4)" class="dropbtn1" style="margin-top: 10px!important;"><mat-icon svgIcon="user"></mat-icon></button>
             </div>
             <!--<div class="dropdown1">
                 <button class="dropbtn1"><mat-icon svgIcon="database"></mat-icon></button>
@@ -26,7 +26,7 @@
                 <button class="dropbtn"><i class="material-icons editicon">person</i></button>
                 <div class="dropdown-content">
                     <a (click)="modal()"><span><i class="material-icons editicon">person</i></span> Profile</a>
-                    <a href="#"><span><i class="material-icons editicon">logout</i></span> Log Out</a>
+                    <a (click)="LogOut()"><span><i class="material-icons editicon">logout</i></span> Log Out</a>
                 </div>
             </div>
         </div>
@@ -34,73 +34,6 @@
 
 
 
-
-
-
-        <!--<mat-nav-list>
-
-            <div class="sidebar-inner slimscrollleft" id="sidebar-main">
-
-                <mat-accordion>
-
-
-                    <mat-expansion-panel hideToggle>
-                        <mat-expansion-panel-header class="dashboard">
-                            <mat-panel-title>
-                                <a (click)="OnClickLink(1)"><mat-icon>directions_boat</mat-icon></a>
-                            </mat-panel-title>
-                        </mat-expansion-panel-header>
-
-                    </mat-expansion-panel>
-
-                    <mat-expansion-panel hideToggle>
-                        <mat-expansion-panel-header class="dashboard">
-                            <mat-panel-title>
-                                <a (click)="OnClickLink(2)"><mat-icon svgIcon="freight"></mat-icon></a>
-                            </mat-panel-title>
-                        </mat-expansion-panel-header>
-
-                    </mat-expansion-panel>
-
-                    <mat-expansion-panel hideToggle>
-                        <mat-expansion-panel-header class="dashboard">
-                            <mat-panel-title>
-                                <a (click)="OnClickLink(3)"><mat-icon svgIcon="profit"></mat-icon></a>
-                            </mat-panel-title>
-                        </mat-expansion-panel-header>
-
-                    </mat-expansion-panel>
-
-                    <mat-expansion-panel hideToggle>
-                        <mat-expansion-panel-header class="dashboard">
-                            <mat-panel-title>
-                                <a (click)="OnClickLink(4)"><mat-icon svgIcon="user"></mat-icon></a>
-
-                            </mat-panel-title>
-                        </mat-expansion-panel-header>
-
-                    </mat-expansion-panel>
-
-
-
-                    <mat-expansion-panel hideToggle>
-                        <mat-expansion-panel-header class="dashboard" style="margin-left:-17px !important; position:absolute;bottom:30px;">
-                            <a class="nav-link waves-effect nav-user" data-toggle="dropdown" href="#" role="button" aria-haspopup="false"
-                               aria-expanded="false">
-                                <mat-icon style="color: #fafafa!important; font-size: 20px!important; background-color: #43506d!important; padding: 6px!important; border-radius: 5px!important;">account_circle</mat-icon>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
-
-
-                                <a class="dropdown-item" href="#">
-                                    <i class="mdi mdi-logout m-r-5 text-muted"></i> Logout
-                                </a>
-                            </div>
-                        </mat-expansion-panel-header>
-                    </mat-expansion-panel>
-                </mat-accordion>
-            </div>
-        </mat-nav-list>-->
     </div>
 
     <div class="modal fade seminor-login-modal" data-backdrop="static" id="UserProfile">
@@ -124,11 +57,17 @@
                                 <div class="col-md-12 col-lg-12">
                                     <div class="form-group">
                                         <div class="row">
-                                            <div class="col-md-12">
+                                            <div class="col-md-6">
                                                 <label>User ID</label>
-                                                <input type="text" class="form-control" />
+                                            </div>
+                                            <div class="col-md-6 alrt">
+                                                <button data-toggle="tooltip" title="Password Reset" (click)="OnResetPassword()" type="submit" class="btn btn-warning bmd-btn-fab"><i class="material-icons editicon">key</i><div class="ripple-container"></div></button>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <input type="text" id="txtuserid" disabled formControlName="User_Idv" class="form-control" />
                                             </div>
                                         </div>
+                                       
                                     </div>
                                 </div>
                             </div>
@@ -140,25 +79,21 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <label>User Active</label>
-                                                <select name="Status" class="form-control my-select">
-                                                    <option value="0">User Active</option>
-                                                </select>
+                                                <input type="text" id="txtuseractive" disabled formControlName="User_Active" class="form-control" />
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-3" [hidden]="DisplayEmpNone">
                             <div class="row">
                                 <div class="col-md-12 col-lg-12">
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <label>Employee Code</label>
-                                                <select name="Status" class="form-control my-select">
-                                                    <option value="0">Employee Code</option>
-                                                </select>
+                                                <input type="text" id="txtEmpCode" disabled formControlName="Employee_Code" class="form-control" />
                                             </div>
                                         </div>
                                     </div>
@@ -172,8 +107,10 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <label>Landing Application</label>
-                                                <select name="Status" class="form-control my-select">
-                                                    <option value="0">Landing Application</option>
+                                                <select class="form-control my-select" id="ddlLandingApp" formControlName="Landing_Application_Id">
+                                                    <option *ngFor="let status of LandingValues" [value]="status.value">
+                                                        {{status.viewValue}}
+                                                    </option>
                                                 </select>
                                             </div>
                                         </div>
@@ -184,14 +121,14 @@
                     </div>
 
                     <div class="row alogtop">
-                        <div class="col-md-3">
+                        <div class="col-md-3" [hidden]="DisplayEmpNone">
                             <div class="row">
                                 <div class="col-md-12 col-lg-12">
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <label>Employee Name</label>
-                                                <input type="text" class="form-control" />
+                                                <input type="text" id="txtEmpName" disabled formControlName="EmployeeName" class="form-control" />
                                             </div>
                                         </div>
                                     </div>
@@ -205,7 +142,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <label>Short Name</label>
-                                                <input type="text" class="form-control" />
+                                                <input type="text" id="txtShortName" disabled formControlName="ShortName" class="form-control" />
                                             </div>
                                         </div>
                                     </div>
@@ -218,10 +155,8 @@
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <label>Active</label>
-                                                <select name="Status" class="form-control my-select">
-                                                    <option value="0">Active</option>
-                                                </select>
+                                                <label>Employee Active</label>
+                                                <input type="text" id="txtEmpActive" disabled formControlName="Employee_Active_Status" class="form-control" />
                                             </div>
                                         </div>
                                     </div>
@@ -235,9 +170,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <label>Gender</label>
-                                                <select name="Status" class="form-control my-select">
-                                                    <option value="0">Gender</option>
-                                                </select>
+                                                <input type="text" id="txtGender" disabled formControlName="Gender" class="form-control" />
                                             </div>
                                         </div>
                                     </div>
@@ -254,7 +187,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <label>Date of Birth</label>
-                                                <input type="date" class="form-control" />
+                                                <input type="date" id="txtDOB" disabled formControlName="DOB" class="form-control" />
                                             </div>
                                         </div>
                                     </div>
@@ -268,7 +201,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <label>Designation</label>
-                                                <input type="text" class="form-control" />
+                                                <input type="text" id="txtDesignation" disabled formControlName="Designation" class="form-control" />
                                             </div>
                                         </div>
                                     </div>
@@ -282,7 +215,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <label>Landline</label>
-                                                <input type="number" class="form-control" />
+                                                <input type="text" id="txtLandline" disabled formControlName="Landline" class="form-control" />
                                             </div>
                                         </div>
                                     </div>
@@ -296,7 +229,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <label>Mobile</label>
-                                                <input type="number" class="form-control" />
+                                                <input type="text" id="txtMobile" disabled formControlName="Mobile" class="form-control" />
                                             </div>
                                         </div>
                                     </div>
@@ -313,7 +246,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <label>E-Mail</label>
-                                                <input type="email" class="form-control" />
+                                                <input type="text" id="txtEmail" disabled formControlName="Email" class="form-control" />
                                             </div>
                                         </div>
                                     </div>
@@ -327,7 +260,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <label>Date of Joining</label>
-                                                <input type="date" class="form-control" />
+                                                <input type="date" id="txtDOJ" disabled formControlName="DateOfJoining" class="form-control" />
                                             </div>
                                         </div>
                                     </div>
@@ -341,7 +274,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <label>Date of Confirmation</label>
-                                                <input type="date" class="form-control" />
+                                                <input type="date" id="txtDOC" disabled formControlName="DateOfConfirmation" class="form-control" />
                                             </div>
                                         </div>
                                     </div>
@@ -355,7 +288,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <label>Date of Relieving</label>
-                                                <input type="date" class="form-control" />
+                                                <input type="date" id="txtDOR" disabled formControlName="DateOfRelieving" class="form-control" />
                                             </div>
                                         </div>
                                     </div>
@@ -372,7 +305,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <label>Division</label>
-                                                <input type="text" class="form-control" />
+                                                <input type="text" id="ddlDivision" disabled formControlName="Division_Name" class="form-control" />
                                             </div>
                                         </div>
                                     </div>
@@ -386,9 +319,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <label>Office</label>
-                                                <select class="form-control my-select">
-                                                    <option value="0">Office</option>
-                                                </select>
+                                                <input type="text" id="ddlOffice" disabled formControlName="Office_Name" class="form-control" />
                                             </div>
                                         </div>
                                     </div>
@@ -402,7 +333,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <label>Department</label>
-                                                <input type="text" class="form-control" />
+                                                <input type="text" id="txtDepartment" disabled formControlName="Department" class="form-control" />
                                             </div>
                                         </div>
                                     </div>
@@ -416,7 +347,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <label>Reporting To</label>
-                                                <input type="text" class="form-control" />
+                                                <input type="text" id="txtReportingTo" disabled formControlName="Reporting_to" class="form-control" />
                                             </div>
                                         </div>
                                     </div>
@@ -433,7 +364,7 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <label>HOD</label>
-                                                <input type="text" class="form-control" />
+                                                <input type="text" id="txtHOD" disabled formControlName="HOD" class="form-control" />
                                             </div>
                                         </div>
                                     </div>
@@ -447,7 +378,35 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <label>SBU/Division Head</label>
-                                                <input type="text" class="form-control" />
+                                                <input type="text" id="txtSBUHead" disabled formControlName="SBU_Division_Head" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3" [hidden]="DisplayNone">
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Vendor Name</label>
+                                                <input type="text" id="txtVendorName" disabled formControlName="VendorName" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3" [hidden]="DisplayNone">
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Vendor Branch</label>
+                                                <input type="text" id="txtVendorBranch" disabled formControlName="VendorBranch" class="form-control" />
                                             </div>
                                         </div>
                                     </div>
@@ -458,10 +417,78 @@
 
                     <div class="divide3"></div>
                     <div class="col-md-12 alrt padlr0 btmrw">
-                        <button data-toggle="tooltip" title="Profile" type="submit" class="btn btn-primary btn-raised cntbtn mb-0" (click)="PartBlCreate();">Save<div class="ripple-container"></div></button>
+                        <button data-toggle="tooltip" title="Profile" type="submit" class="btn btn-primary btn-raised cntbtn mb-0" (click)="OnSubmit();">Save<div class="ripple-container"></div></button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-<!-- </form> -->
+    <div class="modal fade seminor-login-modal" data-backdrop="static" id="PasswordRestModal">
+        <div class="modal-dialog modal-dialog-centered dialog400">
+            <div class="modal-content">
+                <div class="row">
+                    <div class="col-md-12 alrt">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span><i class="fa fa-times-circle" aria-hidden="true"></i></span>
+                        </button>
+                    </div>
+                </div>
+
+
+                <div class="modal-body seminor-login-modal-body cntpopup">
+                    <h5 class="modal-title text-center">Password Reset</h5>
+                    <div class="divide1"></div>
+                 
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="row">
+
+                                <div class="col-md-4">
+                                    <label style="font-weight:bold;">Password : </label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="text" id="txtResetPassword" disabled formControlName="Reset_Password" class="form-control" />
+                                </div>
+                               
+                            </div>
+                            <!--<div class="row">
+
+                                <div class="col-md-4">
+                                    <label style="font-weight:bold;">New Password : </label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="text" id="txtNewPssword" disabled formControlName="New_Password" class="form-control" />
+                                </div>
+
+                            </div>
+                            <div class="row">
+
+                                <div class="col-md-4">
+                                    <label style="font-weight:bold;">Confirm Password : </label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="text" id="txtConfirmPassword" disabled formControlName="Confirm_Password" class="form-control" />
+                                </div>
+
+                            </div>
+                            <div class="row">
+
+                               
+                                <div class="col-md-4"></div>
+                                <div class="col-md-8">
+                                    <button type="submit" (click)="GeneratePassword()" [disabled]="disablegenerate" class="btn btn-primary btnadd btn-raised mb-0" style="width:12.7rem!important;margin-top:7px;">Reset Password</button>
+                                </div>
+                            </div>-->
+                        </div>
+
+                    </div>
+                    <!--<div class="col-md-12" style="text-align: right; font-weight: bold;">
+                        <label style=" color: #248908;">{{PasswordReset}}</label>
+                    </div>-->
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>

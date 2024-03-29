@@ -244,5 +244,16 @@ export class CommonService {
     GetCOAAccountMappingList(payload: any): Observable<any[]> {
         return this.http.post<any[]>(this.globals.APIURL + '/Common/GetCOAAccountMappingList', payload);
     }
+    
+    SendToken(payload: any): Observable<any[]> {
+        return this.http.post<any[]>(this.globals.LANDINGURL + '/Home/GetAuthentication', payload);
+    }
+    
+    getDeleteToken(payload: any): Observable<any[]> {
+        return this.http.post<any[]>(this.globals.LANDINGURL + '/Home/GetDeleteToken', payload);
+    }
+    GetInstanceLinks(payload: any): Observable<any[]> {
+        return this.http.post<any[]>(this.globals.LANDINGURL + '/SystemAdminApi/InstanceLinks', payload);
+    }
 
 }

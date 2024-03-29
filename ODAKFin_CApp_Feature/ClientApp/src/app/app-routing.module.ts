@@ -208,12 +208,17 @@ const routes: Routes = [
     { path: '', redirectTo: "/login", pathMatch: 'full' },
     { path: 'login', component: LoginComponent },
 
+    // { path: '', redirectTo: "/dashboard", pathMatch: 'full' },
+    // { path: 'dashboard', component: DashboardComponent },
+    // { path: 'dashboard/:Token/:TokenID', component: DashboardComponent },
+
 
     {
         path: 'views', component: ViewsComponent, canActivate: [AuthenticationGuard],
 
         children: [
             { path: 'dashboard', component: DashboardComponent },
+            { path: 'dashboard/:Token/:TokenID', component: DashboardComponent },
             { path: 'administration/administration', component: AdministrationComponent },
             { path: 'administration/systemmaster', component: SystemmasterComponent },
             { path: 'administration/orgstruct', component: OrgstructComponent },
