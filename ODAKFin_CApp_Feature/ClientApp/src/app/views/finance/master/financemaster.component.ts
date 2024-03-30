@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Globals } from 'src/app/globals';
 import { CommonService } from 'src/app/services/common.service';
 import { LoginService } from 'src/app/services/login.service';
 import Swal from 'sweetalert2';
@@ -30,12 +31,16 @@ export class FinanceMasterComponent implements OnInit {
   isRequest: boolean = false;
   isProgress: boolean = false;
   isPayments: boolean = false;
+  Token: string;
+  payloadupdatepermission: { userId: any; };
 
   constructor(
     private titleService: Title,
     private router: Router,
     private route: ActivatedRoute,
-    private LService: CommonService
+    private commonDataService: CommonService,
+    private LService: LoginService,
+    private globals: Globals,
   ) { }
 
   getPermissionListForCreate(value, route) {
@@ -328,7 +333,105 @@ export class FinanceMasterComponent implements OnInit {
         this.selectedTabName = 'Masters'
       }
     })
+
+    this.route.queryParams.subscribe(params => {
+      localStorage.setItem("TokenID", params['TokenID']);
+    });
+
+    this.BindTokenValues();
+    this.setEntityConfigurable();
+
   }
+
+  BindTokenValues() {
+
+    if (localStorage.getItem("TokenID") != null) {
+      const payload = {
+        ID: localStorage.getItem("TokenID")
+      }
+      this.commonDataService.SendToken(payload).subscribe(data => {
+        var TokenID = data[0].ID.toString();
+        var Token = data[0].access_token;
+        // this.UserID = data[0].UserID;
+        localStorage.setItem("UserID", data[0].UserID.toString());
+
+        if (this.Token != 'null') {
+          this.GeneratePermission(localStorage.getItem("UserID"));
+        }
+        else {
+          //window.location.href = "https://localhost:44323/views/sessionexpired?Tokenid=" + TokenID;
+          window.location.href = this.globals.SaApi + "/views/sessionexpired?ajdysghjadsbkyfgHVUFKDYKUYGVSDCHBKYGuyfkjyhbvjdygiuagsidukuYGUKFYSDKUFyguydgfakhdfhg=" + TokenID;
+          localStorage.removeItem('TokenID');
+          localStorage.removeItem('UserID');
+        }
+      });
+    }
+    else {
+      window.location.href = 'https://navioindia.freighteiz.com/login';
+    }
+  }
+
+  GeneratePermission(userid: any) {
+    let payload3 = {
+      "isdata": "G",
+      "ref_RoleId": "",
+      "UserId": userid,
+      "Created_by": 0
+    }
+    console.log("GeneratePayload", payload3);
+    this.LService.GenerateUserPermissionObject(payload3).subscribe(res => {
+      if (res.statuscode == 200 && res.message == "Success") {
+        this.GeneratePermissionupdate(userid);
+      }
+
+    }, err => {
+      Swal.fire(err.message);
+    });
+  }
+
+  GeneratePermissionupdate(userid: any) {
+    this.payloadupdatepermission = {
+      "userId": userid
+    }
+    this.LService.getUserPermissionUpdateList(this.payloadupdatepermission).subscribe((res: any) => {
+
+      if (res.message == "Success") {
+        this.GeneratePermissionCombined(parseInt(userid));
+      }
+      // else {
+      //     Swal.fire(res.message);
+      // }
+    }, err => {
+      Swal.fire(err.message);
+    });
+  }
+
+  GeneratePermissionCombined(userid: any) {
+
+    let numberValue = Number(localStorage.getItem("UserId"));
+
+    let payload2 = {
+      "userId": userid
+    }
+
+    console.log("payloadcombined", payload2)
+    this.LService.getUserPermissionCombinedList(payload2).subscribe((res: any) => {
+    }, err => {
+      Swal.fire(err.message);
+    });
+  }
+
+  setEntityConfigurable() {
+    this.commonDataService.getEntityConfigurableDetails({}).subscribe((result: any) => {
+        if (result.message === 'Success') {
+            const entityConfigurable = result.data.Table[0];
+            localStorage.setItem('EntityConfigurable', JSON.stringify(entityConfigurable))
+        }
+    }, err => {
+        Swal.fire("Invalid Credentials");
+    });
+}
+
 
   routePage(routePage: string) {
 

@@ -246,14 +246,14 @@ export class CommonService {
     }
     
     SendToken(payload: any): Observable<any[]> {
-        return this.http.post<any[]>(this.globals.LANDINGURL + '/Home/GetAuthentication', payload);
+        return this.http.post<any[]>(this.globals.SaApi + '/Home/GetAuthentication', payload);
     }
     
     getDeleteToken(payload: any): Observable<any[]> {
-        return this.http.post<any[]>(this.globals.LANDINGURL + '/Home/GetDeleteToken', payload);
+        return this.http.post<any[]>(this.globals.SaApi + '/Home/GetDeleteToken', payload);
     }
     GetInstanceLinks(payload: any): Observable<any[]> {
-        return this.http.post<any[]>(this.globals.LANDINGURL + '/SystemAdminApi/InstanceLinks', payload);
+        return this.http.post<any[]>(this.globals.SaApi + '/SystemAdminApi/InstanceLinks', payload);
     }
 
 }

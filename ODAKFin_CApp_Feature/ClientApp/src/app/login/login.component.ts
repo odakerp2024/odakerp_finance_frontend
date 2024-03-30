@@ -77,7 +77,7 @@ export class LoginComponent implements OnInit {
                 localStorage.setItem("UserName", data.data.logindetails.User_Idv);
                 localStorage.setItem('OrgId', '1'); // need to get from login in feature for diff org
                 this.GeneratePermission(data.data.logindetails.UserId);
-                this.router.navigate(['/views/dashboard' ]);
+                this.router.navigate(['/views/finance/financemaster',{tabName : 'transactions'}],);
             } else {
                 Swal.fire("Invalid Credentials");
             }
