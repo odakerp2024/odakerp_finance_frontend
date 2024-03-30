@@ -242,6 +242,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { DirectiveModule } from './directive/directive.module';
 import { PaymentVoucherDetailsComponent } from './views/finance/transactions/payment-vouchers/payment-voucher-details/payment-voucher-details.component';
 import { PaymentVoucherViewComponent } from './views/finance/transactions/payment-vouchers/payment-voucher-view/payment-voucher-view.component';
+import { TrialbalancetwoComponent } from './views/finance/reports/leveltwo/trialbalancetwo/trialbalancetwo.component';
+import { TrailbalanceComponent } from './views/finance/reports/levelone/trailbalance/trailbalance.component';
 const EntityConfigurable = localStorage.getItem('EntityConfigurable');
 const EntityDateFormat = JSON.parse(EntityConfigurable)?.DateFormat;
 export const MY_FORMATS = {
@@ -470,7 +472,9 @@ export const MY_FORMATS = {
     ChartaccountcodeviewComponent,
     ChartaccountcodelistComponent,
     PaymentVoucherViewComponent,
-    PaymentVoucherDetailsComponent
+    PaymentVoucherDetailsComponent,
+    TrialbalancetwoComponent,
+    TrailbalanceComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
