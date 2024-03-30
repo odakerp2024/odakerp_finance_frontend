@@ -237,7 +237,7 @@
                 <div class="row">
                     <div class="col-4">
                         <label>Remarks</label>
-                        <textarea [ngClass]=" isUpdate ? 'block-input' : ''" formControlName="Remarks"
+                        <textarea [(ngModel)]="Remarks" [ngModelOptions]="{standalone: true}" [ngClass]=" isUpdate ? 'block-input' : ''"
                             class="form-control addressht" rows="3"></textarea>
                     </div>
                     <div class="col-4"></div>
@@ -257,15 +257,15 @@
                     <button type="button" class="btn btn-primary text-white mr-3 mb-0 col-auto" (click)="submit()">
                         Save
                     </button>
-                    <button type="button"
-                        [ngClass]=" !isUpdate || !isEditMode || (!isSameAmount && !isPaymentForBill) ? 'disable-input--nostyle final-disable--style' : ''"
+                    <button type="button" *ngIf="!IsFinal"
+                        [ngClass]=" !isUpdate || !isEditMode ? 'disable-input--nostyle final-disable--style' : ''"
                         class="btn btn-success text-white mr-3 mb-0 col-auto" (click)="finalSubmit()">
                         Final
                     </button>
-                    <button type="button" *ngIf="isUpdate && !IsFinal" (click)="submit(true)"
+                    <button type="button" *ngIf="isUpdate && IsFinal" (click)="submit(true)"
                         [ngClass]="!isEditMode  ? 'disable-input--style' : ''"
                         class="btn btn-warning text-white mr-3 mb-0 col-auto">
-                        Delete
+                        Close Provision
                     </button>
 
                     <button type="button" (click)="Cancel()" class="btn btn-warning text-white mr-3 mb-0 col-auto">

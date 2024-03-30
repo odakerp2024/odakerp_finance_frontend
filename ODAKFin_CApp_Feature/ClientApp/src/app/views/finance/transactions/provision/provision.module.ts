@@ -24,8 +24,7 @@ import { BrowserModule } from '@angular/platform-browser'
     MatSelectModule,
     SharedModule,
     NgSelectModule,
-    DirectiveModule,
-    BrowserModule.withServerTransition({ appId: 'ng-cli-universal' })
+    DirectiveModule
   ]
 })
 export class ProvisionModule { }
