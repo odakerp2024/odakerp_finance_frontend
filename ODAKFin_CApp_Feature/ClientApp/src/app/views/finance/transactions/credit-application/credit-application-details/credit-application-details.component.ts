@@ -26,8 +26,8 @@ export class CreditApplicationDetailsComponent implements OnInit {
   // * pagination start
   pager: any = {}; // pager object
   pagedItems: any[]; // paged items
-  creditdaysValidation:boolean = false
-  creditAmountValidation:boolean = false
+  creditdaysValidation: any;
+  creditAmountValidation: any;
   // * pagination end
 
   ModifiedOn: any;
@@ -232,29 +232,28 @@ export class CreditApplicationDetailsComponent implements OnInit {
     console.log(this.creditLimit)
     const highestValue = Math.max(...this.creditLimit.map((res: any) => res.MaxCreditDays))
     if(event.target.value > highestValue){
-      this.creditdaysValidation = true
-      const data = {
-        CreditLimitDays: 0
-      }
-      this.creditApplicationForm.patchValue(data);
+      this.creditdaysValidation = highestValue
     }
     else{
-      this.creditdaysValidation = false
+      const data = {
+        CreditLimitDays: event.target.value
+      }
+      this.creditApplicationForm.patchValue(data);
+      this.creditdaysValidation = null; 
     }
-
   }
 
   onCreditLimitAmount(event:any){
     const highestValue = Math.max(...this.creditLimit.map((res: any) => res.MaxCreditAmount))
     if(event.target.value > highestValue){
-      this.creditAmountValidation = true
-      const data = {
-        CreditLimitAmount: 0
-      }
-      this.creditApplicationForm.patchValue(data);
+      this.creditAmountValidation = highestValue
     }
     else{
-      this.creditAmountValidation = false
+      const data = {
+        CreditLimitDays: event.target.value
+      }
+      this.creditApplicationForm.patchValue(data);
+      this.creditAmountValidation = null; 
     }
   }
 

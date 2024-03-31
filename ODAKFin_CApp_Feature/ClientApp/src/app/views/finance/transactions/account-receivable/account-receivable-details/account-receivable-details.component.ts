@@ -17,6 +17,7 @@ import Swal from 'sweetalert2';
 })
 export class AccountReceivableDetailsComponent implements OnInit {
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat')
+  entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   accountReceivableId: any;
   CreatedOn: string = '';
   private ngUnsubscribe = new Subject<void>();
@@ -99,6 +100,7 @@ export class AccountReceivableDetailsComponent implements OnInit {
   
 
   getAccountReceivableIdByID() {
+    debugger
     const payload =  this.accountReceivableId
     var service = `${this.globals.APIURL}/AccountsReceivable/GetAccountInvoiceListById`;
     this.dataService.post(service, { Id: payload }).subscribe(async (result: any) => {
@@ -178,13 +180,13 @@ export class AccountReceivableDetailsComponent implements OnInit {
   save(){
     var validation = "";
     if (this.accountReceivableForm.value.DivisionId == "") {
-      validation += "<span style='color:red;'>*</span> <span>Please Enter Division </span></br>"
+      validation += "<span style='color:red;'>*</span> <span>Please Select Division </span></br>"
     }
     if (this.accountReceivableForm.value.OfficeId == "") {
-      validation += "<span style='color:red;'>*</span> <span>Please Enter Office</span></br>"
+      validation += "<span style='color:red;'>*</span> <span>Please Select Office</span></br>"
     }
     if (this.accountReceivableForm.value.Customer == "") {
-      validation += "<span style='color:red;'>*</span> <span>Please Enter Customer Name</span></br>"
+      validation += "<span style='color:red;'>*</span> <span>Please Select Customer Name</span></br>"
     }
     if (this.accountReceivableForm.value.Invoice == "") {
       validation += "<span style='color:red;'>*</span> <span>Please Enter Invoice number</span></br>"

@@ -7,6 +7,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { ExpensesComponent } from './expenses/expenses.component';
 import { ExpensesDetailComponent } from './expenses-detail/expenses-detail.component';
 import { DirectiveModule } from 'src/app/directive/directive.module';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 
 
@@ -24,7 +25,8 @@ import { DirectiveModule } from 'src/app/directive/directive.module';
     ReactiveFormsModule,
     NgSelectModule,
     MatDatepickerModule,
-    DirectiveModule
+    DirectiveModule,
+    SharedModule
   ]
 })
 export class ExpensesModule { }

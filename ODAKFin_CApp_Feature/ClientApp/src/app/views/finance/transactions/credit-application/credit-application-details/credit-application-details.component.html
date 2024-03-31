@@ -298,27 +298,16 @@
                     <div class="form-group bmd-form-group w-100">
                         <label class="str">Credit Limit (Days)</label>
                         <input type="number" class="form-control" (change)="onCreditLimitDays($event)" [formControlName]="'CreditLimitDays'" min="0" step="2" [disabled]="true">
-                        <p *ngIf="creditdaysValidation" style="color: red;">The selected credit days has been exceeded</p>
+                        <p *ngIf="creditdaysValidation" style="color: red;">The credit days limit should be "{{creditdaysValidation}}" or less</p>
+
                     </div>
                 </div>
 
                 <div class="col-4">
                         <div class="form-group bmd-form-group">
                             <label class="str">Credit Limit (Amount)</label>
-                            <!-- <select class="form-control my-select amount" formControlName="CreditLimitAmount">
-                                <option value='' disabled>--SELECT CREDIT AMOUNT--</option>
-                                <option *ngFor="let  credit of creditLimit" [value]=credit.MaxCreditAmount>
-                                    {{credit.MaxCreditAmount}}
-                                </option>
-                            </select> -->
-                            <!-- <ng-select class="searchdropdown days" [clearable]="false" [formControlName]="'CreditLimitAmount'">
-                                <ng-option [value]="''" disabled>--SELECT CREDIT AMOUNT--</ng-option>
-                                   <ng-option *ngFor="let credit of creditLimit" [value]=credit.MaxCreditAmount>
-                                   <span class="textwrap">{{credit.MaxCreditAmount}}</span>
-                                </ng-option>
-                           </ng-select> -->
                            <input type="number" class="form-control" (change)="onCreditLimitAmount($event)" [formControlName]="'CreditLimitAmount'" min="0" step="2" [disabled]="true">
-                        <p *ngIf="creditAmountValidation" style="color: red;">The selected credit amount has been exceeded</p>
+                            <p *ngIf="creditAmountValidation" style="color: red;">The credit amount limit should be "{{creditAmountValidation}}" or less</p>                       
                     </div>
                 </div>
 

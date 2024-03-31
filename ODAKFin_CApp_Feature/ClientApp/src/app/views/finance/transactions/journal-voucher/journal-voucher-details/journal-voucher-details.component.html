@@ -207,7 +207,7 @@
                                                         <ng-option [value]="0" disabled>--SELECT CURRENCY--</ng-option>
                                                         <ng-option *ngFor="let currency of currencyList" [value]="currency.ID">
                                                           <!-- {{ currency.Currency | uppercase }} -->
-                                                          {{ currency.Currency.split(' - ')[0] | uppercase }}
+                                                          {{ currency.CurrencyCode | uppercase }}
 
                                                         </ng-option>
                                                       </ng-select>                                                      
@@ -237,12 +237,9 @@
                                                 </td>
 
                                                 <td>
-                                                    <input
-                                                        onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
-                                                        min="0" numbersOnly 
-                                                        appDynamicDecimal class="form-control my-select amount w-100 mr-0"
-                                                        formControlName="Narration"/>
+                                                    <input type="text" class="w-100 inputs" formControlName="Narration"  onkeypress="return event.charCode != 46 && ((event.charCode >= 48 && event.charCode <= 57) || (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122))" />
                                                 </td>
+                                                
                                                 <td>
 
                                                 </td>

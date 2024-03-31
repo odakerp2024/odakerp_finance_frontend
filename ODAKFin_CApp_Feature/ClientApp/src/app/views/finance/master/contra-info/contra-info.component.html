@@ -232,7 +232,8 @@
                     <div class=" form-group">
                         <label *ngIf = "contraForm.value.ModeofPaymentId != 2" class="str" for="Party" >Reference Number</label>
                         <label *ngIf = "contraForm.value.ModeofPaymentId == 2" for="Party" >Reference Number</label>
-                        <input onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly class="form-control w-100" formControlName="ReferenceNo" />
+                        <!-- This alow only the ALPHANUMERIC VALUES(NUMBER AND TEXT APRAT FROM ANYTHING IT OMMIT) -->
+                        <input type="text" class="w-100 inputs" formControlName="ReferenceNo" onkeypress="return event.charCode != 46 && (event.charCode >= 48 && event.charCode <= 57 || event.charCode >= 65 && event.charCode <= 90 || event.charCode >= 97 && event.charCode <= 122)" />
                     </div>
                 </div>
 

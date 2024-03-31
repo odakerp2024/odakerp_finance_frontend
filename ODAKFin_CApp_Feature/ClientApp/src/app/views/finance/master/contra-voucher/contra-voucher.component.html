@@ -310,7 +310,9 @@
 
                 <div class="col-12">
                     <div class="form-group bmd-form-group">
-                        <input type="text" class="w-100 inputs" formControlName="ReferenceNo"
+                        <!-- <input type="text" class="w-100 inputs" formControlName="ReferenceNo" -->
+                        <!-- This alow only the ALPHANUMERIC VALUES(NUMBER AND TEXT APRAT FROM ANYTHING IT OMMIT) -->
+                        <input type="text" class="w-100 inputs" formControlName="ReferenceNo" onkeypress="return event.charCode != 46 && (event.charCode >= 48 && event.charCode <= 57 || event.charCode >= 65 && event.charCode <= 90 || event.charCode >= 97 && event.charCode <= 122)"
                             placeholder=" REFERENCE NUMBER" />
                     </div>
                 </div>

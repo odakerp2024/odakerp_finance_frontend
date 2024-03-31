@@ -151,19 +151,19 @@ export class BankDetailsComponent implements OnInit {
       this.accountBankForm.value.Id = this.bankId
       var validation = "";
       if (this.accountBankForm.value.DivisionId == "") {
-        validation += "<span style='color:red;'>*</span> <span>Please Enter Division </span></br>"
+        validation += "<span style='color:red;'>*</span> <span>Please Select Division </span></br>"
       }
       if (this.accountBankForm.value.OfficeId == "") {
-        validation += "<span style='color:red;'>*</span> <span>Please Enter Office</span></br>"
+        validation += "<span style='color:red;'>*</span> <span>Please Select Office</span></br>"
       }
       if (this.accountBankForm.value.AccountName == "") {
-        validation += "<span style='color:red;'>*</span> <span>Please Enter Account</span></br>"
+        validation += "<span style='color:red;'>*</span> <span>Please Select Account</span></br>"
       }
       if (this.accountBankForm.value.Group == "") {
         validation += "<span style='color:red;'>*</span> <span>Please Enter Group</span></br>"
       }
       if (this.accountBankForm.value.DebitorCredit == "") {
-        validation += "<span style='color:red;'>*</span> <span>Please Enter DebitorCredit</span></br>"
+        validation += "<span style='color:red;'>*</span> <span>Please Select Debit/Credit</span></br>"
       }
       if (this.accountBankForm.value.Exchange == "") {
         validation += "<span style='color:red;'>*</span> <span>Please Enter Exchange</span></br>"
@@ -188,16 +188,16 @@ export class BankDetailsComponent implements OnInit {
   // this.accountBankForm.controls['AccountName'].setValue(this.AccountList.AccountName);
   // this.accountBankForm.get('AccountName').setValue(this.AccountList.AccountName);
 
-let selectedBank = this.accountBankForm.value.AccountName;
-let filteredAccounts = this.AccountList.filter(AccountList => AccountList.AccountName === selectedBank);
-let filteredAccountsNumber = this.AccountList.filter(AccountList => AccountList.AccountName === selectedBank);
+// let selectedBank = this.accountBankForm.value.AccountName;
+// let filteredAccounts = this.AccountList.filter(AccountList => AccountList.AccountName === selectedBank);
+// let filteredAccountsNumber = this.AccountList.filter(AccountList => AccountList.AccountName === selectedBank);
 
-  let accountName = filteredAccounts[0].AccountName.split(' - ')[0];
-  let accountNumber = filteredAccountsNumber[0].AccountName.split(' - ')[1]; // Use [1] to get the account number part
+//   let accountName = filteredAccounts[0].AccountName.split(' - ')[0];
+//   let accountNumber = filteredAccountsNumber[0].AccountName.split(' - ')[1]; // Use [1] to get the account number part
 
-  // Set the extracted account name and account number to the form controls
-  this.accountBankForm.controls['AccountName'].setValue(accountName);
-  this.accountBankForm.controls['AccountNUmber'].setValue(accountNumber);
+//   // Set the extracted account name and account number to the form controls
+//   this.accountBankForm.controls['AccountName'].setValue(accountName);
+//   this.accountBankForm.controls['AccountNUmber'].setValue(accountNumber);
 
 
 
@@ -221,7 +221,7 @@ let filteredAccountsNumber = this.AccountList.filter(AccountList => AccountList.
         "Office": this.accountBankForm.value.Office,
         "OfficeId":this.accountBankForm.value.OfficeId,
         "AccountName": this.accountBankForm.value.AccountName,
-        "AccountNUmber":this.accountBankForm.value.AccountNUmber,
+        "AccountNUmber":1,
         "Group": this.accountBankForm.value.GroupName,
         "DebitorCredit": this.accountBankForm.value.DebitorCredit,
         "Currency": this.accountBankForm.value.Currency,
@@ -267,7 +267,7 @@ let filteredAccountsNumber = this.AccountList.filter(AccountList => AccountList.
     var service = `${this.globals.APIURL}/OpeningBalanceBank/DeleteBankListById`;
     this.dataService.post(service, { Id: payload }).subscribe(async (result: any) => {
       if(result.message == 'Success'){
-        Swal.fire(result.result, '', 'success');
+        Swal.fire(result.result[0], '', 'success');
         this.router.navigate(['/views/transactions/openingBalances/bank']);
         this.accountBankForm.reset();
         }else {

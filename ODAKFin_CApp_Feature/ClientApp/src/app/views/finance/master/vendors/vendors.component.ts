@@ -1406,7 +1406,9 @@ export class VendorsComponent implements OnInit {
     if (response['data'].Table2.length > 0) {
       this.bankDetailsList = response['data'].Table2;
     }
-
+    if (response['data'].Table3.length > 0) {
+      this.documentPayloadInfo = response['data'].Table3;
+    }
 
     //Account Link
     if (response['data'].Table3.length > 0) {
@@ -2717,19 +2719,20 @@ export class VendorsComponent implements OnInit {
     if (event) {
       this.documentPayloadInfo.push({
         VendorDocumentsID: 0,
-        VendorBranchID: this.fg.value.CustomerBranchID,
+        VendorBranchID: this.fg.value.VendorBranchID,
         DocumentName: event.DocumentName,
         FilePath: event.FilePath,
         UpdateOn: this.datePipe.transform(new Date(), 'YYYY-MM-dd')
       });
-      this.onSubmit();
+      // this.onSubmit();
     }
   }
 
   deleteDocument(deleteIndex) {
+    debugger
     const index = this.documentPayloadInfo.findIndex((element) => element.VendorDocumentsID == deleteIndex.VendorDocumentsID)
     this.documentPayloadInfo.splice(index, 1);
-    this.onSubmit();
+    // this.onSubmit();
   }
 
 
@@ -3275,7 +3278,7 @@ export class VendorsComponent implements OnInit {
     this.fg.controls.BankName.setValue('');
     this.fg.controls.bankShortName.setValue('');
     this.fg.controls.AccountNumberId.setValue('');
-    this.fg.controls.CurrencyId.setValue(1);
+    this.fg.controls.CurrencyId.setValue('');
     this.fg.controls.IFSCCode.setValue('');
     this.fg.controls.bankCountryId.setValue('');
     this.fg.controls.SwiftCode.setValue('');
