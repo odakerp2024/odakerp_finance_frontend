@@ -25,7 +25,7 @@ import { StatemasterviewComponent } from './views/masters/commonmaster/statemast
 import { ContypemasterComponent } from './views/masters/commonmaster/contypemaster/contypemaster.component';
 import { ContypemasterviewComponent } from './views/masters/commonmaster/contypemaster/contypemasterview/contypemasterview.component';
 
-import { LoginComponent } from './login/login.component';
+// import { LoginComponent } from './login/login.component';
 import { AuthenticationGuard } from './authentication.guard';
 import { PopupComponent } from './popup/popup.component';
 import { ViewsComponent } from './views/views.component';
@@ -208,8 +208,11 @@ const routes: Routes = [
     // { path: '', redirectTo: "/login", pathMatch: 'full' },
     // { path: 'login', component: LoginComponent },
 
-    { path: '', redirectTo: "/views", pathMatch: 'full' },
-    { path: 'views', component: ViewsComponent, canActivate: [AuthenticationGuard] },
+    // { path: '', redirectTo: "/views", pathMatch: 'full' },
+    // { path: 'views', component: ViewsComponent, canActivate: [AuthenticationGuard] },
+
+    { path: '', redirectTo: 'views/finance/financemaster', pathMatch: 'full' },
+    { path: 'finance/financemaster', component: FinanceMasterComponent },
 
     // { path: '', redirectTo: "/dashboard", pathMatch: 'full' },
     // { path: 'dashboard', component: DashboardComponent },
@@ -218,7 +221,7 @@ const routes: Routes = [
 
     {
         // path: 'views', component: ViewsComponent, canActivate: [AuthenticationGuard],
-        path: 'views', component: ViewsComponent, canActivate: [AuthenticationGuard],
+        path: 'views', component: ViewsComponent,
 
         children: [
             { path: 'dashboard', component: DashboardComponent },

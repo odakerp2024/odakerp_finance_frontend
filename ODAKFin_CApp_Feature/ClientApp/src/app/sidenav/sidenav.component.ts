@@ -199,7 +199,6 @@ export class SidenavComponent implements OnInit {
     }
 
     BindTokenValues(val) {
-        debugger
         this.ProfileForm.value.ID = localStorage.getItem("TokenID");
         this.commonDataService.SendToken(this.ProfileForm.value).subscribe(data => {
             this.TokenID = data[0].ID;
@@ -210,7 +209,7 @@ export class SidenavComponent implements OnInit {
             }
             else {
                 //window.location.href = "https://localhost:44323/login";
-                window.location.href = 'https://navioindia.freighteiz.com/login';
+                window.location.href = this.globals.LANDINGURL + "login";
             }
         });
     }
@@ -238,7 +237,6 @@ export class SidenavComponent implements OnInit {
     // }
 
     OnClickLink(val) {
-
         if (val == 1) {
             window.location.href = "https://la-navioindia.freighteiz.com/views/ladashboards/latransactions/latransactions?Token=" + this.Token + "&TokenID=" + this.TokenID;
 
