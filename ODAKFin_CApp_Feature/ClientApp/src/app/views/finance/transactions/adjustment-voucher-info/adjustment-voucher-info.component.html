@@ -227,17 +227,34 @@
                                     <!-- <td> <input  formControlName="ExchangeRate" class="form-control"
                                         onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly id="rate" />
                                     </td> -->
-                                    <td> <input formControlName="Amount" class="form-control" onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47' min="0" numbersOnly
-                                            id="Amount" />
+                                    <td> 
+                                       <input
+                                            onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                            min="0" numbersOnly
+                                            appDynamicDecimal class="form-control"
+                                            formControlName="Amount" id="Amount"/>
                                     </td>
-                                    <td> <input  formControlName="ROE" class="form-control"  onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47' min="0" numbersOnly
-                                            id="roe" />
+                                    <td> 
+                                        <input
+                                        onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                        min="0" numbersOnly
+                                        appDynamicDecimal class="form-control"
+                                        formControlName="ROE" id="roe"/>
                                     </td>                                  
-                                    <td> <input formControlName="CompanyCurrencyAmount"
-                                            [value]="AdjustmentCreateForm.value.ROE * AdjustmentCreateForm.value.Amount"
-                                            class="form-control" type="number" id="LocalAmount" readonly /> </td>
-                                    <td> <input formControlName="Narration" class="form-control" type="text"
-                                            id="Narration" /> </td>
+                                    <td>
+                                         <!-- <input formControlName="CompanyCurrencyAmount"
+                                            [value]="AdjustmentCreateForm.value.ROE * AdjustmentCreateForm.value.Amount" --> 
+                                            <input [value]="(AdjustmentCreateForm.value.ROE && AdjustmentCreateForm.value.Amount) ? 
+                                            (AdjustmentCreateForm.value.ROE * AdjustmentCreateForm.value.Amount).toFixed(3) : '0'"
+                                            formControlName="CompanyCurrencyAmount"
+                                            class="form-control w-100" readonly autocomplete="off"
+                                            onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly/>
+
+                                        </td>
+
+                                    <td> 
+                                        <input type="text" class="form-control" formControlName="Narration" id="Narration"  onkeypress="return event.charCode != 46 && ((event.charCode >= 48 && event.charCode <= 57) || (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122))" />
+                                         </td>
                                     <td>
                                     </td>
                                 </tr>

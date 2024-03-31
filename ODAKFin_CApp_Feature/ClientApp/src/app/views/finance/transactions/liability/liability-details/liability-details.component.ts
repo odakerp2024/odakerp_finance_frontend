@@ -206,19 +206,19 @@ async  getLiabilityByID() {
       this.accountLiabilityForm.value.Id = this.liabilityId
       var validation = "";
       if (this.accountLiabilityForm.value.DivisionId == "") {
-        validation += "<span style='color:red;'>*</span> <span>Please Enter Division </span></br>"
+        validation += "<span style='color:red;'>*</span> <span>Please Select Division </span></br>"
       }
       if (this.accountLiabilityForm.value.OfficeId == "") {
-        validation += "<span style='color:red;'>*</span> <span>Please Enter Office</span></br>"
+        validation += "<span style='color:red;'>*</span> <span>Please Select Office</span></br>"
       }
       if (this.accountLiabilityForm.value.AccountName == "") {
-        validation += "<span style='color:red;'>*</span> <span>Please Enter Account</span></br>"
+        validation += "<span style='color:red;'>*</span> <span>Please Select Account</span></br>"
       }
       if (this.accountLiabilityForm.value.Group == "") {
         validation += "<span style='color:red;'>*</span> <span>Please Enter Group</span></br>"
       }
       if (this.accountLiabilityForm.value.DebitorCredit == "") {
-        validation += "<span style='color:red;'>*</span> <span>Please Enter DebitorCredit</span></br>"
+        validation += "<span style='color:red;'>*</span> <span>Please Select Debit/Credit</span></br>"
       }
       if (this.accountLiabilityForm.value.Exchange == "") {
         validation += "<span style='color:red;'>*</span> <span>Please Enter Exchange</span></br>"

@@ -17,6 +17,7 @@ import { takeUntil, map } from 'rxjs/operators';
 })
 export class AssetDetailComponent implements OnInit {
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat')
+  entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   asseteId: any;
   CreatedOn: string = '';
   private ngUnsubscribe = new Subject<void>();
@@ -149,19 +150,19 @@ export class AssetDetailComponent implements OnInit {
       this.accountAssetForm.value.Id = this.asseteId
       var validation = "";
       if (this.accountAssetForm.value.DivisionId == "") {
-        validation += "<span style='color:red;'>*</span> <span>Please Enter Division </span></br>"
+        validation += "<span style='color:red;'>*</span> <span>Please Select Division </span></br>"
       }
       if (this.accountAssetForm.value.OfficeId == "") {
-        validation += "<span style='color:red;'>*</span> <span>Please Enter Office</span></br>"
+        validation += "<span style='color:red;'>*</span> <span>Please Select Office</span></br>"
       }
       if (this.accountAssetForm.value.AccountName == "") {
-        validation += "<span style='color:red;'>*</span> <span>Please Enter Account</span></br>"
+        validation += "<span style='color:red;'>*</span> <span>Please Select Account</span></br>"
       }
       if (this.accountAssetForm.value.Group == "") {
         validation += "<span style='color:red;'>*</span> <span>Please Enter Group</span></br>"
       }
       if (this.accountAssetForm.value.DebitorCredit == "") {
-        validation += "<span style='color:red;'>*</span> <span>Please Enter DebitorCredit</span></br>"
+        validation += "<span style='color:red;'>*</span> <span>Please Select Debit/Credit</span></br>"
       }
       if (this.accountAssetForm.value.Exchange == "") {
         validation += "<span style='color:red;'>*</span> <span>Please Enter Exchange</span></br>"

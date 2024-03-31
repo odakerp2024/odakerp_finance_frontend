@@ -85,16 +85,16 @@
                                  </div>
                           
                                 <div class="col-3">
-                                    <label class="">Office</label>
-                                    <ng-select  class="searchdropdown custom"    type="text" [ngClass]=" isUpdate ? 'block-input' : ''"
-                                     formControlName ="OfficeId" [clearable]="false"  [appendTo]="'body'">
-                                        <ng-option [value]="''" disabled>--SELECT OFFICE TYPE--</ng-option>
-                                        <ng-container *ngFor="let office of officeList">
-                                        <ng-option [value]="office.ID">
-                                            {{office.OfficeName | uppercase}}
-                                        </ng-option>
-                                        </ng-container>
-                                    </ng-select>                                    
+                                    <label class="str1 mt-0">Office</label>
+                                    <ng-select  class="searchdropdown custom"  [ngClass]=" isUpdate ? 'block-input' : ''" formControlName="OfficeId"
+                                    [clearable]="false">
+                                    <ng-option [value]="''" disabled>--SELECT OFFICE--</ng-option>
+                                    <ng-container *ngFor="let office of officeList">
+                                    <ng-option [value]="office.ID">
+                                        {{office.OfficeName | uppercase}}
+                                    </ng-option>
+                                   </ng-container>
+                                   </ng-select>      
                                 </div>
 
                                 <div class="col-3">
@@ -107,9 +107,14 @@
                                     </ng-select>  
                              </div>
 
-                                <div class="col-3">
+                                <!-- <div class="col-3">
                                     <label class="">Purchase Invoice #</label>
                                     <input RemoveSpecialChars type="text" [ngClass]=" isUpdate ? 'block-input' : ''" formControlName ="PurchaseInvoice" class="w-100 form-group pl-2 form-control"/>
+                                </div> -->
+
+                                <div class="col-3">
+                                    <label class="">Purchase Invoice #</label>
+                                    <input  [ngClass]=" isUpdate ? 'block-input' : ''" formControlName ="PurchaseInvoice" class="w-100 form-group pl-2 form-control"/>
                                 </div>
                                 <div class="col-3">
                                     <label class=" mb-2">Purchase Invoice Date</label>
@@ -132,32 +137,47 @@
 
                                 <div class="col-3">
                                     <label class="">Exchange</label>
-                                    <input RemoveSpecialChars [ngClass]=" isUpdate ? 'block-input' : ''" formControlName ="Exchange" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
-                                    min="0" numbersOnly type="tel" class="w-100 form-group pl-2 form-control"/>
+                                    <input [ngClass]=" isUpdate ? 'block-input' : ''"
+                                    onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                    min="0" numbersOnly 
+                                    appDynamicDecimal class="form-control my-select amount w-100 mr-0"
+                                    formControlName="Exchange"/>
                                 </div>
 
                                 <div class="col-3">
                                     <label class="">Invoice Amount (ICY)</label>
-                                    <input RemoveSpecialChars [ngClass]=" isUpdate ? 'block-input' : ''" formControlName ="InvoiceAmountICY" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
-                                    min="0" numbersOnly type="tel" class="w-100 form-group pl-2 form-control"/>
+                                    <input [ngClass]=" isUpdate ? 'block-input' : ''"
+                                    onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                    min="0" numbersOnly 
+                                    appDynamicDecimal class="form-control my-select amount w-100 mr-0"
+                                    formControlName="InvoiceAmountICY"/>
                                 </div>
 
                                 <div class="col-3">
                                     <label class="">Invoice Amount (CCY)</label>
-                                    <input RemoveSpecialChars [ngClass]=" isUpdate ? 'block-input' : ''" formControlName ="InvoiceAmountCCY" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
-                                    min="0" numbersOnly min="1" class="w-100 form-control form-group py-0"/>
+                                    <input [ngClass]=" isUpdate ? 'block-input' : ''"
+                                    onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                    min="0" numbersOnly 
+                                    appDynamicDecimal class="form-control my-select amount w-100 mr-0"
+                                    formControlName="InvoiceAmountCCY"/>
                                 </div>
 
                                 <div class="col-3">
                                     <label class="">Due Amount (ICY)</label>
-                                    <input RemoveSpecialChars [ngClass]=" isUpdate ? 'block-input' : ''" formControlName ="DueAmountICY" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
-                                    min="0" numbersOnly type="text" class="w-100 form-control form-group py-0 hide-date-icon"/>
+                                    <input [ngClass]=" isUpdate ? 'block-input' : ''"
+                                    onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                    min="0" numbersOnly 
+                                    appDynamicDecimal class="form-control my-select amount w-100 mr-0"
+                                    formControlName="DueAmountICY"/>
                                 </div>
 
                                 <div class="col-3">
                                     <label class="">Due Amount (CCY)</label>
-                                    <input RemoveSpecialChars [ngClass]=" isUpdate ? 'block-input' : ''" formControlName ="DueAmountCCY" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
-                                    min="0" numbersOnly type="text" class="w-100 form-control form-group py-0 hide-date-icon"/>
+                                    <input [ngClass]=" isUpdate ? 'block-input' : ''"
+                                    onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                    min="0" numbersOnly 
+                                    appDynamicDecimal class="form-control my-select amount w-100 mr-0"
+                                    formControlName="DueAmountCCY"/>
                                 </div>
                      </div>
                     </div>
