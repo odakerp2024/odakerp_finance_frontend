@@ -41,6 +41,8 @@ export class ProvisionDetailComponent implements OnInit {
   numberRangeList: any;
   IsFinal: number;
   Remarks: any;
+  IsExchangeEnable: boolean = false;
+  companyCurrencyId: Number;
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
@@ -153,7 +155,7 @@ export class ProvisionDetailComponent implements OnInit {
     });
   }
 
-  getCurrency() {
+  async getCurrency() {
     return new Promise((resolve, rejects) => {
       const payload = { "currencyId": 0, "countryId": 0 };
       let service = `${this.globals.SaApi}/SystemAdminApi/GetCurrency`
@@ -161,9 +163,11 @@ export class ProvisionDetailComponent implements OnInit {
         if (result.length > 0) {
           this.currencyList = result;
           const entityInfo: any = this.commonDataService.getLocalStorageEntityConfigurable();
-          // let info = this.currencyList.find(x => x.Currency == entityInfo.Currency);
-          // let currencyCode = entityInfo.Currency.split('-');
-          // this.receivedCurrencyName = currencyCode[0].trim();
+          debugger
+          const val = entityInfo['Currency'];
+          let info = this.currencyList.find(x => x.Currency.toUpperCase() == val);
+          this.companyCurrencyId = info.ID
+          this.ProvisionForm.controls['Table1']['controls']['Currency'].setValue(this.companyCurrencyId)
           resolve(true)
         }
       });
@@ -255,7 +259,7 @@ export class ProvisionDetailComponent implements OnInit {
     this.ProvisionForm.controls['Table1']['controls']['Rate'].setValue(0);
     this.ProvisionForm.controls['Table1']['controls']['Qty'].setValue(0);
     this.ProvisionForm.controls['Table1']['controls']['Amount'].setValue('');
-    this.ProvisionForm.controls['Table1']['controls']['Currency'].setValue('');
+    this.ProvisionForm.controls['Table1']['controls']['Currency'].setValue(this.companyCurrencyId);
     this.ProvisionForm.controls['Table1']['controls']['ExchangeRate'].setValue(1);
     this.ProvisionForm.controls['Table1']['controls']['AmountCCR'].setValue(0);
   }
@@ -556,6 +560,28 @@ export class ProvisionDetailComponent implements OnInit {
           }
         }
       })
+    }
+  }
+
+  rateQuantityChangeEvent(event) {
+    const rate = Number(this.ProvisionForm.controls['Table1']['controls']['Rate'].value)
+    const qty = Number(this.ProvisionForm.controls['Table1']['controls']['Qty'].value)
+    const exRate = Number(this.ProvisionForm.controls['Table1']['controls']['ExchangeRate'].value)
+    this.ProvisionForm.controls['Table1']['controls']['Amount'].setValue((rate * qty).toFixed(this.entityFraction))
+
+    this.ProvisionForm.controls['Table1']['controls']['AmountCCR'].setValue((exRate * qty).toFixed(this.entityFraction))
+  }
+
+  changeCurrencyEvent(currencyId: any) {
+    let entityInfo = this.commonDataService.getLocalStorageEntityConfigurable();
+    let info = this.currencyList.find(x => x.Currency == entityInfo['Currency']);
+    if (info.ID == currencyId) {
+
+      this.ProvisionForm.controls['Table1']['controls']['ExchangeRate'].setValue(1);
+      this.IsExchangeEnable = false;
+    }
+    else {
+      this.IsExchangeEnable = true;
     }
   }
 
