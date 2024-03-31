@@ -463,7 +463,7 @@
                 <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group bmd-form-group w-100">
                         <label class="fontstyles">TDS Amount (INR)</label>
-                        <input [ngClass]="!IsTDSEnable ? 'disable-input' : ''"
+                        <input [ngClass]="!IsTDSEnable ? 'disable-input' : ''" (ngModelChange)="summaryAmountCalculation()"
                             onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
                             min="0" numbersOnly appDynamicDecimal class=" form-control mt-1"
                             formControlName="TDSAmount" />
@@ -543,7 +543,7 @@
                                     <th class="text-center" scope="col">Invoice Amount <br>(CCY)</th>
                                     <th class="text-center" scope="col">Due Amount <br>(CCY)</th>
                                     <th class="text-center" scope="col">TDS</th>
-                                    <th class="text-center" scope="col" style="min-width: 90px;">Payment</th>
+                                    <th class="text-center" scope="col" style="min-width: 90px;">Adjusted invoice <br>Amount</th>
                                     <th class="text-center" scope="col">Select</th>
                                 </tr>
                             </thead>
@@ -582,8 +582,8 @@
                                                 readonly [value]="journal.Currency" type="text">
                                         </td>
                                         <td>
-                                            <input class="text-center border-0" formControlName="DueAmountCCY" readonly
-                                                [value]="journal.Currency" type="text">
+                                            <input class="text-center border-0" formControlName="DueAmountCCY"
+                                             readonly [value]="journal.DueAmountCCY" type="text">
                                         </td>
                                         <td>
                                             <input min="1" numbersOnly appDynamicDecimal onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'

@@ -166,7 +166,7 @@
                                         <input type="text"
                                             onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
                                             min="0" numbersOnly appDynamicDecimal class="w-100 form-control"
-                                            placeholder="Rate" [formControlName]="'Rate'" />
+                                            placeholder="Rate" [formControlName]="'Rate'"  (ngModelChange)="rateQuantityChangeEvent($event)" />
 
                                     </td>
 
@@ -174,18 +174,18 @@
                                         <input type="text"
                                             onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
                                             min="0" numbersOnly appDynamicDecimal class="w-100 form-control"
-                                            placeholder="Qty" [formControlName]="'Qty'" />
+                                            placeholder="Qty" [formControlName]="'Qty'"  (ngModelChange)="rateQuantityChangeEvent($event)" />
                                     </td>
 
                                     <td class="text-center bestfit-width">
                                         <input type="text"
                                             onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
-                                            min="0" numbersOnly appDynamicDecimal class="w-100 form-control"
-                                            placeholder="Amount" [formControlName]="'Amount'" />
+                                            min="0" numbersOnly readonly appDynamicDecimal class="w-100 form-control"
+                                            placeholder="Amount" [formControlName]="'Amount'"  />
                                     </td>
 
                                     <td class="text-center bestfit-width">
-                                        <ng-select class="searchdropdown" [appendTo]="'body'" [clearable]="false"
+                                        <ng-select class="searchdropdown" [appendTo]="'body'" [clearable]="false" (change)="changeCurrencyEvent($event)"
                                             formControlName="Currency" id="ddlStatus">
                                             <ng-option [value]="''" [disabled]="true">--SELECT
                                                 CURRENCY--</ng-option>
@@ -197,17 +197,17 @@
                                     </td>
 
                                     <td class="text-center bestfit-width">
-                                        <input type="text"
+                                        <input type="text" [ngClass]=" !IsExchangeEnable ? 'block-input' : ''"
                                             onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
                                             min="0" numbersOnly appDynamicDecimal class="w-100 form-control"
-                                            placeholder="Exchange Rate" [formControlName]="'ExchangeRate'" />
+                                            placeholder="Exchange Rate"  (ngModelChange)="rateQuantityChangeEvent($event)" [formControlName]="'ExchangeRate'" />
 
                                     </td>
 
                                     <td class="text-center bestfit-width">
                                         <input type="text"
                                             onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
-                                            min="0" numbersOnly appDynamicDecimal class="w-100 form-control"
+                                            min="0" numbersOnly readonly appDynamicDecimal class="w-100 form-control"
                                             placeholder="AmountCCR" [formControlName]="'AmountCCR'" />
 
                                     </td>
@@ -237,7 +237,7 @@
                 <div class="row">
                     <div class="col-4">
                         <label>Remarks</label>
-                        <textarea [ngClass]=" isUpdate ? 'block-input' : ''" formControlName="Remarks"
+                        <textarea [(ngModel)]="Remarks" [ngModelOptions]="{standalone: true}" [ngClass]=" isUpdate ? 'block-input' : ''"
                             class="form-control addressht" rows="3"></textarea>
                     </div>
                     <div class="col-4"></div>
@@ -257,15 +257,15 @@
                     <button type="button" class="btn btn-primary text-white mr-3 mb-0 col-auto" (click)="submit()">
                         Save
                     </button>
-                    <button type="button"
-                        [ngClass]=" !isUpdate || !isEditMode || (!isSameAmount && !isPaymentForBill) ? 'disable-input--nostyle final-disable--style' : ''"
+                    <button type="button" *ngIf="!IsFinal"
+                        [ngClass]=" !isUpdate || !isEditMode ? 'disable-input--nostyle final-disable--style' : ''"
                         class="btn btn-success text-white mr-3 mb-0 col-auto" (click)="finalSubmit()">
                         Final
                     </button>
-                    <button type="button" *ngIf="isUpdate && !IsFinal" (click)="submit(true)"
+                    <button type="button" *ngIf="isUpdate && IsFinal" (click)="submit(true)"
                         [ngClass]="!isEditMode  ? 'disable-input--style' : ''"
                         class="btn btn-warning text-white mr-3 mb-0 col-auto">
-                        Delete
+                        Close Provision
                     </button>
 
                     <button type="button" (click)="Cancel()" class="btn btn-warning text-white mr-3 mb-0 col-auto">

@@ -1149,6 +1149,8 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
       this.receiptForm.controls['ExGain'].setValue(0);
       this.receiptForm.controls['ExLoss'].setValue(0);
     }
+
+    this.summaryAmountCalculation();
   }
 
   getExchangeRate(fromCurrencyCode, toCurrencyCode) {
@@ -1608,14 +1610,14 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
       TotalCredit = Number((!this.receiptForm.value.TotalPaymentAmount ? 0 :
         Number(this.receiptForm.value.TotalPaymentAmount)) + Number(this.receiptForm.value.ExLoss));
     } else {
-      TotalTDS = this.receiptForm.value.TDSAmount;
+      // TotalTDS = this.receiptForm.value.TDSAmount;
 
       TotalCredit = Number((this.receiptForm.value.AmountReceived * (!this.receiptForm.value.ExchangeRate ? 0 : this.receiptForm.value.ExchangeRate))
         + Number(TotalTDS) + Number(this.receiptForm.value.ExLoss));
     }
 
     TotalDebit = Number((this.receiptForm.value.AmountReceived * (!this.receiptForm.value.ExchangeRate ? 0 : this.receiptForm.value.ExchangeRate))
-      + (!this.receiptForm.value.TDSAmount ? 0 : TotalTDS) + Number(TotalTDS) + (this.receiptForm.value.BankCharges * (!this.receiptForm.value.ExchangeRate ? 0 : this.receiptForm.value.ExchangeRate))
+      + (!this.receiptForm.value.TDSAmount ? 0 : Number(this.receiptForm.value.TDSAmount)) + Number(TotalTDS) + (this.receiptForm.value.BankCharges * (!this.receiptForm.value.ExchangeRate ? 0 : this.receiptForm.value.ExchangeRate))
       + Number(this.receiptForm.value.ExGain));
 
     this.receiptForm.controls['TotalDebit'].setValue(TotalDebit.toFixed(this.entityFraction));

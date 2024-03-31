@@ -528,7 +528,7 @@
                                     <th class="text-center" scope="col">Due Amount <br>(CCY)</th>
                                     <!-- <th  class="text-center" scope="col">Due Amount (L)</th> -->
                                     <th class="text-center" scope="col">TDS</th>
-                                    <th class="text-center" style="min-width: 90px;" scope="col">Payment</th>
+                                    <th class="text-center" style="min-width: 90px;" scope="col">Adjusted invoice<br> Amount</th>
                                     <th class="text-center" scope="col">Select</th>
                                 </tr>
                             </thead>
@@ -920,13 +920,15 @@
                                     <td class="text-center">
                                         <label>TDS</label>
                                     </td>
-                                    <td *ngIf="(!this.paymentForm.value.Table.IsVendor && !isPaymentForBill) ||  (this.paymentForm.value.Table.IsVendor && !isPaymentForBill)"
+                                    <td *ngIf="(!this.paymentForm.value.Table.IsVendor && !isPaymentForBill) ||  (this.paymentForm.value.Table.IsVendor && !isPaymentForBill) || (!this.paymentForm.value.Table.IsVendor && isPaymentForBill)"
                                         class="text-center">
                                         <label>0</label>
                                     </td>
-                                    <td *ngIf="(!this.paymentForm.value.Table.IsVendor && !isPaymentForBill) ||  (this.paymentForm.value.Table.IsVendor && !isPaymentForBill)"
+                                    <td *ngIf="(!this.paymentForm.value.Table.IsVendor && !isPaymentForBill) ||  (this.paymentForm.value.Table.IsVendor && !isPaymentForBill) || (!this.paymentForm.value.Table.IsVendor && isPaymentForBill)"
                                         class="text-center">
-                                        <label>{{this.paymentForm.value.Table.TDSAmount}}</label>
+                                        <label>{{(this.paymentForm.value.Table.TDSAmount *
+                                            (!this.paymentForm.value.Table.ExchangeRate ? 0 :
+                                            this.paymentForm.value.Table.ExchangeRate))}}</label>
                                     </td>
 
                                     <td *ngIf="this.paymentForm.value.Table.IsVendor && isPaymentForBill"

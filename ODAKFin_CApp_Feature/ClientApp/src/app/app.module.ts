@@ -469,8 +469,6 @@ export const MY_FORMATS = {
     VendorsviewComponent,
     ChartaccountcodeviewComponent,
     ChartaccountcodelistComponent,
-    PaymentVoucherViewComponent,
-    PaymentVoucherDetailsComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
