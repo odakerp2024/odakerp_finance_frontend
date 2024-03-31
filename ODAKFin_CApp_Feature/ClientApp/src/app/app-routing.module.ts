@@ -205,8 +205,11 @@ import { ProvisionViewComponent } from './views/finance/transactions/provision/p
 import { ProvisionDetailComponent } from './views/finance/transactions/provision/provision-detail/provision-detail.component';
 const routes: Routes = [
 
-    { path: '', redirectTo: "/login", pathMatch: 'full' },
-    { path: 'login', component: LoginComponent },
+    // { path: '', redirectTo: "/login", pathMatch: 'full' },
+    // { path: 'login', component: LoginComponent },
+
+    { path: '', redirectTo: "/views", pathMatch: 'full' },
+    { path: 'views', component: ViewsComponent, canActivate: [AuthenticationGuard] },
 
     // { path: '', redirectTo: "/dashboard", pathMatch: 'full' },
     // { path: 'dashboard', component: DashboardComponent },
@@ -214,6 +217,7 @@ const routes: Routes = [
 
 
     {
+        // path: 'views', component: ViewsComponent, canActivate: [AuthenticationGuard],
         path: 'views', component: ViewsComponent, canActivate: [AuthenticationGuard],
 
         children: [

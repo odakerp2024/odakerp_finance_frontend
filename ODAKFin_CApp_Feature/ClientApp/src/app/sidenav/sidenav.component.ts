@@ -215,102 +215,55 @@ export class SidenavComponent implements OnInit {
         });
     }
 
-    BindInstanceDtls() {
-        debugger
-        this.commonDataService.GetInstanceLinks(this.ProfileForm.value).subscribe(data => {
-            this.ProfileForm.patchValue(data[0]);
+    // BindInstanceDtls() {
+    //     debugger
+    //     this.commonDataService.GetInstanceLinks(this.ProfileForm.value).subscribe(data => {
+    //         this.ProfileForm.patchValue(data[0]);
 
-            for (var i = 0; i < data.length; i++) {
-                if (data[i].TypeID == 531) {
-                    this.salink = data[i].Url;
-                }
-                if (data[i].TypeID == 532) {
-                    this.fflink = data[i].Url;
-                }
-                if (data[i].TypeID == 533) {
-                    this.lalink = data[i].Url;
-                }
-                if (data[i].TypeID == 534) {
-                    this.fnlink = data[i].Url;
-                }
-            }
-        });
-    }
+    //         for (var i = 0; i < data.length; i++) {
+    //             if (data[i].TypeID == 531) {
+    //                 this.salink = data[i].Url;
+    //             }
+    //             if (data[i].TypeID == 532) {
+    //                 this.fflink = data[i].Url;
+    //             }
+    //             if (data[i].TypeID == 533) {
+    //                 this.lalink = data[i].Url;
+    //             }
+    //             if (data[i].TypeID == 534) {
+    //                 this.fnlink = data[i].Url;
+    //             }
+    //         }
+    //     });
+    // }
 
     OnClickLink(val) {
-        debugger
+
         if (val == 1) {
-            if (this.lalink != "") {
-                window.open("https://" + this.lalink + "?Token=" + this.Token + "&Token=" + this.TokenID);
-            }
-            else {
-                Swal.fire("Please Contact Administrator");
-            }
+            window.location.href = "https://la-navioindia.freighteiz.com/views/ladashboards/latransactions/latransactions?Token=" + this.Token + "&TokenID=" + this.TokenID;
 
             //window.open("https://localhost:44301/views/ladashboards/latransactions/latransactions?Token=" + this.Token + "&Token=" + this.TokenID);
 
-            //if (this.lalink == "odaklaqa.odaksolutions.in") {
-            //    /*window.location.href = "https://" + this.lalink + "/login";*/
-            //    window.open("https://" + this.lalink + "/login", '_blank');
-            //}
-            //else {
-            //    Swal.fire("Please Contact Your Administrator");
-            //}
-            //if (this.activeid == "2") {
-            //    Swal.fire("Please Contact Your Administrator");
-            //}
-
         }
         if (val == 2) {
-            if (this.fflink != "") {
-                window.open("https://" + this.fflink + "?Token=" + this.Token + "&Token=" + this.TokenID);
-            }
-            else {
-                Swal.fire("Please Contact Administrator");
-            }
+            window.open("https://ff-navioindia.freighteiz.com/ui/#/fflanding?Token=" + this.Token + "&Token=" + this.TokenID);
+            
             //window.open("https://" + this.fflink + "?Token=" + this.Token + "&Token=" + this.TokenID);
 
-            //if (this.fflink == "odakffqa.odaksolutions.in") {
-            //    /*window.location.href = "https://" + this.fflink + "/ui";*/
-            //    window.open("https://" + this.fflink + "/ui", '_blank');
-            //}
-            //else {
-            //    Swal.fire("Please Contact Your Administrator");
-            //}
         }
         if (val == 3) {
-            if (this.fnlink != "") {
-                window.open("https://" + this.fnlink + "?Token=" + this.Token + "&Token=" + this.TokenID);
-            }
-            else {
-                Swal.fire("Please Contact Administrator");
-            }
+                window.open("https://fn-navioindia.freighteiz.com/views/finance/financemaster;tabName=transactions?Token=" + this.Token + "&Token=" + this.TokenID);
+           
             //window.open("https://" + this.fnlink + "?Token=" + this.Token + "&Token=" + this.TokenID);
 
-            //if (this.fnlink == "odakfnqa.odaksolutions.in") {
-            //    /*window.location.href = "https://" + this.fnlink + "/login";*/
-            //    window.open("https://" + this.fnlink + "/login", '_blank');
-            //}
-            //else {
-            //    Swal.fire("Please Contact Your Administrator");
-            //}
+            
         }
         if (val == 4) {
-            if (this.salink != "") {
-                window.open("https://" + this.salink + "?Token=" + this.Token + "&Token=" + this.TokenID);
-            }
-            else {
-                Swal.fire("Please Contact Administrator");
-            }
+                window.open("https://sa-navioindia.freighteiz.com/views/dashboard?Token=" + this.Token + "&Token=" + this.TokenID);
+            
             //window.open("https://" + this.salink + "?Token=" + this.Token + "&Token=" + this.TokenID);
 
-            //if (this.salink == "odaksaqa.odaksolutions.in") {
-            //    /*window.location.href = "https://" + this.salink + "/login";*/
-            //    window.open("https://" + this.salink + "/login", '_blank');
-            //}
-            //else {
-            //    Swal.fire("Please Contact Your Administrator");
-            //}
+            
         }
 
     }

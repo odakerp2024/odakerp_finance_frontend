@@ -23,27 +23,21 @@ export class Globals {
 
     // dev
     // APIURL: string = 'https://odakfn.odaksolutions.in/api';
-    APIURL: string = 'https://localhost:44301/api';
-    MASTER_API_URL: string = 'https://odakfn.odaksolutions.in/api';
-    SaApi: string = "https://odaksaqa.odaksolutions.in/api";
-    APIURLFF: string = 'https://odaksaqa.odaksolutions.in/ffddev/api';
-    APIURLLA: string = 'https://odaklaqa.odaksolutions.in/api';
-    TemplateUploadURL: string = 'https://odakfn.odaksolutions.in';
-    LANDINGURL: string = 'https://navioindia.freighteiz.com'
-
-    // PROD
-    //  APIURL: string = 'https://fn-navioindia.freighteiz.com/api';
-    // MASTER_API_URL: string = 'https://fn-navioindia.freighteiz.com/api';
-    // SaApi: string = "https://sa-navioindia.freighteiz.com/api";
-    // APIURLFF: string = 'https://sa-navioindia.freighteiz.com/ffddev/api';
-    // APIURLLA: string = 'https://la-navioindia.freighteiz.com/api';
-    // TemplateUploadURL: string = 'https://fn-navioindia.freighteiz.com/api';
+    // // APIURL: string = 'https://localhost:44301/api';
+    // MASTER_API_URL: string = 'https://odakfn.odaksolutions.in/api';
+    // SaApi: string = "https://odaksaqa.odaksolutions.in/api";
+    // APIURLFF: string = 'https://odaksaqa.odaksolutions.in/ffddev/api';
+    // APIURLLA: string = 'https://odaklaqa.odaksolutions.in/api';
+    // TemplateUploadURL: string = 'https://odakfn.odaksolutions.in';
     // LANDINGURL: string = 'https://navioindia.freighteiz.com'
 
+    // PROD
+     APIURL: string = 'https://fn-navioindia.freighteiz.com/api';
+    MASTER_API_URL: string = 'https://fn-navioindia.freighteiz.com/api';
+    SaApi: string = "https://sa-navioindia.freighteiz.com/api";
+    APIURLFF: string = 'https://sa-navioindia.freighteiz.com/ffddev/api';
+    APIURLLA: string = 'https://la-navioindia.freighteiz.com/api';
+    TemplateUploadURL: string = 'https://fn-navioindia.freighteiz.com/api';
+    LANDINGURL: string = 'https://navioindia.freighteiz.com'
+
 }
-
-
-// APIURL: string = 'https://la-navioindia.freighteiz.com/api';
-//     APISAURL: string = 'https://sa-navioindia.freighteiz.com/api';
-//     APIURLFF: string = 'https://sa-navioindia.freighteiz.com/ffddev/api';
-//     APIFNURL: string = 'https://fn-navioindia.freighteiz.com/api'

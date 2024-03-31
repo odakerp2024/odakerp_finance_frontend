@@ -360,7 +360,7 @@ export class FinanceMasterComponent implements OnInit {
         }
         else {
           //window.location.href = "https://localhost:44323/views/sessionexpired?Tokenid=" + TokenID;
-          window.location.href = this.globals.SaApi + "/views/sessionexpired?ajdysghjadsbkyfgHVUFKDYKUYGVSDCHBKYGuyfkjyhbvjdygiuagsidukuYGUKFYSDKUFyguydgfakhdfhg=" + TokenID;
+          window.location.href = this.globals.APIURLLA + "/views/sessionexpired?ajdysghjadsbkyfgHVUFKDYKUYGVSDCHBKYGuyfkjyhbvjdygiuagsidukuYGUKFYSDKUFyguydgfakhdfhg=" + TokenID;
           localStorage.removeItem('TokenID');
           localStorage.removeItem('UserID');
         }
