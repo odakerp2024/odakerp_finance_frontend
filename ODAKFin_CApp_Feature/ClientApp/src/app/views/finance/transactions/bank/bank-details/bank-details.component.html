@@ -156,22 +156,28 @@
                                 <!-- <input  type="tel" [ngClass]=" isUpdate ? 'block-input' : ''" formControlName ="Currency" class="w-100 form-group pl-2 form-control"/> -->
                                 <ng-select class="searchdropdown custom" type="tel" [ngClass]=" isUpdate ? 'block-input' : ''" formControlName ="Currency" [clearable]="false" [appendTo]="'body'">
                                     <ng-option [value]="''"  [disabled]="true" selected>--SELECT CURRENCY--</ng-option>
-                                    <ng-option *ngFor="let currency of currencyList" [value]="currency.CurrencyID">{{ currency.CurrencyCode | uppercase }}</ng-option>
+                                    <ng-option *ngFor="let currency of currencyList" [value]="currency.CurrencyCode">{{ currency.CurrencyCode | uppercase }}</ng-option>
                                 </ng-select>
                             </div>
 
                               <div class="col-3">
                                 <label class="">Exchange</label>
-                                <input RemoveSpecialChars onkeypress='return event.charCode >= 48 && event.charCode <= 57' formControlName ="Exchange"
-                                min="0" numbersOnly class="w-100 form-group py-0 form-control" />
+                                <input [ngClass]=" isUpdate ? 'block-input' : ''"
+                                    onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                    min="0" numbersOnly 
+                                    appDynamicDecimal class="form-control my-select amount w-100 mr-0"
+                                    formControlName="Exchange"/>
                               </div>
 
                             
 
                               <div class="col-3">
                                   <label class=""> Amount </label>
-                                  <input RemoveSpecialChars [ngClass]=" isUpdate ? 'block-input' : ''" formControlName ="AmountCCY" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
-                                  min="0" numbersOnly type="tel" class="w-100 form-group pl-2 form-control"/>
+                                  <input [ngClass]=" isUpdate ? 'block-input' : ''"
+                                    onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                    min="0" numbersOnly 
+                                    appDynamicDecimal class="form-control my-select amount w-100 mr-0"
+                                    formControlName="AmountCCY"/>
                               </div>  
                    </div>
                   </div>

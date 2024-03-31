@@ -179,7 +179,7 @@ export class BankComponent implements OnInit {
   }
 
   editDivision(data: any) {
-    this.getPermissionListForUpdate(601, data);
+    this.getPermissionListForUpdate(data, 601);
   }
   search() {
     this.getBankList()
@@ -376,7 +376,7 @@ export class BankComponent implements OnInit {
   }
 
 
-  getPermissionListForUpdate(value, id) {
+  getPermissionListForUpdate(id, value) {
 
     // Check Permission for Division Add
     const userID = localStorage.getItem("UserID");
@@ -394,7 +394,7 @@ export class BankComponent implements OnInit {
 
           if (data[0].Update_Opt == 2) {
 
-            this.router.navigate(['/views/transactions/openingBalances/bank-detail', { id: value }]);
+            this.router.navigate(['/views/transactions/openingBalances/bank-detail', { id: id }]);
 
           } else {
             this.closeModal();

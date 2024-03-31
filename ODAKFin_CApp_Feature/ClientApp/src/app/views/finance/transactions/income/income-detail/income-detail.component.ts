@@ -205,19 +205,19 @@ export class IncomeDetailComponent implements OnInit {
       this.accountIncomeForm.value.Id = this.incomeId
       var validation = "";
       if (this.accountIncomeForm.value.DivisionId == "") {
-        validation += "<span style='color:red;'>*</span> <span>Please Enter Division </span></br>"
+        validation += "<span style='color:red;'>*</span> <span>Please Select Division </span></br>"
       }
       if (this.accountIncomeForm.value.OfficeId == "") {
-        validation += "<span style='color:red;'>*</span> <span>Please Enter Office</span></br>"
+        validation += "<span style='color:red;'>*</span> <span>Please Select Office</span></br>"
       }
       if (this.accountIncomeForm.value.AccountName == "") {
-        validation += "<span style='color:red;'>*</span> <span>Please Enter Account</span></br>"
+        validation += "<span style='color:red;'>*</span> <span>Please Select Account</span></br>"
       }
       if (this.accountIncomeForm.value.Group == "") {
         validation += "<span style='color:red;'>*</span> <span>Please Enter Group</span></br>"
       }
       if (this.accountIncomeForm.value.DebitorCredit == "") {
-        validation += "<span style='color:red;'>*</span> <span>Please Enter DebitorCredit</span></br>"
+        validation += "<span style='color:red;'>*</span> <span>Please Select Debit/Credit</span></br>"
       }
       if (this.accountIncomeForm.value.Exchange == "") {
         validation += "<span style='color:red;'>*</span> <span>Please Enter Exchange</span></br>"

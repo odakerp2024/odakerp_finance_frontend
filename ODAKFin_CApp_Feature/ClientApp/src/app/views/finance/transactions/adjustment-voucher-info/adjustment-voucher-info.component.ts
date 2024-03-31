@@ -48,6 +48,7 @@ export class AdjustmentVoucherInfoComponent implements OnInit {
   payload: any = {};
   isFinalRecord: boolean = false;
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
+  entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   entityCurrency = this.commonDataService.getLocalStorageEntityConfigurable('Currency');
   entityCurrency1 = this.commonDataService.getLocalStorageEntityConfigurable('Currency').substring(0, 3);
   AdjustmentForm: any;
@@ -163,7 +164,7 @@ export class AdjustmentVoucherInfoComponent implements OnInit {
       AccountId: [0],
       DrCrId: [0],
       Currency:  [0],
-      ROE:  ['1'],
+      ROE:  [''],
       Amount: [],
       CompanyCurrencyAmount: [0],
       Narration: [''],
@@ -379,6 +380,7 @@ export class AdjustmentVoucherInfoComponent implements OnInit {
 
   
   async addRow() {  
+    debugger
     var validation = "";
     const accountMappingIds = []; // Replace this with your actual data
    const selectedAccountId = this.AccountTypeId;
@@ -424,7 +426,7 @@ export class AdjustmentVoucherInfoComponent implements OnInit {
     // let accountcustomer = this.groupedCoaTypeList.CustomerName.find(x => x.Id == info.AccountId);
     let accountDetails = this.accountName.find(x => x.Id == info.AccountId);
     let DrCrId = this.debitCreditList.find(x => x.Id == info.DrCrId);
-    let currency = this.currencyList.find(x => x.ID == info.Currency);
+     let currency = this.currencyList.find(x => x.ID == info.Currency);
 
     if (this.editAccountTable) {
       let editValue = {
@@ -441,7 +443,7 @@ export class AdjustmentVoucherInfoComponent implements OnInit {
         // {Id: 44, AccountName: 'properties', AccountType: 'ChartOfAccount'}
         AccountName: accountDetails.Name,
         DrCrName: DrCrId.TransactionName,
-        CurrencyName: currency.Currency,
+        CurrencyName: currency.CurrencyCode,
         AccountType: info.AccountType,
       }
 
@@ -455,14 +457,18 @@ export class AdjustmentVoucherInfoComponent implements OnInit {
         AccountId: info.AccountId,
         DrCrId: info.DrCrId,
         Currency: info.Currency,
-        ROE: info.ROE,
-        Amount: info.Amount,
-        CompanyCurrencyAmount: Number(info.ROE) * Number(info.Amount),
+        // ROE: info.ROE,
+        // Amount: info.Amount,
+        // CompanyCurrencyAmount: Number(info.ROE) * Number(info.Amount),
+        ROE: Number(info.ROE) % 1 !== 0 ? Number(info.ROE).toFixed(this.entityFraction) : info.ROE,
+        Amount: Number(info.Amount) % 1 !== 0 ? Number(info.Amount).toFixed(this.entityFraction) : info.Amount,
+        // CompanyCurrencyAmount: Number(info.ROE) % 1 !== 0 ? (Number(info.ROE) * Number(info.Amount)).toFixed(this.entityFraction): Number(info.ROE) * Number(info.Amount),
+        CompanyCurrencyAmount: (Number(info.ROE) * Number(info.Amount)),
         Narration: info.Narration,
         ExchangeRate: info.ExchangeRate,
         AccountName: accountDetails.Name,
         DrCrName: DrCrId.TransactionName,
-        CurrencyName: currency.Currency,
+        CurrencyName: currency.CurrencyCode,
         AccountType: info.AccountType,
         // AccountType: JSON.stringify(this.selectedAccountItemObj)
       });
@@ -548,9 +554,10 @@ export class AdjustmentVoucherInfoComponent implements OnInit {
     var totalCredit = 0;
     var totalDebit = 0;
     var totalDifference = 0;
-    for (let data of debit) totalDebit += Number(data.CompanyCurrencyAmount);
-    for (let data of credit) totalCredit += Number(data.CompanyCurrencyAmount);
-    totalDifference = Math.abs(totalCredit - totalDebit);
+    for (let data of debit) totalDebit += Number(Number(data.CompanyCurrencyAmount).toFixed(this.entityFraction));
+    for (let data of credit) totalCredit += Number(Number(data.CompanyCurrencyAmount).toFixed(this.entityFraction));
+     totalDifference = Math.abs(totalCredit - totalDebit);
+    totalDifference = Number(totalDifference.toFixed(this.entityFraction));
     this.AmountDifference = totalDifference;
 
     this.AdjustmentCreateForm.controls['TotalDebit'].setValue(totalDebit);
@@ -559,11 +566,16 @@ export class AdjustmentVoucherInfoComponent implements OnInit {
   }
 
   resetTable() {
+    debugger
     this.AdjustmentCreateForm.controls['Id'].setValue(0);
     this.AdjustmentCreateForm.controls['AccountId'].setValue(0);
     this.AdjustmentCreateForm.controls['AccountType'].setValue(0);
     this.AdjustmentCreateForm.controls['DrCrId'].setValue(0);
-    this.AdjustmentCreateForm.controls['Currency'].setValue(this.entityCurrency1);
+    // this.AdjustmentCreateForm.controls['Currency'].setValue(this.entityCurrency1);
+    const entitySelectedCurrency = this.currencyList.find(c => c.Currency.toUpperCase() === this.entityCurrency.toUpperCase());
+      if (entitySelectedCurrency) {
+        this.AdjustmentCreateForm.controls.Currency.setValue(entitySelectedCurrency.ID);
+      }
     this.AdjustmentCreateForm.controls['ROE'].setValue('');
     this.AdjustmentCreateForm.controls['Amount'].setValue('');
     this.AdjustmentCreateForm.controls['CompanyCurrencyAmount'].setValue(0);

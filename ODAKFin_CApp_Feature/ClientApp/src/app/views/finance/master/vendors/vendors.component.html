@@ -939,15 +939,25 @@
                                                                             <div class="w-100 mr-2 ml-2">
                                                                                 <label class="str">Account
                                                                                     Number</label>
-                                                                                   <input type="text" (paste)="(false)"
+                                                                                   <!-- <input type="text" (paste)="(false)"
                                                                                     name="bankAcctName"
                                                                                     formControlName="AccountNumberId"
                                                                                     autocomplete="off"
                                                                                     id="txtBankAcctName"
                                                                                     ng-model="txtBankAcctName"
                                                                                     class="form-control"
-                                                                                    maxlength="20">
-                                                                            </div>
+                                                                                    maxlength="20"> -->
+                                                                                     <!-- This alow only the ALPHANUMERIC VALUES(NUMBER AND TEXT APRAT FROM ANYTHING IT OMMIT) -->
+                                                                                    <input type="text" (paste)="(false)"
+                                                                                    name="bankAcctName"
+                                                                                    formControlName="AccountNumberId"
+                                                                                    autocomplete="off"
+                                                                                    id="txtBankAcctName"
+                                                                                    ng-model="txtBankAcctName"
+                                                                                    class="form-control"
+                                                                                    maxlength="20"
+                                                                                    onkeypress="return event.charCode != 46 && (event.charCode >= 48 && event.charCode <= 57 || event.charCode >= 65 && event.charCode <= 90 || event.charCode >= 97 && event.charCode <= 122)">
+                                                                               </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -1271,7 +1281,7 @@
                                                             class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
                                                             <div class="col-12 det tblrow" style="border:0px red">
                                                                 <!-- Start -->
-                                                                <app-documents [documentList]="documentInfo"
+                                                                <app-documents [documentList]="documentPayloadInfo"
                                                                     (saveDocumentEvent)="uploadDocument($event)"
                                                                     (deleteDocumentEvent)="deleteDocument($event)"></app-documents>
                                                                 <!-- End -->
@@ -2968,19 +2978,18 @@
                             </div>
                         </div>
                     </div>
-
-                
-                    <div class="row">
+                    <div *ngIf="Current_Tab != 'tabEmail'" class="row">
                         <div class="col-md-12 alrt">
-                            <button type="submit" (click)="onSubmit()" class="btn btn-primary btn-raised mb-0 m-r-15"
-                                [ngClass]="[Current_Tab == 'tabEmail' ?  'd-none' : '',Current_Tab == 'tabKYC' ? 'd-none': '']">Save</button>
-                            <button type="button" (click)="reset()" class="btn btn-danger btn-raised mb-0"
-                                [ngClass]="[Current_Tab == 'tabEmail' ?  'd-none' : '',Current_Tab == 'tabKYC' ? 'd-none' : '']">Cancel</button>
-
+                            <button type="submit" (click)="onSubmit();" class="btn btn-primary btn-raised mb-0  m-r-15">
+                                Save </button>
+                            <button type="button" (click)="reset()"
+                                class="btn btn-danger btn-raised mb-0">Cancel</button>
                         </div>
-                        <!-- <input type="hidden" id="RegId" [ngModelOptions]="{standalone: true}" [(ngModel)]="RegId"
-                            name="RegId" /> -->
+                        <input type="hidden" id="RegId" [ngModelOptions]="{standalone: true}" [(ngModel)]="RegId"
+                            name="RegId" />
                     </div>
+                
+                   
                 </div>
 
             </div>

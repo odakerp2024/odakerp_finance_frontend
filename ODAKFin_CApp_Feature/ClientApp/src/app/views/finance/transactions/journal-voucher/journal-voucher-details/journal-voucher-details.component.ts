@@ -399,10 +399,11 @@ export class JournalVoucherDetailsComponent implements OnInit {
         DrCrName: DrCrId.TransactionName,
         Currency: info.Currency,
         CurrencyName: currency.CurrencyCode,
-        ROE: Number(info.ROE).toFixed(this.entityFraction),
-        Amount: Number(info.Amount).toFixed(this.entityFraction),
-        CompanyCurrencyAmount: ((Number(info.ROE) * Number(info.Amount)).toFixed(this.entityFraction)),
-        Narration: Number(info.Narration).toFixed(this.entityFraction),
+        ROE: info.ROE,
+        Amount: info.Amount,
+        CompanyCurrencyAmount: Number(info.ROE) * Number(info.Amount),
+        
+        Narration: info.Narration
       }
 
       this.journalTableList[this.editSelectedIdex] = editValue
@@ -426,19 +427,23 @@ export class JournalVoucherDetailsComponent implements OnInit {
       ROE: Number(info.ROE) % 1 !== 0 ? Number(info.ROE).toFixed(this.entityFraction) : info.ROE,
       Amount: Number(info.Amount) % 1 !== 0 ? Number(info.Amount).toFixed(this.entityFraction) : info.Amount,
       CompanyCurrencyAmount: Number(info.ROE) % 1 !== 0 ? (Number(info.ROE) * Number(info.Amount)).toFixed(this.entityFraction): Number(info.ROE) * Number(info.Amount),
-      Narration: Number(info.Narration) % 1 !== 0 ? Number(info.Narration).toFixed(this.entityFraction) : info.Narration,
+      Narration: info.Narration,
     });
     this.resetJournalTable();
     this.calculateTotalDebitAndCredit();
     this.setPage(1);
   }
-
+  // this.entityCurrency
   resetJournalTable() {
     this.journalForm.controls['Id'].setValue(0);
     this.journalForm.controls['AccountId'].setValue(0);
     this.journalForm.controls['AccountName'].setValue('');
     this.journalForm.controls['DrCrId'].setValue(0);
-    this.journalForm.controls['Currency'].setValue(this.entityCurrency);
+    // this.journalForm.controls['Currency'].setValue(this.entityCurrency);
+    const entitySelectedCurrency = this.currencyList.find(c => c.Currency.toUpperCase() === this.entityCurrency.toUpperCase());
+      if (entitySelectedCurrency) {
+        this.journalForm.controls.Currency.setValue(entitySelectedCurrency.ID);
+      }
     this.journalForm.controls['CurrencyName'].setValue('');
     this.journalForm.controls['ROE'].setValue('');
     this.journalForm.controls['Amount'].setValue('');

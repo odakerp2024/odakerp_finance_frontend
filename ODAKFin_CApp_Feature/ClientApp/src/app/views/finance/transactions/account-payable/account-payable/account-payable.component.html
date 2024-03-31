@@ -245,9 +245,9 @@
 
                     <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
                         <div class="form-group bmd-form-group">
-                            <input onkeypress='return event.charCode >= 48 && event.charCode <= 57' formControlName ="Amount"
-                            min="0" numbersOnly autocomplete="off" class="form-control" min="1"
-                                name="acctCode" placeholder="Amount" RemoveSpecialChars>
+                           <input onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                min="0" numbersOnly appDynamicDecimal class="form-control my-select amount w-100 mr-0"
+                                formControlName="Amount" placeholder="Amount" numbersOnly/>
                         </div>
                     </div>
 

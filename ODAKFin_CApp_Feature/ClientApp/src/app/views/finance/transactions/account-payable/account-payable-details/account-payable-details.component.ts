@@ -244,13 +244,13 @@ export class AccountPayableDetailsComponent  implements OnInit {
       this.accountPayableForm.value.Id = this.accountPayableId
       var validation = "";
       if (this.accountPayableForm.value.DivisionId == "") {
-        validation += "<span style='color:red;'>*</span> <span>Please Enter Division </span></br>"
+        validation += "<span style='color:red;'>*</span> <span>Please Select Division </span></br>"
       }
       if (this.accountPayableForm.value.OfficeId == "") {
-        validation += "<span style='color:red;'>*</span> <span>Please Enter Office</span></br>"
+        validation += "<span style='color:red;'>*</span> <span>Please Select Office</span></br>"
       }
       if (this.accountPayableForm.value.VendorName == "") {
-        validation += "<span style='color:red;'>*</span> <span>Please Enter VendorName</span></br>"
+        validation += "<span style='color:red;'>*</span> <span>Please Select Vendor Name</span></br>"
       }
       if (this.accountPayableForm.value.PurchaseInvoice == "") {
         validation += "<span style='color:red;'>*</span> <span>Please Enter PurchaseInvoice</span></br>"
