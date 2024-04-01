@@ -191,7 +191,7 @@ export class SidenavComponent implements OnInit {
         debugger
         this.TokenID = parseInt(localStorage.getItem("TokenID"));
         this.ProfileForm.value.ID = Number(localStorage.getItem("TokenID"));
-        this.commonDataService.getDeleteToken(this.ProfileForm.value).subscribe(() => {
+        this.commonDataService.getDeleteToken(this.ProfileForm.value.ID).subscribe(() => {
             //this.allItems = data;
         });
         //window.location.href = "https://localhost:44323/login";
@@ -199,8 +199,12 @@ export class SidenavComponent implements OnInit {
     }
 
     BindTokenValues(val) {
+
         this.ProfileForm.value.ID = localStorage.getItem("TokenID");
-        this.commonDataService.SendToken(this.ProfileForm.value).subscribe(data => {
+        const payload  = {
+            ID : this.ProfileForm.value.ID
+        }
+        this.commonDataService.SendToken(payload).subscribe(data => {
             this.TokenID = data[0].ID;
             this.Token = data[0].access_token;
 
@@ -238,30 +242,25 @@ export class SidenavComponent implements OnInit {
 
     OnClickLink(val) {
         if (val == 1) {
-            window.location.href = "https://la-navioindia.freighteiz.com/views/ladashboards/latransactions/latransactions?Token=" + this.Token + "&TokenID=" + this.TokenID;
 
-            //window.open("https://localhost:44301/views/ladashboards/latransactions/latransactions?Token=" + this.Token + "&Token=" + this.TokenID);
+            window.open("https://la-navioindia.freighteiz.com/views/ladashboards/latransactions/latransactions?Token=" + this.Token + "&TokenID=" + this.TokenID, "_blank");
 
         }
         if (val == 2) {
-            window.open("https://ff-navioindia.freighteiz.com/ui/#/fflanding?Token=" + this.Token + "&Token=" + this.TokenID);
-            
+            window.open("https://ff-navioindia.freighteiz.com/ui/#/fflanding?Token=" + this.Token + "&TokenID=" + this.TokenID, "_blank");
+
             //window.open("https://" + this.fflink + "?Token=" + this.Token + "&Token=" + this.TokenID);
 
         }
         if (val == 3) {
-                window.open("https://fn-navioindia.freighteiz.com/views/finance/financemaster;tabName=transactions?Token=" + this.Token + "&Token=" + this.TokenID);
-           
+            window.open("https://fn-navioindia.freighteiz.com/views/finance/financemaster;tabName=transactions?Token=" + this.Token + "&TokenID=" + this.TokenID, "_blank");
+
             //window.open("https://" + this.fnlink + "?Token=" + this.Token + "&Token=" + this.TokenID);
 
-            
+
         }
         if (val == 4) {
-                window.open("https://sa-navioindia.freighteiz.com/views/dashboard?Token=" + this.Token + "&Token=" + this.TokenID);
-            
-            //window.open("https://" + this.salink + "?Token=" + this.Token + "&Token=" + this.TokenID);
-
-            
+            window.open("https://sa-navioindia.freighteiz.com/views/dashboard?Token=" + this.Token + "&TokenID=" + this.TokenID, "_blank");
         }
 
     }
