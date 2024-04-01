@@ -162,14 +162,13 @@
                                 <div class="col-md-6">
                                     <label class=" mb-3">From</label>
                                     <div class="input-group">
-                                        <mat-form-field class="tillDate mat_date_picker disable-datepicker" appearance="outline">
-                                            <input matInput (click)="StartDate.open()" style="margin-bottom: 3px;"
-                                                autocomplete="off" [matDatepicker]="StartDate" id="StartDate"
-                                                [placeholder]="entityDateFormat" formControlName="StartDate">
+                                        <mat-form-field class="tillDate mat_date_picker" appearance="outline">
+                                            <input matInput (click)="StartDate.open()" readonly autocomplete="off"
+                                                [min]="provisionFilter.get('StartDate').value" [matDatepicker]="StartDate"
+                                                id="StartDate" [placeholder]="entityDateFormat" formControlName="StartDate">
                                             <mat-datepicker-toggle matSuffix [for]="StartDate"></mat-datepicker-toggle>
                                             <mat-datepicker #StartDate></mat-datepicker>
                                         </mat-form-field>
-                                        <!-- <input formControlName="StartDate" (change)="purchaseEvent($event.target.value)" [max]="minDate"  type="date" class="form-control" /> -->
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -177,7 +176,7 @@
                                     <div class="input-group">
                                         <mat-form-field class="tillDate mat_date_picker" appearance="outline">
                                             <input matInput (click)="EndDate.open()" readonly autocomplete="off"
-                                                [min]="provisionFilter.get('StartDate').value" [matDatepicker]="EndDate"
+                                                [min]="provisionFilter.get('EndDate').value" [matDatepicker]="EndDate"
                                                 id="EndDate" [placeholder]="entityDateFormat" formControlName="EndDate">
                                             <mat-datepicker-toggle matSuffix [for]="EndDate"></mat-datepicker-toggle>
                                             <mat-datepicker #EndDate></mat-datepicker>

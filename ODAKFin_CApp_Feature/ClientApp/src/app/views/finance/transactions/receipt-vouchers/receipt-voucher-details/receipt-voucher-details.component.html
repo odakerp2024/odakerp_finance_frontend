@@ -600,7 +600,7 @@
                                                 formControlName="Payment">
                                         </td>
                                         <td>
-                                            <input (change)=" setInitalPaymentAmount(i);onSelectEvent();"
+                                            <input (change)=" setInitalPaymentAmount(i);onSelectEvent();summaryAmountCalculation()"
                                                 formControlName="IsSelect" type="checkbox"
                                                 [ngClass]=" !isEditMode ? 'disable-input--nostyle' : ''" />
                                         </td>

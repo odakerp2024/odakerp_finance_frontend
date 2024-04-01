@@ -1397,16 +1397,21 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
       var totalAmount = 0;
       var totalTDSAmount = 0;
       var totalPaymentAmount = 0;
-      info.forEach(element => {
-        totalAmount += Number(element.TDS) + (Number(element.Payment) * Number(element.ExchangeRate));
-        totalTDSAmount += (Number(element.TDS) * Number(element.ExchangeRate)),
-          totalPaymentAmount += (Number(element.Payment) * Number(element.ExchangeRate))
-      });
+      if (info.length > 0) {
+
+        info.forEach(element => {
+          totalAmount += Number(Number(element.Payment) * Number(element.ExchangeRate));
+          totalTDSAmount += (Number(element.TDS) * Number(element.ExchangeRate)),
+            // totalPaymentAmount += (Number(element.Payment) * Number(element.ExchangeRate))
+            totalPaymentAmount += Number(element.TDS) + (Number(element.Payment) * Number(element.ExchangeRate));
+        });
+      }
+      
       this.receiptForm.controls['TotalTDSAmount'].patchValue(totalTDSAmount.toFixed(this.entityFraction));
       this.receiptForm.controls['TotalPaymentAmount'].patchValue(totalPaymentAmount.toFixed(this.entityFraction));
-      this.totalAmount = totalAmount;
+      this.totalAmount = Number(totalAmount.toFixed(this.entityFraction));
     }
-    this.summaryAmountCalculation();
+    // this.summaryAmountCalculation();
   }
 
   invoiceNumberSearch(event) {

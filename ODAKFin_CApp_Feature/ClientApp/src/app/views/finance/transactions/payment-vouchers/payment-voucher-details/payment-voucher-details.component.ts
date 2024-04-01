@@ -1792,13 +1792,17 @@ export class PaymentVoucherDetailsComponent implements OnInit {
       var totalAmountCal = 0;
       var totalTDSAmount = 0;
       var totalPaymentAmount = 0;
-      info.forEach(element => {
-        totalAmountCal += Number(element.TDS) + (Number(element.Payment) * Number(element.ExchangeRate));
-        totalTDSAmount += (Number(element.TDS) * Number(element.ExchangeRate)),
-          totalPaymentAmount += (Number(element.Payment) * Number(element.ExchangeRate))
-      });
+      if (info.length > 0) {
+
+        info.forEach(element => {
+          totalAmountCal += Number(Number(element.Payment) * Number(element.ExchangeRate));
+          totalTDSAmount += (Number(element.TDS) * Number(element.ExchangeRate)),
+            // totalPaymentAmount += (Number(element.Payment) * Number(element.ExchangeRate))
+            totalPaymentAmount += (Number(element.TDS) * Number(element.ExchangeRate)) + (Number(element.Payment) * Number(element.ExchangeRate));
+        });
+      }
       // this.paymentForm.controls.Table.controls['TotalAmount'].setValue(totalAmountCal);
-      this.selectedInvoiceTotal = totalAmountCal;
+      this.selectedInvoiceTotal = Number(totalAmountCal.toFixed(this.entityFraction));;
       const amountPaid = this.paymentForm.controls.Table.controls['AmountPaid'].value;
       const totalAmount = this.selectedInvoiceTotal;
       if (amountPaid == totalAmount) {
