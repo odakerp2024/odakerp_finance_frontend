@@ -1093,4 +1093,10 @@ export class FinanceMasterComponent implements OnInit {
     }
   }
 
+  navigate() {
+    this.router.navigate(['/views/finance/reports/levelone']);
+  }
+
+
+
 }
