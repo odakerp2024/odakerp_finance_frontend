@@ -810,5 +810,27 @@
                     </div>
                 </div>
             </div>
+
+            
+ <div *ngIf="selectedTabName === 'Reports'" class="container-fluid pt-4">
+    <div class="row">
+
+        <div class="col-md-3 panelbox">
+            <div class="panel panel-default">
+                <div class="title pl-3 panel-heading" style="text-align: center;">Report</div>
+                <div class="panel-body">
+                    <div class="col-md-12">
+                        <button class="btn btn-link" (click)="navigate()">
+                            <i class="fa fa-angle-double-right"></i>
+                            Trail Balance
+                        </button>
+                        <div style="border-bottom: 1px dashed"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
         </div>
     </div>

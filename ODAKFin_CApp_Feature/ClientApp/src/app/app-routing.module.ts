@@ -203,6 +203,8 @@ import { ChartaccountcodelistComponent } from './views/finance/master/chartaccou
 import { LamasterComponent } from './views/masters/LAmaster/lamaster.component';
 import { ProvisionViewComponent } from './views/finance/transactions/provision/provision-view/provision-view.component';
 import { ProvisionDetailComponent } from './views/finance/transactions/provision/provision-detail/provision-detail.component';
+import { TrialbalancetwoComponent } from './views/finance/reports/leveltwo/trialbalancetwo/trialbalancetwo.component';
+import { TrailbalanceComponent } from './views/finance/reports/levelone/trailbalance/trailbalance.component';
 const routes: Routes = [
 
     { path: '', redirectTo: "/login", pathMatch: 'full' },
@@ -440,6 +442,11 @@ const routes: Routes = [
 
             { path: 'finance/Vendor/Vendorview', component: VendorsviewComponent },
             { path: 'finance/Vendor', component: VendorsComponent },
+
+            {path: 'finance/reports/levelone', component: TrailbalanceComponent},
+
+            {path: 'finance/reports/leveltwo', component: TrialbalancetwoComponent},
+
 
             { path: 'finance/master/taxgroup/taxgroupview', component: TaxgroupviewComponent },
             { path: 'finance/master/taxgroup/taxgroup', component: TaxgroupComponent },
