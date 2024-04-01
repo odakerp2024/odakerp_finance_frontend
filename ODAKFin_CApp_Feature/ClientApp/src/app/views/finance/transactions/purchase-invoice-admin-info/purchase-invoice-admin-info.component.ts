@@ -30,6 +30,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
   minDate: string = this.datePipe.transform(new Date(), "yyyy-MM-dd");
   // newOne : string = '';
   isUpdate: boolean = false;
+  provisionList : [ { ID:'1',name: 'Partial'},{ID:'2' ,name: 'Full'}]
   isUpdateMode: boolean = false;
   isUpdateMode1: boolean = false;
   ModifiedOn: string = '';
@@ -179,12 +180,13 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       Office: [0],
       OfficeGST: [''],
       BookingAgainst: [0],
+      Provision:[0],
       PINumber: [''],
       PIDate: [this.minDate],
       StatusId: [1],
       VendorId: [0],
       VendorBranch: [''],
-      VendorType: [''],
+      // VendorType: [''],
       VINumber: [''],
       VIDate: [''],
       DueDate: [''],
@@ -203,7 +205,11 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       CGST: [''],
       SGST: [''],
       InvoiceAmount: [''],
+      NetAmount:[''],
+      Bankdetails:[''],
       InvoiceCurrency: [''],
+      InvoiceExrate:[''],
+      Remarks:[''],
       CreatedDate:[this.minDate],
       CreatedBy: localStorage.getItem('UserID'),
       TDSAmount:[0],
@@ -216,10 +222,12 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       Amount: [''],
       CurrencyId: [1],
       ExRate: ['1'],
-      LocalAmount: [''],
-      IsTaxable: [''],
+      Amountccr: [''],
+      Isrcm: [''],
       GSTGroup: [''],
-      IsDelete: [0]
+      IsDelete: [0],
+
+
     });
 
     let entityInfo = this.commonDataService.getLocalStorageEntityConfigurable();
