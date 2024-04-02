@@ -3230,7 +3230,7 @@ export class VendorsComponent implements OnInit {
       const bankDetailsObj = {
         VendorBankId: this.fg.value.VendorBankId,
         VendorId: this.fg.value.VendorId,
-        vendorBranchId: this.fg.value.vendorBranchID ? this.fg.value.vendorBranchID : 0,
+        vendorBranchId: this.fg.value.VendorBranchID ? this.fg.value.VendorBranchID : 0,
         BankAccountCode: this.fg.value.BankAccountCode,
         ShortName: this.fg.value.bankShortName,
         AccountNumberId: this.fg.value.AccountNumberId,
@@ -3262,6 +3262,7 @@ export class VendorsComponent implements OnInit {
   }
 
   patchBankDetails(patchData) {
+    console.log(patchData)
     this.fg.controls.BankAccountCode.setValue(patchData.BankAccountCode);
     this.fg.controls.BankName.setValue(patchData.BankName);
     this.fg.controls.bankShortName.setValue(patchData.ShortName);
@@ -3271,6 +3272,9 @@ export class VendorsComponent implements OnInit {
     this.fg.controls.bankCountryId.setValue(patchData.CountryId);
     this.fg.controls.SwiftCode.setValue(patchData.SwiftCode);
     this.fg.controls.bankIsActive.setValue(patchData.IsActive ? 'true' : 'false');
+    this.fg.controls.VendorBankId.setValue(patchData.VendorBankId);
+    this.fg.controls.VendorId.setValue(patchData.VendorId);
+    this.fg.controls.VendorBranchId.setValue(patchData.vendorBranchId);
   }
 
   clearBankDetails() {
@@ -3278,7 +3282,8 @@ export class VendorsComponent implements OnInit {
     this.fg.controls.BankName.setValue('');
     this.fg.controls.bankShortName.setValue('');
     this.fg.controls.AccountNumberId.setValue('');
-    this.fg.controls.CurrencyId.setValue('');
+    // this.fg.controls.CurrencyId.setValue('');
+    this.fg.controls.CurrencyId.setValue(this.entityCurrencyID);
     this.fg.controls.IFSCCode.setValue('');
     this.fg.controls.bankCountryId.setValue('');
     this.fg.controls.SwiftCode.setValue('');
@@ -3463,7 +3468,8 @@ export class VendorsComponent implements OnInit {
     }
   }
 
-  OnClickRadio(index) {
+  OnClickRadio(data,index) {
+    console.log(data)
     this.bankEditSelectedIndex = index;
     this.clearBankDetails();
   }

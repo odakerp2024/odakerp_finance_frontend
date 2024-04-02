@@ -168,7 +168,7 @@ export class IncomeDetailComponent implements OnInit {
     }
 
   getGroup() {
-    this.commonDataService.getGroupListDropdown({ GroupName :"Income  " }).subscribe(result => {
+    this.commonDataService.getGroupListDropdown({ GroupName :"Income"}).subscribe(result => {
       this.AccountList = [];
       if (result['data'].Table.length > 0) {
         this.AccountList = result['data'].Table;

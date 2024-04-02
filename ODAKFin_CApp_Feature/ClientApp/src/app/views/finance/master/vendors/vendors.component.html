@@ -976,8 +976,8 @@
                                                                                         Select Currency --</ng-option>
                                                                                     <ng-option *ngFor="let gRow of currencyList"
                                                                                     [value]="gRow.ID">
-                                                                                    {{gRow.CurrencyName}} -
-                                                                                    {{gRow.CurrencyCode}}
+                                                                                    {{gRow.CurrencyName | uppercase }} -
+                                                                                    {{gRow.CurrencyCode | uppercase}}
                                                                                     </ng-option>
                                                                                     </ng-select>
                                                                             </div>
@@ -1152,7 +1152,7 @@
                                                                                     rowspan="1" colspan="1"
                                                                                     aria-label="Name: activate to sort column ascending"
                                                                                     style="width: 177.575px;">
-                                                                                    Currency
+                                                                                    Currency 
                                                                                 </th>
                                                                                 <th class="actwid" tabindex="0"
                                                                                     aria-controls="datatable-buttons"
@@ -1253,7 +1253,7 @@
                                                                                     <input class="vertal checkbox"
                                                                                         type="radio" name="AlertCheck"
                                                                                         id="RadioCheck"
-                                                                                        (click)="OnClickRadio(i)" />
+                                                                                        (click)="OnClickRadio(dataItem,i)" />
                                                                                 </td>
                                                                             </tr>
                                                                         </tbody>

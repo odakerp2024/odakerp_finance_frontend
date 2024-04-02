@@ -188,16 +188,16 @@ export class BankDetailsComponent implements OnInit {
   // this.accountBankForm.controls['AccountName'].setValue(this.AccountList.AccountName);
   // this.accountBankForm.get('AccountName').setValue(this.AccountList.AccountName);
 
-// let selectedBank = this.accountBankForm.value.AccountName;
-// let filteredAccounts = this.AccountList.filter(AccountList => AccountList.AccountName === selectedBank);
-// let filteredAccountsNumber = this.AccountList.filter(AccountList => AccountList.AccountName === selectedBank);
+let selectedBank = this.accountBankForm.value.AccountName;
+let filteredAccounts = this.AccountList.filter(AccountList => AccountList.AccountName === selectedBank);
+let filteredAccountsNumber = this.AccountList.filter(AccountList => AccountList.AccountName === selectedBank);
 
-//   let accountName = filteredAccounts[0].AccountName.split(' - ')[0];
-//   let accountNumber = filteredAccountsNumber[0].AccountName.split(' - ')[1]; // Use [1] to get the account number part
+  let accountName = filteredAccounts[0].AccountName.split(' - ')[0];
+  let accountNumber = filteredAccountsNumber[0].AccountName.split(' - ')[1]; // Use [1] to get the account number part
 
 //   // Set the extracted account name and account number to the form controls
-//   this.accountBankForm.controls['AccountName'].setValue(accountName);
-//   this.accountBankForm.controls['AccountNUmber'].setValue(accountNumber);
+  this.accountBankForm.controls['AccountName'].setValue(accountName);
+  this.accountBankForm.controls['AccountNUmber'].setValue(accountNumber);
 
 
 
@@ -221,7 +221,7 @@ export class BankDetailsComponent implements OnInit {
         "Office": this.accountBankForm.value.Office,
         "OfficeId":this.accountBankForm.value.OfficeId,
         "AccountName": this.accountBankForm.value.AccountName,
-        "AccountNUmber":1,
+        "AccountNUmber":this.accountBankForm.value.AccountNUmber,
         "Group": this.accountBankForm.value.GroupName,
         "DebitorCredit": this.accountBankForm.value.DebitorCredit,
         "Currency": this.accountBankForm.value.Currency,
