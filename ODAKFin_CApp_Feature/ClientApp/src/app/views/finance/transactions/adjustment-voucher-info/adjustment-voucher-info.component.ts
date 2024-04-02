@@ -437,7 +437,7 @@ export class AdjustmentVoucherInfoComponent implements OnInit {
         Currency: info.Currency,
         ROE: info.ROE,
         Amount: info.Amount,
-        CompanyCurrencyAmount: Number(info.ROE) * Number(info.Amount),
+        CompanyCurrencyAmount: (Number(info.ROE) * Number(info.Amount)).toFixed(this.entityFraction),
         Narration: info.Narration,
         ExchangeRate: info.ExchangeRate,  
         // {Id: 44, AccountName: 'properties', AccountType: 'ChartOfAccount'}
@@ -462,8 +462,7 @@ export class AdjustmentVoucherInfoComponent implements OnInit {
         // CompanyCurrencyAmount: Number(info.ROE) * Number(info.Amount),
         ROE: Number(info.ROE) % 1 !== 0 ? Number(info.ROE).toFixed(this.entityFraction) : info.ROE,
         Amount: Number(info.Amount) % 1 !== 0 ? Number(info.Amount).toFixed(this.entityFraction) : info.Amount,
-        // CompanyCurrencyAmount: Number(info.ROE) % 1 !== 0 ? (Number(info.ROE) * Number(info.Amount)).toFixed(this.entityFraction): Number(info.ROE) * Number(info.Amount),
-        CompanyCurrencyAmount: (Number(info.ROE) * Number(info.Amount)),
+        CompanyCurrencyAmount: Number(info.ROE) % 1 !== 0 ? (Number(info.ROE) * Number(info.Amount)).toFixed(this.entityFraction): Number(info.ROE) * Number(info.Amount),
         Narration: info.Narration,
         ExchangeRate: info.ExchangeRate,
         AccountName: accountDetails.Name,
