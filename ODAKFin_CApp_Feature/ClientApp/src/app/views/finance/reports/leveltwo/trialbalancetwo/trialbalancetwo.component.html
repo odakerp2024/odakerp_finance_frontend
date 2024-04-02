@@ -1,11 +1,13 @@
 
 <div class="card p-4" >
+    <form [formGroup]="filterForm">
 
 <div class="row">
+  
     <div class="col-md-2">
         <label class="str mb-2">Date</label>
         <mat-form-field class="tillDate mat_date_picker" appearance="outline">
-            <input matInput (dateChange)="onDateChange($event)" readonly autocomplete="off" [matDatepicker]="ToDate" id="ToDate" style="padding:3px;">
+            <input matInput formControlName="Date" (dateChange)="onDateChange($event)" readonly autocomplete="off" [matDatepicker]="ToDate" id="ToDate" style="padding:3px;">
             <mat-datepicker-toggle matSuffix [for]="ToDate" class="center-icon"></mat-datepicker-toggle>
             <mat-datepicker #ToDate></mat-datepicker>
         </mat-form-field>
@@ -15,26 +17,50 @@
     <div class="col-md-2">
         <label class="str" for="companyName">Select Office</label><br>
        
-        <ng-select class="searchdropdown" [clearable]="false"
+        <!-- <ng-select class="searchdropdown" [clearable]="false"
             name="AccType"
             id="ddlCountry">
             <ng-option [value]="''" [disabled]="true">--SELECT APPLICATION--</ng-option>
             <ng-option value="option1">Option 1</ng-option>
             <ng-option value="Option2">Option 2</ng-option>
             <ng-option value="Option3">Option 3</ng-option>
-        </ng-select>
+        </ng-select> --> 
+        <ng-select  class="searchdropdown" formControlName="OfficeId"  [clearable]="false">
+            <ng-option [value]="''" disabled>--SELECT OFFICE--</ng-option>
+            <ng-container *ngFor="let office of officeList">
+              <ng-option [value]="office.ID">
+                <span class="textwrap">{{office.OfficeName | uppercase}}</span>
+              </ng-option>
+            </ng-container>
+        </ng-select> 
     </div>
 
     <div class="col-md-2">
         <label class="str" >Select Division</label><br>
        
-        <ng-select class="searchdropdown" [clearable]="false"
+        <!-- <ng-select class="searchdropdown" [clearable]="false"
             name="AccType"
             id="ddlCountry">
             <ng-option [value]="''" [disabled]="true">--SELECT APPLICATION--</ng-option>
             <ng-option value="Option1">Option 1</ng-option>
             <ng-option value="Option2">Option 2</ng-option>
             <ng-option value="Option3">Option 3</ng-option>
+        </ng-select> -->
+        <!-- <ng-select  class="searchdropdown custom" formControlName="DivisionId"  [clearable]="false" (change)="onDivisionChange()">
+            <ng-option [value]="''" disabled>--SELECT DIVISION--</ng-option>
+            <ng-container  *ngFor="let division of divisionList">
+              <ng-option  [value]="division.ID">
+                <span class="textwrap">{{division.DivisionName | uppercase}}</span>
+              </ng-option>
+           </ng-container>
+        </ng-select>  -->
+        <ng-select  class="searchdropdown custom" formControlName="DivisionId"  [clearable]="false">
+            <ng-option [value]="''" disabled>--SELECT DIVISION--</ng-option>
+            <ng-container  *ngFor="let division of divisionList">
+              <ng-option  [value]="division.ID">
+                <span class="textwrap">{{division.DivisionName | uppercase}}</span>
+              </ng-option>
+           </ng-container>
         </ng-select>
     </div>
     <div class="col-md-2"></div>
@@ -43,7 +69,7 @@
     <div class="col-md-2">
         <label class="str" >Export As</label><br>
        
-        <ng-select class="searchdropdown" [clearable]="false"
+        <ng-select class="searchdropdown" formControlName="exportAs" [clearable]="false"
             name="AccType"
             id="ddlCountry">
             <ng-option [value]="''" [disabled]="true">--SELECT APPLICATION--</ng-option>
@@ -54,6 +80,7 @@
     </div>
 
 </div>
+</form>
 
 <div class="col-md-12 mt-5 pt-3"></div>
 
@@ -65,7 +92,7 @@
         <h2>Account Transactions</h2>
         <p>Basis: Accrual</p>
         <h6>Accounts Receivable</h6>
-        <p>From 01/04/2023 To 23/03/2024</p>
+        <p>{{ selectedDate ? selectedDate : currentDate | date:'mediumDate' }}</p>
 
     </div>
 
@@ -73,7 +100,7 @@
 
 </div>
 
-<div class="col-md-12 mt-5 pt-3"></div>
+<div class="col-md-12 mt-3"></div>
 
 <div class="col-sm-12 scrtbl">
     <table id="datatable-buttons"
@@ -100,20 +127,36 @@
 
     </thead>
     <tbody>
-        <tr>
-            <td><a>01/04/2023</a></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+        <!-- <tr *ngFor="let balance of balanceList">
+            <td>{{balance.Trans_Date}}</td>
+            <td>{{balance.Trans_Account_Name}}</td>
+            <td>{{balance.Trans_Details}}</td>
+            <td>{{balance.Transaction_Type}}</td>
+            <td>{{balance.Trans_Type}}</td>
+            <td>{{balance.Trans_Ref_Details}}</td>
+            <td>{{balance.Debit}}</td>
+            <td>{{balance.Credit}}</td>
+            <td>{{balance.Amount}}</td>
+            
+        </tr> -->
+
+        
+          <tr *ngFor="let balance of dataList">
+            <td>{{balance.Trans_Date}}</td>
+            <td>{{balance.Trans_Account_Name}}</td>
+            <td>{{balance.Trans_Details}}</td>
+            <td>{{balance.Transaction_Type}}</td>
+            <td>{{balance.Trans_Type}}</td>
+            <td>{{balance.Trans_Ref_Details}}</td>
+            <td>{{balance.Debit}}</td>
+            <td>{{balance.Credit}}</td>
+            <td>{{balance.Amount}}</td>
+
+      
             
         </tr>
 
-        <tr>
+        <!-- <tr>
              <td><a href="#">06/04/2023</a></td>
             <td  class="text-center">Accounts Receivable</td>
             <td>G LINE SHIPPING LLC</td>
@@ -149,7 +192,7 @@
             <td></td>
             <td>8,850.00</td>
             <td>8,850.00 C</td>
-        </tr>
+        </tr> -->
         
     </tbody>
 

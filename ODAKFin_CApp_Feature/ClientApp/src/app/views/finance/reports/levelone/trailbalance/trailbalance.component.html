@@ -1,42 +1,69 @@
 
 
 <div class="card p-4">
+<form [formGroup]="filterForm">
 
 <div class="row">
     <div class="col-md-2">
         <label class="str mb-2">Date</label>
         <mat-form-field class="tillDate mat_date_picker" appearance="outline">
-            <input matInput (dateChange)="onDateChange($event)" readonly autocomplete="off" [matDatepicker]="ToDate" id="ToDate" style="padding:3px;">
+            <input matInput (dateChange)="onDateChange($event)"  formControlName="Date" autocomplete="off" [matDatepicker]="ToDate" id="ToDate" style="padding:3px;">
             <mat-datepicker-toggle matSuffix [for]="ToDate" class="center-icon"></mat-datepicker-toggle>
             <mat-datepicker #ToDate></mat-datepicker>
         </mat-form-field>
     </div>
     
     <div class="col-md-2">
-        <label class="str" for="companyName">Select Office</label><br>
+        <label class="str" for="companyName">Select Division</label><br>
        
-        <ng-select class="searchdropdown" [clearable]="false"
-            name="AccType"
-            id="ddlCountry">
-            <ng-option [value]="''" [disabled]="true">--SELECT APPLICATION--</ng-option>
-            <ng-option value="Option1">Option 1</ng-option>
-            <ng-option value="Option2">Option 2</ng-option>
-            <ng-option value="Option3">Option 3</ng-option>
-        </ng-select>
+        <!-- <ng-select  class="searchdropdown"  [clearable]="false"
+          formControlName="OfficeId"  (change)="onOfficeChange(filterForm.value.OfficeId)" >
+            <ng-option [value]="''" disabled>--SELECT OFFICE--</ng-option>
+            <ng-container *ngFor="let office of officeList">
+              <ng-option [value]="office.ID">
+                <span class="textwrap">{{office.OfficeName | uppercase}}</span>
+              </ng-option>
+            </ng-container>
+        </ng-select>  -->
+
+        <ng-select class="searchdropdown custom" [clearable]="false"
+         formControlName="DivisionId" (change)="onDivisionChange(filterForm.value.DivisionId)"  (ngModelChange)="getOfficeLists($event)">
+            <ng-option [value]="''" disabled>--SELECT DIVISION--</ng-option>
+            <ng-container *ngFor="let division of divisionList" >
+              <ng-option *ngIf="division.Active" [value]="division.ID">
+                <span class="textwrap">{{ division.DivisionName | uppercase }}</span>
+              </ng-option>
+            </ng-container>
+          </ng-select>
     </div>
 
     <div class="col-md-2">
-        <label class="str" >Select Division</label><br>
+        <label class="str" >Select Office</label><br>
+
+        <ng-select  class="searchdropdown"  [clearable]="false"
+        formControlName="OfficeId"  (change)="onOfficeChange(filterForm.value.OfficeId)" >
+          <ng-option [value]="''" disabled>--SELECT OFFICE--</ng-option>
+          <ng-container *ngFor="let office of officeList">
+            <ng-option [value]="office.ID">
+              <span class="textwrap">{{office.OfficeName | uppercase}}</span>
+            </ng-option>
+          </ng-container>
+      </ng-select> 
        
-        <ng-select class="searchdropdown" [clearable]="false"
-            name="AccType"
-            id="ddlCountry">
-            <ng-option [value]="''" [disabled]="true">--SELECT APPLICATION--</ng-option>
-            <ng-option value="Option1">Option 1</ng-option>
-            <ng-option value="Option2">Option 2</ng-option>
-            <ng-option value="Option3">Option 3</ng-option>
-        </ng-select>
+      
+
+        <!-- <ng-select class="searchdropdown custom" [clearable]="false"
+         formControlName="DivisionId" (change)="onDivisionChange(filterForm.value.DivisionId)"  (ngModelChange)="getOfficeLists($event)">
+            <ng-option [value]="''" disabled>--SELECT DIVISION--</ng-option>
+            <ng-container *ngFor="let division of divisionList" >
+              <ng-option *ngIf="division.Active" [value]="division.ID">
+                <span class="textwrap">{{ division.DivisionName | uppercase }}</span>
+              </ng-option>
+            </ng-container>
+          </ng-select> -->
+          
     </div>
+    <!-- <div class="col-md-2" *ngFor="let division of divisionList">{{division.ID}}</div> -->
     <div class="col-md-2"></div>
     <div class="col-md-2"></div>
 
@@ -55,8 +82,9 @@
     </div>
  
 </div>
+</form>
 
-<div class="col-md-12 mt-5 pt-3"></div>
+<div class="col-md-12 mt-3"></div>
 
 
 <div class="row">    
@@ -66,7 +94,7 @@
         <h3>ODAK SOLUTIONS PRIVATE LIMITED</h3>
         <h2>Trail Balance</h2>
         <p>Basis: Accrual</p>
-        <p>As of {{ selectedDate }}</p>
+        <p>As of {{ selectedDate ? selectedDate : currentDate | date:'mediumDate' }}</p>
 
     </div>
 
@@ -74,7 +102,7 @@
 
 </div>
 
-<div class="col-md-12 mt-5 pt-3"></div>
+<div class="col-md-12 mt-3"></div>
 
 <div class="col-sm-12 scrtbl">
     <table id="datatable-buttons"
@@ -94,19 +122,26 @@
 
     </thead>
     <tbody>
-        <tr>
+        <!-- <tr>
             <td><a href="views/finance/reports/leveltwo" >Accounts Receivable</a></td>
-            <td colspan="4" class="text-center">1.36,33,109.97</td>
+            <td></td>
+            <td></td>
+            <td></td>
             
-        </tr>
+        </tr> -->
 
-        <tr>
-             <td><a href="#">Advance Tax</a></td>
-            <td colspan="4" class="text-center">13,69,999.00</td>
-           
+        <tr *ngFor="let balance of balanceList; let i = index">
+            <!-- <p>{{balance.ChartOfAccountsId}}</p> -->
+            <td (click)="editBalance(balance.ChartOfAccountsId)" style="color: #0366d6;cursor: pointer;">{{ balance.GrandParentAccountName }} - {{ balance.ParentAccountName }} - {{ balance.ChildAccountName }}</td>
+            <td>{{ balance.ChartOfAccountsId }}</td>
+            <td *ngIf="balance.ChildTransaction_Type === 'Credit'">{{ balance.ChildNet_Balance }}</td>
+            <td *ngIf="balance.ChildTransaction_Type !== 'Credit'">null</td>
+            <td *ngIf="balance.ChildTransaction_Type === 'Debit'">{{ balance.ChildNet_Balance }}</td>
+            <td *ngIf="balance.ChildTransaction_Type !== 'Debit'">null</td>
         </tr>
+        
 
-        <tr>
+        <!-- <tr>
 
             <td><a href="#">Air Conditioner</a></td>
             <td colspan="4" class="text-center">2,28,469.24</td>
@@ -116,7 +151,7 @@
         <tr>
             <td><a href="#">Allines Technology</a></td>
             <td colspan="4" class="text-center">65,000.00</td> 
-        </tr>     
+        </tr>      -->
     </tbody>
 
 </table>
