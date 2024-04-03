@@ -26,6 +26,7 @@ export class PaymentVoucherDetailsComponent implements OnInit {
   vendorTanDetails: any;
   newOne: any;
   branches: any;
+  TotalDebitAccountAmount: number = 0;
   onTextareaInput(event: Event): void {
     const textarea = this.autoResizeTextArea.nativeElement as HTMLTextAreaElement;
     textarea.style.height = 'auto';
@@ -300,9 +301,9 @@ export class PaymentVoucherDetailsComponent implements OnInit {
       this.IsTDSEnable = false;
       this.IsVendorEnable = true;
       this.IsBranchEnable = true;
-      this.paymentForm.controls.Table.controls['VendorId'].setValue('');
-      this.paymentForm.controls.Table.controls['VendorBranch'].setValue('');
-      this.paymentForm.controls.Table.controls['TDSAmount'].setValue(0);
+      // this.paymentForm.controls.Table.controls['VendorId'].setValue('');
+      // this.paymentForm.controls.Table.controls['VendorBranch'].setValue('');
+      // this.paymentForm.controls.Table.controls['TDSAmount'].setValue(0);
       this.isAccountType = false;
 
     } else if (value == 2 && this.isPaymentForBill) {
@@ -316,8 +317,8 @@ export class PaymentVoucherDetailsComponent implements OnInit {
       this.IsVendorEnable = false;
       this.IsBranchEnable = false;
 
-      this.paymentForm.controls.Table.controls['VendorId'].setValue('');
-      this.paymentForm.controls.Table.controls['VendorBranch'].setValue('');
+      // this.paymentForm.controls.Table.controls['VendorId'].setValue('');
+      // this.paymentForm.controls.Table.controls['VendorBranch'].setValue('');
       this.paymentForm.controls.Table.controls['TDSAmount'].setValue(0);
       this.isAccountType = true;
     } else if (value == 1 && !this.isPaymentForBill) {
@@ -329,9 +330,9 @@ export class PaymentVoucherDetailsComponent implements OnInit {
       this.IsTDSEnable = true;
       this.IsVendorEnable = true;
       this.IsBranchEnable = true;
-      this.paymentForm.controls.Table.controls['VendorId'].setValue('');
-      this.paymentForm.controls.Table.controls['VendorBranch'].setValue('');
-      this.paymentForm.controls.Table.controls['TDSAmount'].setValue(0);
+      // this.paymentForm.controls.Table.controls['VendorId'].setValue('');
+      // this.paymentForm.controls.Table.controls['VendorBranch'].setValue('');
+      // this.paymentForm.controls.Table.controls['TDSAmount'].setValue(0);
       this.isAccountType = false;
     } else if (value == 2 && !this.isPaymentForBill) {
       this.paymentForm.controls.Table.controls['IsVendor'].setValue(false);
@@ -342,9 +343,9 @@ export class PaymentVoucherDetailsComponent implements OnInit {
       this.IsTDSEnable = true;
       this.IsVendorEnable = false;
       this.IsBranchEnable = false;
-      this.paymentForm.controls.Table.controls['VendorId'].setValue('');
-      this.paymentForm.controls.Table.controls['VendorBranch'].setValue('');
-      this.paymentForm.controls.Table.controls['TDSAmount'].setValue(0);
+      // this.paymentForm.controls.Table.controls['VendorId'].setValue('');
+      // this.paymentForm.controls.Table.controls['VendorBranch'].setValue('');
+      // this.paymentForm.controls.Table.controls['TDSAmount'].setValue(0);
       this.isAccountType = true;
     }
 
@@ -978,6 +979,7 @@ export class PaymentVoucherDetailsComponent implements OnInit {
     const VendorId = this.paymentForm.controls['Table'].controls['IsVendor'].value ? 1 : this.paymentForm.controls['Table'].controls['IsAccount'].value ? 2 : '';
     this.setVendor(VendorId);
     this.paymentForm.controls.Table.controls['TDSAmount'].setValue(tableData.TDS_Amount);
+    this.calculateFinalTotal();
     this.summaryAmountCalculation();
   }
 
@@ -1987,8 +1989,6 @@ export class PaymentVoucherDetailsComponent implements OnInit {
   getIsChecked(i) {
     if (i !== undefined) {
 
-
-
       const inputData = this.paymentDetailsTableList[i].Payment;
       const enteredDecimalCount = inputData % 1 !== 0 ? inputData.toString().split('.')[1]?.length || 0 : 0;
       if (enteredDecimalCount > this.entityFraction) {
@@ -2002,8 +2002,7 @@ export class PaymentVoucherDetailsComponent implements OnInit {
         const fixedDecimal1 = inputData1.toFixed(this.entityFraction);
         this.paymentDetailsTableList[i].TDS = fixedDecimal1
       }
-
-      return this.paymentDetailsTableList[i].IsCheck == 0 ? false : true;
+      return this.paymentDetailsTableList[i].IsCheck == 0 || this.paymentDetailsTableList[i].IsCheck == null ? false : true;
     }
     return false;
   }
@@ -2184,6 +2183,7 @@ export class PaymentVoucherDetailsComponent implements OnInit {
     var TotalDebit = 0;
     var TotalCredit = 0;
     var TotalTDS = 0;
+    
     // this.paymentForm.value.Table.AmountPaid
 
     if (this.paymentForm.value.Table.IsVendor && this.isPaymentForBill) {
@@ -2214,17 +2214,21 @@ export class PaymentVoucherDetailsComponent implements OnInit {
       TotalDebit = Number(this.paymentForm.value.Table.TotalPaymentAmount) + Number(this.paymentForm.value.Table.ExLoss)
 
       TotalCredit += Number(this.paymentForm.value.Table.TotalTDSAmount);
+
     } else if (this.paymentForm.value.Table.IsVendor && !this.isPaymentForBill) {
       TotalDebit = Number((this.paymentForm.value.Table.AmountPaid * this.paymentForm.value.Table.ExchangeRate))
-        + Number(this.paymentForm.value.Table.ExLoss)
+        + Number(this.paymentForm.value.Table.ExLoss) + Number((this.paymentForm.value.Table.TDSAmount * this.paymentForm.value.Table.ExchangeRate))
     } else if (this.paymentForm.value.Table.IsAccount) {
-      TotalDebit += Number(this.paymentForm.value.Table.ExLoss)
+      this.TotalDebitAccountAmount = 0;
+      TotalDebit += Number(this.paymentForm.value.Table.ExLoss) + Number((this.paymentForm.value.Table.TDSAmount * this.paymentForm.value.Table.ExchangeRate))
+      
       this.accountDetailsTableList.forEach(element => {
 
         if (element.TransactionType == 1) {
           TotalDebit += Number(element.Amount_CCR);
         } else {
           TotalCredit += Number(element.Amount_CCR);
+          this.TotalDebitAccountAmount += Number(element.Amount_CCR);
         }
         // TotalTDS += Number(element.),
       });

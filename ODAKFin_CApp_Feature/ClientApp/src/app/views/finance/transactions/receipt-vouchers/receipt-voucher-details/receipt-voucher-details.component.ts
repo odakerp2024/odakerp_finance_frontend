@@ -1574,16 +1574,16 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
       this.receiptForm.controls['IsInvoice'].setValue(true);
       this.receiptForm.controls['IsOnAccount'].setValue(false);
       this.receiptForm.controls['IsSecurityDeposit'].setValue(false);
-      this.receiptForm.controls['TDSAmount'].setValue(0);
+      // this.receiptForm.controls['TDSAmount'].setValue(0);
       this.IsTDSEnable = false;
     } else if (isInvoice == 2) {
       this.receiptForm.controls['IsInvoice'].setValue(false);
       this.receiptForm.controls['IsOnAccount'].setValue(true);
       this.receiptForm.controls['IsSecurityDeposit'].setValue(false);
-      this.receiptForm.controls['TDSAmount'].setValue(0);
+      // this.receiptForm.controls['TDSAmount'].setValue(0);
 
       this.receiptForm.controls['TotalPaymentAmount'].setValue(0);
-      this.receiptForm.controls['TotalTDSAmount'].setValue(0);
+      // this.receiptForm.controls['TotalTDSAmount'].setValue(0);
 
       this.IsTDSEnable = true;
       this.paymentType = 'account';
@@ -1592,7 +1592,7 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
       this.receiptForm.controls['IsInvoice'].setValue(false);
       this.receiptForm.controls['IsOnAccount'].setValue(false);
       this.receiptForm.controls['IsSecurityDeposit'].setValue(true);
-      this.receiptForm.controls['TDSAmount'].setValue(0);
+      // this.receiptForm.controls['TDSAmount'].setValue(0);
       this.IsTDSEnable = true;
       this.paymentType = 'security';
       this.paymentVoucherType = 'Security Deposit'
@@ -1615,14 +1615,14 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
       TotalCredit = Number((!this.receiptForm.value.TotalPaymentAmount ? 0 :
         Number(this.receiptForm.value.TotalPaymentAmount)) + Number(this.receiptForm.value.ExLoss));
     } else {
-      // TotalTDS = this.receiptForm.value.TDSAmount;
+       TotalTDS = Number((Number(this.receiptForm.value.TDSAmount) * this.receiptForm.value.ExchangeRate))
 
       TotalCredit = Number((this.receiptForm.value.AmountReceived * (!this.receiptForm.value.ExchangeRate ? 0 : this.receiptForm.value.ExchangeRate))
         + Number(TotalTDS) + Number(this.receiptForm.value.ExLoss));
     }
 
     TotalDebit = Number((this.receiptForm.value.AmountReceived * (!this.receiptForm.value.ExchangeRate ? 0 : this.receiptForm.value.ExchangeRate))
-      + (!this.receiptForm.value.TDSAmount ? 0 : Number(this.receiptForm.value.TDSAmount)) + Number(TotalTDS) + (this.receiptForm.value.BankCharges * (!this.receiptForm.value.ExchangeRate ? 0 : this.receiptForm.value.ExchangeRate))
+      + Number(TotalTDS) + (this.receiptForm.value.BankCharges * (!this.receiptForm.value.ExchangeRate ? 0 : this.receiptForm.value.ExchangeRate))
       + Number(this.receiptForm.value.ExGain));
 
     this.receiptForm.controls['TotalDebit'].setValue(TotalDebit.toFixed(this.entityFraction));

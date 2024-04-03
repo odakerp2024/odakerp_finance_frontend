@@ -867,7 +867,7 @@
                                     <td *ngIf="!this.paymentForm.value.Table.IsVendor" class="text-center">
                                         <label>{{(this.paymentForm.value.Table.AmountPaid *
                                             (!this.paymentForm.value.Table.ExchangeRate ? 0 :
-                                            this.paymentForm.value.Table.ExchangeRate))
+                                            this.paymentForm.value.Table.ExchangeRate)) + this.TotalDebitAccountAmount
                                             }}</label>
                                     </td>
                                 </tr>
@@ -882,7 +882,7 @@
                                         <label>{{(this.paymentForm.value.Table.AmountPaid *
                                             (!this.paymentForm.value.Table.ExchangeRate ? 0 :
                                             this.paymentForm.value.Table.ExchangeRate
-                                            ))
+                                            )) + (this.paymentForm.value.Table.TDSAmount * this.paymentForm.value.Table.ExchangeRate)
                                             }}
                                         </label>
                                     </td>
