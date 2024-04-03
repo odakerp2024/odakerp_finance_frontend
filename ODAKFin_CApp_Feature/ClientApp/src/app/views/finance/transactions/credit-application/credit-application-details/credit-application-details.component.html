@@ -57,11 +57,14 @@
                 <div class="col-4" *ngIf="requestType">
                     <div class="form-group bmd-form-group w-100">
                         <label >Previous Application Number</label>
-                        <ng-select  class="searchdropdown"  formControlName="" [clearable]="false">
-                            <ng-option [value]="''" disabled></ng-option>
-                            <ng-container  >
-                              <ng-option    >
-                                <span class="textwrap"></span>
+                        
+                        <ng-select  class="searchdropdown"  formControlName="PreviousApplicationNumber"
+                        (change)="handleChange($event)" [clearable]="false">
+                            <ng-option [value]="''" disabled>--SELECT PREVIOUS APPLICATION NUMBER--</ng-option>
+                            <ng-container  *ngFor="let application of creditApplicationList">
+                              <ng-option   [value]="application.CreditApplicationId" >
+                                <span class="textwrap"> {{application.CreditApplicationNumber }}</span>
+                               
                               </ng-option>
                            </ng-container>
                         </ng-select> 
@@ -69,23 +72,24 @@
                 </div>
 
                 <div class="col-4" *ngIf="requestType" ></div>
-
-                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4"  *ngIf="requestType">
-                    <label >Request Type </label><br>
-                    <div class="row ml-1 disabled-content">
+               
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4" *ngIf="requestType">
+                    <h5 >Request Type</h5>
+                    <div class="row ml-1 mb-3">
                         <div class="form-check">
-                            <input type="radio" formControlName="IsRevise" class="form-check-input" id="radio2" 
-                            name="IsRevise" [value]="true" (click)="setRevise()">
-                            <label class="form-check-label" for="radio2">Revise</label>
+                            <input type="radio"  checked class="form-check-input" id="radio1"
+                                name="requestType" [value]="1" (click)="setRevise()">
+                            <label class="form-check-label" for="radio1">Revise</label>
                         </div>
                         <div class="form-check ml-1">
-                            <input type="radio" class="form-check-input" formControlName="IsRevoke" id="radio3"
-                            name="IsRevoke" [value]="true" (click)="setRevoke()">
-                            <label class="form-check-label" for="radio3">Revoke</label>
+                            <input type="radio" class="form-check-input"  id="radio2"
+                                name="requestType" [value]="1" (click)="setRevoke()">
+                            <label class="form-check-label" for="radio2">Revoke</label>
                         </div>
                     </div>
                 </div>
-
+                
+                
 
                 <div class="col-4">
                     <label class="str">Credit Application Number</label>
@@ -162,7 +166,7 @@
                                 {{office.OfficeName | uppercase}}
                             </option>
                         </select> -->
-                        <ng-select  class="searchdropdown"  formControlName="OfficeId" [clearable]="false" (change)="getNumberRangeList()">
+                        <ng-select  class="searchdropdown"  formControlName="OfficeId" [clearable]="false" (change)="getNumberRangeList()"  [disabled]="isGetByIdInProgress">
                             <ng-option [value]="''" disabled>--SELECT OFFICE--</ng-option>
                             <ng-container *ngFor="let office of officeList">
                               <ng-option [value]="office.ID">
@@ -315,11 +319,13 @@
                 </div>
 
             </div>
-
+          
             <!-- proposed credit limit -->
-            <div class="row mb-3">
+            <!-- <div class="row mb-3">
                 <h4 class="col-12">Proposed Credit Limit</h4>
-                <div class="col-4">
+                <div class="col-4"> -->
+
+                    
                     <!-- <div class="form-group bmd-form-group w-100">
                         <label class="str">Credit Limit (Days)</label>                        
                         <ng-select class="searchdropdown days" [clearable]="false" [formControlName]="'CreditLimitDays'">
@@ -329,7 +335,9 @@
                             </ng-option>
                        </ng-select>
                     </div> -->
-                    <div class="form-group bmd-form-group w-100">
+
+
+                    <!-- <div class="form-group bmd-form-group w-100">
                         <label class="str">Credit Limit (Days)</label>
                         <input type="number" class="form-control" (change)="onCreditLimitDays($event)" [formControlName]="'CreditLimitDays'" min="0" step="2" [disabled]="true">
                         <p *ngIf="creditdaysValidation" style="color: red;">The credit days limit should be "{{creditdaysValidation}}" or less</p>
@@ -343,11 +351,13 @@
                            <input type="number" class="form-control" (change)="onCreditLimitAmount($event)" [formControlName]="'CreditLimitAmount'" min="0" step="2" [disabled]="true">
                             <p *ngIf="creditAmountValidation" style="color: red;">The credit amount limit should be "{{creditAmountValidation}}" or less</p>                       
                     </div>
-                </div>
-
+                </div> -->
+<!-- 
                 <div class="col-4">
                         <div class="form-group bmd-form-group">
-                            <label class="str">With Post Dated Cheque ?</label>
+                            <label class="str">With Post Dated Cheque ?</label> -->
+
+
                             <!-- <select class="form-control my-select" formControlName="PostDatedCheques">
                                 <option value='' disabled>--SELECT TRADE--</option>
                                 <ng-container *ngFor="let status of statusValues">
@@ -356,6 +366,8 @@
                                     </option>
                                 </ng-container>
                             </select> -->
+
+<!-- 
                             <ng-select  class="searchdropdown"  formControlName="PostDatedCheques" [clearable]="false" >
                                 <ng-option [value]="''" disabled>--SELECT TRADE--</ng-option>
                                 <ng-container  *ngFor="let status of PDCValue">
@@ -363,8 +375,8 @@
                                     <span class="textwrap">{{status.viewValue | uppercase}}</span>
                                   </ng-option>
                                 </ng-container>
-                            </ng-select>  
-                        </div>
+                            </ng-select>   
+                         </div>
                 </div>
 
                 <div class="col-12">
@@ -372,7 +384,7 @@
                     <textarea class="p-1 form-control w-50" name="" cols="50" rows="3"
                         formControlName="RequestRemarks"></textarea>
                 </div>
-            </div>
+            </div> -->
 
 
               <!-- Customer Details -->
@@ -413,6 +425,105 @@
                     </tbody>
                 </table>
             </div> -->
+
+
+            <div  *ngIf="creditApplicationForm.value.IsRevise">
+            <ng-component [ngTemplateOutlet]="currentCreditLimit"></ng-component>
+                        <div class="row mb-3">
+                            <h4 class="col-12">Proposed Credit Limit</h4>
+                            <div class="col-4">
+            <div class="form-group bmd-form-group w-100">
+                                    <label class="str">Credit Limit (Days)</label>
+                                    <input type="number" class="form-control" (change)="onCreditLimitDays($event)" [formControlName]="'CreditLimitDays'" min="0" step="2" [disabled]="true">
+                                    <p *ngIf="creditdaysValidation" style="color: red;">The credit days limit should be "{{creditdaysValidation}}" or less</p>
+            
+                                </div>
+                            </div>
+            
+                            <div class="col-4">
+                                    <div class="form-group bmd-form-group">
+                                        <label class="str">Credit Limit (Amount)</label>
+                                       <input type="number" class="form-control" (change)="onCreditLimitAmount($event)" [formControlName]="'CreditLimitAmount'" min="0" step="2" [disabled]="true">
+                                        <p *ngIf="creditAmountValidation" style="color: red;">The credit amount limit should be "{{creditAmountValidation}}" or less</p>                       
+                                </div>
+                            </div>
+            
+                            <div class="col-4">
+                                    <div class="form-group bmd-form-group">
+                                        <label class="str">With Post Dated Cheque ?</label>
+                                        <ng-select  class="searchdropdown"  formControlName="PostDatedCheques" [clearable]="false" >
+                                            <ng-option [value]="''" disabled>--SELECT TRADE--</ng-option>
+                                            <ng-container  *ngFor="let status of PDCValue">
+                                              <ng-option [value]="status.value">
+                                                <span class="textwrap">{{status.viewValue | uppercase}}</span>
+                                              </ng-option>
+                                            </ng-container>
+                                        </ng-select>   
+                                     </div>
+                            </div>
+            
+                            <div class="col-12">
+                                <label for="" class="">Request Remarks</label><br>
+                                <textarea class="p-1 form-control w-50" name="" cols="50" rows="3"
+                                    formControlName="RequestRemarks"></textarea>
+                            </div>
+                        </div>
+                   
+                         </div>
+                   
+                         <div class="row mb-3">
+                            <h4 class="col-12">Current Credit Limit</h4>
+                            <div class="col-4">
+                        <div class="form-group bmd-form-group w-100">
+                                    <label class="str">Credit Limit (Days)</label>
+                                    <input type="number" class="form-control disable-input"  [formControlName]="CurrentCreditLimitDays" min="0" step="2" [disabled]="true">
+                                    <!-- <p *ngIf="creditdaysValidation" style="color: red;">The credit days limit should be "{{creditdaysValidation}}" or less</p> -->
+            
+                                </div>
+                            </div>
+            
+                            <div class="col-4">
+                                    <div class="form-group bmd-form-group ">
+                                        <label class="str">Credit Limit (Amount)</label>
+                                       <input type="number" class="form-control disable-input" [formControlName]="CurrentCreditLimitAmount" min="0" step="2" [disabled]="true">
+                                        <!-- <p *ngIf="creditAmountValidation" style="color: red;">The credit amount limit should be "{{creditAmountValidation}}" or less</p>                        -->
+                                </div>
+                            </div>
+            
+                            <div class="col-4">
+                                    <div class="form-group bmd-form-group ">
+                                        <label class="str">With Post Dated Cheque ?</label>
+                                        <ng-select  class="searchdropdown disable-input"  [formControlName]="CurrentPostDatedCheques" [clearable]="false" >
+                                            <ng-option [value]="''" disabled>--SELECT TRADE--</ng-option>
+                                            <ng-container  *ngFor="let status of PDCValue">
+                                              <ng-option [value]="status.value">
+                                                <span class="textwrap">{{status.viewValue | uppercase}}</span>
+                                              </ng-option>
+                                            </ng-container>
+                                        </ng-select>   
+                                     </div>
+                            </div>
+            
+                            <div class="col-12">
+                                <label for="" class="">Request Remarks</label><br>
+                                <textarea class="p-1 form-control w-50" name="" cols="50" rows="3"
+                                    formControlName="RequestRemarks"></textarea>
+                            </div>
+                        </div>
+
+                            <!-- <div class="col-12 row pr-0" *ngIf="creditApplicationForm.value.IsRevoke">
+                                <ng-component [ngTemplateOutlet]="currentCreditLimit"></ng-component>
+                                
+        
+                            </div> -->
+            
+                            <!-- <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                                <div class="form-group">
+                                    <label>Remarks</label>
+                                    <textarea class="form-control addressht" id="" rows="5" formControlName="Remarks"></textarea>
+                                </div>
+                            </div> -->
+
 
             <div class="row mb-3 "  [ngClass]=" !isEditMode ? 'disabled-content' : ''" >
                 <h4 class="col-12">Documents</h4>
