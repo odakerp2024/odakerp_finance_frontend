@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Globals } from 'src/app/globals';
 import { Vendorlist } from 'src/app/model/financeModule/Vendor';
 import { PaginationService } from 'src/app/pagination.service';
@@ -6,7 +6,8 @@ import { DataService } from 'src/app/services/data.service';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-
+import { CommonService } from 'src/app/services/common.service';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-trialbalancetwo',
@@ -17,7 +18,7 @@ export class TrialbalancetwoComponent implements OnInit {
 
   id: number;
   dataList: any[] = [];
-
+  balancenewList: any[] = [];
   filterForm: any;
   selectedDate: any;
   pager: any = {};
@@ -28,22 +29,27 @@ export class TrialbalancetwoComponent implements OnInit {
   balanceList: any = [];
   currentDate: Date = new Date();
   data: any[];
+  TemplateUploadURL = this.globals.TemplateUploadURL;
+
+  @ViewChild('table') table: ElementRef;
 
   constructor(public ps: PaginationService,  private globals: Globals,
     private dataService: DataService,
     private datePipe: DatePipe, private fb: FormBuilder, 
     private route: ActivatedRoute,
-    private router: Router ) { }
+    private router: Router,
+    private commonDataService: CommonService, ) { }
 
   ngOnInit(): void {
     this.getDivisionList();
     this.getOfficeList();
     this. getbyidBalancelist();
-    this.createReceiptFilterForm();
+    this.createBalanceFilterForm();
 
     this.route.paramMap.subscribe(params => {
       this.id = +params.get('id');
       this.fetchData(this.id);
+      // this.setPage(1);
     });
   }
 
@@ -59,13 +65,12 @@ export class TrialbalancetwoComponent implements OnInit {
     };
 
     this.dataService.post(service, payload).subscribe((response: any) => {
-      console.log('Response Data:', response); // Log the entire response data
+      console.log('Response Data:', response); 
 
       if (response.data.Table.length > 0) {
-        this.dataList = response.data.Table; // Assign the array to this.dataList
-        console.log('Data List:', this.dataList); // Log the extracted data list
-
-        // If further processing/rendering is needed, do it here
+        this.dataList = response.data.Table; 
+        console.log('Data List:', this.dataList); 
+        this.setPage(1);
       } else {
         console.error('Error: Invalid response format');
       }
@@ -74,44 +79,18 @@ export class TrialbalancetwoComponent implements OnInit {
     });
 }
 
-
-
-//   fetchData(id: number): void {
-//     debugger;
-//     var service = 'https://odakfnqa.odaksolutions.in/api/Reports/GetLedgerDataById';
-  
-//     const payload = {
-//       "AccountId": id,
-//       "Date": "",
-//       "DivisionId": "",
-//       "OfficeId": ""
-//     };
-
-//     this.dataService.post(service, payload).subscribe((response: any) => {
-//       // Assuming 'Table' is the property that contains the array data
-//       if (response && response.Table) {
-//         this.dataList = response.Table; // Extract the array from the object
-//         console.log(this.dataList);
-//       } else {
-//         console.error('Error: Invalid response format');
-//       }
-//     }, err => {
-//       console.error('Error:', err);
-//     });
-// }
-
-
-
   onDateChange(event: any): void {
     this.selectedDate = this.datePipe.transform(event.value, 'yyyy-MM-dd');
+    this.BasedOnDate(this.selectedDate);
   }
 
-  async setPage(page: number) {
+  setPage(page: number) {
     if (page < 1 || page > this.pager.totalPages) {
       return;
     }
-    this.pager = this.ps.getPager(this.allItems.length, page);
-    this.pagedItems = this.allItems.slice(this.pager.startIndex, this.pager.endIndex + 1);
+    this.pager = this.ps.getPager(this.dataList.length, page);
+
+    this.pagedItems = this.dataList.slice(this.pager.startIndex, this.pager.endIndex + 1);
   }
 
   getDivisionList() {
@@ -135,13 +114,10 @@ export class TrialbalancetwoComponent implements OnInit {
     }, error => { });
   }
 
-
   getbyidBalancelist() {
     var service = `
     https://odakfnqa.odaksolutions.in/api/Reports/GetLedgerDataById
     `;
-    
-    // Define the payload object
     var payload = {
       "AccountId": 784,
       "Date": "2024-04-30",
@@ -153,56 +129,122 @@ export class TrialbalancetwoComponent implements OnInit {
         this.balanceList = [];
         if (result.message == 'Success' && result.data.Table.length > 0) {
             this.balanceList = result.data.Table;
-            this.setPage(1);
+            // this.setPage(1);
         }
     }, error => {
-        console.error("Error occurred:", error); // Log the error for debugging
+        console.error("Error occurred:", error); 
     });
 }
 
-
-createReceiptFilterForm() {
+createBalanceFilterForm() {
   this.filterForm = this.fb.group({
-    //  "AccountId": null,
-    // AccountId: 784,
     Date: [''],
     OfficeId: [''],
     DivisionId : ['']
   })
 }
 
+BasedOnDate(selectedDate: any ) {
+   
+  const service = 'https://odakfnqa.odaksolutions.in/api/Reports/GetLedgerDataById';
+  
+  const payload = {
+    "AccountId": "",
+    "Date": selectedDate,
+    "DivisionId": "",
+    "OfficeId": ""
+  };
 
-//   getbyidBalancelist() {
-//     debugger
-//     var service = `
-//     https://odakfnqa.odaksolutions.in/api/Reports/GetLedgerDataById
-//     `;
-    
-//     // Define the payload object
-//     var payload = {
-//       // "AccountId": 784,
-//       "Date": "2024-04-30",
-//       "DivisionId": 1,
-//     "OfficeId" : 2
-//     };
+  this.dataService.post(service, payload).subscribe((response: any) => {
+    this.dataList = [];
+    console.log('Response Data:', response); 
 
-//     this.dataService.post(service, this.filterForm.value).subscribe((result: any) => {
-//         this.balanceList = [];
-//         if (result.message == 'Success' && result.data.Table.length > 0) {
-//             this.balanceList = result.data.Table;
-//             this.setPage(1);
-//         }
-//     }, error => {
-//         console.error("Error occurred:", error); // Log the error for debugging
-//     });
-// }
-
-
-onDivisionChange() {
-  // Call both functions when division is changed
-  this.createReceiptFilterForm();
-  this.getbyidBalancelist();
+    if (response.data.Table.length > 0) {
+      this.dataList = response.data.Table;
+      console.log('Data List:', this.dataList); 
+    } else {
+      console.error('Error: Invalid response format');
+    }
+  }, err => {
+    console.error('Error:', err);
+  });
 }
+
+onDivisionChange( divisionId: any, id: number): void {
+  debugger;
+ 
+  const service = 'https://odakfnqa.odaksolutions.in/api/Reports/GetLedgerDataById';
+  
+  const payload = {
+    "AccountId": id,
+    "Date": "",
+    "DivisionId": divisionId,
+    "OfficeId": ""
+  };
+
+  this.dataService.post(service, payload).subscribe((response: any) => {
+    this.dataList = [];
+    console.log('Response Data:', response); 
+
+    if (response.data.Table.length > 0) {
+      this.dataList = response.data.Table; 
+      console.log('Data List:', this.dataList);
+    } else {
+      console.error('Error: Invalid response format');
+    }
+  }, err => {
+    console.error('Error:', err);
+  });
+}
+
+onOfficeChange( OfficeId: any, id: number): void {
+  debugger;
+  const service = 'https://odakfnqa.odaksolutions.in/api/Reports/GetLedgerDataById';
+  
+  const payload = {
+    "AccountId": id,
+    "Date": "",
+    "DivisionId": "",
+    "OfficeId": OfficeId
+  };
+
+  this.dataService.post(service, payload).subscribe((response: any) => {
+    this.dataList = [];
+    console.log('Response Data:', response);
+
+    if (response.data.Table.length > 0) {
+      this.dataList = response.data.Table; 
+      console.log('Data List:', this.dataList);
+    } else {
+      console.error('Error: Invalid response format');
+    }
+  }, err => {
+    console.error('Error:', err);
+  });
+}
+
+
+getOfficeLists(id: number) {
+  this.commonDataService.getOfficeByDivisionId({ DivisionId: id }).subscribe(result => {
+    this.officeList = [];
+    if (result['data'].Table.length > 0) {
+      this.officeList = result['data'].Table;
+    }
+  })
+}
+
+downloadExcel() {
+  if (!this.table) {
+    console.error('Table element not found.');
+    return;
+  }
+
+  const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(this.table.nativeElement);
+  const wb: XLSX.WorkBook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+  XLSX.writeFile(wb, 'table_data.xlsx');
+}
+
 }
 
 

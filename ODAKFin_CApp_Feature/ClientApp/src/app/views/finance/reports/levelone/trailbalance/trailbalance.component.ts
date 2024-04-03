@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Vendorlist } from 'src/app/model/financeModule/Vendor';
 import { PaginationService } from 'src/app/pagination.service';
 import { Router } from '@angular/router';
@@ -10,6 +10,9 @@ import { CommonService } from 'src/app/services/common.service';
 import Swal from 'sweetalert2';
 import { ContraVoucherService } from 'src/app/services/contra-voucher.service';
 // import { CommonService } from 'src/app/services/common.service';
+import * as XLSX from 'xlsx';
+import { HttpClient } from '@angular/common/http';
+
 
 
 @Component({
@@ -33,14 +36,18 @@ export class TrailbalanceComponent implements OnInit {
   filterForm: any;
   selectedDivisionId: number;
   bankListDetails: any = [];
+  TemplateUploadURL = this.globals.TemplateUploadURL;
+  dataList: any;
 
+  @ViewChild('table') table: ElementRef;
 
   constructor(public ps: PaginationService,
     private fb: FormBuilder,
     private router: Router, private datePipe: DatePipe,   private globals: Globals,
     private dataService: DataService,
     private commonDataService: CommonService, 
-    private contraVoucherService: ContraVoucherService,) { 
+    private contraVoucherService: ContraVoucherService,
+    private http: HttpClient) { 
       this.createFilterForm();
     }
 
@@ -52,31 +59,24 @@ export class TrailbalanceComponent implements OnInit {
     this.createFilterForm();
   }
 
-  // createAdjustment() {
-  //   this.adjustmentFilter = this.fb.group({
-  //     Id: [0],
-  //     DivisionId: [0],
-  //     OfficeId: [0],
-      
-  //     Date:['']
-  //   });
-  // }
-
-
   navigate(){
     this.nav=false;
   }
 
-  
   onDateChange(event: any): void {
     this.selectedDate = this.datePipe.transform(event.value, 'yyyy-MM-dd');
     this.BasedOnDate(this.selectedDate);
   }
 
-
   setPage(page: number) {
-    this.pager = this.ps.getPager(this.adjustmentList.length, page);
-    this.pagedItems = this.adjustmentList.slice(this.pager.startIndex, this.pager.endIndex + 1);
+    if (page < 1 || page > this.pager.totalPages) {
+      return;
+    }
+    // get pager object from service
+    this.pager = this.ps.getPager(this.balanceList.length, page);
+
+    // get current page of items
+    this.pagedItems = this.balanceList.slice(this.pager.startIndex, this.pager.endIndex + 1);
   }
 
 
@@ -103,26 +103,13 @@ export class TrailbalanceComponent implements OnInit {
     }, error => { });
   }
 
-  // trailbalanceList() {
-  //   var service = `${this.globals.APIURL}/Reports/GetTrailBalanceList`;
-  //   this.dataService.post(service, this.adjustmentFilter.value).subscribe((result: any) => {
-  //     this.adjustmentList = [];
-  //     this.pagedItems = [];
-  //     if (result.data.Table.length > 0) {
-  //       this.adjustmentList = result.data.Table;
-  //       this.setPage(1);
-  //     }
-  //   }, error => { });
-  // }
-
   
   trailbalanceList() {
     debugger;
     var service = `
     https://odakfnqa.odaksolutions.in/api/Reports/GetTrailBalanceList
     `;
-    
-    // Define the payload object
+  
     var payload = {
         "DivisionId": 1,
         "OfficeId": 0,
@@ -136,7 +123,7 @@ export class TrailbalanceComponent implements OnInit {
             this.setPage(1);
         }
     }, error => {
-        console.error("Error occurred:", error); // Log the error for debugging
+        console.error("Error occurred:", error); 
     });
 }
 
@@ -151,8 +138,6 @@ createFilterForm(){
 
 editBalance(id: number) {
   debugger
-  // const userID = localStorage.getItem("TokenID");
-
   var service = `
   https://odakfnqa.odaksolutions.in/api/Reports/GetLedgerDataById
   `;
@@ -166,38 +151,12 @@ editBalance(id: number) {
 
  
   this.dataService.post(service, payload).subscribe(data => {
-    // this.router.navigate(['/views/finance/reports/leveltwo'], { state: { data: data } });
     this.router.navigate(['/views/finance/reports/leveltwo', { id: id }])
    
   }, err => {
     console.log('error:', err.message);
   });
 }
-
-// onDivisionChange(divisionId: number){
-//   debugger
-//   var service = `
-//   https://odakfnqa.odaksolutions.in/api/Reports/GetTrailBalanceList
-//   `;
-  
-//   // Define the payload object
-//   var payload = {
-//       "DivisionId": divisionId,
-//       "OfficeId": 0,
-//       "Date": ""
-//   };
-
-//   this.dataService.post(service, payload).subscribe((result: any) => {
-//     this.balanceList = [];
-//     if (result.message == 'Success' && result.data.Table.length > 0) {
-//         this.balanceList = result.data.Table;
-//         this.setPage(1);
-//     }
-// }, error => {
-//     console.error("Error occurred:", error); // Log the error for debugging
-// });
-
-// }
 
 onDivisionChange(value: any) {
   debugger
@@ -238,7 +197,7 @@ onOfficeChange(values: any) {
       this.setPage(1);
     }
   }, error => {
-    console.error("Error occurred:", error); // Log the error for debugging
+    console.error("Error occurred:", error); 
   });
 
 }
@@ -261,7 +220,7 @@ BasedOnDate(selectedDate: any) {
       this.setPage(1);
     }
   }, error => {
-    console.error("Error occurred:", error); // Log the error for debugging
+    console.error("Error occurred:", error); 
   });
     
 }
@@ -276,7 +235,6 @@ getOfficeLists(id: number) {
   })
 }
 
-
 getDivisionBasedOffice(officeId, divisoinId: any) {
 debugger
   if (officeId && divisoinId) {
@@ -288,13 +246,48 @@ debugger
     this.dataService.post(service, payload).subscribe((result: any) => {
       if (result.message = "Success") {
         this.bankListDetails = result.data.Table;
-        // this.getSameCurrencyBank()
       }
     }, error => {
       console.error(error);
     });
   }
 }
+
+
+downloadExcel() {
+  if (!this.table) {
+      console.error('Table element not found.');
+      return;
+  }
+
+  // Convert the table to a worksheet
+  const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(this.table.nativeElement);
+
+  // Get the range of the header row
+  const headerRange = XLSX.utils.decode_range(ws['!ref']);
+  for (let col = headerRange.s.c; col <= headerRange.e.c; col++) {
+      const cellAddress = XLSX.utils.encode_cell({ r: headerRange.s.r, c: col });
+
+      // Apply styling to each cell in the header row
+      if (!ws[cellAddress]) {
+          ws[cellAddress] = {};
+      }
+      ws[cellAddress].s = {
+          font: { bold: true }, // Make the header text bold
+          fill: { fgColor: { rgb: "D3D3D3" } } // Set the background color of the header row to light gray
+      };
+  }
+
+  // Create a new workbook
+  const wb: XLSX.WorkBook = XLSX.utils.book_new();
+
+  // Add the worksheet to the workbook
+  XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+  // Write the workbook to a file
+  XLSX.writeFile(wb, 'table_data.xlsx');
+}
+
 
 
 
