@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Globals } from 'src/app/globals';
 import { PaginationService } from 'src/app/pagination.service';
 import { CommonService } from 'src/app/services/common.service';
@@ -63,7 +63,7 @@ pagedItems: any[];// paged items
     this.getCustomerAndBranch();
     this.getDropdowns();
     this.getOfficeList();
-    this.getCustomerList();
+    this.getCustomerList();   
   }
 
 
@@ -84,8 +84,8 @@ pagedItems: any[];// paged items
       "EndDate" :['']
     });
   }
+  CreateNew(requestType: boolean){
 
-  CreateNew(){
     const userID = localStorage.getItem("UserID");
     const paylod = {
       userID: Number(userID),
@@ -102,7 +102,7 @@ pagedItems: any[];// paged items
               Swal.fire('Please Contact Administrator');
           }
           else {
-            this.router.navigate(['/views/transactions/credit-application/credit-application-details']);
+            this.router.navigate(['/views/transactions/credit-application/credit-application-details', { requestType: requestType }]);
           }
         }
         else {

@@ -78,7 +78,9 @@ export class CreditApplicationDetailsComponent implements OnInit {
   salesPersonid: any;
   customerBranchid: any;
   result: any;
-
+  creditType: string = "Revise";
+  requestType: boolean = false;
+  
   constructor(
     private ps: PaginationService,
     private fb: FormBuilder,
@@ -96,6 +98,9 @@ export class CreditApplicationDetailsComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
+    this.route.paramMap.subscribe(params => {
+      this.requestType = params.get('requestType') === 'true'; 
+    });
     this.createForm();
     await this.getDivision();
     //this.getCustomerCredit();
@@ -125,6 +130,8 @@ export class CreditApplicationDetailsComponent implements OnInit {
   createForm() {
     this.creditApplicationForm = this.fb.group({
       CreditApplicationId: [0],
+      IsRevise: [true],
+      IsRevoke: [false],
       CreditApplicationNumber: [],
       ApplicationDate: [this.minDate],
       ApplicationStatus: [22],
@@ -242,6 +249,24 @@ export class CreditApplicationDetailsComponent implements OnInit {
       this.creditdaysValidation = null; 
     }
   }
+
+   // Function to handle the "Revoke" radio button click
+   setRevoke() {
+    this.creditType = 'Revoke';
+    this.creditApplicationForm.patchValue({
+      IsRevise: false,
+      IsRevoke: true,
+    });
+  }
+  // Function to handle the "Temp" radio button click
+  setRevise() {
+    this.creditType = 'Revise';
+    this.creditApplicationForm.patchValue({
+      IsRevise: true,
+      IsRevoke: false,
+    });
+  }
+
 
   onCreditLimitAmount(event:any){
     const highestValue = Math.max(...this.creditLimit.map((res: any) => res.MaxCreditAmount))

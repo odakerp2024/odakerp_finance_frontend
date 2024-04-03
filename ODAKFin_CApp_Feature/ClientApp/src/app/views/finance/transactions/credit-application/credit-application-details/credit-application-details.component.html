@@ -53,12 +53,46 @@
             <!-- Basic Details -->
             <div class="row mb-3">
                 <h4 class="col-12">Basic Details</h4>
+
+                <div class="col-4" *ngIf="requestType">
+                    <div class="form-group bmd-form-group w-100">
+                        <label >Previous Application Number</label>
+                        <ng-select  class="searchdropdown"  formControlName="" [clearable]="false">
+                            <ng-option [value]="''" disabled></ng-option>
+                            <ng-container  >
+                              <ng-option    >
+                                <span class="textwrap"></span>
+                              </ng-option>
+                           </ng-container>
+                        </ng-select> 
+                    </div>
+                </div>
+
+                <div class="col-4" *ngIf="requestType" ></div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4"  *ngIf="requestType">
+                    <label >Request Type </label><br>
+                    <div class="row ml-1 disabled-content">
+                        <div class="form-check">
+                            <input type="radio" formControlName="IsRevise" class="form-check-input" id="radio2" 
+                            name="IsRevise" [value]="true" (click)="setRevise()">
+                            <label class="form-check-label" for="radio2">Revise</label>
+                        </div>
+                        <div class="form-check ml-1">
+                            <input type="radio" class="form-check-input" formControlName="IsRevoke" id="radio3"
+                            name="IsRevoke" [value]="true" (click)="setRevoke()">
+                            <label class="form-check-label" for="radio3">Revoke</label>
+                        </div>
+                    </div>
+                </div>
+
+
                 <div class="col-4">
                     <label class="str">Credit Application Number</label>
                     <input type="text" class="w-100 form-control" formControlName="CreditApplicationNumber" readonly
                     [ngClass]=" isUpdate ? 'disable-input' : ''" />
 
-                </div>
+                </div>              
 
                 <!-- <div class="col-4">
                     <label class="str">Credit Application Date</label>
