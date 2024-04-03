@@ -2211,16 +2211,16 @@ export class PaymentVoucherDetailsComponent implements OnInit {
       //   TotalDebit += Number(element.Payment)
       // });
 
-      TotalDebit = Number(this.paymentForm.value.Table.TotalPaymentAmount) + Number(this.paymentForm.value.Table.ExLoss)
+      TotalDebit = Number(this.paymentForm.value.Table.TotalPaymentAmount) + Number(this.paymentForm.value.Table.ExLoss) + Number((this.paymentForm.value.Table.BankCharges * this.paymentForm.value.Table.ExchangeRate))
 
       TotalCredit += Number(this.paymentForm.value.Table.TotalTDSAmount);
 
     } else if (this.paymentForm.value.Table.IsVendor && !this.isPaymentForBill) {
       TotalDebit = Number((this.paymentForm.value.Table.AmountPaid * this.paymentForm.value.Table.ExchangeRate))
-        + Number(this.paymentForm.value.Table.ExLoss) + Number((this.paymentForm.value.Table.TDSAmount * this.paymentForm.value.Table.ExchangeRate))
+        + Number(this.paymentForm.value.Table.ExLoss) + Number((this.paymentForm.value.Table.TDSAmount * this.paymentForm.value.Table.ExchangeRate)) + Number((this.paymentForm.value.Table.BankCharges * this.paymentForm.value.Table.ExchangeRate))
     } else if (this.paymentForm.value.Table.IsAccount) {
       this.TotalDebitAccountAmount = 0;
-      TotalDebit += Number(this.paymentForm.value.Table.ExLoss) + Number((this.paymentForm.value.Table.TDSAmount * this.paymentForm.value.Table.ExchangeRate))
+      TotalDebit += Number(this.paymentForm.value.Table.ExLoss) + Number((this.paymentForm.value.Table.TDSAmount * this.paymentForm.value.Table.ExchangeRate)) + Number((this.paymentForm.value.Table.BankCharges * this.paymentForm.value.Table.ExchangeRate))
       
       this.accountDetailsTableList.forEach(element => {
 
@@ -2243,6 +2243,7 @@ export class PaymentVoucherDetailsComponent implements OnInit {
 
     this.paymentForm.controls['Table'].controls['TotalCredit'].setValue(TotalCredit.toFixed(this.entityFraction))
     this.paymentForm.controls['Table'].controls['TotalDebit'].setValue(TotalDebit.toFixed(this.entityFraction))
+
     // this.paymentForm.controls['Table'].controls['TotalTDSAmount'].setValue(TotalTDS.toFixed(this.entityFraction))
     this.TotalDebit = Number(TotalDebit.toFixed(this.entityFraction));
 

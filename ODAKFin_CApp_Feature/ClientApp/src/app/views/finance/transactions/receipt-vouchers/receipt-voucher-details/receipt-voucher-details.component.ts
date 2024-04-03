@@ -1400,10 +1400,10 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
       if (info.length > 0) {
 
         info.forEach(element => {
-          totalAmount += Number(Number(element.Payment) * Number(element.ExchangeRate));
-          totalTDSAmount += (Number(element.TDS) * Number(element.ExchangeRate)),
+          totalAmount += Number(Number(element.Payment) * Number(!element.ExchangeRate ? 1 : element.ExchangeRate));
+          totalTDSAmount += (Number(element.TDS) * Number(!element.ExchangeRate ? 1 : element.ExchangeRate)),
             // totalPaymentAmount += (Number(element.Payment) * Number(element.ExchangeRate))
-            totalPaymentAmount += Number(element.TDS) + (Number(element.Payment) * Number(element.ExchangeRate));
+            totalPaymentAmount += Number(element.TDS) + (Number(element.Payment) * Number(!element.ExchangeRate ? 1 : element.ExchangeRate));
         });
       }
       
@@ -1610,15 +1610,17 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
     var TotalTDS = 0;
 
     if (this.receiptForm.value.IsInvoice) {
+      // this.onSelectEvent();
+      
       TotalTDS = this.receiptForm.value.TotalTDSAmount
 
       TotalCredit = Number((!this.receiptForm.value.TotalPaymentAmount ? 0 :
-        Number(this.receiptForm.value.TotalPaymentAmount)) + Number(this.receiptForm.value.ExLoss));
+        Number(this.receiptForm.value.TotalPaymentAmount)) + Number(this.receiptForm.value.ExLoss)) + (this.receiptForm.value.BankCharges * (!this.receiptForm.value.ExchangeRate ? 0 : this.receiptForm.value.ExchangeRate));
     } else {
        TotalTDS = Number((Number(this.receiptForm.value.TDSAmount) * this.receiptForm.value.ExchangeRate))
 
       TotalCredit = Number((this.receiptForm.value.AmountReceived * (!this.receiptForm.value.ExchangeRate ? 0 : this.receiptForm.value.ExchangeRate))
-        + Number(TotalTDS) + Number(this.receiptForm.value.ExLoss));
+        + Number(TotalTDS) + Number(this.receiptForm.value.ExLoss)) + (this.receiptForm.value.BankCharges * (!this.receiptForm.value.ExchangeRate ? 0 : this.receiptForm.value.ExchangeRate));
     }
 
     TotalDebit = Number((this.receiptForm.value.AmountReceived * (!this.receiptForm.value.ExchangeRate ? 0 : this.receiptForm.value.ExchangeRate))
