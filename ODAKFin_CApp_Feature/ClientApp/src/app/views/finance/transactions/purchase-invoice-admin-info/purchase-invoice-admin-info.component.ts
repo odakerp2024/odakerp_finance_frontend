@@ -30,7 +30,9 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
   minDate: string = this.datePipe.transform(new Date(), "yyyy-MM-dd");
   // newOne : string = '';
   isUpdate: boolean = false;
-  provisionList : [ { ID:'1',name: 'Partial'},{ID:'2' ,name: 'Full'}]
+  provisionList : [ { ID:'1',name: 'Partial'},{ID:'2' ,name: 'Full'}];
+  bankList = [];
+  IsRCM: any;
   isUpdateMode: boolean = false;
   isUpdateMode1: boolean = false;
   ModifiedOn: string = '';
@@ -113,7 +115,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     this.getCurrency();
     this.getNumberRange();
     this.getTaxGroup();
-
+    this.getBankList();
    
 
 
@@ -223,7 +225,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       CurrencyId: [1],
       ExRate: ['1'],
       Amountccr: [''],
-      Isrcm: [''],
+      IsRCM: [''],
       GSTGroup: [''],
       IsDelete: [0],
 
@@ -364,6 +366,24 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       }
     }, error => { });
   }
+
+  
+  getBankList() {
+    let payload = {
+      AccountNo: '',
+      BankName: '',
+      Currency: '',
+      IFSCCode: '',
+      IsActive: 1,
+      SwiftCode: null
+     }
+     this.commonDataService.getbankaccountFilter(payload).subscribe((result: any) => {
+      
+      if (result.message == "Success") {
+        this.bankList = result['data'].Table;
+      }
+    })
+  }
   
 calculateDueDate(maxDate: any) {
 
@@ -447,7 +467,7 @@ calculateDueDate(maxDate: any) {
             if (response['data'].Table4[0].GSTCategory) {
               let info = this.GSTCategoryList.find(x => x.Id == response['data'].Table4[0].GSTCategory);
               if (info.CategoryName == 'Overseas') { this.PurchaseCreateForm.controls['VendorType'].setValue('Overseas'); }
-              else { this.PurchaseCreateForm.controls['VendorType'].setValue('Local'); }
+              // else { this.PurchaseCreateForm.controls['VendorType'].setValue('Local'); }
             }
           }
           if (response['data'].Table5.length > 0) {
@@ -578,13 +598,14 @@ calculateDueDate(maxDate: any) {
     if (this.PurchaseCreateForm.value.ExRate == "" || this.PurchaseCreateForm.value.ExRate == 0) {
       validation += "<span style='color:red;'>*</span> <span>Please Enter ExRate.</span></br>";
     }
-    if (this.PurchaseCreateForm.value.LocalAmount == "" || this.PurchaseCreateForm.value.LocalAmount == 0) {
-      validation += "<span style='color:red;'>*</span> <span>Please Enter Local Amount.</span></br>";
+    if (this.PurchaseCreateForm.value.Amountccr == "" || this.PurchaseCreateForm.value.Amountccr == 0) {
+      validation += "<span style='color:red;'>*</span> <span>Please Enter Amount CCR.</span></br>";
     }
-    if (this.PurchaseCreateForm.value.IsTaxable == "") {
-      validation += "<span style='color:red;'>*</span> <span>Please Select Taxable.</span></br>";
+    if (this.PurchaseCreateForm.value.IsRCM == "") {
+      // validation += "<span style='color:red;'>*</span> <span>Please Select RCM.</span></br>";
+      this.PurchaseCreateForm.get('IsRCM').setValue(0);
     }
-    if (this.PurchaseCreateForm.value.IsTaxable == 1) {
+    if (this.PurchaseCreateForm.value.IsRCM == 1) {
       if (this.PurchaseCreateForm.value.GSTGroup == "" || this.PurchaseCreateForm.value.GSTGroup == 0) {
         validation += "<span style='color:red;'>*</span> <span>Please Enter GST Group.</span></br>";
       }
@@ -609,8 +630,8 @@ calculateDueDate(maxDate: any) {
         Amount: info.Rate * info.Qty,
         CurrencyId: info.CurrencyId,
         ExRate: info.ExRate ? info.ExRate : 1,
-        LocalAmount: info.LocalAmount,
-        IsTaxable: info.IsTaxable,
+        Amountccr: info.Amountccr,
+        IsRCM: info.IsRCM,
         GSTGroup: info.GSTGroup ? info.GSTGroup : 0,
         CurrencyName: currency.Currency,
         AccountName: account.AccountName,
@@ -639,8 +660,8 @@ calculateDueDate(maxDate: any) {
       Amount: info.Rate * info.Qty,
       CurrencyId: info.CurrencyId,
       ExRate: info.ExRate ? info.ExRate : 1,
-      LocalAmount: info.LocalAmount,
-      IsTaxable: info.IsTaxable,
+      Amountccr: info.Amountccr,
+      IsRCM: info.IsRCM,
       GSTGroup: info.GSTGroup ? info.GSTGroup : 0,
       CurrencyName: currency.Currency,
       AccountName: account.AccountName,
@@ -670,8 +691,8 @@ calculateDueDate(maxDate: any) {
     this.PurchaseCreateForm.controls['Amount'].setValue('');
     this.PurchaseCreateForm.controls['CurrencyId'].setValue(1);
     this.PurchaseCreateForm.controls['ExRate'].setValue('1');
-    this.PurchaseCreateForm.controls['LocalAmount'].setValue('');
-    this.PurchaseCreateForm.controls['IsTaxable'].setValue('');
+    this.PurchaseCreateForm.controls['Amountccr'].setValue('');
+    this.PurchaseCreateForm.controls['IsRCM'].setValue('');
     this.PurchaseCreateForm.controls['GSTGroup'].setValue('');
   }
 
@@ -690,8 +711,8 @@ calculateDueDate(maxDate: any) {
       Amount: info.Amount,
       CurrencyId: info.CurrencyId,
       ExRate: info.ExRate,
-      LocalAmount: info.LocalAmount,
-      IsTaxable: info.IsTaxable,
+      Amountccr: info.Amountccr,
+      IsRCM: info.IsRCM,
       GSTGroup: info.GSTGroup
     });
     this.isEditMode = !this.isEditMode;
@@ -752,10 +773,10 @@ calculateDueDate(maxDate: any) {
 
   async saveInfo(status: any, isDelete = false ) {
 
-    if(this.mappingSuccess == false){
-      Swal.fire(this.errorMessage)
-      return false;
-    }
+    // if(this.mappingSuccess == false){
+    //   Swal.fire(this.errorMessage)
+    //   return false;
+    // }
 
     var validation = "";
     if (this.PurchaseCreateForm.value.Division == "" || this.PurchaseCreateForm.value.Division == 0) {
@@ -966,12 +987,13 @@ calculateDueDate(maxDate: any) {
       Office: info.Office,
       OfficeGST: info.OfficeGST,
       BookingAgainst: info.BookingAgainst,
+      Provision:info.Provision,
       PINumber: info.PINumber,
       PIDate: info.PIDate,
       StatusId: status,
       VendorId: info.VendorId,
       VendorBranch: info.VendorBranch,
-      VendorType: info.VendorType,
+      // VendorType: info.VendorType,
       VINumber: info.VINumber,
       VIDate: info.VIDate,
       DueDate: info.DueDate,
@@ -990,7 +1012,11 @@ calculateDueDate(maxDate: any) {
       CGST: Math.trunc(info.CGST),
       SGST: Math.trunc(info.SGST),
       InvoiceAmount: Math.trunc(info.InvoiceAmount),
+      NetAmount:info.NetAmount,
+      Bankdetails:info.Bankdetails,
       InvoiceCurrency: info.InvoiceCurrency ? info.InvoiceCurrency : 0,
+      InvoiceExrate:info.InvoiceExrate,
+      Remarks:info.Remarks,
       CreatedBy: info.CreatedBy,
       TDSAmount:info.TDSRate
     };
@@ -1092,7 +1118,7 @@ calculateDueDate(maxDate: any) {
     this.entityCurrencyID = info.ID;
     if (this.entityCurrencyID == currencyId ) {
       this.PurchaseCreateForm.controls['ExRate'].setValue(1);
-      this.PurchaseCreateForm.controls['LocalAmount'].setValue(1 * this.PurchaseCreateForm.value.Rate * this.PurchaseCreateForm.value.Qty);
+      this.PurchaseCreateForm.controls['Amountccr'].setValue(1 * this.PurchaseCreateForm.value.Rate * this.PurchaseCreateForm.value.Qty);
       this.PurchaseCreateForm.get('ExRate').disable();
     }
     else {
@@ -1101,11 +1127,11 @@ calculateDueDate(maxDate: any) {
   }
 
   exchangeRateChangeEvent(event) {
-    this.PurchaseCreateForm.controls['LocalAmount'].setValue(event * this.PurchaseCreateForm.value.Rate * this.PurchaseCreateForm.value.Qty);
+    this.PurchaseCreateForm.controls['Amountccr'].setValue(event * this.PurchaseCreateForm.value.Rate * this.PurchaseCreateForm.value.Qty);
   }
 
   rateQuantityChangeEvent(event) {
-    this.PurchaseCreateForm.controls['LocalAmount'].setValue((this.PurchaseCreateForm.value.Rate ? this.PurchaseCreateForm.value.Rate : 1)
+    this.PurchaseCreateForm.controls['Amountccr'].setValue((this.PurchaseCreateForm.value.Rate ? this.PurchaseCreateForm.value.Rate : 1)
       * (this.PurchaseCreateForm.value.Qty ? this.PurchaseCreateForm.value.Qty : 1) * (this.PurchaseCreateForm.value.ExRate ? this.PurchaseCreateForm.value.ExRate : 1));
   }
 
@@ -1177,7 +1203,7 @@ TdsPercentageCalculation(){
   var subTotalAmount = 0;
   if (this.PurchaseTableList.length > 0) {
     this.PurchaseTableList.forEach(element => {
-      subTotalAmount += element.LocalAmount;
+      subTotalAmount += element.Amountccr;
     });
     this.PurchaseCreateForm.controls['SubTotal'].setValue(subTotalAmount);  // Handle the case when subTotalAmount is 0.
    
@@ -1272,4 +1298,9 @@ TdsPercentageCalculation(){
     this.orderType == 'Purchase' ? this.PurchaseCreateForm.controls['PurchaseOrder'].setValue('') : this.orderType == 'Internal' ? this.PurchaseCreateForm.controls['InternalOrder'].setValue('') : '';
   }
 
+
+  toggleRCM(checked: boolean) {
+    this.PurchaseCreateForm.get('IsRCM').setValue(checked);
+}
+  
 }
