@@ -40,9 +40,9 @@ export class ProvisionDetailComponent implements OnInit {
   provisionId: number;
   numberRangeList: any;
   IsFinal: number;
-  Remarks: any;
   IsExchangeEnable: boolean = false;
   companyCurrencyId: Number;
+  Remarks: any;
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
@@ -62,12 +62,21 @@ export class ProvisionDetailComponent implements OnInit {
     this.getParentAccountList();
     this.getCurrency();
 
-    this.route.params.subscribe(async param => {
-      this.provisionId = param['provisionId'] ? param['provisionId'] : 0;
-      if (this.provisionId) {
-        // this.getByIdRotueFunctionality();
+    // this.route.params.subscribe(async param => {
+    //
+    //   this.provisionId = param['provisionId'] ? param['provisionId'] : 0;
+    //   if (this.provisionId) {
+    //     this.getByIdRouteFunction();
+    //   }
+    // })
+
+    this.route.params.subscribe(param => {
+      if (param.id) {
+        this.provisionId = param.id;
+        this.getByIdRouteFunction();
+        this.ProvisionForm.disable();
       }
-    })
+    });
 
   }
 
@@ -163,7 +172,6 @@ export class ProvisionDetailComponent implements OnInit {
         if (result.length > 0) {
           this.currencyList = result;
           const entityInfo: any = this.commonDataService.getLocalStorageEntityConfigurable();
-          debugger
           const val = entityInfo['Currency'];
           let info = this.currencyList.find(x => x.Currency.toUpperCase() == val);
           this.companyCurrencyId = info.ID
@@ -179,7 +187,7 @@ export class ProvisionDetailComponent implements OnInit {
   }
 
   DynamicGridAddRow() {
-    debugger
+ 
     const gRow = this.ProvisionForm.value.Table1;
     var validation = "";
 
@@ -240,7 +248,7 @@ export class ProvisionDetailComponent implements OnInit {
 
   OnClickEditValue() {
     // console.log('row', row, index)
-    debugger
+ 
     if (this.editSelectedIndex >= 0 && this.editSelectedIndex != null) {
       const editRow = this.provisionItemsTableList[this.editSelectedIndex];
 
@@ -253,7 +261,7 @@ export class ProvisionDetailComponent implements OnInit {
   }
 
   clearAccountDetailsForm() {
-    debugger
+ 
     this.ProvisionForm.controls['Table1']['controls']['ProvisionItemsId'].setValue(0);
     this.ProvisionForm.controls['Table1']['controls']['Account'].setValue(0);
     this.ProvisionForm.controls['Table1']['controls']['Rate'].setValue(0);
@@ -296,7 +304,7 @@ export class ProvisionDetailComponent implements OnInit {
   }
 
   async submit(isClosed = false) {
-
+ 
     const validation = this.validationCheck();
 
     if (validation != "") {
@@ -316,6 +324,7 @@ export class ProvisionDetailComponent implements OnInit {
       allowOutsideClick: false
     }).then(async (result) => {
       if (result.isConfirmed) {
+     
         if (isClosed) {
           this.ProvisionForm.controls['Table']['controls']['IsClosedProvision'].setValue(1);
         } else {
@@ -351,7 +360,7 @@ export class ProvisionDetailComponent implements OnInit {
   }
 
   getFinalPayload() {
-
+debugger
     // delete the un-wanted key from the object
     this.provisionItemsTableList.forEach((v) => {
       // set the due amount as same if it is not Final
@@ -372,6 +381,7 @@ export class ProvisionDetailComponent implements OnInit {
   }
 
   savePayment(payload, type) {
+ 
     this.provisionService.savePayment(payload).pipe(takeUntil(this.ngUnsubscribe)).subscribe((result: any) => {
       if (result.message == "Success") {
         // console.log('result the payment voucher', result);
@@ -564,19 +574,32 @@ export class ProvisionDetailComponent implements OnInit {
   }
 
   rateQuantityChangeEvent(event) {
+ 
     const rate = Number(this.ProvisionForm.controls['Table1']['controls']['Rate'].value)
     const qty = Number(this.ProvisionForm.controls['Table1']['controls']['Qty'].value)
     const exRate = Number(this.ProvisionForm.controls['Table1']['controls']['ExchangeRate'].value)
-    this.ProvisionForm.controls['Table1']['controls']['Amount'].setValue((rate * qty).toFixed(this.entityFraction))
 
-    this.ProvisionForm.controls['Table1']['controls']['AmountCCR'].setValue((exRate * qty).toFixed(this.entityFraction))
+    const amount = rate * qty;
+    this.ProvisionForm.controls['Table1']['controls']['Amount'].setValue(amount.toFixed(this.entityFraction));
+    
+    const currentAmountValue = Number(this.ProvisionForm.controls['Table1']['controls']['Amount'].value);
+    const amountCCR = exRate * currentAmountValue;
+    this.ProvisionForm.controls['Table1']['controls']['AmountCCR'].setValue(amountCCR.toFixed(this.entityFraction));
+    
+    // this.ProvisionForm.controls['Table1']['controls']['Amount'].setValue((rate * qty).toFixed(this.entityFraction))
+
+    // this.ProvisionForm.controls['Table1']['controls']['AmountCCR'].setValue((exRate * qty).toFixed(this.entityFraction))
   }
 
   changeCurrencyEvent(currencyId: any) {
+ 
     let entityInfo = this.commonDataService.getLocalStorageEntityConfigurable();
-    let info = this.currencyList.find(x => x.Currency == entityInfo['Currency']);
+    const val = entityInfo['Currency'];
+    let info = this.currencyList.find(x => x.Currency.toUpperCase() == val);
+   // let info = this.currencyList.find(x => x.Currency == entityInfo['Currency']);
+    console.log(this.currencyList , 'Currency List')
+    console.log(info , 'info')
     if (info.ID == currencyId) {
-
       this.ProvisionForm.controls['Table1']['controls']['ExchangeRate'].setValue(1);
       this.IsExchangeEnable = false;
     }
@@ -585,5 +608,38 @@ export class ProvisionDetailComponent implements OnInit {
     }
   }
 
+
+  getByIdRouteFunction() {
+ 
+    var service = `${this.globals.APIURL}/Provision/GetProvisionById`; var payload = { Id: this.provisionId };
+    this.dataService.post(service, payload).subscribe(async (result: any) => {
+      this.provisionItemsTableList = [];
+      //this.pagedItems = [];
+      if (result.message == 'Success' && result.data.Table.length > 0) {
+        let info = result.data.Table[0];
+
+        this.CreatedBy = info.CreatedByName; 
+        this.ProvisionForm.patchValue({
+          ProvisionId: this.provisionId,
+          DivisionId: info.DivisionId,
+          OfficeId: info.OfficeId,
+          Number: info.ProvisionNumber,
+          Date: this.datePipe.transform(info.Date, 'y-MM-dd'),
+          StatusId: info.Status,
+          Remarks: info.Remarks,
+          Amount: info.Amount,
+        });
+         this.getOffice(info.Division);
+        if (result.data.Table1.length > 0) {
+          this.provisionItemsTableList = result.data.Table1;
+        //  this.setPage(1);
+        };
+      }
+    }, error => { });
+  }
+
+
+
+  
 
 }

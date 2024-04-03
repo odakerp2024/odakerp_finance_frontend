@@ -197,10 +197,12 @@
                                     </td>
 
                                     <td class="text-center bestfit-width">
-                                        <input type="text" [ngClass]=" !IsExchangeEnable ? 'block-input' : ''"
+                                        <input type="text" [ngClass]=" !IsExchangeEnable ? 'disable-input' : ''"
                                             onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
                                             min="0" numbersOnly appDynamicDecimal class="w-100 form-control"
                                             placeholder="Exchange Rate"  (ngModelChange)="rateQuantityChangeEvent($event)" [formControlName]="'ExchangeRate'" />
+
+                                            
 
                                     </td>
 
@@ -237,7 +239,7 @@
                 <div class="row">
                     <div class="col-4">
                         <label>Remarks</label>
-                        <textarea [(ngModel)]="Remarks" [ngModelOptions]="{standalone: true}" [ngClass]=" isUpdate ? 'block-input' : ''"
+                        <textarea [(ngModel)]="Remarks" [ngModelOptions]="{standalone: true}" 
                             class="form-control addressht" rows="3"></textarea>
                     </div>
                     <div class="col-4"></div>
