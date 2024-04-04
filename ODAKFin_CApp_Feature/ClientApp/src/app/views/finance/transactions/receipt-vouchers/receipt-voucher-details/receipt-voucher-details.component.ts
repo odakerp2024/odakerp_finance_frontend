@@ -352,7 +352,7 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
   }
 
   getReceiptVoucherInfo() {
-    debugger
+    
     var service = `${this.globals.APIURL}/ReceiptVoucher/GetReceiptVoucherById`;
     this.dataService.post(service, { Id: this.receiptVoucherId }).subscribe(async (result: any) => {
       if (result.message == 'Success' && result.data.Table.length > 0) {
@@ -508,7 +508,7 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
   }
 
   getCurrency() {
-    debugger
+    
     let service = `${this.globals.SaApi}/SystemAdminApi/GetCurrency`
     this.dataService.post(service, {}).subscribe((result: any) => {
       this.currencyList = [];
@@ -664,10 +664,10 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
 
 
   async getModuleType() {
-    // debugger
+    // 
     let service = `${this.globals.APIURL}/LedgerMapping/GetLedgerDropDownList`;
     this.dataService.post(service, {}).subscribe(async (result: any) => {
-      // debugger
+      // 
       if (result.message = "Success") {
         // this.ledgerSubModuleList = [];
 
@@ -684,10 +684,10 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
 
 
   async checkLedgerMapping() {
-    debugger
+    
     let service = `${this.globals.APIURL}/Common/CheckModuleAccess`;
     this.dataService.post(service, { ModuleId: this.ModuleId }).subscribe(async (result: any) => {
-      // debugger
+      // 
       if (result.data == "Access Granted") {
         this.mappingSuccess = true
       }
@@ -801,7 +801,7 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
 
     // set Delete flag
     if (isDelete && this.isUpdate) {
-      // debugger
+      // 
       this.receiptForm.controls['IsDelete'].setValue(1);
     }
 
@@ -838,7 +838,7 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
         // return
         this.dataService.post(service, this.payload).subscribe((result: any) => {
           if (result.message == "Success") {
-            // debugger
+            // 
             Swal.fire(result.data.Message, '', 'success');
             this.isUpdateMode1 = true;
             this.isUpdateMode = false;
@@ -1229,7 +1229,7 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
   }
 
   createPaymentDetailsPayload(info, exchangeRate = 0) {
-    debugger
+    
 
     this.paymentDetailsTableList = [];
     for (let data of info) {
@@ -1375,7 +1375,7 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
 
   //  set payment Amount as due Amount when checked;
   setInitalPaymentAmount(checkedIndex) {
-    debugger
+    
     const controlAtIndex = this.myArray.at(checkedIndex);
     if (!controlAtIndex.value.Payment && controlAtIndex.value.IsSelect) {
       controlAtIndex.value.Payment = controlAtIndex.value.DueAmount;
@@ -1391,7 +1391,7 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
   }
 
   onSelectEvent() {
-    debugger
+    
     if (this.receiptForm.value.paymentDetailsArray.length > 0) {
       let info = this.receiptForm.value.paymentDetailsArray.filter(x => x.IsSelect == true);
       var totalAmount = 0;
@@ -1403,7 +1403,7 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
           totalAmount += Number(Number(element.Payment) * Number(!element.ExchangeRate ? 1 : element.ExchangeRate));
           totalTDSAmount += (Number(element.TDS) * Number(!element.ExchangeRate ? 1 : element.ExchangeRate)),
             // totalPaymentAmount += (Number(element.Payment) * Number(element.ExchangeRate))
-            totalPaymentAmount += Number(element.TDS) + (Number(element.Payment) * Number(!element.ExchangeRate ? 1 : element.ExchangeRate));
+            totalPaymentAmount += (Number(element.TDS) * Number(!element.ExchangeRate ? 1 : element.ExchangeRate)) + (Number(element.Payment) * Number(!element.ExchangeRate ? 1 : element.ExchangeRate));
         });
       }
       
@@ -1567,7 +1567,7 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
   }
 
   setPaymentVoucherType(isInvoice = 0) {
-    debugger
+    
     if (isInvoice == 1) {
       this.paymentType = 'invoice';
       this.paymentVoucherType = 'Invoice';
@@ -1604,7 +1604,7 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
   }
 
   summaryAmountCalculation() {
-    debugger
+    
     var TotalDebit = 0;
     var TotalCredit = 0;
     var TotalTDS = 0;
@@ -1617,7 +1617,7 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
       TotalCredit = Number((!this.receiptForm.value.TotalPaymentAmount ? 0 :
         Number(this.receiptForm.value.TotalPaymentAmount)) + Number(this.receiptForm.value.ExLoss)) + (this.receiptForm.value.BankCharges * (!this.receiptForm.value.ExchangeRate ? 0 : this.receiptForm.value.ExchangeRate));
     } else {
-       TotalTDS = Number((Number(this.receiptForm.value.TDSAmount) * this.receiptForm.value.ExchangeRate))
+       TotalTDS = Number(this.receiptForm.value.TDSAmount);
 
       TotalCredit = Number((this.receiptForm.value.AmountReceived * (!this.receiptForm.value.ExchangeRate ? 0 : this.receiptForm.value.ExchangeRate))
         + Number(TotalTDS) + Number(this.receiptForm.value.ExLoss)) + (this.receiptForm.value.BankCharges * (!this.receiptForm.value.ExchangeRate ? 0 : this.receiptForm.value.ExchangeRate));

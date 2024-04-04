@@ -1027,7 +1027,7 @@
                                         <label>0</label>
                                     </td>
                                     <td *ngIf="!this.receiptForm.value.IsInvoice" class="text-center">
-                                        <label>{{+this.receiptForm.value.TDSAmount + (this.receiptForm.value.AmountReceived *
+                                        <label>{{+this.receiptForm.value.TDSAmount  + (this.receiptForm.value.AmountReceived *
                                             (!this.receiptForm.value.ExchangeRate ? 0 :
                                             this.receiptForm.value.ExchangeRate
                                             ))  +(this.receiptForm.value.BankCharges * this.receiptForm.value.ExchangeRate)  }}</label>
@@ -1036,7 +1036,7 @@
                                         <label>0</label>
                                     </td>
                                     <td *ngIf="this.receiptForm.value.IsInvoice" class="text-center">
-                                        <label>{{ +this.receiptForm.value.TotalPaymentAmount  + (this.receiptForm.value.BankCharges * this.receiptForm.value.ExchangeRate) 
+                                        <label>{{ +this.receiptForm.value.TotalPaymentAmount  +(this.receiptForm.value.BankCharges * this.receiptForm.value.ExchangeRate) 
                                         }}</label>
                                     </td>
                                 </tr>
