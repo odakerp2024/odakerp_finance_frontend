@@ -352,7 +352,7 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
   }
 
   getReceiptVoucherInfo() {
-    debugger
+    
     var service = `${this.globals.APIURL}/ReceiptVoucher/GetReceiptVoucherById`;
     this.dataService.post(service, { Id: this.receiptVoucherId }).subscribe(async (result: any) => {
       if (result.message == 'Success' && result.data.Table.length > 0) {
@@ -508,7 +508,7 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
   }
 
   getCurrency() {
-    debugger
+    
     let service = `${this.globals.SaApi}/SystemAdminApi/GetCurrency`
     this.dataService.post(service, {}).subscribe((result: any) => {
       this.currencyList = [];
@@ -664,10 +664,10 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
 
 
   async getModuleType() {
-    // debugger
+    // 
     let service = `${this.globals.APIURL}/LedgerMapping/GetLedgerDropDownList`;
     this.dataService.post(service, {}).subscribe(async (result: any) => {
-      // debugger
+      // 
       if (result.message = "Success") {
         // this.ledgerSubModuleList = [];
 
@@ -684,10 +684,10 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
 
 
   async checkLedgerMapping() {
-    debugger
+    
     let service = `${this.globals.APIURL}/Common/CheckModuleAccess`;
     this.dataService.post(service, { ModuleId: this.ModuleId }).subscribe(async (result: any) => {
-      // debugger
+      // 
       if (result.data == "Access Granted") {
         this.mappingSuccess = true
       }
@@ -801,7 +801,7 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
 
     // set Delete flag
     if (isDelete && this.isUpdate) {
-      // debugger
+      // 
       this.receiptForm.controls['IsDelete'].setValue(1);
     }
 
@@ -838,7 +838,7 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
         // return
         this.dataService.post(service, this.payload).subscribe((result: any) => {
           if (result.message == "Success") {
-            // debugger
+            // 
             Swal.fire(result.data.Message, '', 'success');
             this.isUpdateMode1 = true;
             this.isUpdateMode = false;
@@ -1229,7 +1229,7 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
   }
 
   createPaymentDetailsPayload(info, exchangeRate = 0) {
-    debugger
+    
 
     this.paymentDetailsTableList = [];
     for (let data of info) {
@@ -1375,7 +1375,7 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
 
   //  set payment Amount as due Amount when checked;
   setInitalPaymentAmount(checkedIndex) {
-    debugger
+    
     const controlAtIndex = this.myArray.at(checkedIndex);
     if (!controlAtIndex.value.Payment && controlAtIndex.value.IsSelect) {
       controlAtIndex.value.Payment = controlAtIndex.value.DueAmount;
@@ -1391,22 +1391,27 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
   }
 
   onSelectEvent() {
-    debugger
+    
     if (this.receiptForm.value.paymentDetailsArray.length > 0) {
       let info = this.receiptForm.value.paymentDetailsArray.filter(x => x.IsSelect == true);
       var totalAmount = 0;
       var totalTDSAmount = 0;
       var totalPaymentAmount = 0;
-      info.forEach(element => {
-        totalAmount += Number(element.TDS) + (Number(element.Payment) * Number(element.ExchangeRate));
-        totalTDSAmount += (Number(element.TDS) * Number(element.ExchangeRate)),
-          totalPaymentAmount += (Number(element.Payment) * Number(element.ExchangeRate))
-      });
+      if (info.length > 0) {
+
+        info.forEach(element => {
+          totalAmount += Number(Number(element.Payment) * Number(!element.ExchangeRate ? 1 : element.ExchangeRate));
+          totalTDSAmount += (Number(element.TDS) * Number(!element.ExchangeRate ? 1 : element.ExchangeRate)),
+            // totalPaymentAmount += (Number(element.Payment) * Number(element.ExchangeRate))
+            totalPaymentAmount += (Number(element.TDS) * Number(!element.ExchangeRate ? 1 : element.ExchangeRate)) + (Number(element.Payment) * Number(!element.ExchangeRate ? 1 : element.ExchangeRate));
+        });
+      }
+      
       this.receiptForm.controls['TotalTDSAmount'].patchValue(totalTDSAmount.toFixed(this.entityFraction));
       this.receiptForm.controls['TotalPaymentAmount'].patchValue(totalPaymentAmount.toFixed(this.entityFraction));
-      this.totalAmount = totalAmount;
+      this.totalAmount = Number(totalAmount.toFixed(this.entityFraction));
     }
-    this.summaryAmountCalculation();
+    // this.summaryAmountCalculation();
   }
 
   invoiceNumberSearch(event) {
@@ -1562,23 +1567,23 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
   }
 
   setPaymentVoucherType(isInvoice = 0) {
-    debugger
+    
     if (isInvoice == 1) {
       this.paymentType = 'invoice';
       this.paymentVoucherType = 'Invoice';
       this.receiptForm.controls['IsInvoice'].setValue(true);
       this.receiptForm.controls['IsOnAccount'].setValue(false);
       this.receiptForm.controls['IsSecurityDeposit'].setValue(false);
-      this.receiptForm.controls['TDSAmount'].setValue(0);
+      // this.receiptForm.controls['TDSAmount'].setValue(0);
       this.IsTDSEnable = false;
     } else if (isInvoice == 2) {
       this.receiptForm.controls['IsInvoice'].setValue(false);
       this.receiptForm.controls['IsOnAccount'].setValue(true);
       this.receiptForm.controls['IsSecurityDeposit'].setValue(false);
-      this.receiptForm.controls['TDSAmount'].setValue(0);
+      // this.receiptForm.controls['TDSAmount'].setValue(0);
 
       this.receiptForm.controls['TotalPaymentAmount'].setValue(0);
-      this.receiptForm.controls['TotalTDSAmount'].setValue(0);
+      // this.receiptForm.controls['TotalTDSAmount'].setValue(0);
 
       this.IsTDSEnable = true;
       this.paymentType = 'account';
@@ -1587,7 +1592,7 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
       this.receiptForm.controls['IsInvoice'].setValue(false);
       this.receiptForm.controls['IsOnAccount'].setValue(false);
       this.receiptForm.controls['IsSecurityDeposit'].setValue(true);
-      this.receiptForm.controls['TDSAmount'].setValue(0);
+      // this.receiptForm.controls['TDSAmount'].setValue(0);
       this.IsTDSEnable = true;
       this.paymentType = 'security';
       this.paymentVoucherType = 'Security Deposit'
@@ -1599,25 +1604,27 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
   }
 
   summaryAmountCalculation() {
-    debugger
+    
     var TotalDebit = 0;
     var TotalCredit = 0;
     var TotalTDS = 0;
 
     if (this.receiptForm.value.IsInvoice) {
+      // this.onSelectEvent();
+      
       TotalTDS = this.receiptForm.value.TotalTDSAmount
 
       TotalCredit = Number((!this.receiptForm.value.TotalPaymentAmount ? 0 :
-        Number(this.receiptForm.value.TotalPaymentAmount)) + Number(this.receiptForm.value.ExLoss));
+        Number(this.receiptForm.value.TotalPaymentAmount)) + Number(this.receiptForm.value.ExLoss)) + (this.receiptForm.value.BankCharges * (!this.receiptForm.value.ExchangeRate ? 0 : this.receiptForm.value.ExchangeRate));
     } else {
-      // TotalTDS = this.receiptForm.value.TDSAmount;
+       TotalTDS = Number(this.receiptForm.value.TDSAmount);
 
       TotalCredit = Number((this.receiptForm.value.AmountReceived * (!this.receiptForm.value.ExchangeRate ? 0 : this.receiptForm.value.ExchangeRate))
-        + Number(TotalTDS) + Number(this.receiptForm.value.ExLoss));
+        + Number(TotalTDS) + Number(this.receiptForm.value.ExLoss)) + (this.receiptForm.value.BankCharges * (!this.receiptForm.value.ExchangeRate ? 0 : this.receiptForm.value.ExchangeRate));
     }
 
     TotalDebit = Number((this.receiptForm.value.AmountReceived * (!this.receiptForm.value.ExchangeRate ? 0 : this.receiptForm.value.ExchangeRate))
-      + (!this.receiptForm.value.TDSAmount ? 0 : Number(this.receiptForm.value.TDSAmount)) + Number(TotalTDS) + (this.receiptForm.value.BankCharges * (!this.receiptForm.value.ExchangeRate ? 0 : this.receiptForm.value.ExchangeRate))
+      + Number(TotalTDS) + (this.receiptForm.value.BankCharges * (!this.receiptForm.value.ExchangeRate ? 0 : this.receiptForm.value.ExchangeRate))
       + Number(this.receiptForm.value.ExGain));
 
     this.receiptForm.controls['TotalDebit'].setValue(TotalDebit.toFixed(this.entityFraction));

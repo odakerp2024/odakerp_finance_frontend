@@ -40,6 +40,10 @@ export class AccountPayableDetailsComponent  implements OnInit {
   isEditButton: boolean = false;
   resultValues: any[];
   formattedErrorMessages: any;
+  debitCreditList = [
+    { value: 1, debitCreditName: 'Debit' },
+    { value: 0, debitCreditName: 'Credit' }
+  ];
 
 
 
@@ -89,6 +93,7 @@ export class AccountPayableDetailsComponent  implements OnInit {
       PurchaseInvoiceDate: [this.currentDate],
       InvoiceCurrency: [''],
       Exchange: [''],
+      DebitorCredit: [''],
       InvoiceAmountICY: [''],
       InvoiceAmountCCY: [''],
       DueAmountICY: [''],
@@ -133,6 +138,7 @@ export class AccountPayableDetailsComponent  implements OnInit {
           PurchaseInvoiceDate: this.datePipe.transform(new Date(info.PurchaseInvoiceDate), "yyyy-MM-dd") ,
           InvoiceCurrency: info.InvoiceCurrency,
           Exchange: info.Exchange,
+          DebitorCredit: info.DebitorCredit,
           InvoiceAmountICY: info.InvoiceAmountICY,
           InvoiceAmountCCY: info.InvoiceAmountCCY,
           DueAmountICY: info.DueAmountICY,
@@ -273,6 +279,9 @@ export class AccountPayableDetailsComponent  implements OnInit {
       if (this.accountPayableForm.value.Exchange == "") {
         validation += "<span style='color:red;'>*</span> <span>Please Enter Exchange</span></br>"
       }
+      if (this.accountPayableForm.value.DebitorCredit == "") {
+        validation += "<span style='color:red;'>*</span> <span>Please Select Debit/Credit</span></br>"
+      }
       if (validation != "") {
         Swal.fire(validation)
         return false;
@@ -304,6 +313,7 @@ export class AccountPayableDetailsComponent  implements OnInit {
         "PurchaseInvoiceDate": this.accountPayableForm.value.PurchaseInvoiceDate,
         "InvoiceCurrency": this.accountPayableForm.value.InvoiceCurrency,
         "Exchange": this.accountPayableForm.value.Exchange,
+        "DebitorCredit": this.accountPayableForm.value.DebitorCredit,
         "InvoiceAmountICY": this.accountPayableForm.value.InvoiceAmountICY,
         "InvoiceAmountCCY": this.accountPayableForm.value.InvoiceAmountCCY,
         "DueAmountICY": this.accountPayableForm.value.DueAmountICY,

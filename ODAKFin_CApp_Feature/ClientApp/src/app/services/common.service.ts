@@ -202,7 +202,7 @@ export class CommonService {
 
     // User Role Permission details service
     GetUserPermissionObject(payload: any): Observable<any> {
-        return this.http.post<any>(this.globals.APIURLLA + '/MenuMaster/UserPermissionObject', payload);
+        return this.http.post<any>(this.globals.APIURL + '/Common/GetUserPermissionObject', payload);
     }
 
     getLedgerMappingParentAccountList(payload): Observable<any[]> {

@@ -26,6 +26,7 @@ export class PaymentVoucherDetailsComponent implements OnInit {
   vendorTanDetails: any;
   newOne: any;
   branches: any;
+  TotalDebitAccountAmount: number = 0;
   onTextareaInput(event: Event): void {
     const textarea = this.autoResizeTextArea.nativeElement as HTMLTextAreaElement;
     textarea.style.height = 'auto';
@@ -150,7 +151,6 @@ export class PaymentVoucherDetailsComponent implements OnInit {
     this.getDivisionList();
     this.getStatus();
     // this.getOffice();
-    // this.getBankList();
     await this.getVendorList();
     this.getModeOfPayment();
     this.getNumberRangeList();
@@ -272,7 +272,7 @@ export class PaymentVoucherDetailsComponent implements OnInit {
   }
 
   getParentAccountList() {
-    debugger
+    
     this.commonDataService.getChartaccountsFilter().subscribe(async data => {
       this.AccountList = [];
       if (data["data"].length > 0) {
@@ -290,7 +290,7 @@ export class PaymentVoucherDetailsComponent implements OnInit {
   }
 
   setVendor(value) {
-    debugger
+    
     if (value == 1 && this.isPaymentForBill) {
       this.paymentForm.controls.Table.controls['IsVendor'].setValue(true);
       this.paymentForm.controls.Table.controls['IsAccount'].setValue(false);
@@ -300,9 +300,9 @@ export class PaymentVoucherDetailsComponent implements OnInit {
       this.IsTDSEnable = false;
       this.IsVendorEnable = true;
       this.IsBranchEnable = true;
-      this.paymentForm.controls.Table.controls['VendorId'].setValue('');
-      this.paymentForm.controls.Table.controls['VendorBranch'].setValue('');
-      this.paymentForm.controls.Table.controls['TDSAmount'].setValue(0);
+      // this.paymentForm.controls.Table.controls['VendorId'].setValue('');
+      // this.paymentForm.controls.Table.controls['VendorBranch'].setValue('');
+      // this.paymentForm.controls.Table.controls['TDSAmount'].setValue(0);
       this.isAccountType = false;
 
     } else if (value == 2 && this.isPaymentForBill) {
@@ -316,8 +316,8 @@ export class PaymentVoucherDetailsComponent implements OnInit {
       this.IsVendorEnable = false;
       this.IsBranchEnable = false;
 
-      this.paymentForm.controls.Table.controls['VendorId'].setValue('');
-      this.paymentForm.controls.Table.controls['VendorBranch'].setValue('');
+      // this.paymentForm.controls.Table.controls['VendorId'].setValue('');
+      // this.paymentForm.controls.Table.controls['VendorBranch'].setValue('');
       this.paymentForm.controls.Table.controls['TDSAmount'].setValue(0);
       this.isAccountType = true;
     } else if (value == 1 && !this.isPaymentForBill) {
@@ -329,9 +329,9 @@ export class PaymentVoucherDetailsComponent implements OnInit {
       this.IsTDSEnable = true;
       this.IsVendorEnable = true;
       this.IsBranchEnable = true;
-      this.paymentForm.controls.Table.controls['VendorId'].setValue('');
-      this.paymentForm.controls.Table.controls['VendorBranch'].setValue('');
-      this.paymentForm.controls.Table.controls['TDSAmount'].setValue(0);
+      // this.paymentForm.controls.Table.controls['VendorId'].setValue('');
+      // this.paymentForm.controls.Table.controls['VendorBranch'].setValue('');
+      // this.paymentForm.controls.Table.controls['TDSAmount'].setValue(0);
       this.isAccountType = false;
     } else if (value == 2 && !this.isPaymentForBill) {
       this.paymentForm.controls.Table.controls['IsVendor'].setValue(false);
@@ -342,9 +342,9 @@ export class PaymentVoucherDetailsComponent implements OnInit {
       this.IsTDSEnable = true;
       this.IsVendorEnable = false;
       this.IsBranchEnable = false;
-      this.paymentForm.controls.Table.controls['VendorId'].setValue('');
-      this.paymentForm.controls.Table.controls['VendorBranch'].setValue('');
-      this.paymentForm.controls.Table.controls['TDSAmount'].setValue(0);
+      // this.paymentForm.controls.Table.controls['VendorId'].setValue('');
+      // this.paymentForm.controls.Table.controls['VendorBranch'].setValue('');
+      // this.paymentForm.controls.Table.controls['TDSAmount'].setValue(0);
       this.isAccountType = true;
     }
 
@@ -483,7 +483,7 @@ export class PaymentVoucherDetailsComponent implements OnInit {
 
 
   async submit(isDelete = false) {
-    debugger
+    
     if (this.mappingSuccess == false) {
       Swal.fire(this.errorMessage)
       return false;
@@ -591,10 +591,10 @@ export class PaymentVoucherDetailsComponent implements OnInit {
 
 
   async getModuleType() {
-    // debugger
+    // 
     let service = `${this.globals.APIURL}/LedgerMapping/GetLedgerDropDownList`;
     this.dataService.post(service, {}).subscribe(async (result: any) => {
-      // debugger
+      // 
       if (result.message = "Success") {
         // this.ledgerSubModuleList = [];
 
@@ -611,10 +611,10 @@ export class PaymentVoucherDetailsComponent implements OnInit {
 
 
   async checkLedgerMapping() {
-    // debugger
+    // 
     let service = `${this.globals.APIURL}/Common/CheckModuleAccess`;
     this.dataService.post(service, { ModuleId: this.ModuleId }).subscribe(async (result: any) => {
-      // debugger
+      // 
       if (result.data == "Access Granted") {
         this.mappingSuccess = true
       }
@@ -812,7 +812,7 @@ export class PaymentVoucherDetailsComponent implements OnInit {
   }
 
   async patchForm(data) {
-    debugger
+    
     const tableData = data.Table[0];
     const table1Data = data.Table1;
     const table2Data = data.Table2[0];
@@ -845,7 +845,7 @@ export class PaymentVoucherDetailsComponent implements OnInit {
       CurrencyId: tableData.CurrencyId,
       TdsDeducted: tableData.TdsDeducted ? 1 : 0,
       VendorTan: tableData.VendorTan,
-      PaidfromId: tableData.PaidfromId,
+      PaidfromId: Number(tableData.PaidfromId),
       ModeofPaymentId: tableData.ModeofPaymentId,
       ReferenceNo: tableData.ReferenceNo,
       BankCharges: tableData.BankCharges,
@@ -885,10 +885,8 @@ export class PaymentVoucherDetailsComponent implements OnInit {
     this.paymentForm.get('Table1').patchValue(Table1);
     this.paymentForm.get('Table2').patchValue(table2Data);
     await this.getBankList(true);
-    debugger
+    
     let toCurrency = this.currencyList.find(x => x.ID == tableData.CurrencyId);
-    debugger
-
     var totalTDSAmount = 0;
     var totalPaymentAmount = 0;
 
@@ -978,7 +976,12 @@ export class PaymentVoucherDetailsComponent implements OnInit {
     const VendorId = this.paymentForm.controls['Table'].controls['IsVendor'].value ? 1 : this.paymentForm.controls['Table'].controls['IsAccount'].value ? 2 : '';
     this.setVendor(VendorId);
     this.paymentForm.controls.Table.controls['TDSAmount'].setValue(tableData.TDS_Amount);
-    this.summaryAmountCalculation();
+    this.calculateFinalTotal();
+    this.setCurrencyId(tableData.CurrencyId);
+    if(this.receivedCurrencyName != tableData.CurrencyName){
+      await this.getBankList(false);
+    }
+    // this.summaryAmountCalculation();
   }
 
   updateAmount(amount) {
@@ -1143,9 +1146,9 @@ export class PaymentVoucherDetailsComponent implements OnInit {
     this.commonDataService.getBankByOfficeId(payload).subscribe((result: any) => {
       if (result.message == "Success") {
         this.bankList = result['data'].Table;
-        if (getSameCurrencyBank) {
+        // if (getSameCurrencyBank) {
           this.getSameCurrencyBank()
-        }
+        // }
       }
     })
 
@@ -1186,7 +1189,6 @@ export class PaymentVoucherDetailsComponent implements OnInit {
 
 
   getVendorBranch(vendorId) {
-    debugger
     const vendorDetails = this.vendorList.find((vendor) => vendor.VendorID == vendorId);
     this.paymentForm.controls['Table'].controls['VendorBranch'].setValue('');
     if (vendorDetails) {
@@ -1207,7 +1209,6 @@ export class PaymentVoucherDetailsComponent implements OnInit {
   }
 
   getVendorTan(vendorBranch) {
-    debugger
     const vendorTanDetails = this.vendorList.filter(vendor => { return vendor.BranchCode == vendorBranch }); // ! need to vendorTanDetails is present
     if (vendorTanDetails.length == 0) {
       return;
@@ -1357,7 +1358,6 @@ export class PaymentVoucherDetailsComponent implements OnInit {
 
 
   setDueBill(value) {
-    debugger
     if (value == 0) {
       this.isTds = false;
     } else {
@@ -1367,7 +1367,6 @@ export class PaymentVoucherDetailsComponent implements OnInit {
   }
 
   setPaymentVoucherRadio(type) {
-    debugger
     if (type === 'IsBill') {
       this.paymentForm.controls['Table'].controls['IsBill'].setValue(1);
       this.paymentForm.controls['Table'].controls['IsOnAccount'].setValue(0)
@@ -1392,7 +1391,7 @@ export class PaymentVoucherDetailsComponent implements OnInit {
   }
 
   setCurrencyId(CurrencyID) {
-    debugger
+    
     const currencyDetails = this.currencyList.find((curr) => curr.ID == CurrencyID);
     this.receivedCurrencyName = currencyDetails.CurrencyCode;
     this.getSameCurrencyBank();
@@ -1423,7 +1422,6 @@ export class PaymentVoucherDetailsComponent implements OnInit {
   }
 
   getDueAmount(tds = 0, bill = 0, payment = 0, index, dueAmount, type, isChecked = false) {
-    debugger
     !tds ? tds = 0 : '';
     !payment ? payment = 0 : '';
     let currentRow = this.paymentDetailsTableList[index];
@@ -1578,7 +1576,6 @@ export class PaymentVoucherDetailsComponent implements OnInit {
               }
 
             }
-            debugger
             if (this.entityCurrencyId === +this.paymentForm.controls['Table'].controls['CurrencyId'].value) {
               this.isSameCurrency = true
             }
@@ -1611,7 +1608,7 @@ export class PaymentVoucherDetailsComponent implements OnInit {
   }
 
   amountChange($event) {
-    debugger
+    
     this.TotalCredit = Number($event);
 
     this.AmountDifference = Math.abs(this.TotalDebit - (this.TotalCredit == 0 ? this.paymentForm.value.Table.AmountPaid : this.TotalCredit));
@@ -1635,7 +1632,7 @@ export class PaymentVoucherDetailsComponent implements OnInit {
 
 
   getExchangeRate(fromCurrencyCode = '', toCurrencyCode = '') {
-    debugger
+    
     const payload = {
       FromCurrency: fromCurrencyCode,
       ToCurrency: toCurrencyCode
@@ -1731,7 +1728,7 @@ export class PaymentVoucherDetailsComponent implements OnInit {
       "VendorId": Vendor_id
     }
     this.paymentService.getInvoicePaymentList(payload).subscribe(async (result: any) => {
-      debugger
+      
       if (result.message == "Success") {
 
         const constructArray = [];
@@ -1741,7 +1738,7 @@ export class PaymentVoucherDetailsComponent implements OnInit {
           await this.getExchangeRate(this.entityCurrencyCode, isDiffCurrencyInvoice.CurrencyCode);
           this.isSameCurrency = false;
         }
-        debugger
+        
         // const val = this.exchangePairDetails;
         result.data.Table.forEach((invoice) => {
           const due = {
@@ -1777,7 +1774,7 @@ export class PaymentVoucherDetailsComponent implements OnInit {
   }
 
   OnClickRadio(index, InvoiceNumber, selectedValue) {
-    debugger
+    
     this.paymentDetailsTableList[+index].IsCheck = this.paymentDetailsTableList[index].IsCheck == 0 ? 1 : 0;
   }
   // * Invoice selected total amount calculation;
@@ -1792,13 +1789,17 @@ export class PaymentVoucherDetailsComponent implements OnInit {
       var totalAmountCal = 0;
       var totalTDSAmount = 0;
       var totalPaymentAmount = 0;
-      info.forEach(element => {
-        totalAmountCal += Number(element.TDS) + (Number(element.Payment) * Number(element.ExchangeRate));
-        totalTDSAmount += (Number(element.TDS) * Number(element.ExchangeRate)),
-          totalPaymentAmount += (Number(element.Payment) * Number(element.ExchangeRate))
-      });
+      if (info.length > 0) {
+
+        info.forEach(element => {
+          totalAmountCal += Number(Number(element.Payment) * Number(!element.ExchangeRate ? 1 : element.ExchangeRate ));
+          totalTDSAmount += (Number(element.TDS) * Number(!element.ExchangeRate ? 1 : element.ExchangeRate )),
+            // totalPaymentAmount += (Number(element.Payment) * Number(element.ExchangeRate))
+            totalPaymentAmount += (Number(element.TDS) * Number(!element.ExchangeRate ? 1 : element.ExchangeRate )) + (Number(element.Payment) * Number(!element.ExchangeRate ? 1 : element.ExchangeRate ));
+        });
+      }
       // this.paymentForm.controls.Table.controls['TotalAmount'].setValue(totalAmountCal);
-      this.selectedInvoiceTotal = totalAmountCal;
+      this.selectedInvoiceTotal = Number(totalAmountCal.toFixed(this.entityFraction));;
       const amountPaid = this.paymentForm.controls.Table.controls['AmountPaid'].value;
       const totalAmount = this.selectedInvoiceTotal;
       if (amountPaid == totalAmount) {
@@ -1810,7 +1811,6 @@ export class PaymentVoucherDetailsComponent implements OnInit {
       this.paymentForm.controls['Table'].controls['TotalTDSAmount'].setValue(totalTDSAmount.toFixed(this.entityFraction))
       this.paymentForm.controls['Table'].controls['TotalPaymentAmount'].setValue(totalPaymentAmount.toFixed(this.entityFraction))
     }
-
     this.summaryAmountCalculation();
 
   }
@@ -1881,7 +1881,7 @@ export class PaymentVoucherDetailsComponent implements OnInit {
 
   // move the selcted invoices to top
   groupSelectedAtTop() {
-    debugger
+    
     const selectedInvoicesIndices = this.paymentDetailsTableList.reduce((indices, invoice, index) => {
       if (invoice.IsCheck === 1) {
         indices.push(index);
@@ -1896,7 +1896,7 @@ export class PaymentVoucherDetailsComponent implements OnInit {
 
   //  set payment Amount as due Amount when checked;
   setInitalPaymentAmount(checkedIndex, seletedInvoice) {
-    debugger
+    
     if (!seletedInvoice.Payment && seletedInvoice.IsCheck) {
       this.paymentDetailsTableList[checkedIndex].Payment = seletedInvoice.DueAmount;
       this.getDueAmount(seletedInvoice.TDS, seletedInvoice.BillAmount, seletedInvoice.DueAmount, checkedIndex, seletedInvoice.DueAmount, 'payment', true);
@@ -1983,8 +1983,6 @@ export class PaymentVoucherDetailsComponent implements OnInit {
   getIsChecked(i) {
     if (i !== undefined) {
 
-
-
       const inputData = this.paymentDetailsTableList[i].Payment;
       const enteredDecimalCount = inputData % 1 !== 0 ? inputData.toString().split('.')[1]?.length || 0 : 0;
       if (enteredDecimalCount > this.entityFraction) {
@@ -1998,15 +1996,14 @@ export class PaymentVoucherDetailsComponent implements OnInit {
         const fixedDecimal1 = inputData1.toFixed(this.entityFraction);
         this.paymentDetailsTableList[i].TDS = fixedDecimal1
       }
-
-      return this.paymentDetailsTableList[i].IsCheck == 0 ? false : true;
+      return this.paymentDetailsTableList[i].IsCheck == 0 || this.paymentDetailsTableList[i].IsCheck == null ? false : true;
     }
     return false;
   }
 
 
   DynamicGridAddRow() {
-    debugger
+    
     const gRow = this.paymentForm.value.Table4;
     var validation = "";
 
@@ -2118,7 +2115,7 @@ export class PaymentVoucherDetailsComponent implements OnInit {
 
   OnClickEditValue() {
     // console.log('row', row, index)
-    debugger
+    
     const editRow = this.accountDetailsTableList[this.editSelectedIndex];
 
     if (editRow.TransactionType == true) {
@@ -2176,10 +2173,10 @@ export class PaymentVoucherDetailsComponent implements OnInit {
   }
 
   summaryAmountCalculation() {
-    debugger
     var TotalDebit = 0;
     var TotalCredit = 0;
     var TotalTDS = 0;
+    
     // this.paymentForm.value.Table.AmountPaid
 
     if (this.paymentForm.value.Table.IsVendor && this.isPaymentForBill) {
@@ -2207,20 +2204,24 @@ export class PaymentVoucherDetailsComponent implements OnInit {
       //   TotalDebit += Number(element.Payment)
       // });
 
-      TotalDebit = Number(this.paymentForm.value.Table.TotalPaymentAmount) + Number(this.paymentForm.value.Table.ExLoss)
+      TotalDebit = Number(this.paymentForm.value.Table.TotalPaymentAmount) + Number(this.paymentForm.value.Table.ExLoss) + Number((this.paymentForm.value.Table.BankCharges * this.paymentForm.value.Table.ExchangeRate))
 
       TotalCredit += Number(this.paymentForm.value.Table.TotalTDSAmount);
+
     } else if (this.paymentForm.value.Table.IsVendor && !this.isPaymentForBill) {
       TotalDebit = Number((this.paymentForm.value.Table.AmountPaid * this.paymentForm.value.Table.ExchangeRate))
-        + Number(this.paymentForm.value.Table.ExLoss)
+        + Number(this.paymentForm.value.Table.ExLoss) + Number(this.paymentForm.value.Table.TDSAmount) + Number((this.paymentForm.value.Table.BankCharges * this.paymentForm.value.Table.ExchangeRate))
     } else if (this.paymentForm.value.Table.IsAccount) {
-      TotalDebit += Number(this.paymentForm.value.Table.ExLoss)
+      this.TotalDebitAccountAmount = 0;
+      TotalDebit += Number(this.paymentForm.value.Table.ExLoss) + Number(this.paymentForm.value.Table.TDSAmount) + Number((this.paymentForm.value.Table.BankCharges * this.paymentForm.value.Table.ExchangeRate))
+      
       this.accountDetailsTableList.forEach(element => {
 
         if (element.TransactionType == 1) {
           TotalDebit += Number(element.Amount_CCR);
         } else {
           TotalCredit += Number(element.Amount_CCR);
+          this.TotalDebitAccountAmount += Number(element.Amount_CCR);
         }
         // TotalTDS += Number(element.),
       });
@@ -2228,13 +2229,14 @@ export class PaymentVoucherDetailsComponent implements OnInit {
     }
 
 
-    TotalCredit += Number((this.paymentForm.value.Table.AmountPaid * this.paymentForm.value.Table.ExchangeRate)) + Number((this.paymentForm.value.Table.TDSAmount * this.paymentForm.value.Table.ExchangeRate))
+    TotalCredit += Number((this.paymentForm.value.Table.AmountPaid * this.paymentForm.value.Table.ExchangeRate)) + Number(this.paymentForm.value.Table.TDSAmount)
       + Number((this.paymentForm.value.Table.BankCharges * this.paymentForm.value.Table.ExchangeRate)) + Number(this.paymentForm.value.Table.ExGain)
 
     // this.TotalCredit = Number(TotalCredit.toFixed(this.entityFraction));
 
     this.paymentForm.controls['Table'].controls['TotalCredit'].setValue(TotalCredit.toFixed(this.entityFraction))
     this.paymentForm.controls['Table'].controls['TotalDebit'].setValue(TotalDebit.toFixed(this.entityFraction))
+
     // this.paymentForm.controls['Table'].controls['TotalTDSAmount'].setValue(TotalTDS.toFixed(this.entityFraction))
     this.TotalDebit = Number(TotalDebit.toFixed(this.entityFraction));
 

@@ -192,6 +192,14 @@
         <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 mt-2">
             <div class="card p-1 pt-4 pb-4 ">
                 <form [formGroup]="accountBankForm" class="mt-1 mb-1">
+                    
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                        <div class="form-group bmd-form-group">
+                            <input  type="text" autocomplete="off" class="form-control" formControlName ="OBReference"
+                                name="acctCode" placeholder="OB Reference #" >
+                        </div>
+                    </div>
+
                     <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
                         <div class="form-group bmd-form-group">
                             <input  type="text" autocomplete="off" class="form-control" formControlName ="AccountName"

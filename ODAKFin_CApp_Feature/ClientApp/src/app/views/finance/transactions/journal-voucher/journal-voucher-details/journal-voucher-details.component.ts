@@ -401,7 +401,7 @@ export class JournalVoucherDetailsComponent implements OnInit {
         CurrencyName: currency.CurrencyCode,
         ROE: info.ROE,
         Amount: info.Amount,
-        CompanyCurrencyAmount: Number(info.ROE) * Number(info.Amount),
+        CompanyCurrencyAmount: (Number(info.ROE) * Number(info.Amount)).toFixed(this.entityFraction),
         
         Narration: info.Narration
       }

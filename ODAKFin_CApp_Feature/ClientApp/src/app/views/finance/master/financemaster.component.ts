@@ -53,8 +53,6 @@ export class FinanceMasterComponent implements OnInit {
       SubfunctionID: value
     }
     this.LService.GetUserPermissionObject(paylod).subscribe(data => {
-      
-
       if (route == 'Email ids') {
 
         if (data.length > 0) {
@@ -224,9 +222,11 @@ export class FinanceMasterComponent implements OnInit {
       }
 
 
-      this.router.navigate(['views/transactions/banking/bank-view', 
-      { isSummary: this.isSummary, isBook: this.isBook, isStatementCreate: this.isStatementCreate, 
-        isStatement: this.isStatement, isReconciliation: this.isReconciliation, isUnreconciled: this.isUnreconciled }]);
+      this.router.navigate(['views/transactions/banking/bank-view',
+        {
+          isSummary: this.isSummary, isBook: this.isBook, isStatementCreate: this.isStatementCreate,
+          isStatement: this.isStatement, isReconciliation: this.isReconciliation, isUnreconciled: this.isUnreconciled
+        }]);
 
 
     }, err => {
@@ -298,9 +298,9 @@ export class FinanceMasterComponent implements OnInit {
         } else {
           this.isPayments = false;
         }
-        
-        this.router.navigate(['views/transactions/payment-request/payment-batch', 
-        { isRequest: this.isRequest, isProgress: this.isProgress, isPayments: this.isPayments}]);
+
+        this.router.navigate(['views/transactions/payment-request/payment-batch',
+          { isRequest: this.isRequest, isProgress: this.isProgress, isPayments: this.isPayments }]);
 
       }
 
@@ -440,17 +440,17 @@ export class FinanceMasterComponent implements OnInit {
       this.getPermissionListForCreate(538, 'Documents');
 
     }
-    else if(routePage == 'transactions-banking'){
-      this.getPermissionListForBanking(486,'Bank Summary');
-      this.getPermissionListForBanking(487,'Bank Book');
-      this.getPermissionListForBanking(488,'Bank statement');
-      this.getPermissionListForBanking(489,'Bank Reconciliation');
-      this.getPermissionListForBanking(490,'Bank Unreconciled');
+    else if (routePage == 'transactions-banking') {
+      this.getPermissionListForBanking(486, 'Bank Summary');
+      this.getPermissionListForBanking(487, 'Bank Book');
+      this.getPermissionListForBanking(488, 'Bank statement');
+      this.getPermissionListForBanking(489, 'Bank Reconciliation');
+      this.getPermissionListForBanking(490, 'Bank Unreconciled');
     }
-    else if(routePage == 'payment-batch'){
-      this.getPermissionListForPaymentBatch(491,'Open Request');
-      this.getPermissionListForPaymentBatch(492,'In Progress');
-      this.getPermissionListForPaymentBatch(493,'Closed Payments');
+    else if (routePage == 'payment-batch') {
+      this.getPermissionListForPaymentBatch(491, 'Open Request');
+      this.getPermissionListForPaymentBatch(492, 'In Progress');
+      this.getPermissionListForPaymentBatch(493, 'Closed Payments');
     }
     else {
       this.getPermissionList(routePage);
@@ -598,7 +598,7 @@ export class FinanceMasterComponent implements OnInit {
     }
     else if (routePage == 'COA Master') {
       SubfunctionID = 577;
-    }    
+    }
     else if (routePage == 'Credit-Review') {
       SubfunctionID = 494;
     }
@@ -652,7 +652,7 @@ export class FinanceMasterComponent implements OnInit {
     }
     else if (routePage == 'provision') {
       // SubfunctionID = 533;
-      this.router.navigate(['views/finance/transactions/provision/provision-view']);
+      this.router.navigate(['/views/provision/provision-view']);
     }
 
     const userID = localStorage.getItem("UserID");
@@ -1029,17 +1029,17 @@ export class FinanceMasterComponent implements OnInit {
             else {
               if (routePage == 'NumberRange') {
                 if (data[0].Create_Opt != 2) {
-                  if(data[0].Update_Opt != 2){
-                    if(data[0].Read_Opt != 2){
+                  if (data[0].Update_Opt != 2) {
+                    if (data[0].Read_Opt != 2) {
                       Swal.fire('Please Contact Administrator');
                     }
-                    else{
+                    else {
                       this.router.navigate(['/views/auto-generate/auto-view']);
                     }
                   }
-                  else{
+                  else {
                     this.router.navigate(['/views/auto-generate/auto-view']);
-                  }                  
+                  }
                 }
                 else {
                   this.router.navigate(['/views/auto-generate/auto-view']);
@@ -1057,7 +1057,7 @@ export class FinanceMasterComponent implements OnInit {
                 }
                 else {
                   this.router.navigate(['/views/coa/cao-view']);
-                } 
+                }
               }
               else if (routePage == 'Templates') {
                 if (data[0].Read_Opt != 2) {

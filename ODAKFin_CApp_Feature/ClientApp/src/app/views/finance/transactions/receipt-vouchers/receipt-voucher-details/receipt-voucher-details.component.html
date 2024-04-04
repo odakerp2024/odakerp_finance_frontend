@@ -600,7 +600,7 @@
                                                 formControlName="Payment">
                                         </td>
                                         <td>
-                                            <input (change)=" setInitalPaymentAmount(i);onSelectEvent();"
+                                            <input (change)=" setInitalPaymentAmount(i);onSelectEvent();summaryAmountCalculation()"
                                                 formControlName="IsSelect" type="checkbox"
                                                 [ngClass]=" !isEditMode ? 'disable-input--nostyle' : ''" />
                                         </td>
@@ -1027,17 +1027,17 @@
                                         <label>0</label>
                                     </td>
                                     <td *ngIf="!this.receiptForm.value.IsInvoice" class="text-center">
-                                        <label>{{this.receiptForm.value.AmountReceived *
+                                        <label>{{+this.receiptForm.value.TDSAmount  + (this.receiptForm.value.AmountReceived *
                                             (!this.receiptForm.value.ExchangeRate ? 0 :
                                             this.receiptForm.value.ExchangeRate
-                                            )}}</label>
+                                            ))  +(this.receiptForm.value.BankCharges * this.receiptForm.value.ExchangeRate)  }}</label>
                                     </td>
                                     <td *ngIf="this.receiptForm.value.IsInvoice" class="text-center">
                                         <label>0</label>
                                     </td>
                                     <td *ngIf="this.receiptForm.value.IsInvoice" class="text-center">
-                                        <label>{{(!this.receiptForm.value.TotalPaymentAmount ? 0 :
-                                            this.receiptForm.value.TotalPaymentAmount)}}</label>
+                                        <label>{{ +this.receiptForm.value.TotalPaymentAmount  +(this.receiptForm.value.BankCharges * this.receiptForm.value.ExchangeRate) 
+                                        }}</label>
                                     </td>
                                 </tr>
 

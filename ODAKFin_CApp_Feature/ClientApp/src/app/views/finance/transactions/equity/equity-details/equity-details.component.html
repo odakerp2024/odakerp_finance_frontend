@@ -121,7 +121,7 @@
                                 <ng-select class="searchdropdown"   
                                     [ngClass]=" isUpdate ? 'block-input' : ''" formControlName ="AccountName" [clearable]="false" [appendTo]="'body'">
                                     <ng-option [value]="''" [disabled]="true">--SELECT ACCOUNT--</ng-option>
-                                    <ng-option *ngFor="let account of AccountList" [value]="account.ID">
+                                    <ng-option *ngFor="let account of AccountList" [value]="account.COATypeName">
                                         {{account.COATypeName | uppercase}}
                                     </ng-option>
                                   </ng-select>

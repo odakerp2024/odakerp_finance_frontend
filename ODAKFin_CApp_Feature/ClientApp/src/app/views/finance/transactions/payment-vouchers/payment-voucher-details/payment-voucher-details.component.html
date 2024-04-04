@@ -558,13 +558,14 @@
 
                                         <!-- <td class="text-center">{{due.DueAmountLocal}}</td> -->
                                         <td class="text-center">
-                                            <input class="w-100"
+                                            <!-- <input class="w-100"
                                                 [ngClass]="IsFinal  || !isTds || !isEditMode || !due.IsCheck ? 'disable-input' : ''"
                                                 numbersOnly appDynamicDecimal
                                                 (change)="getDueAmount($event.target.value, due.BillAmount, due.Payment, i, due.DueAmount,'tds');summaryAmountCalculation()"
-                                                [(ngModel)]="due.TDS" [ngModelOptions]="{standalone: true}">
-                                            <!-- {{due.tds}} -->
+                                                [(ngModel)]="due.TDS" [ngModelOptions]="{standalone: true}"> -->
+                                            {{due.TDS}}
                                         </td>
+                                        
                                         <td class="text-center">
                                             <!-- {{due.payment}} -->
                                             <input min="1" class="w-100"
@@ -867,7 +868,7 @@
                                     <td *ngIf="!this.paymentForm.value.Table.IsVendor" class="text-center">
                                         <label>{{(this.paymentForm.value.Table.AmountPaid *
                                             (!this.paymentForm.value.Table.ExchangeRate ? 0 :
-                                            this.paymentForm.value.Table.ExchangeRate))
+                                            this.paymentForm.value.Table.ExchangeRate)) + this.TotalDebitAccountAmount
                                             }}</label>
                                     </td>
                                 </tr>
@@ -879,10 +880,10 @@
 
                                     <td *ngIf="this.paymentForm.value.Table.IsVendor && !this.isPaymentForBill"
                                         class="text-center">
-                                        <label>{{(this.paymentForm.value.Table.AmountPaid *
+                                        <label>{{+this.paymentForm.value.Table.TDSAmount + (this.paymentForm.value.Table.AmountPaid *
                                             (!this.paymentForm.value.Table.ExchangeRate ? 0 :
                                             this.paymentForm.value.Table.ExchangeRate
-                                            ))
+                                            )) +(this.paymentForm.value.Table.BankCharges * this.paymentForm.value.Table.ExchangeRate)
                                             }}
                                         </label>
                                     </td>
@@ -894,7 +895,7 @@
 
                                     <td *ngIf="this.paymentForm.value.Table.IsVendor && this.isPaymentForBill"
                                         class="text-center">
-                                        <label>{{ this.paymentForm.value.Table.TotalPaymentAmount
+                                        <label>{{+this.paymentForm.value.Table.TotalPaymentAmount + (this.paymentForm.value.Table.BankCharges * this.paymentForm.value.Table.ExchangeRate ) 
                                             }}
                                         </label>
                                     </td>
@@ -926,9 +927,7 @@
                                     </td>
                                     <td *ngIf="(!this.paymentForm.value.Table.IsVendor && !isPaymentForBill) ||  (this.paymentForm.value.Table.IsVendor && !isPaymentForBill) || (!this.paymentForm.value.Table.IsVendor && isPaymentForBill)"
                                         class="text-center">
-                                        <label>{{(this.paymentForm.value.Table.TDSAmount *
-                                            (!this.paymentForm.value.Table.ExchangeRate ? 0 :
-                                            this.paymentForm.value.Table.ExchangeRate))}}</label>
+                                        <label>{{this.paymentForm.value.Table.TDSAmount }}</label>
                                     </td>
 
                                     <td *ngIf="this.paymentForm.value.Table.IsVendor && isPaymentForBill"
@@ -937,7 +936,7 @@
                                     </td>
                                     <td *ngIf="this.paymentForm.value.Table.IsVendor  && isPaymentForBill"
                                         class="text-center">
-                                        <label>{{this.paymentForm.value.Table.TotalTDSAmount}}</label>
+                                        <label>0</label>
                                     </td>
 
                                 </tr>
