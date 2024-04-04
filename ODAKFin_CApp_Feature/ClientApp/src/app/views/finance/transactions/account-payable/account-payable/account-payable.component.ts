@@ -74,6 +74,7 @@ export class AccountPayableComponent implements OnInit {
 
   CreateForm() {
     this.amountPayableForm = this.fb.group({
+      OBReference: [''],
       Vendor: [''],
       PurchaseInvoice: [''],
       Amount: [''],

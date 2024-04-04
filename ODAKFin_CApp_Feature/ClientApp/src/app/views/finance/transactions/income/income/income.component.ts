@@ -71,6 +71,7 @@ export class IncomeComponent implements OnInit {
 
   CreateForm() {
     this.accountIncomeForm = this.fb.group({
+      OBReference: [''],
       AccountName: [''],
       Amount: [''],
     });

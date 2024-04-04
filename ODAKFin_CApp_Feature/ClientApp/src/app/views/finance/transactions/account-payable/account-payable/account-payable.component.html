@@ -113,16 +113,13 @@
                         <table class="table table-responsive table-striped table-bordered w-100 dataTable no-footer">
                             <thead>
                                 <tr>
-
-                             
-                                    <th tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                    colspan="1" aria-label="Name: activate to sort column ascending"
-                                     >Purchase Invoice#</th>
-
-
                                     <th tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
                                         >OB Reference#</th>
+
+                                    <th tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                         >Purchase Invoice#</th>
 
                                     <th tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
@@ -144,9 +141,9 @@
                             <tbody>
                                 <tbody *ngIf="pagedItems.length > 0">
                                 <tr *ngFor="let data of pagedItems">
-                                    <td (click)="editDivision(data.Id)" style="color: #0366d6;cursor: pointer;">{{data.PurchaseInvoice }}</td>
+                                    <td (click)="editDivision(data.Id)" style="color: #0366d6;cursor: pointer;">{{data.OBReference }}</td>
                                     <td >
-                                        {{data.OBReference }}</td>
+                                        {{data.PurchaseInvoice }}</td> 
                                     <td>{{data.OBDate     | date
                                         : commonService.convertToLowerCaseDay(
                                             entityDateFormat
@@ -229,6 +226,14 @@
         <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 mt-2">
             <div class="card p-1 pt-4 pb-4 ">
                 <form [formGroup]="amountPayableForm" class="mt-1 mb-1">
+
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                        <div class="form-group bmd-form-group">
+                            <input  type="text" autocomplete="off" class="form-control" formControlName ="OBReference"
+                                name="acctCode" placeholder="OB Reference#" >
+                        </div>
+                    </div>
+
                     <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
                         <div class="form-group bmd-form-group">
                             <input  type="text" autocomplete="off" class="form-control" formControlName ="Vendor"

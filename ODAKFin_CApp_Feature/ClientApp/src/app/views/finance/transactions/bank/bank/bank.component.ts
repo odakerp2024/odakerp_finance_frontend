@@ -73,6 +73,7 @@ export class BankComponent implements OnInit {
 
   CreateForm() {
     this.accountBankForm = this.fb.group({
+      OBReference: [''],
       AccountName: [''],
       Amount: [''],
     });
