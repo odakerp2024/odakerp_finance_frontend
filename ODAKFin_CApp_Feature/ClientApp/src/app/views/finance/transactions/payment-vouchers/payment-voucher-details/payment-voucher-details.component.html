@@ -880,10 +880,10 @@
 
                                     <td *ngIf="this.paymentForm.value.Table.IsVendor && !this.isPaymentForBill"
                                         class="text-center">
-                                        <label>{{(this.paymentForm.value.Table.AmountPaid *
+                                        <label>{{+this.paymentForm.value.Table.TDSAmount + (this.paymentForm.value.Table.AmountPaid *
                                             (!this.paymentForm.value.Table.ExchangeRate ? 0 :
                                             this.paymentForm.value.Table.ExchangeRate
-                                            )) + this.paymentForm.value.Table.TDSAmount +(this.paymentForm.value.Table.BankCharges * this.paymentForm.value.Table.ExchangeRate)
+                                            )) +(this.paymentForm.value.Table.BankCharges * this.paymentForm.value.Table.ExchangeRate)
                                             }}
                                         </label>
                                     </td>
