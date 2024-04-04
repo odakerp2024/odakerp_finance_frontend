@@ -72,10 +72,11 @@ export class EquityComponent implements OnInit {
 
   CreateForm() {
     this.accountEquityForm = this.fb.group({
+      OBReference: [''],
       AccountName: [''],
       Amount: [''],
     });
-
+    debugger
     this.uploadForm = this.fb.group({
       RegistrationCode: [this.registerCode],
       UploadDate: [this.getCurrentDate()],
@@ -303,7 +304,7 @@ export class EquityComponent implements OnInit {
       let employeeMaster = new FormData();
       employeeMaster.append('file', this.file1[0]);
       employeeMaster.append('createdBy', this.CreatedBy)
-      employeeMaster.append('Registrationcode', this.uploadForm.value.RegistrationCode);
+      employeeMaster.append('Registrationcode', this.registerCode);
       employeeMaster.append('OBDate', this.formattedDate)
       console.log(employeeMaster)
       this.OpeningBalancesEquityService.upload(employeeMaster).subscribe((result: any) => {
