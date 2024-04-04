@@ -49,7 +49,7 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="let data of pagedItems">
-                                    <td (click)="createProvision(data.ProvisionId)"  style="color: #0366d6;cursor: pointer;">
+                                    <td (click)="ProvisionInfo(data.ProvisionId)"  style="color: #0366d6;cursor: pointer;">
                                         {{data.ProvisionNumber}}</td>
                                     <td>{{data.ProvisionDate | date :
                                         commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td>

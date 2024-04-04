@@ -108,7 +108,7 @@ export class ProvisionViewComponent implements OnInit {
     }, error => { });
   } 
 
-  createProvision(id?: number){
+  createProvision(){
     const userID = localStorage.getItem("UserID");
     const paylod = {
       userID: Number(userID),
@@ -116,7 +116,7 @@ export class ProvisionViewComponent implements OnInit {
       SubfunctionID: 511,
     }
 
-    this.router.navigate(['/views/provision/provision-detail',{ id: id }]);
+    this.router.navigate(['/views/provision/provision-detail']);
 
     // this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
     //   if (data.length > 0) {
@@ -141,6 +141,14 @@ export class ProvisionViewComponent implements OnInit {
     // }, err => {
     //   console.log('errr----->', err.message);
     // });
+  }
+
+
+  
+  ProvisionInfo(ProvisionId?: number){
+    
+    this.router.navigate(['/views/provision/provision-detail',{ ProvisionId: ProvisionId }]);
+
   }
 
 }

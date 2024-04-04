@@ -35,14 +35,15 @@ export class ProvisionDetailComponent implements OnInit {
   editSelectedIndex: number;
   TotalAmount: number = 0;
   isGridEditMode = false;
-  isEditMode: boolean;
-  isEditMode1: boolean;
+  isEditMode: boolean = false;
+  // isEditMode1: boolean;
+  isUpdate: boolean = false;
   provisionId: number;
   numberRangeList: any;
   IsFinal: number;
   IsExchangeEnable: boolean = false;
   companyCurrencyId: Number;
-  Remarks: any;
+  Remarks: any
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
@@ -71,10 +72,12 @@ export class ProvisionDetailComponent implements OnInit {
     // })
 
     this.route.params.subscribe(param => {
-      if (param.id) {
-        this.provisionId = param.id;
-        this.getByIdRouteFunction();
+      if (param.ProvisionId) {
+        this.provisionId = param.ProvisionId;
         this.ProvisionForm.disable();
+        this.getByIdRouteFunction();
+  
+         
       }
     });
 
@@ -110,6 +113,71 @@ export class ProvisionDetailComponent implements OnInit {
     });
   }
 
+ 
+
+  getByIdRouteFunction() {    
+    var service = `${this.globals.APIURL}/Provision/GetProvisionById`; 
+    var payload = { Id: this.provisionId };
+    this.dataService.post(service, payload).subscribe(async (result: any) => {
+      if (result.message == 'Success' && result.data.Table.length > 0) {
+        this.provisionItemsTableList = [];
+        let info = result.data.Table[0];
+        if (info.Status == 2) this.isEditMode = true;
+        await this.getOffice(info.DivisionId);
+        // console.log("Info before patching form:", info); // Log info before patching the form
+        this.Remarks = info.Remarks; 
+        this.TotalAmount = info.TotalAmount;
+        this.ProvisionForm.get('Table').patchValue({
+          ProvisionId: info.ProvisionId,
+          DivisionId: info.DivisionId,
+          OfficeId: info.OfficeId,
+          Number: info.ProvisionNumber,
+          Date: info.ProvisionDate,
+          Status: info.StatusId,
+          Remarks: this.Remarks,
+          TotalAmount: this.TotalAmount,
+          IsFinal: info.IsFinal ,
+          IsClosedProvision: info.IsClosedProvision
+        });
+        // console.log("Form values after patching:", this.ProvisionForm.value); // Log form values after patching
+        
+        this.getCurrency();
+        this.getParentAccountList();
+        if (result.data.Table1.length > 0) {
+          // Patch values into Table1 form group
+          const table1FormGroup = this.ProvisionForm.get('Table1') as FormGroup;
+          const table1Data = result.data.Table1[0]; // Assuming only one item is patched
+          // console.log("table1Data before patching form:", table1Data);
+          table1FormGroup.patchValue({
+            ProvisionItemsId: table1Data.ProvisionItemsId,
+            Account: table1Data.Account,
+            Rate: table1Data.Rate,
+            Qty: table1Data.Qty,
+            Amount: table1Data.Amount,
+            Currency: table1Data.Currency,
+            ExchangeRate: table1Data.ExchangeRate,
+            AmountCCR: table1Data.AmountCCR,
+            AccountName: await this.getAccountName(table1Data.Account),
+            CurrencyName: await this.getCurrencyName(table1Data.Currency)
+          
+          });
+          // console.log("Form values after patching:", table1FormGroup.value);
+          // Set provisionItemsTableList separately
+          this.provisionItemsTableList = result.data.Table1.map(item => ({
+            ...item,
+            AccountName: this.getAccountName(item.Account),
+            CurrencyName: this.getCurrencyName(item.Currency)
+          }));
+          console.log(this.provisionItemsTableList, 'table 1');
+        }
+        
+      }
+    }, error => { });
+  }
+  
+  
+
+
   getDivisionList() {
     var service = `${this.globals.APIURL}/Division/GetOrganizationDivisionList`; var payload: any = {}
     this.dataService.post(service, payload).subscribe((result: any) => {
@@ -135,12 +203,12 @@ export class ProvisionDetailComponent implements OnInit {
   //   });
   // }
 
-  getOffice(DivisionId) {
+  getOffice(DivisionId) {   
     return new Promise((resolve, reject) => {
       const payload = { DivisionId: DivisionId }
       this.commonDataService.getOfficeByDivisionId(payload).pipe(takeUntil(this.ngUnsubscribe)).subscribe((result: any) => {
         this.officeList = [];
-        // this.ProvisionForm.controls.Table.controls
+        this.ProvisionForm.controls['Table']['controls']['OfficeId'].setValue('');
         if (result.message == 'Success') {
           if (result.data && result.data.Table.length > 0) {
             this.officeList.push(...result.data.Table);
@@ -163,6 +231,18 @@ export class ProvisionDetailComponent implements OnInit {
       }
     });
   }
+
+   getAccountName(accountId: number){
+    this.getParentAccountList(); 
+    const account = this.AccountList.find(acc => acc.ChartOfAccountsId.toString().toLowerCase() === accountId.toString().toLowerCase());
+    return account.AccountName; 
+  }
+
+  getCurrencyName(ID: number): string {
+    const currency = this.currencyList.find(c => c.ID === ID);
+    return  currency.CurrencyCode; // Return currency name if found, else return an empty string
+  }
+
 
   async getCurrency() {
     return new Promise((resolve, rejects) => {
@@ -359,26 +439,30 @@ export class ProvisionDetailComponent implements OnInit {
     return validation;
   }
 
-  getFinalPayload() {
-debugger
-    // delete the un-wanted key from the object
-    this.provisionItemsTableList.forEach((v) => {
-      // set the due amount as same if it is not Final
-      delete v.CurrencyName;
-      delete v.AccountName;
-    });
 
-    this.ProvisionForm.controls['Table']['controls']['Amount'].setValue(this.TotalAmount);
-    this.ProvisionForm.controls['Table']['controls']['Remarks'].setValue(this.Remarks);
+getFinalPayload() {
+  // Create a shallow copy of provisionItemsTableList with unnecessary keys removed
+  const modifiedTableList = this.provisionItemsTableList.map(item => {
+    const { CurrencyName, AccountName, ...rest } = item;
+    return rest;
+  });
 
-    let payload = {
-      "Provision": {
-        "Table": [this.ProvisionForm.value.Table],
-        "Table1": [...this.provisionItemsTableList]
-      }
-    }
-    return payload;
-  }
+  this.ProvisionForm.controls['Table']['controls']['Amount'].setValue(this.TotalAmount);
+  this.ProvisionForm.controls['Table']['controls']['Remarks'].setValue(this.Remarks);
+
+  // Construct the final payload
+  const payload = {
+    Provision: {
+      Table: [this.ProvisionForm.value.Table],
+      Table1: modifiedTableList
+    },
+    Remarks: this.Remarks,
+    TotalAmount: this.TotalAmount, 
+  };
+
+  return payload;
+}
+
 
   savePayment(payload, type) {
  
@@ -389,7 +473,7 @@ debugger
         Swal.fire(result.message, '', 'success');
         if (type === 'draft') {
           this.isEditMode = false;
-          this.isEditMode1 = true;
+         // this.isEditMode1 = true;
           this.provisionId = Number(result.data.Id)
           // this.editView(result.data.Id)
         }
@@ -607,39 +691,5 @@ debugger
       this.IsExchangeEnable = true;
     }
   }
-
-
-  getByIdRouteFunction() {
- 
-    var service = `${this.globals.APIURL}/Provision/GetProvisionById`; var payload = { Id: this.provisionId };
-    this.dataService.post(service, payload).subscribe(async (result: any) => {
-      this.provisionItemsTableList = [];
-      //this.pagedItems = [];
-      if (result.message == 'Success' && result.data.Table.length > 0) {
-        let info = result.data.Table[0];
-
-        this.CreatedBy = info.CreatedByName; 
-        this.ProvisionForm.patchValue({
-          ProvisionId: this.provisionId,
-          DivisionId: info.DivisionId,
-          OfficeId: info.OfficeId,
-          Number: info.ProvisionNumber,
-          Date: this.datePipe.transform(info.Date, 'y-MM-dd'),
-          StatusId: info.Status,
-          Remarks: info.Remarks,
-          Amount: info.Amount,
-        });
-         this.getOffice(info.Division);
-        if (result.data.Table1.length > 0) {
-          this.provisionItemsTableList = result.data.Table1;
-        //  this.setPage(1);
-        };
-      }
-    }, error => { });
-  }
-
-
-
-  
 
 }
