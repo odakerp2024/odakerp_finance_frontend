@@ -334,13 +334,19 @@ export class FinanceMasterComponent implements OnInit {
       }
     })
 
-    this.route.queryParams.subscribe(params => {
-      localStorage.setItem("TokenID", params['TokenID']);
-    });
+    if (localStorage.getItem("TokenID") == null || localStorage.getItem("TokenID") == 'undefined') {
 
-    this.BindTokenValues();
-    this.setEntityConfigurable();
+      this.route.queryParams.subscribe(params => {
+        if(params['TokenID']){
+          localStorage.setItem("TokenID", params['TokenID']);
+        } else {
+          Swal.fire('Please Contact Administrator');
+        }
+      });
 
+      this.BindTokenValues();
+      this.setEntityConfigurable();
+    }
   }
 
   BindTokenValues() {
@@ -423,14 +429,14 @@ export class FinanceMasterComponent implements OnInit {
 
   setEntityConfigurable() {
     this.commonDataService.getEntityConfigurableDetails({}).subscribe((result: any) => {
-        if (result.message === 'Success') {
-            const entityConfigurable = result.data.Table[0];
-            localStorage.setItem('EntityConfigurable', JSON.stringify(entityConfigurable))
-        }
+      if (result.message === 'Success') {
+        const entityConfigurable = result.data.Table[0];
+        localStorage.setItem('EntityConfigurable', JSON.stringify(entityConfigurable))
+      }
     }, err => {
-        Swal.fire("Invalid Credentials");
+      Swal.fire("Invalid Credentials");
     });
-}
+  }
 
 
   routePage(routePage: string) {
