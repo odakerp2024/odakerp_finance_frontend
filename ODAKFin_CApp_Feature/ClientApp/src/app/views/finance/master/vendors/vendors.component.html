@@ -162,8 +162,8 @@
                                             </option>
                                         </select> -->
                                         <ng-select class="searchdropdown" name="Country" id="ddlCountry"
-                                            formControlName="CountryID" 
-                                            [clearable]="false" (change)="OnChangeCountry($event)">
+                                            formControlName="CountryID" [clearable]="false"
+                                            (change)="OnChangeCountry($event)">
                                             <ng-option [value]="0" [disabled]="true">--SELECT COUNTRY--</ng-option>
                                             <ng-option *ngFor="let gRow of countryList" [value]="gRow.ID">
                                                 {{gRow.Country | uppercase}}
@@ -188,8 +188,8 @@
                                         </select> -->
 
                                         <mat-select id="ddlCategory" formControlName="CategoryId"
-                                            (selectionChange)="categorySelected($event)" placeholder=" --SELECT CATEGORY--" 
-                                            class="form-control" multiple>
+                                            (selectionChange)="categorySelected($event)"
+                                            placeholder=" --SELECT CATEGORY--" class="form-control" multiple>
                                             <ng-container *ngFor="let gRow of categoryList">
                                                 <mat-option [disabled]="categoryDisableList.includes(gRow.CategoryID)"
                                                     [value]="gRow.CategoryID">
@@ -272,7 +272,8 @@
                                     <div class="col-md-12">
                                         <div class="row">
                                             <div class="col-md-6">
-                                            <p class="mt-2 mr-4 mb-1">Related Party (s)</p></div>                                           
+                                                <p class="mt-2 mr-4 mb-1">Related Party (s)</p>
+                                            </div>
                                             <div class="col-md-6 alrt">
                                                 <button type="submit" class="btn btn-success bmd-btn-fab tblbtngap"
                                                     (click)="OnClickAddParty()"><i
@@ -398,9 +399,9 @@
                         <!-- <i class="fa-solid fa-circle-plus"></i> -->
                     </button>
                 </div>
-                <div class="card-body" style="padding-top: 0px;">
+                <!-- <div class="card-body" style="padding-top: 0px;"> -->
 
-                    <div class="row">
+                <!-- <div class="row">
                         <div class="col-md-12">
                             <ul class="nav nav-pills nav-justified" role="tablist">
                                 <li class="nav-item waves-effect waves-light">
@@ -445,18 +446,62 @@
                                 <li class="nav-item waves-effect waves-light">
                                     <a class="nav-link" data-toggle="tab" href="#tabInterfaces" role="tab"
                                         (click)="checkPermission('tabInterfaces');"
-                                        [ngClass]="!isUpdate ? 'disable-input' : ''" aria-selected="false">Interfaces
+                                        [ngClass]=" !isUpdate ? 'disable-input' : ''" aria-selected="false">Interfaces
                                     </a>
                                 </li>
                             </ul>
 
+                        </div>
+                    </div> -->
+
+                <div class="card p-4">
+                    <div class="d-flex mt-4" style="height: 2.4rem;">
+
+                        <div (click)="checkPermission('tabBranch')"
+                            [ngClass]="Current_Tab == 'tabBranch' ? 'selected-tav-view' : 'not-selected-tav-view'"
+                            class="text-center select-tav-view mr-3">Branch Details
+                        </div>
+
+                        <div (click)="checkPermission('tabbankDetails')"
+                            [ngClass]=" !isUpdate ? 'disable-input' : Current_Tab == 'tabbankDetails' ? 'selected-tav-view' : 'not-selected-tav-view'"
+                            class="text-center select-tav-view mr-3">Bank Details
+                        </div>
+
+                        <div (click)="checkPermission('tabKYC')"
+                            [ngClass]=" !isUpdate ? 'disable-input' : Current_Tab == 'tabKYC' ? 'selected-tav-view' : 'not-selected-tav-view'"
+                            class="text-center select-tav-view mr-3">KYC Documents
+                        </div>
+
+                        <div (click)="checkPermission('tabAccounting')"
+                            [ngClass]=" !isUpdate ? 'disable-input' : Current_Tab == 'tabAccounting' ? 'selected-tav-view' : 'not-selected-tav-view'"
+                            class="text-center select-tav-view mr-3">Accounting
+                        </div>
+
+                        <div (click)="checkPermission('tabTDSLink')"
+                            [ngClass]=" !isUpdate ? 'disable-input' : Current_Tab == 'tabTDSLink' ? 'selected-tav-view' : 'not-selected-tav-view'"
+                            class="text-center select-tav-view mr-3">TDS
+                        </div>
+
+                        <div (click)="checkPermission('creditDetails')"
+                            [ngClass]=" !isUpdate ? 'disable-input' : Current_Tab == 'creditDetails' ? 'selected-tav-view' : 'not-selected-tav-view'"
+                            class="text-center select-tav-view mr-3">Credit Details
+                        </div>
+
+                        <div (click)="checkPermission('tabEmail')"
+                            [ngClass]=" !isUpdate ? 'disable-input' : Current_Tab == 'tabEmail' ? 'selected-tav-view' : 'not-selected-tav-view'"
+                            class="text-center select-tav-view mr-3">Email Ids
+                        </div>
+
+                        <div (click)="checkPermission('tabInterfaces')"
+                            [ngClass]=" !isUpdate ? 'disable-input' : Current_Tab == 'tabInterfaces' ? 'selected-tav-view' : 'not-selected-tav-view'"
+                            class="text-center select-tav-view mr-3">Interfaces
                         </div>
                     </div>
 
                     <div class="row porttariff">
                         <div class="col-md-12">
                             <div class="tab-content">
-                                <div class="tab-pane pt-3 active show" id="tabBranch" role="tabpanel">
+                                <div class="tab-pane pt-3 active show" *ngIf="Current_Tab == 'tabBranch'" role="tabpanel">
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="card m-b-30">
@@ -585,8 +630,8 @@
                                                                                     formControlName="Address">
                                                                                 </textarea> -->
                                                                                 <input type="text" name="address"
-                                                                                formControlName="Address"
-                                                                                id="address" class="form-control">                                                                             
+                                                                                    formControlName="Address"
+                                                                                    id="address" class="form-control">
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -859,7 +904,7 @@
                                     </div>
                                 </div>
 
-                                <div class="tab-pane pt-3" id="tabBank" role="tabpanel">
+                                <div class="tab-pane pt-3" *ngIf="Current_Tab == 'tabbankDetails'" role="tabpanel">
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="card m-b-30">
@@ -878,11 +923,11 @@
                                                                                 <label class="str">Bank Account
                                                                                     Code</label> -->
 
-                                                                                <!-- </div>
+                                                                <!-- </div>
                                                                 <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
                                                                 <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7"> -->
 
-                                                                                <!-- <input type="text" name="bankName"
+                                                                <!-- <input type="text" name="bankName"
                                                                                     formControlName="BankAccountCode"
                                                                                     autocomplete="off"
                                                                                     id="txtBankAcctNo"
@@ -939,7 +984,7 @@
                                                                             <div class="w-100 mr-2 ml-2">
                                                                                 <label class="str">Account
                                                                                     Number</label>
-                                                                                   <!-- <input type="text" (paste)="(false)"
+                                                                                <!-- <input type="text" (paste)="(false)"
                                                                                     name="bankAcctName"
                                                                                     formControlName="AccountNumberId"
                                                                                     autocomplete="off"
@@ -947,17 +992,16 @@
                                                                                     ng-model="txtBankAcctName"
                                                                                     class="form-control"
                                                                                     maxlength="20"> -->
-                                                                                     <!-- This alow only the ALPHANUMERIC VALUES(NUMBER AND TEXT APRAT FROM ANYTHING IT OMMIT) -->
-                                                                                    <input type="text" (paste)="(false)"
+                                                                                <!-- This alow only the ALPHANUMERIC VALUES(NUMBER AND TEXT APRAT FROM ANYTHING IT OMMIT) -->
+                                                                                <input type="text" (paste)="(false)"
                                                                                     name="bankAcctName"
                                                                                     formControlName="AccountNumberId"
                                                                                     autocomplete="off"
                                                                                     id="txtBankAcctName"
                                                                                     ng-model="txtBankAcctName"
-                                                                                    class="form-control"
-                                                                                    maxlength="20"
+                                                                                    class="form-control" maxlength="20"
                                                                                     onkeypress="return event.charCode != 46 && (event.charCode >= 48 && event.charCode <= 57 || event.charCode >= 65 && event.charCode <= 90 || event.charCode >= 97 && event.charCode <= 122)">
-                                                                               </div>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -971,15 +1015,20 @@
                                                                  <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
                                                                  <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7 input-field"> -->
                                                                                 <ng-select formControlName="CurrencyId"
-                                                                                id="ddlOffice" [clearable]="false" class="searchdropdown" >
-                                                                                    <ng-option disabled [value]="null">--
+                                                                                    id="ddlOffice" [clearable]="false"
+                                                                                    class="searchdropdown">
+                                                                                    <ng-option disabled
+                                                                                        [value]="null">--
                                                                                         Select Currency --</ng-option>
-                                                                                    <ng-option *ngFor="let gRow of currencyList"
-                                                                                    [value]="gRow.ID">
-                                                                                    {{gRow.CurrencyName | uppercase }} -
-                                                                                    {{gRow.CurrencyCode | uppercase}}
+                                                                                    <ng-option
+                                                                                        *ngFor="let gRow of currencyList"
+                                                                                        [value]="gRow.ID">
+                                                                                        {{gRow.CurrencyName | uppercase
+                                                                                        }} -
+                                                                                        {{gRow.CurrencyCode |
+                                                                                        uppercase}}
                                                                                     </ng-option>
-                                                                                    </ng-select>
+                                                                                </ng-select>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -1030,11 +1079,11 @@
                                                                             <div class="w-100 mr-2 ml-2">
                                                                                 <label class="str">IFSC Code</label> -->
 
-                                                                                <!-- </div>
+                                                                <!-- </div>
                                                               <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
                                                               <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7"> -->
 
-                                                                                <!-- <input type="text" name="bankBranch"
+                                                                <!-- <input type="text" name="bankBranch"
                                                                                     (keypress)="IfscCode($event)"
                                                                                     formControlName="IFSCCode"
                                                                                     autocomplete="off"
@@ -1152,7 +1201,7 @@
                                                                                     rowspan="1" colspan="1"
                                                                                     aria-label="Name: activate to sort column ascending"
                                                                                     style="width: 177.575px;">
-                                                                                    Currency 
+                                                                                    Currency
                                                                                 </th>
                                                                                 <th class="actwid" tabindex="0"
                                                                                     aria-controls="datatable-buttons"
@@ -1209,7 +1258,7 @@
                                                                                         class="form-control">
                                                                                 </td> -->
 
-                                                                                
+
                                                                                 <td>
                                                                                     <!-- <select
                                                                                         [(ngModel)]="+dataItem.CurrencyId"
@@ -1227,17 +1276,21 @@
                                                                                         </option>
                                                                                     </select> -->
 
-                                                                                <ng-select [(ngModel)]="+dataItem.CurrencyId"
-                                                                                    disabled 
-                                                                                    [ngModelOptions]="{standalone: true}">
-                                                                                    <ng-option disabled [value]="null">
-                                                                                        -- Select Currency --</ng-option>
-                                                                                    <ng-option *ngFor="let gRow of currencyList"
-                                                                                    [value]="gRow.ID">
-                                                                                    {{gRow.CurrencyName}} -
-                                                                                    {{gRow.CurrencyCode}}
-                                                                                    </ng-option>
-                                                                                </ng-select>
+                                                                                    <ng-select
+                                                                                        [(ngModel)]="+dataItem.CurrencyId"
+                                                                                        disabled
+                                                                                        [ngModelOptions]="{standalone: true}">
+                                                                                        <ng-option disabled
+                                                                                            [value]="null">
+                                                                                            -- Select Currency
+                                                                                            --</ng-option>
+                                                                                        <ng-option
+                                                                                            *ngFor="let gRow of currencyList"
+                                                                                            [value]="gRow.ID">
+                                                                                            {{gRow.CurrencyName}} -
+                                                                                            {{gRow.CurrencyCode}}
+                                                                                        </ng-option>
+                                                                                    </ng-select>
 
                                                                                 </td>
                                                                                 <td>
@@ -1270,7 +1323,7 @@
                                     </div>
                                 </div>
 
-                                <div class="tab-pane pt-3" id="tabKYC" role="tabpanel">
+                                <div class="tab-pane pt-3" *ngIf="Current_Tab == 'tabKYC'" role="tabpanel">
                                     <div class="row">
 
                                         <div class="col-12">
@@ -1294,7 +1347,7 @@
                                     </div>
                                 </div>
                                 <!--  tab4 accounting -->
-                                <div class="tab-pane pt-3" id="tabAccounting" role="tabpanel">
+                                <div class="tab-pane pt-3" *ngIf="Current_Tab == 'tabAccounting'" role="tabpanel">
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="card m-b-30">
@@ -1342,9 +1395,9 @@
                                                                                 <!-- <label
                                                                                     [ngClass]="{'str' :gstCategoryInput.placeOfSupport}">Place
                                                                                     of Support</label> -->
-                                                                                      <label
-                                                                                    class="str">Place of Support</label> 
-                                                                                    
+                                                                                <label class="str">Place of
+                                                                                    Support</label>
+
                                                                                 <!-- [ngClass]="{'disable-input' : !gstCategoryInput.placeOfSupport}" -->
                                                                                 <select name="placeofSupply"
                                                                                     id="ddlplaceofSupplystate"
@@ -1353,9 +1406,9 @@
                                                                                     <option [value]="''" disabled
                                                                                         selected>--SELECT--</option>
                                                                                     <option
-                                                                                    *ngFor="let state of countryStateList"
-                                                                                    [value]="state.ID">
-                                                                                    {{state.StateName | uppercase}}
+                                                                                        *ngFor="let state of countryStateList"
+                                                                                        [value]="state.ID">
+                                                                                        {{state.StateName | uppercase}}
                                                                                     </option>
                                                                                 </select>
                                                                             </div>
@@ -1453,16 +1506,19 @@
                                                                                 </select> -->
 
 
-                                                                                <ng-select name="currency" id="txtCurrency" [clearable]="false"
-                                                                                formControlName="AccountCurrencyId" class="searchdropdown">
+                                                                                <ng-select name="currency"
+                                                                                    id="txtCurrency" [clearable]="false"
+                                                                                    formControlName="AccountCurrencyId"
+                                                                                    class="searchdropdown">
                                                                                     <ng-option [value]="''" disabled>
                                                                                         --SELECT--</ng-option>
-                                                                                    <ng-option *ngFor="let gRow of currencyList"
-                                                                                    [value]="gRow.ID">
-                                                                                    {{gRow.CurrencyName}} -
-                                                                                    {{gRow.CurrencyCode}}
+                                                                                    <ng-option
+                                                                                        *ngFor="let gRow of currencyList"
+                                                                                        [value]="gRow.ID">
+                                                                                        {{gRow.CurrencyName}} -
+                                                                                        {{gRow.CurrencyCode}}
                                                                                     </ng-option>
-                                                                                    </ng-select>
+                                                                                </ng-select>
 
                                                                             </div>
                                                                         </div>
@@ -1525,8 +1581,9 @@
                                                                                     formControlName="MSMONo"
                                                                                     autocomplete="off"
                                                                                     id="txtMSMENumber"
-                                                                                    ng-model="txtMSMENumber" numbersOnly min="0" min="1"
-                                                                                    onkeypress='return event.charCode >= 48 && event.charCode <= 57' 
+                                                                                    ng-model="txtMSMENumber" numbersOnly
+                                                                                    min="0" min="1"
+                                                                                    onkeypress='return event.charCode >= 48 && event.charCode <= 57'
                                                                                     class="form-control" maxlength="12">
                                                                             </div>
                                                                         </div>
@@ -1556,19 +1613,20 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                
+
                                                                 <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                                                                     <div class="form-group">
                                                                         <div class="row">
                                                                             <div class="col-md-12">
                                                                                 <label
-                                                                                    [ngClass]="{'str' :gstCategoryInput.SubCategory}">Ledger Mapping</label>
-                                                                                <select name="Ledger"
-                                                                                    id="ddlLedger"
+                                                                                    [ngClass]="{'str' :gstCategoryInput.SubCategory}">Ledger
+                                                                                    Mapping</label>
+                                                                                <select name="Ledger" id="ddlLedger"
                                                                                     formControlName="LedgerMappingId"
                                                                                     class="form-control my-select">
                                                                                     <option value="0" disabled selected>
-                                                                                        --SELECT Ledger Mapping--</option>
+                                                                                        --SELECT Ledger Mapping--
+                                                                                    </option>
                                                                                     <option
                                                                                         *ngFor="let data of parentAccountList"
                                                                                         [value]="data.Id">
@@ -1755,7 +1813,7 @@
                                     </div>
                                 </div>
 
-                                <div class="tab-pane pt-3" id="tabTDSLink" role="tabpanel">
+                                <div class="tab-pane pt-3" *ngIf="Current_Tab == 'tabTDSLink'" role="tabpanel">
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="card m-b-30">
@@ -1865,7 +1923,8 @@
                                                                                     <td></td>
                                                                                     <td>
                                                                                         <select class="form-control"
-                                                                                            formControlName="TDSApplicability" [attr.disabled]="isUpdate ?  'disable-input' : ''"
+                                                                                            formControlName="TDSApplicability"
+                                                                                            [attr.disabled]="isUpdate ?  'disable-input' : ''"
                                                                                             (change)="tdsApplicability($event.target.value); patchTdsValue()">
                                                                                             <option [value]="0">
                                                                                                 --SELECT--</option>
@@ -1990,7 +2049,8 @@
                                                                                                 [placeholder]="entityDateFormat"
                                                                                                 formControlName="StartDate">
                                                                                             <mat-datepicker-toggle
-                                                                                                matSuffix [disabled]="tdsFormDisable.LDC ? null : ''"
+                                                                                                matSuffix
+                                                                                                [disabled]="tdsFormDisable.LDC ? null : ''"
                                                                                                 [for]="StartDate"></mat-datepicker-toggle>
                                                                                             <mat-datepicker
                                                                                                 #StartDate></mat-datepicker>
@@ -2019,7 +2079,8 @@
                                                                                                 [placeholder]="entityDateFormat"
                                                                                                 formControlName="EndDate">
                                                                                             <mat-datepicker-toggle
-                                                                                                matSuffix [disabled]="tdsFormDisable.LDC ? null : ''"
+                                                                                                matSuffix
+                                                                                                [disabled]="tdsFormDisable.LDC ? null : ''"
                                                                                                 [for]="EndDate"></mat-datepicker-toggle>
                                                                                             <mat-datepicker
                                                                                                 #EndDate></mat-datepicker>
@@ -2053,7 +2114,7 @@
                                                                                                 [placeholder]="entityDateFormat"
                                                                                                 formControlName="Date">
                                                                                             <mat-datepicker-toggle
-                                                                                                matSuffix 
+                                                                                                matSuffix
                                                                                                 [for]="Date"></mat-datepicker-toggle>
                                                                                             <mat-datepicker
                                                                                                 #Date></mat-datepicker>
@@ -2410,7 +2471,7 @@
                                     </div>
                                 </div>
 
-                                <div class="tab-pane pt-3" id="tabCredit" role="tabpanel">
+                                <div class="tab-pane pt-3" *ngIf="Current_Tab == 'creditDetails'" role="tabpanel">
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="card m-b-30">
@@ -2513,7 +2574,8 @@
                                                                                             name="creditDays"
                                                                                             formControlName="CreditDays"
                                                                                             autocomplete="off"
-                                                                                            id="creditDays" RemoveSpecialChars
+                                                                                            id="creditDays"
+                                                                                            RemoveSpecialChars
                                                                                             onkeypress='return event.charCode >= 48 && event.charCode <= 57'
                                                                                             numbersOnly min="0" min="1"
                                                                                             class="form-control">
@@ -2524,19 +2586,29 @@
                                                                                             name="creditLimits"
                                                                                             formControlName="CreditLimit"
                                                                                             autocomplete="off"
-                                                                                            id="creditLimits" RemoveSpecialChars
+                                                                                            id="creditLimits"
+                                                                                            RemoveSpecialChars
                                                                                             onkeypress='return event.charCode >= 48 && event.charCode <= 57'
                                                                                             numbersOnly min="0" min="1"
                                                                                             class="form-control">
                                                                                     </td>
 
                                                                                     <td>
-                                                                                    <ng-select class="searchdropdown" formControlName="Currency" [clearable]="false" [appendTo]="'body'">
-                                                                                    <ng-option [value]="0" disabled>--SELECT CURRENCY--</ng-option>
-                                                                                    <ng-option  *ngFor="let currency of currencyList"  [value]="currency.ID">
-                                                                                    {{currency.Currency | uppercase}}
-                                                                                    </ng-option>
-                                                                                    </ng-select> 
+                                                                                        <ng-select
+                                                                                            class="searchdropdown"
+                                                                                            formControlName="Currency"
+                                                                                            [clearable]="false"
+                                                                                            [appendTo]="'body'">
+                                                                                            <ng-option [value]="0"
+                                                                                                disabled>--SELECT
+                                                                                                CURRENCY--</ng-option>
+                                                                                            <ng-option
+                                                                                                *ngFor="let currency of currencyList"
+                                                                                                [value]="currency.ID">
+                                                                                                {{currency.Currency |
+                                                                                                uppercase}}
+                                                                                            </ng-option>
+                                                                                        </ng-select>
                                                                                     </td>
 
                                                                                     <td>
@@ -2545,8 +2617,10 @@
                                                                                             appearance="outline">
                                                                                             <input matInput
                                                                                                 autocomplete="off"
-                                                                                                [min]="minDate" style="font:small-caption"
-                                                                                                [matDatepicker]="Effectivedate" readonly
+                                                                                                [min]="minDate"
+                                                                                                style="font:small-caption"
+                                                                                                [matDatepicker]="Effectivedate"
+                                                                                                readonly
                                                                                                 id="Effectivedate"
                                                                                                 [placeholder]="entityDateFormat"
                                                                                                 formControlName="Effectivedate">
@@ -2564,8 +2638,9 @@
                                                                                     </td>
 
                                                                                     <td>
-                                                                    
-                                                                                        <input class="form-control" readonly disabled
+
+                                                                                        <input class="form-control"
+                                                                                            readonly disabled
                                                                                             type="text" id="ApprovedBy"
                                                                                             name="endDate"
                                                                                             formControlName="ApprovedBy" />
@@ -2580,8 +2655,9 @@
                                                                                         <mat-form-field
                                                                                             class="Date mat_date_picker mt-3"
                                                                                             appearance="outline">
-                                                                                            <input matInput readonly disabled
-                                                                                              class="disable-datepicker" 
+                                                                                            <input matInput readonly
+                                                                                                disabled
+                                                                                                class="disable-datepicker"
                                                                                                 autocomplete="off"
                                                                                                 style="background:#e9ecef;"
                                                                                                 [min]="minDate"
@@ -2696,7 +2772,7 @@
                                     </div>
                                 </div>
 
-                                <div class="tab-pane pt-3" id="tabEmail" role="tabpanel">
+                                <div class="tab-pane pt-3"  *ngIf="Current_Tab == 'tabEmail'" role="tabpanel">
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="card m-b-30">
@@ -2846,7 +2922,7 @@
                                     <!-- <app-e-mail-table  [tableData]="emailData" [OrgId]="companyDetailId" (saveTable)="updateEmailDetails($event)"></app-e-mail-table> -->
                                 </div>
 
-                                <div class="tab-pane pt-3" id="tabInterfaces" role="tabpanel">
+                                <div class="tab-pane pt-3" *ngIf="Current_Tab == 'tabInterfaces'" role="tabpanel">
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="card m-b-30">
@@ -2988,8 +3064,8 @@
                         <input type="hidden" id="RegId" [ngModelOptions]="{standalone: true}" [(ngModel)]="RegId"
                             name="RegId" />
                     </div>
-                
-                   
+
+
                 </div>
 
             </div>
