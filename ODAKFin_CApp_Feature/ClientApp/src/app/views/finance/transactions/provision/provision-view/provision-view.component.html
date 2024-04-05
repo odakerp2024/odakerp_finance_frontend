@@ -71,7 +71,7 @@
                         </table>
                     </div>
 
-                    <!-- <div class="row page mr-3" align="right">
+                    <div class="row page mr-3" align="right">
                         <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10 && pager.totalItems > 10"
                             class="pagination">
                             <li [ngClass]="{disabled:pager.currentPage === 1}">
@@ -97,7 +97,7 @@
                                 <a (click)="setPage(pager.totalPages)">Last</a>
                             </li>
                         </ul>
-                    </div> -->
+                    </div> 
                 </div>
             </div>
         </div>
@@ -109,7 +109,7 @@
 
                     <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
                         <div class="form-group bmd-form-group w-100">
-                            <label class="str fontstyles">Division</label>
+                            <label class=" fontstyles">Division</label>
                             <ng-select class="searchdropdown custom" formControlName="Division"  [clearable]="false">
                                 <ng-option [value]="0" disabled>--SELECT DIVISION TYPE--</ng-option>
                                 <ng-container *ngFor="let division of divisionList">
