@@ -58,15 +58,7 @@
 
                 <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group">
-                        <label class="str">Division</label>
-                        <!-- <select formControlName="Division"
-                            (ngModelChange)="getOfficeList($event);PurchaseCreateForm.controls['Office'].setValue(0);"
-                            name="Division" class="form-control my-select">
-                            <option disabled value="0">--SELECT DIVISION--</option>
-                            <option *ngFor="let division of divisionList" [value]="division.ID">
-                                {{division.DivisionName | uppercase}}
-                            </option>
-                        </select> -->
+                        <label>Division</label>
                         <ng-select  class="searchdropdown"  formControlName="Division" [clearable]="false" (ngModelChange)="getOfficeList($event);PurchaseCreateForm.controls['Office'].setValue(0);" name="Division" >
                             <ng-option [value]="0" disabled>--SELECT DIVISION--</ng-option>
                             <ng-container  *ngFor="let division of divisionList">
@@ -80,15 +72,7 @@
 
                 <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group">
-                        <label class="str">Office</label>
-                        <!-- <select formControlName="Office"
-                            (ngModelChange)="getOfficeGST($event);autoCodeGeneration('purchase')" name="Office"
-                            class="form-control my-select">
-                            <option disabled value="0">--SELECT OFFICE--</option>
-                            <option *ngFor="let office of officeList" [value]="office.ID">
-                                {{office.OfficeName | uppercase}}
-                            </option>
-                        </select> -->
+                        <label>Office</label>
                         <ng-select  class="searchdropdown"  formControlName="Office" [clearable]="false"(ngModelChange)="getOfficeGST($event)" name="Office">
                             <ng-option [value]="0" disabled>--SELECT OFFICE--</ng-option>
                             <ng-container *ngFor="let office of officeList">
@@ -100,19 +84,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
-                    <label class="str">Booking Against</label><br>
-                    <div class="row ml-1">
-                        <div class="form-check">
-                            <input type="radio" class="form-check-input" id="radio2" checked name="optradio" value="2">
-                            <label class="form-check-label" for="radio2">General</label>
-                        </div>
-                        <!-- <div class="form-check ml-1">
-                            <input type="radio" class="form-check-input" id="radio3" name="optradio" value="3">
-                            <label class="form-check-label" for="radio3">Against Provision</label>
-                        </div> -->
-                    </div>
-                </div>
+         
 
                 <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group">
@@ -122,6 +94,35 @@
                     </div>
                 </div>
 
+     
+            <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                <label>Booking Against</label><br>
+                <div class="row ml-1">
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" id="radio1" checked name="optradio" value="2">
+                        <label class="form-check-label" for="radio1">General</label>
+                    </div>
+                    <div class="form-check ml-5">
+                        <input type="radio" class="form-check-input" id="radio2" checked name="optradio" value="2">
+                        <label class="form-check-label" for="radio2">Against provision</label>
+                    </div>
+                </div>
+            </div>
+ 
+            <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                <div class="form-group">
+                    <label>Provision Type</label>
+                    <ng-select  class="searchdropdown"  formControlName="Provision" [clearable]="false" name="provision">
+                        <ng-option  [value]="0" disabled>--SELECT PROVISION--</ng-option>                    
+                        <ng-option value="1">FULL</ng-option>
+                        <ng-option value="0">PARTIAL</ng-option>             
+                    </ng-select>  
+                </div>
+            </div>            
+      
+            <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+            </div>
+           
                 <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group">
                         <label class="str">Purchase Invoice #</label>
@@ -146,7 +147,7 @@
 
                 <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group">
-                        <label class="str">Status</label>
+                        <label class="str">PJ Status</label>
                         <select [ngClass]=" isUpdate ? 'block-input' : 'block-input'" readonly formControlName="StatusId" name="Status" class="form-control my-select disable-input--nostyle">
                             <option disabled value="">--SELECT STATUS--</option>
                             <option disabled *ngFor="let status of statusList" [value]="status.Id">
@@ -158,7 +159,7 @@
 
                 <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group">
-                        <label class="str">Vendor</label>
+                        <label>Vendor</label>
                         <!-- <select formControlName="VendorId" (change)="getVendorBranchList($event.target.value, true, 0 );PurchaseCreateForm.controls['VendorGSTCategory'].setValue('');
                             PurchaseCreateForm.controls['VendorGST'].setValue('');PurchaseCreateForm.controls['TDSApplicability'].setValue('');PurchaseCreateForm.controls['TDSSection'].setValue('');
                             PurchaseCreateForm.controls['ReasonforNonTDS'].setValue('');
@@ -217,12 +218,12 @@
                     </div>
                 </div>
 
-               <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+               <!-- <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group">
                         <label class="str">Vendor Type</label>
                         <input formControlName="VendorType" readonly class="form-control" type="text" id="VendorType">
                     </div>
-                </div>
+                </div> -->
 
                 <div class="col-md-4 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group">
@@ -249,7 +250,7 @@
 
                 <div class="col-md-4 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group">
-                        <label class="str">Due Date</label>
+                        <label>Due Date</label>
                         <input formControlName="DueDate" readonly class="form-control" [placeholder]="entityDateFormat" type="text" id="DueDate" *ngIf="duedatelist && duedatelist.length > 0">
                     </div>
                     <div>
@@ -412,8 +413,8 @@
                                     <th>Amount</th>
                                     <th>Currency</th>
                                     <th>Ex.Rate</th>
-                                    <th>Local Amount</th>
-                                    <th>Taxable</th>
+                                    <th>Amount (CCR)</th>
+                                    <th>Rcm</th>
                                     <th>GST Group %</th>
                                     <th>Select</th>
                                 </tr>
@@ -465,21 +466,25 @@
                                             (ngModelChange)="exchangeRateChangeEvent($event)" class="form-control"
                                             onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly id="ExRate" />
                                     </td>
-                                    <td> <input readonly formControlName="LocalAmount" class="form-control" type="text"
-                                            id="LocalAmount" /> </td>
-                                    <td>
+                                    <td> <input readonly formControlName="Amountccr" class="form-control" type="text"
+                                            id="Amount (CCR)" /> </td>
+                                 
                                         <!-- <select (change)="taxableChangeEvent($event.target.value)"
                                             formControlName="IsTaxable" class="form-control my-select">
                                             <option disabled value="">--SELECT TAXABLE--</option>
                                             <option value="1">YES</option>
                                             <option value="0">NO</option>
                                         </select> -->
-                                        <ng-select class="searchdropdown" [formControlName]="'IsTaxable'" [clearable]="false" [appendTo]="'body'" (change)="taxableChangeEvent($event)">
-                                            <ng-option [value]="''" disabled>--SELECT TAXABLE--</ng-option>
-                                            <ng-option value="1">YES</ng-option>
-                                            <ng-option value="0">NO</ng-option>
-                                         </ng-select> 
-                                    </td>
+                                            <!-- <mat-checkbox class="searchcheckbox" (change)="toggleRCM($event.checked ? 1 : 0)" 
+                                                          [checked]="PurchaseCreateForm.value.IsRCM === 1"></mat-checkbox>                                         -->
+                                                          <td>
+                                                            <input type="checkbox" (change)="toggleRCM($event.target.checked)" 
+                                                            [checked]="PurchaseCreateForm.value.IsRCM === true">
+                                                        </td>
+                                                        
+                                                                         
+                                                                                                                                                               
+                                 
                                     <td>
                                         <!-- <select formControlName="GSTGroup" class="form-control my-select">
                                             <option disabled value="0">--SELECT TAX GROUP--</option>
@@ -503,8 +508,8 @@
                                     <td>{{data.Amount}}</td>
                                     <td>{{data.CurrencyName}}</td>
                                     <td>{{data.ExRate ? data.ExRate : 1}}</td>
-                                    <td>{{data.LocalAmount}}</td>
-                                    <td>{{data.IsTaxable == 1 ? 'YES' :'NO'}}</td>
+                                    <td>{{data.Amountccr}}</td>
+                                    <td>{{data.IsRCM ? 'Checked' : 'Unchecked' }}</td>
                                     <td>{{data.GSTGroup ? data.GSTGroup :0}} %</td>
                                     <td>
                                         <input class="vertal checkbox" type="radio" name="AlertCheck" id="RadioCheck"
@@ -608,6 +613,57 @@
                             </table>
                         </div>
 
+                        <div class="row ml-3 mt-5">
+                            <div>
+                                <label>Bank Details</label>
+                            </div>
+                            <div>
+                                <div class="form-group ml-5">
+                                    <ng-select style="width:250px"class="searchdropdown" formControlName="Bankdetails" [clearable]="false"  name="bank">
+                                        <ng-option [value]="''" >--SELECT BANK--</ng-option>
+                                        <ng-option *ngFor="let bank of bankList" [value]="bank.BankID">
+                                            {{ bank.BankName | uppercase }} - {{ bank.AccountNo | uppercase }}
+                                        </ng-option>
+                                    </ng-select>  
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row ml-3 mt-1">
+                            <div>
+                                <label class="str">Invoice Currency</label>
+                            </div>
+                            <div>
+                                <div class="form-group ml-3">
+                                    <ng-select style="width:250px"class="searchdropdown" [formControlName]="'InvoiceCurrency'"[clearable]="false" [appendTo]="'body'" (change)="changeCurrencyEvent($event)">
+                                        <ng-option [value]="0" disabled>--SELECT CURRENCY--</ng-option>
+                                        <ng-option *ngFor="let currency of currencyList" [value]="currency.ID">
+                                        <span class="textwrap">{{currency.Currency | uppercase}}</span>
+                                       </ng-option>
+                                    </ng-select> 
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row ml-3 mt-1">
+                            <div>
+                                <label>Invoice ExRate</label>
+                            </div>
+                            <div style="margin-left: 33px;">
+                                <div class="form-group">
+                                    <input style="width:250px" formControlName="InvoiceExrate"  class="form-control" type="number"
+                                    id="InvoiceExrate">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row ml-3 mt-1">
+                            <div>
+                                <label>Remarks</label>
+                            </div>
+                            <div style="margin-left: 67px;">
+                                <div class="form-group">
+                                    <textarea   formControlName="Remarks" style="width:250px"class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="col p-0">
                         <div class="col-md-6 col-sm-6 col-lg-10 col-xl-12 mt-4">
@@ -617,18 +673,11 @@
                                     type="number" id="SubTotal">
                             </div>
                         </div>
+                        
                         <div class="col-md-6 col-sm-6 col-lg-10 col-xl-12">
                             <div class="form-group">
-                                <label>TDS</label>
-                                <input readonly formControlName="TDSRate" class="form-control" placeholder="TDS"
-                                    type="number" id="TDSRate">
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 col-sm-6 col-lg-10 col-xl-12">
-                            <div class="form-group">
-                                <label>IGST</label>
-                                <input readonly formControlName="IGST" class="form-control" placeholder="IGST"
+                                <label>SGST</label>
+                                <input  formControlName="SGST" class="form-control" placeholder="SGST"
                                     type="number" id="SubTotal">
                             </div>
                         </div>
@@ -636,32 +685,49 @@
                         <div class="col-md-6 col-sm-6 col-lg-10 col-xl-12">
                             <div class="form-group">
                                 <label>CGST</label>
-                                <input readonly formControlName="CGST" class="form-control" placeholder="CGST"
+                                <input  formControlName="CGST" class="form-control" placeholder="CGST"
                                     type="number" id="SubTotal">
                             </div>
                         </div>
 
                         <div class="col-md-6 col-sm-6 col-lg-10 col-xl-12">
                             <div class="form-group">
-                                <label>SGST</label>
-                                <input readonly formControlName="SGST" class="form-control" placeholder="SGST"
+                                <label>IGST</label>
+                                <input  formControlName="IGST" class="form-control" placeholder="IGST"
                                     type="number" id="SubTotal">
                             </div>
                         </div>
+
+               
+
 
                         <div class="col-md-6 col-sm-6 col-lg-10 col-xl-12">
                             <div class="form-group">
                                 <label>Invoice Amount</label>
                                 <input readonly formControlName="InvoiceAmount" class="form-control"
-                                    placeholder="Invoice Amount" type="number" id="SubTotal">
+                                    placeholder="Invoice Amount" type="number" id="InvoiceAmount">
+                            </div>
+                        </div>
+                         
+                          <div class="col-md-6 col-sm-6 col-lg-10 col-xl-12">
+                            <div class="form-group">
+                                <label>TDS Applicable</label>
+                                <input readonly formControlName="TDSRate" class="form-control" placeholder="TDS"
+                                    type="number" id="TDSRate">
                             </div>
                         </div>
 
                         <div class="col-md-6 col-sm-6 col-lg-10 col-xl-12">
                             <div class="form-group">
+                                <label>Net Amount</label>
+                                <input readonly formControlName="NetAmount" class="form-control" placeholder="Net Amount"
+                                    type="number" id="NetAmount">
+                            </div>
+                        </div>
+
+                        <!-- <div class="col-md-6 col-sm-6 col-lg-10 col-xl-12">
+                            <div class="form-group">
                                 <label>Invoice Currency</label>
-                                <!-- <input readonly formControlName="InvoiceCurrency" class="form-control"
-                                    placeholder="Invoice Currency" type="text" id="SubTotal"> -->
                                 <select [ngClass]=" isUpdate ? 'block-input' : 'block-input'"
                                     formControlName="InvoiceCurrency" class="form-control my-select">
                                     <option disabled value="0">--SELECT CURRENCY--</option>
@@ -669,9 +735,8 @@
                                         {{currency.Currency | uppercase}}
                                     </option>
                                 </select>
-
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
 
@@ -686,13 +751,14 @@
                         (click)="saveInfo(2)">
                         Final
                     </button>
-                   <button type="button" *ngIf="isUpdate && !isFinalRecord" [disabled]="isUpdateMode" (click)="saveInfo(1,true)"
+                   <!-- <button type="button" *ngIf="isUpdate && !isFinalRecord" [disabled]="isUpdateMode" (click)="saveInfo(1,true)"
                         class="btn btn-warning text-white mr-3 mb-0 col-auto">
                         Delete
-                    </button>
+                    </button> -->
                     <button type="button"(click)="saveInfo(3)"
-                        class="btn btn-warning text-white mr-3 mb-0 col-auto">
-                        Cancel
+                        class="btn btn-primary text-white mr-3 mb-0 col-auto"
+                        style="background-color: #19a84c !important;border: #19a84c;border: 1px solid #19a84c !important;">
+                        Print
                     </button>
                 </div>
             </div>
