@@ -8,7 +8,7 @@
             <div class="float-right">
                 <!-- edit   [disable] = "!isEditMode" -->
                 <button type="button" class="btn btn-warning bmd-btn-edit text-white mr-3"
-                    *ngIf="!isUpdate && !isEditMode" (click)="ProvisionForm.enable()">
+                *ngIf="isUpdate && !IsFinal"  (click)="enableEdit()">
                     <i class="material-icons editicon">edit</i>
                 </button>
                 <!-- back -->
@@ -16,7 +16,7 @@
                     <i class="material-icons editicon">reply</i>
                 </button>
                 <!-- clock details -->
-                <button *ngIf="isUpdate" type="button" class="btn btn-raised bmd-btn-edit" data-placement="bottom" type="button"
+                <button  type="button" class="btn btn-raised bmd-btn-edit" data-placement="bottom" type="button"
                     id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="material-icons editicon">schedule</i>
                 </button>
@@ -256,10 +256,11 @@
                 <!-- || paymentForm.value.Table.value.AmountPaid !== paymentForm.value.Table.value.TotalAmount  -->
                 <div class="float-right">
                     <!-- [ngClass]=" !isEditMode || !isSameAmount  ? 'disable-input--nostyle save-disable---style' : ''" -->
-                    <button type="button" class="btn btn-primary text-white mr-3 mb-0 col-auto" (click)="submit()">
+                    <button type="button" *ngIf="!IsFinal && isUpdate"
+                     class="btn btn-primary text-white mr-3 mb-0 col-auto" (click)="submit()">
                         Save
                     </button>
-                    <button type="button" *ngIf="!IsFinal"
+                    <button type="button" *ngIf="!IsFinal && isUpdate"
                         [ngClass]=" !isUpdate || !isEditMode ? 'disable-input--nostyle final-disable--style' : ''"
                         class="btn btn-success text-white mr-3 mb-0 col-auto" (click)="finalSubmit()">
                         Final

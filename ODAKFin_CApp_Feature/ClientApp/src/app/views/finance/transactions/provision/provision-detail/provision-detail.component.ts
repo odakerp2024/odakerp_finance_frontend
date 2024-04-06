@@ -35,15 +35,15 @@ export class ProvisionDetailComponent implements OnInit {
   editSelectedIndex: number;
   TotalAmount: number = 0;
   isGridEditMode = false;
-  isEditMode: boolean = false;
-  // isEditMode1: boolean;
-  isUpdate: boolean = false;
+  isEditMode: boolean = true;
+  isEditMode1: boolean =false;
+  isUpdate = true;
   provisionId: number;
   numberRangeList: any;
-  IsFinal: number;
+  IsFinal : boolean = false;
   IsExchangeEnable: boolean = false;
   companyCurrencyId: Number;
-  Remarks: any
+  Remarks: string = '';
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
@@ -62,14 +62,8 @@ export class ProvisionDetailComponent implements OnInit {
     this.getDivisionList();
     this.getParentAccountList();
     this.getCurrency();
+    this.getNumberRangeList();
 
-    // this.route.params.subscribe(async param => {
-    //
-    //   this.provisionId = param['provisionId'] ? param['provisionId'] : 0;
-    //   if (this.provisionId) {
-    //     this.getByIdRouteFunction();
-    //   }
-    // })
 
     this.route.params.subscribe(param => {
       if (param.ProvisionId) {
@@ -112,21 +106,30 @@ export class ProvisionDetailComponent implements OnInit {
       })
     });
   }
+  
+  enableEdit() {
+     this.ProvisionForm.enable();
+     this.isUpdate = true;
+     this.isEditMode = true;
+     this.isEditMode1 = true;
+   }
 
- 
-
-  getByIdRouteFunction() {    
+  getByIdRouteFunction() {   
     var service = `${this.globals.APIURL}/Provision/GetProvisionById`; 
     var payload = { Id: this.provisionId };
     this.dataService.post(service, payload).subscribe(async (result: any) => {
       if (result.message == 'Success' && result.data.Table.length > 0) {
         this.provisionItemsTableList = [];
         let info = result.data.Table[0];
-        if (info.Status == 2) this.isEditMode = true;
+        if (info.StatusId == 2) {
+          this.isEditMode = true;
+          this.IsFinal = true; // Set isFinal to true if StatusId is 2
+      }
         await this.getOffice(info.DivisionId);
-        // console.log("Info before patching form:", info); // Log info before patching the form
+        //console.log("Info before patching form:", info); // Log info before patching the form
         this.Remarks = info.Remarks; 
-        this.TotalAmount = info.TotalAmount;
+          const table1Data = result.data.Table1[0];
+        this.TotalAmount = table1Data.AmountCCR;
         this.ProvisionForm.get('Table').patchValue({
           ProvisionId: info.ProvisionId,
           DivisionId: info.DivisionId,
@@ -136,10 +139,10 @@ export class ProvisionDetailComponent implements OnInit {
           Status: info.StatusId,
           Remarks: this.Remarks,
           TotalAmount: this.TotalAmount,
-          IsFinal: info.IsFinal ,
+          IsFinal: info.IsFinal ? 1 : 0,
           IsClosedProvision: info.IsClosedProvision
         });
-        // console.log("Form values after patching:", this.ProvisionForm.value); // Log form values after patching
+       // console.log("Form values after patching:", this.ProvisionForm.value); // Log form values after patching
         
         this.getCurrency();
         this.getParentAccountList();
@@ -168,7 +171,7 @@ export class ProvisionDetailComponent implements OnInit {
             AccountName: this.getAccountName(item.Account),
             CurrencyName: this.getCurrencyName(item.Currency)
           }));
-          console.log(this.provisionItemsTableList, 'table 1');
+         // console.log(this.provisionItemsTableList, 'table 1');
         }
         
       }
@@ -384,7 +387,6 @@ export class ProvisionDetailComponent implements OnInit {
   }
 
   async submit(isClosed = false) {
- 
     const validation = this.validationCheck();
 
     if (validation != "") {
@@ -404,9 +406,9 @@ export class ProvisionDetailComponent implements OnInit {
       allowOutsideClick: false
     }).then(async (result) => {
       if (result.isConfirmed) {
-     
         if (isClosed) {
           this.ProvisionForm.controls['Table']['controls']['IsClosedProvision'].setValue(1);
+          // this.ProvisionForm.controls['Table']['controls']['Status'].setValue(3);
         } else {
           this.ProvisionForm.controls['Table']['controls']['IsClosedProvision'].setValue(0);
         }
@@ -455,9 +457,9 @@ getFinalPayload() {
     Provision: {
       Table: [this.ProvisionForm.value.Table],
       Table1: modifiedTableList
-    },
-    Remarks: this.Remarks,
-    TotalAmount: this.TotalAmount, 
+    }
+    // Remarks: this.Remarks,
+    // TotalAmount: this.TotalAmount, 
   };
 
   return payload;
@@ -547,7 +549,8 @@ getFinalPayload() {
           let sectionOrderInfo = await this.checkAutoSectionItem([{ sectionA: paymentVoucher[0].SectionA }, { sectionB: paymentVoucher[0].SectionB }, { sectionC: paymentVoucher[0].SectionC }, { sectionD: paymentVoucher[0].SectionD }], paymentVoucher[0].NextNumber, event);
           let code = this.autoCodeService.NumberRange(paymentVoucher[0], sectionOrderInfo.sectionA, sectionOrderInfo.sectionB, sectionOrderInfo.sectionC, sectionOrderInfo.sectionD);
 
-          if (code) this.ProvisionForm.controls['Number'].setValue(code.trim().toUpperCase());
+          // if (code) this.ProvisionForm.controls['Number'].setValue(code.trim().toUpperCase());
+          if (code) this.ProvisionForm.get('Table.Number').setValue(code.trim().toUpperCase());
           resolve(true);
         }
         else {
@@ -625,7 +628,7 @@ getFinalPayload() {
       if (result.message == "Success") {
         this.numberRangeList = result['data'].Table;
         // this.autoCodeGeneration();
-        // console.log('numberRangeList', this.numberRangeList)
+       // console.log('numberRangeList', this.numberRangeList)
       }
     })
   }
