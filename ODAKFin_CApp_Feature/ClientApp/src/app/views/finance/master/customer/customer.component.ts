@@ -379,7 +379,7 @@ export class CustomerComponent implements OnInit {
 
           if (data[0].SubfunctionID == paylod.SubfunctionID) {
 
-            if (data[0].Update_Opt == 2) {
+            if (data[0].Create_Opt == 2) {
               this.isKYCDocuments = true;
               this.Current_Tab = 'tabKYC';
 

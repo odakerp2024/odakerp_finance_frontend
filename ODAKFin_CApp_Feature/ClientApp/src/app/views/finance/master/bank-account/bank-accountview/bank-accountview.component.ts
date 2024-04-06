@@ -6,6 +6,9 @@ import { MastersService } from 'src/app/services/masters.service';
 import { Bankaccountlist, BankFilter, Currency, CurrencySearch, Image_List } from '../../../../../model/bankaccount';
 import { PaginationService } from 'src/app/pagination.service';
 import { Status, StatusNew } from '../../../../../model/common';
+import { CommonService } from 'src/app/services/common.service';
+import Swal from 'sweetalert2';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -34,13 +37,56 @@ export class BankAccountviewComponent implements OnInit {
   Is_DataFound: Boolean = true;
   imagenotfound: any = new Image_List().Not_Found_for_List;
   //pagesort: any = new GridSort().sort;
-  constructor(private fb: FormBuilder, public ps: PaginationService, private ms: BankService, private titleService: Title) { }
+  constructor(private fb: FormBuilder, public ps: PaginationService, private ms: BankService, private titleService: Title,
+    private commonDataService: CommonService,private router: Router) { }
 
   ngOnInit(): void {
     this.titleService.setTitle(this.title);
     this.OnBindDropdownAccType();
     this.clearSearch();
     this.PageLoadingbankaccountList()
+  }
+
+  onEditPermission(Id){
+    this.getPermissionListForCreate(568, Id);
+  }
+  
+  onAddPermission(){
+    this.getPermissionListForCreate(568);
+  }
+
+  
+  getPermissionListForCreate(value, Id = 0) {
+
+    // Check Permission for Division Add
+    const userID = localStorage.getItem("UserID");
+    const paylod = {
+      userID: Number(userID),
+      Ref_Application_Id: "4",
+      SubfunctionID: value
+    }
+    this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
+      debugger
+      if (data.length > 0) {
+        console.log("PermissionObject", data);
+
+        if (data[0].SubfunctionID == paylod.SubfunctionID) {
+
+          if (data[0].Create_Opt == 2 && Id == 0) {
+            this.router.navigate(['/views/finance/master/bank-account/bank-account/']);
+          } else if (data[0].Update_Opt == 2 && Id != 0) {
+            this.router.navigate(['/views/finance/master/bank-account/bank-account/', { id: Id }]);
+          } else {
+            Swal.fire('Please Contact Administrator');
+          }
+        }
+      } else {
+        Swal.fire('Please Contact Administrator');
+      }
+
+    }, err => {
+      console.log('errr----->', err.message);
+    });
   }
 
   OnBindDropdownAccType() {

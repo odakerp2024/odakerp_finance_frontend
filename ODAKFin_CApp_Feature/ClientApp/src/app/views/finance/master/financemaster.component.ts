@@ -547,10 +547,13 @@ export class FinanceMasterComponent implements OnInit {
     else if (routePage == 'internal') {
       SubfunctionID = 533;
     }
+    else if (routePage == 'BankMaster') {
+      SubfunctionID = 567;
+    }
     else if (routePage == 'provision') {
       // SubfunctionID = 533;
       this.router.navigate(['/views/provision/provision-view']);
-    }
+    } 
 
     const userID = localStorage.getItem("UserID");
     const paylod = {
@@ -915,6 +918,15 @@ export class FinanceMasterComponent implements OnInit {
                 }
                 else {
                   this.router.navigate(['/views/internal-order/internal-view']);
+                }
+              }
+              else if (routePage == 'BankMaster') {
+                debugger
+                if (data[0].Read_Opt != 2) {
+                  Swal.fire('Please Contact Administrator');
+                }
+                else {
+                  this.router.navigate(['/views/finance/master/bank-account/bank-accountview']);
                 }
               }
 
