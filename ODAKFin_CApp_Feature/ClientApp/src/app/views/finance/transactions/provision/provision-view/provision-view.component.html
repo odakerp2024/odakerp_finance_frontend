@@ -49,7 +49,7 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="let data of pagedItems">
-                                    <td style="color: #0366d6;cursor: pointer;">
+                                    <td (click)="ProvisionInfo(data.ProvisionId)"  style="color: #0366d6;cursor: pointer;">
                                         {{data.ProvisionNumber}}</td>
                                     <td>{{data.ProvisionDate | date :
                                         commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td>
@@ -110,8 +110,8 @@
                     <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
                         <div class="form-group bmd-form-group w-100">
                             <label class="str fontstyles">Division</label>
-                            <ng-select class="searchdropdown custom" formControlName="Division" (change)="getOffice($event);" [clearable]="false">
-                                <ng-option [value]="''" disabled>--SELECT DIVISION TYPE--</ng-option>
+                            <ng-select class="searchdropdown custom" formControlName="Division"  [clearable]="false">
+                                <ng-option [value]="0" disabled>--SELECT DIVISION TYPE--</ng-option>
                                 <ng-container *ngFor="let division of divisionList">
                                     <ng-option *ngIf="division.Active" [value]="division.ID">
                                         {{division.DivisionName | uppercase}}
@@ -200,7 +200,7 @@
                         <div class="form-group bmd-form-group">
                             <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'StatusId'"
                                 name="active" id="active">
-                                <ng-option [value]="0" disabled>--SELECT STATUS--</ng-option>
+                                <ng-option [value]="''" disabled>--SELECT STATUS--</ng-option>
                                 <ng-option *ngFor="let status of statusList" [value]="status.Id">
                                     <span class="textwrap">{{status.StatusName | uppercase}}</span>
                                 </ng-option>
@@ -210,10 +210,10 @@
 
                     <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 searchbtn alrt text-center mb-3 mt-3">
                         <button style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;" type="submit"
-                            (click)="getPurchaseInvoice();" class="btn btn-primary btn-raised mb-0">Search<div
+                            (click)="getProvisionList();" class="btn btn-primary btn-raised mb-0">Search<div
                                 class="ripple-container"></div></button>
                         <button style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;"
-                            (click)="createPurchaseForm();vendorBranch =[];getPurchaseInvoice();"
+                            (click)="createProvisoinForm();getProvisionList();"
                             class="btn btn-raised btn-danger mb-0">Clear
                             <div class="ripple-container">
                             </div>

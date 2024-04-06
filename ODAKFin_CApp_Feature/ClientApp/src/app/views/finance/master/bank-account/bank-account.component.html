@@ -82,12 +82,12 @@
                         <div class="row w-100 mr-2 ml-2">
 
                             <label class="mr-1" for="flexRadioDefault1">Bank</label>
-                            <input formControlName="IsBank" [value]="true"  mdbRadio (click)="setBank(3)" class="form-control mr-2" type="radio" name="flexRadioDefault"
-                                id="flexRadioDefault1" />
+                            <input formControlName="IsBank" [value]="true" mdbRadio (click)="setBank(3)"
+                                class="form-control mr-2" type="radio" name="flexRadioDefault" id="flexRadioDefault1" />
 
                             <label class="mr-1" for="flexRadioDefault2">Cash</label>
-                            <input formControlName="IsCash" [value]="true" mdbRadio (click)="setBank(4)" class="form-control" type="radio" name="flexRadioDefault"
-                                id="flexRadioDefault2" />
+                            <input formControlName="IsCash" [value]="true" mdbRadio (click)="setBank(4)"
+                                class="form-control" type="radio" name="flexRadioDefault" id="flexRadioDefault2" />
                         </div>
                     </div>
                 </div>
@@ -238,7 +238,7 @@
                         <div class="form-group bmd-form-group">
                             <div class="row">
                                 <div class="w-100 mr-2 ml-2">
-                                    <label [ngClass]="FinancialForm.value.IsBank ? 'str' : ''"  >IFSC Code</label>
+                                    <label [ngClass]="FinancialForm.value.IsBank ? 'str' : ''">IFSC Code</label>
                                     <!-- </div>
                             <div class="col-md-1 col-sm-1 col-lg-1 col-xl-1">:</div>
                             <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7"> -->
@@ -372,12 +372,14 @@
                                         </ng-container>
                                     </mat-select>
                                     <!-- <ng-template></ng-template> -->
-                                    <div *ngIf="allValues == false" style="display:flex;align-items:center; margin-top: 18px; "
+                                    <div *ngIf="allValues == false"
+                                        style="display:flex;align-items:center; margin-top: 18px; "
                                         class="d-flex flex-wrap">
-                                        <span  *ngFor="let division_id of FinancialForm.value.DivisionIds"
+                                        <span *ngFor="let division_id of FinancialForm.value.DivisionIds"
                                             class="px-2 py-1 border border-bark mx-2">{{getDivisionName(division_id)}}</span>
                                     </div>
-                                    <div *ngIf="allValues == true" style="display:flex;align-items:center; margin-top: 18px; "
+                                    <div *ngIf="allValues == true"
+                                        style="display:flex;align-items:center; margin-top: 18px; "
                                         class="d-flex flex-wrap">
                                         <span class="px-2 py-1 border border-bark mx-2">ALL</span>
                                     </div>
@@ -405,12 +407,14 @@
                                         </ng-container>
                                     </mat-select>
                                     <!-- <ng-template></ng-template> -->
-                                    <div *ngIf="allOffice == false" style="display:flex;align-items:center; margin-top: 18px; "
+                                    <div *ngIf="allOffice == false"
+                                        style="display:flex;align-items:center; margin-top: 18px; "
                                         class="d-flex flex-wrap">
                                         <span *ngFor="let office_id of FinancialForm.value.OfficeIds"
                                             class="px-2 py-1 border border-bark mx-2">{{getOfficeName(office_id)}}</span>
                                     </div>
-                                    <div *ngIf="allOffice == true" style="display:flex;align-items:center; margin-top: 18px; "
+                                    <div *ngIf="allOffice == true"
+                                        style="display:flex;align-items:center; margin-top: 18px; "
                                         class="d-flex flex-wrap">
                                         <span class="px-2 py-1 border border-bark mx-2">ALL</span>
                                     </div>
@@ -442,16 +446,37 @@
             </div>
             <input type="hidden" id="HDRegId" ng-model="HDRegId" />
         </div>--->
-            <div class="card-body">
+            <!-- <div class="card-body"> -->
 
-                <div class="row">
-                    <div class="col-md-12">
-                        <ul class="nav nav-pills nav-justified" role="tablist">
-                            <!-- <li class="nav-item waves-effect waves-light">
+            <!-- <div class="row">
+                    <div class="col-md-12"> -->
+
+            <div class="card p-4">
+                <div class="d-flex mt-4" style="height: 2.4rem;">
+
+                    <div (click)="checkPermission('tabCheque')"
+                        [ngClass]="Current_Tab == 'tabCheque' ? 'selected-tav-view' : 'not-selected-tav-view'"
+                        class="text-center select-tav-view mr-3">Cheque Management
+                    </div>
+
+                    <div (click)="checkPermission('tabStatement')"
+                        [ngClass]="Current_Tab == 'tabStatement' ? 'selected-tav-view' : 'not-selected-tav-view'"
+                        class="text-center select-tav-view mr-3">Statement
+                    </div>
+
+                    <div (click)="checkPermission('tabAttachment')"
+                        [ngClass]="Current_Tab == 'tabAttachment' ? 'selected-tav-view' : 'not-selected-tav-view'"
+                        class="text-center select-tav-view mr-3">Attachment
+                    </div>
+                </div>
+
+
+                <!-- <ul class="nav nav-pills nav-justified" role="tablist"> -->
+                <!-- <li class="nav-item waves-effect waves-light">
                             <a class="nav-link active show" data-toggle="tab" href="#revenue" role="tab"
                                 aria-selected="true">Accounting Link</a>
                         </li> -->
-                            <li class="nav-item waves-effect waves-light">
+                <!-- <li class="nav-item waves-effect waves-light">
                                 <a class="nav-link active" data-toggle="tab" href="#detention" role="tab"
                                     aria-selected="true">Cheque Management</a>
                             </li>
@@ -463,13 +488,13 @@
                                 <a class="nav-link" data-toggle="tab" href="#Attachment" role="tab"
                                     aria-selected="false">Attachment</a>
                             </li>
-                        </ul>
-                    </div>
-                </div>
+                        </ul> -->
+                <!-- </div>
+                </div> -->
 
                 <div class="row porttariff">
                     <div class="col-md-12">
-                        <div class="tab-content">
+                        <!-- <div class="tab-content"> -->
                             <!-- <div class="tab-pane pt-3 active show" id="revenue" role="tabpanel">
 
                             <div class="row">
@@ -519,7 +544,7 @@
                         </div> -->
 
 
-                            <div class="tab-pane pt-3 active show" id="detention" role="tabpanel">
+                            <div class="tab-pane pt-3" *ngIf="Current_Tab == 'tabCheque'">
                                 <div class="row">
 
                                     <div class="col-12">
@@ -851,7 +876,7 @@
                             </div>
 
 
-                            <div class="tab-pane pt-3" id="Storage" role="tabpanel">
+                            <div class="tab-pane pt-3" *ngIf="Current_Tab == 'tabStatement'">
                                 <div class="row">
 
                                     <div class="col-12">
@@ -1107,7 +1132,7 @@
 
                             </div>
 
-                            <div class="tab-pane pt-3" id="Attachment" role="tabpanel">
+                            <div class="tab-pane pt-3" *ngIf="Current_Tab == 'tabAttachment'">
                                 <div class="row">
                                     <div class="col-12">
                                         <div class="card m-b-30">
@@ -1135,7 +1160,7 @@
 
                         </div>
 
-                    </div>
+                    <!-- </div> -->
 
 
                 </div>

@@ -113,6 +113,19 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="str">Short Name</label>
+                                    <input readonly type="text" name="ShortName"
+                                        formControlName="ShortName" id="ShortName" class="form-control"
+                                        >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="col-md-4">
                         <div class="form-group">
@@ -120,7 +133,7 @@
                                 <div class="col-md-12">
                                     <label class="str mb-2">Start Date</label>
                                     <mat-form-field class="tillDate  mat_date_picker"   appearance="outline">
-                                        <input matInput  (click)="FromDate.open()" readonly [ngClass]=" isUpdate ? 'disable-datepicker' : ''" [matDatepicker]="FromDate"[placeholder]="entityDateFormat" formControlName="FromDate">
+                                        <input matInput (dateChange)="dateChange($event)" (click)="FromDate.open()" readonly [ngClass]=" isUpdate ? 'disable-datepicker' : ''" [matDatepicker]="FromDate"[placeholder]="entityDateFormat" formControlName="FromDate">
                                         <mat-datepicker-toggle matSuffix [for]="FromDate"></mat-datepicker-toggle>
                                         <mat-datepicker #FromDate></mat-datepicker>
                                         </mat-form-field>
@@ -140,7 +153,7 @@
                                 <div class="col-md-12">
                                     <label class="str mb-2">End Date</label>
                                     <mat-form-field class="tillDate mat_date_picker"   appearance="outline" >
-                                        <input matInput (click)="ToDate.open()" readonly autocomplete="off" [ngClass]=" isUpdate ? 'disable-datepicker' : ''"  [matDatepicker]="ToDate"  id="ToDate" [placeholder]="entityDateFormat" formControlName="ToDate">
+                                        <input matInput (dateChange)="dateChange($event)" (click)="ToDate.open()" readonly autocomplete="off" [ngClass]=" isUpdate ? 'disable-datepicker' : ''"  [matDatepicker]="ToDate"  id="ToDate" [placeholder]="entityDateFormat" formControlName="ToDate">
                                         <mat-datepicker-toggle matSuffix [for]="ToDate"></mat-datepicker-toggle>
                                         <mat-datepicker #ToDate></mat-datepicker>
                                     </mat-form-field>

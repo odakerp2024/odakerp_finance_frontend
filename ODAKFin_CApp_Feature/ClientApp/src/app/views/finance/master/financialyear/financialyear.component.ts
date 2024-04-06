@@ -80,11 +80,24 @@ export class FinancialyearComponent implements OnInit {
   createForm() {
 
     if (this.fg.value.FinancialYearId != null) {
+
       this.FormMode = "B";
 
       let service = `${this.globals.APIURL}/FinancialYear/GetFinancialYearId/`;
       this.dataService.post(service, { FinancialYearId: this.finicalYearId }).subscribe((data: any) => {
+        debugger
         // this.fy.getFinancialYearbyId(this.fg.value).pipe().subscribe(data => {
+        var startDate = ''
+        var endDate = ''
+        if (data["data"][0].FromDate) {
+          startDate = new Date(data["data"][0].FromDate).getFullYear().toString().slice(-2)
+        }
+        if (data["data"][0].ToDate) {
+          endDate = new Date(data["data"][0].ToDate).getFullYear().toString().slice(-2)
+        }
+
+        this.fg.controls.ShortName.setValue(startDate + '' + endDate);
+
         this.fg.patchValue(data["data"][0]);
         //$('#ddlIsActive').select2().val(data["data"][0].IsActive);
         //$('#txtFromDate').val(data["data"][0].FromDate);
@@ -98,7 +111,8 @@ export class FinancialyearComponent implements OnInit {
         FromDate: '',
         ToDate: '',
         IsActive: false,
-        FinancialPeriod: 0
+        FinancialPeriod: 0,
+        ShortName: ''
       });
     }
     else {
@@ -109,7 +123,8 @@ export class FinancialyearComponent implements OnInit {
         FromDate: '',
         ToDate: '',
         IsActive: true,
-        FinancialPeriod: 0
+        FinancialPeriod: 0,
+        ShortName: ''
       }
       );
       //$('#ddlIsActive').select().val(0);
@@ -258,5 +273,26 @@ export class FinancialyearComponent implements OnInit {
       console.error(error);
     });
   }
+
+  dateChange(event: any) {
+    debugger
+    // Your logic here
+    const selectedDate = event.target.value;
+    var startDate = ''
+    var endDate = ''
+    // const year = selectedDate.getFullYear().toString().slice(-2);
+
+    if (this.fg.controls.FromDate.value) {
+      startDate = new Date(this.fg.controls.FromDate.value).getFullYear().toString().slice(-2)
+    }
+    if (this.fg.controls.ToDate.value) {
+      endDate = new Date(this.fg.controls.ToDate.value).getFullYear().toString().slice(-2)
+    }
+
+    this.fg.controls.ShortName.setValue(startDate + '' + endDate);
+
+    console.log('Date changed:', selectedDate);
+  }
+
 
 }

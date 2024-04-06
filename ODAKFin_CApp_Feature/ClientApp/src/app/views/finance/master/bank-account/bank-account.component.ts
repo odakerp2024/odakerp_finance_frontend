@@ -88,9 +88,10 @@ export class BankAccountComponent implements OnInit {
   allValues: boolean;
   allOffice: boolean;
   perOne: boolean;
+  Current_Tab: string = '';
 
   selectedCheckboxes: any[] = [];
-  bankId: any;
+  bankId = 0;
   // allSelected=false;
   ModuleId: any
   modules: any;
@@ -98,6 +99,9 @@ export class BankAccountComponent implements OnInit {
   mappingSuccess: boolean = false;
   errorMessage: any;
   parentAccountList: any[];
+  isChequeTab: boolean = false;
+  isStatement: boolean = false;
+  isAttachemnt: boolean = false;
 
 
   constructor(
@@ -106,12 +110,24 @@ export class BankAccountComponent implements OnInit {
     private commonDataService: CommonService
   ) {
     this.getNumberRange();
-    this.route.queryParams.subscribe(params => {
+    this.route.params.subscribe(params => {
       this.FinancialForm = this.fb.group({
         ID: params['id']
       });
       this.bankId = params['id'] ? params['id'] : 0;
     });
+
+    if (this.bankId) {
+
+      this.getPermissionListForUpdate(569, 'Cheque Management');
+      this.getPermissionListForUpdate(570, 'Statement Template');
+      this.getPermissionListForUpdate(571, 'Attachments ');
+    } else {
+      this.getPermissionListForCreate(569, 'Cheque Management');
+      this.getPermissionListForCreate(570, 'Statement Template');
+      this.getPermissionListForCreate(571, 'Attachments');      
+    }
+
     this.getTemplateName();
     // this.getOffice();
     this.getDivision(true);
@@ -154,6 +170,189 @@ export class BankAccountComponent implements OnInit {
     }
     this.createCheckManagementForm();
     this.createStatementForm();
+  }
+
+
+  checkPermission(value) {
+    debugger
+    if (value == 'tabCheque' && this.isChequeTab == true) {
+      this.Current_Tab = 'tabCheque'
+    } else if (value == 'tabStatement' && this.isStatement == true) {
+      this.Current_Tab = 'tabStatement'
+    } else if (value == 'tabAttachment' && this.isAttachemnt == true) {
+      this.Current_Tab = 'tabAttachment'
+    } else {
+      this.Current_Tab = this.Current_Tab
+      Swal.fire('Please Contact Administrator');
+    }
+  }
+
+  getPermissionListForUpdate(value, route) {
+
+    // Check Permission for Division Add
+    const userID = localStorage.getItem("UserID");
+    const paylod = {
+      userID: Number(userID),
+      Ref_Application_Id: "4",
+      SubfunctionID: value
+    }
+    this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
+      debugger
+      if (route == 'Cheque Management') {
+
+        if (data.length > 0) {
+          console.log("PermissionObject", data);
+
+          if (data[0].SubfunctionID == paylod.SubfunctionID) {
+
+            if (data[0].Update_Opt == 2) {
+              this.isChequeTab = true;
+              this.Current_Tab = 'tabCheque';
+            } else {
+              this.isChequeTab = false;
+            }
+          }
+        } else {
+          this.isChequeTab = false;
+        }
+      }
+
+      if (route == 'Statement Template') {
+
+        if (data.length > 0) {
+          console.log("PermissionObject", data);
+
+          if (data[0].SubfunctionID == paylod.SubfunctionID) {
+
+            if (data[0].Update_Opt == 2) {
+              this.isStatement = true;
+              this.Current_Tab = 'tabStatement';
+            } else {
+              this.isStatement = false;
+            }
+          }
+        } else {
+          this.isStatement = false;
+        }
+      }
+
+      if (route == 'Attachments') {
+
+        if (data.length > 0) {
+          console.log("PermissionObject", data);
+
+          if (data[0].SubfunctionID == paylod.SubfunctionID) {
+
+            if (data[0].Update_Opt == 2) {
+              this.isAttachemnt = true;
+              this.Current_Tab = 'tabAttachment';
+
+            } else {
+              this.isAttachemnt = false;
+            }
+          }
+        } else {
+          this.isAttachemnt = false;
+        }
+      }
+
+      if (this.isChequeTab == true) {
+        this.Current_Tab = 'tabCheque';
+      }
+      else if (this.isStatement == true) {
+        this.Current_Tab = 'tabStatement';
+      }
+      else if (this.isAttachemnt == true) {
+        this.Current_Tab = 'tabAttachment';
+      }
+
+    }, err => {
+      console.log('errr----->', err.message);
+    });
+  }
+
+  getPermissionListForCreate(value, route) {
+
+    // Check Permission for Division Add
+    const userID = localStorage.getItem("UserID");
+    const paylod = {
+      userID: Number(userID),
+      Ref_Application_Id: "4",
+      SubfunctionID: value
+    }
+    this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
+      debugger
+      if (route == 'Cheque Management') {
+
+        if (data.length > 0) {
+          console.log("PermissionObject", data);
+
+          if (data[0].SubfunctionID == paylod.SubfunctionID) {
+
+            if (data[0].Create_Opt == 2) {
+              this.isChequeTab = true;
+              this.Current_Tab = 'tabCheque';
+            } else {
+              this.isChequeTab = false;
+            }
+          }
+        } else {
+          this.isChequeTab = false;
+        }
+      }
+
+      if (route == 'Statement Template') {
+
+        if (data.length > 0) {
+          console.log("PermissionObject", data);
+
+          if (data[0].SubfunctionID == paylod.SubfunctionID) {
+
+            if (data[0].Create_Opt == 2) {
+              this.isStatement = true;
+              this.Current_Tab = 'tabStatement';
+            } else {
+              this.isStatement = false;
+            }
+          }
+        } else {
+          this.isStatement = false;
+        }
+      }
+
+      if (route == 'Attachments') {
+
+        if (data.length > 0) {
+          console.log("PermissionObject", data);
+
+          if (data[0].SubfunctionID == paylod.SubfunctionID) {
+
+            if (data[0].Create_Opt == 2) {
+              this.isAttachemnt = true;
+              this.Current_Tab = 'tabAttachment';
+
+            } else {
+              this.isAttachemnt = false;
+            }
+          }
+        } else {
+          this.isAttachemnt = false;
+        }
+      }
+
+      if (this.isChequeTab == true) {
+        this.Current_Tab = 'tabCheque';
+      }
+      else if (this.isStatement == true) {
+        this.Current_Tab = 'tabStatement';
+      }
+      else if (this.isAttachemnt == true) {
+        this.Current_Tab = 'tabAttachment';
+      }
+
+    }, err => {
+      console.log('errr----->', err.message);
+    });
   }
 
   getDivisionName(division_id) {
@@ -1276,7 +1475,7 @@ export class BankAccountComponent implements OnInit {
 
   setBank(value, ledgerId = 0) {
     debugger
-    if(value == 3){
+    if (value == 3) {
       this.FinancialForm.patchValue({
         IsBank: true,
         IsCash: false,
@@ -1293,7 +1492,7 @@ export class BankAccountComponent implements OnInit {
       $('#ddlLedger').val(ledgerId)
       this.getLedgerMappingParentAccountList(value)
     }
-    
+
   }
 
 

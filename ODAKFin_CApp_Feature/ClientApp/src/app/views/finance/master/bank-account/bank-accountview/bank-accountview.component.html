@@ -5,7 +5,7 @@
     </div>
     <div class="col-md-3 alrt">
         <button type="button" class="btn btn-success btn-raised bmd-btn-edit btntop"
-         tabindex="0" [routerLink]="['/views/finance/master/bank-account/bank-account']">
+         tabindex="0" (click)="onAddPermission()">
          <i  class="material-icons editicon">add</i>
          <div class="ripple-container">
          </div>
@@ -90,9 +90,7 @@
 
                                     <tr *ngFor="let dataItem of pagedItems;let i = index">
                                         <!-- <td> {{ i + 1*pager.startIndex+1 }}</td> -->
-                                        <td style="color:#0366d6;cursor: pointer;"
-                                            [routerLink]="'/views/finance/master/bank-account/bank-account/'+dataItem.BankID"
-                                            [queryParams]="{id: dataItem.BankID}">{{dataItem.BankName}}</td>
+                                        <td style="color:#0366d6;cursor: pointer;" (click)="onEditPermission(dataItem.BankID)">{{dataItem.BankName}}</td>
                                         <td>{{dataItem.AccountNo}}</td>
                                         <!-- <td [title]="dataItem.DivisionName | uppercase">
                                             {{ (dataItem.DivisionName && dataItem.DivisionName.length > 20) ? dataItem.DivisionName .slice(0, 20) + '-' : dataItem.DivisionName  }}

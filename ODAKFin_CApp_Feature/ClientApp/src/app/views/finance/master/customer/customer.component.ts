@@ -171,6 +171,7 @@ export class CustomerComponent implements OnInit {
       this.Current_Tab = 'tabInterfaces'
     }
     else {
+      this.Current_Tab = this.Current_Tab
       Swal.fire('Please Contact Administrator');
     }
   }
@@ -378,7 +379,7 @@ export class CustomerComponent implements OnInit {
 
           if (data[0].SubfunctionID == paylod.SubfunctionID) {
 
-            if (data[0].Update_Opt == 2) {
+            if (data[0].Create_Opt == 2) {
               this.isKYCDocuments = true;
               this.Current_Tab = 'tabKYC';
 

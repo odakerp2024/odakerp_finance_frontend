@@ -50,11 +50,13 @@ export class ProvisionViewComponent implements OnInit {
       StartDate: [''],
       EndDate: [''],
       Amount: [''],
-      StatusId: [0]
+      StatusId: [''],
+      Id:['']
     });
   }
 
   getProvisionList() {
+    debugger
     var service = `${this.globals.APIURL}/Provision/GetProvisionList`;
     this.dataService.post(service, this.provisionFilter.value).subscribe((result: any) => {
       this.provisionList = [];
@@ -139,6 +141,14 @@ export class ProvisionViewComponent implements OnInit {
     // }, err => {
     //   console.log('errr----->', err.message);
     // });
+  }
+
+
+  
+  ProvisionInfo(ProvisionId?: number){
+    
+    this.router.navigate(['/views/provision/provision-detail',{ ProvisionId: ProvisionId }]);
+
   }
 
 }
