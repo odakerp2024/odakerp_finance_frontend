@@ -133,7 +133,7 @@
                                 name="CategoryId" id="CategoryId">
                                 <ng-option [value]="0" disabled>--SELECT OFFICE--</ng-option>
                                 <ng-container *ngFor="let office of officeList">
-                                    <ng-option [value]="office.ID">
+                                    <ng-option [value]="office.OfficeId">
                                         <span class="textwrap">{{office.OfficeName | uppercase}}</span>
                                     </ng-option>
                                 </ng-container>

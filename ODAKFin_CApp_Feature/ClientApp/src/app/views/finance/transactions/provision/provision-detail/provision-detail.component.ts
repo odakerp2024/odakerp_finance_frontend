@@ -43,7 +43,7 @@ export class ProvisionDetailComponent implements OnInit {
   IsFinal : boolean = false;
   IsExchangeEnable: boolean = false;
   companyCurrencyId: Number;
-  Remarks: any
+  Remarks: string = '';
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
