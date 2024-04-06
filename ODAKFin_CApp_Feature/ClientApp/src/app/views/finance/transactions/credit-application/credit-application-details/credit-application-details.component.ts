@@ -84,7 +84,9 @@ export class CreditApplicationDetailsComponent implements OnInit {
   requestType: boolean = false;
   isGetByIdInProgress = false;
   creditType: string = "Revise";
- 
+  IsRevise: boolean;
+  IsRevoke:boolean;
+  
 
   constructor(
     private ps: PaginationService,
@@ -104,9 +106,10 @@ export class CreditApplicationDetailsComponent implements OnInit {
 
   async ngOnInit() {
     this.route.paramMap.subscribe(params => {
-      this.requestType = params.get('requestType') === 'true';   
+      this.requestType = params.get('requestType') === 'true';     
     });
     this.createForm(); 
+    this.setRevise();
     await this.getDivision();   
     //this.getCustomerCredit();
     this.getCustomerAndBranch();
@@ -135,9 +138,9 @@ export class CreditApplicationDetailsComponent implements OnInit {
   createForm() {
     this.creditApplicationForm = this.fb.group({
       CreditApplicationId: [0],
-      IsRevise: [true],
+      IsRevise: [false],
       IsRevoke: [false],
-      CreditApplicationNumber: [],
+      CreditApplicationNumber: [''],
       ApplicationDate: [this.minDate],
       ApplicationStatus: [22],
       DivisionId: [],
@@ -271,7 +274,7 @@ export class CreditApplicationDetailsComponent implements OnInit {
     debugger
    
     const selectedCreditApplicationId = event;
-
+     
     // Call the getById method passing the selected CreditApplicationId
     this.getbyId(selectedCreditApplicationId);
 }
@@ -300,20 +303,29 @@ getbyId(selectedCreditApplicationId: any) {
 
                 //  Table.IsFinal = 1; // ! set the final Value;
                 //  Table.StatusId = 2;
-                //  this.creditApplicationForm.enable();
+                 this.creditApplicationForm.disable();
+               
+                //  this.creditApplicationForm.value.
                 this.isEditMode = true;
-                this.CreatedOn = Table.CreatedDate;
-                this.ModifiedOn = Table.UpdatedDate;
-                this.CreatedBy = Table.CreatedByName;
-                this.ModifiedBy = Table.UpdatedByName;
-                this.creditApplicationForm.patchValue({
+                // this.CreatedOn = Table.CreatedOn ?? this.minDate,
+                // this.CreatedBy =  [this.CreatedBy];
+                // this.CreatedOn = Table.CreatedDate;
+                this.CreatedBy = this.CreatedBy;
+              //  this.CreatedBy = Table.CreatedByName;    
+              this.creditApplicationForm.patchValue({
                     CreditApplicationId: Table.CreditApplicationId,
                     // CreditApplicationNumber: Table.CreditApplicationNumber,
+                    // ApplicationDate: this.datePipe.transform(
+                    //     new Date(Table.ApplicationDate),
+                    //     "yyyy-MM-dd"
+                    // ),
+
                     ApplicationDate: this.datePipe.transform(
-                        new Date(Table.ApplicationDate),
-                        "yyyy-MM-dd"
-                    ),
-                    ApplicationStatus: Table.ApplicationStatus,
+                          new Date(this.minDate),
+                          "yyyy-MM-dd"
+                      ),
+                    ApplicationStatus: [22],
+                    
                     DivisionId: Table.DivisionId,
                     OfficeId: Table.OfficeId,
                     CustomerId: Table.CustomerId,
@@ -331,7 +343,7 @@ getbyId(selectedCreditApplicationId: any) {
                     PostDatedCheques: Table.PostDatedCheques ? 1 : 0,
                     RequestRemarks: Table.RequestRemarks,
                     CreatedBy: Table.CreatedBy,
-                    StatusId: Table.StatusId,
+                    StatusId: 1,
                 });
                 this.getWQuestions(result.data.Table1);
             }
@@ -367,20 +379,23 @@ getbyId(selectedCreditApplicationId: any) {
     }
   }
   setRevise() {
+    
     this.creditType = 'Revise';
     this.creditApplicationForm.patchValue({
       IsRevise: true,
-      IsRevoke: false,
+      IsRevoke: true,
     });
+    this.createForm();
   }
 
   // Function to handle the "Revoke" radio button click
   setRevoke() {
+    this.createForm();
     this.creditType = 'Revoke';
     this.creditApplicationForm.patchValue({
       IsRevise: false,
       IsRevoke: true,
-    });
+    });   
   }
 
   onCreditLimitAmount(event:any){
@@ -428,8 +443,8 @@ getbyId(selectedCreditApplicationId: any) {
   //  * construct the payload for save and final
   constructPayload() {
     if (!this.isUpdate) {
-      this.creditApplicationForm.value.SalesPersonId =
-        this.customerDetail["data"].Table2[0].SalesId;
+      this.creditApplicationForm.value.SalesPersonId = 101
+        //  this.customerDetail["data"].Table2[0].SalesId;
     } else {
       this.creditApplicationForm.value.SalesPersonId = this.salesPersonid;
 
@@ -547,7 +562,7 @@ getbyId(selectedCreditApplicationId: any) {
           const creditApplicationId = result.data.Id;
           this.router.navigate([
             "/views/transactions/credit-application/credit-application-details",
-            { creditId: creditApplicationId },
+            { creditId: creditApplicationId  },{ Isrequestype: true  },,
           ]);
           // this.goBack();
         }
