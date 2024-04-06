@@ -73,6 +73,7 @@ export class ExpensesComponent implements OnInit {
 
   CreateForm() {
     this.accountExpensesForm = this.fb.group({
+      OBReference: [''],
       AccountName: [''],
       Amount: [''],
     });

@@ -72,6 +72,7 @@ export class LiabilityComponent implements OnInit {
 
   CreateForm() {
     this.accountLiabilityForm = this.fb.group({
+      OBReference: [''],
       AccountName: [''],
       Amount: [''],
     });

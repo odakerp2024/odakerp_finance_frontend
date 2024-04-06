@@ -98,6 +98,7 @@ export class AccountReceivableComponent implements OnInit {
 
   CreateForm() {
     this.amountReceivableForm = this.fb.group({
+      OBReference: [''],
       Customer: [''],
       Invoice: [''],
       Amount: [''],

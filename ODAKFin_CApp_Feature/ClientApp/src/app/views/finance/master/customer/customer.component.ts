@@ -171,6 +171,7 @@ export class CustomerComponent implements OnInit {
       this.Current_Tab = 'tabInterfaces'
     }
     else {
+      this.Current_Tab = this.Current_Tab
       Swal.fire('Please Contact Administrator');
     }
   }

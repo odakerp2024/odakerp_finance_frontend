@@ -72,6 +72,7 @@ export class AssetComponent implements OnInit {
 
   CreateForm() {
     this.accountAssetForm = this.fb.group({
+      OBReference: [''],
       AccountName: [''],
       Amount: [''],
     });

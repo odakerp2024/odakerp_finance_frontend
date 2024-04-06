@@ -1192,3 +1192,23 @@ nav ul.maindash>li {
   margin-top: 2rem;
   margin-bottom: 2rem;
 }
+
+.select-tav-view {
+  border-radius: 0.25rem;
+  cursor: pointer;
+  width: 13%;
+  margin-right: 10px;
+  font-weight: 700;
+  padding-top: 0.5rem;
+}
+
+.not-selected-tav-view {
+  border: 1px solid #4b5493;
+  color: #54763e;
+}
+
+.selected-tav-view {
+  border: 1px solid #4b5493;
+  background-color: #54763e;
+  color: white;
+}

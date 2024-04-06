@@ -38,6 +38,10 @@ export class AccountReceivableDetailsComponent implements OnInit {
   officeList :any= [];
   currencyList: any;
   customerList :any = [];
+  debitCreditList = [
+    { value: 1, debitCreditName: 'Debit' },
+    { value: 0, debitCreditName: 'Credit' }
+  ];
 
 
 
@@ -89,6 +93,7 @@ export class AccountReceivableDetailsComponent implements OnInit {
       InvoiceAmountICY: [''],
       Exchange: [''],
       InvoiceAmountCCY: [''],
+      DebitorCredit: [''],
       DueAmountICY: [''],
       DueAmountCCY: [''],
       CreatedDate: [new Date()],
@@ -135,6 +140,7 @@ export class AccountReceivableDetailsComponent implements OnInit {
           InvoiceDate: this.datePipe.transform(new Date(info.InvoiceDate), "yyyy-MM-dd"),
           InvoiceCurrency: info.InvoiceCurrency,
           Exchange: info.Exchange,
+          DebitorCredit: info.DebitorCredit,
           InvoiceAmountICY: info.InvoiceAmountICY,
           InvoiceAmountCCY: info.InvoiceAmountCCY,
           DueAmountICY: info.DueAmountICY,
@@ -212,6 +218,9 @@ export class AccountReceivableDetailsComponent implements OnInit {
     if (this.accountReceivableForm.value.Exchange == "") {
       validation += "<span style='color:red;'>*</span> <span>Please Enter Exchange</span></br>"
     }
+    if (this.accountReceivableForm.value.DebitorCredit == "") {
+      validation += "<span style='color:red;'>*</span> <span>Please Select Debit/Credit</span></br>"
+    }
     if (validation != "") {
       Swal.fire(validation)
       return false;
@@ -241,6 +250,7 @@ export class AccountReceivableDetailsComponent implements OnInit {
         "InvoiceDate": this.accountReceivableForm.value.InvoiceDate,
         "InvoiceCurrency": this.accountReceivableForm.value.InvoiceCurrency,
         "Exchange": this.accountReceivableForm.value.Exchange,
+        "DebitorCredit": this.accountReceivableForm.value.DebitorCredit,
         "InvoiceAmountICY": this.accountReceivableForm.value.InvoiceAmountICY,
         "InvoiceAmountCCY": this.accountReceivableForm.value.InvoiceAmountCCY,
         "DueAmountICY": this.accountReceivableForm.value.DueAmountICY,

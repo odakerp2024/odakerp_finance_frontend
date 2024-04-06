@@ -136,13 +136,23 @@
                                 </div>
 
                                 <div class="col-3">
-                                    <label class="">Exchange</label>
+                                    <label class="">Exchange Rate</label>
                                     <input [ngClass]=" isUpdate ? 'block-input' : ''"
                                     onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
                                     min="0" numbersOnly 
                                     appDynamicDecimal class="form-control my-select amount w-100 mr-0"
                                     formControlName="Exchange"/>
                                 </div>
+
+                                <div class="col-3">
+                                    <label class="">Debit/Credit</label>                                 
+                                    <ng-select class="searchdropdown custom" [ngClass]=" isUpdate ? 'block-input' : ''" formControlName ="DebitorCredit"  [clearable]="false"  [appendTo]="'body'">
+                                      <ng-option [value]="''" disabled>--SELECT Dr/Cr--</ng-option>
+                                      <ng-option *ngFor="let item of debitCreditList" [value]="item.debitCreditName">
+                                        {{ item.debitCreditName | uppercase }}
+                                      </ng-option>
+                                    </ng-select>  
+                                  </div>
 
                                 <div class="col-3">
                                     <label class="">Invoice Amount (ICY)</label>
