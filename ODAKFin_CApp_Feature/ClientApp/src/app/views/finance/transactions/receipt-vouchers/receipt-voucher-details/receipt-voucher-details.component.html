@@ -529,11 +529,15 @@
                         </div>
                     </div>
 
-                    <div class="col-12  table-wrapper">
-                        <table class="bend-table" style="max-height: 500px;"
-                            class="table table-responsive  table-bordered w-100 table-striped border-0 agingTable mt-2">
+                    <div class="container-fluid  table-wrapper">
+                        <!-- <div class="     table-wrapper"> -->
+                        <table class="table-bordered table-striped invoice tablewidth">
+                            <!-- <table class="bend-table" style="max-height: 500px;"
+                            class="table table-responsive  table-bordered w-100 table-striped border-0 agingTable mt-2"> -->
+
                             <thead class="text-center">
-                                <tr>
+                                <tr class="receiptVoucher">
+                                    <!-- <tr class="header-position-sticky"> -->
                                     <th>S.NO</th>
                                     <th class="text-center" scope="col">Invoice No</th>
                                     <th class="text-center" scope="col">Date</th>
@@ -542,7 +546,7 @@
                                     <th class="text-center" scope="col">Due Amount <br>(ICY)</th>
                                     <th class="text-center" scope="col">Invoice Amount <br>(CCY)</th>
                                     <th class="text-center" scope="col">Due Amount <br>(CCY)</th>
-                                    <th class="text-center" scope="col">TDS</th>
+                                    <th class="text-center tds" scope="col">TDS</th>
                                     <th class="text-center" scope="col" style="min-width: 90px;">Adjusted invoice <br>Amount</th>
                                     <th class="text-center" scope="col">Select</th>
                                 </tr>
@@ -585,16 +589,16 @@
                                             <input class="text-center border-0" formControlName="DueAmountCCY"
                                              readonly [value]="journal.DueAmountCCY" type="text">
                                         </td>
-                                        <td>
+                                        <td >
                                             <input min="1" numbersOnly appDynamicDecimal onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
-                                                [ngClass]=" !isShowTDSColumn || !isEditMode || !getIsChecked(i) ? 'disable-input' : ''"
-                                                class="text-center border-0" formControlName="TDS" [value]="journal.TDS"
-                                                (change)="getDueAmount( i,'tds'); onSelectEvent();summaryAmountCalculation()">
+                                                [ngClass]=" !isShowTDSColumn || !isEditMode || !getIsChecked(i) ? 'disableinput' : ''"
+                                                class="text-center border-0" formControlName="TDS" [value]="journal.TDS" 
+                                                (change)="getDueAmount( i,'tds'); onSelectEvent();summaryAmountCalculation()" class="tds">
 
                                         </td>
                                         <td>
                                             <input min="1" onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47' appDynamicDecimal  numbersOnly 
-                                                [ngClass]="[ !isEditMode || !getIsChecked(i) ? 'disable-input' : '',]"
+                                                [ngClass]="[ !isEditMode || !getIsChecked(i) ? 'disableinput' : '',]"
                                                 (change)="getDueAmount(i,'Payment');onSelectEvent();summaryAmountCalculation()"
                                                 class="text-center payment-textbox" [value]="journal.Payment"
                                                 formControlName="Payment">
@@ -602,7 +606,7 @@
                                         <td>
                                             <input (change)=" setInitalPaymentAmount(i);onSelectEvent();summaryAmountCalculation()"
                                                 formControlName="IsSelect" type="checkbox"
-                                                [ngClass]=" !isEditMode ? 'disable-input--nostyle' : ''" />
+                                                [ngClass]=" !isEditMode ? 'disableinput--nostyle' : ''" />
                                         </td>
                                     </tr>
 

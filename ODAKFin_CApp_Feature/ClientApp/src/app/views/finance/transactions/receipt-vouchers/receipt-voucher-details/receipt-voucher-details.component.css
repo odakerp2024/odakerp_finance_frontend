@@ -101,3 +101,128 @@ div.form-group input.form-control.amount {
         max-width: 866px;
     }
 }
+
+
+.receiptVoucher{
+    color:white;
+    background-color: #2F4685;
+}
+
+.invoice{
+    width: 100%;
+    table-layout: auto;
+    /* margin-left: 26px; */
+}
+
+
+
+
+/* Styles for tablets and larger screens */
+/* @media screen and (min-width: 768px) {
+    .invoice {
+        font-size: 14px;
+        width: 100%; 
+    }
+
+    .invoice th,
+    .invoice td {
+        font-size: 14px; 
+        width: 100%;
+    }
+} */
+
+/* Styles for smaller screens */
+/* @media screen and (max-width: 767px) {
+    .invoice {
+        font-size: 12px;
+        width: 100%; 
+    }
+
+    .invoice th,
+    .invoice td {
+        font-size: 12px; 
+        width: 100%;
+    }
+} */
+
+
+/* Styles for tablets and larger screens */
+@media screen and (min-width: 768px) {
+    .invoice {
+        font-size: 14px;
+        width: 100%; 
+        table-layout: fixed; 
+    }
+
+    .invoice th,
+    .invoice td {
+        font-size: 14px;
+        width: 100%; 
+    }
+}
+
+/* Styles for smaller screens */
+@media screen and (max-width: 767px) {
+    .invoice {
+        font-size: 12px;
+        width: 100%; 
+        table-layout: fixed; 
+    }
+
+    .invoice th,
+    .invoice td {
+        font-size: 12px;
+        width: 100%; 
+    }
+}
+
+
+.container-fluid{
+
+    overflow-x: auto;
+    width: 100%;
+    max-width: 100%;
+}
+
+
+
+
+/* .invoice th.tds,
+.invoice td.tds {
+    width: 90px !important; 
+} */
+
+
+.header-position-sticky{
+    position: sticky;
+    top: 0;
+}
+
+/* ::ng-deep .container-fluid .table-wrapper .invoice th.tds,
+::ng-deep .container-fluid .table-wrapper .invoice td.tds {
+    width: 104px !important;
+} */
+
+::ng-deep .container-fluid .table-wrapper .invoice th.tds,
+::ng-deep .container-fluid .table-wrapper .invoice td.tds  {
+    width: 100px !important;
+    align-items: center !important;
+    vertical-align: middle !important; 
+}
+
+.disableinput {
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+    background-color: #e9ecef !important;
+    border: 1px solid #c2c4c6;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    user-select: none !important;
+    /* width: 159px; */
+    max-width: 100%;
+}
+
+
+.tds {
+    text-align: center; 
+}

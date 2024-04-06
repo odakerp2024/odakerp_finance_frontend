@@ -89,3 +89,9 @@ div.form-group input.form-control.amount {
     font-weight: bold !important;
     font-size: large !important;
 }
+
+::ng-deep.ng-dropdown-panel .ng-dropdown-panel-items .ng-optgroup{
+    font-weight: bold !important;
+    color:black !important;
+    text-transform: uppercase !important;
+}
