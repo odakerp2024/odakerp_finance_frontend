@@ -40,6 +40,8 @@ export class AccountPayableDetailsComponent  implements OnInit {
   isEditButton: boolean = false;
   resultValues: any[];
   formattedErrorMessages: any;
+  VendorCodeList: any;
+  VendorBranch:any;
   debitCreditList = [
     { value: 1, debitCreditName: 'Debit' },
     { value: 0, debitCreditName: 'Credit' }
@@ -89,6 +91,7 @@ export class AccountPayableDetailsComponent  implements OnInit {
       OfficeId:[''],
       Remarks: [''],
       VendorName: [''],
+      VendorBranch: [''],
       PurchaseInvoice: [''],
       PurchaseInvoiceDate: [this.currentDate],
       InvoiceCurrency: [''],
@@ -126,10 +129,12 @@ export class AccountPayableDetailsComponent  implements OnInit {
         this.CreatedOn = this.datePipe.transform(info.CreatedDate, this.entityDateFormat1);
         this.ModifiedOn = this.datePipe.transform(info.ModifiedDate, this.entityDateFormat1);
        debugger
+       await this.getVendorList(info.DivisionId);
        await this.getOffice(info.DivisionId);
         this.accountPayableForm.patchValue({      
           ReceiptVoucherId: this.accountPayableId,
-          VendorName: info.Vendor,
+          VendorName: info.VendorId,
+          VendorBranch: info.BranchName.toUpperCase(),
           Division: info.Division,
           DivisionId: info.DivisionId,
           Office: info.Office,
@@ -163,7 +168,36 @@ export class AccountPayableDetailsComponent  implements OnInit {
   })
   }
 
+  getVendorBranch(event: any) {
+    debugger
+    const service = `${this.globals.APIURL}/PaymentVoucher/PaymentVoucherBillDuePaymentList`;
+    this.dataService.post(service, { VendorId: event }).subscribe((result: any) => {
+      this.VendorCodeList = [];
+      if (result.data.Table.length > 0) { 
+        this.VendorCodeList = result.data.Table;
+      }
+      console.log("okdd");
+      // console.log(this.CustomerCodeList, 'customer list');
+      this.accountPayableForm.get('VendorBranch').setValue('');
+      // If customer has only one branch, auto-select it
+      if (this.VendorCodeList.length === 1) {
+        this.accountPayableForm.get('VendorBranch').setValue(this.VendorCodeList[0].CityName);
+      }
+      
+    }, error => { });
+  }
 
+  // getVendorBranchList(VendorId) {
+  //   debugger
+  //   const customerDetails = this.VendorCodeList.find(vendor => vendor.VendorID === VendorId);
+  //   this.accountPayableForm.controls['CustomerBranch'].setValue('');
+  //   if (customerDetails) {
+  //     this.VendorBranch = this.VendorCodeList.filter(vendor => vendor.CustomerName === customerDetails.CustomerName);
+  //     if (this.VendorBranch.length === 1) { // If customer has only one branch
+  //       this.accountPayableForm.controls['CustomerBranch'].setValue(this.VendorBranch[0].CityName);
+  //     }
+  //   }
+  // }
   getVendorList(ID) {
     debugger
     return new Promise((resolve, reject) => {
@@ -214,6 +248,8 @@ export class AccountPayableDetailsComponent  implements OnInit {
         this.commonDataService.getOfficeByDivisionId(payload).pipe(takeUntil(this.ngUnsubscribe)).subscribe((result: any)=>{
           this.officeList = [];
            this.accountPayableForm.controls['OfficeId'].setValue('');
+           this.accountPayableForm.controls['VendorName'].setValue('');
+           this.accountPayableForm.controls['VendorBranch'].setValue('');
           if(result.message == 'Success'){
             if(result.data && result.data.Table.length > 0) {
               this.officeList.push(...result.data.Table);
@@ -247,10 +283,14 @@ export class AccountPayableDetailsComponent  implements OnInit {
   }
 
   save(){
+    debugger
       this.accountPayableForm.value.Id = this.accountPayableId
       var validation = "";
       if (this.accountPayableForm.value.DivisionId == "") {
         validation += "<span style='color:red;'>*</span> <span>Please Select Division </span></br>"
+      }
+      if (this.accountPayableForm.value.VendorBranch == "") {
+        validation += "<span style='color:red;'>*</span> <span>Please Select Vendor Branch </span></br>"
       }
       if (this.accountPayableForm.value.OfficeId == "") {
         validation += "<span style='color:red;'>*</span> <span>Please Select Office</span></br>"
@@ -309,6 +349,7 @@ export class AccountPayableDetailsComponent  implements OnInit {
         "OfficeId": this.accountPayableForm.value.OfficeId,
         "Office": this.accountPayableForm.value.Office,
         "Vendor": this.accountPayableForm.value.VendorName,
+        "BranchName": this.accountPayableForm.value.VendorBranch,
         "PurchaseInvoice": this.accountPayableForm.value.PurchaseInvoice,
         "PurchaseInvoiceDate": this.accountPayableForm.value.PurchaseInvoiceDate,
         "InvoiceCurrency": this.accountPayableForm.value.InvoiceCurrency,
