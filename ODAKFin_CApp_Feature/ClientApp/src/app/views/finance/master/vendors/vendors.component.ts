@@ -676,9 +676,9 @@ export class VendorsComponent implements OnInit {
     //console.log(this.route.snapshot.params['Vendor_ID']);
     //console.log(this.route.snapshot.params['Vendor_BranchID']);
     this.getCategoryList();
+    this.OnBindDropdownCountry();
     this.createForm();
     this.getBusinessDivision();
-    this.OnBindDropdownCountry();
     this.getCategory();
     this.getGSTCategory();
     this.OnBindCompanyStatus();
@@ -699,7 +699,7 @@ export class VendorsComponent implements OnInit {
     this.getPayableSubCategory();
     this.getOnBoard();
     this.getReasonList();
-    this.getCurrency();
+    // this.getCurrency();
     this.OnBindDropdownfinancialYear();
 
     // this.getVendorPartyList();
@@ -931,10 +931,12 @@ export class VendorsComponent implements OnInit {
   //   });
   // }
 
-  OnBindDropdownCountry() {
-    this.ms.OnBindDropdownCountry().subscribe(data => {
-      this.countryList = data;
-    });
+  async OnBindDropdownCountry() {
+    var payload = {};
+    var service = `${this.globals.SaApi}/SystemAdminApi/GetCountries`;
+    await this.dataService.post(service, payload).subscribe((result: any) => {
+      this.countryList = result;
+    }, error => { });
   }
 
   OnBindCompanyStatus() {
@@ -1145,11 +1147,11 @@ export class VendorsComponent implements OnInit {
       if (result.length > 0) {
         this.currencyList = result;
         // const entitySelectedCurrency = this.currencyList.find(c => c.Currency == this.entityCurrency);
-        const entitySelectedCurrency = this.currencyList.find(c => c.Currency.toUpperCase() === this.entityCurrency.toUpperCase());
+        const entitySelectedCurrency = this.currencyList.find(c => c.Currency === this.entityCurrency.toUpperCase());
 
         if (entitySelectedCurrency) {
           this.creditDetailsForm.controls.Currency.setValue(entitySelectedCurrency.ID);
-          this.fg.controls.CurrencyId.setValue(entitySelectedCurrency.ID); 
+          this.fg.controls.CurrencyId.setValue(entitySelectedCurrency.ID);
           this.fg.controls.AccountCurrencyId.setValue(entitySelectedCurrency.ID);
 
           this.entityCurrencyID = entitySelectedCurrency.ID
@@ -1337,7 +1339,6 @@ export class VendorsComponent implements OnInit {
   }
 
   EditModeValueBInd(response) {
-    debugger
     this.vendorDetailsById = response;
     var tblcount: number = 0;
     if (response['data'].Table.length > 0) {
@@ -2729,7 +2730,6 @@ export class VendorsComponent implements OnInit {
   }
 
   deleteDocument(deleteIndex) {
-    debugger
     const index = this.documentPayloadInfo.findIndex((element) => element.VendorDocumentsID == deleteIndex.VendorDocumentsID)
     this.documentPayloadInfo.splice(index, 1);
     // this.onSubmit();
@@ -3295,7 +3295,7 @@ export class VendorsComponent implements OnInit {
   // Email Ids start
   updateEmailDetails(event: any) {
 
-    if (event.length > 0 ||event.length == 0) {
+    if (event.length > 0 || event.length == 0) {
       this.emailIDPayLoad = event;
       this.onSubmit();
     }
@@ -3468,7 +3468,7 @@ export class VendorsComponent implements OnInit {
     }
   }
 
-  OnClickRadio(data,index) {
+  OnClickRadio(data, index) {
     console.log(data)
     this.bankEditSelectedIndex = index;
     this.clearBankDetails();

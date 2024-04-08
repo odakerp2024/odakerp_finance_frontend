@@ -499,7 +499,7 @@ getBankaccountDetails(OL:BankaccountGetDetails): Observable< BankaccountGetDetai
     }
 
     OnBindDropdownCountry() {
-        return this.http.post<Country>(this.globals.SaApi + '/SystemAdminApi/GetCountries', this.http.options);
+        return this.http.post<Country>(this.globals.APIURL + '/Organization/GetCountryList', this.http.options);
     }
 
 }
