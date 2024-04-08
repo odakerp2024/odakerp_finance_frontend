@@ -42,6 +42,7 @@ export class ProvisionDetailComponent implements OnInit {
   numberRangeList: any;
   IsFinal : boolean = false;
   IsExchangeEnable: boolean = false;
+  Isclose : boolean = false ;
   companyCurrencyId: Number;
   Remarks: string = '';
   constructor(
@@ -125,15 +126,16 @@ export class ProvisionDetailComponent implements OnInit {
           this.isEditMode = true;
           this.IsFinal = true; // Set isFinal to true if StatusId is 2
       }
-      if (info.StatusId == 3) {
-        this.isEditMode = true;
-        this.IsFinal = false; // Set isFinal to true if StatusId is 2
-       }
+      if(info.StatusId == 3){
+        this.isEditMode = true ;
+        this.IsFinal = true;
+        this.Isclose = true;
+      }
         await this.getOffice(info.DivisionId);
         //console.log("Info before patching form:", info); // Log info before patching the form
         this.Remarks = info.Remarks; 
-          const table1Data = result.data.Table1[0];
-        this.TotalAmount = table1Data.AmountCCR;
+          const table1Data = result.data.Table1;
+         this.TotalAmount = table1Data.reduce((acc, item) => acc + parseFloat(item.AmountCCR), 0);
         this.ProvisionForm.get('Table').patchValue({
           ProvisionId: info.ProvisionId,
           DivisionId: info.DivisionId,
@@ -155,7 +157,7 @@ export class ProvisionDetailComponent implements OnInit {
           const table1FormGroup = this.ProvisionForm.get('Table1') as FormGroup;
           const table1Data = result.data.Table1[0]; // Assuming only one item is patched
           // Format the AmountCCR to two decimal places
-          const formattedAmountCCR = parseFloat(table1Data.AmountCCR).toFixed(2);
+          const formattedAmountCCR = Number(table1Data.AmountCCR).toFixed(2);
           // console.log("table1Data before patching form:", table1Data);
           table1FormGroup.patchValue({
             ProvisionItemsId: table1Data.ProvisionItemsId,
@@ -175,7 +177,8 @@ export class ProvisionDetailComponent implements OnInit {
           this.provisionItemsTableList = result.data.Table1.map(item => ({
             ...item,
             AccountName: this.getAccountName(item.Account),
-            CurrencyName: this.getCurrencyName(item.Currency)
+            CurrencyName: this.getCurrencyName(item.Currency),
+            AmountCCR: parseFloat(item.AmountCCR).toFixed(2)
           }));
          // console.log(this.provisionItemsTableList, 'table 1');
         }
