@@ -150,6 +150,8 @@ export class ProvisionDetailComponent implements OnInit {
           // Patch values into Table1 form group
           const table1FormGroup = this.ProvisionForm.get('Table1') as FormGroup;
           const table1Data = result.data.Table1[0]; // Assuming only one item is patched
+          // Format the AmountCCR to two decimal places
+          const formattedAmountCCR = parseFloat(table1Data.AmountCCR).toFixed(2);
           // console.log("table1Data before patching form:", table1Data);
           table1FormGroup.patchValue({
             ProvisionItemsId: table1Data.ProvisionItemsId,
@@ -159,7 +161,7 @@ export class ProvisionDetailComponent implements OnInit {
             Amount: table1Data.Amount,
             Currency: table1Data.Currency,
             ExchangeRate: table1Data.ExchangeRate,
-            AmountCCR: table1Data.AmountCCR,
+            AmountCCR: formattedAmountCCR,
             AccountName: await this.getAccountName(table1Data.Account),
             CurrencyName: await this.getCurrencyName(table1Data.Currency)
           

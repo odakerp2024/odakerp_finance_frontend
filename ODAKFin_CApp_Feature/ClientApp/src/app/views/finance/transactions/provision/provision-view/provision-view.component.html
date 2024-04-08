@@ -202,7 +202,7 @@
                                 name="active" id="active">
                                 <ng-option [value]="''" disabled>--SELECT STATUS--</ng-option>
                                 <ng-option *ngFor="let status of statusList" [value]="status.Id">
-                                    <span class="textwrap">{{status.StatusName | uppercase}}</span>
+                                    <span class="textwrap">{{ status.StatusName === "Cancelled" ? 'CLOSED' : status.StatusName | uppercase }}</span>
                                 </ng-option>
                             </ng-select>
                         </div>
