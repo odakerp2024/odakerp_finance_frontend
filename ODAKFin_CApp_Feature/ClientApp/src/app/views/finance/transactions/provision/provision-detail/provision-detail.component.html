@@ -265,7 +265,7 @@
                         class="btn btn-success text-white mr-3 mb-0 col-auto" (click)="finalSubmit()">
                         Final
                     </button>
-                    <button type="button" *ngIf="isUpdate && IsFinal" (click)="submit(true)"
+                    <button type="button" *ngIf="isUpdate && IsFinal && Isclose" (click)="submit(true)"
                         [ngClass]="!isEditMode  ? 'disable-input--style' : ''"
                         class="btn btn-warning text-white mr-3 mb-0 col-auto">
                         Close Provision
