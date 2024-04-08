@@ -125,6 +125,10 @@ export class ProvisionDetailComponent implements OnInit {
           this.isEditMode = true;
           this.IsFinal = true; // Set isFinal to true if StatusId is 2
       }
+      if (info.StatusId == 3) {
+        this.isEditMode = true;
+        this.IsFinal = false; // Set isFinal to true if StatusId is 2
+       }
         await this.getOffice(info.DivisionId);
         //console.log("Info before patching form:", info); // Log info before patching the form
         this.Remarks = info.Remarks; 
@@ -410,7 +414,10 @@ export class ProvisionDetailComponent implements OnInit {
       if (result.isConfirmed) {
         if (isClosed) {
           this.ProvisionForm.controls['Table']['controls']['IsClosedProvision'].setValue(1);
-          // this.ProvisionForm.controls['Table']['controls']['Status'].setValue(3);
+          this.ProvisionForm.controls['Table']['controls']['Status'].setValue(3);
+          // Retrieve the value of 'Status' form control
+          const statusValue = this.ProvisionForm.controls['Table']['controls']['Status'].value;
+         // console.log(statusValue);
         } else {
           this.ProvisionForm.controls['Table']['controls']['IsClosedProvision'].setValue(0);
         }
