@@ -45,7 +45,7 @@ export class DivisionInfoComponent implements OnInit {
     private datePipe: DatePipe,
     private router: Router,
     private dataService: DataService,
-    private globals: Globals,
+    public globals: Globals,
     private route: ActivatedRoute,
     private autoCodeService: AutoCodeService,
     private commonDataService: CommonService

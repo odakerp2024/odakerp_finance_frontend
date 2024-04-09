@@ -32,7 +32,7 @@ export class DivisionComponent implements OnInit {
   constructor(
     private router: Router,
     private dataService: DataService,
-    private globals: Globals,
+    public globals: Globals,
     private fb: FormBuilder,
     public ps: PaginationService,
     private CommonService: CommonService
