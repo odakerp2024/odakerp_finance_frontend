@@ -37,7 +37,7 @@ export class ProvisionDetailComponent implements OnInit {
   isGridEditMode = false;
   isEditMode: boolean = true;
   isEditMode1: boolean =false;
-  isUpdate = true;
+  isUpdate : boolean = false;
   provisionId: number;
   numberRangeList: any;
   IsFinal : boolean = false;
@@ -59,6 +59,10 @@ export class ProvisionDetailComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    console.log(this.isEditMode , 'editmode'),
+    console.log(this.isUpdate , 'update'),
+    console.log(this.IsFinal , 'final'),
+    console.log(this.Isclose , 'close')
     this.createForm();
     this.getDivisionList();
     this.getParentAccountList();
@@ -69,6 +73,7 @@ export class ProvisionDetailComponent implements OnInit {
     this.route.params.subscribe(param => {
       if (param.ProvisionId) {
         this.provisionId = param.ProvisionId;
+        this.isUpdate = true;
         this.ProvisionForm.disable();
         this.getByIdRouteFunction();
   
@@ -113,6 +118,11 @@ export class ProvisionDetailComponent implements OnInit {
      this.isUpdate = true;
      this.isEditMode = true;
      this.isEditMode1 = true;
+     //this.IsFinal = true;
+     console.log(this.isEditMode , 'editmode'),
+     console.log(this.isUpdate , 'update'),
+     console.log(this.IsFinal , 'final'),
+     console.log(this.Isclose , 'close')
    }
 
   getByIdRouteFunction() {   
@@ -479,7 +489,6 @@ getFinalPayload() {
 
 
   savePayment(payload, type) {
- 
     this.provisionService.savePayment(payload).pipe(takeUntil(this.ngUnsubscribe)).subscribe((result: any) => {
       if (result.message == "Success") {
         // console.log('result the payment voucher', result);
@@ -487,11 +496,11 @@ getFinalPayload() {
         Swal.fire(result.message, '', 'success');
         if (type === 'draft') {
           this.isEditMode = false;
-         // this.isEditMode1 = true;
+          this.isEditMode1 = true;
           this.provisionId = Number(result.data.Id)
-          // this.editView(result.data.Id)
+          this.editView(result.data.Id)
         }
-        if (type === 'final') {
+        else if (type === 'final' ) {
           this.backToMain();
         }
         // this.backToMain();
@@ -503,12 +512,21 @@ getFinalPayload() {
     });
   }
 
+  
+  editView(ProvisionId: Number) {
+      this.router.navigate(['/views/provision/provision-detail', { ProvisionId: ProvisionId  }],{
+      relativeTo: this.route,
+      queryParamsHandling: 'merge',
+     });
+    this.getByIdRouteFunction();
+  }
+
   backToMain() {
     this.router.navigate(['/views/provision/provision-view']);
+    this.isUpdate = false;
   }
 
   async finalSubmit() {
-
     this.validationCheck();
 
     const validation = this.validationCheck();
@@ -538,13 +556,13 @@ getFinalPayload() {
         const payload = this.getFinalPayload();
         console.log('final payload', payload)
         payload.Provision.Table[0].IsFinal = 1; // set as final
-        payload.Provision.Table[0].Status = 2; // ! set save type(draft(1) or final(2) or canceled(3));
+        payload.Provision.Table[0].Status = 2; //set save type(draft(1) or final(2) or canceled(3));
         payload.Provision.Table[0].Date = new Date();
         // return
         this.savePayment(payload, 'final');
 
         // return
-        this.savePayment(payload, 'draft');
+        // this.savePayment(payload, 'draft');
 
       } else {
 

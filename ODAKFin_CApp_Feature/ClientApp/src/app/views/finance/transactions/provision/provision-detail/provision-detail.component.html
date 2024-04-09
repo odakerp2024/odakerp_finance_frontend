@@ -8,7 +8,7 @@
             <div class="float-right">
                 <!-- edit   [disable] = "!isEditMode" -->
                 <button type="button" class="btn btn-warning bmd-btn-edit text-white mr-3"
-                *ngIf="isUpdate && !IsFinal"  (click)="enableEdit()">
+                *ngIf="isUpdate"  (click)="enableEdit()">
                     <i class="material-icons editicon">edit</i>
                 </button>
                 <!-- back -->
@@ -255,17 +255,17 @@
             <div class="col-12 pt-4 pb-4">
                 <!-- || paymentForm.value.Table.value.AmountPaid !== paymentForm.value.Table.value.TotalAmount  -->
                 <div class="float-right">
-                    <!-- [ngClass]=" !isEditMode || !isSameAmount  ? 'disable-input--nostyle save-disable---style' : ''" -->
-                    <button type="button" *ngIf="!IsFinal && isUpdate"
+                    <button type="button"  *ngIf="!IsFinal" 
+                    [ngClass]="IsFinal ? 'disable-input--nostyle final-disable--style' : ''"
                      class="btn btn-primary text-white mr-3 mb-0 col-auto" (click)="submit()">
                         Save
                     </button>
-                    <button type="button" *ngIf="!IsFinal && isUpdate"
-                        [ngClass]=" !isUpdate || !isEditMode ? 'disable-input--nostyle final-disable--style' : ''"
+                    <button type="button"  *ngIf="!IsFinal" 
+                        [ngClass]="!isEditMode || !IsFinal && !isUpdate ? 'disable-input--nostyle final-disable--style' : ''"
                         class="btn btn-success text-white mr-3 mb-0 col-auto" (click)="finalSubmit()">
                         Final
                     </button>
-                    <button type="button" *ngIf="isUpdate && IsFinal && Isclose" (click)="submit(true)"
+                    <button type="button" *ngIf="isUpdate && IsFinal" (click)="submit(true)"
                         [ngClass]="!isEditMode  ? 'disable-input--style' : ''"
                         class="btn btn-warning text-white mr-3 mb-0 col-auto">
                         Close Provision
