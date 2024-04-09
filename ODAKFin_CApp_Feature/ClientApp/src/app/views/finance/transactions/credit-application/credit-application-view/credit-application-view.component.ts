@@ -134,7 +134,7 @@ pagedItems: any[];// paged items
     payload.ApplicationDate = new Date(payload.ApplicationDate);
     this.creditApplicationService.getList(payload).subscribe((result: any) => {
       if (result.message == 'Success') {
-        this.creditApplicationList = result.data.Table;
+        this.creditApplicationList = result.data.Table;    
         this.setPage(1)
       }
     })
@@ -144,51 +144,53 @@ pagedItems: any[];// paged items
     this.getCreditApplication();
   }
 
-  editCreditApplication(id) {
+  editCreditApplication(id, IsRevise, IsRevoke) {
     const userID = localStorage.getItem("UserID");
-    const paylod = {
+    const payload = {
       userID: Number(userID),
       Ref_Application_Id: "4",
       SubfunctionID: 523,
     }
-    this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
+    this.commonDataService.GetUserPermissionObject(payload).subscribe(data => {
       if (data.length > 0) {
         console.log("PermissionObject", data);
-
-        if (data[0].SubfunctionID == paylod.SubfunctionID) {
-
-          if (data[0].Read_Opt != 2) {
-            if(data[0].Update_Opt != 2){
-              Swal.fire('Please Contact Administrator');
-            }
-            else{
-              this.pager = {};
-              this.filterFormCreate();
-              this.creditApplicationFilter();
-              this.router.navigate(['/views/transactions/credit-application/credit-application-details', { creditId: id }]);
-            }
-            
-          }
-          else {
+  
+        if (data[0].SubfunctionID === payload.SubfunctionID) {
+          if (data[0].Read_Opt !== 2) {
+            Swal.fire('Please Contact Administrator');
+          } else {
+            const isReviseOrRevoke = IsRevise || IsRevoke|| this.checkReviseOrRevokeInList(); // Check if IsRevise is true or revise/revoke values present in the list
             this.pager = {};
             this.filterFormCreate();
-            this.creditApplicationFilter();
-            this.router.navigate(['/views/transactions/credit-application/credit-application-details', { creditId: id }]);
+            this.getCreditApplication();
+            this.navigateToCreditApplicationDetails(id, isReviseOrRevoke); // Set requestType based on IsRevise or presence of revise/revoke values
           }
-        }
-        else {
+        } else {
           Swal.fire('Please Contact Administrator');
         }
-      }
-      else {
+      } else {
         Swal.fire('Please Contact Administrator');
       }
     }, err => {
-      console.log('errr----->', err.message);
+      console.log('Error:', err.message);
     });
-    
   }
-
+  
+  checkReviseOrRevokeInList() {
+    // Check if "revise" or "revoke" values are present in the creditApplicationList
+    for (const application of this.creditApplicationList) {
+      if (application.action === "revise" || application.action === "revoke") {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  navigateToCreditApplicationDetails(id, requestType) {
+    // Navigate to credit application details with specified parameters
+    this.router.navigate(['/views/transactions/credit-application/credit-application-details', { creditId: id, requestType: requestType }]);
+  }
+  
   // getDivision() {
   //   return new Promise((resolve, rejects) => {
   //     this.commonDataService.getDivision({}).subscribe((result: any) => {

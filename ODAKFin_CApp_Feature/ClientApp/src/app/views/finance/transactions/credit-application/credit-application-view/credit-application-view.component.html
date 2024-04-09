@@ -81,9 +81,7 @@
                     <td
                       (click)="
                         editCreditApplication(
-                          creditApplication.CreditApplicationId
-                        )
-                      "
+                          creditApplication.CreditApplicationId, creditApplication.IsRevise, creditApplication.IsRevoke )"
                       style="color: #0366d6; cursor: pointer"
                     >
                       {{ creditApplication.CreditApplicationNumber }}
