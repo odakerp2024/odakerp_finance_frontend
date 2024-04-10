@@ -30,7 +30,7 @@ export class CreditApplicationDetailsComponent implements OnInit {
   creditAmountValidation: any;
   // * pagination end
 
-
+  IsUpdated:boolean = true;
   ModifiedOn: any;
   CreatedOn: any;
   CreatedBy = localStorage.getItem("UserID");
@@ -86,7 +86,10 @@ export class CreditApplicationDetailsComponent implements OnInit {
   creditType: string ;
   IsRevise: boolean ;
   IsRevoke:boolean ;
-  
+  ReviseCreditLimitDays: any;
+  ReviseCreditLimitAmount: any;
+  RevisePostDatedCheques: any;
+  ReviseRequestRemarks: any;
 
   constructor(
     private ps: PaginationService,
@@ -131,7 +134,7 @@ export class CreditApplicationDetailsComponent implements OnInit {
         debugger;
         this.getById();
       }
-    });
+    });    
   }
 
   getByFunctionality() {
@@ -163,6 +166,10 @@ export class CreditApplicationDetailsComponent implements OnInit {
       CreditLimitAmount: [],
       PostDatedCheques: [""],
       RequestRemarks: [],
+      // ReviseCreditLimitDays: [],
+      // ReviseCreditLimitAmount: [],
+      // RevisePostDatedCheques: [""],
+      // ReviseRequestRemarks: [],
       CreatedBy: [this.CreatedBy],
       StatusId: [1],
       ApprovedDate: [],
@@ -311,11 +318,10 @@ getbyId(selectedCreditApplicationId: any) {
                 // }
 
                 //  Table.IsFinal = 1; // ! set the final Value;
-                //  Table.StatusId = 2;
-                 this.creditApplicationForm.disable();
-               
-                //  this.creditApplicationForm.value.
-                this.isEditMode = true;
+                //  Table.StatusId = 2;                
+                this.creditApplicationForm.disable();
+                // this.IsUpdated = false;
+                this.isEditMode = false;
                 // this.CreatedOn = Table.CreatedOn ?? this.minDate,
                 // this.CreatedBy =  [this.CreatedBy];
                 // this.CreatedOn = Table.CreatedDate;
@@ -355,9 +361,9 @@ getbyId(selectedCreditApplicationId: any) {
                     CreatedBy: Table.CreatedBy,
                     // IsRevise: Table.IsRevise  ? true : false,
                     // IsRevoke: Table.IsRevoke  ? true : false,
-                    StatusId: 1,
+                    StatusId: Table.StatusId,
                   
-                });
+                });              
                 if (this.creditApplicationForm.value.IsRevoke) {
                   this.creditApplicationForm.patchValue({
                       CreditLimitDays: 0,
@@ -378,7 +384,7 @@ getbyId(selectedCreditApplicationId: any) {
                 this.questionArray = result.data.Table1;
             }
             this.getNumberRangeList();
-            this.isGetByIdInProgress = false;
+            this.isGetByIdInProgress = false;       
         }
     });
 }
@@ -473,6 +479,11 @@ getbyId(selectedCreditApplicationId: any) {
     }
     const Table = this.creditApplicationForm.value;
 
+    if(!this.requestType){
+      Table.IsRevise = false;
+      Table.IsRevoke = false;
+    }
+
     let payload = {
       CreditApplication: {
         Table: [
@@ -485,10 +496,10 @@ getbyId(selectedCreditApplicationId: any) {
             CreatedBy: +Table.CreatedBy,
             CreditApplicationId: Table.CreditApplicationId,
             CreditApplicationNumber: Table.CreditApplicationNumber,
-            CreditLimitAmount: Table.CreditLimitAmount,
-            CreditLimitDays: Table.CreditLimitDays,
+            CreditLimitDays: Table.ReviseCreditLimitDays ? Table.ReviseCreditLimitDays : Table.CreditLimitDays,
+            CreditLimitAmount: this.ReviseCreditLimitAmount ? this.ReviseCreditLimitAmount : Table.CreditLimitAmount,
             CustomerId: +Table.CustomerId,
-           
+
             IsRevise: +Table.IsRevise ? true : false, 
             IsRevoke: +Table.IsRevoke ? true : false, 
             CustomerPan: Table.CustomerPan,
@@ -499,8 +510,8 @@ getbyId(selectedCreditApplicationId: any) {
             Email: Table.Email,
             Mobile: Table.Mobile,
             OfficeId: +Table.OfficeId,
-            PostDatedCheques: +Table.PostDatedCheques,
-            RequestRemarks: Table.RequestRemarks,
+            PostDatedCheques: Table.RevisePostDatedCheques ? Table.RevisePostDatedCheques : Table.PostDatedCheques,
+            RequestRemarks: Table.ReviseRequestRemarks ? Table.ReviseRequestRemarks : Table.RequestRemarks,
             SalesPersonId: Table.SalesPersonId,
             StatusId: +Table.StatusId,
             Telephone: Table.Telephone,
@@ -581,12 +592,12 @@ getbyId(selectedCreditApplicationId: any) {
           }
           Swal.fire("", result.data.Message, "success");
           const creditApplicationId = result.data.Id;
-    
-          // Extract IsRevise and IsRevoke values from the payload
+   
+         
           const isRevise = payload.CreditApplication.Table[0].IsRevise;
           const isRevoke = payload.CreditApplication.Table[0].IsRevoke;
     
-          // Determine requestType based on IsRevise and IsRevoke
+      
           const requestType = isRevise || isRevoke;
     
           this.router.navigate([
@@ -848,6 +859,7 @@ getbyId(selectedCreditApplicationId: any) {
   }
 
   getTradeList() {
+    
     debugger;
     this.creditApplicationService.getTradeList({}).subscribe((result: any) => {
       if (result.message == "Success") {
@@ -1234,6 +1246,7 @@ getbyId(selectedCreditApplicationId: any) {
   }
 
   getCustomerBranchCode(event: any) {
+    this.creditApplicationForm.value.IsRevise = false;
     debugger;
     let service = `${this.globals.APIURL}/ReceiptVoucher/GetReceiptVoucherDropDownList`;
     this.dataService
@@ -1268,6 +1281,7 @@ getbyId(selectedCreditApplicationId: any) {
                   Swal.fire(result.data);
                 }
               });
+           
           }
         }
         console.log(result, "resultresultresult");

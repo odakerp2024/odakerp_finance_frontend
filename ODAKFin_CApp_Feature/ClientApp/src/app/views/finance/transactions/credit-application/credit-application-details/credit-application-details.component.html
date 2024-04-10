@@ -169,7 +169,7 @@
                             </ng-container>
                         </select> -->
                         <ng-select  class="searchdropdown"  formControlName="DivisionId" [clearable]="false"
-                        (ngModelChange)="getOfficeList($event)" (change)="getWQuestions()">
+                        (ngModelChange)="getOfficeList($event)" (change)="getWQuestions()"  [ngClass]="!IsUpdated ? 'disable-input' : ''">
                             <ng-option [value]="''" disabled>--SELECT DIVISION TYPE--</ng-option>
                             <ng-container  *ngFor="let division of divisionList">
                               <ng-option  *ngIf="division.Active"  [value]="division.ID">
@@ -189,7 +189,8 @@
                                 {{office.OfficeName | uppercase}}
                             </option>
                         </select> -->
-                        <ng-select  class="searchdropdown"  formControlName="OfficeId" [clearable]="false" (change)="getNumberRangeList()"  [disabled]="isGetByIdInProgress">
+                        <ng-select  class="searchdropdown"  formControlName="OfficeId" [clearable]="false" (change)="getNumberRangeList()"  
+                        [disabled]="isGetByIdInProgress"  [ngClass]="!IsUpdated ? 'disable-input' : ''">
                             <ng-option [value]="''" disabled>--SELECT OFFICE--</ng-option>
                             <ng-container *ngFor="let office of officeList">
                               <ng-option [value]="office.ID">
@@ -219,7 +220,7 @@
 
                        <ng-select
                        class="searchdropdown custom"  [formControlName]="'CustomerId'" [ngClass]="{'disable-input': isCopied}" [clearable]="false" 
-                       (change)="isSelectBranch = true;getCustomerBranchCode($event)">
+                       (change)="isSelectBranch = true;getCustomerBranchCode($event)"  [ngClass]="!IsUpdated ? 'disable-input' : ''">
                        <ng-option [value]="0" disabled>--SELECT CUSTOMER--</ng-option>
                        <ng-option *ngFor="let customerData of customerAndBranchList" [value]="customerData.CustomerID">
                         {{customerData.CustomerName | uppercase }}
@@ -247,7 +248,8 @@
                                 {{customerData.BranchCode | uppercase}}
                             </option>
                         </select> -->
-                        <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'CustomerBranchId'" (change)="getCustomerFullDetail($event)">
+                        <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'CustomerBranchId'" 
+                        (change)="getCustomerFullDetail($event)"  [ngClass]="!IsUpdated ? 'disable-input' : ''">
                                <ng-option [value]="0" disabled>--SELECT BRANCH--</ng-option>
                                <ng-option *ngFor="let customerData of customerBranchList"  [value]=customerData.CustomerBranchID>
                                 {{customerData.CityName | uppercase}}
@@ -275,7 +277,7 @@
                 <div class="col-4">
                     <div class="form-group bmd-form-group w-100">
                         <label class="str">Trade</label>
-                        <ng-select class="searchdropdown" formControlName="Trade" [clearable]="false">
+                        <ng-select class="searchdropdown" formControlName="Trade" [clearable]="false"  [ngClass]="!IsUpdated ? 'disable-input--nostyle' : ''">
                             <ng-option [value]="''" disabled>--SELECT TRADE--</ng-option>                            
                             <ng-option *ngFor="let getTrade of getTradeLists" [value]="getTrade.Id">
                                 {{ getTrade.TradeType | uppercase }}
@@ -544,7 +546,8 @@
                                 <div class="col-4">
                 <div class="form-group bmd-form-group w-100">
                                         <label class="str">Credit Limit (Days)</label>
-                                        <input type="number" class="form-control" formControlName="CreditLimitDays1" min="0" step="2" [disabled]="false" (change)="onCreditLimitDays($event)">
+                                        <input type="number" class="form-control" [(ngModel)]="ReviseCreditLimitDays"  min="0" step="2"
+                                         [disabled]="false" (change)="onCreditLimitDays($event)"  >
                                         <p *ngIf="creditdaysValidation" style="color: red;">The credit days limit should be "{{creditdaysValidation}}" or less</p>
                 
                                     </div>
@@ -553,7 +556,8 @@
                                 <div class="col-4"> 
                                         <div class="form-group bmd-form-group">
                                             <label class="str">Credit Limit (Amount)</label>
-                                        <input type="number" class="form-control"  formControlName="CreditLimitAmount1" min="0" step="2" [disabled]="false" (change)="onCreditLimitAmount($event)">
+                                        <input type="number" class="form-control" [(ngModel)]="ReviseCreditLimitAmount"   min="0" step="2" [disabled]="false" 
+                                       (change)="onCreditLimitAmount($event)">
                                             <p *ngIf="creditAmountValidation" style="color: red;">The credit amount limit should be "{{creditAmountValidation}}" or less</p>                       
                                     </div>
                                 </div>
@@ -561,7 +565,7 @@
                                 <div class="col-4">
                                         <div class="form-group bmd-form-group">
                                             <label class="str">With Post Dated Cheque ?</label>
-                                            <ng-select  class="searchdropdown"  formControlName="PostDatedCheques1" [clearable]="false" >
+                                            <ng-select  class="searchdropdown"  [(ngModel)]="RevisePostDatedCheques" [clearable]="false" >
                                                 <ng-option [value]="''" disabled>--SELECT TRADE--</ng-option>
                                                 <ng-container  *ngFor="let status of PDCValue">
                                                 <ng-option [value]="status.value">
@@ -574,8 +578,8 @@
                 
                                 <div class="col-12">
                                     <label for="" class="">Request Remarks</label><br>
-                                    <textarea class="p-1 form-control w-50" name="" cols="50" rows="3"
-                                        formControlName="RequestRemarks1"></textarea>
+                                    <textarea class="p-1 form-control w-50" [(ngModel)]="ReviseRequestRemarks"name="" cols="50" rows="3"
+                                        ></textarea>
                                 </div>
                             </div>
                     
