@@ -112,8 +112,8 @@
             <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                 <div class="form-group">
                     <label>Provision Type</label>
-                    <ng-select  class="searchdropdown"  formControlName="Provision" [clearable]="false" name="provision">
-                        <ng-option  [value]="0" disabled>--SELECT PROVISION--</ng-option>                    
+                    <ng-select  class="searchdropdown"  formControlName="ProvisionType" [clearable]="false" name="provision">
+                        <ng-option  [value]="0" disabled>--SELECT PROVISION TYPE--</ng-option>                    
                         <ng-option value="1">FULL</ng-option>
                         <ng-option value="0">PARTIAL</ng-option>             
                     </ng-select>  
@@ -121,6 +121,18 @@
             </div>            
       
             <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                <div class="form-group">
+                    <label>Provision</label>
+                    <ng-select  class="searchdropdown"  formControlName="Provision" [clearable]="false"
+                    [placeholder]="'-- SELECT PROVISION --'">
+                        <ng-option [value]="0" disabled>--SELECT PROVISION--</ng-option>
+                        <ng-container *ngFor="let provision of provisionDropDownList">
+                          <ng-option  [value]="provision.ProvisionId">
+                           <span class="textwrap">{{provision.ProvisionNumber | uppercase}}</span>
+                          </ng-option>
+                        </ng-container>
+                    </ng-select>  
+                </div>
             </div>
            
                 <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
@@ -285,10 +297,18 @@
 
                 <div class="col-md-4 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group">
-                        <label>RCM Applicable </label>
-                        <input formControlName="RCMApplicable" readonly class="form-control" type="text"
-                            id="txtRemarks">
+                        <label>RCM Applicable</label>
+                        <ng-select class="searchdropdown" formControlName="RCMApplicable" [clearable]="false" name="RCM"   [placeholder]="'-- SELECT TDS--'"
+                                   (change)="toggleRCM($event)">
+                            <ng-option [value]="0" disabled>--SELECT RCM--</ng-option>                    
+                            <ng-option value="1">YES</ng-option>
+                            <ng-option value="0">NO</ng-option>             
+                        </ng-select>  
                     </div>
+                    
+                    
+                    
+                    
                 </div>
 
                 <div class="col-md-4 col-sm-6 col-lg-4 col-xl-4">
@@ -414,20 +434,15 @@
                                     <th>Currency</th>
                                     <th>Ex.Rate</th>
                                     <th>Amount (CCR)</th>
-                                    <th>Rcm</th>
+                                    <th>TDS</th>
                                     <th>GST Group %</th>
+                                    <th>Rcm</th>
                                     <th>Select</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>
-                                        <!-- <select formControlName="AccountId" class="form-control my-select">
-                                            <option disabled value="0">--SELECT ACCOUNT--</option>
-                                            <option *ngFor="let name of accountName" [value]="name.ChartOfAccountsId">
-                                                {{name.AccountName | uppercase}}
-                                            </option>
-                                        </select> -->                                                  
+                                    <td>                                                 
                                         <ng-select class="searchdropdown" [formControlName]="'AccountId'" [clearable]="false" [appendTo]="'body'">
                                            <ng-option [value]="0" disabled>--SELECT ACCOUNT--</ng-option>
                                            <ng-option *ngFor="let name of accountName" [value]="name.ChartOfAccountsId">
@@ -448,13 +463,6 @@
                                             class="form-control"  id="Amount" onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly/>
                                     </td>
                                     <td>
-                                        <!-- <select (change)="changeCurrencyEvent($event.target.value)"
-                                            formControlName="CurrencyId" class="form-control my-select">
-                                            <option disabled value="0">--SELECT CURRENCY--</option>
-                                            <option *ngFor="let currency of currencyList" [value]="currency.ID">
-                                                {{currency.Currency | uppercase}}
-                                            </option>
-                                        </select> -->
                                         <ng-select class="searchdropdown" [formControlName]="'CurrencyId'" [clearable]="false" [appendTo]="'body'" (change)="changeCurrencyEvent($event)">
                                             <ng-option [value]="0" disabled>--SELECT CURRENCY--</ng-option>
                                             <ng-option *ngFor="let currency of currencyList" [value]="currency.ID">
@@ -468,30 +476,15 @@
                                     </td>
                                     <td> <input readonly formControlName="Amountccr" class="form-control" type="text"
                                             id="Amount (CCR)" /> </td>
-                                 
-                                        <!-- <select (change)="taxableChangeEvent($event.target.value)"
-                                            formControlName="IsTaxable" class="form-control my-select">
-                                            <option disabled value="">--SELECT TAXABLE--</option>
-                                            <option value="1">YES</option>
-                                            <option value="0">NO</option>
-                                        </select> -->
-                                            <!-- <mat-checkbox class="searchcheckbox" (change)="toggleRCM($event.checked ? 1 : 0)" 
-                                                          [checked]="PurchaseCreateForm.value.IsRCM === 1"></mat-checkbox>                                         -->
-                                                          <td>
-                                                            <input type="checkbox" (change)="toggleRCM($event.target.checked)" 
-                                                            [checked]="PurchaseCreateForm.value.IsRCM === true">
-                                                        </td>
-                                                        
-                                                                         
-                                                                                                                                                               
-                                 
                                     <td>
-                                        <!-- <select formControlName="GSTGroup" class="form-control my-select">
-                                            <option disabled value="0">--SELECT TAX GROUP--</option>
-                                            <option *ngFor="let tax of taxList" [value]="tax.TaxRate">
-                                                {{tax.TaxRate}} %
-                                            </option>
-                                        </select> -->
+                                        <ng-select class="searchdropdown" [formControlName]="'TDSMaster'" [clearable]="false" [appendTo]="'body'">
+                                            <ng-option [value]="0" disabled>--SELECT TDS SECTION--</ng-option>
+                                            <ng-option *ngFor="let tdsmaster of SectionMasterList"  [value]="tdsmaster.SectionID">
+                                            <span class="textwrap">{{tdsmaster.SectionName}}</span>
+                                           </ng-option>
+                                         </ng-select>   
+                                    </td>                                                                                                                                                                                       
+                                    <td>
                                         <ng-select class="searchdropdown" [formControlName]="'GSTGroup'" [clearable]="false" [appendTo]="'body'">
                                             <ng-option [value]="0" disabled>--SELECT TAX GROUP--</ng-option>
                                             <ng-option *ngFor="let tax of taxList"  [value]="tax.TaxRate">
@@ -499,9 +492,13 @@
                                            </ng-option>
                                          </ng-select>                        
                                     </td>
+                                    <td>
+                                        <input type="checkbox" (change)="toggleRCM($event.target.checked)" [checked]="isRCMChecked">
+                                    </td>
+                                                                        
                                     <td> </td>
                                 </tr>
-                                <tr *ngFor="let data of pagedItems;let i = index">
+                                <tr *ngFor="let data of PurchaseTableList;let i = index">
                                     <td>{{data.AccountName}}</td>
                                     <td>{{data.Rate}}</td>
                                     <td>{{data.Qty}}</td>
@@ -509,8 +506,9 @@
                                     <td>{{data.CurrencyName}}</td>
                                     <td>{{data.ExRate ? data.ExRate : 1}}</td>
                                     <td>{{data.Amountccr}}</td>
-                                    <td>{{data.IsRCM ? 'Checked' : 'Unchecked' }}</td>
+                                    <td>{{data.Tds}}</td>
                                     <td>{{data.GSTGroup ? data.GSTGroup :0}} %</td>
+                                    <td><input type="checkbox" [checked]="data.IsRCM"></td>
                                     <td>
                                         <input class="vertal checkbox" type="radio" name="AlertCheck" id="RadioCheck"
                                             (click)="OnClickRadio(i)" />

@@ -30,7 +30,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
   minDate: string = this.datePipe.transform(new Date(), "yyyy-MM-dd");
   // newOne : string = '';
   isUpdate: boolean = false;
-  provisionList : [ { ID:'1',name: 'Partial'},{ID:'2' ,name: 'Full'}];
+  ProvisionTypeList : [ { ID:'1',name: 'Partial'},{ID:'2' ,name: 'Full'}];
   bankList = [];
   IsRCM: any;
   isUpdateMode: boolean = false;
@@ -83,6 +83,9 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
   moduleName = 'Purchase invoice(Admin)'
   mappingSuccess: boolean = false;
   errorMessage: any;
+  provisionDropDownList: any[];
+  SectionMasterList: any[];
+  isRCMChecked: boolean;
 
   constructor(
     private fb: FormBuilder,
@@ -116,7 +119,8 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     this.getNumberRange();
     this.getTaxGroup();
     this.getBankList();
-   
+    this.getProvisionDropDownList();
+    this.getTDSMaster();
 
 
   // this.maxDate = new Date();
@@ -182,6 +186,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       Office: [0],
       OfficeGST: [''],
       BookingAgainst: [0],
+      ProvisionType:[0],
       Provision:[0],
       PINumber: [''],
       PIDate: [this.minDate],
@@ -225,8 +230,9 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       CurrencyId: [1],
       ExRate: ['1'],
       Amountccr: [''],
+      TDSMaster:[{ value: '', disabled: true }],
       IsRCM: [''],
-      GSTGroup: [''],
+      GSTGroup: [{ value: '', disabled: true }] ,
       IsDelete: [0],
 
 
@@ -235,6 +241,20 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     let entityInfo = this.commonDataService.getLocalStorageEntityConfigurable();
     this.entityCurrencyName = entityInfo['Currency'];
     this.PurchaseCreateForm.controls['InvoiceCurrency'].setValue(this.entityCurrencyName);
+    this.PurchaseCreateForm.get('TDSApplicability').valueChanges.subscribe((value) => {
+      if (value === 1) {
+        this.PurchaseCreateForm.get('TDSMaster').enable();
+      } else {
+        this.PurchaseCreateForm.get('TDSMaster').disable();
+      }
+    });    
+    this.PurchaseCreateForm.get('RCMApplicable').valueChanges.subscribe(value => {
+      if (value === '1') { // If RCM is selected as "YES"
+        this.PurchaseCreateForm.get('GSTGroup').enable(); // Enable the GSTGroup field
+      } else { // If RCM is selected as "NO"
+        this.PurchaseCreateForm.get('GSTGroup').disable(); // Disable the GSTGroup field
+      }
+    });
   }
 
   getPurchaseInvoiceAdminInfo() {
@@ -367,7 +387,32 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     }, error => { });
   }
 
+
+  getProvisionDropDownList() {
+    let payload = {
+      ProvisionNumber: '',
+      Division: 0,
+      Office: 0,
+      StartDate: '',
+      EndDate: '',
+      Amount: '',
+      StatusId: 2,
+      Id: 0
+    };
+    var service = `${this.globals.APIURL}/Provision/GetProvisionList`;
+    this.dataService.post(service, payload).subscribe((result: any) => {
+      this.provisionDropDownList = [];
+      this.pagedItems = [];
+      if (result.message == 'Success' && result.data.Table.length > 0) {
+        this.provisionDropDownList = result.data.Table;
+        this.setPage(1);
+      }
+    }, error => { 
+      console.error(error);
+    });
+  }
   
+
   getBankList() {
     let payload = {
       AccountNo: '',
@@ -434,12 +479,28 @@ calculateDueDate(maxDate: any) {
    
   }
 
-  // getTDSSection() {
-  //   const payLoad = { TDSRatesId: 0, TaxName: '', RatePercentage: '', sectionID: 0, SectionID: 0, SectionName: '', EffectiveDate: '', IsActive: true, Status: '', Remarks: '' };
-  //   this.tdsService.getSection(payLoad).subscribe(data => {
-  //     this.tdsSectionData = data['data'];
-  //   });
-  // }
+  getTDSMaster() {
+
+    const payLoad = {
+      TDSRatesId: 0,
+      TaxName: '',
+      RatePercentage: null,
+      SectionID: 0,
+      SectionName: '',
+      EffectiveDate: null,
+      IsActive: 1,
+      Status: ''
+    }
+
+    const serviceUrl = `${this.globals.APIURL}/TDSRates/GetTDSRatesFilter/`; 
+    this.dataService.post(serviceUrl, payLoad).subscribe((data: any) => {
+      this.SectionMasterList = [];
+      this.SectionMasterList = data["data"]
+    }, error => { 
+      console.error(error);
+    });
+}
+
 
   getTDSSection(){
 
@@ -601,6 +662,9 @@ calculateDueDate(maxDate: any) {
     if (this.PurchaseCreateForm.value.Amountccr == "" || this.PurchaseCreateForm.value.Amountccr == 0) {
       validation += "<span style='color:red;'>*</span> <span>Please Enter Amount CCR.</span></br>";
     }
+    if (this.PurchaseCreateForm.value.TDSMaster == "" || this.PurchaseCreateForm.value.TDSMaster == 0) {
+      validation += "<span style='color:red;'>*</span> <span>Please Select TDS.</span></br>";
+    }
     if (this.PurchaseCreateForm.value.IsRCM == "") {
       // validation += "<span style='color:red;'>*</span> <span>Please Select RCM.</span></br>";
       this.PurchaseCreateForm.get('IsRCM').setValue(0);
@@ -631,6 +695,7 @@ calculateDueDate(maxDate: any) {
         CurrencyId: info.CurrencyId,
         ExRate: info.ExRate ? info.ExRate : 1,
         Amountccr: info.Amountccr,
+        TDSMaster:info.TDSMaster,
         IsRCM: info.IsRCM,
         GSTGroup: info.GSTGroup ? info.GSTGroup : 0,
         CurrencyName: currency.Currency,
@@ -661,6 +726,7 @@ calculateDueDate(maxDate: any) {
       CurrencyId: info.CurrencyId,
       ExRate: info.ExRate ? info.ExRate : 1,
       Amountccr: info.Amountccr,
+      TDSMaster:info.TDSMaster,
       IsRCM: info.IsRCM,
       GSTGroup: info.GSTGroup ? info.GSTGroup : 0,
       CurrencyName: currency.Currency,
@@ -673,8 +739,9 @@ calculateDueDate(maxDate: any) {
       TDSRate:info.TDSRate
     });
     this.resetTable();
-    this.setPage(1);
+    // this.setPage(1);
     this.calculateTotalAmount(this.PurchaseTableList[0], 'create');
+    //console.log(this.PurchaseTableList,'Grid')
   }
 
   setPage(page: number) {
@@ -692,7 +759,7 @@ calculateDueDate(maxDate: any) {
     this.PurchaseCreateForm.controls['CurrencyId'].setValue(1);
     this.PurchaseCreateForm.controls['ExRate'].setValue('1');
     this.PurchaseCreateForm.controls['Amountccr'].setValue('');
-    this.PurchaseCreateForm.controls['IsRCM'].setValue('');
+    this.PurchaseCreateForm.controls['TDSMaster'].setValue('');
     this.PurchaseCreateForm.controls['GSTGroup'].setValue('');
   }
 
@@ -712,6 +779,7 @@ calculateDueDate(maxDate: any) {
       CurrencyId: info.CurrencyId,
       ExRate: info.ExRate,
       Amountccr: info.Amountccr,
+      TDSMaster:info.TDSMaster,
       IsRCM: info.IsRCM,
       GSTGroup: info.GSTGroup
     });
@@ -740,7 +808,7 @@ calculateDueDate(maxDate: any) {
   
           this.modules = result.data.Module
   
-          let subModule = this.modules.find(x => x.ModuleName.toUpperCase() == this.moduleName.toUpperCase());
+          let subModule = this.modules.find(x => x.ModuleName == this.moduleName);
           this.ModuleId = subModule.ID
           await  this.checkLedgerMapping()
           call()
@@ -987,6 +1055,7 @@ calculateDueDate(maxDate: any) {
       Office: info.Office,
       OfficeGST: info.OfficeGST,
       BookingAgainst: info.BookingAgainst,
+      ProvisionType:info.ProvisionType,
       Provision:info.Provision,
       PINumber: info.PINumber,
       PIDate: info.PIDate,
@@ -1155,14 +1224,107 @@ calculateDueDate(maxDate: any) {
     }, error => { });
   }
 
-  // calculateTotalAmount(purchaseInfoTableValue?: any, methodType?: any) {
-  //   var subTotalAmount = 0;
-  //   if (this.PurchaseTableList.length > 0) {
-  //     this.PurchaseTableList.forEach(element => { subTotalAmount += element.LocalAmount; });
-  //     this.PurchaseCreateForm.controls['SubTotal'].setValue(subTotalAmount);
-  //   } else { this.PurchaseCreateForm.controls['SubTotal'].setValue(''); }
+  
 
-  //   if (purchaseInfoTableValue.IsTaxable) {
+TdsPercentageCalculation(){
+  var subTotalAmount = 0;
+  if (this.PurchaseTableList.length > 0) {
+    this.PurchaseTableList.forEach(element => {
+      subTotalAmount += element.Amountccr;
+    });
+    this.PurchaseCreateForm.controls['SubTotal'].setValue(subTotalAmount);  // Handle the case when subTotalAmount is 0.
+   
+
+    if (subTotalAmount > 0 && this.vendorTDS > 0) {   // Calculate Section based TDS rate on TDS amount and set the value for TDSRate 
+      const tdsRate = (subTotalAmount /100 ) * this.vendorTDS ;
+      this.PurchaseCreateForm.controls['TDSRate'].setValue(tdsRate);
+    } else if(subTotalAmount > 0 && this.vendorLDC > '') {   // Calculate LDC based TDS rate based on TDS amount and set the value for TDSRate    
+      const tdsRate = (subTotalAmount /100 ) * this.vendorLDC ;
+      this.PurchaseCreateForm.controls['TDSRate'].setValue(tdsRate);
+    }else{
+      this.PurchaseCreateForm.controls['TDSRate'].setValue(0); 
+    }
+  } else {
+    this.PurchaseCreateForm.controls['SubTotal'].setValue('');
+  }
+
+  return subTotalAmount
+
+}
+
+
+calculateTotalAmount(purchaseInfoTableValue?: any, methodType?: any) {
+
+  var subTotalAmount = this.TdsPercentageCalculation();
+  if (purchaseInfoTableValue) {
+    let officeInfo = this.officeList.find(x => x.ID == this.PurchaseCreateForm.value.Office);
+    if (this.officeCityId == officeInfo.StateId ? officeInfo.StateId : 0) {
+      let info = subTotalAmount * (purchaseInfoTableValue.GSTGroup / 100);
+      purchaseInfoTableValue.CGST = Math.trunc(info / 2);
+      purchaseInfoTableValue.SGST = Math.trunc(info / 2);
+      purchaseInfoTableValue.IGST = 0;
+    }
+    else {
+      let info = subTotalAmount * (purchaseInfoTableValue.GSTGroup / 100);
+      purchaseInfoTableValue.CGST = 0;
+      purchaseInfoTableValue.SGST = 0;
+      purchaseInfoTableValue.IGST = Math.trunc(info / 2);
+    }
+    this.PurchaseTableList[methodType == 'create' ? 0 : this.editSelectedIdex] = purchaseInfoTableValue;
+  }
+  this.editSelectedIdex = null;
+
+  var CGST = 0;
+  var SGST = 0;
+  var IGST = 0;
+
+  this.PurchaseTableList.forEach(element => {
+    CGST += element.CGST ? element.CGST : 0;
+    SGST += element.SGST ? element.SGST : 0;
+    IGST += element.IGST ? element.IGST : 0;
+  });
+
+    // Calculate TDS amount based on TDS rate and update the form controls
+    if(this.vendorTDS >0){
+      const tdsRate = (subTotalAmount /100 ) * this.vendorTDS ;
+      this.PurchaseCreateForm.controls['TDSRate'].setValue(tdsRate);
+    }else{
+      const tdsRate = (subTotalAmount/100)* this.vendorLDC
+      this.PurchaseCreateForm.controls['TDSRate'].setValue(tdsRate);
+    }   
+
+
+    
+    // Update form controls
+    this.PurchaseCreateForm.controls['CGST'].setValue(CGST);
+    this.PurchaseCreateForm.controls['SGST'].setValue(SGST);
+    this.PurchaseCreateForm.controls['IGST'].setValue(IGST);
+    this.getFinalCalculation();
+}
+ getFinalCalculation(){
+
+  let invoiceAmount = 0;
+
+  // Calculate invoiceAmount based on amountccr and GSTGroup
+  this.PurchaseTableList.forEach(e => {
+      const amountccr = e.Amountccr; // Retrieve amountccr value from the current element e
+      const gstCalculation = amountccr * (e.GSTGroup / 100);
+      if(e.IsRCM == true){
+        invoiceAmount += gstCalculation;
+      }else{
+        invoiceAmount += amountccr;
+      }
+  });
+  
+  // Update form controls
+  this.PurchaseCreateForm.controls['InvoiceAmount'].setValue(invoiceAmount);
+ }
+
+
+  // calculateTotalAmount(purchaseInfoTableValue?: any, methodType?: any) {
+  //   debugger
+  //   var subTotalAmount = this.TdsPercentageCalculation();
+  //   if (purchaseInfoTableValue && purchaseInfoTableValue.IsTaxable) {
   //     let officeInfo = this.officeList.find(x => x.ID == this.PurchaseCreateForm.value.Office);
   //     if (this.officeCityId == officeInfo.StateId ? officeInfo.StateId : 0) {
   //       let info = subTotalAmount * (purchaseInfoTableValue.GSTGroup / 100);
@@ -1190,6 +1352,16 @@ calculateDueDate(maxDate: any) {
   //     IGST += element.IGST ? element.IGST : 0;
   //   });
 
+  //     // Calculate TDS amount based on TDS rate and update the form controls
+  //     if(this.vendorTDS >0){
+  //       const tdsRate = (subTotalAmount /100 ) * this.vendorTDS ;
+  //       this.PurchaseCreateForm.controls['TDSRate'].setValue(tdsRate);
+  //     }else{
+  //       const tdsRate = (subTotalAmount/100)* this.vendorLDC
+  //       this.PurchaseCreateForm.controls['TDSRate'].setValue(tdsRate);
+  //     }   
+
+
   //   this.PurchaseCreateForm.controls['CGST'].setValue(CGST);
   //   this.PurchaseCreateForm.controls['SGST'].setValue(SGST);
   //   this.PurchaseCreateForm.controls['IGST'].setValue(IGST);
@@ -1198,100 +1370,6 @@ calculateDueDate(maxDate: any) {
 
 
 
-TdsPercentageCalculation(){
-
-  var subTotalAmount = 0;
-  if (this.PurchaseTableList.length > 0) {
-    this.PurchaseTableList.forEach(element => {
-      subTotalAmount += element.Amountccr;
-    });
-    this.PurchaseCreateForm.controls['SubTotal'].setValue(subTotalAmount);  // Handle the case when subTotalAmount is 0.
-   
-
-    if (subTotalAmount > 0 && this.vendorTDS > 0) {   // Calculate Section based TDS rate on TDS amount and set the value for TDSRate 
-      const tdsRate = (subTotalAmount /100 ) * this.vendorTDS ;
-      this.PurchaseCreateForm.controls['TDSRate'].setValue(tdsRate);
-    } else if(subTotalAmount > 0 && this.vendorLDC > '') {   // Calculate LDC based TDS rate based on TDS amount and set the value for TDSRate    
-      const tdsRate = (subTotalAmount /100 ) * this.vendorLDC ;
-      this.PurchaseCreateForm.controls['TDSRate'].setValue(tdsRate);
-    }else{
-      this.PurchaseCreateForm.controls['TDSRate'].setValue(0); 
-    }
-  } else {
-    this.PurchaseCreateForm.controls['SubTotal'].setValue('');
-  }
-
-  return subTotalAmount
-
-}
-
-  calculateTotalAmount(purchaseInfoTableValue?: any, methodType?: any) {
-    // var subTotalAmount = 0;
-    // if (this.PurchaseTableList.length > 0) {
-    //   this.PurchaseTableList.forEach(element => {
-    //     subTotalAmount += element.LocalAmount;
-    //   });
-    //   this.PurchaseCreateForm.controls['SubTotal'].setValue(subTotalAmount);  // Handle the case when subTotalAmount is 0.
-    //   this.PurchaseCreateForm.controls['TDSRate'].setValue(0);
-
-    //   if (subTotalAmount > 0 && this.vendorTDS > 0) {   // Calculate Section based TDS rate on TDS amount and set the value for TDSRate 
-    //     const tdsRate = (subTotalAmount /100 ) * this.vendorTDS ;
-    //     this.PurchaseCreateForm.controls['TDSRate'].setValue(tdsRate);
-    //   } else if(subTotalAmount > 0 && this.vendorLDC > '') {   // Calculate LDC based TDS rate based on TDS amount and set the value for TDSRate    
-    //     const tdsRate = (subTotalAmount /100 ) * this.vendorLDC ;
-    //     this.PurchaseCreateForm.controls['TDSRate'].setValue(tdsRate);
-    //   }else{
-    //     this.PurchaseCreateForm.controls['TDSRate'].setValue(0); 
-    //   }
-    // } else {
-    //   this.PurchaseCreateForm.controls['SubTotal'].setValue('');
-    // }
-
-    var subTotalAmount = this.TdsPercentageCalculation();
-    if (purchaseInfoTableValue && purchaseInfoTableValue.IsTaxable) {
-      let officeInfo = this.officeList.find(x => x.ID == this.PurchaseCreateForm.value.Office);
-      if (this.officeCityId == officeInfo.StateId ? officeInfo.StateId : 0) {
-        let info = subTotalAmount * (purchaseInfoTableValue.GSTGroup / 100);
-        purchaseInfoTableValue.CGST = Math.trunc(info / 2);
-        purchaseInfoTableValue.SGST = Math.trunc(info / 2);
-        purchaseInfoTableValue.IGST = 0;
-      }
-      else {
-        let info = subTotalAmount * (purchaseInfoTableValue.GSTGroup / 100);
-        purchaseInfoTableValue.CGST = 0;
-        purchaseInfoTableValue.SGST = 0;
-        purchaseInfoTableValue.IGST = Math.trunc(info / 2);
-      }
-      this.PurchaseTableList[methodType == 'create' ? 0 : this.editSelectedIdex] = purchaseInfoTableValue;
-    }
-    this.editSelectedIdex = null;
-
-    var CGST = 0;
-    var SGST = 0;
-    var IGST = 0;
-
-    this.PurchaseTableList.forEach(element => {
-      CGST += element.CGST ? element.CGST : 0;
-      SGST += element.SGST ? element.SGST : 0;
-      IGST += element.IGST ? element.IGST : 0;
-    });
-
-      // Calculate TDS amount based on TDS rate and update the form controls
-      if(this.vendorTDS >0){
-        const tdsRate = (subTotalAmount /100 ) * this.vendorTDS ;
-        this.PurchaseCreateForm.controls['TDSRate'].setValue(tdsRate);
-      }else{
-        const tdsRate = (subTotalAmount/100)* this.vendorLDC
-        this.PurchaseCreateForm.controls['TDSRate'].setValue(tdsRate);
-      }   
-
-
-    this.PurchaseCreateForm.controls['CGST'].setValue(CGST);
-    this.PurchaseCreateForm.controls['SGST'].setValue(SGST);
-    this.PurchaseCreateForm.controls['IGST'].setValue(IGST);
-    this.PurchaseCreateForm.controls['InvoiceAmount'].setValue(CGST + SGST + IGST + subTotalAmount);
-  }
-
   purchaseOrderChangeEvent(type: string) { }
 
   orderChangeEvent() {
@@ -1299,8 +1377,16 @@ TdsPercentageCalculation(){
   }
 
 
-  toggleRCM(checked: boolean) {
-    this.PurchaseCreateForm.get('IsRCM').setValue(checked);
+toggleRCM(value: string) {
+  if (value === '1') {
+    this.isRCMChecked = true; // Set isRCMChecked to true if "YES" is selected
+    this.PurchaseCreateForm.get('IsRCM').setValue(true); // Check the checkbox
+  } else if (value === '0') {
+    this.isRCMChecked = false; // Set isRCMChecked to false if "NO" is selected
+    this.PurchaseCreateForm.get('IsRCM').setValue(false); // Uncheck the checkbox
+  }
+ this.getFinalCalculation();
 }
-  
+
+
 }
