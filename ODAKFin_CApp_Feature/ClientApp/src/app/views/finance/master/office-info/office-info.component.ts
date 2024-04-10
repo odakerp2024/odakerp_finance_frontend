@@ -446,7 +446,7 @@ export class OfficeInfoComponent implements OnInit, AfterViewChecked, AfterViewI
     }
     const Table1 = this.officeDetailsForm.value;
     Table1.IsSalesOffice = Table1.IsSalesOffice.toString();
-    Table1.Active = Table1.Active === 'true' ? true : false;
+    Table1.Active = Table1.Active === 'true' ? true : Table1.Active == 'YES' ? true: false;
     this.payload = {
       Office: {
         Table: [officePayload.value],

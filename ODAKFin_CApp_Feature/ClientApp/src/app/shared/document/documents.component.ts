@@ -1,4 +1,4 @@
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpEventType, HttpResponse } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, OnChanges, AfterContentChecked, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { event } from 'jquery';
@@ -59,7 +59,8 @@ export class DocumentsComponent implements OnInit, OnChanges, AfterContentChecke
       DocumentName: [''],
       others: [''],
       FilePath: [''],
-      UploadedOn: [new Date()]
+      UploadedOn: [new Date()],
+      file: []
     });
   }
 
@@ -91,10 +92,12 @@ export class DocumentsComponent implements OnInit, OnChanges, AfterContentChecke
   fileSelected(event) {
     if (event.target.files.length > 0) {
       this.documentForm.controls.FilePath.setValue(event.target.files[0].name);
+      this.documentForm.controls.file.setValue(event);
     }
   }
 
   uploadDocument() {
+    debugger
     let validation = '';
     if (!this.documentForm.value.DocumentName) {
       validation += '<span style=\'color:red;\'>*</span> <span>Please select Document Name </span></br>';
@@ -121,29 +124,65 @@ export class DocumentsComponent implements OnInit, OnChanges, AfterContentChecke
     }
   }
 
-  download(fileUrl: string) {
-    // this.fileUrl = fileUrl;
-    // this.http.get(`${this.globals.APIURL}/LACommon/download?fileUrl=${fileUrl}`, {
-    //     reportProgress: true,
-    //     observe: 'events',
-    //     responseType: 'blob'
-    // }).subscribe((events) => {
-    //   console.log('LACommon file download', events);
-    //   // this.downloadFile(events);
-    // });
-  }
+  /*File Download*/
+download = (fileUrl) => {
+  debugger
+  this.fileUrl = "UploadFolder\\Attachments\\" + fileUrl;
+  this.commonDataService.download(fileUrl).subscribe((event) => {
 
-  downloadFile = (data) => {
-    const downloadedFile = new Blob([data.body], { type: data.body.type });
-    const a = document.createElement('a');
-    a.setAttribute('style', 'display:none;');
-    document.body.appendChild(a);
-    a.download = this.fileUrl;
-    a.href = URL.createObjectURL(downloadedFile);
-    a.target = '_blank';
-    a.click();
-    document.body.removeChild(a);
-  }
+      if (event.type === HttpEventType.UploadProgress){
+        
+      }
+          // this.progress1 = Math.round((100 * event.loaded) / event.total);
+
+      else if (event.type === HttpEventType.Response) {
+          // this.message = 'Download success.';
+          this.downloadFile(event);
+      }
+  });
+}
+
+private downloadFile = (data: HttpResponse<Blob>) => {
+  const downloadedFile = new Blob([data.body], { type: data.body.type });
+  const a = document.createElement('a');
+  a.setAttribute('style', 'display:none;');
+  document.body.appendChild(a);
+  a.download = this.fileUrl;
+  a.href = URL.createObjectURL(downloadedFile);
+  a.target = '_blank';
+  a.click();
+  document.body.removeChild(a);
+}
+/*File Download*/
+
+  
+
+  // download(fileUrl: string) {
+  //   debugger
+  //    this.fileUrl = this.globals.APIURL + '/"UploadFolder/Attachments/'+ fileUrl;
+
+  //   // this.http.get(`${this.globals.APIURL}/LACommon/download?fileUrl=${fileUrl}`, {
+  //   //     reportProgress: true,
+  //   //     observe: 'events',
+  //   //     responseType: 'blob'
+  //   // }).subscribe((events) => {
+  //   //   console.log('LACommon file download', events);
+  //   //   this.downloadFile(events);
+  //   // });
+  //   this.downloadFile(this.fileUrl);
+  // }
+
+  // downloadFile = (data) => {
+  //   const downloadedFile = new Blob([data.body], { type: data.body.type });
+  //   const a = document.createElement('a');
+  //   a.setAttribute('style', 'display:none;');
+  //   document.body.appendChild(a);
+  //   a.download = this.fileUrl;
+  //   a.href = '';
+  //   a.target = '_blank';
+  //   a.click();
+  //   document.body.removeChild(a);
+  // }
   /*File Download*/
 
   // setDocumentName(fileName: any) {

@@ -38,6 +38,8 @@ export class AccountReceivableDetailsComponent implements OnInit {
   officeList :any= [];
   currencyList: any;
   customerList :any = [];
+  CustomerCodeList :any = [];
+  customerBranch:any;
   debitCreditList = [
     { value: 1, debitCreditName: 'Debit' },
     { value: 0, debitCreditName: 'Credit' }
@@ -87,6 +89,7 @@ export class AccountReceivableDetailsComponent implements OnInit {
       OfficeId:[0],
       Remarks: [''],
       Customer: [''],
+      CustomerBranch: [''],
       Invoice: [''],
       InvoiceDate: [''],
       InvoiceCurrency: [''],
@@ -102,6 +105,36 @@ export class AccountReceivableDetailsComponent implements OnInit {
       UpdatedBy: [localStorage.getItem('UserID')],
     });
   }
+
+  
+  selectedCustomer(event: any) {
+    const service = `${this.globals.APIURL}/ReceiptVoucher/GetReceiptVoucherDropDownList`;
+    this.dataService.post(service, { CustomerId: event }).subscribe((result: any) => {
+      this.CustomerCodeList = [];
+      if (result.data.Table3.length > 0) { 
+        this.CustomerCodeList = result.data.Table3;
+      }
+      console.log("okdd");
+      // console.log(this.CustomerCodeList, 'customer list');
+      this.accountReceivableForm.get('CustomerBranch').setValue('');
+      // If customer has only one branch, auto-select it
+      if (this.CustomerCodeList.length === 1) {
+        this.accountReceivableForm.get('CustomerBranch').setValue(this.CustomerCodeList[0].CityName);
+      }
+    }, error => { });
+  }
+  
+  // getCustomerBranch(CustomerId) {
+  //   debugger
+  //   const customerDetails = this.CustomerCodeList.find(vendor => vendor.CustomerId === CustomerId);
+  //   this.accountReceivableForm.controls['CustomerBranch'].setValue('');
+  //   if (customerDetails) {
+  //     this.customerBranch = this.CustomerCodeList.filter(vendor => vendor.CustomerName === customerDetails.CustomerName);
+  //     if (this.customerBranch.length === 1) { // If customer has only one branch
+  //       this.accountReceivableForm.controls['CustomerBranch'].setValue(this.customerBranch[0].CityName);
+  //     }
+  //   }
+  // }
   
 
   getAccountReceivableIdByID() {
@@ -128,18 +161,19 @@ export class AccountReceivableDetailsComponent implements OnInit {
           // Swal.fire("Can't able to edit this invoice !");
           this.isEditButton = false
         }
-
+        await this.getCustomerList(info.DivisionId);
         await this.getOfficeList(info.DivisionId);
         this.accountReceivableForm.patchValue({
           ReceiptVoucherId: this.accountReceivableId,
           DivisionId: info.DivisionId,
           OfficeId: info.OfficeId,
-          Customer: info.Customer,
+          Customer: info.CustomerId,
           Invoice: info.Invoice,
           // InvoiceDate: this.datePipe.transform(info.InvoiceDate, 'dd-MM-y'),
           InvoiceDate: this.datePipe.transform(new Date(info.InvoiceDate), "yyyy-MM-dd"),
           InvoiceCurrency: info.InvoiceCurrency,
           Exchange: info.Exchange,
+          CustomerBranch: info.BranchName.toUpperCase(),
           DebitorCredit: info.DebitorCredit,
           InvoiceAmountICY: info.InvoiceAmountICY,
           InvoiceAmountCCY: info.InvoiceAmountCCY,
@@ -148,7 +182,7 @@ export class AccountReceivableDetailsComponent implements OnInit {
           ModifiedBy: info.ModifiedBy,
           OBReference: info.OBReference,
           OBDate: this.datePipe.transform(info.OBDate, 'dd-MM-yyyy'),
-        });
+        });        
         
         // console.log(this.accountReceivableForm.value,'accountReceivableFormaccountReceivableForm')
 
@@ -221,11 +255,13 @@ export class AccountReceivableDetailsComponent implements OnInit {
     if (this.accountReceivableForm.value.DebitorCredit == "") {
       validation += "<span style='color:red;'>*</span> <span>Please Select Debit/Credit</span></br>"
     }
+    if (this.accountReceivableForm.value.CustomerBranch == "") {
+      validation += "<span style='color:red;'>*</span> <span>Please Select Customer Branch</span></br>"
+    }
     if (validation != "") {
       Swal.fire(validation)
       return false;
     }
-    
     //  const Division = this.accountReceivableForm.value.DivisionId;
     //  const selectedDivision = this.divisionList.find(x => x.ID === Division);
     //  if (selectedDivision) {
@@ -246,6 +282,7 @@ export class AccountReceivableDetailsComponent implements OnInit {
         "Office": this.accountReceivableForm.value.Office,
         "OfficeId":this.accountReceivableForm.value.OfficeId,
         "Customer": this.accountReceivableForm.value.Customer,
+        "BranchName": this.accountReceivableForm.value.CustomerBranch,
         "Invoice": this.accountReceivableForm.value.Invoice,
         "InvoiceDate": this.accountReceivableForm.value.InvoiceDate,
         "InvoiceCurrency": this.accountReceivableForm.value.InvoiceCurrency,
@@ -353,6 +390,8 @@ export class AccountReceivableDetailsComponent implements OnInit {
       this.commonDataService.getOfficeByDivisionId(payload).subscribe((result: any) => {
         this.officeList = [];
         this.accountReceivableForm.controls['OfficeId'].setValue('');
+        this.accountReceivableForm.controls['Customer'].setValue('');
+        this.accountReceivableForm.controls['CustomerBranch'].setValue('');
         if (result.message == 'Success') {
           if (result.data && result.data.Table.length > 0) {
             this.officeList.push(...result.data.Table);
@@ -371,7 +410,7 @@ export class AccountReceivableDetailsComponent implements OnInit {
     var service = `${this.globals.APIURL}/Common/GetCustomerAndVendorByDivisionId`;
     this.dataService.post(service, payload).subscribe((result: any) => {
       this.customerList = [];
-       this.accountReceivableForm.controls['Customer'].setValue('');
+      // this.accountReceivableForm.controls['Customer'].setValue('');
       if (result.message == "Success" && result.data.Table.length > 0) {
         this.customerList = result.data.Table;
       }

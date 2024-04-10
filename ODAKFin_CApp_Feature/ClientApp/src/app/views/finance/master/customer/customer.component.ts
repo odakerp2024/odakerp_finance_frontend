@@ -117,6 +117,7 @@ export class CustomerComponent implements OnInit {
   isEmailids: boolean = false;
   isInterfaces: boolean = false;
   parentAccountList: any[];
+  selectedFile: File = null;
 
   constructor(private router: Router, private route: ActivatedRoute, private fb: FormBuilder, private ms: MastersService
     , private commonservice: CommonService, private customerService: CustomerService,
@@ -1066,7 +1067,8 @@ export class CustomerComponent implements OnInit {
       this.TabKYCDocument.CustomerBranchID = data.CustomerBranchID;
       this.TabKYCDocument.DocumentName = data.DocumentName;
       this.TabKYCDocument.FilePath = data.FilePath;
-      this.TabKYCDocument.UpdateOn = data.UpdateOn;
+      // this.TabKYCDocument.UpdateOn = new Date(data.UpdateOn)!;
+      this.TabKYCDocument.UniqueFilePath = data.UniqueFilePath;
       this.customerModel.Customer.Table3.push(this.TabKYCDocument);
     }
   }
@@ -1164,7 +1166,7 @@ export class CustomerComponent implements OnInit {
     //   this.customerModel.Customer.Table7.push(TabDivision);
     // };
   }
-//------ ledger maping validate conditions are removed due to mapped account in customer itself --08-03-2024
+  //------ ledger maping validate conditions are removed due to mapped account in customer itself --08-03-2024
 
   // async getModuleType() {
 
@@ -2094,14 +2096,28 @@ export class CustomerComponent implements OnInit {
   }
 
   uploadDocument(event: any) {
+    debugger
     if (event) {
-      this.documentPayloadInfo.push({
-        CustomerDocumentsID: 0,
-        CustomerBranchID: this.fg.value.CustomerBranchID,
-        DocumentName: event.DocumentName,
-        FilePath: event.FilePath,
-        UpdateOn: this.datePipe.transform(new Date(), 'YYYY-MM-dd')
-      });
+
+      this.selectedFile = event.file.target.files[0];
+      const filedata = new FormData();
+      filedata.append('file', this.selectedFile, this.selectedFile.name)
+
+      this.commonservice.AttachUpload(this.selectedFile).subscribe(data => {
+        if (data) {
+          this.documentPayloadInfo.push({
+            CustomerDocumentsID: 0,
+            CustomerBranchID: this.fg.value.CustomerBranchID,
+            DocumentName: event.DocumentName,
+            FilePath: event.FilePath,
+            UniqueFilePath: data.FileNamev,
+            // UpdateOn: this.datePipe.transform(new Date(), 'YYYY-MM-dd')
+          });
+        }
+      },
+        (error: HttpErrorResponse) => {
+          Swal.fire(error.message, 'error')
+        });
     }
   }
 
@@ -2111,7 +2127,7 @@ export class CustomerComponent implements OnInit {
   }
 
   saveOfficeDetails(event: any) {
-    if (event.length > 0 || event.length ==0) {
+    if (event.length > 0 || event.length == 0) {
       this.emailIDPayLoad = event;
       this.onSubmit();
     }
