@@ -24,12 +24,12 @@ export class ViewsComponent implements OnInit {
         function logout() {
             var tokenid = localStorage.getItem("TokenID");
             //window.location.href = "https://localhost:44323/views/sessionexpired?Tokenid=" + tokenid;
-            window.location.href = "https://navioindia.freighteiz.com/views/sessionexpired?ajhdsvkhabdsucgvaugsdvicugavsdigyaiysgdvicagybsdiucyagiusdygfiuHBSDUCYIAUSDYVBUIAYV=" + tokenid;
+            window.location.href = this.globals.LANDINGURL + "views/sessionexpired?ajhdsvkhabdsucgvaugsdvicugavsdigyaiysgdvicagybsdiucyagiusdygfiuHBSDUCYIAUSDYVBUIAYV=" + tokenid;
             localStorage.removeItem('TokenID');
         }
         function resetTimer() {
             clearTimeout(time);
-            time = setTimeout(logout, 120000)
+            time = setTimeout(logout, 1200000)
         }
   
     };

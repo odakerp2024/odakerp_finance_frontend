@@ -122,7 +122,6 @@ export class FinanceMasterComponent implements OnInit {
       SubfunctionID: value
     }
     this.LService.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
 
       if (route == 'Bank Summary') {
 
@@ -244,7 +243,6 @@ export class FinanceMasterComponent implements OnInit {
       SubfunctionID: value
     }
     this.LService.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
 
       if (route == 'Open Request') {
 
@@ -334,23 +332,16 @@ export class FinanceMasterComponent implements OnInit {
       }
     })
 
-    if (localStorage.getItem("TokenID") == null || localStorage.getItem("TokenID") == 'undefined') {
-
-      this.route.queryParams.subscribe(params => {
-        if(params['TokenID']){
-          localStorage.setItem("TokenID", params['TokenID']);
-        } else {
-          Swal.fire('Please Contact Administrator');
-        }
-      });
-
-      this.BindTokenValues();
-      this.setEntityConfigurable();
-    }
+    this.route.queryParams.subscribe(params => {
+      if(params['TokenID']){
+        localStorage.setItem("TokenID", params['TokenID']);
+        this.BindTokenValues();
+        this.setEntityConfigurable();
+      }
+    });
   }
 
   BindTokenValues() {
-
     localStorage.setItem('OrgId', "1")
 
     if (localStorage.getItem("TokenID") != null) {
@@ -1032,7 +1023,6 @@ export class FinanceMasterComponent implements OnInit {
                 }
               }
               else if (routePage == 'BankMaster') {
-                debugger
                 if (data[0].Read_Opt != 2) {
                   Swal.fire('Please Contact Administrator');
                 }
