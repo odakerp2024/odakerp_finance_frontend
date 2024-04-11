@@ -1,6 +1,6 @@
 
 
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpEventType, HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -233,6 +233,8 @@ export class VendorsComponent implements OnInit {
   isEmailids: boolean = false;
   isInterfaces: boolean = false;
   parentAccountList: any[];
+  selectedFile: File = null;
+  fileUrl: string;
 
   constructor(private router: Router, private route: ActivatedRoute, private fb: FormBuilder, private ms: MastersService
     , private commonservice: CommonService, private VendorService: VendorService, private fy: FinancialyearService,
@@ -280,10 +282,10 @@ export class VendorsComponent implements OnInit {
       this.Current_Tab = 'tabKYC'
     } else if (value == 'tabAccounting' && this.isAccounting == true) {
       this.Current_Tab = 'tabAccounting'
-    } else if (value == 'tabAccounting' && this.isTDS == true) {
-      this.Current_Tab = 'tabAccounting'
-    } else if (value == 'tabAccounting' && this.isCreditDetails == true) {
-      this.Current_Tab = 'tabAccounting'
+    } else if (value == 'tabTDSLink' && this.isTDS == true) {
+      this.Current_Tab = 'tabTDSLink'
+    } else if (value == 'creditDetails' && this.isCreditDetails == true) {
+      this.Current_Tab = 'creditDetails'
     } else if (value == 'tabEmail' && this.isEmailids == true) {
       this.Current_Tab = 'tabEmail'
     } else if (value == 'tabInterfaces' && this.isInterfaces == true) {
@@ -1631,6 +1633,7 @@ export class VendorsComponent implements OnInit {
       this.TabKYCDocument.DocumentName = element.DocumentName;
       this.TabKYCDocument.FilePath = element.FilePath;
       this.TabKYCDocument.UpdateOn = element.UpdateOn;
+      this.TabKYCDocument.UniqueFilePath = !element.UniqueFilePath ? 'Test' : element.UniqueFilePath;
       this.VendorModel.Vendor.Table3.push(this.TabKYCDocument);
     }
   }
@@ -2716,20 +2719,61 @@ export class VendorsComponent implements OnInit {
     }
   }
 
-  uploadDocument(event) {
+  uploadDocument(event: any) {
     if (event) {
-      this.documentPayloadInfo.push({
-        VendorDocumentsID: 0,
-        VendorBranchID: this.fg.value.VendorBranchID,
-        DocumentName: event.DocumentName,
-        FilePath: event.FilePath,
-        UpdateOn: this.datePipe.transform(new Date(), 'YYYY-MM-dd')
-      });
-      // this.onSubmit();
+
+      this.selectedFile = event.file.target.files[0];
+      const filedata = new FormData();
+      filedata.append('file', this.selectedFile, this.selectedFile.name)
+
+      this.commonservice.AttachUpload(this.selectedFile).subscribe(data => {
+        if (data) {
+          this.documentPayloadInfo.push({
+            VendorDocumentsID: 0,
+            VendorBranchID: this.fg.value.VendorBranchID,
+            DocumentName: event.DocumentName,
+            FilePath: event.FilePath,
+            UpdateOn: this.datePipe.transform(new Date(), 'YYYY-MM-dd'),
+            UniqueFilePath: data.FileNamev,
+          });
+        }
+      },
+        (error: HttpErrorResponse) => {
+          Swal.fire(error.message, 'error')
+        });
     }
   }
 
+  /*File Download*/
+  download = (fileUrl) => {
+    debugger
+    this.fileUrl = "UploadFolder\\Attachments\\" + fileUrl;
+    this.commonservice.download(fileUrl).subscribe((event) => {
+
+      if (event.type === HttpEventType.UploadProgress) {
+
+      } else if (event.type === HttpEventType.Response) {
+        // this.message = 'Download success.';
+        this.downloadFile(event);
+      }
+    });
+  }
+
+  private downloadFile = (data: HttpResponse<Blob>) => {
+    const downloadedFile = new Blob([data.body], { type: data.body.type });
+    const a = document.createElement('a');
+    a.setAttribute('style', 'display:none;');
+    document.body.appendChild(a);
+    a.download = this.fileUrl;
+    a.href = URL.createObjectURL(downloadedFile);
+    a.target = '_blank';
+    a.click();
+    document.body.removeChild(a);
+  }
+
   deleteDocument(deleteIndex) {
+    debugger
+
     const index = this.documentPayloadInfo.findIndex((element) => element.VendorDocumentsID == deleteIndex.VendorDocumentsID)
     this.documentPayloadInfo.splice(index, 1);
     // this.onSubmit();

@@ -144,6 +144,7 @@ export class KYCDocument {
     DocumentName = '';
     FilePath = '';
     UpdateOn = '';
+    UniqueFilePath = '';
 }
 
 // Table3
