@@ -498,11 +498,11 @@
             <div *ngIf="!requestType ">
                 <ng-component [ngTemplateOutlet]="currentCreditLimit"></ng-component>
                             <div class="row mb-3">
-                                <h4 class="col-12">Proposed Credit Limit1</h4>
+                                <h4 class="col-12">Proposed Credit Limit</h4>
                                 <div class="col-4">
                 <div class="form-group bmd-form-group w-100">
                                         <label class="str">Credit Limit (Days)</label>
-                                        <input type="number" class="form-control" formControlName="CreditLimitDays" min="0" step="2" [disabled]="false" (change)="onCreditLimitDays($event)">
+                                        <input type="number" class="form-control" formControlName="CreditLimitDays" min="0" step="2" [disabled]="false" (change)="onCreditLimitDays($event, false)">
                                         <p *ngIf="creditdaysValidation" style="color: red;">The credit days limit should be "{{creditdaysValidation}}" or less</p>
                 
                                     </div>
@@ -511,7 +511,7 @@
                                 <div class="col-4">
                                         <div class="form-group bmd-form-group">
                                             <label class="str">Credit Limit (Amount)</label>
-                                        <input type="number" class="form-control"  formControlName="CreditLimitAmount" min="0" step="2" [disabled]="false" (change)="onCreditLimitAmount($event)">
+                                        <input type="number" class="form-control"  formControlName="CreditLimitAmount" min="0" step="2" [disabled]="false" (change)="onCreditLimitAmount($event, false)">
                                             <p *ngIf="creditAmountValidation" style="color: red;">The credit amount limit should be "{{creditAmountValidation}}" or less</p>                       
                                     </div>
                                 </div>
@@ -542,12 +542,12 @@
             <div *ngIf="requestType && !creditApplicationForm.value.IsRevoke ">
                 <ng-component [ngTemplateOutlet]="currentCreditLimit"></ng-component>
                             <div class="row mb-3">
-                                <h4 class="col-12">Proposed Credit Limit2</h4>
+                                <h4 class="col-12">Proposed Credit Limit</h4>
                                 <div class="col-4">
                 <div class="form-group bmd-form-group w-100">
                                         <label class="str">Credit Limit (Days)</label>
-                                        <input type="number" class="form-control" [(ngModel)]="ReviseCreditLimitDays"  min="0" step="2"
-                                         [disabled]="false" (change)="onCreditLimitDays($event)"  >
+                                        <input type="number" class="form-control" [(ngModel)]="ReviseCreditLimitDays"  [ngModelOptions]="{standalone: true}"
+                                         min="0" step="2" [disabled]="false" (change)="onCreditLimitDays($event, true)"  >
                                         <p *ngIf="creditdaysValidation" style="color: red;">The credit days limit should be "{{creditdaysValidation}}" or less</p>
                 
                                     </div>
@@ -556,8 +556,8 @@
                                 <div class="col-4"> 
                                         <div class="form-group bmd-form-group">
                                             <label class="str">Credit Limit (Amount)</label>
-                                        <input type="number" class="form-control" [(ngModel)]="ReviseCreditLimitAmount"   min="0" step="2" [disabled]="false" 
-                                       (change)="onCreditLimitAmount($event)">
+                                        <input type="number" class="form-control" [(ngModel)]="ReviseCreditLimitAmount"  [ngModelOptions]="{standalone: true}" 
+                                        min="0" step="2" [disabled]="false" (change)="onCreditLimitAmount($event, true)">
                                             <p *ngIf="creditAmountValidation" style="color: red;">The credit amount limit should be "{{creditAmountValidation}}" or less</p>                       
                                     </div>
                                 </div>
@@ -565,7 +565,7 @@
                                 <div class="col-4">
                                         <div class="form-group bmd-form-group">
                                             <label class="str">With Post Dated Cheque ?</label>
-                                            <ng-select  class="searchdropdown"  [(ngModel)]="RevisePostDatedCheques" [clearable]="false" >
+                                            <ng-select  class="searchdropdown"  [(ngModel)]="RevisePostDatedCheques" [ngModelOptions]="{standalone: true}" [clearable]="false" >
                                                 <ng-option [value]="''" disabled>--SELECT TRADE--</ng-option>
                                                 <ng-container  *ngFor="let status of PDCValue">
                                                 <ng-option [value]="status.value">
@@ -578,7 +578,7 @@
                 
                                 <div class="col-12">
                                     <label for="" class="">Request Remarks</label><br>
-                                    <textarea class="p-1 form-control w-50" [(ngModel)]="ReviseRequestRemarks"name="" cols="50" rows="3"
+                                    <textarea class="p-1 form-control w-50" [(ngModel)]="ReviseRequestRemarks" [ngModelOptions]="{standalone: true}" name="" cols="50" rows="3"
                                         ></textarea>
                                 </div>
                             </div>
@@ -635,7 +635,7 @@
                                     </td>
                                     <td >{{validation.CreditQuestions }}</td>
                                     <td class="p-0">
-                                        <input type="text" class="w-100" [ngClass]=" !isEditMode ? 'disable-input' : ''"
+                                        <input type="text" class="w-100" [ngClass]=" !isEditMode || !IsUpdated ? 'disable-input' : ''"
                                          [(ngModel)]="validation.Response"  [ngModelOptions]="{standalone: true}"/>
                                         <!-- {{validation.Response}} -->
                                     </td>
@@ -660,7 +660,7 @@
                         </button>
 
 
-                        <button type="submit" [ngClass]=" !isEditMode  || !isUpdate? 'disable-input--style' : ''"
+                        <button type="submit" [ngClass]=" !isEditMode  || !isUpdate ? 'disable-input--style' : ''"
                             class="btn btn-primary btn-raised mb-0" (click)="confirmFunction(FINAL_TYPE)">
                             Submit for Approval
                         </button>
