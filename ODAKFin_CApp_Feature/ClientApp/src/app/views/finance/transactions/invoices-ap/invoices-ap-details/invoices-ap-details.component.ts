@@ -409,7 +409,7 @@ export class InvoicesApDetailsComponent implements OnInit {
       }
     }
 
-    await this.createPayload(status);
+ 
      let saveMsg = `Do you want to Save this Details?`;
     let finalMsg = `Final voucher not possible to edit <br> Do you want proceed?`;
     let closeMsg = `Voucher is not yet finalized <br> Do you want to still exit`;
@@ -445,7 +445,7 @@ export class InvoicesApDetailsComponent implements OnInit {
       cancelButtonText: 'No',
       reverseButtons: false,
       allowOutsideClick: false
-    }).then((result) => {
+    }).then(async(result) => {
       if (result.isConfirmed) {
 
      // If canceled 
@@ -454,6 +454,7 @@ export class InvoicesApDetailsComponent implements OnInit {
           this.ViewPage();
           return;
         }
+        await this.createPayload(status);
 
         let service = `${this.globals.APIURL}/OutStandingInvoiceAP/SaveOutStandingInvoiceAP`;
         this.dataService.post(service, this.payload).subscribe((result: any) => {
