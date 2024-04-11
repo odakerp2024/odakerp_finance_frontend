@@ -500,8 +500,9 @@
 
                     <div class="row porttariff">
                         <div class="col-md-12">
-                            <div class="tab-content">
-                                <div class="tab-pane pt-3 active show" *ngIf="Current_Tab == 'tabBranch'" role="tabpanel">
+                            <!-- <div class="tab-content"> -->
+
+                                <div class="tab-pane pt-3" *ngIf="Current_Tab == 'tabBranch'">
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="card m-b-30">
@@ -2772,7 +2773,7 @@
                                     </div>
                                 </div>
 
-                                <div class="tab-pane pt-3"  *ngIf="Current_Tab == 'tabEmail'" role="tabpanel">
+                                <div class="tab-pane pt-3" *ngIf="Current_Tab == 'tabEmail'" role="tabpanel">
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="card m-b-30">
@@ -3051,7 +3052,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            <!-- </div> -->
                         </div>
                     </div>
                     <div *ngIf="Current_Tab != 'tabEmail'" class="row">

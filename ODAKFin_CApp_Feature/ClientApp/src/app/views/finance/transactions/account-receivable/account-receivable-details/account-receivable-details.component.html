@@ -83,7 +83,7 @@
                                <ng-option  [value]="division.ID">
                                 {{division.DivisionName | uppercase}}
                                </ng-option>
-                               </ng-container>
+                               </ng-container>  
                                </ng-select> 
                             </div>
 
@@ -111,10 +111,20 @@
                                 </div> -->
                                 <div class="col-3">
                                     <label class="str1 mt-0">Customer Name</label>
-                                    <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'Customer'"name="active" id="active">
+                                    <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'Customer'"name="active" id="active" (change)="selectedCustomer($event);">
                                         <ng-option [value]="''" disabled>--SELECT CUSTOMER--</ng-option>
-                                        <ng-option *ngFor="let customer of customerList"  [value]="customer.CustomerName">
+                                        <ng-option *ngFor="let customer of customerList"  [value]="customer.CustomerID">
                                             <span class="textwrap">{{customer.CustomerName | uppercase}}</span>
+                                        </ng-option>
+                                    </ng-select> 
+                                </div>
+
+                                <div class="col-3">
+                                    <label class="str1 mt-0">Customer Branch</label>
+                                    <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'CustomerBranch'">
+                                        <ng-option [value]="''" disabled>--SELECT BRANCH--</ng-option>
+                                        <ng-option *ngFor="let Branch of CustomerCodeList"  [value]="Branch.CityName">
+                                            <span class="textwrap">{{Branch.CityName | uppercase}}</span>
                                         </ng-option>
                                     </ng-select> 
                                 </div>

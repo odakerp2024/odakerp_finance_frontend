@@ -141,13 +141,13 @@
                         </div>
                     </div>
 
-                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                    <!-- <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
                         <div class="form-group bmd-form-group">
                             <input formControlName="PINumber" type="text" autocomplete="off" class="form-control"
                                 name="Reference" placeholder="PV NUMBER #" maxlength="20">
                         </div>
                     </div>
-                   
+                    -->
                     <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
                         <div class="form-group bmd-form-group">
                             <input formControlName="ProvisionNumber" placeholder="Provision Number"
@@ -202,7 +202,7 @@
                                 name="active" id="active">
                                 <ng-option [value]="''" disabled>--SELECT STATUS--</ng-option>
                                 <ng-option *ngFor="let status of statusList" [value]="status.Id">
-                                    <span class="textwrap">{{status.StatusName | uppercase}}</span>
+                                    <span class="textwrap">{{ status.StatusName === "Cancelled" ? 'CLOSED' : status.StatusName | uppercase }}</span>
                                 </ng-option>
                             </ng-select>
                         </div>

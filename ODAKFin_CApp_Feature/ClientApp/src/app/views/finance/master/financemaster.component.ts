@@ -351,6 +351,8 @@ export class FinanceMasterComponent implements OnInit {
 
   BindTokenValues() {
 
+    localStorage.setItem('OrgId', "1")
+
     if (localStorage.getItem("TokenID") != null) {
       const payload = {
         ID: localStorage.getItem("TokenID")

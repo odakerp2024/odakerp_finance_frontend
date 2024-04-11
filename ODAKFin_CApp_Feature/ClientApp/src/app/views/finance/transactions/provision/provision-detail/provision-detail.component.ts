@@ -37,11 +37,12 @@ export class ProvisionDetailComponent implements OnInit {
   isGridEditMode = false;
   isEditMode: boolean = true;
   isEditMode1: boolean =false;
-  isUpdate = true;
+  isUpdate : boolean = false;
   provisionId: number;
   numberRangeList: any;
   IsFinal : boolean = false;
   IsExchangeEnable: boolean = false;
+  Isclose : boolean = false ;
   companyCurrencyId: Number;
   Remarks: string = '';
   constructor(
@@ -58,6 +59,10 @@ export class ProvisionDetailComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    console.log(this.isEditMode , 'editmode'),
+    console.log(this.isUpdate , 'update'),
+    console.log(this.IsFinal , 'final'),
+    console.log(this.Isclose , 'close')
     this.createForm();
     this.getDivisionList();
     this.getParentAccountList();
@@ -68,6 +73,7 @@ export class ProvisionDetailComponent implements OnInit {
     this.route.params.subscribe(param => {
       if (param.ProvisionId) {
         this.provisionId = param.ProvisionId;
+        this.isUpdate = true;
         this.ProvisionForm.disable();
         this.getByIdRouteFunction();
   
@@ -112,6 +118,11 @@ export class ProvisionDetailComponent implements OnInit {
      this.isUpdate = true;
      this.isEditMode = true;
      this.isEditMode1 = true;
+     //this.IsFinal = true;
+     console.log(this.isEditMode , 'editmode'),
+     console.log(this.isUpdate , 'update'),
+     console.log(this.IsFinal , 'final'),
+     console.log(this.Isclose , 'close')
    }
 
   getByIdRouteFunction() {   
@@ -125,11 +136,16 @@ export class ProvisionDetailComponent implements OnInit {
           this.isEditMode = true;
           this.IsFinal = true; // Set isFinal to true if StatusId is 2
       }
+      if(info.StatusId == 3){
+        this.isEditMode = true ;
+        this.IsFinal = true;
+        this.Isclose = true;
+      }
         await this.getOffice(info.DivisionId);
         //console.log("Info before patching form:", info); // Log info before patching the form
         this.Remarks = info.Remarks; 
-          const table1Data = result.data.Table1[0];
-        this.TotalAmount = table1Data.AmountCCR;
+          const table1Data = result.data.Table1;
+         this.TotalAmount = table1Data.reduce((acc, item) => acc + parseFloat(item.AmountCCR), 0);
         this.ProvisionForm.get('Table').patchValue({
           ProvisionId: info.ProvisionId,
           DivisionId: info.DivisionId,
@@ -150,6 +166,8 @@ export class ProvisionDetailComponent implements OnInit {
           // Patch values into Table1 form group
           const table1FormGroup = this.ProvisionForm.get('Table1') as FormGroup;
           const table1Data = result.data.Table1[0]; // Assuming only one item is patched
+          // Format the AmountCCR to two decimal places
+          const formattedAmountCCR = Number(table1Data.AmountCCR).toFixed(2);
           // console.log("table1Data before patching form:", table1Data);
           table1FormGroup.patchValue({
             ProvisionItemsId: table1Data.ProvisionItemsId,
@@ -159,7 +177,7 @@ export class ProvisionDetailComponent implements OnInit {
             Amount: table1Data.Amount,
             Currency: table1Data.Currency,
             ExchangeRate: table1Data.ExchangeRate,
-            AmountCCR: table1Data.AmountCCR,
+            AmountCCR: formattedAmountCCR,
             AccountName: await this.getAccountName(table1Data.Account),
             CurrencyName: await this.getCurrencyName(table1Data.Currency)
           
@@ -169,7 +187,8 @@ export class ProvisionDetailComponent implements OnInit {
           this.provisionItemsTableList = result.data.Table1.map(item => ({
             ...item,
             AccountName: this.getAccountName(item.Account),
-            CurrencyName: this.getCurrencyName(item.Currency)
+            CurrencyName: this.getCurrencyName(item.Currency),
+            AmountCCR: parseFloat(item.AmountCCR).toFixed(2)
           }));
          // console.log(this.provisionItemsTableList, 'table 1');
         }
@@ -408,7 +427,10 @@ export class ProvisionDetailComponent implements OnInit {
       if (result.isConfirmed) {
         if (isClosed) {
           this.ProvisionForm.controls['Table']['controls']['IsClosedProvision'].setValue(1);
-          // this.ProvisionForm.controls['Table']['controls']['Status'].setValue(3);
+          this.ProvisionForm.controls['Table']['controls']['Status'].setValue(3);
+          // Retrieve the value of 'Status' form control
+          const statusValue = this.ProvisionForm.controls['Table']['controls']['Status'].value;
+         // console.log(statusValue);
         } else {
           this.ProvisionForm.controls['Table']['controls']['IsClosedProvision'].setValue(0);
         }
@@ -467,7 +489,6 @@ getFinalPayload() {
 
 
   savePayment(payload, type) {
- 
     this.provisionService.savePayment(payload).pipe(takeUntil(this.ngUnsubscribe)).subscribe((result: any) => {
       if (result.message == "Success") {
         // console.log('result the payment voucher', result);
@@ -475,11 +496,11 @@ getFinalPayload() {
         Swal.fire(result.message, '', 'success');
         if (type === 'draft') {
           this.isEditMode = false;
-         // this.isEditMode1 = true;
+          this.isEditMode1 = true;
           this.provisionId = Number(result.data.Id)
-          // this.editView(result.data.Id)
+          this.editView(result.data.Id)
         }
-        if (type === 'final') {
+        else if (type === 'final' ) {
           this.backToMain();
         }
         // this.backToMain();
@@ -491,12 +512,21 @@ getFinalPayload() {
     });
   }
 
+  
+  editView(ProvisionId: Number) {
+      this.router.navigate(['/views/provision/provision-detail', { ProvisionId: ProvisionId  }],{
+      relativeTo: this.route,
+      queryParamsHandling: 'merge',
+     });
+    this.getByIdRouteFunction();
+  }
+
   backToMain() {
     this.router.navigate(['/views/provision/provision-view']);
+    this.isUpdate = false;
   }
 
   async finalSubmit() {
-
     this.validationCheck();
 
     const validation = this.validationCheck();
@@ -526,13 +556,13 @@ getFinalPayload() {
         const payload = this.getFinalPayload();
         console.log('final payload', payload)
         payload.Provision.Table[0].IsFinal = 1; // set as final
-        payload.Provision.Table[0].Status = 2; // ! set save type(draft(1) or final(2) or canceled(3));
+        payload.Provision.Table[0].Status = 2; //set save type(draft(1) or final(2) or canceled(3));
         payload.Provision.Table[0].Date = new Date();
         // return
         this.savePayment(payload, 'final');
 
         // return
-        this.savePayment(payload, 'draft');
+        // this.savePayment(payload, 'draft');
 
       } else {
 

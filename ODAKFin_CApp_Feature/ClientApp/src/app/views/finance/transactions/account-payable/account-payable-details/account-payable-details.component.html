@@ -99,13 +99,23 @@
 
                                 <div class="col-3">
                                     <label class="">Vendor Name</label>                                    
-                                    <ng-select class="searchdropdown custom" [clearable]="false" [ngClass]=" isUpdate ? 'block-input' : ''" [formControlName]="'VendorName'" [appendTo]="'body'">
+                                    <ng-select class="searchdropdown custom" [clearable]="false" [ngClass]=" isUpdate ? 'block-input' : ''" [formControlName]="'VendorName'" [appendTo]="'body' " (change)="getVendorBranch($event);">
                                         <ng-option [value]="''" disabled>--SELECT VENDOR--</ng-option>
-                                        <ng-option *ngFor="let vendor of vendorList"  [value]="vendor.VendorName">
+                                        <ng-option *ngFor="let vendor of vendorList"  [value]="vendor.VendorID">
                                             <span class="textwrap">{{vendor.VendorName | uppercase}}</span>
                                         </ng-option>
                                     </ng-select>  
                              </div>
+
+                             <div class="col-3">
+                                <label class="str1 mt-0">Vendor Branch</label>
+                                <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'VendorBranch'">
+                                    <ng-option [value]="''" disabled>--SELECT BRANCH--</ng-option>
+                                    <ng-option *ngFor="let Branch of VendorCodeList"  [value]="Branch.CityName">
+                                        <span class="textwrap">{{Branch.CityName | uppercase}}</span>
+                                    </ng-option>
+                                </ng-select> 
+                            </div>
 
                                 <!-- <div class="col-3">
                                     <label class="">Purchase Invoice #</label>

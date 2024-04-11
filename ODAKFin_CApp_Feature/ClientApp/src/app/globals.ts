@@ -37,7 +37,7 @@ export class Globals {
     SaApi: string = "https://sa-navioindia.freighteiz.com/api";
     APIURLFF: string = 'https://sa-navioindia.freighteiz.com/ffddev/api';
     APIURLLA: string = 'https://la-navioindia.freighteiz.com/api';
-    TemplateUploadURL: string = 'https://fn-navioindia.freighteiz.com/api';
+    TemplateUploadURL: string = 'https://fn-navioindia.freighteiz.com';
     LANDINGURL: string = 'https://navioindia.freighteiz.com/'
 
 }
