@@ -103,7 +103,8 @@ export class KYCDocument {
     CustomerBranchID = 0;
     DocumentName = '';
     FilePath = '';
-    UpdateOn = '';
+    // UpdateOn = new Date();
+    UniqueFilePath = '';
 }
 
 export class AccountLink {

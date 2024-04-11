@@ -236,13 +236,28 @@ export class CommonService {
     getFFGLActivityList(): Observable<any[]> {
         return this.http.post<any[]>(this.globals.APIURL + '/Common/GetFFGLActivityList', {});
     }
-    
+
     GetCOAAccountList(payload: any): Observable<any[]> {
         return this.http.post<any[]>(this.globals.APIURL + '/Common/GetCOAAccountList', payload);
     }
-   
+
     GetCOAAccountMappingList(payload: any): Observable<any[]> {
         return this.http.post<any[]>(this.globals.APIURL + '/Common/GetCOAAccountMappingList', payload);
+    }
+
+    AttachUpload(file): Observable<any> {
+    
+        const formData = new FormData();
+        formData.append("file", file, file.name);
+        return this.http.post(this.globals.APIURL + '/Common/DocumentUpload/', formData)
+    }
+
+    download(fileUrl: string) {
+        return this.http.get(`${this.globals.APIURL}/Common/download?fileUrl=${fileUrl}`, {
+            reportProgress: true,
+            observe: 'events',
+            responseType: 'blob'
+        });
     }
 
 }
