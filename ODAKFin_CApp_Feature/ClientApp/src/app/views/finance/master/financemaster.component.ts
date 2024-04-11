@@ -869,7 +869,7 @@ export class FinanceMasterComponent implements OnInit {
                   Swal.fire('Please Contact Administrator');
                 }
                 else {
-                  this.router.navigate(['/views/vendor-notes/vendor-view']);
+                  this.router.navigate(['/views/transactions/invoices_AR_view/invoices_AR_view']);
                 }
               }
               else if (routePage == 'InvoiceAP') {

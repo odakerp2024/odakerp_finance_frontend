@@ -211,7 +211,7 @@
                             [clearable]="false" formControlName="VendorId" name="Status"  >
                             <ng-option [value]="0" [disabled]="true">--SELECT VENDOR--</ng-option>
                             <ng-option *ngFor="let data of vendorList" [value]="data.VendorID">
-                                {{data.VendorName | uppercase}} - {{data.BranchCode | uppercase}}
+                                {{data.VendorName | uppercase}} - {{data.CityName | uppercase}}
                             </ng-option>
                           </ng-select>  
                     </div>
@@ -239,12 +239,9 @@
                 <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group">
                         <label class="str" for="Status">Tolerance %</label>
-                        <!-- <select formControlName="ToleranceId" name="Status" class="form-control my-select">
-                            <option disabled value="0">--SELECT TOLERANCE %--</option>
-                            <option value="1">NA</option>
-                        </select> -->
+                        
                         <input *ngIf="isShowTolerancePercentage" (keyup)="checkRange($event.target.value)"
-                            appDynamicDecimal formControlName="ToleranceId" onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="form-control" RemoveSpecialChars>
+                            appDynamicDecimal formControlName="ToleranceId" onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47' class="form-control" min="0" numbersOnly>
                         <input min="1" *ngIf="!isShowTolerancePercentage" readonly formControlName="ToleranceId" type="text"
                             class="form-control">
                     </div>
@@ -309,9 +306,14 @@
                                             </ng-select>
                                         </td>
                                         <td>
-                                            <input (ngModelChange)="totalAmountCalculation($event)"
-                                                formControlName="Quantity" class="form-control" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
-                                                name="Oty" RemoveSpecialChars/>
+                                            <!-- <input (ngModelChange)="totalAmountCalculation($event)"
+                                                formControlName="Quantity" class="form-control" onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                                name="Oty" RemoveSpecialChars/> -->
+                                                <input (ngModelChange)="totalAmountCalculation($event)"
+                                            onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                            min="0" numbersOnly
+                                            appDynamicDecimal class="form-control"
+                                            formControlName="Quantity"/>
                                         </td>
                                         <td>
                                             <!-- <select formControlName="CurrencyId" class="form-control my-select">
@@ -328,9 +330,14 @@
                                             </ng-select>
                                         </td>
                                         <td>
-                                            <input (ngModelChange)="totalAmountCalculation($event)"
-                                                formControlName="Rate" class="form-control" onkeypress='return event.charCode >= 48 && event.charCode <= 57' RemoveSpecialChars/>
-                                        </td>
+                                            <!-- <input (ngModelChange)="totalAmountCalculation($event)"
+                                                formControlName="Rate" class="form-control" onkeypress='return event.charCode >= 48 && event.charCode <= 57' RemoveSpecialChars/> -->
+                                                <input (ngModelChange)="totalAmountCalculation($event)"
+                                                onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                                min="0" numbersOnly
+                                                appDynamicDecimal class="form-control"
+                                                formControlName="Rate"/>
+                                            </td>
                                         <td>
                                             <input formControlName="Amount" class="form-control" type="text" readonly />
                                         </td>
