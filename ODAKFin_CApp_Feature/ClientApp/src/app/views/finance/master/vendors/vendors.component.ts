@@ -23,6 +23,7 @@ import { DatePipe } from '@angular/common';
 import { CommonPatternService } from 'src/app/shared/service/common-pattern.service';
 import { AutoCodeService } from 'src/app/services/auto-code.service';
 
+
 @Component({
   selector: 'app-vendors',
   templateUrl: './vendors.component.html',
