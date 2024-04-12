@@ -30,6 +30,7 @@ export class CreditApplicationDetailsComponent implements OnInit {
   creditAmountValidation: any;
   // * pagination end
 
+  IsUpdated:boolean = true;
   ModifiedOn: any;
   CreatedOn: any;
   CreatedBy = localStorage.getItem("UserID");
@@ -78,6 +79,17 @@ export class CreditApplicationDetailsComponent implements OnInit {
   salesPersonid: any;
   customerBranchid: any;
   result: any;
+  creditApplicationList = [];
+  // creditType: string = "Revise";
+  requestType: boolean =false;
+  isGetByIdInProgress = false;
+  creditType: string ;
+  IsRevise: boolean ;
+  IsRevoke:boolean ;
+  ReviseCreditLimitDays: any;
+  ReviseCreditLimitAmount: any;
+  RevisePostDatedCheques: any;
+  ReviseRequestRemarks: any;
 
   constructor(
     private ps: PaginationService,
@@ -96,14 +108,22 @@ export class CreditApplicationDetailsComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    this.createForm();
-    await this.getDivision();
+    // this.route.paramMap.subscribe(params => {
+    //   const requestTypeString = params.get('requestType');
+    //     this.IsRevise = requestTypeString == 'true';
+    // });
+
+    this.route.paramMap.subscribe(params => {
+      this.requestType = params.get('requestType') === 'true';   
+    });    
+    this.createForm(); 
+    await this.getDivision();   
     //this.getCustomerCredit();
     this.getCustomerAndBranch();
     this.getDropdowns();
     this.getCustomerDropDownList();
     this.getTradeList();
-
+    this. getCreditApplication();
     // this.getCustomerDropDown();
     // this.getById();
     this.route.params.subscribe(async (param) => {
@@ -114,7 +134,7 @@ export class CreditApplicationDetailsComponent implements OnInit {
         debugger;
         this.getById();
       }
-    });
+    });    
   }
 
   getByFunctionality() {
@@ -125,7 +145,9 @@ export class CreditApplicationDetailsComponent implements OnInit {
   createForm() {
     this.creditApplicationForm = this.fb.group({
       CreditApplicationId: [0],
-      CreditApplicationNumber: [],
+      IsRevise: true,
+      IsRevoke: false,
+      CreditApplicationNumber: [''],
       ApplicationDate: [this.minDate],
       ApplicationStatus: [22],
       DivisionId: [],
@@ -165,9 +187,10 @@ export class CreditApplicationDetailsComponent implements OnInit {
       if (result.message == "Success") {
         if (result.data.Table.length) {
           // this.customerBranchList = []
-          this.customerBranchid = result.data.Table[0];
+          this.customerBranchid = result.data.Table[0].CustomerBranchId;
           this.salesPersonid = result.data.Table[0].SalesPersonId;
           const Table = result.data.Table[0];
+        //  this.getCustomerBranchCode(Table.CustomerId);
           this.getOfficeList(Table.DivisionId); // get office list
           // this.getBranch(false, +Table.CustomerId)
 
@@ -175,7 +198,9 @@ export class CreditApplicationDetailsComponent implements OnInit {
             debugger;
             this.IsFinal = true;
           }
-
+          // if(this.IsRevoke == true && this.IsRevise == false){
+             
+          // }
           //  Table.IsFinal = 1; // ! set the final Value;
           //  Table.StatusId = 2;
           this.creditApplicationForm.disable();
@@ -189,7 +214,7 @@ export class CreditApplicationDetailsComponent implements OnInit {
             CreditApplicationNumber: Table.CreditApplicationNumber,
             ApplicationDate: this.datePipe.transform(
               new Date(Table.ApplicationDate),
-              "yyyy-MM-dd"
+              "yyyy-MM-dd"             
             ),
             ApplicationStatus: Table.ApplicationStatus,
             DivisionId: Table.DivisionId,
@@ -204,13 +229,15 @@ export class CreditApplicationDetailsComponent implements OnInit {
             Telephone: Table.Telephone,
             Mobile: Table.Mobile,
             Email: Table.Email,
+            IsRevise: Table.IsRevise,
+            IsRevoke: Table.IsRevoke,
             CreditLimitDays: Table.CreditLimitDays,
             CreditLimitAmount: Table.CreditLimitAmount,
             PostDatedCheques: Table.PostDatedCheques ? 1 : 0,
             RequestRemarks: Table.RequestRemarks,
             CreatedBy: Table.CreatedBy,
-            StatusId: Table.StatusId,
-          });
+            StatusId: 1,
+          });         
           this.getWQuestions(result.data.Table1);
         }
 
@@ -224,38 +251,235 @@ export class CreditApplicationDetailsComponent implements OnInit {
           debugger;
           this.questionArray = result.data.Table1;
         }
+        this.reset();       
       }
     });
   }
 
-  onCreditLimitDays(event:any){
-    console.log(this.creditLimit)
-    const highestValue = Math.max(...this.creditLimit.map((res: any) => res.MaxCreditDays))
-    if(event.target.value > highestValue){
-      this.creditdaysValidation = highestValue
-    }
-    else{
-      const data = {
-        CreditLimitDays: event.target.value
-      }
-      this.creditApplicationForm.patchValue(data);
-      this.creditdaysValidation = null; 
-    }
+
+
+  reset(){
+    this.ReviseCreditLimitAmount = "";
+    this.ReviseCreditLimitDays = "";
+    this.RevisePostDatedCheques = "";
+    this.ReviseRequestRemarks = "";
   }
 
-  onCreditLimitAmount(event:any){
-    const highestValue = Math.max(...this.creditLimit.map((res: any) => res.MaxCreditAmount))
-    if(event.target.value > highestValue){
-      this.creditAmountValidation = highestValue
+  getCreditApplication() {
+    debugger
+    const payload = {
+      "CreditApplicationId": "",
+      "CreditApplicationNumber": "",
+      "ApplicationDate":"",
+      "Customer": 0,
+      "customerAndBranchList": 0,
+      "CreditLimitDays": "",
+      "CreditLimitAmount": "",
+      "StatusId": 24,
+      "DivisionId": 0,
+      "OfficeId": 0,
+      "SalesPersonId": 0,    
+      "StartDate" : "",
+      "EndDate" : ""
+      
     }
-    else{
-      const data = {
-        CreditLimitDays: event.target.value
+    // payload.ApplicationDate = new Date(payload.ApplicationDate);
+    this.creditApplicationService.getList(payload).subscribe((result: any) => {
+      if (result.message == 'Success') {
+        this.creditApplicationList = result.data.Table;
+         
       }
-      this.creditApplicationForm.patchValue(data);
-      this.creditAmountValidation = null; 
-    }
+    })
   }
+ 
+  handleChange(event: any) {
+    const selectedCreditApplicationId = event;
+
+    this.getbyId(selectedCreditApplicationId);
+  }
+
+getbyId(selectedCreditApplicationId: any) {
+  debugger
+    const payload = {
+        CreditApplicationId: selectedCreditApplicationId,
+    };
+   
+    this.creditApplicationService.getById(payload).subscribe((result: any) => {
+        debugger;
+        if (result.message == "Success") {
+            if (result.data.Table.length) {              
+                // this.customerBranchList = []
+                this.customerBranchid = result.data.Table[0].CustomerBranchId;
+                this.salesPersonid = result.data.Table[0].SalesPersonId;
+                const Table = result.data.Table[0];
+                console.log(Table, "Table");
+                this.getCustomerBranchCode(Table.CustomerId);
+           
+                this.getOfficeList(Table.DivisionId); // get office list
+               
+                // this.getBranch(false, +Table.CustomerId)
+
+                // if (Table.StatusId === 2) {
+                //     debugger;
+                //     this.IsFinal = true;
+                // }
+
+                //  Table.IsFinal = 1; // ! set the final Value;
+                //  Table.StatusId = 2;                
+                this.creditApplicationForm.disable();
+                 this.IsUpdated = false;              
+                // this.CreatedOn = Table.CreatedOn ?? this.minDate,
+                // this.CreatedBy =  [this.CreatedBy];
+                // this.CreatedOn = Table.CreatedDate;
+                this.CreatedBy = this.CreatedBy;               
+              //  this.CreatedBy = Table.CreatedByName;  
+              
+              this.isEditMode = true;
+              this.creditApplicationForm.patchValue({
+                    // CreditApplicationId: Table.CreditApplicationId,
+                    CreditApplicationId: 0,
+                    // CreditApplicationNumber: Table.CreditApplicationNumber,
+                    // ApplicationDate: this.datePipe.transform(
+                    //     new Date(Table.ApplicationDate),
+                    //     "yyyy-MM-dd"
+                    // ),
+
+                    ApplicationDate: this.datePipe.transform(
+                          new Date(this.minDate),
+                          "yyyy-MM-dd"
+                      ),
+                    //  ApplicationStatus: Table.ApplicationStatus,
+                    
+                    DivisionId: Table.DivisionId,
+                    OfficeId: Table.OfficeId,
+                    CustomerId: Table.CustomerId,
+                    CustomerBranchId: Table.CityName,
+                    SalesPersonId: Table.SalesPIC,
+                    Trade: Table.Trade,
+                    CustomerStatus: Table.CustomerStatus == "Active" ? 1 : 0,
+                    CustomerPan: Table.CustomerPan,
+                    CustomerPrimeContact: Table.CustomerPrimeContact,
+                    Telephone: Table.Telephone,
+                    Mobile: Table.Mobile,
+                    Email: Table.Email,
+                    CreditLimitDays: Table.CreditLimitDays,
+                    CreditLimitAmount: Table.CreditLimitAmount,
+                    PostDatedCheques: Table.PostDatedCheques ? 1 : 0,
+                    RequestRemarks: Table.RequestRemarks,
+                    CreatedBy: Table.CreatedBy,
+                    // IsRevise: Table.IsRevise  ? true : false,
+                    // IsRevoke: Table.IsRevoke  ? true : false,
+                    //  StatusId: 1,
+                  
+                });              
+                if (this.creditApplicationForm.value.IsRevoke) {
+                  this.creditApplicationForm.patchValue({
+                      CreditLimitDays: 0,
+                      CreditLimitAmount: 0
+                  });
+              }
+                this.getWQuestions(result.data.Table1);
+            }
+
+            if (result.data.Table2) {
+                // debugger
+                this.documentList = result.data.Table2;
+                this.documentInfo = this.constructDocumentPayload(this.documentList);
+            }
+
+            if (result.data.Table1) {
+                debugger;
+                this.questionArray = result.data.Table1;
+            }
+            this.getNumberRangeList();
+            this.isGetByIdInProgress = false;       
+        }
+    });
+}
+
+  // onCreditLimitDays(event:any){
+  //   console.log(this.creditLimit)
+  //   const highestValue = Math.max(...this.creditLimit.map((res: any) => res.MaxCreditDays))
+  //   if(event.target.value > highestValue){
+  //     this.creditdaysValidation = highestValue
+  //   }
+  //   else{
+  //     const data = {
+  //       CreditLimitDays: event.target.value
+  //     }
+  //     this.creditApplicationForm.patchValue(data);
+  //     this.creditdaysValidation = null; 
+  //   }
+  // }
+  // onReviseCreditLimitDays(event:any){
+  //   console.log(this.creditLimit)
+  //   const highestValue = Math.max(...this.creditLimit.map((res: any) => res.MaxCreditDays))
+  //   if(event.target.value > highestValue){
+  //     this.creditdaysValidation = highestValue
+  //   }
+  //   else{
+  //     const data = {
+  //       ReviseCreditLimitDays: event.target.value
+  //     }
+  //     this.creditApplicationForm.patchValue(data);
+  //     this.creditdaysValidation = null; 
+  //   }
+  // }
+  onCreditLimitDays(event: any, requestType: boolean = false) {
+    const fieldName = requestType ? 'ReviseCreditLimitDays' : 'CreditLimitDays';
+    const fieldValue = event.target.value;
+
+    const highestValue = Math.max(...this.creditLimit.map((res: any) => res.MaxCreditDays));
+    if (fieldValue > highestValue) {
+        this.creditdaysValidation = highestValue;
+    } else {
+        const data = {
+            [fieldName]: fieldValue
+        };
+        this.creditApplicationForm.patchValue(data);
+        this.creditdaysValidation = null;
+    }
+}
+
+
+  setRevise() {
+    
+    this.creditType = 'Revise';
+    this.creditApplicationForm.patchValue({
+      IsRevise: true,
+      IsRevoke: false,
+    });
+    this.createForm();
+  }
+
+  // Function to handle the "Revoke" radio button click
+  setRevoke() {
+    this.createForm();
+    this.creditType = 'Revoke';  
+    this.creditApplicationForm.patchValue({
+      IsRevise: false,
+      IsRevoke: true,
+      // CreditLimitAmount: 0,
+      // CreditLimitDays:  0,
+    });   
+  }
+
+  onCreditLimitAmount(event: any, requestType: boolean = false) {
+    const fieldName = requestType ? 'ReviseCreditLimitAmount' : 'CreditLimitAmount';
+    const fieldValue = event.target.value;
+
+    const highestValue = Math.max(...this.creditLimit.map((res: any) => res.MaxCreditAmount));
+    if (fieldValue > highestValue) {
+        this.creditAmountValidation = highestValue;
+    } else {
+        const data = {
+            [fieldName]: fieldValue
+        };
+        this.creditApplicationForm.patchValue(data);
+        this.creditAmountValidation = null;
+    }
+}
+
 
   fileSelected(event) {}
 
@@ -288,18 +512,20 @@ export class CreditApplicationDetailsComponent implements OnInit {
   //  * construct the payload for save and final
   constructPayload() {
     if (!this.isUpdate) {
-      this.creditApplicationForm.value.SalesPersonId =
-        this.customerDetail["data"].Table2[0].SalesId;
+      this.creditApplicationForm.value.SalesPersonId = 
+           this.customerDetail["data"] .Table2[0].SalesId;
     } else {
       this.creditApplicationForm.value.SalesPersonId = this.salesPersonid;
 
-      this.creditApplicationForm.value.CustomerBranchId =
-        this.customerBranchid.CustomerBranchId;
+      this.creditApplicationForm.value.CustomerBranchId = this.customerBranchid;
     }
-
     const Table = this.creditApplicationForm.value;
 
-    debugger;
+    if(!this.requestType){
+      Table.IsRevise = false;
+      Table.IsRevoke = false;
+    }
+
     let payload = {
       CreditApplication: {
         Table: [
@@ -312,9 +538,12 @@ export class CreditApplicationDetailsComponent implements OnInit {
             CreatedBy: +Table.CreatedBy,
             CreditApplicationId: Table.CreditApplicationId,
             CreditApplicationNumber: Table.CreditApplicationNumber,
-            CreditLimitAmount: Table.CreditLimitAmount,
-            CreditLimitDays: Table.CreditLimitDays,
+            CreditLimitDays: this.ReviseCreditLimitDays ? this.ReviseCreditLimitDays : Table.CreditLimitDays,
+            CreditLimitAmount: this.ReviseCreditLimitAmount ? this.ReviseCreditLimitAmount : Table.CreditLimitAmount,
             CustomerId: +Table.CustomerId,
+
+            IsRevise: +Table.IsRevise ? true : false, 
+            IsRevoke: +Table.IsRevoke ? true : false, 
             CustomerPan: Table.CustomerPan,
             CustomerPrimeContact: Table.CustomerPrimeContact,
             CustomerStatus: +Table.CustomerStatus ? "Active" : "Inactive",
@@ -323,8 +552,8 @@ export class CreditApplicationDetailsComponent implements OnInit {
             Email: Table.Email,
             Mobile: Table.Mobile,
             OfficeId: +Table.OfficeId,
-            PostDatedCheques: +Table.PostDatedCheques,
-            RequestRemarks: Table.RequestRemarks,
+            PostDatedCheques: this.RevisePostDatedCheques ? this.RevisePostDatedCheques : Table.PostDatedCheques,
+            RequestRemarks: this.ReviseRequestRemarks ? this.ReviseRequestRemarks : Table.RequestRemarks,
             SalesPersonId: Table.SalesPersonId,
             StatusId: +Table.StatusId,
             Telephone: Table.Telephone,
@@ -385,7 +614,6 @@ export class CreditApplicationDetailsComponent implements OnInit {
   }
 
   saveCredit() {
-    // debugger
     // const validation = this.validationCheck();
 
     // // *  validation check
@@ -396,7 +624,6 @@ export class CreditApplicationDetailsComponent implements OnInit {
     // }
 
     const payload = this.constructPayload();
-    // debugger
     this.creditApplicationService
       .saveCreditApplication(payload)
       .subscribe((result: any) => {
@@ -406,15 +633,23 @@ export class CreditApplicationDetailsComponent implements OnInit {
           }
           Swal.fire("", result.data.Message, "success");
           const creditApplicationId = result.data.Id;
+   
+         
+          const isRevise = payload.CreditApplication.Table[0].IsRevise;
+          const isRevoke = payload.CreditApplication.Table[0].IsRevoke;
+    
+      
+          const requestType = isRevise || isRevoke;
+    
           this.router.navigate([
             "/views/transactions/credit-application/credit-application-details",
-            { creditId: creditApplicationId },
+            { creditId: creditApplicationId, requestType: requestType },
           ]);
-          // this.goBack();
         }
       });
-  }
-
+    }
+    
+   
   // * credit final
   finalCredit() {
     // const validation = this.validationCheck();
@@ -498,10 +733,10 @@ export class CreditApplicationDetailsComponent implements OnInit {
         "<span style='color:red;'>*</span> <span>Please response to the questions it is mandatory</span><br>";
     }
 
-    if (!Table.CreditApplicationNumber) {
-      validation +=
-        "<span style='color:red;'>*</span> <span>Application Number Is Required.</span></br>";
-    }
+    // if (!Table.CreditApplicationNumber) {
+    //   validation +=
+    //     "<span style='color:red;'>*</span> <span>Application Number Is Required.</span></br>";
+    // }
 
     if (!Table.ApplicationDate) {
       validation +=
@@ -533,7 +768,7 @@ export class CreditApplicationDetailsComponent implements OnInit {
         "<span style='color:red;'>*</span> <span>Please select Customer Branch.</span></br>";
     }
 
-    // if (!Table.SalesPersonId) {
+    // if (Table.SalesPersonId) {
     //   validation += "<span style='color:red;'>*</span> <span>Please select Sales Person.</span></br>"
     // }
 
@@ -557,7 +792,7 @@ export class CreditApplicationDetailsComponent implements OnInit {
 
     // if (!Table.Telephone) {
     //   validation += "<span style='color:red;'>*</span> <span>Please Enter Telephone.</span></br>"
-    // }
+    // } 
 
     // if (!Table.Mobile) {
     //   validation += "<span style='color:red;'>*</span> <span>Please Enter Mobile.</span></br>"
@@ -592,13 +827,13 @@ export class CreditApplicationDetailsComponent implements OnInit {
         "<span style='color:red;'>*</span> <span>Please select Status.</span></br>";
     }
 
-    if (
-      Table.CustomerPan &&
-      this.creditApplicationForm.get("CustomerPan").invalid
-    ) {
-      validation +=
-        "<span style='color:red;'>*</span> <span>Please enter valid PAN number</span></br>";
-    }
+    // if (
+    //   Table.CustomerPan &&
+    //   this.creditApplicationForm.get("CustomerPan").invalid
+    // ) {
+    //   validation +=
+    //     "<span style='color:red;'>*</span> <span>Please enter valid PAN number</span></br>";
+    // }
 
     // if (Table1.creditvaleus ) {
     //   validation += '<span style=\'color:red;\'>*</span> <span>Please enter All Questions</span></br>';
@@ -665,6 +900,7 @@ export class CreditApplicationDetailsComponent implements OnInit {
   }
 
   getTradeList() {
+    
     debugger;
     this.creditApplicationService.getTradeList({}).subscribe((result: any) => {
       if (result.message == "Success") {
@@ -697,6 +933,7 @@ export class CreditApplicationDetailsComponent implements OnInit {
 
   getNumberRangeList() {
     //  If credit Id present then not generate a code
+    this.creditApplicationForm.value.CreditApplicationNumber = "";
     const creditId = this.creditApplicationForm.value.CreditApplicationNumber;
     if (creditId) {
       return;
@@ -992,18 +1229,21 @@ export class CreditApplicationDetailsComponent implements OnInit {
 
   //  * update the sales person value form the customer after branch selected
   updateSalesPerson() {
+    debugger
     const CustomerId = this.creditApplicationForm.value.CustomerId;
     const selectedCustomerDetails = this.customerAndBranchList.find(
       (customer) => customer.CustomerID == CustomerId
     );
+    
     this.creditApplicationForm.controls["SalesPersonId"].setValue(
       selectedCustomerDetails.SalesId
-    );
+  );
+  
   }
 
   getCustomerFullDetail(event: any) {
     this.updateSalesPerson();
-    if (this.customerBranchList.length == 1) {
+    if (this.customerBranchList.length > 1) {
       var inputRequest = {
         CustomerBranchID: this.customerBranchList[0].CustomerBranchID,
         CustomerID: this.creditApplicationForm.value.CustomerId,
@@ -1026,7 +1266,7 @@ export class CreditApplicationDetailsComponent implements OnInit {
       .subscribe((response) => {
         debugger;
         this.customerDetail = response;
-        //  this.salesPersonid = response.data.Table3.SalesId
+          this.salesPersonid = response["data"].Table2[0].SalesId
         console.log(response, "aekhfuieashufg");
         // debugger
         const doc = this.customerDetail["data"].Table3;
@@ -1035,7 +1275,6 @@ export class CreditApplicationDetailsComponent implements OnInit {
         this.documentInfo = this.constructDocumentPayload(doc);
         this.patchCustomerData(this.customerDetail);
       });
-
     this.customerService
       .getCustomerBranchDuplicate(payloads)
       .subscribe((result: any) => {
@@ -1061,7 +1300,7 @@ export class CreditApplicationDetailsComponent implements OnInit {
         this.customerBranchList = result.data.Table3;
         if (result.data.Table3.length > 0) {
           this.creditApplicationForm.controls["CustomerBranchId"].setValue(0);
-          if (this.customerBranchList.length == 1) {
+          if (this.customerBranchList.length > 0) {
             const branchCode = this.customerBranchList[0].CustomerBranchID;
             this.creditApplicationForm.controls["CustomerBranchId"].setValue(
               branchCode
@@ -1072,7 +1311,6 @@ export class CreditApplicationDetailsComponent implements OnInit {
               CustomerID: event,
               CustomerBranchID: branchCode,
             };
-
             this.customerService
               .getCustomerBranchDuplicate(payload)
               .subscribe((result: any) => {
@@ -1086,6 +1324,7 @@ export class CreditApplicationDetailsComponent implements OnInit {
                   Swal.fire(result.data);
                 }
               });
+           
           }
         }
         console.log(result, "resultresultresult");
