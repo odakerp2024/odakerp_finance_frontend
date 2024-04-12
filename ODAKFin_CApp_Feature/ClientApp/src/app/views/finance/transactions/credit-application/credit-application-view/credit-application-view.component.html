@@ -1,17 +1,39 @@
 <div class="p-4">
   <div class="row headtitle">
     <div class="col-9 d-flex justify-content-between">
-      <span class="mt-auto">
-        <h4>Credit Application</h4>
-      </span>
-      <button
-        (click)="CreateNew()"
-        class="btn btn-success btn-raised bmd-btn-edit"
-      >
-        <i class="material-icons editicon">add</i>
-      </button>
+        <span class="mt-auto">
+          <h4>Credit Application</h4>
+        </span>
+      </div>
     </div>
-  </div>
+      <div class="row ">
+        <div class="col-12 d-flex ">
+          <div class="col-6"></div>
+      <div class="col-/2 d-flex " >
+        <span class="mr-3">
+          <h5>New Request</h5>
+        </span>
+        <button
+          (click)="CreateNew(false)"
+          class="btn btn-success btn-raised bmd-btn-edit"
+        > 
+          <i class="material-icons editicon">add</i>
+        </button>
+      </div>
+  
+      <div class="col-/4 d-flex " style="margin-left:40px;" >
+        <span class="mr-3">
+          <h5>Revise & Revoke</h5>
+        </span>
+        <button
+          (click)="CreateNew(true)"
+          class="btn btn-success btn-raised bmd-btn-edit"
+        >
+          <i class="material-icons editicon">add</i>
+        </button>
+      </div>  
+   </div>
+  </div> 
   <div class="row">
     <!-- Table View -->
     <div class="col-sm-12 col-md-9">
@@ -59,9 +81,7 @@
                     <td
                       (click)="
                         editCreditApplication(
-                          creditApplication.CreditApplicationId
-                        )
-                      "
+                          creditApplication.CreditApplicationId, creditApplication.IsRevise, creditApplication.IsRevoke )"
                       style="color: #0366d6; cursor: pointer"
                     >
                       {{ creditApplication.CreditApplicationNumber }}
