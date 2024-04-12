@@ -300,7 +300,7 @@
                         <label>RCM Applicable</label>
                         <ng-select class="searchdropdown" formControlName="RCMApplicable" [clearable]="false" name="RCM"   [placeholder]="'-- SELECT TDS--'"
                                    (change)="toggleRCM($event)">
-                            <ng-option [value]="0" disabled>--SELECT RCM--</ng-option>                    
+                            <ng-option [value]="''" disabled>--SELECT RCM--</ng-option>                    
                             <ng-option value="1">YES</ng-option>
                             <ng-option value="0">NO</ng-option>             
                         </ng-select>  

@@ -30,7 +30,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
   minDate: string = this.datePipe.transform(new Date(), "yyyy-MM-dd");
   // newOne : string = '';
   isUpdate: boolean = false;
-  ProvisionTypeList : [ { ID:'1',name: 'Partial'},{ID:'2' ,name: 'Full'}];
+  ProvisionTypeList: [{ ID: '1', name: 'Partial' }, { ID: '2', name: 'Full' }];
   bankList = [];
   IsRCM: any;
   isUpdateMode: boolean = false;
@@ -43,7 +43,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
   private ngUnsubscribe = new Subject<void>();
   vendorBranch: any = [];
   maxDate: string = this.datePipe.transform(new Date(), "yyyy-MM-dd");
-  DueDateopen : string = this.datePipe.transform(new Date(), "yyyy-MM-dd");
+  DueDateopen: string = this.datePipe.transform(new Date(), "yyyy-MM-dd");
   TDSApplicability = [{ name: 'Yes', id: 1 }, { name: 'No', id: 2 }, { name: 'LDC', id: 3 }];
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
   GSTCategoryList: any = [];
@@ -52,6 +52,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
   officeList: any = [];
   statusList: any = [];
   vendorsList: any = [];
+  allVendorsList: any = [];
   tdsSectionData: any = [];
   reasonList: any = [];
   purchaseList: any = [];
@@ -77,7 +78,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
   PIDate: any;
   vendorBranchId: number = 0;
   vendorTDS = 0;
-  vendorLDC : any;
+  vendorLDC: any;
   ModuleId: any
   modules: any;
   moduleName = 'Purchase invoice(Admin)'
@@ -86,6 +87,9 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
   provisionDropDownList: any[];
   SectionMasterList: any[];
   isRCMChecked: boolean;
+  selectedOfficeStateId = 0;
+  selectedBranchStateId = 0;
+  isSameState: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -123,10 +127,10 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     this.getTDSMaster();
 
 
-  // this.maxDate = new Date();
-  // this.maxDate.setDate( this.maxDate.getDate() + 3 );
+    // this.maxDate = new Date();
+    // this.maxDate.setDate( this.maxDate.getDate() + 3 );
 
-    
+
 
     this.route.params.subscribe(param => {
       if (param.id) {
@@ -138,14 +142,14 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
         this.PurchaseCreateForm.disable();
       }
     });
-    this.getModuleType( () => {
-      if(this.mappingSuccess == false){
+    this.getModuleType(() => {
+      if (this.mappingSuccess == false) {
         Swal.fire(this.errorMessage)
       }
     });
   }
 
-  updateValue(){
+  updateValue() {
     const userID = localStorage.getItem("UserID");
     const paylod = {
       userID: Number(userID),
@@ -159,12 +163,12 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
         if (data[0].SubfunctionID == paylod.SubfunctionID) {
 
           if (data[0].Update_Opt != 2) {
-              Swal.fire('Please Contact Administrator');
+            Swal.fire('Please Contact Administrator');
           }
           else {
             this.PurchaseCreateForm.enable();
             this.isUpdateMode = false;
-            this.isUpdateMode1= true;
+            this.isUpdateMode1 = true;
           }
         }
         else {
@@ -186,8 +190,8 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       Office: [0],
       OfficeGST: [''],
       BookingAgainst: [0],
-      ProvisionType:[0],
-      Provision:[0],
+      ProvisionType: [0],
+      Provision: [0],
       PINumber: [''],
       PIDate: [this.minDate],
       StatusId: [1],
@@ -207,19 +211,19 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       PurchaseOrder: [''],
       InternalOrder: [''],
       SubTotal: [''],
-      TDSRate:[0],
+      TDSRate: [0],
       IGST: [''],
       CGST: [''],
       SGST: [''],
       InvoiceAmount: [''],
-      NetAmount:[''],
-      Bankdetails:[''],
+      NetAmount: [''],
+      Bankdetails: [''],
       InvoiceCurrency: [''],
-      InvoiceExrate:[''],
-      Remarks:[''],
-      CreatedDate:[this.minDate],
+      InvoiceExrate: [''],
+      Remarks: [''],
+      CreatedDate: [this.minDate],
       CreatedBy: localStorage.getItem('UserID'),
-      TDSAmount:[0],
+      TDSAmount: [0],
 
       // Table
       Id: [0],
@@ -230,9 +234,9 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       CurrencyId: [1],
       ExRate: ['1'],
       Amountccr: [''],
-      TDSMaster:[{ value: '', disabled: true }],
+      TDSMaster: [{ value: '', disabled: true }],
       IsRCM: [''],
-      GSTGroup: [{ value: '', disabled: true }] ,
+      GSTGroup: [{ value: '', disabled: true }],
       IsDelete: [0],
 
 
@@ -247,7 +251,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       } else {
         this.PurchaseCreateForm.get('TDSMaster').disable();
       }
-    });    
+    });
     this.PurchaseCreateForm.get('RCMApplicable').valueChanges.subscribe(value => {
       if (value === '1') { // If RCM is selected as "YES"
         this.PurchaseCreateForm.get('GSTGroup').enable(); // Enable the GSTGroup field
@@ -284,15 +288,15 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
           BookingAgainst: info.BookingAgainst,
           PINumber: info.PINumber,
           PIDate: this.datePipe.transform(info.PIDate, 'y-MM-dd'),
-         // PIDate: info.PIDate,
+          // PIDate: info.PIDate,
           StatusId: info.StatusId,
           VendorId: info.VendorId,
           VendorBranch: info.VendorBranch,
           VendorType: info.VendorType,
           VINumber: info.VINumber,
           VIDate: this.datePipe.transform(info.VIDate, 'y-MM-dd'),
-        //  VIDate: info.VIDate,
-           DueDate: this.datePipe.transform(info.DueDate, 'dd-MM-y'),
+          //  VIDate: info.VIDate,
+          DueDate: this.datePipe.transform(info.DueDate, 'dd-MM-y'),
           //DueDate: info.DueDate,
           VendorGST: info.VendorGST,
           VendorGSTCategory: info.VendorGSTCategory,
@@ -311,11 +315,11 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
           InvoiceAmount: info.InvoiceAmount,
           InvoiceCurrency: info.InvoiceCurrency,
           CreatedBy: info.CreatedBy,
-          TDSAmount:info.TDSRate
+          TDSAmount: info.TDSRate
         });
         this.getOfficeList(info.Division);
         this.getVendorBranchList(info.VendorId, info.VendorBranch, false);
-        const vendorDetails =  await this.getVendorDetailsInfo(info.VendorBranch)
+        const vendorDetails = await this.getVendorDetailsInfo(info.VendorBranch)
         if (result.data.Table1.length > 0) {
           this.PurchaseTableList = result.data.Table1;
           this.setPage(1);
@@ -372,9 +376,9 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       }
     }, error => { });
   }
-  
+
   getDueDate(event) {
-   
+
     var service = `${this.globals.APIURL}/PurchaseInvoice/GetPurchaseInvoiceDueDate`;
     this.dataService.post(service, { VendorBranchId: event }).subscribe((result: any) => {
       this.duedatelist = [];
@@ -382,7 +386,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
         this.duedatelist = result.data.Table;
         this.calculateDueDate(new Date(event));
         let info = result.data.Table[0];
-      
+
       }
     }, error => { });
   }
@@ -407,11 +411,11 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
         this.provisionDropDownList = result.data.Table;
         this.setPage(1);
       }
-    }, error => { 
+    }, error => {
       console.error(error);
     });
   }
-  
+
 
   getBankList() {
     let payload = {
@@ -421,33 +425,46 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       IFSCCode: '',
       IsActive: 1,
       SwiftCode: null
-     }
-     this.commonDataService.getbankaccountFilter(payload).subscribe((result: any) => {
-      
+    }
+    this.commonDataService.getbankaccountFilter(payload).subscribe((result: any) => {
+
       if (result.message == "Success") {
         this.bankList = result['data'].Table;
       }
     })
   }
-  
-calculateDueDate(maxDate: any) {
 
-  const creditDays = this.duedatelist.length > 0 ?  this.duedatelist[0].CreditDays : 0; 
-  const selectedDate = maxDate.value as Date;                   
+  calculateDueDate(maxDate: any) {
 
-  const dueDate = new Date(selectedDate); 
-  dueDate.setDate(dueDate.getDate() + creditDays)
+    const creditDays = this.duedatelist.length > 0 ? this.duedatelist[0].CreditDays : 0;
+    const selectedDate = maxDate.value as Date;
 
-  this.DueDateopen = this.datePipe.transform(dueDate, 'dd-MM-y'); 
- 
-}
+    const dueDate = new Date(selectedDate);
+    dueDate.setDate(dueDate.getDate() + creditDays)
+
+    this.DueDateopen = this.datePipe.transform(dueDate, 'dd-MM-y');
+
+  }
 
   getVendorList() {
     return new Promise((resolve, reject) => {
       this.paymentService.getVendorList({}).pipe(takeUntil(this.ngUnsubscribe)).subscribe((result: any) => {
         if (result.message == "Success") {
           if (result["data"].Table.length) {
-            this.vendorsList = result["data"].Table.filter(x => x.OnboradName == 'CONFIRMED' && x.Status == 'Active');
+            debugger
+            const vendorList = result["data"].Table.filter(x => x.OnboradName == 'CONFIRMED' && x.Status == 'Active');
+            const uniqueVendors = new Set();
+            this.allVendorsList = vendorList;
+            const filteredVendorsList = vendorList.filter((vendor) => {
+              const identifier = vendor;
+              if (!uniqueVendors.has(identifier.VendorID)) {
+                uniqueVendors.add(identifier.VendorID);
+                this.vendorsList.push(identifier);
+                return true;
+              }
+              return false;
+            });
+
             resolve(true);
           }
         }
@@ -464,19 +481,21 @@ calculateDueDate(maxDate: any) {
   }
 
   getVendorBranchList(event, setBrach = false, branchId?: any) {
-   
-    this.vendorBranch = [];
-    this.vendorBranch = this.vendorsList.filter(x => x.VendorID == event);
+    debugger
 
-      // this.PurchaseCreateForm.value.VendorBranch = this.vendorBranch[0].BranchCode;
-    if(this.vendorBranch.length  === 1 && setBrach){
+    this.vendorBranch = [];
+    this.vendorBranch = this.allVendorsList.filter(x => x.VendorID == event);
+
+    // this.PurchaseCreateForm.value.VendorBranch = this.vendorBranch[0].BranchCode;
+    if (this.vendorBranch.length === 1 && setBrach) {
       const singleBranchDetails = this.vendorBranch[0];
       // this.vendorBranchId = singleBranchDetails.VendorBranchID;
       this.getDueDate(singleBranchDetails.VendorBranchID);
       this.PurchaseCreateForm.controls['VendorBranch'].setValue(singleBranchDetails.VendorBranchID);
       this.getVendorDetailsInfo(singleBranchDetails.VendorBranchID);
+      this.checkBranchState(singleBranchDetails);
     }
-   
+
   }
 
   getTDSMaster() {
@@ -492,31 +511,31 @@ calculateDueDate(maxDate: any) {
       Status: ''
     }
 
-    const serviceUrl = `${this.globals.APIURL}/TDSRates/GetTDSRatesFilter/`; 
+    const serviceUrl = `${this.globals.APIURL}/TDSRates/GetTDSRatesFilter/`;
     this.dataService.post(serviceUrl, payLoad).subscribe((data: any) => {
       this.SectionMasterList = [];
       this.SectionMasterList = data["data"]
-    }, error => { 
+    }, error => {
       console.error(error);
     });
-}
+  }
 
 
-  getTDSSection(){
+  getTDSSection() {
 
-    const payLoad = { TDSRatesId: 0, TaxName: '', RatePercentage: '', sectionID: 0, SectionID: 0, SectionName: '', Date: '', IsActive: true, Status: '', Remarks: '', TDSRate:0};
-      this.VendorService.getVendorSectionRate(payLoad).subscribe(data => {
+    const payLoad = { TDSRatesId: 0, TaxName: '', RatePercentage: '', sectionID: 0, SectionID: 0, SectionName: '', Date: '', IsActive: true, Status: '', Remarks: '', TDSRate: 0 };
+    this.VendorService.getVendorSectionRate(payLoad).subscribe(data => {
       this.tdsSectionData = data['data']['Table'];
     });
   }
 
   getTdsSection(SectionName) {
-  
-  const  tdsRate: any =   this.tdsSectionData.find((item) => item.SectionID == SectionName );
-  this.PurchaseCreateForm.controls.TDSRate.setValue(tdsRate.Rate)
-}
+
+    const tdsRate: any = this.tdsSectionData.find((item) => item.SectionID == SectionName);
+    this.PurchaseCreateForm.controls.TDSRate.setValue(tdsRate.Rate)
+  }
   getVendorDetailsInfo(event) {
-  
+
     return new Promise((resolve, reject) => {
       let vendorInfo = this.vendorBranch.find(x => x.VendorBranchID == event);
       if (vendorInfo) {
@@ -533,14 +552,14 @@ calculateDueDate(maxDate: any) {
           }
           if (response['data'].Table5.length > 0) {
             let info = response['data'].Table5[response['data'].Table5.length - 1];
-            this.vendorTDS = info.TDSRate ? info.TDSRate :  0;
-           // console.log('vendorTDS', this.vendorTDS)
+            this.vendorTDS = info.TDSRate ? info.TDSRate : 0;
+            // console.log('vendorTDS', this.vendorTDS)
             this.vendorLDC = info.Rate ? info.Rate : ''
             if (info) {
               this.PurchaseCreateForm.controls['TDSApplicability'].setValue(info.TDSApplicability ? info.TDSApplicability : '');
               this.PurchaseCreateForm.controls['TDSSection'].setValue(info.TDSSectionId ? info.TDSSectionId : '');
               this.PurchaseCreateForm.controls['ReasonforNonTDS'].setValue(info.Reason ? info.Reason : '');
-              this.PurchaseCreateForm.controls['LDCRate'].setValue( this.vendorLDC );
+              this.PurchaseCreateForm.controls['LDCRate'].setValue(this.vendorLDC);
               this.PurchaseCreateForm.controls['TDSRate'].setValue(this.vendorTDS);
             }
           }
@@ -549,7 +568,7 @@ calculateDueDate(maxDate: any) {
         });
       }
     })
-    
+
   }
 
   OnClickDeleteValueFile(index: number) {
@@ -558,7 +577,11 @@ calculateDueDate(maxDate: any) {
 
   getOfficeGST(event) {
     let officeInfo = this.officeList.find(x => x.ID == event);
-    if (officeInfo) this.PurchaseCreateForm.controls['OfficeGST'].setValue(officeInfo.GSTNo);
+    debugger
+    if (officeInfo) {
+      this.PurchaseCreateForm.controls['OfficeGST'].setValue(officeInfo.GSTNo);
+      this.selectedOfficeStateId = officeInfo.StateId;
+    }
   }
 
   GetGSTCategory() {
@@ -595,9 +618,9 @@ calculateDueDate(maxDate: any) {
   //   });
   // }
 
-   getPurchaseList() {
+  getPurchaseList() {
     let service = `${this.globals.APIURL}/PurchaseInvoice/GetPurchaseInvoiceDropDownList`;
-    this.dataService.post(service, { Id: 0, PurchaseNumber: ''}).subscribe((result: any) => {
+    this.dataService.post(service, { Id: 0, PurchaseNumber: '' }).subscribe((result: any) => {
       this.purchaseList = [];
       if (result.message == 'Success' && result.data.Table1.length > 0) {
         this.purchaseList = result.data.Table1;
@@ -609,7 +632,7 @@ calculateDueDate(maxDate: any) {
 
   getInternalOrderList() {
     let service = `${this.globals.APIURL}/PurchaseInvoice/GetPurchaseInvoiceDropDownList`;
-    this.dataService.post(service, { Id: 0, InternalNumber: ''}).subscribe((result: any) => {
+    this.dataService.post(service, { Id: 0, InternalNumber: '' }).subscribe((result: any) => {
       this.internalOderList = [];
       if (result.message == 'Success' && result.data.Table2.length > 0) {
         this.internalOderList = result.data.Table2;
@@ -674,11 +697,10 @@ calculateDueDate(maxDate: any) {
         validation += "<span style='color:red;'>*</span> <span>Please Enter GST Group.</span></br>";
       }
     }
-    if (validation != "")
-     { 
+    if (validation != "") {
       Swal.fire(validation);
-       return false;
-       }
+      return false;
+    }
 
     let info = this.PurchaseCreateForm.value;
     let account = this.accountName.find(x => x.ChartOfAccountsId == info.AccountId);
@@ -695,7 +717,7 @@ calculateDueDate(maxDate: any) {
         CurrencyId: info.CurrencyId,
         ExRate: info.ExRate ? info.ExRate : 1,
         Amountccr: info.Amountccr,
-        TDSMaster:info.TDSMaster,
+        TDSMaster: info.TDSMaster,
         IsRCM: info.IsRCM,
         GSTGroup: info.GSTGroup ? info.GSTGroup : 0,
         CurrencyName: currency.Currency,
@@ -705,7 +727,7 @@ calculateDueDate(maxDate: any) {
         SGST: 0,
         InvoiceAmount: 0,
         InvoiceCurrency: 0,
-        TDSRate:info.TDSRate
+        TDSRate: info.TDSRate
       };
 
       this.PurchaseTableList[this.editSelectedIdex] = editValue;
@@ -726,7 +748,7 @@ calculateDueDate(maxDate: any) {
       CurrencyId: info.CurrencyId,
       ExRate: info.ExRate ? info.ExRate : 1,
       Amountccr: info.Amountccr,
-      TDSMaster:info.TDSMaster,
+      TDSMaster: info.TDSMaster,
       IsRCM: info.IsRCM,
       GSTGroup: info.GSTGroup ? info.GSTGroup : 0,
       CurrencyName: currency.Currency,
@@ -736,7 +758,7 @@ calculateDueDate(maxDate: any) {
       SGST: 0,
       InvoiceAmount: 0,
       InvoiceCurrency: 0,
-      TDSRate:info.TDSRate
+      TDSRate: info.TDSRate
     });
     this.resetTable();
     // this.setPage(1);
@@ -779,7 +801,7 @@ calculateDueDate(maxDate: any) {
       CurrencyId: info.CurrencyId,
       ExRate: info.ExRate,
       Amountccr: info.Amountccr,
-      TDSMaster:info.TDSMaster,
+      TDSMaster: info.TDSMaster,
       IsRCM: info.IsRCM,
       GSTGroup: info.GSTGroup
     });
@@ -802,15 +824,15 @@ calculateDueDate(maxDate: any) {
   async getModuleType(call) {
     return new Promise((resolve, rejects) => {
       let service = `${this.globals.APIURL}/LedgerMapping/GetLedgerDropDownList`;
-      this.dataService.post(service, {}).subscribe(async(result: any) => {
+      this.dataService.post(service, {}).subscribe(async (result: any) => {
         if (result.message = "Success") {
           // this.ledgerSubModuleList = [];
-  
+
           this.modules = result.data.Module
-  
+
           let subModule = this.modules.find(x => x.ModuleName == this.moduleName);
           this.ModuleId = subModule.ID
-          await  this.checkLedgerMapping()
+          await this.checkLedgerMapping()
           call()
         }
       }, error => {
@@ -825,13 +847,13 @@ calculateDueDate(maxDate: any) {
       let service = `${this.globals.APIURL}/Common/CheckModuleAccess`;
       this.dataService.post(service, { ModuleId: this.ModuleId }).subscribe(async (result: any) => {
         if (result.data == "Access Granted") {
-          this.mappingSuccess = true      
+          this.mappingSuccess = true
         }
-        else{
-          this.mappingSuccess = false  
-           this.errorMessage = result.data
-            // Swal.fire(this.errorMessage)
-            resolve(true)
+        else {
+          this.mappingSuccess = false
+          this.errorMessage = result.data
+          // Swal.fire(this.errorMessage)
+          resolve(true)
         }
       }, error => {
         console.error(error);
@@ -839,7 +861,7 @@ calculateDueDate(maxDate: any) {
     })
   }
 
-  async saveInfo(status: any, isDelete = false ) {
+  async saveInfo(status: any, isDelete = false) {
 
     // if(this.mappingSuccess == false){
     //   Swal.fire(this.errorMessage)
@@ -874,7 +896,7 @@ calculateDueDate(maxDate: any) {
     if (this.PurchaseCreateForm.value.DueDate == "" || this.PurchaseCreateForm.value.DueDate == 0) {
       validation += "<span style='color:red;'>*</span> <span>Please select Due Date.</span></br>";
     }
-    if(this.FileList.length == 0){
+    if (this.FileList.length == 0) {
       validation += "<span style='color:red;'>*</span> <span>Please choose a File</span></br>"
     }
     if (this.orderType == 'Purchase') {
@@ -897,18 +919,18 @@ calculateDueDate(maxDate: any) {
     //   await this.autoCodeGeneration('purchase')
     // }
     if (validation != "") {
-      if(status != 3){
-      Swal.fire(validation);
-      return false;
+      if (status != 3) {
+        Swal.fire(validation);
+        return false;
       }
     }
 
-    
+
     let saveMsg = `Do you want to Save this Details?`;
     let finalMsg = `Final voucher not possible to edit <br> Do you want proceed?`;
     let closeMsg = `Voucher is not yet finalized <br> Do you want to still exit`;
     let deleteMsg = `Do you want to Delete this Details?`;
-    
+
     let combinedText: string;
 
     if (status === 2) {
@@ -918,77 +940,77 @@ calculateDueDate(maxDate: any) {
     } else {
       combinedText = closeMsg;
     }
-    
-        // set Delete flag
-       
-    if(isDelete  && this.isUpdate){
-      this.PurchaseCreateForm.controls['IsDelete'].setValue(1); 
+
+    // set Delete flag
+
+    if (isDelete && this.isUpdate) {
+      this.PurchaseCreateForm.controls['IsDelete'].setValue(1);
     }
 
-      //  Its finaled already and cancelled
-      if (status == 3 && this.isFinalRecord) {
-        this.ViewPage();
-        return;
-      }
+    //  Its finaled already and cancelled
+    if (status == 3 && this.isFinalRecord) {
+      this.ViewPage();
+      return;
+    }
 
 
-      Swal.fire({
-            showCloseButton: true,
-            title: '',
-            icon: 'question',
-            html: combinedText,
-            showCancelButton: true,
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'No',
-            reverseButtons: false,
-            allowOutsideClick: false
-          }).then(async (result) => {
-            if (result.isConfirmed) {
-      
-           // If canceled 
-      
-          if(status == 3 ){
-            this.ViewPage();
-            return;
-          }
+    Swal.fire({
+      showCloseButton: true,
+      title: '',
+      icon: 'question',
+      html: combinedText,
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'No',
+      reverseButtons: false,
+      allowOutsideClick: false
+    }).then(async (result) => {
+      if (result.isConfirmed) {
 
-          if(status == 2 && !this.isFinalRecord){
-            await this.autoCodeGeneration('purchase')
-          }
+        // If canceled 
 
-          await this.createPayload(status);
+        if (status == 3) {
+          this.ViewPage();
+          return;
+        }
+
+        if (status == 2 && !this.isFinalRecord) {
+          await this.autoCodeGeneration('purchase')
+        }
+
+        await this.createPayload(status);
 
         let service = `${this.globals.APIURL}/PurchaseInvoice/SavePurchaseInvoiceInfo`;
         this.dataService.post(service, this.payload).subscribe((result: any) => {
           if (result.message == "Success") {
-  
+
             Swal.fire(result.data.Message, '', 'success');
             this.isUpdateMode = true;
             this.isUpdateMode1 = true;
 
-            if(status == 0){
+            if (status == 0) {
               this.PurchaseInvoiceId = result.data.Id;
-                this.isUpdateMode = true;
-                this.isUpdateMode1 = true;
+              this.isUpdateMode = true;
+              this.isUpdateMode1 = true;
             }
-          
-            if (this.isUpdate && status && !this.isFinalRecord) {
-       
-               this.updateAutoGenerated();
-               }
 
-               if(isDelete && this.isUpdate){
-                this.ViewPage();
-              }
-  
-               if (!this.isUpdate && !this.isFinalRecord) {
-                  const PurchaseInvoiceId = result.data.Id;
-                  this.editpurchaseinvoice(PurchaseInvoiceId)
-                } 
+            if (this.isUpdate && status && !this.isFinalRecord) {
+
+              this.updateAutoGenerated();
+            }
+
+            if (isDelete && this.isUpdate) {
+              this.ViewPage();
+            }
+
+            if (!this.isUpdate && !this.isFinalRecord) {
+              const PurchaseInvoiceId = result.data.Id;
+              this.editpurchaseinvoice(PurchaseInvoiceId)
+            }
           }
-          if(status == 2){
-           this.ViewPage(); 
-            return;          
+          if (status == 2) {
+            this.ViewPage();
+            return;
           }
 
         }, error => {
@@ -1000,15 +1022,15 @@ calculateDueDate(maxDate: any) {
   editpurchaseinvoice(id: number) {
     this.router.navigate(['/views/purchase-admin-info/purchase-invoice-info', { id: id, isUpdate: true }]);
   }
-  
-  ViewPage(){
+
+  ViewPage() {
     this.router.navigate(['/views/purchase-invoice/purchase-invoice-view']);
   }
 
-  goBack(){
+  goBack() {
     // If finaled allow to rediret to list page
-    if(this.isFinalRecord){
-       this.ViewPage();
+    if (this.isFinalRecord) {
+      this.ViewPage();
       return
     }
 
@@ -1017,7 +1039,7 @@ calculateDueDate(maxDate: any) {
       showCloseButton: true,
       title: '',
       icon: 'question',
-      html:`Voucher is not yet finalized <br> Do you want to still exit?`,
+      html: `Voucher is not yet finalized <br> Do you want to still exit?`,
       showCancelButton: true,
       confirmButtonText: 'Yes',
       cancelButtonText: 'No',
@@ -1025,11 +1047,11 @@ calculateDueDate(maxDate: any) {
       allowOutsideClick: false
     }).then((result) => {
       if (result.isConfirmed) {
-         this.ViewPage();
+        this.ViewPage();
       }
     })
   }
-  
+
   updateAutoGenerated() {
     let Info = this.autoGenerateCodeList.filter(x => x.ObjectName == 'Purchase Invoice(Admin)');
     if (Info.length > 0) {
@@ -1049,14 +1071,14 @@ calculateDueDate(maxDate: any) {
     //   this.PurchaseCreateForm.value.VendorBranch = this.newOne;
     // }
     let info = this.PurchaseCreateForm.value;
-     let Table = {
+    let Table = {
       PurchaseInvoiceId: this.PurchaseInvoiceId,
       Division: info.Division,
       Office: info.Office,
       OfficeGST: info.OfficeGST,
       BookingAgainst: info.BookingAgainst,
-      ProvisionType:info.ProvisionType,
-      Provision:info.Provision,
+      ProvisionType: info.ProvisionType,
+      Provision: info.Provision,
       PINumber: info.PINumber,
       PIDate: info.PIDate,
       StatusId: status,
@@ -1081,13 +1103,13 @@ calculateDueDate(maxDate: any) {
       CGST: Math.trunc(info.CGST),
       SGST: Math.trunc(info.SGST),
       InvoiceAmount: Math.trunc(info.InvoiceAmount),
-      NetAmount:info.NetAmount,
-      Bankdetails:info.Bankdetails,
+      NetAmount: info.NetAmount,
+      Bankdetails: info.Bankdetails,
       InvoiceCurrency: info.InvoiceCurrency ? info.InvoiceCurrency : 0,
-      InvoiceExrate:info.InvoiceExrate,
-      Remarks:info.Remarks,
+      InvoiceExrate: info.InvoiceExrate,
+      Remarks: info.Remarks,
       CreatedBy: info.CreatedBy,
-      TDSAmount:info.TDSRate
+      TDSAmount: info.TDSRate
     };
     let purchaseTableList = this.PurchaseTableList;
     purchaseTableList.forEach(element => {
@@ -1122,7 +1144,7 @@ calculateDueDate(maxDate: any) {
 
   async autoCodeGeneration(event: any) {
     return new Promise(async (resolve, rejects) => {
-    // if (this.isUpdate && !this.isFinalRecord ) {
+      // if (this.isUpdate && !this.isFinalRecord ) {
       if (event && this.isUpdate && !this.isFinalRecord) {
         let Info = this.autoGenerateCodeList.filter(x => x.ObjectName == 'Purchase Invoice(Admin)');
         if (Info.length > 0) {
@@ -1140,9 +1162,9 @@ calculateDueDate(maxDate: any) {
         this.PurchaseCreateForm.controls['PINumber'].setValue('');
         resolve(true);
       }
-    // }
-  })
-}
+      // }
+    })
+  }
 
   checkAutoSectionItem(sectionInfo: any, runningNumber: any, Code: string) {
     var sectionA = '';
@@ -1185,7 +1207,7 @@ calculateDueDate(maxDate: any) {
     let entityInfo = this.commonDataService.getLocalStorageEntityConfigurable();
     let info = this.currencyList.find(x => x.Currency == entityInfo['Currency']);
     this.entityCurrencyID = info.ID;
-    if (this.entityCurrencyID == currencyId ) {
+    if (this.entityCurrencyID == currencyId) {
       this.PurchaseCreateForm.controls['ExRate'].setValue(1);
       this.PurchaseCreateForm.controls['Amountccr'].setValue(1 * this.PurchaseCreateForm.value.Rate * this.PurchaseCreateForm.value.Qty);
       this.PurchaseCreateForm.get('ExRate').disable();
@@ -1224,101 +1246,101 @@ calculateDueDate(maxDate: any) {
     }, error => { });
   }
 
-  
 
-TdsPercentageCalculation(){
-  var subTotalAmount = 0;
-  if (this.PurchaseTableList.length > 0) {
+
+  TdsPercentageCalculation() {
+    var subTotalAmount = 0;
+    if (this.PurchaseTableList.length > 0) {
+      this.PurchaseTableList.forEach(element => {
+        subTotalAmount += element.Amountccr;
+      });
+      this.PurchaseCreateForm.controls['SubTotal'].setValue(subTotalAmount);  // Handle the case when subTotalAmount is 0.
+
+
+      if (subTotalAmount > 0 && this.vendorTDS > 0) {   // Calculate Section based TDS rate on TDS amount and set the value for TDSRate 
+        const tdsRate = (subTotalAmount / 100) * this.vendorTDS;
+        this.PurchaseCreateForm.controls['TDSRate'].setValue(tdsRate);
+      } else if (subTotalAmount > 0 && this.vendorLDC > '') {   // Calculate LDC based TDS rate based on TDS amount and set the value for TDSRate    
+        const tdsRate = (subTotalAmount / 100) * this.vendorLDC;
+        this.PurchaseCreateForm.controls['TDSRate'].setValue(tdsRate);
+      } else {
+        this.PurchaseCreateForm.controls['TDSRate'].setValue(0);
+      }
+    } else {
+      this.PurchaseCreateForm.controls['SubTotal'].setValue('');
+    }
+
+    return subTotalAmount
+
+  }
+
+
+  calculateTotalAmount(purchaseInfoTableValue?: any, methodType?: any) {
+
+    var subTotalAmount = this.TdsPercentageCalculation();
+    if (purchaseInfoTableValue) {
+      let officeInfo = this.officeList.find(x => x.ID == this.PurchaseCreateForm.value.Office);
+      if (this.officeCityId == officeInfo.StateId ? officeInfo.StateId : 0) {
+        let info = subTotalAmount * (purchaseInfoTableValue.GSTGroup / 100);
+        purchaseInfoTableValue.CGST = Math.trunc(info / 2);
+        purchaseInfoTableValue.SGST = Math.trunc(info / 2);
+        purchaseInfoTableValue.IGST = 0;
+      }
+      else {
+        let info = subTotalAmount * (purchaseInfoTableValue.GSTGroup / 100);
+        purchaseInfoTableValue.CGST = 0;
+        purchaseInfoTableValue.SGST = 0;
+        purchaseInfoTableValue.IGST = Math.trunc(info / 2);
+      }
+      this.PurchaseTableList[methodType == 'create' ? 0 : this.editSelectedIdex] = purchaseInfoTableValue;
+    }
+    this.editSelectedIdex = null;
+
+    var CGST = 0;
+    var SGST = 0;
+    var IGST = 0;
+
     this.PurchaseTableList.forEach(element => {
-      subTotalAmount += element.Amountccr;
+      CGST += element.CGST ? element.CGST : 0;
+      SGST += element.SGST ? element.SGST : 0;
+      IGST += element.IGST ? element.IGST : 0;
     });
-    this.PurchaseCreateForm.controls['SubTotal'].setValue(subTotalAmount);  // Handle the case when subTotalAmount is 0.
-   
-
-    if (subTotalAmount > 0 && this.vendorTDS > 0) {   // Calculate Section based TDS rate on TDS amount and set the value for TDSRate 
-      const tdsRate = (subTotalAmount /100 ) * this.vendorTDS ;
-      this.PurchaseCreateForm.controls['TDSRate'].setValue(tdsRate);
-    } else if(subTotalAmount > 0 && this.vendorLDC > '') {   // Calculate LDC based TDS rate based on TDS amount and set the value for TDSRate    
-      const tdsRate = (subTotalAmount /100 ) * this.vendorLDC ;
-      this.PurchaseCreateForm.controls['TDSRate'].setValue(tdsRate);
-    }else{
-      this.PurchaseCreateForm.controls['TDSRate'].setValue(0); 
-    }
-  } else {
-    this.PurchaseCreateForm.controls['SubTotal'].setValue('');
-  }
-
-  return subTotalAmount
-
-}
-
-
-calculateTotalAmount(purchaseInfoTableValue?: any, methodType?: any) {
-
-  var subTotalAmount = this.TdsPercentageCalculation();
-  if (purchaseInfoTableValue) {
-    let officeInfo = this.officeList.find(x => x.ID == this.PurchaseCreateForm.value.Office);
-    if (this.officeCityId == officeInfo.StateId ? officeInfo.StateId : 0) {
-      let info = subTotalAmount * (purchaseInfoTableValue.GSTGroup / 100);
-      purchaseInfoTableValue.CGST = Math.trunc(info / 2);
-      purchaseInfoTableValue.SGST = Math.trunc(info / 2);
-      purchaseInfoTableValue.IGST = 0;
-    }
-    else {
-      let info = subTotalAmount * (purchaseInfoTableValue.GSTGroup / 100);
-      purchaseInfoTableValue.CGST = 0;
-      purchaseInfoTableValue.SGST = 0;
-      purchaseInfoTableValue.IGST = Math.trunc(info / 2);
-    }
-    this.PurchaseTableList[methodType == 'create' ? 0 : this.editSelectedIdex] = purchaseInfoTableValue;
-  }
-  this.editSelectedIdex = null;
-
-  var CGST = 0;
-  var SGST = 0;
-  var IGST = 0;
-
-  this.PurchaseTableList.forEach(element => {
-    CGST += element.CGST ? element.CGST : 0;
-    SGST += element.SGST ? element.SGST : 0;
-    IGST += element.IGST ? element.IGST : 0;
-  });
 
     // Calculate TDS amount based on TDS rate and update the form controls
-    if(this.vendorTDS >0){
-      const tdsRate = (subTotalAmount /100 ) * this.vendorTDS ;
+    if (this.vendorTDS > 0) {
+      const tdsRate = (subTotalAmount / 100) * this.vendorTDS;
       this.PurchaseCreateForm.controls['TDSRate'].setValue(tdsRate);
-    }else{
-      const tdsRate = (subTotalAmount/100)* this.vendorLDC
+    } else {
+      const tdsRate = (subTotalAmount / 100) * this.vendorLDC
       this.PurchaseCreateForm.controls['TDSRate'].setValue(tdsRate);
-    }   
+    }
 
 
-    
+
     // Update form controls
     this.PurchaseCreateForm.controls['CGST'].setValue(CGST);
     this.PurchaseCreateForm.controls['SGST'].setValue(SGST);
     this.PurchaseCreateForm.controls['IGST'].setValue(IGST);
     this.getFinalCalculation();
-}
- getFinalCalculation(){
+  }
+  getFinalCalculation() {
 
-  let invoiceAmount = 0;
+    let invoiceAmount = 0;
 
-  // Calculate invoiceAmount based on amountccr and GSTGroup
-  this.PurchaseTableList.forEach(e => {
+    // Calculate invoiceAmount based on amountccr and GSTGroup
+    this.PurchaseTableList.forEach(e => {
       const amountccr = e.Amountccr; // Retrieve amountccr value from the current element e
       const gstCalculation = amountccr * (e.GSTGroup / 100);
-      if(e.IsRCM == true){
+      if (e.IsRCM == true) {
         invoiceAmount += gstCalculation;
-      }else{
+      } else {
         invoiceAmount += amountccr;
       }
-  });
-  
-  // Update form controls
-  this.PurchaseCreateForm.controls['InvoiceAmount'].setValue(invoiceAmount);
- }
+    });
+
+    // Update form controls
+    this.PurchaseCreateForm.controls['InvoiceAmount'].setValue(invoiceAmount);
+  }
 
 
   // calculateTotalAmount(purchaseInfoTableValue?: any, methodType?: any) {
@@ -1377,16 +1399,29 @@ calculateTotalAmount(purchaseInfoTableValue?: any, methodType?: any) {
   }
 
 
-toggleRCM(value: string) {
-  if (value === '1') {
-    this.isRCMChecked = true; // Set isRCMChecked to true if "YES" is selected
-    this.PurchaseCreateForm.get('IsRCM').setValue(true); // Check the checkbox
-  } else if (value === '0') {
-    this.isRCMChecked = false; // Set isRCMChecked to false if "NO" is selected
-    this.PurchaseCreateForm.get('IsRCM').setValue(false); // Uncheck the checkbox
+  toggleRCM(value: string) {
+    if (value === '1') {
+      this.isRCMChecked = true; // Set isRCMChecked to true if "YES" is selected
+      this.PurchaseCreateForm.get('IsRCM').setValue(true); // Check the checkbox
+    } else if (value === '0') {
+      this.isRCMChecked = false; // Set isRCMChecked to false if "NO" is selected
+      this.PurchaseCreateForm.get('IsRCM').setValue(false); // Uncheck the checkbox
+    }
+    this.getFinalCalculation();
   }
- this.getFinalCalculation();
-}
+
+  checkBranchState(branch) {
+    debugger
+    this.selectedBranchStateId = branch.SourceOfSupply;
+  }
+
+  checkSameState(){
+    if(this.selectedBranchStateId == this.selectedOfficeStateId){
+      this.isSameState = true
+    } else {
+      this.isSameState = false
+    }
+  }
 
 
 }
