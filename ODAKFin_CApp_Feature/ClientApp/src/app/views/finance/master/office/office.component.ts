@@ -77,7 +77,7 @@ export class OfficeComponent implements OnInit {
     if (filter) {
       var service = `${this.globals.APIURL}/Office/GetOrganizationOfficeFilter`;
       var payload: any = this.officeFilter.value;
-      payload.Active = payload.Active === 'true' ? 1 : 0;
+      payload.Active = payload.Active === 'true' ? 1 :payload.Active === 'false'? 0:'';
 
     }
     else {

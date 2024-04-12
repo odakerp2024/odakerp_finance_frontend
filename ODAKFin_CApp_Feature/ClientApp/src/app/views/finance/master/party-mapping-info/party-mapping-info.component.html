@@ -137,7 +137,8 @@
                             (ngModelChange)="partyChanges($event,true)" formControlName="FirstParty" name="Party" >
                             <ng-option [value]="''" [disabled]="true">--SELECT PARTY--</ng-option>
                             <ng-option *ngFor="let data of vendorsList" [value]="data.VendorID">
-                                {{data.VendorName | uppercase}}
+                                {{data.VendorName | uppercase}} - {{data.CityName | uppercase}}
+                                <!-- {{data.VendorName | uppercase}} - {{data.CityName | uppercase}} -->
                             </ng-option>
                           </ng-select>
 
@@ -154,7 +155,7 @@
                             (ngModelChange)="partyChanges($event,false)" formControlName="FirstParty" name="Party" >
                             <ng-option [value]="''" [disabled]="true">--SELECT PARTY--</ng-option>
                             <ng-option *ngFor="let data of customerList" [value]="data.CustomerID">
-                                {{data.CustomerName | uppercase}}
+                                {{data.CustomerName | uppercase}} - {{data.CityName | uppercase}}
                             </ng-option>
                           </ng-select>
                     </div>
@@ -218,7 +219,7 @@
                         (ngModelChange)="partyChanges($event,false)" formControlName="SecondParty" name="Party">
                             <ng-option [value]="''" [disabled]="true">--SELECT PARTY--</ng-option>
                             <ng-option *ngFor="let data of customerList" [value]="data.CustomerID">
-                                {{data.CustomerName | uppercase}}
+                                {{data.CustomerName | uppercase}} - {{data.CityName | uppercase}}
                             </ng-option>
                           </ng-select>
 
@@ -235,7 +236,7 @@
                             (ngModelChange)="partyChanges($event,true)" formControlName="SecondParty" name="Party">
                             <ng-option [value]="''" [disabled]="true">--SELECT PARTY--</ng-option>
                             <ng-option *ngFor="let data of vendorsList" [value]="data.VendorID">
-                                {{data.VendorName | uppercase}}
+                                {{data.VendorName | uppercase}} - {{data.CityName | uppercase}}
                             </ng-option>
                           </ng-select>
                     </div>

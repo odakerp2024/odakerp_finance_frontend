@@ -41,6 +41,7 @@ export class InternalInfoComponent implements OnInit {
   isUpdate: boolean = false;
   isFinalModeEnable: boolean = false; 
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
+  entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   minDate: string = this.datePipe.transform(new Date(), "yyyy-MM-dd");
   isCopyMode: boolean = false;
   CreatedBy: string = '';
@@ -281,6 +282,7 @@ export class InternalInfoComponent implements OnInit {
 
 
   addRow() {
+    debugger
     var validation = "";
     if (this.internalCreateForm.value.AccountId == "" || this.internalCreateForm.value.AccountId == 0) {
       validation += "<span style='color:red;'>*</span> <span>Please select Account.</span></br>"
@@ -346,8 +348,24 @@ export class InternalInfoComponent implements OnInit {
     this.internalTableList.map(x => {
       totalAmount += x.Amount;
     });
-    this.internalCreateForm.controls['TotalAmount'].setValue(totalAmount);
-  }
+
+    const fixedTotalAmount = totalAmount.toFixed(this.entityFraction); // Fixed to three decimal places
+    this.internalCreateForm.controls['TotalAmount'].setValue(fixedTotalAmount);
+}
+
+
+//   CalculateTotalAmount() {
+
+//     // this.purchaseCreateForm.controls['Amount'].setValue(this.purchaseCreateForm.value.Rate * this.purchaseCreateForm.value.Quantity).toFixed(entityFraction);
+//     const rate = this.internalCreateForm.value.Rate;
+// const quantity = this.internalCreateForm.value.Quantity;
+// const entityFraction = this.entityFraction; // assuming this is a valid number
+
+//     // this.purchaseCreateForm.controls['Amount'].setValue(this.purchaseCreateForm.value.Rate * this.purchaseCreateForm.value.Quantity.toFixed(this.entityFraction));
+//     const calculatedAmount = (rate * quantity).toFixed(entityFraction);
+    
+//     this.internalCreateForm.controls['Amount'].setValue(calculatedAmount);
+//    }
 
   setPage(page: number) {
     this.pager = this.ps.getPager(this.internalTableList.length, page);
@@ -529,6 +547,22 @@ export class InternalInfoComponent implements OnInit {
   totalAmountCalculation(event) {
     this.internalCreateForm.controls['Amount'].setValue(this.internalCreateForm.value.Rate * this.internalCreateForm.value.Quantity);
   }
+
+
+  
+//   totalAmountCalculation(event) {
+//     debugger
+
+//     // this.purchaseCreateForm.controls['Amount'].setValue(this.purchaseCreateForm.value.Rate * this.purchaseCreateForm.value.Quantity).toFixed(entityFraction);
+//     const rate = this.internalCreateForm.value.Rate;
+// const quantity = this.internalCreateForm.value.Quantity;
+// const entityFraction = this.entityFraction; // assuming this is a valid number
+
+//     // this.purchaseCreateForm.controls['Amount'].setValue(this.purchaseCreateForm.value.Rate * this.purchaseCreateForm.value.Quantity.toFixed(this.entityFraction));
+//     const calculatedAmount = (rate * quantity).toFixed(entityFraction);
+    
+//     this.internalCreateForm.controls['Amount'].setValue(calculatedAmount);
+//    }
 
   OnClickRadio(event) {
     this.editSelectedIdex = event;
