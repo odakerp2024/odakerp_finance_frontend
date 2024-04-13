@@ -803,6 +803,7 @@ getbyId(selectedCreditApplicationId: any) {
     // }
 
     // Proposed Credit Limit
+    if(!Table.IsRevoke && !this.requestType){
     if (!Table.CreditLimitDays) {
       validation +=
         "<span style='color:red;'>*</span> <span>Please select Limit Days .</span></br>";
@@ -818,9 +819,32 @@ getbyId(selectedCreditApplicationId: any) {
         "<span style='color:red;'>*</span> <span>Please select Post Dated Cheques .</span></br>";
     }
 
-    // if (!Table.RequestRemarks) {
-    //   validation += "<span style='color:red;'>*</span> <span>Please Enter The Remarks .</span></br>"
-    // }
+    if (!Table.RequestRemarks) {
+      validation += "<span style='color:red;'>*</span> <span>Please Enter The Remarks .</span></br>"
+    }
+  }
+  if(this.requestType && Table.IsRevise){
+    debugger
+  if (!this.ReviseCreditLimitDays) {
+    validation +=
+      "<span style='color:red;'>*</span> <span>Please select Limit Days .</span></br>";
+  }
+
+  if (!this.ReviseCreditLimitAmount) {
+    validation +=
+      "<span style='color:red;'>*</span> <span>Please select Credit Amount.</span></br>";
+  }
+
+  if (this.RevisePostDatedCheques === "") {
+    validation +=
+      "<span style='color:red;'>*</span> <span>Please select Post Dated Cheques .</span></br>";
+  }
+
+  if (!this.ReviseRequestRemarks) {
+    validation += "<span style='color:red;'>*</span> <span>Please Enter The Remarks .</span></br>"
+  }
+}
+
 
     if (Table.StatusId === "") {
       validation +=
@@ -1413,12 +1437,11 @@ getbyId(selectedCreditApplicationId: any) {
   }
 
   getWQuestions(list: any = []) {
+    debugger
     const Table = this.creditApplicationForm.value;
-
     const payload = {
       Division: +Table.DivisionId,
     };
-
     debugger;
     this.creditApplicationService.getQuestionAndDropdown(payload).subscribe(
       (result: any) => {
@@ -1427,19 +1450,27 @@ getbyId(selectedCreditApplicationId: any) {
         }
         if (result.message == "Success") {
           if (list.length > 0) {
-            this.questionArray = list;
+              if (this.requestType) {
+                  // If requestType is true, set CreditValidationId to 0
+                  this.questionArray = list.map((question: any) => ({
+                      CreditValidationId: 0,
+                      CreditApplicationId: question.CreditApplicationId,
+                      CreditQuestions: question.CreditQuestions,
+                      Response: question.Response,
+                  }));
+              } else {
+                  // Otherwise, retain the original list
+                  this.questionArray = list;
+              }
           } else {
-            const finalQuestionList = [];
-            result.data.Table1.map((question) => {
-              debugger;
-              const obj = {
-                CreditValidationId: 0,
-                CreditApplicationId: 0,
-                CreditQuestions: question.CreditQuestions,
-                Response: "",
-              };
-              finalQuestionList.push(obj);
-            });
+              // If list is empty, create new array with CreditValidationId set to 0
+              const finalQuestionList = result.data.Table1.map((question: any) => ({
+                  CreditValidationId: 0,
+                  CreditApplicationId: 0,
+                  CreditQuestions: question.CreditQuestions,
+                  Response: "",
+              }));
+                   
             this.questionArray = finalQuestionList;
             this.dropDownOptions = [...result.data.Table];
           }
