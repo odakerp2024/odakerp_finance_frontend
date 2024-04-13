@@ -104,7 +104,7 @@
                         <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'PartyId'"(change)="partyEvent($event)">
                             <ng-option [value]="0" disabled>--SELECT PARTY--</ng-option>
                             <ng-option *ngFor="let customer of customerList"  [value]="customer.CustomerID">
-                                <span class="textwrap">{{customer.CustomerName | uppercase}}</span>
+                                <span class="textwrap">{{customer.CustomerName | uppercase}} - {{customer.CityName | uppercase}}</span>
                             </ng-option>
                         </ng-select> 
                     </div>
