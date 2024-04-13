@@ -112,10 +112,10 @@
             <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                 <div class="form-group">
                     <label>Provision Type</label>
-                    <ng-select  class="searchdropdown"  formControlName="ProvisionType" [clearable]="false" name="provision">
+                    <ng-select  class="searchdropdown"  formControlName="ProvisionType" [clearable]="false" name="ProvisionType">
                         <ng-option  [value]="0" disabled>--SELECT PROVISION TYPE--</ng-option>                    
-                        <ng-option value="1">FULL</ng-option>
-                        <ng-option value="0">PARTIAL</ng-option>             
+                        <ng-option [value]="1">PARTIAL</ng-option>             
+                        <ng-option [value]="2">FULL</ng-option>
                     </ng-select>  
                 </div>
             </div>            
@@ -493,7 +493,7 @@
                                          </ng-select>                        
                                     </td>
                                     <td>
-                                        <input type="checkbox" (change)="toggleRCM($event.target.checked)" [checked]="isRCMChecked">
+                                        <input type="checkbox" formControlName="IsRCM" >
                                     </td>
                                                                         
                                     <td> </td>
@@ -506,9 +506,9 @@
                                     <td>{{data.CurrencyName}}</td>
                                     <td>{{data.ExRate ? data.ExRate : 1}}</td>
                                     <td>{{data.Amountccr}}</td>
-                                    <td>{{data.Tds}}</td>
+                                    <td>{{data.TDSName}}</td>
                                     <td>{{data.GSTGroup ? data.GSTGroup :0}} %</td>
-                                    <td><input type="checkbox" [checked]="data.IsRCM"></td>
+                                    <td><input class='disable-input' type="checkbox" [checked]="data.IsRCM"></td>
                                     <td>
                                         <input class="vertal checkbox" type="radio" name="AlertCheck" id="RadioCheck"
                                             (click)="OnClickRadio(i)" />
@@ -617,7 +617,7 @@
                             </div>
                             <div>
                                 <div class="form-group ml-5">
-                                    <ng-select style="width:250px"class="searchdropdown" formControlName="Bankdetails" [clearable]="false"  name="bank">
+                                    <ng-select style="width:250px"class="searchdropdown" formControlName="BankId" [clearable]="false"  name="bank">
                                         <ng-option [value]="''" >--SELECT BANK--</ng-option>
                                         <ng-option *ngFor="let bank of bankList" [value]="bank.BankID">
                                             {{ bank.BankName | uppercase }} - {{ bank.AccountNo | uppercase }}
@@ -675,7 +675,7 @@
                         <div class="col-md-6 col-sm-6 col-lg-10 col-xl-12">
                             <div class="form-group">
                                 <label>SGST</label>
-                                <input  formControlName="SGST" class="form-control" placeholder="SGST"
+                                <input  readonly formControlName="SGST" class="form-control" placeholder="SGST"
                                     type="number" id="SubTotal">
                             </div>
                         </div>
@@ -683,7 +683,7 @@
                         <div class="col-md-6 col-sm-6 col-lg-10 col-xl-12">
                             <div class="form-group">
                                 <label>CGST</label>
-                                <input  formControlName="CGST" class="form-control" placeholder="CGST"
+                                <input readonly formControlName="CGST" class="form-control" placeholder="CGST"
                                     type="number" id="SubTotal">
                             </div>
                         </div>
@@ -691,7 +691,7 @@
                         <div class="col-md-6 col-sm-6 col-lg-10 col-xl-12">
                             <div class="form-group">
                                 <label>IGST</label>
-                                <input  formControlName="IGST" class="form-control" placeholder="IGST"
+                                <input readonly formControlName="IGST" class="form-control" placeholder="IGST"
                                     type="number" id="SubTotal">
                             </div>
                         </div>
@@ -753,11 +753,11 @@
                         class="btn btn-warning text-white mr-3 mb-0 col-auto">
                         Delete
                     </button> -->
-                    <button type="button"(click)="saveInfo(3)"
-                        class="btn btn-primary text-white mr-3 mb-0 col-auto"
-                        style="background-color: #19a84c !important;border: #19a84c;border: 1px solid #19a84c !important;">
-                        Print
-                    </button>
+                    <button type="submit" class="btn btn-danger btntop btn-raised" (click)="ViewPage()">Cancel</button>
+                    <!-- <button type="button"(click)="saveInfo(3)"
+                        class="btn btn-danger text-white mr-3 mb-0 col-auto">
+                        Cancel
+                    </button> -->
                 </div>
             </div>
         </form>
