@@ -220,7 +220,7 @@ export class DivisionInfoComponent implements OnInit {
           DividionName: info.DivisionName,
           ShortName: info.ShortName,
           Application: info.Application,
-          Active: info.Active == true ? 'YES' : 'NO',
+          Active: info.Active == true ? 'true' : 'false',
           createdDate: this.datePipe.transform(info.createdDate, 'y-MM-dd'),
           ModifiedDate: this.datePipe.transform(info.ModifiedDate, 'y-MM-dd'),
           CreatedBy: info.CreatedBy,
