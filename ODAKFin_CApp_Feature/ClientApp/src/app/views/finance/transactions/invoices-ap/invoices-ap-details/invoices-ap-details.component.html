@@ -97,7 +97,7 @@
                         <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'PartyId'"(change)="partyEvent($event)">
                             <ng-option [value]="0" disabled>--SELECT PARTY--</ng-option>
                             <ng-option *ngFor="let vendor of vendorsList" [value]="vendor.VendorID">
-                                <span class="textwrap">{{vendor.VendorName | uppercase}}</span>
+                                <span class="textwrap">{{vendor.VendorName | uppercase}} - {{vendor.CityName | uppercase}}</span>
                             </ng-option>
                         </ng-select> 
                     </div>
