@@ -61,7 +61,8 @@
                         <ng-select  class="searchdropdown"  
                         (change)="handleChange($event)" [clearable]="false">
                             <ng-option [value]="''" disabled>--SELECT PREVIOUS APPLICATION NUMBER--</ng-option>
-                            <ng-container  *ngFor="let application of creditApplicationList">
+                            <!-- <ng-container  *ngFor="let application of creditApplicationList" > -->
+                                <ng-container *ngFor="let application of filteredApplications">
                               <ng-option   [value]="application.CreditApplicationId" >
                                 <span class="textwrap"> {{application.CreditApplicationNumber }}</span>
                                
@@ -487,9 +488,10 @@
                             </div>
             
                             <div class="col-12">
-                                <label for="" class="">Request Remarks</label><br>
-                                <textarea class="p-1 form-control w-50" name="" cols="50" rows="3"
-                                    formControlName="RequestRemarks"></textarea>
+                                <label for="" class="str">Request Remarks</label><br>
+                                <textarea class="p-1 form-control w-50" name="" cols="50" rows="3" 
+                                [(ngModel)]="RequestRemarks"  [ngModelOptions]="{standalone: true}" ></textarea>
+                                <!-- formControlName="RequestRemarks"> -->
                             </div>
                         </div>
             </div>
@@ -531,9 +533,10 @@
                                 </div>
                 
                                 <div class="col-12">
-                                    <label for="" class="">Request Remarks</label><br>
+                                    <label for="" class="str">Request Remarks</label><br>
                                     <textarea class="p-1 form-control w-50" name="" cols="50" rows="3"
-                                        formControlName="RequestRemarks"></textarea>
+                                    [(ngModel)]="RequestRemarks1"  [ngModelOptions]="{standalone: true}"></textarea>
+                                        <!-- formControlName="RequestRemarks"></textarea> -->
                                 </div>
                             </div>
                     
@@ -577,7 +580,7 @@
                                 </div>
                 
                                 <div class="col-12">
-                                    <label for="" class="">Request Remarks</label><br>
+                                    <label for="" class="str">Request Remarks</label><br>
                                     <textarea class="p-1 form-control w-50" [(ngModel)]="ReviseRequestRemarks" [ngModelOptions]="{standalone: true}" name="" cols="50" rows="3"
                                         ></textarea>
                                 </div>
@@ -653,14 +656,15 @@
                 </div>
 
                 <div class="col-12 m-auto text-right hide-element-print">
-                    
-                        <button type="submit" [ngClass]=" !isEditMode ? 'disable-input--style' : ''"
+                   
+                        <button type="submit" [ngClass]=" !isEditMode && !IsSave ? 'disable-input--style' : ''"
+                       
                             class="btn btn-primary btn-raised mb-0" (click)="confirmFunction(SAVE_TYPE)">
                             Save
                         </button>
 
 
-                        <button type="submit" [ngClass]=" !isEditMode  || !isUpdate ? 'disable-input--style' : ''"
+                        <button type="submit" [ngClass]=" ((!isEditMode  || !isUpdate) && !IsSave) ? 'disable-input--style' : ''"
                             class="btn btn-primary btn-raised mb-0" (click)="confirmFunction(FINAL_TYPE)">
                             Submit for Approval
                         </button>
