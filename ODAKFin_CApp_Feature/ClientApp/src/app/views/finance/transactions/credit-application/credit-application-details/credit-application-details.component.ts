@@ -80,6 +80,7 @@ export class CreditApplicationDetailsComponent implements OnInit {
   customerBranchid: any;
   result: any;
   creditApplicationList = [];
+  filteredApplications: any[] = [];
   // creditType: string = "Revise";
   requestType: boolean =false;
   isGetByIdInProgress = false;
@@ -90,7 +91,7 @@ export class CreditApplicationDetailsComponent implements OnInit {
   ReviseCreditLimitAmount: any;
   RevisePostDatedCheques: any;
   ReviseRequestRemarks: any;
-
+  IsSave :boolean =  false;
   constructor(
     private ps: PaginationService,
     private fb: FormBuilder,
@@ -127,11 +128,9 @@ export class CreditApplicationDetailsComponent implements OnInit {
     // this.getCustomerDropDown();
     // this.getById();
     this.route.params.subscribe(async (param) => {
-      // debugger
       this.creditId = +param["creditId"] ? +param["creditId"] : 0;
       if (this.creditId) {
-        this.isUpdate = true;
-        debugger;
+        this.isUpdate = true;       
         this.getById();
       }
     });    
@@ -183,19 +182,17 @@ export class CreditApplicationDetailsComponent implements OnInit {
     };
 
     this.creditApplicationService.getById(payload).subscribe((result: any) => {
-      debugger;
       if (result.message == "Success") {
         if (result.data.Table.length) {
           // this.customerBranchList = []
           this.customerBranchid = result.data.Table[0].CustomerBranchId;
           this.salesPersonid = result.data.Table[0].SalesPersonId;
           const Table = result.data.Table[0];
-        //  this.getCustomerBranchCode(Table.CustomerId);
+          // this.getCustomerBranchCode(Table.CustomerId);
           this.getOfficeList(Table.DivisionId); // get office list
           // this.getBranch(false, +Table.CustomerId)
 
-          if (Table.StatusId === 2) {
-            debugger;
+          if (Table.StatusId === 2) {        
             this.IsFinal = true;
           }
           // if(this.IsRevoke == true && this.IsRevise == false){
@@ -242,13 +239,12 @@ export class CreditApplicationDetailsComponent implements OnInit {
         }
 
         if (result.data.Table2) {
-          // debugger
+          // 
           this.documentList = result.data.Table2;
           this.documentInfo = this.constructDocumentPayload(this.documentList);
         }
 
-        if (result.data.Table1) {
-          debugger;
+        if (result.data.Table1) {        
           this.questionArray = result.data.Table1;
         }
         this.reset();       
@@ -265,8 +261,7 @@ export class CreditApplicationDetailsComponent implements OnInit {
     this.ReviseRequestRemarks = "";
   }
 
-  getCreditApplication() {
-    debugger
+  getCreditApplication() {    
     const payload = {
       "CreditApplicationId": "",
       "CreditApplicationNumber": "",
@@ -287,19 +282,26 @@ export class CreditApplicationDetailsComponent implements OnInit {
     this.creditApplicationService.getList(payload).subscribe((result: any) => {
       if (result.message == 'Success') {
         this.creditApplicationList = result.data.Table;
-         
+        this.applyFilter();
+        
       }
     })
   }
- 
+  applyFilter() {
+    this.filteredApplications = this.creditApplicationList.filter((application) =>
+      application.Status === 'Approved' && !application.IsRevise && !application.IsRevoke
+    );
+  }
+  
+  
+
   handleChange(event: any) {
     const selectedCreditApplicationId = event;
 
     this.getbyId(selectedCreditApplicationId);
   }
 
-getbyId(selectedCreditApplicationId: any) {
-  debugger
+getbyId(selectedCreditApplicationId: any) {  
     const payload = {
         CreditApplicationId: selectedCreditApplicationId,
     };
@@ -375,14 +377,15 @@ getbyId(selectedCreditApplicationId: any) {
                 if (this.creditApplicationForm.value.IsRevoke) {
                   this.creditApplicationForm.patchValue({
                       CreditLimitDays: 0,
-                      CreditLimitAmount: 0
+                      CreditLimitAmount: 0,
+                      RequestRemarks : ''
                   });
               }
                 this.getWQuestions(result.data.Table1);
             }
 
             if (result.data.Table2) {
-                // debugger
+                // 
                 this.documentList = result.data.Table2;
                 this.documentInfo = this.constructDocumentPayload(this.documentList);
             }
@@ -511,6 +514,7 @@ getbyId(selectedCreditApplicationId: any) {
 
   //  * construct the payload for save and final
   constructPayload() {
+    debugger
     if (!this.isUpdate) {
       this.creditApplicationForm.value.SalesPersonId = 
            this.customerDetail["data"] .Table2[0].SalesId;
@@ -525,7 +529,6 @@ getbyId(selectedCreditApplicationId: any) {
       Table.IsRevise = false;
       Table.IsRevoke = false;
     }
-
     let payload = {
       CreditApplication: {
         Table: [
@@ -560,16 +563,17 @@ getbyId(selectedCreditApplicationId: any) {
             Trade: +Table.Trade,
             ApprovedDate: "",
           },
-        ],
+        ],    
         Table1: [
           ...this.questionArray,
+          
           // {
           //     "CreditValidationId":0,
           //     "CreditApplicationId":0,
           //     "CreditQuestions":"Its me Kavi",
           //     "Response":"Yes"
           // }
-        ],
+      ],
         Table2: [...this.documentList],
       },
     };
@@ -578,7 +582,8 @@ getbyId(selectedCreditApplicationId: any) {
   }
   //  * credit save
   confirmFunction(type) {
-    debugger;
+   
+    debugger
     const validation = this.validationCheck();
     // *  validation check
     if (validation != "") {
@@ -598,7 +603,7 @@ getbyId(selectedCreditApplicationId: any) {
       allowOutsideClick: false,
     }).then(async (result) => {
       if (result.isConfirmed) {
-        debugger;
+       
         switch (type) {
           case this.SAVE_TYPE:
             this.saveCredit();
@@ -663,7 +668,6 @@ getbyId(selectedCreditApplicationId: any) {
     // const ApprovedDetails = this.applicationStatus.find(
     //   (status) => status.Status === "Approved"
     //);
-    debugger;
     let payload = this.constructPayload();
     payload.CreditApplication.Table[0].StatusId = 2; // ! set save type(draft(1) or final(2) or canceled(3));
     payload.CreditApplication.Table[0].ApplicationStatus = PendingApprovalDetails.Id;
@@ -728,7 +732,8 @@ getbyId(selectedCreditApplicationId: any) {
 
     var validation = "";
 
-    if (validationMessage) {
+    if (validationMessage && !this.requestType) {
+      debugger
       validation +=
         "<span style='color:red;'>*</span> <span>Please response to the questions it is mandatory</span><br>";
     }
@@ -824,7 +829,7 @@ getbyId(selectedCreditApplicationId: any) {
     }
   }
   if(this.requestType && Table.IsRevise){
-    debugger
+    
   if (!this.ReviseCreditLimitDays) {
     validation +=
       "<span style='color:red;'>*</span> <span>Please select Limit Days .</span></br>";
@@ -925,7 +930,6 @@ getbyId(selectedCreditApplicationId: any) {
 
   getTradeList() {
     
-    debugger;
     this.creditApplicationService.getTradeList({}).subscribe((result: any) => {
       if (result.message == "Success") {
         this.getTradeLists = result.data.Table;
@@ -934,7 +938,6 @@ getbyId(selectedCreditApplicationId: any) {
   }
 
   getCustomerAndBranch() {
-    debugger;
     this.creditApplicationService
       .getCustomerAndBranch({})
       .subscribe((result: any) => {
@@ -1030,7 +1033,7 @@ getbyId(selectedCreditApplicationId: any) {
       }
     });
   }
-
+ 
   checkAutoSectionItem(sectionInfo: any, runningNumber: any, Code: string) {
     var sectionA = "";
     var sectionB = "";
@@ -1253,7 +1256,7 @@ getbyId(selectedCreditApplicationId: any) {
 
   //  * update the sales person value form the customer after branch selected
   updateSalesPerson() {
-    debugger
+    
     const CustomerId = this.creditApplicationForm.value.CustomerId;
     const selectedCustomerDetails = this.customerAndBranchList.find(
       (customer) => customer.CustomerID == CustomerId
@@ -1266,14 +1269,15 @@ getbyId(selectedCreditApplicationId: any) {
   }
 
   getCustomerFullDetail(event: any) {
-    this.updateSalesPerson();
+    
+     this.updateSalesPerson();
     if (this.customerBranchList.length > 1) {
       var inputRequest = {
         CustomerBranchID: this.customerBranchList[0].CustomerBranchID,
         CustomerID: this.creditApplicationForm.value.CustomerId,
       };
     } else {
-      debugger;
+      ;
       var inputRequest = {
         CustomerBranchID: event,
         CustomerID: this.creditApplicationForm.value.CustomerId,
@@ -1288,21 +1292,22 @@ getbyId(selectedCreditApplicationId: any) {
       .getCustomerId(inputRequest)
       .pipe()
       .subscribe((response) => {
-        debugger;
+        
         this.customerDetail = response;
-          this.salesPersonid = response["data"].Table2[0].SalesId
+          //this.salesPersonid = response["data"].Table2[0].SalesId
         console.log(response, "aekhfuieashufg");
-        // debugger
+        // 
         const doc = this.customerDetail["data"].Table3;
         this.creditApplicationForm.value.SalesPersonId =
           this.customerDetail["data"].Table2[0].SalesId;
+          this.patchCustomerData(this.customerDetail);
         this.documentInfo = this.constructDocumentPayload(doc);
-        this.patchCustomerData(this.customerDetail);
+       
       });
     this.customerService
       .getCustomerBranchDuplicate(payloads)
       .subscribe((result: any) => {
-        debugger;
+       
         if (result.message == "Success") {
           console.log(result.data, "result");
         } else {
@@ -1314,7 +1319,6 @@ getbyId(selectedCreditApplicationId: any) {
   }
 
   getCustomerBranchCode(event: any) {
-    debugger;
     let service = `${this.globals.APIURL}/ReceiptVoucher/GetReceiptVoucherDropDownList`;
     this.dataService
       .post(service, { CustomerId: event })
@@ -1363,7 +1367,7 @@ getbyId(selectedCreditApplicationId: any) {
 
   // * get Branch dropdown list
   // getBranch(isSelectBranch= false, event) {
-  //   debugger
+  //   
   //   const CustomerId = this.creditApplicationForm.value.CustomerId ? this.creditApplicationForm.value.CustomerId :event;
   //   this.customerBranchList = this.customerAndBranchList.filter((customer) => customer.CustomerID == CustomerId);
   //   if(this.customerBranchList.length){
@@ -1407,8 +1411,8 @@ getbyId(selectedCreditApplicationId: any) {
   }
 
   // * patch customer details when customer selected form the dropdown
-  patchCustomerData(customer: any) {
-    debugger;
+  patchCustomerData(customer) {
+    ;
     this.creditApplicationForm.controls["CustomerStatus"].setValue(
       customer.data.Table1[0].IsActive ? 1 : 0
     );
@@ -1442,7 +1446,8 @@ getbyId(selectedCreditApplicationId: any) {
     const payload = {
       Division: +Table.DivisionId,
     };
-    debugger;
+  
+    debugger
     this.creditApplicationService.getQuestionAndDropdown(payload).subscribe(
       (result: any) => {
         if (result.message == "Success") {
@@ -1524,8 +1529,13 @@ getbyId(selectedCreditApplicationId: any) {
               Swal.fire('Please Contact Administrator');            
           }
           else {
+            if(!this.requestType){
             this.enableEditForm();
             this.editMode();
+            }
+            else{
+              this.IsSave = true;
+            }            
           }
         }
         else {
