@@ -31,6 +31,7 @@ export class InvoicesArDetailsComponent implements OnInit {
   CreatedBy: string = '';
   statusList: any = [];
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
+  entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   invoiceForm: any;
   partyList = [];
   documentTableList = [];
@@ -150,8 +151,8 @@ export class InvoicesArDetailsComponent implements OnInit {
         });
         this.receiptList = result['data'].Table1;
         this.openInvoiceList = result['data'].Table1;
-        this.TotalDebitAmount = tableInfo.TotalDebitAmount;
-        this.TotalCreditAmount = tableInfo.TotalCreditAmount;
+        this.TotalDebitAmount = tableInfo.TotalDebitAmount.toFixed(this.entityFraction);
+        this.TotalCreditAmount = tableInfo.TotalCreditAmount.toFixed(this.entityFraction);
         if (result['data'].Table3.length > 0) this.FileList = result['data'].Table3;
       }
     }, error => { console.error(error) });
