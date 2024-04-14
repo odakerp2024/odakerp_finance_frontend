@@ -157,11 +157,14 @@
                                             [value]="receipt.PendingAmount" type="text">
                                     </td>
                                     <td>
-                                        <input [ngClass]=" isUpdateMode ? 'block-set-off-input' : ''"
+                                        <input onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                        min="0" numbersOnly
+                                        appDynamicDecimal
+                                        [ngClass]=" isUpdateMode ? 'block-set-off-input' : ''"
                                             [readonly]="isUpdateMode" Style="max-width:60px"
                                             (change)="setOffChangeEvent($event,i,'Receipts');"
                                             class="text-center" formControlName="AdjustedAmount"
-                                            [value]="receipt.AdjustedAmount" min="1" type="number" RemoveSpecialChars>
+                                            [value]="receipt.AdjustedAmount" min="1" type="number" Style="max-width:90px">
                                     </td>
                                     <td>
                                         <input (change)="onSelectEvent(i,'Receipts')" Style="max-width:40px" formControlName="IsSelect"
@@ -226,11 +229,14 @@
                                             [value]="invoice.PendingAmount" type="text">
                                     </td>
                                     <td>
-                                        <input [readonly]="isUpdateMode" Style="max-width:70px"
+                                        <input onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                        min="0" numbersOnly
+                                        appDynamicDecimal 
+                                        [readonly]="isUpdateMode" Style="max-width:70px"
                                             [ngClass]=" isUpdateMode ? 'block-set-off-input' : ''"
                                             (ngModelChange)="setOffChangeEvent($event,i,'Invoices');"
                                             class="text-center" formControlName="AdjustedAmount"
-                                            [value]="invoice.AdjustedAmount" min="1" type="number" RemoveSpecialChars>
+                                            [value]="invoice.AdjustedAmount" min="1" type="number" Style="max-width:90px">
                                     </td>
                                     <td>
                                         <input (change)="onSelectEvent(i,'Invoices')" Style="max-width:40px" formControlName="IsSelect"

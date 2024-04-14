@@ -129,8 +129,8 @@ export class ExchangeRateviewComponent implements OnInit {
       "PairId": this.fg.value.PairId,
       //  "EffectiveDate": this.fg.value.EffectiveDate,
       "StartDate": this.fg.value.StartDate,
-      "EndDate": this.fg.value.EndDate
-      // "isActive": this.fg.value.IsActive
+      "EndDate": this.fg.value.EndDate,
+       "IsActive": 1
     }
     this.ERService.getExchangeRateFilter(queryParams).subscribe(data => {
       if (data["data"].length == 0) { this.Is_DataFound = false; }
