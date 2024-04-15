@@ -187,11 +187,12 @@
                                             </option>
                                         </select> -->
 
+                                        <!-- [disabled]="categoryDisableList.includes(gRow.CategoryID)" -->
                                         <mat-select id="ddlCategory" formControlName="CategoryId"
                                             (selectionChange)="categorySelected($event)"
                                             placeholder=" --SELECT CATEGORY--" class="form-control" multiple>
                                             <ng-container *ngFor="let gRow of categoryList">
-                                                <mat-option [disabled]="categoryDisableList.includes(gRow.CategoryID)"
+                                                <mat-option 
                                                     [value]="gRow.CategoryID">
                                                     {{gRow.Category | uppercase}}
                                                 </mat-option>
@@ -238,6 +239,7 @@
                             </div>
                         </div>
                         <div class="col-md-4"></div>
+                        <!-- [disabled]="divisionDisableList.includes(gRow.ID)" -->
                         <div class="col-md-4">
                             <div class="form-group">
                                 <div class="row">
@@ -247,7 +249,7 @@
                                             (selectionChange)="customerDivision($event)"
                                             placeholder="-- SELECT VENDOR OF DIVISION--" class="form-control" multiple>
                                             <ng-container *ngFor="let gRow of divisionList">
-                                                <mat-option [disabled]="divisionDisableList.includes(gRow.ID)"
+                                                <mat-option
                                                     *ngIf="gRow.Active" [value]="gRow.ID">
                                                     {{gRow.DivisionName | uppercase}}
                                                 </mat-option>
