@@ -346,7 +346,7 @@ getbyId(selectedCreditApplicationId: any) {
               
               this.isEditMode = true;
               this.creditApplicationForm.patchValue({
-                    // CreditApplicationId: Table.CreditApplicationId,
+                    //  OldCreditApplicationId: Table.CreditApplicationId,
                     CreditApplicationId: 0,
                     // CreditApplicationNumber: Table.CreditApplicationNumber,
                     // ApplicationDate: this.datePipe.transform(
@@ -720,10 +720,17 @@ getbyId(selectedCreditApplicationId: any) {
   //  * validation check all the required fields are present
   validationCheck() {
     // "CreditApplicationId": Table.CreditApplicationId,
-
+debugger
     const Table = this.creditApplicationForm.value;
+    const Table2 = this.documentList;
     const Table1 = this.questionArray;
     var validationMessage = false;
+    var validationMessage1 = false;
+
+      if(Table2.length == 0){
+        debugger            
+            validationMessage1 = true;
+      }
 
     if (Table1.length > 0) {
       Table1.forEach((item) => {
@@ -738,6 +745,10 @@ getbyId(selectedCreditApplicationId: any) {
 
     var validation = "";
 
+    if (validationMessage1) {
+      validation +=
+        "<span style='color:red;'>*</span> <span>Please Upload a Document</span><br>";
+    }
     if (validationMessage) {
       validation +=
         "<span style='color:red;'>*</span> <span>Please response to the questions it is mandatory</span><br>";
