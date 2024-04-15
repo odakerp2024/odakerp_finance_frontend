@@ -179,7 +179,7 @@
                                                 {{gRow.CountryName | uppercase}}
                                             </option>
                                         </select> -->
-                                        <ng-select class="searchdropdown" [ngClass]=" isUpdate ? 'block-input' : ''"
+                                        <ng-select class="searchdropdown"
                                             [clearable]="false" name="Country" id="ddlCountry"
                                             formControlName="CountryID" (ngModelChange)="getStateList($event)">
                                             <ng-option [value]="0" [disabled]="true">--SELECT COUNTRY--</ng-option>
@@ -214,10 +214,10 @@
                                             </option>
                                         </select> -->
 
-
+                                        <!-- [disabled]="selectedCategoryList.includes(gRow.CategoryID)" -->
                                         <mat-select id="ddlCategory" name="Category" formControlName="Category"
                                             placeholder="Category" class="form-control" multiple>
-                                            <mat-option [disabled]="selectedCategoryList.includes(gRow.CategoryID)"
+                                            <mat-option 
                                                 *ngFor="let gRow  of categoryList" [value]="gRow.CategoryID">
                                                 {{gRow.Category | uppercase}}
                                             </mat-option>
@@ -267,7 +267,7 @@
                         </div>
                         <div class="col-md-4">
                         </div>
-
+                        <!-- [disabled]="divisionDisableList.includes(gRow.ID)" -->
                         <div class="col-md-4">
                             <div class="form-group">
                                 <div class="row">
@@ -280,7 +280,7 @@
                                             placeholder="Customer of Division(s)"
                                             (selectionChange)="selectedDivision($event.value)" class="form-control"
                                             multiple>
-                                            <mat-option [disabled]="divisionDisableList.includes(gRow.ID)"
+                                            <mat-option 
                                                 *ngFor="let gRow of divisionList" [value]="gRow.ID">
                                                 {{gRow.DivisionName | uppercase}}
                                             </mat-option>
