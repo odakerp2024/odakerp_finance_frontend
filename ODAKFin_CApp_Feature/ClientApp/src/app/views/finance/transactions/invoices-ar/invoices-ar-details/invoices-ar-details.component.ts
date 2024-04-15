@@ -310,7 +310,7 @@ export class InvoicesArDetailsComponent implements OnInit {
       const controlAtIndex = this.ReceiptInfo.at(index);
        const pendingAmount = this.newReceiptList.at(index).PendingAmount - controlAtIndex.value.AdjustedAmount;
        if (pendingAmount >= 0) {
-        controlAtIndex.patchValue({ PendingAmount: pendingAmount });
+        controlAtIndex.patchValue({ PendingAmount: pendingAmount.toFixed(this.entityFraction) });
       }
      else {
        Swal.fire('Your amount has exceeded the limit!');
@@ -323,7 +323,7 @@ export class InvoicesArDetailsComponent implements OnInit {
       const controlAtIndex = this.OpenInvoiceInfo.at(index);
       const pendingAmount = this.newInvoiceList.at(index).InvoiceAmount - controlAtIndex.value.AdjustedAmount;
       if (pendingAmount >= 0) {
-        controlAtIndex.patchValue({ PendingAmount: pendingAmount });
+        controlAtIndex.patchValue({ PendingAmount: pendingAmount.toFixed(this.entityFraction) });
       }  
       else {
         Swal.fire('Your amount has exceeded the limit!');
@@ -358,7 +358,7 @@ export class InvoicesArDetailsComponent implements OnInit {
           if (data.IsSelect) { AdjustedAmountReceipt += data.AdjustedAmount; }
         }
         this.invoiceForm.controls['TotalDebitAmount'].setValue(AdjustedAmountReceipt);
-        this.TotalDebitAmount = AdjustedAmountReceipt;
+        this.TotalDebitAmount = AdjustedAmountReceipt % 1 !== 0 ? AdjustedAmountReceipt.toFixed(this.entityFraction) : AdjustedAmountReceipt;
       }
       else { this.invoiceForm.controls['TotalDebitAmount'].setValue(AdjustedAmountReceipt); }
     }
@@ -369,7 +369,7 @@ export class InvoicesArDetailsComponent implements OnInit {
           if (data.IsSelect) { AdjustedAmountInvoice += data.AdjustedAmount; }
         }
         this.invoiceForm.controls['TotalCreditAmount'].setValue(AdjustedAmountInvoice);
-        this.TotalCreditAmount = AdjustedAmountInvoice;
+        this.TotalCreditAmount = AdjustedAmountInvoice % 1 !== 0 ? AdjustedAmountInvoice.toFixed(this.entityFraction) : AdjustedAmountInvoice;
       }
       else { this.invoiceForm.controls['TotalCreditAmount'].setValue(AdjustedAmountInvoice); }
     }

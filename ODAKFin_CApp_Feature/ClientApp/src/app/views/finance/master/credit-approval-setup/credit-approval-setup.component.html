@@ -31,9 +31,9 @@
                                         colspan="1" aria-label="Name: activate to sort column ascending"
                                         (click)="sort()">Effective Date</th>
 
-                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                    <!-- <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort()">Approval Method</th>
+                                        (click)="sort()">Approval Method</th> -->
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
@@ -59,7 +59,7 @@
                                         style="color: #0366d6;cursor: pointer;">{{data.DivisionName}}
                                     </td>
                                     <td>{{data.EffectiveDate | date:'dd-MM-YYYY'}}</td>
-                                    <td>{{data.ApprovalMethod}}</td>
+                                    <!-- <td>{{data.ApprovalMethod}}</td> -->
                                     <td>{{data.MaxCreditDays}}</td>
                                     <td>{{data.MaxCreditAmount}}</td>
                                     <td> <button (click)="creditInfoRoute(data.CASDivisionId,'copy')"
@@ -127,13 +127,9 @@
                         </div>
                     </div>
 
-                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
+                    <!-- <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
                         <div class="form-group bmd-form-group">
-                            <!-- <select formControlName="ApprovalMethod" class="form-control" name="active" id="active">
-                                <option value="" disabled>--SELECT APPROVAL METHOD--</option>
-                                <option *ngFor="let data of approvalList" [value]="data.ApprovalMethod">
-                                    {{data.ApprovalMethod | uppercase}}</option>
-                            </select> -->
+                            
                             <ng-select class="searchdropdown" [attr.disabled]="isCopied ? 'disabled' : null" [clearable]="false" formControlName="ApprovalMethod" name="active" id="active" >
                                 <ng-option [value]="''" [disabled]="true">--SELECT APPROVAL METHOD--</ng-option>
                                 
@@ -143,7 +139,7 @@
                            
                               </ng-select> 
                         </div>
-                    </div>
+                    </div> -->
 
                     <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 searchbtn alrt text-center mb-3 mt-3">
                         <button style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;" type="submit"

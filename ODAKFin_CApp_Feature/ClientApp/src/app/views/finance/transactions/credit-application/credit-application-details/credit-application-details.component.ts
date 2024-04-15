@@ -338,7 +338,7 @@ getbyId(selectedCreditApplicationId: any) {
               
               this.isEditMode = true;
               this.creditApplicationForm.patchValue({
-                    // CreditApplicationId: Table.CreditApplicationId,
+                    //  OldCreditApplicationId: Table.CreditApplicationId,
                     CreditApplicationId: 0,
                     // CreditApplicationNumber: Table.CreditApplicationNumber,
                     // ApplicationDate: this.datePipe.transform(
@@ -716,8 +716,15 @@ getbyId(selectedCreditApplicationId: any) {
     // "CreditApplicationId": Table.CreditApplicationId,
 
     const Table = this.creditApplicationForm.value;
+    const Table2 = this.documentList;
     const Table1 = this.questionArray;
     var validationMessage = false;
+    var validationMessage1 = false;
+
+      if(Table2.length == 0){
+        debugger            
+            validationMessage1 = true;
+      }
 
     if (Table1.length > 0) {
       Table1.forEach((item) => {
@@ -732,8 +739,11 @@ getbyId(selectedCreditApplicationId: any) {
 
     var validation = "";
 
-    if (validationMessage && !this.requestType) {
-      debugger
+    if (validationMessage1) {
+      validation +=
+        "<span style='color:red;'>*</span> <span>Please Upload a Document</span><br>";
+    }
+    if (validationMessage) {
       validation +=
         "<span style='color:red;'>*</span> <span>Please response to the questions it is mandatory</span><br>";
     }
@@ -824,12 +834,10 @@ getbyId(selectedCreditApplicationId: any) {
         "<span style='color:red;'>*</span> <span>Please select Post Dated Cheques .</span></br>";
     }
 
-    if (!Table.RequestRemarks) {
-      validation += "<span style='color:red;'>*</span> <span>Please Enter The Remarks .</span></br>"
-    }
+    
   }
   if(this.requestType && Table.IsRevise){
-    
+    debugger
   if (!this.ReviseCreditLimitDays) {
     validation +=
       "<span style='color:red;'>*</span> <span>Please select Limit Days .</span></br>";
@@ -840,14 +848,15 @@ getbyId(selectedCreditApplicationId: any) {
       "<span style='color:red;'>*</span> <span>Please select Credit Amount.</span></br>";
   }
 
-  if (this.RevisePostDatedCheques === "") {
+  if (!this.RevisePostDatedCheques) {
+
     validation +=
       "<span style='color:red;'>*</span> <span>Please select Post Dated Cheques .</span></br>";
   }
 
-  if (!this.ReviseRequestRemarks) {
-    validation += "<span style='color:red;'>*</span> <span>Please Enter The Remarks .</span></br>"
-  }
+  // if (!this.ReviseRequestRemarks) {
+  //   validation += "<span style='color:red;'>*</span> <span>Please Enter The Remarks .</span></br>"
+  // }
 }
 
 
@@ -1277,7 +1286,6 @@ getbyId(selectedCreditApplicationId: any) {
         CustomerID: this.creditApplicationForm.value.CustomerId,
       };
     } else {
-      ;
       var inputRequest = {
         CustomerBranchID: event,
         CustomerID: this.creditApplicationForm.value.CustomerId,
@@ -1367,7 +1375,7 @@ getbyId(selectedCreditApplicationId: any) {
 
   // * get Branch dropdown list
   // getBranch(isSelectBranch= false, event) {
-  //   
+  //   debugger
   //   const CustomerId = this.creditApplicationForm.value.CustomerId ? this.creditApplicationForm.value.CustomerId :event;
   //   this.customerBranchList = this.customerAndBranchList.filter((customer) => customer.CustomerID == CustomerId);
   //   if(this.customerBranchList.length){
@@ -1411,8 +1419,7 @@ getbyId(selectedCreditApplicationId: any) {
   }
 
   // * patch customer details when customer selected form the dropdown
-  patchCustomerData(customer) {
-    ;
+  patchCustomerData(customer) {  
     this.creditApplicationForm.controls["CustomerStatus"].setValue(
       customer.data.Table1[0].IsActive ? 1 : 0
     );
@@ -1447,7 +1454,6 @@ getbyId(selectedCreditApplicationId: any) {
       Division: +Table.DivisionId,
     };
   
-    debugger
     this.creditApplicationService.getQuestionAndDropdown(payload).subscribe(
       (result: any) => {
         if (result.message == "Success") {
@@ -1455,7 +1461,9 @@ getbyId(selectedCreditApplicationId: any) {
         }
         if (result.message == "Success") {
           if (list.length > 0) {
-              if (this.requestType) {
+
+               if (this.requestType && this.creditApplicationForm.applicationStatus == 22  ) {
+                // if (this.IsRevise && this.IsRevoke  ) {
                   // If requestType is true, set CreditValidationId to 0
                   this.questionArray = list.map((question: any) => ({
                       CreditValidationId: 0,
@@ -1474,7 +1482,7 @@ getbyId(selectedCreditApplicationId: any) {
                   CreditApplicationId: 0,
                   CreditQuestions: question.CreditQuestions,
                   Response: "",
-              }));
+              }));           
                    
             this.questionArray = finalQuestionList;
             this.dropDownOptions = [...result.data.Table];

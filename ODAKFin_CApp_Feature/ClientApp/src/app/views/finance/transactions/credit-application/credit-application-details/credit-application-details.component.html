@@ -605,7 +605,8 @@
 
 
             <div class="row mb-3 "  [ngClass]=" !isEditMode ? 'disabled-content' : ''" >
-                <h4 class="col-12">Documents</h4>
+                <h4 class="col-12 str">Documents</h4>
+               
                     <div class="col-12">
                         <app-documents [documentList]="documentInfo" [dropDownOptions]="dropDownOptions" (saveDocumentEvent)="uploadDocument($event)"
                         (deleteDocumentEvent)="deleteDocument($event)"></app-documents>

@@ -22,3 +22,12 @@
     background:  #e9ecef !important;
 
  }
+ .voucher-column{
+    max-width:150px !important
+}
+.setOff{
+    max-width:90px !important
+}
+.Voucher-amount{
+    max-width:90px !important
+}
