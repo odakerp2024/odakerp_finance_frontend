@@ -4,16 +4,18 @@ import { Injectable } from '@angular/core';
 
 export class Globals {
 
+    appName: string = 'FI';
+
     // UAT
-   // APIURL: string = 'https://odakfnuat.odaksolutions.in/api';
-    // MASTER_API_URL: string = 'https://odakfnuat.odaksolutions.in/api';
-    // SaApi: string = "https://odaksauat.odaksolutions.in/api";
-    // APIURLFF: string = 'https://odaksauat.odaksolutions.in/ffddev/api';
-    // APIURLLA: string = 'https://odaklauat.odaksolutions.in/api';
-    //TemplateUploadURL: string = 'https://odakfnuat.odaksolutions.in';
+    APIURL: string = 'https://odakfnuat.odaksolutions.in/api';
+    MASTER_API_URL: string = 'https://odakfnuat.odaksolutions.in/api';
+    SaApi: string = "https://odaksauat.odaksolutions.in/api";
+    APIURLFF: string = 'https://odaksauat.odaksolutions.in/ffddev/api';
+    APIURLLA: string = 'https://odaklauat.odaksolutions.in/api';
+    TemplateUploadURL: string = 'https://odakfnuat.odaksolutions.in';
 
     // QA
-    //  APIURL: string = 'https://odakfnqa.odaksolutions.in/api';
+    // APIURL: string = 'https://odakfnqa.odaksolutions.in/api';
     // MASTER_API_URL: string = 'https://odakfnqa.odaksolutions.in/api';
     // SaApi: string = "https://odaksaqa.odaksolutions.in/api";
     // APIURLFF: string = 'https://odaksaqa.odaksolutions.in/ffddev/api';
@@ -21,10 +23,14 @@ export class Globals {
     // TemplateUploadURL: string = 'https://odakfnqa.odaksolutions.in';
     
     // dev
-    APIURL: string = 'https://odakfn.odaksolutions.in/api';
-    MASTER_API_URL: string = 'https://odakfn.odaksolutions.in/api';
-    SaApi: string = "https://odaksaqa.odaksolutions.in/api";
-    APIURLFF: string = 'https://odaksaqa.odaksolutions.in/ffddev/api';
-    APIURLLA: string = 'https://odaklaqa.odaksolutions.in/api';
-    TemplateUploadURL: string = 'https://odakfn.odaksolutions.in';
+    // APIURL: string = 'https://odakfn.odaksolutions.in/api';
+    // MASTER_API_URL: string = 'https://odakfn.odaksolutions.in/api';
+    // SaApi: string = "https://odaksaqa.odaksolutions.in/api";
+    // APIURLFF: string = 'https://odaksaqa.odaksolutions.in/ffddev/api';
+    // APIURLLA: string = 'https://odaklaqa.odaksolutions.in/api';
+    // TemplateUploadURL: string = 'https://odakfn.odaksolutions.in';
+
+    //APIURLlocal: string = 'https://localhost:44301/api';
+
+    //SaApi: string = 'https://localhost:44304/api';
 }
