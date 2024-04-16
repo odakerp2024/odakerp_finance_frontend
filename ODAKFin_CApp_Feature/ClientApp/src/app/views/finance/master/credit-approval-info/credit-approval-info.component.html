@@ -478,12 +478,12 @@
 
         <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 text-right mt-4">
             <button *ngIf="!isCloneRecord"
-                [disabled]="isUpdateModeEnable || creditInfo.length == 0 || approvedInfo.length == 0"
+                [disabled]="isUpdateModeEnable || creditInfo.length == 0"
                 (click)="saveCredit()" type="submit"
                 class="btn btn-primary btn-raised btn-default cntbtn mb-0">Save</button>
 
             <button *ngIf="isCloneRecord"
-                [disabled]="creditInfo.length == 0 || approvedInfo.length == 0 || !creditFormInfo.dirty || ApprovalForm.dirty || DocumentForm.dirty || QuestionForm.dirty"
+                [disabled]="creditInfo.length == 0 || !creditFormInfo.dirty || ApprovalForm.dirty || DocumentForm.dirty || QuestionForm.dirty"
                 (click)="saveCredit()" type="submit"
                 class="btn btn-primary btn-raised btn-default cntbtn mb-0">Save</button>
             <button [routerLink]="['/views/credit/credit-view']"
