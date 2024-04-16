@@ -30,9 +30,9 @@
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
                                         style="width: 177.575px;" >PV Date </th>
-                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                    <!-- <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        style="width: 177.575px;" >Vendor Type</th>
+                                        style="width: 177.575px;" >Vendor Type</th> -->
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
@@ -60,7 +60,7 @@
                                     <td (click)="purchaseInfoRoute(data.Id)" style="color: #0366d6;cursor: pointer;">
                                         {{data.PINumber}}</td>
                                     <td>{{data.PIDate | date : commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td>
-                                    <td>{{data.VendorType}}</td>
+                                    <!-- <td>{{data.VendorType}}</td> -->
                                     
                                     <td [title]="data.VendorName | uppercase">
                                         {{ (data.VendorName && data.VendorName.length > 20) ?data.VendorName.slice(0, 20) + '-' : data.VendorName }}
@@ -195,21 +195,6 @@
                              </div>
                          </div>
                      </div>
-
-                    <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
-                        <div class="form-group bmd-form-group">
-                            <!-- <select formControlName="VendorType" class="form-control" name="CategoryId" id="CategoryId">
-                                <option value="" disabled>--SELECT VENDOR TYPE--</option>
-                                <option value="Local">LOCAL</option>
-                                <option value="Overseas">OVERSEAS</option>
-                            </select> -->
-                            <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'VendorType'" name="CategoryId" id="CategoryId">
-                            <ng-option [value]="''" disabled>--SELECT VENDOR TYPE--</ng-option>
-                            <ng-option >LOCAL</ng-option>
-                            <ng-option >OVERSEAS</ng-option>                       
-                          </ng-select>  
-                        </div>
-                    </div>
 
                     <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
                         <div class="form-group bmd-form-group">
