@@ -30,6 +30,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
   minDate: string = this.datePipe.transform(new Date(), "yyyy-MM-dd");
   // newOne : string = '';
   isUpdate: boolean = false;
+  bookingAgainst: string = 'general'; // Default to 'general'
   ProvisionTypeList: [{ ID: '1', name: 'Partial' }, { ID: '2', name: 'Full' }];
   bankList = [];
   IsRCM: any;
@@ -248,6 +249,10 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     let entityInfo = this.commonDataService.getLocalStorageEntityConfigurable();
     this.entityCurrencyName = entityInfo['Currency'];
     this.PurchaseCreateForm.controls['InvoiceCurrency'].setValue(this.entityCurrencyName);
+    this.PurchaseCreateForm.controls['Rate'].setValue(Number().toFixed(this.entityFraction));
+    // this.PurchaseCreateForm.controls['Qty'].setValue(Number().toFixed(this.entityFraction));
+    
+  
 
     // this.PurchaseCreateForm.get('TDSApplicability').valueChanges.subscribe((value) => {
     //   if (value === 1) {
@@ -265,6 +270,15 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     // });
   }
 
+  onBookingAgainstChange(value: string) {
+    this.bookingAgainst = value;
+    if (value !== 'provision') {
+        this.PurchaseCreateForm.patchValue({
+            ProvisionType: '',
+            Provision: ''
+        });
+    }
+}
   getPurchaseInvoiceAdminInfo() {
     var service = `${this.globals.APIURL}/PurchaseInvoice/GetPurchaseInvoiceById`; var payload = { Id: this.PurchaseInvoiceId };
     this.dataService.post(service, payload).subscribe(async (result: any) => {
@@ -687,6 +701,14 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     }, error => { });
   }
 
+  getCurrencyCode(currencyString: string): string {
+    // Split the currency string by '-' and trim any whitespace
+    const parts = currencyString.split('-').map(part => part.trim());
+    // Return the first part (currency code)
+    return parts[0];
+}
+
+
   addRow() {
     var validation = "";
     if (this.PurchaseCreateForm.value.AccountId == "" || this.PurchaseCreateForm.value.AccountId == 0) {
@@ -714,9 +736,12 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       // validation += "<span style='color:red;'>*</span> <span>Please Select RCM.</span></br>";
       this.PurchaseCreateForm.get('IsRCM').setValue(0);
     }
-    if (this.PurchaseCreateForm.value.IsRCM == 1) {
-      if (this.PurchaseCreateForm.value.GSTGroup == "" || this.PurchaseCreateForm.value.GSTGroup == 0) {
-        validation += "<span style='color:red;'>*</span> <span>Please Enter GST Group.</span></br>";
+    if (this.PurchaseCreateForm.value.IsRCM === 1 && this.PurchaseCreateForm.value.GSTGroup === 0) {
+      // Skip validation when IsRCM is 1 and GSTGroup is 0
+  } else {
+      if (this.PurchaseCreateForm.value.IsRCM === 1 && this.PurchaseCreateForm.value.GSTGroup === "") {
+          // If IsRCM is 1 and GSTGroup is empty, show validation error
+          validation += "<span style='color:red;'>*</span> <span>Please Enter GST Group.</span></br>";
       }
     }
     if (validation != "") {
@@ -940,6 +965,15 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     if (this.PurchaseTableList.length == 0) {
       validation += "<span style='color:red;'>*</span> <span>Attest one record must be create in the Purchase Table.</span></br>";
     }
+    if (this.PurchaseCreateForm.value.BankId == "" || this.PurchaseCreateForm.value.BankId == 0) {
+      validation += "<span style='color:red;'>*</span> <span>Please select Bank Details.</span></br>";
+    }
+    if (this.PurchaseCreateForm.value.InvoiceCurrency == "" || this.PurchaseCreateForm.value.InvoiceCurrency == 0) {
+      validation += "<span style='color:red;'>*</span> <span>Please Enter Invoice Currency.</span></br>";
+    }
+    if (this.PurchaseCreateForm.value.InvoiceExrate == "" || this.PurchaseCreateForm.value.InvoiceExrate == 0) {
+      validation += "<span style='color:red;'>*</span> <span>Please Enter Invoice Exrate.</span></br>";
+    }
     // if(status && !this.isFinalRecord){
     //   await this.autoCodeGeneration('purchase')
     // }
@@ -1111,7 +1145,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       VendorBranch: info.VendorBranch,
       // VendorType: info.VendorType,
       VINumber: info.VINumber,
-      VIDate: info.VIDate,
+      VIDate: this.datePipe.transform(info.VIDate, 'y-MM-dd'),
       DueDate: info.DueDate,
       VendorGST: info.VendorGST,
       VendorGSTCategory: info.VendorGSTCategory ? info.VendorGSTCategory : '',
@@ -1466,8 +1500,9 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     // Calculate invoiceAmount based on amountccr and GSTGroup
     this.PurchaseTableList.forEach(e => {
       const amountccr = e.Amountccr; // Retrieve amountccr value from the current element e
-      const gstCalculation = amountccr * (e.GSTGroup / 100);
-      const tdsCalculation = amountccr * (e.TDSValue / 100);
+      const gstCalculation = (amountccr * e.GSTGroup )/ 100;
+      const tdsCalculation = (amountccr * e.TDSValue) / 100;
+     
 
       // if (this.PurchaseCreateForm.controls['IsRCM'].value == true) {
       //   invoiceAmount += gstCalculation;
