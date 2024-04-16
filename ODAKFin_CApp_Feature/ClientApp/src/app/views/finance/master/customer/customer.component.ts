@@ -2,10 +2,12 @@ import { DatePipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatGridTileHeaderCssMatStyler } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Globals } from 'src/app/globals';
 import { Category, City, DivisionMaster, Status, StatusView } from 'src/app/model/common';
 import { AccountLink, Alerttype, BasicCustomerDetails, CreditDetails, CustomerModel, Division, DivisionLable, DivisionTypes, EmailId, InputPage, Interface, KYCDocument, OfficeDetails, SalesPICList } from 'src/app/model/financeModule/Customer';
+import { WF_EVENTS, workflowEventObj } from 'src/app/model/financeModule/labels.const';
 import { Country, States } from 'src/app/model/Organzation';
 import { AutoCodeService } from 'src/app/services/auto-code.service';
 
@@ -13,6 +15,7 @@ import { CommonService } from 'src/app/services/common.service';
 import { DataService } from 'src/app/services/data.service';
 import { CustomerService } from 'src/app/services/financeModule/customer.service';
 import { MastersService } from 'src/app/services/masters.service';
+import { WorkflowService } from 'src/app/services/workflow.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -119,10 +122,25 @@ export class CustomerComponent implements OnInit {
   parentAccountList: any[];
   selectedFile: File = null;
 
+  isKYClength: boolean = false;
+
+  disableSave = true;
+
+  workflowParamsNo:any=[];
+  workFlowObj!:workflowEventObj;
+  redirectURL:string='';
+  cusID: string='';
+  cusBID: string='';
+  userName: string='';
+  userDiv: string='';
+  userOff: string='';
+
+  onBoardStatus: any;
+
   constructor(private router: Router, private route: ActivatedRoute, private fb: FormBuilder, private ms: MastersService
     , private commonservice: CommonService, private customerService: CustomerService,
     private dataService: DataService, private globals: Globals, private customerservice: CustomerService,
-    private datePipe: DatePipe,
+    private datePipe: DatePipe,private workflow: WorkflowService,
     private autoCodeService: AutoCodeService,
   ) {
     this.getNumberRange();
@@ -149,8 +167,11 @@ export class CustomerComponent implements OnInit {
       }
       this.fg = this.fb.group({
         CustomerID: params['customer_ID'],
-        CustomerBranchID: params['customer_BranchID']
+        CustomerBranchID: params['customer_BranchID'],
       });
+
+      this.cusID = params['customer_ID'];
+      this.cusBID = params['customer_BranchID'];
 
       // check permissions
     });
@@ -380,7 +401,7 @@ export class CustomerComponent implements OnInit {
 
           if (data[0].SubfunctionID == paylod.SubfunctionID) {
 
-            if (data[0].Create_Opt == 2) {
+            if (data[0].Read_Opt == 2) {
               this.isKYCDocuments = true;
               this.Current_Tab = 'tabKYC';
 
@@ -481,7 +502,6 @@ export class CustomerComponent implements OnInit {
 
 
   ngOnInit(): void {
-    debugger
     this.getLedgerMappingParentAccountList();
     //------ ledger maping validate conditions are removed due to mapped account in customer itself --08-03-2024
     // this.getModuleType();
@@ -513,6 +533,30 @@ export class CustomerComponent implements OnInit {
       this.isUpdate = true;
       this.fg.disable();
     }
+    this.getWFParams();
+    this.getUserDtls();
+
+    this.redirectURL= window.location.href
+    console.log('redirectURL',this.redirectURL,window.location)
+  }
+
+
+  getUserDtls(){
+    var userid = localStorage.getItem("UserID");
+    var payload = {
+      "UserID": userid,
+    }
+    this.workflow.getUserDtls(payload).subscribe({
+      next:(res)=>{
+        console.log('getUserDtls', { res })
+        this.userDiv = res[0].DivisionName
+        this.userOff = res[0].OfficeName
+        this.userName = res[0].UserName
+      },
+      error:(e)=>{
+        console.log('error', { e })
+      }
+    });
   }
 
   getCoaType() {
@@ -731,6 +775,9 @@ export class CustomerComponent implements OnInit {
       this.fg.controls.mobile.setValue(response['data'].Table1[0]['MobileNo']);
       this.fg.controls.primaryTelephone.setValue(response['data'].Table1[0]['primaryTelephone']);
       this.fg.controls.onboardstatus.setValue(response['data'].Table1[0]['OnBoard']);
+      //alert(response['data'].Table1[0]['OnBoard']);
+      this.onBoardStatus = response['data'].Table1[0]['OnBoard'];
+      alert(this.onBoardStatus);
     }
 
     //Sales PIC
@@ -741,6 +788,9 @@ export class CustomerComponent implements OnInit {
     //KYC Documents
     if (response['data'].Table3.length > 0) {
       this.documentPayloadInfo = response['data'].Table3;
+      if(this.onBoardStatus != 2){
+        this.disableSave = false;
+      }
     }
 
     //Account Link
@@ -1449,7 +1499,7 @@ export class CustomerComponent implements OnInit {
 
       this.updateSalesPIc();
 
-      this.updateKYCDocument();
+        this.updateKYCDocument();
       //this.customerModel.Customer.Table2.push(this.TabKYCDocument);
 
       this.updateAccountLink();
@@ -1508,6 +1558,115 @@ export class CustomerComponent implements OnInit {
           }
         });
     }
+  }
+
+  getWFParams(){
+    this.workflow.getWorkflowParams(WF_EVENTS['customerApproval'].EVENT_NO).subscribe({
+      next:(res)=>{
+        console.log('getWorkflowParams', { res })
+        if (res?.AlertMegId == 1) {
+          this.workflowParamsNo = res?.Data ? res?.Data : []
+        }
+      },
+      error:(e)=>{
+        console.log('getWorkflowParams', { e })
+      }
+    });
+  }
+
+  submitApproval(){
+    //alert("approval");
+
+    let eventData: any = {}
+    let checkOutstand = 'Fail'
+
+    this.workflowParamsNo.forEach((param: any) => {
+      const paramName: any = `param${param?.paramnumber}`;
+      if (WF_EVENTS['customerApproval'].PARAMS.Division.toLowerCase().trim() == param?.paramname?.toLocaleLowerCase().trim()) {
+        eventData[paramName] = this.userDiv
+      }
+      else if (WF_EVENTS['customerApproval'].PARAMS.Category.toLowerCase().trim() == param?.paramname?.toLocaleLowerCase().trim()) {
+        eventData[paramName] = JSON.stringify(this.fg.value.Category);
+      }
+      else if (WF_EVENTS['customerApproval'].PARAMS.Country.toLowerCase().trim() == param?.paramname?.toLocaleLowerCase().trim()) {
+        eventData[paramName] = this.fg.value.CountryID 
+      }
+      else if (WF_EVENTS['customerApproval'].PARAMS.Created_by.toLowerCase().trim() == param?.paramname?.toLocaleLowerCase().trim()) {
+        eventData[paramName] = this.userName
+      }
+      
+      else {
+        eventData[paramName] = ""
+      }
+    });
+
+    let callbackPayload={
+      //"isdata": "U",
+      //"customerID": this.cusID,
+      "CusBranchID": this.cusBID,
+      "status": 0,
+      //"method":WF_EVENTS['customerApproval'].CALLBACK_METHOD
+    }
+
+    this.workFlowObj = {
+      eventnumber: WF_EVENTS['customerApproval'].EVENT_NO,
+      eventvalue: this.Branch_Code  ? this.Branch_Code : "" ,
+      app: this.globals.appName,
+      division: this.userDiv ? this.userDiv :'',
+      office: this.userOff ? this.userOff :'',
+      eventdata: eventData,
+      Initiator: { userid: this.userName ? this.userName : '', usertype: "string" },
+      //callbackURL:`${this.globals.APIURLlocal}${WF_EVENTS['customerApproval'].apiEndPoint}`,
+      callbackURL:`${this.globals.APIURL}${WF_EVENTS['customerApproval'].apiEndPoint}`,
+      callbackURLcontent:JSON.stringify(callbackPayload),
+      redirectURL:this.redirectURL
+    }
+    console.log(this.workFlowObj, 'workflow Obj');
+
+    this.workflow.workflowTrigger(this.workFlowObj).subscribe({
+      next: (res) => {
+        console.log('workflowTrigger', { res })
+        if(res?.AlertMegId  > 0 ){
+          
+          if(res?.AlertMegId == 1){
+            let payload = {
+              "CusBranchCode": this.Branch_Code,
+            }
+            this.workflow.KYCValidation(payload).subscribe(data => {
+              if (data.length > 0){
+                let dataQ = {
+                  "CusBranchID": this.cusBID,
+              }
+              this.workflow.CustomerConfirm(dataQ).subscribe(xyz => {
+                console.log(xyz);
+              });
+
+              Swal.fire("Your request has Approved");
+
+              }
+              else{
+                Swal.fire("Please Update the Accounting Details");
+              }
+            });
+          }
+          else{
+            Swal.fire("Your request waiting for Approval");
+          }         
+
+        }
+        else if(res?.AlertMegId == -1){
+          Swal.fire(res?.AlertMessage ?  res?.AlertMessage : "")
+          return
+        }
+      },
+      error: (err) => {
+        console.log('workflowTrigger', { err })
+        Swal.fire("Your request not claim approval");
+        // this.workflowEventMsg= "Your Quotation not claim approval"
+        // this.save();  
+      }
+  });
+
   }
 
   updateAutoGenerated() {
