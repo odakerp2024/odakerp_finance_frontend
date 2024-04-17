@@ -54,6 +54,7 @@ export class FinanceMasterComponent implements OnInit {
   userName: string='';
 
   cusBID: string='';
+  eventName: string='';
 
   constructor(
     private titleService: Title, private workflow: WorkflowService, public ps: PaginationService,
@@ -436,6 +437,7 @@ export class FinanceMasterComponent implements OnInit {
             this.isShowWorkflowInbox = false;
             console.log("testworkflow",findUser,findPending);
             this.cusBID = workflowData.details;
+            this.eventName = workflowData?.eventname;
             //alert(this.cusBID);
             console.log('CusBID',this.cusBID);
             this.workflowDetailTitle = `${workflowData?.workflowno} - ${workflowData?.eventname} - ${workflowData.details}`
@@ -457,6 +459,15 @@ export class FinanceMasterComponent implements OnInit {
           Swal.fire(err?.message ? err?.message : "");
         }
       })
+    }
+  }
+
+  OnApproval(){
+    if(this.eventName.toUpperCase() == "CUSTOMER"){
+      this.KYCValidation();
+    }
+    else{
+      this.updateWorkflowStatus('1');
     }
   }
 

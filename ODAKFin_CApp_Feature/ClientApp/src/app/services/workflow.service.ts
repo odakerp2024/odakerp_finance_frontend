@@ -13,7 +13,6 @@ export class WorkflowService {
 
     workFlowAPI = this.globals.SaApi;
     APIURL = this.globals.APIURL;
-    //APIURL = this.globals.APIURLlocal;
 
      getWorkflowParams(workflowKey:string): Observable<any> {
       return this.http.get(`${this.workFlowAPI}/Workflowengineparameter/${workflowKey}`);
@@ -47,6 +46,10 @@ export class WorkflowService {
 
     KYCValidation(payload:any):Observable<any> {
       return this.http.post<any>(`${this.APIURL}/User/CustomerBranchKYCValidation/`, payload);
+    }
+
+    CreditAppConfirm(payload:any):Observable<any> {
+      return this.http.post<any>(`${this.APIURL}/User/CreditAppConfirmUpdate/`, payload);
     }
 
 }

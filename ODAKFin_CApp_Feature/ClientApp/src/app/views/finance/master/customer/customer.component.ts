@@ -775,9 +775,9 @@ export class CustomerComponent implements OnInit {
       this.fg.controls.mobile.setValue(response['data'].Table1[0]['MobileNo']);
       this.fg.controls.primaryTelephone.setValue(response['data'].Table1[0]['primaryTelephone']);
       this.fg.controls.onboardstatus.setValue(response['data'].Table1[0]['OnBoard']);
-      //alert(response['data'].Table1[0]['OnBoard']);
+      
       this.onBoardStatus = response['data'].Table1[0]['OnBoard'];
-      alert(this.onBoardStatus);
+      
     }
 
     //Sales PIC
