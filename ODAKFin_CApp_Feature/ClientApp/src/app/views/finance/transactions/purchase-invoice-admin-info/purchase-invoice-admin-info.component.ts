@@ -1193,6 +1193,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     let purchaseTableList = this.PurchaseTableList;
     purchaseTableList.forEach(element => {
     element.TDSValue = element.TDSValue === '-' ? 0 : element.TDSValue;
+    
    // console.log(element.TDSValue , 'tdsvalue')
     delete element.IsOrderTypeItem; 
     });
@@ -1507,7 +1508,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
 
             let account = this.accountName.find(x => x.ChartOfAccountsId == !info.AccountId ? 0 : info.AccountId);
             let currency = this.currencyList.find(x => x.ID == !info.CurrencyId ? 0 : info.CurrencyId);
-            let tds = this.SectionMasterList.find(x => x.SectionID == !info.TDSMaster ? 0 : info.TDSMaster);
+            // let tds = this.SectionMasterList.find(x => x.SectionID == !info.TDSMaster ? 0 : info.TDSMaster);
 
             let value = {
               Id: info.Id,
@@ -1519,9 +1520,9 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
               CurrencyId: info.CurrencyId,
               ExRate: info.ExRate ? info.ExRate : 1,
               Amountccr: (info.ExRate ? info.ExRate : 1) * (info.Rate * info.Quantity),
-              TDSMaster: info.TDSMaster,
-              TDSName: !tds ? '-' : tds.SectionName,
-              TDSValue: !tds ? '-' : tds.RatePercentage,
+              TDSMaster: 0,
+              TDSName: '-',
+              TDSValue: 0,
               IsRCM: this.PurchaseCreateForm.controls['IsRCM'].value,
               GSTGroup: info.GSTGroup ? info.GSTGroup : 0,
               CurrencyName: !currency ? '-' : currency.CurrencyCode,
@@ -1547,7 +1548,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
 
             let account = this.accountName.find(x => x.ChartOfAccountsId == !info.AccountId ? 0 : info.AccountId);
             let currency = this.currencyList.find(x => x.ID == !info.CurrencyId ? 0 : info.CurrencyId);
-            let tds = this.SectionMasterList.find(x => x.SectionID == !info.TDSMaster ? 0 : info.TDSMaster);
+            // let tds = this.SectionMasterList.find(x => x.SectionID == !info.TDSMaster ? 0 : info.TDSMaster);
 
             let value = {
               Id: info.Id,
@@ -1559,9 +1560,9 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
               CurrencyId: info.CurrencyId,
               ExRate: info.ExRate ? info.ExRate : 1,
               Amountccr: (info.ExRate ? info.ExRate : 1) * (info.Rate * info.Quantity),
-              TDSMaster: info.TDSMaster,
-              TDSName: !tds ? '-' : tds.SectionName,
-              TDSValue: !tds ? '-' : tds.RatePercentage,
+              TDSMaster: 0,
+              TDSName: '-',
+              TDSValue: 0,
               IsRCM: this.PurchaseCreateForm.controls['IsRCM'].value,
               GSTGroup: info.GSTGroup ? info.GSTGroup : 0,
               CurrencyName: !currency ? '-' : currency.CurrencyCode,
