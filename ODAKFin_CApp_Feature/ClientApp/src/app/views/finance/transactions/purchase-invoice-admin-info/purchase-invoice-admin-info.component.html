@@ -447,7 +447,7 @@
                 <div *ngIf="orderType == 'Purchase'" class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group">
                         <label class="str">Purchase Order</label>
-                        <select (ngModelChange)="purchaseOrderChangeEvent('Purchase');" formControlName="PurchaseOrder"
+                        <select (ngModelChange)="purchaseOrderChangeEvent('Purchase', $event);" formControlName="PurchaseOrder"
                             name="PurchaseOrder" class="form-control my-select">
                             <option disabled value="">--SELECT PURCHASE ORDER--</option>
                             <option *ngFor="let gRow of purchaseList" [value]="gRow.Id">
@@ -460,7 +460,7 @@
                 <div *ngIf="orderType == 'Internal'" class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group">
                         <label class="str">Internal Order</label>
-                        <select formControlName="InternalOrder" name="InternalOrder" class="form-control my-select">
+                        <select (ngModelChange)="purchaseOrderChangeEvent('Internal', $event);" formControlName="InternalOrder" name="InternalOrder" class="form-control my-select">
                             <option disabled value="">--SELECT INTERNAL ORDER--</option>
                             <option *ngFor="let gRow of internalOderList" [value]="gRow.Id">
                                 {{gRow.InternalNumber | uppercase}}
@@ -574,7 +574,7 @@
                                     <td>{{data.ExRate ? data.ExRate : 1}}</td>
                                     <td>{{data.Amountccr}}</td>
                                     <td>{{data.TDSName}}</td>
-                                    <td>{{data.GSTGroup ? data.GSTGroup :0}} %</td>
+                                    <td>{{data.GSTGroup ? (data.GSTGroup + '%')  : '-' }}</td>
                                     <td><input class='disable-input' type="checkbox" [checked]="data.IsRCM"></td>
                                     <td>
                                         <input class="vertal checkbox" type="radio" name="AlertCheck" id="RadioCheck"

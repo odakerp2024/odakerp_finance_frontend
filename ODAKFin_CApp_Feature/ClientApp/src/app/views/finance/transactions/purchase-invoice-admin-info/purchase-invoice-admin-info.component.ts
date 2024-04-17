@@ -251,9 +251,6 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     this.PurchaseCreateForm.controls['InvoiceCurrency'].setValue(this.entityCurrencyName);
     this.PurchaseCreateForm.controls['Rate'].setValue(Number().toFixed(this.entityFraction));
     // this.PurchaseCreateForm.controls['Qty'].setValue(Number().toFixed(this.entityFraction));
-    
-  
-
     // this.PurchaseCreateForm.get('TDSApplicability').valueChanges.subscribe((value) => {
     //   if (value === 1) {
     //     this.PurchaseCreateForm.get('TDSMaster').enable();
@@ -273,12 +270,12 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
   onBookingAgainstChange(value: string) {
     this.bookingAgainst = value;
     if (value !== 'provision') {
-        this.PurchaseCreateForm.patchValue({
-            ProvisionType: '',
-            Provision: ''
-        });
+      this.PurchaseCreateForm.patchValue({
+        ProvisionType: '',
+        Provision: ''
+      });
     }
-}
+  }
   getPurchaseInvoiceAdminInfo() {
     var service = `${this.globals.APIURL}/PurchaseInvoice/GetPurchaseInvoiceById`; var payload = { Id: this.PurchaseInvoiceId };
     this.dataService.post(service, payload).subscribe(async (result: any) => {
@@ -287,7 +284,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       this.pagedItems = [];
       if (result.message == 'Success' && result.data.Table.length > 0) {
         let info = result.data.Table[0];
-        
+
         this.CreatedBy = info.CreatedByName;
         this.CreatedOn = info.CreatedDate;
         this.ModifiedOn = info.UpdatedDate;
@@ -344,7 +341,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
         this.getOfficeList(info.Division);
         this.getVendorBranchList(info.VendorId, info.VendorBranch, false);
         const vendorDetails = await this.getVendorDetailsInfo(info.VendorBranch)
-        
+
         if (result.data.Table1.length > 0) {
           this.PurchaseTableList = []
           result.data.Table1.forEach(element => {
@@ -501,7 +498,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       this.paymentService.getVendorList({}).pipe(takeUntil(this.ngUnsubscribe)).subscribe((result: any) => {
         if (result.message == "Success") {
           if (result["data"].Table.length) {
-            
+
             const vendorList = result["data"].Table.filter(x => x.OnboradName == 'CONFIRMED' && x.Status == 'Active');
             const uniqueVendors = new Set();
             this.allVendorsList = vendorList;
@@ -531,7 +528,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
   }
 
   getVendorBranchList(event, setBrach = false, branchId?: any) {
-    
+
 
     this.vendorBranch = [];
     this.vendorBranch = this.allVendorsList.filter(x => x.VendorID == event);
@@ -589,7 +586,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     return new Promise((resolve, reject) => {
       let vendorInfo = this.vendorBranch.find(x => x.VendorBranchID == event);
       if (vendorInfo) {
-        
+
         this.checkBranchState(vendorInfo);
         this.VendorService.getVendorId({ VendorID: vendorInfo.VendorID, VendorBranchID: event }).pipe().subscribe(response => {
           if (response['data'].Table1.length > 0) { this.officeCityId = response['data'].Table1[0].City; }
@@ -629,7 +626,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
 
   getOfficeGST(event) {
     let officeInfo = this.officeList.find(x => x.ID == event);
-    
+
     if (officeInfo) {
       this.PurchaseCreateForm.controls['OfficeGST'].setValue(officeInfo.GSTNo);
       this.selectedOfficeStateId = officeInfo.StateId;
@@ -723,7 +720,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     const parts = currencyString.split('-').map(part => part.trim());
     // Return the first part (currency code)
     return parts[0];
-}
+  }
 
 
   addRow() {
@@ -787,11 +784,12 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
         TDSValue: tds.RatePercentage,
         IsRCM: info.IsRCM,
         GSTGroup: info.GSTGroup ? info.GSTGroup : 0,
-        CurrencyName: currency.Currency,
+        CurrencyName: currency.CurrencyCode,
         AccountName: account.AccountName,
         IGST: 0,
         CGST: 0,
-        SGST: 0
+        SGST: 0,
+        IsOrderTypeItem: info.IsOrderTypeItem
       };
 
       this.PurchaseTableList[this.editSelectedIdex] = editValue;
@@ -816,11 +814,12 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
         TDSValue: tds.RatePercentage,
         IsRCM: info.IsRCM,
         GSTGroup: info.GSTGroup ? info.GSTGroup : 0,
-        CurrencyName: currency.Currency,
+        CurrencyName: currency.CurrencyCode,
         AccountName: account.AccountName,
         IGST: 0,
         CGST: 0,
-        SGST: 0
+        SGST: 0,
+        IsOrderTypeItem: info.IsOrderTypeItem
       });
     }
 
@@ -870,7 +869,8 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       Amountccr: info.Amountccr,
       TDSMaster: info.TDSMaster,
       IsRCM: info.IsRCM,
-      GSTGroup: info.GSTGroup
+      GSTGroup: info.GSTGroup,
+      IsOrderTypeItem: info.IsOrderTypeItem
     });
     this.isEditMode = !this.isEditMode;
   }
@@ -1452,17 +1452,14 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
   //   this.PurchaseCreateForm.controls['InvoiceAmount'].setValue(CGST + SGST + IGST + subTotalAmount);
   // }
 
-
-
-  purchaseOrderChangeEvent(type: string) { }
-
   orderChangeEvent() {
     this.orderType == 'Purchase' ? this.PurchaseCreateForm.controls['PurchaseOrder'].setValue('') : this.orderType == 'Internal' ? this.PurchaseCreateForm.controls['InternalOrder'].setValue('') : '';
+    this.PurchaseTableList =  this.PurchaseTableList.filter(e=> (e.IsOrderTypeItem == 0 || e.IsOrderTypeItem == undefined))
   }
 
 
   toggleRCM(value: string) {
-    
+
     if (value === '1') {
       // this.isRCMChecked = true; // Set isRCMChecked to true if "YES" is selected
       this.PurchaseCreateForm.get('IsRCM').setValue(true); // Check the checkbox
@@ -1494,6 +1491,92 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     } else {
       this.isSameState = false
     }
+  }
+
+  purchaseOrderChangeEvent(type: string, id = 0) {
+    this.PurchaseTableList =  this.PurchaseTableList.filter(e=> (e.IsOrderTypeItem == 0 || e.IsOrderTypeItem == undefined))
+
+    if (type == 'Purchase') {
+      var service = `${this.globals.APIURL}/PurchaseOrder/GetPurchaseOrderById`;
+      this.dataService.post(service, { Id: id }).subscribe(async (result: any) => {
+        if (result.message == 'Success' && result.data.Table1.length > 0) {
+          result.data.Table1.forEach(info => {
+
+            let account = this.accountName.find(x => x.ChartOfAccountsId == !info.AccountId ? 0 : info.AccountId);
+            let currency = this.currencyList.find(x => x.ID == !info.CurrencyId ? 0 : info.CurrencyId);
+            let tds = this.SectionMasterList.find(x => x.SectionID == !info.TDSMaster ? 0 : info.TDSMaster);
+
+            let value = {
+              Id: info.Id,
+              PurchaseInvoiceId: this.PurchaseInvoiceId,
+              AccountId: info.AccountId,
+              Rate: info.Rate,
+              Qty: info.Quantity,
+              Amount: info.Rate * info.Quantity,
+              CurrencyId: info.CurrencyId,
+              ExRate: info.ExRate ? info.ExRate : 1,
+              Amountccr: (info.ExRate ? info.ExRate : 1) * (info.Rate * info.Quantity),
+              TDSMaster: info.TDSMaster,
+              TDSName: !tds ? '-' : tds.SectionName,
+              TDSValue: !tds ? '-' : tds.RatePercentage,
+              IsRCM: this.PurchaseCreateForm.controls['IsRCM'].value,
+              GSTGroup: info.GSTGroup ? info.GSTGroup : 0,
+              CurrencyName: !currency ? '-' : currency.CurrencyCode,
+              AccountName: !account ? '-' : account.AccountName,
+              IGST: 0,
+              CGST: 0,
+              SGST: 0,
+              IsOrderTypeItem: 1
+            };
+
+            this.PurchaseTableList.push(value);
+          })
+
+        }
+      }, error => {
+        console.log("error--->", error);
+       });
+    } else if (type == 'Internal') {
+      var service = `${this.globals.APIURL}/InternalOrder/GetInternalOrderById`;
+      this.dataService.post(service, { Id: id }).subscribe(async (result: any) => {
+        if (result.message == 'Success' && result.data.Table1.length > 0) {
+          result.data.Table1.forEach(info => {
+
+            let account = this.accountName.find(x => x.ChartOfAccountsId == !info.AccountId ? 0 : info.AccountId);
+            let currency = this.currencyList.find(x => x.ID == !info.CurrencyId ? 0 : info.CurrencyId);
+            let tds = this.SectionMasterList.find(x => x.SectionID == !info.TDSMaster ? 0 : info.TDSMaster);
+
+            let value = {
+              Id: info.Id,
+              PurchaseInvoiceId: this.PurchaseInvoiceId,
+              AccountId: info.AccountId,
+              Rate: info.Rate,
+              Qty: info.Quantity,
+              Amount: info.Rate * info.Quantity,
+              CurrencyId: info.CurrencyId,
+              ExRate: info.ExRate ? info.ExRate : 1,
+              Amountccr: (info.ExRate ? info.ExRate : 1) * (info.Rate * info.Quantity),
+              TDSMaster: info.TDSMaster,
+              TDSName: !tds ? '-' : tds.SectionName,
+              TDSValue: !tds ? '-' : tds.RatePercentage,
+              IsRCM: this.PurchaseCreateForm.controls['IsRCM'].value,
+              GSTGroup: info.GSTGroup ? info.GSTGroup : 0,
+              CurrencyName: !currency ? '-' : currency.CurrencyCode,
+              AccountName: !account ? '-' : account.AccountName,
+              IGST: 0,
+              CGST: 0,
+              SGST: 0,
+              IsOrderTypeItem: 1
+            };
+
+            this.PurchaseTableList.push(value);
+          })
+
+        }
+      }, error => {
+        console.log("error--->", error);
+       });
+    } 
   }
 
   getFinalCalculation() {
@@ -1571,7 +1654,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     });
 
     const vendorGSTcategory = this.PurchaseCreateForm.get('VendorGSTCategory').value;
-    console.log(vendorGSTcategory ,'VendorGSTCategory')
+    console.log(vendorGSTcategory, 'VendorGSTCategory')
     if (vendorGSTcategory == 3 || vendorGSTcategory == 5) {
       // based on vendor category 3 is overseas & 5 is sez
       this.PurchaseCreateForm.controls['CGST'].setValue(Number(0).toFixed(this.entityFraction));
