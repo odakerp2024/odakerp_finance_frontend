@@ -1489,7 +1489,7 @@ export class CustomerComponent implements OnInit {
 
       this.customerModel = new CustomerModel();
 
-      if (this.Current_Tab == 'tabAccounting') { this.fg.controls['onboardstatus'].setValue(2); }
+      if (this.Current_Tab == 'tabAccounting') { this.fg.controls['onboardstatus'].setValue(1); }
 
       this.updateBasicCustomerDetail();
       //this.customerModel.Customer.Table.push(this.basicCustomerDetail);
@@ -1519,7 +1519,7 @@ export class CustomerComponent implements OnInit {
       this.updateInputPage();
 
       // Related Party
-
+debugger
       Swal.fire({
         showCloseButton: true,
         title: '',
