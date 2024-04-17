@@ -58,7 +58,7 @@
 
                 <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group">
-                        <label>Division</label>
+                        <label class="str">Division</label>
                         <ng-select  class="searchdropdown"  formControlName="Division" [clearable]="false" (ngModelChange)="getOfficeList($event);PurchaseCreateForm.controls['Office'].setValue(0);" name="Division" >
                             <ng-option [value]="0" disabled>--SELECT DIVISION--</ng-option>
                             <ng-container  *ngFor="let division of divisionList">
@@ -72,7 +72,7 @@
 
                 <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group">
-                        <label>Office</label>
+                        <label class="str">Office</label>
                         <ng-select  class="searchdropdown"  formControlName="Office" [clearable]="false"(ngModelChange)="getOfficeGST($event)" name="Office">
                             <ng-option [value]="0" disabled>--SELECT OFFICE--</ng-option>
                             <ng-container *ngFor="let office of officeList">
@@ -94,7 +94,7 @@
                     </div>
                 </div>
 
-     
+<!--      
             <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                 <label>Booking Against</label><br>
                 <div class="row ml-1">
@@ -134,10 +134,49 @@
                     </ng-select>  
                 </div>
             </div>
-           
+            -->
+
+            <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                <label>Booking Against</label><br>
+                <div class="row ml-1">
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" id="radio1" [checked]="bookingAgainst === 'general'" name="optradio" (change)="onBookingAgainstChange('general')">
+                        <label class="form-check-label" for="radio1">General</label>
+                    </div>
+                    <div class="form-check ml-5">
+                        <input type="radio" class="form-check-input" id="radio2" [checked]="bookingAgainst === 'provision'" name="optradio" (change)="onBookingAgainstChange('provision')">
+                        <label class="form-check-label" for="radio2">Against provision</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4" *ngIf="bookingAgainst === 'provision'">
+                <div class="form-group">
+                    <label>Provision Type</label>
+                    <ng-select class="searchdropdown" formControlName="ProvisionType" [clearable]="false" name="ProvisionType">
+                        <ng-option [value]="0" disabled>--SELECT PROVISION TYPE--</ng-option>                    
+                        <ng-option [value]="1">PARTIAL</ng-option>             
+                        <ng-option [value]="2">FULL</ng-option>
+                    </ng-select>  
+                </div>
+            </div>            
+            
+            <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4" *ngIf="bookingAgainst === 'provision'">
+                <div class="form-group">
+                    <label>Provision</label>
+                    <ng-select class="searchdropdown" formControlName="Provision" [clearable]="false" [placeholder]="'-- SELECT PROVISION --'">
+                        <ng-option [value]="0" disabled>--SELECT PROVISION--</ng-option>
+                        <ng-container *ngFor="let provision of provisionDropDownList">
+                            <ng-option [value]="provision.ProvisionId">
+                                <span class="textwrap">{{provision.ProvisionNumber | uppercase}}</span>
+                            </ng-option>
+                        </ng-container>
+                    </ng-select>  
+                </div>
+            </div>
                 <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group">
-                        <label class="str">Purchase Invoice #</label>
+                        <label>Purchase Invoice #</label>
                         <input formControlName="PINumber" readonly type="text" id="purchaseNo"
                             class="form-control w-100" />
                     </div>
@@ -223,7 +262,7 @@
                             <ng-option [value]="''" disabled>--SELECT VENDOR BRANCH--</ng-option>
                             <ng-container *ngFor="let vendor of vendorBranch">
                               <ng-option [value]="vendor.VendorBranchID">
-                               <span class="textwrap">{{vendor.BranchCode | uppercase}}</span>
+                               <span class="textwrap">{{vendor.CityName | uppercase}}</span>
                               </ng-option>
                             </ng-container>
                         </ng-select> 
@@ -452,21 +491,22 @@
                                     </td>
                                     <td> <input formControlName="Rate"
                                             (ngModelChange)="rateQuantityChangeEvent($event)" class="form-control"
-                                            onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly id="Rate" />
+                                            onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                            min="0" numbersOnly appDynamicDecimal id="Rate" />
                                     </td>
                                     <td> <input formControlName="Qty"
                                             (ngModelChange)="rateQuantityChangeEvent($event)" class="form-control"
-                                            onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly id="Qty" />
+                                            onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly appDynamicDecimal id="Qty" />
                                     </td>
                                     <td> <input readonly formControlName="Amount"
                                             [value]="PurchaseCreateForm.value.Rate * PurchaseCreateForm.value.Qty"
-                                            class="form-control"  id="Amount" onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly/>
+                                            class="form-control"  id="Amount" onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly />
                                     </td>
                                     <td>
                                         <ng-select class="searchdropdown" [formControlName]="'CurrencyId'" [clearable]="false" [appendTo]="'body'" (change)="changeCurrencyEvent($event)">
                                             <ng-option [value]="0" disabled>--SELECT CURRENCY--</ng-option>
                                             <ng-option *ngFor="let currency of currencyList" [value]="currency.ID">
-                                            <span class="textwrap">{{currency.Currency | uppercase}}</span>
+                                            <span class="textwrap">{{ getCurrencyCode(currency.Currency) | uppercase }}</span>
                                            </ng-option>
                                         </ng-select> 
                                     </td>
@@ -613,7 +653,7 @@
 
                         <div class="row ml-3 mt-5">
                             <div>
-                                <label>Bank Details</label>
+                                <label class="str">Bank Details</label>
                             </div>
                             <div>
                                 <div class="form-group ml-5">
@@ -635,7 +675,7 @@
                                     <ng-select style="width:250px"class="searchdropdown" [formControlName]="'InvoiceCurrency'"[clearable]="false" [appendTo]="'body'" (change)="changeCurrencyEvent($event)">
                                         <ng-option [value]="0" disabled>--SELECT CURRENCY--</ng-option>
                                         <ng-option *ngFor="let currency of currencyList" [value]="currency.ID">
-                                        <span class="textwrap">{{currency.Currency | uppercase}}</span>
+                                        <span class="textwrap">{{ getCurrencyCode(currency.Currency) | uppercase }}</span>
                                        </ng-option>
                                     </ng-select> 
                                 </div>
@@ -643,7 +683,7 @@
                         </div>
                         <div class="row ml-3 mt-1">
                             <div>
-                                <label>Invoice ExRate</label>
+                                <label class="str">Invoice ExRate</label>
                             </div>
                             <div style="margin-left: 33px;">
                                 <div class="form-group">
