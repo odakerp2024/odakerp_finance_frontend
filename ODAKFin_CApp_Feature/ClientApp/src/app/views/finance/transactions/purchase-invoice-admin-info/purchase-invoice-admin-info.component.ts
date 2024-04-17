@@ -483,10 +483,10 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     const dueDate = new Date(selectedDate);
     dueDate.setDate(dueDate.getDate() + creditDays);
 
-    this.DueDateopen = this.datePipe.transform(dueDate, 'dd-MM-y');
+    this.DueDateopen = this.datePipe.transform(dueDate, 'yyyy-MM-dd');
 
     // Set the DueDate field to today's date
-    const todayDate = this.datePipe.transform(new Date(), "dd-MM-yyyy")!;
+    const todayDate = this.datePipe.transform(new Date(), "yyyy-MM-dd")!;
     this.PurchaseCreateForm.controls['DueDate'].setValue(todayDate);
   }
 
@@ -743,9 +743,12 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     if (this.PurchaseCreateForm.value.Amountccr == "" || this.PurchaseCreateForm.value.Amountccr == 0) {
       validation += "<span style='color:red;'>*</span> <span>Please Enter Amount CCR.</span></br>";
     }
-    if (this.PurchaseCreateForm.value.TDSMaster == "" || this.PurchaseCreateForm.value.TDSMaster == 0) {
-      validation += "<span style='color:red;'>*</span> <span>Please Select TDS.</span></br>";
-    }
+    if (this.PurchaseCreateForm.value.TDSApplicability == 1) {
+      if (!this.PurchaseCreateForm.value.TDSMaster || this.PurchaseCreateForm.value.TDSMaster == 0) {
+          validation += "<span style='color:red;'>*</span> <span>Please Select TDS.</span></br>";
+      }
+  }
+  
     if (this.PurchaseCreateForm.value.IsRCM == "") {
       // validation += "<span style='color:red;'>*</span> <span>Please Select RCM.</span></br>";
       this.PurchaseCreateForm.get('IsRCM').setValue(0);
@@ -779,12 +782,12 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
         CurrencyId: info.CurrencyId,
         ExRate: info.ExRate ? info.ExRate : 1,
         Amountccr: info.Amountccr,
-        TDSMaster: info.TDSMaster,
-        TDSName: tds.SectionName,
-        TDSValue: tds.RatePercentage,
+        TDSMaster: info.TDSMaster ?  info.TDSMaster : 0,
+        TDSName: !tds ? '-' : tds.SectionName,
+        TDSValue: !tds ? '-' :tds.RatePercentage,
         IsRCM: info.IsRCM,
         GSTGroup: info.GSTGroup ? info.GSTGroup : 0,
-        CurrencyName: currency.CurrencyCode,
+        CurrencyName:this.getCurrencyCode(currency.Currency),
         AccountName: account.AccountName,
         IGST: 0,
         CGST: 0,
@@ -809,12 +812,12 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
         CurrencyId: info.CurrencyId,
         ExRate: info.ExRate ? info.ExRate : 1,
         Amountccr: info.Amountccr,
-        TDSMaster: info.TDSMaster,
-        TDSName: tds.SectionName,
-        TDSValue: tds.RatePercentage,
+        TDSMaster: info.TDSMaster ?  info.TDSMaster : 0,
+        TDSName: !tds ? '-' : tds.SectionName ,
+        TDSValue: !tds ? '-' :tds.RatePercentage,
         IsRCM: info.IsRCM,
         GSTGroup: info.GSTGroup ? info.GSTGroup : 0,
-        CurrencyName: currency.CurrencyCode,
+        CurrencyName:this.getCurrencyCode(currency.Currency),
         AccountName: account.AccountName,
         IGST: 0,
         CGST: 0,
@@ -1188,11 +1191,11 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       TDSAmount: info.TDSAmount
     };
     let purchaseTableList = this.PurchaseTableList;
-    // purchaseTableList.forEach(element => {
-    //   delete element.AccountName; 
-    //   delete element.CurrencyName;
-    //   delete element.TDSRate;
-    // });
+    purchaseTableList.forEach(element => {
+    element.TDSValue = element.TDSValue === '-' ? 0 : element.TDSValue;
+   // console.log(element.TDSValue , 'tdsvalue')
+    delete element.IsOrderTypeItem; 
+    });
     this.payload = {
       "PurchaseInvoice": {
         "Table": [Table],
@@ -1580,7 +1583,6 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
   }
 
   getFinalCalculation() {
-
     this.checkSameState();
 
     let invoiceAmount = 0;
@@ -1604,23 +1606,34 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       const tdsCalculation = (amountccr * e.TDSValue) / 100;
 
 
-      // if (this.PurchaseCreateForm.controls['IsRCM'].value == true) {
-      //   invoiceAmount += gstCalculation;
-      //   // tdsAmount
-      // } else {
-      //   invoiceAmount += amountccr;
+   
+       
+      // if (this.PurchaseCreateForm.controls['TDSApplicability'].value == 1) {
+      //   tdsAmount += tdsCalculation;
+      // } else if( ) {
+      //   tdsAmount += tdsCalculation;
       // }
+      const TDSApplicability = this.PurchaseCreateForm.controls['TDSApplicability'].value
+   //   console.log(TDSApplicability ,'tdsapplicable')
 
-      if (this.PurchaseCreateForm.controls['TDSApplicability'].value == 1) {
+      if (TDSApplicability == 1) {
+      
         tdsAmount += tdsCalculation;
-      } else {
-        tdsAmount += tdsCalculation;
-      }
-
-      // var subTotalAmount = this.TdsPercentageCalculation();
+    } else if (TDSApplicability == 2) {
+       
+        tdsAmount = 0;
+    } else if (TDSApplicability == 3) {
+      const ldcrate = this.PurchaseCreateForm.controls['LDCRate'].value
+      if ( ldcrate> 0) {
+          const tdsCalculation = (amountccr * ldcrate) / 100;    
+          tdsAmount += tdsCalculation; 
+        } 
+      
+    }
+    
       subTotalAmount = this.PurchaseCreateForm.controls['SubTotal'].value
       if (e) {
-        // let officeInfo = this.officeList.find(x => x.ID == this.PurchaseCreateForm.value.Office);
+       
 
 
         if (this.isSameState && this.PurchaseCreateForm.controls['IsRCM'].value) {
@@ -1643,18 +1656,19 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       SGST += e.SGST ? e.SGST : 0;
       IGST += e.IGST ? e.IGST : 0;
 
-      // Calculate TDS amount based on TDS rate and update the form controls
+      //Calculate TDS amount based on TDS rate and update the form controls
       // if (this.vendorTDS > 0) {
       //   const tdsRate = (subTotalAmount / 100) * this.vendorTDS;
       //   this.PurchaseCreateForm.controls['TDSRate'].setValue(tdsRate);
       // } else {
       //   const tdsRate = (subTotalAmount / 100) * this.vendorLDC
       //   this.PurchaseCreateForm.controls['TDSRate'].setValue(tdsRate);
+      // }
 
     });
 
     const vendorGSTcategory = this.PurchaseCreateForm.get('VendorGSTCategory').value;
-    console.log(vendorGSTcategory, 'VendorGSTCategory')
+   // console.log(vendorGSTcategory, 'VendorGSTCategory')
     if (vendorGSTcategory == 3 || vendorGSTcategory == 5) {
       // based on vendor category 3 is overseas & 5 is sez
       this.PurchaseCreateForm.controls['CGST'].setValue(Number(0).toFixed(this.entityFraction));

@@ -616,75 +616,14 @@
                 </div>
 
                 <div class="col-12 row p-0">
-                    <div class="col-8">
-                        <div class="col-7 mt-3">
-                            <label class="str">Upload File</label>
-                            <div class="file-upload">
-                                <input type="text" hidden />
-                                <input *ngIf="!isUpdateMode" class="file-upload__input" hidden type="file" name="myFile"
-                                    id="myFile" (change)="fileSelected($event)">
-
-                                <input *ngIf="isUpdateMode" class="file-upload__input" hidden readonly type="text"
-                                    name="myFile" id="myFile" (change)="fileSelected($event)">
-                                <label for="myFile" class="file-upload__button text-center"
-                                    style=" width: 50% !important; border: 1px solid #b1b1b1d1 !important;margin-top: 14px; border-radius: 10px; box-shadow: 0px 0px 5px 0px rgb(202 202 202); background-color: white; font-weight: 600; margin-right: 0.5rem !important;"
-                                    type="button">
-                                    <img class="ml-2" src="assets/images/docupload.png" alt="Upload image"
-                                        style="width: 1rem !important;" />
-                                    Choose File(s)
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="col-md-8 col-sm-6 col-lg-4 col-xl-4"> </div>
-
-                        <div class="col-md-9 mt-3">
-                            <table
-                                class="table table-responsive table-striped table-bordered w-100 dataTable no-footer">
-                                <thead class="text-center">
-                                    <tr>
-                                        <th tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
-                                            aria-label="Name: activate to sort column ascending"
-                                            style="width: 177.575px;">S.No
-                                        </th>
-                                        <th tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
-                                            aria-label="Name: activate to sort column ascending"
-                                            style="width: 177.575px;" (click)="sort('DivisionName')">File Name</th>
-
-                                        <th tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
-                                            class="text-center" aria-label="Name: activate to sort column ascending"
-                                            style="width: 177.575px;" (click)="sort('ShortName')">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="text-center" *ngIf="FileList.length > 0">
-                                    <tr *ngFor="let data of FileList;let i = index">
-                                        <td>{{i + 1}}</td>
-                                        <td id="documentFileName">{{data.FileName}}</td>
-                                        <td class="text-center">
-                                            <button [disabled]="isUpdateMode" type="submit"
-                                                class="btn btn-danger bmd-btn-fab"
-                                                (click)="OnClickDeleteValueFile(i)"><i
-                                                    class="material-icons editicon">delete</i>
-                                                <div class="ripple-container"></div>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                                <tbody *ngIf="FileList.length == 0">
-                                    <tr>
-                                        <td class="text-center" colspan="3">No records found.</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="row ml-3 mt-5">
+                    <div class="col-8 mt-3">
+                        <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
                             <div>
                                 <label class="str">Bank Details</label>
                             </div>
                             <div>
-                                <div class="form-group ml-5">
-                                    <ng-select style="width:250px"class="searchdropdown" formControlName="BankId" [clearable]="false"  name="bank">
+                                <div class="form-group">
+                                    <ng-select class="searchdropdown" formControlName="BankId" [clearable]="false"  name="bank">
                                         <ng-option [value]="''" >--SELECT BANK--</ng-option>
                                         <ng-option *ngFor="let bank of bankList" [value]="bank.BankID">
                                             {{ bank.BankName | uppercase }} - {{ bank.AccountNo | uppercase }}
@@ -693,13 +632,14 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row ml-3 mt-1">
+
+                        <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
                             <div>
                                 <label class="str">Invoice Currency</label>
                             </div>
                             <div>
-                                <div class="form-group ml-3">
-                                    <ng-select style="width:250px"class="searchdropdown" [formControlName]="'InvoiceCurrency'"[clearable]="false" [appendTo]="'body'" (change)="changeCurrencyEvent($event)">
+                                <div class="form-group">
+                                    <ng-select class="searchdropdown" [formControlName]="'InvoiceCurrency'"[clearable]="false" [appendTo]="'body'" (change)="changeCurrencyEvent($event)">
                                         <ng-option [value]="0" disabled>--SELECT CURRENCY--</ng-option>
                                         <ng-option *ngFor="let currency of currencyList" [value]="currency.ID">
                                         <span class="textwrap">{{ getCurrencyCode(currency.Currency) | uppercase }}</span>
@@ -708,24 +648,24 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row ml-3 mt-1">
+                        <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
                             <div>
                                 <label class="str">Invoice ExRate</label>
                             </div>
-                            <div style="margin-left: 33px;">
+                            <div >
                                 <div class="form-group">
-                                    <input style="width:250px" formControlName="InvoiceExrate"  class="form-control" type="number"
+                                    <input  formControlName="InvoiceExrate"  class="form-control" type="number"
                                     id="InvoiceExrate">
                                 </div>
                             </div>
                         </div>
-                        <div class="row ml-3 mt-1">
+                        <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
                             <div>
                                 <label>Remarks</label>
                             </div>
-                            <div style="margin-left: 67px;">
+                            <div>
                                 <div class="form-group">
-                                    <textarea   formControlName="Remarks" style="width:250px"class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                    <textarea   formControlName="Remarks" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -789,20 +729,66 @@
                                     type="number" id="NetAmount">
                             </div>
                         </div>
-
-                        <!-- <div class="col-md-6 col-sm-6 col-lg-10 col-xl-12">
-                            <div class="form-group">
-                                <label>Invoice Currency</label>
-                                <select [ngClass]=" isUpdate ? 'block-input' : 'block-input'"
-                                    formControlName="InvoiceCurrency" class="form-control my-select">
-                                    <option disabled value="0">--SELECT CURRENCY--</option>
-                                    <option disabled *ngFor="let currency of currencyList" [value]="currency.ID">
-                                        {{currency.Currency | uppercase}}
-                                    </option>
-                                </select>
-                            </div>
-                        </div> -->
                     </div>
+                </div>
+
+                <div class="col-6 mt-0">
+                    <label class="str">Upload File</label>
+                    <div class="file-upload">
+                        <input type="text" hidden />
+                        <input *ngIf="!isUpdateMode" class="file-upload__input" hidden type="file" name="myFile"
+                            id="myFile" (change)="fileSelected($event)">
+
+                        <input *ngIf="isUpdateMode" class="file-upload__input" hidden readonly type="text"
+                            name="myFile" id="myFile" (change)="fileSelected($event)">
+                        <label for="myFile" class="file-upload__button text-center"
+                            style=" width: 50% !important; border: 1px solid #b1b1b1d1 !important;margin-top: 14px; border-radius: 10px; box-shadow: 0px 0px 5px 0px rgb(202 202 202); background-color: white; font-weight: 600; margin-right: 0.5rem !important;"
+                            type="button">
+                            <img class="ml-2" src="assets/images/docupload.png" alt="Upload image"
+                                style="width: 1rem !important;" />
+                            Choose File(s)
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col-md-7 mt-3">
+                    <table
+                        class="table table-responsive table-striped table-bordered w-100 dataTable no-footer">
+                        <thead class="text-center">
+                            <tr>
+                                <th tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                                    aria-label="Name: activate to sort column ascending"
+                                    style="width: 177.575px;">S.No
+                                </th>
+                                <th tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                                    aria-label="Name: activate to sort column ascending"
+                                    style="width: 177.575px;" >File Name</th>
+
+                                <th tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                                    class="text-center" aria-label="Name: activate to sort column ascending"
+                                    style="width: 177.575px;" >Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center" *ngIf="FileList.length > 0">
+                            <tr *ngFor="let data of FileList;let i = index">
+                                <td>{{i + 1}}</td>
+                                <td id="documentFileName">{{data.FileName}}</td>
+                                <td class="text-center">
+                                    <button [disabled]="isUpdateMode" type="submit"
+                                        class="btn btn-danger bmd-btn-fab"
+                                        (click)="OnClickDeleteValueFile(i)"><i
+                                            class="material-icons editicon">delete</i>
+                                        <div class="ripple-container"></div>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody *ngIf="FileList.length == 0">
+                            <tr>
+                                <td class="text-center" colspan="3">No records found.</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
 
                 <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 text-right mt-4">
