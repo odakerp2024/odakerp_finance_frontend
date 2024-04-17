@@ -54,38 +54,38 @@
             <div class="row mb-3">
                 <h4 class="col-12">Basic Details</h4>
 
-                <div class="col-4" *ngIf="requestType">
+                <div class="col-4" *ngIf="RequestType">
                     <div class="form-group bmd-form-group w-100">
                         <label >Previous Application Number</label>
                         
                         <ng-select  class="searchdropdown"  
-                        (change)="handleChange($event)" [clearable]="false">
-                            <ng-option [value]="''" disabled>--SELECT PREVIOUS APPLICATION NUMBER--</ng-option>
+                        (change)="handleChange($event)" [clearable]="false"  formControlName="PreviousApplicationId">
+                            <ng-option [value]="0" disabled>--SELECT PREVIOUS APPLICATION NUMBER--</ng-option>
                                 <ng-container *ngFor="let application of filteredApplications">
                               <ng-option   [value]="application.CreditApplicationId" >
                                 <span class="textwrap"> {{application.CreditApplicationNumber }}</span>
-                               
+                                
                               </ng-option>
                            </ng-container>
                         </ng-select> 
                     </div>
                 </div>
 
-                <div class="col-4" *ngIf="requestType" ></div>
+                <div class="col-4" *ngIf="RequestType" ></div>
                
-                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4" *ngIf="requestType">
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4" *ngIf="RequestType">
                     <h5>Request Type</h5>
                     <div class="row ml-1 mb-3">
                         <div class="form-check">
 
                             <input  formControlName="IsRevise" mdbRadio type="radio" class="form-check-input" id="radio1"
-                                name="requestType" [value]="true" 
+                                name="RequestType" [value]="true" 
                                 (click)="setRevise()" >
                             <label class="form-check-label" for="radio1">Revise</label>
                         </div>
                         <div class="form-check ml-1">
                             <input formControlName="IsRevoke" mdbRadio type="radio" class="form-check-input" id="radio2" 
-                                name="requestType" [value]="true" 
+                                name="RequestType" [value]="true" 
                                 (click)="setRevoke()" >
                             <label class="form-check-label" for="radio2">Revoke</label>
                         </div>
@@ -451,7 +451,7 @@
                 </table>
             </div> -->
            
-            <div  *ngIf="requestType ">
+            <div  *ngIf="RequestType ">
                 <ng-component [ngTemplateOutlet]="currentCreditLimit"></ng-component>
                          <div class="row mb-3">
                             <h4 class="col-12">Current Credit Limit</h4>
@@ -498,7 +498,7 @@
             </div>
             
             
-            <div *ngIf="!requestType ">
+            <div *ngIf="!RequestType ">
                 <ng-component [ngTemplateOutlet]="currentCreditLimit"></ng-component>
                             <div class="row mb-3">
                                 <h4 class="col-12">Proposed Credit Limit</h4>
@@ -542,7 +542,7 @@
                     
             </div>
            
-            <div *ngIf="requestType && !creditApplicationForm.value.IsRevoke ">
+            <div *ngIf="RequestType && !creditApplicationForm.value.IsRevoke ">
                 <ng-component [ngTemplateOutlet]="currentCreditLimit"></ng-component>
                             <div class="row mb-3">
                                 <h4 class="col-12">Proposed Credit Limit</h4>

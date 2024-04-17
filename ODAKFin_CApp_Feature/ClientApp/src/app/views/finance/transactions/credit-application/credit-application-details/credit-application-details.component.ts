@@ -40,6 +40,7 @@ export class CreditApplicationDetailsComponent implements OnInit {
   minDate: string = this.datePipe.transform(new Date(), "yyyy-MM-dd");
   creditApplicationForm: any;
   creditId: any = "";
+  PreviousApplicationId: any = "";
 
   entityDateFormat =
     this.commonDataService.getLocalStorageEntityConfigurable("DateFormat");
@@ -82,7 +83,7 @@ export class CreditApplicationDetailsComponent implements OnInit {
   creditApplicationList = [];
   filteredApplications: any[] = [];
   // creditType: string = "Revise";
-  requestType: boolean =false;
+  RequestType: boolean =false;
   isGetByIdInProgress = false;
   creditType: string ;
   IsRevise: boolean ;
@@ -115,7 +116,7 @@ export class CreditApplicationDetailsComponent implements OnInit {
     // });
 
     this.route.paramMap.subscribe(params => {
-      this.requestType = params.get('requestType') === 'true';   
+      this.RequestType = params.get('RequestType') === 'true';   
     });    
     this.createForm(); 
     await this.getDivision();   
@@ -129,6 +130,7 @@ export class CreditApplicationDetailsComponent implements OnInit {
     // this.getById();
     this.route.params.subscribe(async (param) => {
       this.creditId = +param["creditId"] ? +param["creditId"] : 0;
+      this.PreviousApplicationId = +param["PreviousApplicationId"] ? +param["PreviousApplicationId"] : 0;
       if (this.creditId) {
         this.isUpdate = true;       
         this.getById();
@@ -143,6 +145,7 @@ export class CreditApplicationDetailsComponent implements OnInit {
 
   createForm() {
     this.creditApplicationForm = this.fb.group({
+      PreviousApplicationId: [0],
       CreditApplicationId: [0],
       IsRevise: true,
       IsRevoke: false,
@@ -179,6 +182,10 @@ export class CreditApplicationDetailsComponent implements OnInit {
   getById() {
     const payload = {
       CreditApplicationId: this.creditId,
+      RequestType : this.RequestType ,
+      // PreviousApplicationId: this.creditApplicationForm.value.PreviousApplicationId ? this.creditApplicationForm.value.PreviousApplicationId : this.creditId ,
+      PreviousApplicationId: this.RequestType  ? this.PreviousApplicationId : this.creditId,
+      // PreviousApplicationId: this.creditApplicationForm.value.PreviousApplicationId,
     };
 
     this.creditApplicationService.getById(payload).subscribe((result: any) => {
@@ -207,6 +214,7 @@ export class CreditApplicationDetailsComponent implements OnInit {
           this.CreatedBy = Table.CreatedByName;
           this.ModifiedBy = Table.UpdatedByName;
           this.creditApplicationForm.patchValue({
+           PreviousApplicationId: Table.PreviousApplicationId,
             CreditApplicationId: Table.CreditApplicationId,
             CreditApplicationNumber: Table.CreditApplicationNumber,
             ApplicationDate: this.datePipe.transform(
@@ -303,7 +311,9 @@ export class CreditApplicationDetailsComponent implements OnInit {
 
 getbyId(selectedCreditApplicationId: any) {  
     const payload = {
-        CreditApplicationId: selectedCreditApplicationId,
+         CreditApplicationId: selectedCreditApplicationId,
+        RequestType : this.RequestType,
+       PreviousApplicationId : selectedCreditApplicationId,
     };
    
     this.creditApplicationService.getById(payload).subscribe((result: any) => {
@@ -338,14 +348,14 @@ getbyId(selectedCreditApplicationId: any) {
               
               this.isEditMode = true;
               this.creditApplicationForm.patchValue({
-                    //  OldCreditApplicationId: Table.CreditApplicationId,
+                     PreviousApplicationId: Table.PreviousApplicationId,
                     CreditApplicationId: 0,
                     // CreditApplicationNumber: Table.CreditApplicationNumber,
                     // ApplicationDate: this.datePipe.transform(
                     //     new Date(Table.ApplicationDate),
                     //     "yyyy-MM-dd"
                     // ),
-
+                    RequestType : this.RequestType = true ? true : false,
                     ApplicationDate: this.datePipe.transform(
                           new Date(this.minDate),
                           "yyyy-MM-dd"
@@ -428,8 +438,8 @@ getbyId(selectedCreditApplicationId: any) {
   //     this.creditdaysValidation = null; 
   //   }
   // }
-  onCreditLimitDays(event: any, requestType: boolean = false) {
-    const fieldName = requestType ? 'ReviseCreditLimitDays' : 'CreditLimitDays';
+  onCreditLimitDays(event: any, RequestType: boolean = false) {
+    const fieldName = RequestType ? 'ReviseCreditLimitDays' : 'CreditLimitDays';
     const fieldValue = event.target.value;
 
     const highestValue = Math.max(...this.creditLimit.map((res: any) => res.MaxCreditDays));
@@ -467,8 +477,8 @@ getbyId(selectedCreditApplicationId: any) {
     });   
   }
 
-  onCreditLimitAmount(event: any, requestType: boolean = false) {
-    const fieldName = requestType ? 'ReviseCreditLimitAmount' : 'CreditLimitAmount';
+  onCreditLimitAmount(event: any, RequestType: boolean = false) {
+    const fieldName = RequestType ? 'ReviseCreditLimitAmount' : 'CreditLimitAmount';
     const fieldValue = event.target.value;
 
     const highestValue = Math.max(...this.creditLimit.map((res: any) => res.MaxCreditAmount));
@@ -525,7 +535,7 @@ getbyId(selectedCreditApplicationId: any) {
     }
     const Table = this.creditApplicationForm.value;
 
-    if(!this.requestType){
+    if(!this.RequestType){
       Table.IsRevise = false;
       Table.IsRevoke = false;
     }
@@ -539,12 +549,13 @@ getbyId(selectedCreditApplicationId: any) {
             ),
             ApplicationStatus: +Table.ApplicationStatus,
             CreatedBy: +Table.CreatedBy,
+            PreviousApplicationId: this.RequestType == true ? Table.PreviousApplicationId : Table.CreditApplicationId,
             CreditApplicationId: Table.CreditApplicationId,
             CreditApplicationNumber: Table.CreditApplicationNumber,
             CreditLimitDays: this.ReviseCreditLimitDays ? this.ReviseCreditLimitDays : Table.CreditLimitDays,
             CreditLimitAmount: this.ReviseCreditLimitAmount ? this.ReviseCreditLimitAmount : Table.CreditLimitAmount,
             CustomerId: +Table.CustomerId,
-
+            RequestType: this.RequestType == true ? true : false,
             IsRevise: +Table.IsRevise ? true : false, 
             IsRevoke: +Table.IsRevoke ? true : false, 
             CustomerPan: Table.CustomerPan,
@@ -638,17 +649,17 @@ getbyId(selectedCreditApplicationId: any) {
           }
           Swal.fire("", result.data.Message, "success");
           const creditApplicationId = result.data.Id;
-   
-         
+   const PreviousApplicationId = payload.CreditApplication.Table[0].PreviousApplicationId
+    
           const isRevise = payload.CreditApplication.Table[0].IsRevise;
           const isRevoke = payload.CreditApplication.Table[0].IsRevoke;
     
       
-          const requestType = isRevise || isRevoke;
+          const RequestType = isRevise || isRevoke;
     
           this.router.navigate([
             "/views/transactions/credit-application/credit-application-details",
-            { creditId: creditApplicationId, requestType: requestType },
+            { creditId: creditApplicationId, RequestType: RequestType, PreviousApplicationId: PreviousApplicationId },
           ]);
         }
       });
@@ -818,7 +829,7 @@ getbyId(selectedCreditApplicationId: any) {
     // }
 
     // Proposed Credit Limit
-    if(!Table.IsRevoke && !this.requestType){
+    if(!Table.IsRevoke && !this.RequestType){
     if (!Table.CreditLimitDays) {
       validation +=
         "<span style='color:red;'>*</span> <span>Please select Limit Days .</span></br>";
@@ -836,7 +847,7 @@ getbyId(selectedCreditApplicationId: any) {
 
     
   }
-  if(this.requestType && Table.IsRevise){
+  if(this.RequestType && Table.IsRevise){
     debugger
   if (!this.ReviseCreditLimitDays) {
     validation +=
@@ -1459,27 +1470,28 @@ getbyId(selectedCreditApplicationId: any) {
         if (result.message == "Success") {
           this.creditLimit = result.data.Table2;
         }
+        debugger
         if (result.message == "Success") {
           if (list.length > 0) {
 
-               if (this.requestType && this.creditApplicationForm.applicationStatus == 22  ) {
-                // if (this.IsRevise && this.IsRevoke  ) {
-                  // If requestType is true, set CreditValidationId to 0
-                  this.questionArray = list.map((question: any) => ({
-                      CreditValidationId: 0,
-                      CreditApplicationId: question.CreditApplicationId,
-                      CreditQuestions: question.CreditQuestions,
-                      Response: question.Response,
-                  }));
-              } else {
-                  // Otherwise, retain the original list
+              //  if (this.RequestType == true) {
+              //   // if (this.IsRevise && this.IsRevoke  ) {
+              //     // If requestType is true, set CreditValidationId to 0
+              //     this.questionArray = list.map((question: any) => ({
+              //         CreditValidationId: 0,
+              //         CreditApplicationId: question.CreditApplicationId,
+              //         CreditQuestions: question.CreditQuestions,
+              //         Response: question.Response,
+              //     }));
+              // } else {
+              //     // Otherwise, retain the original list
                   this.questionArray = list;
-              }
+              // }
           } else {
               // If list is empty, create new array with CreditValidationId set to 0
               const finalQuestionList = result.data.Table1.map((question: any) => ({
                   CreditValidationId: 0,
-                  CreditApplicationId: 0,
+                  CreditApplicationId: this.RequestType == true ? this.PreviousApplicationId : 0,
                   CreditQuestions: question.CreditQuestions,
                   Response: "",
               }));           
@@ -1537,7 +1549,7 @@ getbyId(selectedCreditApplicationId: any) {
               Swal.fire('Please Contact Administrator');            
           }
           else {
-            if(!this.requestType){
+            if(!this.RequestType){
             this.enableEditForm();
             this.editMode();
             }

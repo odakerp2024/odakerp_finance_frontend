@@ -84,7 +84,7 @@ pagedItems: any[];// paged items
       "EndDate" :['']
     });
   }
-  CreateNew(requestType: boolean){
+  CreateNew(RequestType: boolean){
 
     const userID = localStorage.getItem("UserID");
     const paylod = {
@@ -102,7 +102,7 @@ pagedItems: any[];// paged items
               Swal.fire('Please Contact Administrator');
           }
           else {
-            this.router.navigate(['/views/transactions/credit-application/credit-application-details', { requestType: requestType }]);
+            this.router.navigate(['/views/transactions/credit-application/credit-application-details', { RequestType: RequestType }]);
           }
         }
         else {
@@ -144,7 +144,7 @@ pagedItems: any[];// paged items
     this.getCreditApplication();
   }
 
-  editCreditApplication(id, IsRevise, IsRevoke) {
+  editCreditApplication(id, IsRevise, IsRevoke, PreviousApplicationId) {
     const userID = localStorage.getItem("UserID");
     const payload = {
       userID: Number(userID),
@@ -163,7 +163,7 @@ pagedItems: any[];// paged items
             this.pager = {};
             this.filterFormCreate();
             this.getCreditApplication();
-            this.navigateToCreditApplicationDetails(id, isReviseOrRevoke); // Set requestType based on IsRevise or presence of revise/revoke values
+            this.navigateToCreditApplicationDetails(id, isReviseOrRevoke, PreviousApplicationId); // Set requestType based on IsRevise or presence of revise/revoke values
           }
         } else {
           Swal.fire('Please Contact Administrator');
@@ -186,9 +186,9 @@ pagedItems: any[];// paged items
     return false;
   }
   
-  navigateToCreditApplicationDetails(id, requestType) {
+  navigateToCreditApplicationDetails(id, RequestType, PreviousApplicationId) {
     // Navigate to credit application details with specified parameters
-    this.router.navigate(['/views/transactions/credit-application/credit-application-details', { creditId: id, requestType: requestType }]);
+    this.router.navigate(['/views/transactions/credit-application/credit-application-details', { creditId: id, RequestType: RequestType, PreviousApplicationId: PreviousApplicationId }]);
   }
   
   // getDivision() {
