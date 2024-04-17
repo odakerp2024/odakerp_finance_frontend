@@ -467,17 +467,34 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     })
   }
 
-  calculateDueDate(maxDate: any) {
+  // calculateDueDate(maxDate: any) {
 
+  //   const creditDays = this.duedatelist.length > 0 ? this.duedatelist[0].CreditDays : 0;
+  //   const selectedDate = maxDate.value as Date;
+
+  //   const dueDate = new Date(selectedDate);
+  //   dueDate.setDate(dueDate.getDate() + creditDays)
+
+  //   this.DueDateopen = this.datePipe.transform(dueDate, 'dd-MM-y');
+
+  // }
+
+  calculateDueDate(event: any) {
+    const selectedDate = event.value as Date;
     const creditDays = this.duedatelist.length > 0 ? this.duedatelist[0].CreditDays : 0;
-    const selectedDate = maxDate.value as Date;
 
     const dueDate = new Date(selectedDate);
-    dueDate.setDate(dueDate.getDate() + creditDays)
+    dueDate.setDate(dueDate.getDate() + creditDays);
 
     this.DueDateopen = this.datePipe.transform(dueDate, 'dd-MM-y');
 
+    // Set the DueDate field to today's date
+    const todayDate = this.datePipe.transform(new Date(), "dd-MM-yyyy")!;
+    this.PurchaseCreateForm.controls['DueDate'].setValue(todayDate);
   }
+
+
+
 
   getVendorList() {
     return new Promise((resolve, reject) => {
@@ -738,10 +755,10 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     }
     if (this.PurchaseCreateForm.value.IsRCM === 1 && this.PurchaseCreateForm.value.GSTGroup === 0) {
       // Skip validation when IsRCM is 1 and GSTGroup is 0
-  } else {
+    } else {
       if (this.PurchaseCreateForm.value.IsRCM === 1 && this.PurchaseCreateForm.value.GSTGroup === "") {
-          // If IsRCM is 1 and GSTGroup is empty, show validation error
-          validation += "<span style='color:red;'>*</span> <span>Please Enter GST Group.</span></br>";
+        // If IsRCM is 1 and GSTGroup is empty, show validation error
+        validation += "<span style='color:red;'>*</span> <span>Please Enter GST Group.</span></br>";
       }
     }
     if (validation != "") {
@@ -1466,7 +1483,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
   }
 
   checkBranchState(branch) {
-    
+
     this.selectedBranchStateId = branch.SourceOfSupply;
     this.getFinalCalculation();
   }
@@ -1500,9 +1517,9 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     // Calculate invoiceAmount based on amountccr and GSTGroup
     this.PurchaseTableList.forEach(e => {
       const amountccr = e.Amountccr; // Retrieve amountccr value from the current element e
-      const gstCalculation = (amountccr * e.GSTGroup )/ 100;
+      const gstCalculation = (amountccr * e.GSTGroup) / 100;
       const tdsCalculation = (amountccr * e.TDSValue) / 100;
-     
+
 
       // if (this.PurchaseCreateForm.controls['IsRCM'].value == true) {
       //   invoiceAmount += gstCalculation;
@@ -1524,12 +1541,12 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
 
 
         if (this.isSameState && this.PurchaseCreateForm.controls['IsRCM'].value) {
-          let info = subTotalAmount * (e.GSTGroup / 100);
+          let info = e.Amountccr * (e.GSTGroup / 100);
           e.CGST = Math.trunc(info / 2);
           e.SGST = Math.trunc(info / 2);
           e.IGST = 0;
         } else if (!this.isSameState && this.PurchaseCreateForm.controls['IsRCM'].value) {
-          let info = subTotalAmount * (e.GSTGroup / 100);
+          let info = e.Amountccr * (e.GSTGroup / 100);
           e.CGST = 0;
           e.SGST = 0;
           e.IGST = info;
@@ -1550,21 +1567,34 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       // } else {
       //   const tdsRate = (subTotalAmount / 100) * this.vendorLDC
       //   this.PurchaseCreateForm.controls['TDSRate'].setValue(tdsRate);
-      // }
 
     });
 
-    // Update form controls
-    this.PurchaseCreateForm.controls['CGST'].setValue(Number(CGST).toFixed(this.entityFraction));
-    this.PurchaseCreateForm.controls['SGST'].setValue(Number(SGST).toFixed(this.entityFraction));
-    this.PurchaseCreateForm.controls['IGST'].setValue(Number(IGST).toFixed(this.entityFraction));
+    const vendorGSTcategory = this.PurchaseCreateForm.get('VendorGSTCategory').value;
+    console.log(vendorGSTcategory ,'VendorGSTCategory')
+    if (vendorGSTcategory == 3 || vendorGSTcategory == 5) {
+      // based on vendor category 3 is overseas & 5 is sez
+      this.PurchaseCreateForm.controls['CGST'].setValue(Number(0).toFixed(this.entityFraction));
+      this.PurchaseCreateForm.controls['SGST'].setValue(Number(0).toFixed(this.entityFraction));
+      this.PurchaseCreateForm.controls['IGST'].setValue(Number(0).toFixed(this.entityFraction));
 
+      invoiceAmount = Number((subTotalAmount).toFixed(this.entityFraction));
+      this.PurchaseCreateForm.controls['TDSRate'].setValue(tdsAmount.toFixed(this.entityFraction));
+      this.PurchaseCreateForm.controls['InvoiceAmount'].setValue(invoiceAmount);
+      this.PurchaseCreateForm.controls['NetAmount'].setValue((invoiceAmount - tdsAmount).toFixed(this.entityFraction));
 
-    invoiceAmount = Number((subTotalAmount + CGST + SGST + IGST).toFixed(this.entityFraction));
-    // Update form controls
-    this.PurchaseCreateForm.controls['TDSRate'].setValue(tdsAmount.toFixed(this.entityFraction));
-    this.PurchaseCreateForm.controls['InvoiceAmount'].setValue(invoiceAmount);
-    this.PurchaseCreateForm.controls['NetAmount'].setValue((invoiceAmount - tdsAmount).toFixed(this.entityFraction));
+    } else {
+
+      this.PurchaseCreateForm.controls['CGST'].setValue(Number(CGST).toFixed(this.entityFraction));
+      this.PurchaseCreateForm.controls['SGST'].setValue(Number(SGST).toFixed(this.entityFraction));
+      this.PurchaseCreateForm.controls['IGST'].setValue(Number(IGST).toFixed(this.entityFraction));
+
+      invoiceAmount = Number((subTotalAmount + CGST + SGST + IGST).toFixed(this.entityFraction));
+      this.PurchaseCreateForm.controls['TDSRate'].setValue(tdsAmount.toFixed(this.entityFraction));
+      this.PurchaseCreateForm.controls['InvoiceAmount'].setValue(invoiceAmount);
+      this.PurchaseCreateForm.controls['NetAmount'].setValue((invoiceAmount - tdsAmount).toFixed(this.entityFraction));
+    }
+
   }
 
 

@@ -283,7 +283,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-4 col-sm-6 col-lg-4 col-xl-4">
+                <!-- <div class="col-md-4 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group">
                         <label class="str mb-2">Vendor Invoice Date</label>
                         <mat-form-field  class="tillDate mat_date_picker"   appearance="outline">
@@ -293,13 +293,12 @@
                             <mat-datepicker-toggle matSuffix [for]="VIDate"></mat-datepicker-toggle>
                             <mat-datepicker #VIDate></mat-datepicker>
                         </mat-form-field>
-                        <!-- <input [max]="maxDate" formControlName="VIDate" class="form-control" type="date"
-                            id="txtRemarks"> -->
+                  
                     </div>
-                </div>      
-               
+                </div>       -->
 
-                <div class="col-md-4 col-sm-6 col-lg-4 col-xl-4">
+
+                <!-- <div class="col-md-4 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group">
                         <label>Due Date</label>
                         <input formControlName="DueDate" readonly class="form-control" [placeholder]="entityDateFormat" type="text" id="DueDate" *ngIf="duedatelist && duedatelist.length > 0">
@@ -311,7 +310,35 @@
                             <mat-datepicker #DueDate></mat-datepicker>
                         </mat-form-field>
                     </div>
+                </div> -->
+
+                <div class="col-md-4 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="str mb-2">Vendor Invoice Date</label>
+                        <mat-form-field  class="tillDate mat_date_picker"   appearance="outline">
+                            <input matInput (click)="VIDate.open()" readonly [max]="maxDate" 
+                                (dateChange)="calculateDueDate($event);"
+                                autocomplete="off" [matDatepicker]="VIDate"  id="VIDate" [placeholder]="entityDateFormat" formControlName="VIDate">
+                            <mat-datepicker-toggle matSuffix [for]="VIDate"></mat-datepicker-toggle>
+                            <mat-datepicker #VIDate></mat-datepicker>
+                        </mat-form-field>
+                    </div>
                 </div>
+                
+                <div class="col-md-4 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label>Due Date</label>
+                        <input formControlName="DueDate" readonly class="form-control" [placeholder]="entityDateFormat" type="text" id="DueDate"  [value]="DueDateopen"
+                            *ngIf="duedatelist && duedatelist.length > 0; else currentDate">
+                    </div>
+                    <ng-template #currentDate>
+                        <div>
+                            <input formControlName="DueDate" readonly class="form-control" [placeholder]="entityDateFormat" type="text" id="DueDate"
+                                [min]="minDate" [max]="maxDate">
+                        </div>
+                    </ng-template>
+                </div>
+                
 
 
                 <div class="col-md-4 col-sm-6 col-lg-4 col-xl-4">
