@@ -180,6 +180,7 @@ export class CreditApplicationDetailsComponent implements OnInit {
 
   // * get the credit application by ID and patch the value to the form
   getById() {
+  
     const payload = {
       CreditApplicationId: this.creditId,
       RequestType : this.RequestType ,
@@ -213,6 +214,7 @@ export class CreditApplicationDetailsComponent implements OnInit {
           this.ModifiedOn = Table.UpdatedDate;
           this.CreatedBy = Table.CreatedByName;
           this.ModifiedBy = Table.UpdatedByName;
+          debugger
           this.creditApplicationForm.patchValue({
            PreviousApplicationId: Table.PreviousApplicationId,
             CreditApplicationId: Table.CreditApplicationId,
@@ -225,7 +227,7 @@ export class CreditApplicationDetailsComponent implements OnInit {
             DivisionId: Table.DivisionId,
             OfficeId: Table.OfficeId,
             CustomerId: Table.CustomerId,
-            CustomerBranchId: Table.CityName,
+            CustomerBranchId: Table.CustomerBranchId,
             SalesPersonId: Table.SalesPIC,
             Trade: Table.Trade,
             CustomerStatus: Table.CustomerStatus == "Active" ? 1 : 0,
@@ -244,17 +246,21 @@ export class CreditApplicationDetailsComponent implements OnInit {
             StatusId: 1,
           });         
           this.getWQuestions(result.data.Table1);
+        
         }
 
         if (result.data.Table2) {
           // 
           this.documentList = result.data.Table2;
           this.documentInfo = this.constructDocumentPayload(this.documentList);
+          
         }
+        
 
         if (result.data.Table1) {        
           this.questionArray = result.data.Table1;
         }
+        
         this.reset();       
       }
     });
@@ -498,9 +504,13 @@ getbyId(selectedCreditApplicationId: any) {
 
   // * document upload functionality
   uploadDocument(event) {
+    debugger
     let newDoc = {
-      CustomerDocumentsID: 0,
-      CustomerBranchID: this.creditApplicationForm.value.CustomerBranchId,
+      CustomerDocumentsID:  0,
+      CreditApplicationId: this.RequestType == true ? this.PreviousApplicationId :this.creditApplicationForm.value.CreditApplicationId,
+    //  CustomerBranchID: this.creditApplicationForm.value.CustomerBranchId,
+    //  result.data.Table[0].CustomerBranchId
+    CustomerBranchID: this.creditApplicationForm.value.CustomerBranchId,
       DocumentName: event.DocumentName,
       FilePath: event.FilePath,
       // "UpdatedOn": event.UploadedOn
@@ -698,6 +708,7 @@ getbyId(selectedCreditApplicationId: any) {
 
   // * construct and pass the data to document component
   constructDocumentPayload(docList) {
+    debugger
     if (docList) {
       const newDocument = [];
       docList.forEach((item) => {
@@ -1320,7 +1331,7 @@ getbyId(selectedCreditApplicationId: any) {
         this.creditApplicationForm.value.SalesPersonId =
           this.customerDetail["data"].Table2[0].SalesId;
           this.patchCustomerData(this.customerDetail);
-        this.documentInfo = this.constructDocumentPayload(doc);
+         this.documentInfo = this.constructDocumentPayload(doc);
        
       });
     this.customerService
@@ -1486,6 +1497,7 @@ getbyId(selectedCreditApplicationId: any) {
               // } else {
               //     // Otherwise, retain the original list
                   this.questionArray = list;
+                 
               // }
           } else {
               // If list is empty, create new array with CreditValidationId set to 0
@@ -1495,11 +1507,11 @@ getbyId(selectedCreditApplicationId: any) {
                   CreditQuestions: question.CreditQuestions,
                   Response: "",
               }));           
-                   
+           debugger        
             this.questionArray = finalQuestionList;
-            this.dropDownOptions = [...result.data.Table];
-          }
+          }   
         }
+        this.dropDownOptions = [...result.data.Table];
       },
       (error) => {}
     );
