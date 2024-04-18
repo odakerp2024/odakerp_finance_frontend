@@ -490,7 +490,6 @@ getFinalPayload() {
   return payload;
 }
 
-
   savePayment(payload, type) {
     this.provisionService.savePayment(payload).pipe(takeUntil(this.ngUnsubscribe)).subscribe((result: any) => {
       if (result.message == "Success") {
