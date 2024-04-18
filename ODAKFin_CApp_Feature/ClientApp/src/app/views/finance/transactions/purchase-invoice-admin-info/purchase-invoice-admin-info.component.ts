@@ -276,7 +276,8 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       });
     }
   }
-  getPurchaseInvoiceAdminInfo() {
+  async  getPurchaseInvoiceAdminInfo() {
+ 
     var service = `${this.globals.APIURL}/PurchaseInvoice/GetPurchaseInvoiceById`; var payload = { Id: this.PurchaseInvoiceId };
     this.dataService.post(service, payload).subscribe(async (result: any) => {
       this.PurchaseTableList = [];
@@ -294,7 +295,11 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
         if (info.PurchaseOrder) this.orderType = 'Purchase';
         else if (info.InternalOrder) this.orderType = 'Internal';
         else this.orderType = '';
-
+       
+        // to get Purchase or Internal order number
+        this.purchaseOrderChangeEvent('Purchase', info.PurchaseOrder);
+        this.purchaseOrderChangeEvent('Internal', info.InternalOrder);
+       
         this.PurchaseCreateForm.patchValue({
           PurchaseInvoiceId: this.PurchaseInvoiceId,
           Division: info.Division,
@@ -340,7 +345,9 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
         });
         this.getOfficeList(info.Division);
         this.getVendorBranchList(info.VendorId, info.VendorBranch, false);
-        const vendorDetails = await this.getVendorDetailsInfo(info.VendorBranch)
+        const vendorDetails = await this.getVendorDetailsInfo(info.VendorBranch);
+        await this.getInternalOrderList();
+        await this.getPurchaseList();
 
         if (result.data.Table1.length > 0) {
           this.PurchaseTableList = []
