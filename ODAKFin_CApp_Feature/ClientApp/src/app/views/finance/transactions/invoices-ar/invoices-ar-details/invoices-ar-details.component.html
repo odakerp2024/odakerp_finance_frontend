@@ -104,7 +104,7 @@
                         <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'PartyId'"(change)="partyEvent($event)">
                             <ng-option [value]="0" disabled>--SELECT PARTY--</ng-option>
                             <ng-option *ngFor="let customer of customerList"  [value]="customer.CustomerID">
-                                <span class="textwrap">{{customer.CustomerName | uppercase}}</span>
+                                <span class="textwrap">{{customer.CustomerName | uppercase}} - {{customer.CityName | uppercase}}</span>
                             </ng-option>
                         </ng-select> 
                     </div>
@@ -144,7 +144,7 @@
                             <ng-container *ngIf="receiptList?.length != 0; else noRecord2">
                                 <tr *ngFor="let receipt of invoiceForm.get('receiptInfo').controls; let i = index"
                                     [formGroupName]="i">
-                                    <td> <input class="text-center border-0" formControlName="VoucherNumber" readonly
+                                    <td> <input class="text-center border-0 voucher-column" formControlName="VoucherNumber" readonly
                                             [value]="receipt.VoucherNumber"  Style="max-width:120px" type="text">
                                     </td>
                                     <td>
@@ -152,7 +152,7 @@
                                             [value]="receipt.VoucherDate"  Style="max-width:70px" type="text">
                                     </td>
                                     <td>
-                                        <input class="text-center border-0" formControlName="VoucherAmount" readonly
+                                        <input class="text-center border-0 Voucher-amount" formControlName="VoucherAmount" readonly
                                             [value]="receipt.VoucherAmount"  Style="max-width:50px" type="text">
                                     </td>   
                                     <td>
@@ -160,14 +160,17 @@
                                             [value]="receipt.IsAdjusted"  Style="max-width:40px" type="text">
                                     </td>
                                     <td>
-                                        <input class="text-center border-0" formControlName="PendingAmount" readonly
+                                        <input class="text-center border-0 Voucher-amount" formControlName="PendingAmount" readonly
                                             [value]="receipt.PendingAmount"  Style="max-width:70px" type="text">
                                     </td>
                                     <td>
-                                        <input [ngClass]=" isUpdateMode ? 'block-set-off-input' : ''"
+                                        <input onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                        min="0" numbersOnly
+                                        appDynamicDecimal
+                                        [ngClass]=" isUpdateMode ? 'block-set-off-input' : ''"
                                             [readonly]="isUpdateMode"  Style="max-width:60px"
                                             (change)="setOffChangeEvent($event,i,'Receipts');"
-                                            class="text-center" formControlName="AdjustedAmount"
+                                            class="text-center setOff" formControlName="AdjustedAmount"
                                             [value]="receipt.AdjustedAmount" min="1" type="number">
                                     </td>
                                     <td>
@@ -214,7 +217,7 @@
                             <ng-container *ngIf="openInvoiceList?.length != 0; else noRecord2">
                                 <tr *ngFor="let invoice of invoiceForm.get('openInvoiceInfo').controls; let i = index"
                                     [formGroupName]="i"   >
-                                    <td> <input class="text-center border-0" formControlName="InvoiceNumber" readonly
+                                    <td> <input class="text-center border-0 voucher-column" formControlName="InvoiceNumber" readonly
                                         Style="max-width:90px"
                                             [value]="invoice.InvoiceNumber" type="text">
                                     </td>
@@ -223,7 +226,7 @@
                                             [value]="invoice.InvoiceDate"   Style="max-width:70px" type="text">
                                     </td>
                                     <td>
-                                        <input class="text-center border-0" formControlName="InvoiceAmount" readonly
+                                        <input class="text-center border-0 Voucher-amount" formControlName="InvoiceAmount" readonly
                                             [value]="invoice.InvoiceAmount"  Style="max-width:60px" type="text">
                                     </td>
                                     <td>
@@ -231,15 +234,18 @@
                                             [value]="invoice.IsAdjusted" Style="max-width:50px" type="text">
                                     </td>
                                     <td>
-                                        <input class="text-center border-0" formControlName="PendingAmount" readonly
-                                            [value]="invoice.PendingAmount"  Style="max-width:70px" type="text">
+                                        <input class="text-center border-0 Voucher-amount" formControlName="PendingAmount" readonly
+                                            [value]="invoice.PendingAmount"  Style="max-width:50px" type="text">
                                     </td>
                                     <td>
-                                        <input [readonly]="isUpdateMode" Style="max-width:70px"
+                                        <input onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                        min="0" numbersOnly
+                                        appDynamicDecimal
+                                        [readonly]="isUpdateMode" Style="max-width:70px"
                                             [ngClass]=" isUpdateMode ? 'block-set-off-input' : ''"
                                             (ngModelChange)="setOffChangeEvent($event,i,'Invoices');"
-                                            class="text-center" formControlName="AdjustedAmount"
-                                            [value]="invoice.AdjustedAmount" min="1" type="number">
+                                            class="text-center setOff" formControlName="AdjustedAmount"
+                                            [value]="invoice.AdjustedAmount" min="1" type="number" Style="max-width:90px">
                                     </td>
                                     <td>
                                         <input (change)="onSelectEvent(i,'Invoices')" Style="max-width:70px" formControlName="IsSelect"

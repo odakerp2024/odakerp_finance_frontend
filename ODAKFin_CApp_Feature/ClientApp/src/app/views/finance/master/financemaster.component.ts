@@ -1,9 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Globals } from 'src/app/globals';
+import { data } from 'jquery';
+import { PaginationService } from 'src/app/pagination.service';
 import { CommonService } from 'src/app/services/common.service';
 import { LoginService } from 'src/app/services/login.service';
+import { WorkflowService } from 'src/app/services/workflow.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -15,7 +19,7 @@ export class FinanceMasterComponent implements OnInit {
 
   isShow: boolean = true;
   selectedTabName: string = 'Masters';
-  title = 'Finance Master';
+  title = 'Finance';
   isEmailids: boolean = false;
   isDocuments: boolean = false;
   isReadDocument: boolean = false;
@@ -34,14 +38,46 @@ export class FinanceMasterComponent implements OnInit {
   Token: string;
   payloadupdatepermission: { userId: any; };
 
+  private wfAllItems = [];
+  wfPager: any = {};
+  wfPagedItems = [];
+
+  isShowWorkflowInbox: boolean = true;
+  isShowWorkflowDetails: boolean = false;
+
+  workflowIndexList: any = [];
+
+  workFlowUpdateForm: FormGroup;
+  workflowSubmitted: boolean = false;
+  workflowDetailTitle: string = 'test-test';
+  workflowDetailsList: any = [];
+  isNotApproval:boolean=false;
+  dispStyle: any = 'none';
+
+  userName: string='';
+
+  cusBID: string='';
+
   constructor(
-    private titleService: Title,
-    private router: Router,
+    private titleService: Title, private workflow: WorkflowService, public ps: PaginationService,
+    private router: Router,private fb: FormBuilder,
     private route: ActivatedRoute,
     private commonDataService: CommonService,
     private LService: LoginService,
     private globals: Globals,
-  ) { }
+  ) { 
+    this.workFlowUpdateForm = fb.group({
+      userEmail: "",
+      workflowNo: "",
+      currentStep: "",
+      totalStep: "",
+      remarks: "",
+      status: "",
+    })
+
+    this.getUserDtls();
+
+  }
 
   getPermissionListForCreate(value, route) {
 
@@ -313,6 +349,7 @@ export class FinanceMasterComponent implements OnInit {
 
   ngOnInit() {
     this.titleService.setTitle(this.title);
+    //this.getUserDtls();
     if (localStorage.getItem('DashboardType')) {
       this.selectedTabName = localStorage.getItem('DashboardType');
     }
@@ -347,6 +384,167 @@ export class FinanceMasterComponent implements OnInit {
       this.BindTokenValues();
       this.setEntityConfigurable();
     }
+  }
+
+  getUserDtls(){
+    var userid = localStorage.getItem("UserID");
+    var payload = {
+      "UserID": userid,
+    }
+    this.workflow.getUserDtls(payload).subscribe({
+      next:(res)=>{
+        console.log('getUserDtls', { res })
+        this.userName = res[0].UserName;
+        this.getWorkflowInbox();
+      },
+      error:(e)=>{
+        console.log('error', { e })
+      }
+    });
+  }
+
+  getWorkflowInbox() {
+    let payload = {
+      //userEmail: "anuja@odaksolutions.com",
+      userEmail: this.userName,
+    }
+    this.workflow.getWorkflowInbox(payload).subscribe(data => {
+        console.log(data)
+        if ((data.Status == true) && (data.AlertMegId == 1)) {
+          this.wfAllItems = data.Data
+          this.setPageWF(1)
+        }
+        else {
+          this.wfAllItems = []
+          this.setPageWF(1)
+        }
+      });
+  }
+
+  getWorkflowDetails(workflowData: any) {
+    console.log(workflowData)
+    if (workflowData?.workflowno) {
+      let payload = {
+
+      }
+      this.workflow.getWorkflowDetails(workflowData?.workflowno).subscribe({
+        next: (res: any) => {
+          console.log(res)
+          if (res?.Status == true || res?.AlertMegId == 1) {
+            let resData = res?.Data
+            let mapUserPool=resData?.reduce((acc: any, item: any) => {
+              const existingItem = acc.find((group: any) => group.step === item.step);
+              if (existingItem) {
+                existingItem.user = existingItem?.user + ', ' + item?.user;
+              } else {
+                acc.push(item);
+              }
+              return acc;
+            }, []);
+            console.log(mapUserPool)
+            let findUser = resData?.find((item:any) => item?.user?.toLowerCase() == this.userName.toLowerCase() && item?.step !=0)
+            let findPending = resData?.find((item:any)=> item?.status?.toLowerCase() == 'pending')
+            if(findUser?.step == findPending?.step){
+              this.isNotApproval=true;
+            }
+
+            this.workflowDetailsList = this.isNotApproval ?  resData?.filter((item: any) => item?.status?.toLowerCase() !== "pending") : mapUserPool
+            
+            this.isShowWorkflowDetails = true;
+            this.isShowWorkflowInbox = false;
+            console.log("testworkflow",findUser,findPending);
+            this.cusBID = workflowData.details;
+            //alert(this.cusBID);
+            console.log('CusBID',this.cusBID);
+            this.workflowDetailTitle = `${workflowData?.workflowno} - ${workflowData?.eventname} - ${workflowData.details}`
+            this.workFlowUpdateForm.patchValue({
+              userEmail: this.userName,
+              workflowNo: workflowData.workflowno,
+              currentStep: workflowData.currentstep,
+              totalStep: workflowData.totalstep
+            });
+            ($('#progressModel') as any).modal('show');
+            // this.dispStyle = 'block'
+          }
+          else {
+            Swal.fire(res?.message ? res?.message : "");
+          }
+        },
+        error: (err: any) => {
+          console.log('my-workspace', 'getWorkflowDetails()', (err))
+          Swal.fire(err?.message ? err?.message : "");
+        }
+      })
+    }
+  }
+
+  KYCValidation(){
+    let payload = {
+      "CusBranchCode": this.cusBID,
+    }
+    this.workflow.KYCValidation(payload).subscribe(data => {
+      if(data.length > 0){
+        this.updateWorkflowStatus('1');
+      }
+      else {
+        Swal.fire("Please Update the Accounting Details");
+      }
+      
+    });
+  }
+
+  updateWorkflowStatus(statuscode: string) {
+    if (this.workFlowUpdateForm.valid) {
+      this.workflowSubmitted = false;
+      console.log(this.workFlowUpdateForm.value)
+      let payload = {
+        "wfnumber": this.workFlowUpdateForm.value.workflowNo,
+        "step_id": +this.workFlowUpdateForm.value.currentStep,
+        "remarks": this.workFlowUpdateForm.value.remarks,
+        "statuscode": statuscode,
+        "statustext": this.workFlowUpdateForm.value.status,
+        "approvaluser": { "usertype": "string", "userid": this.userName }
+      }
+      console.log(this.workFlowUpdateForm.value, 'payload', payload)
+
+      this.workflow.updateWorkflowStatus(payload).subscribe({
+        next: (res: any) => {
+          console.log(res);
+          if (res?.Status == true || res?.AlertMegId == 1) {
+            Swal.fire("Updated Successfully");
+            this.onBackWorkflowInbox()
+          } else {
+            Swal.fire(res?.message ? res?.message : "")
+          }
+        },
+        error: (err: any) => {
+          console.log('my-workspace', 'updateWorkflowStatus()', (err?.error))
+          let msg = err?.error && err?.error?.AlertMessage ? err?.error?.AlertMessage : err?.message ? err?.message : ""
+          Swal.fire(msg)
+        }
+      })
+    }
+    else {
+      this.workflowSubmitted = true
+      return
+    }
+
+  }
+
+  onBackWorkflowInbox() {
+    this.isShowWorkflowDetails = false;
+    this.isShowWorkflowInbox = true;
+    this.isNotApproval=false;
+    this.workFlowUpdateForm.reset();
+    this.getWorkflowInbox()
+    this.dispStyle = 'none',
+    ($('#progressModel') as any).modal('hide')
+  }
+
+  setPageWF(page: number) {
+    
+    this.wfPager = this.ps.getPager(this.wfAllItems.length, page);
+    this.wfPagedItems = this.wfAllItems.slice(this.wfPager.startIndex, this.wfPager.endIndex + 1)
   }
 
   BindTokenValues() {
@@ -980,7 +1178,7 @@ export class FinanceMasterComponent implements OnInit {
                   Swal.fire('Please Contact Administrator');
                 }
                 else {
-                  this.router.navigate(['/views/vendor-notes/vendor-view']);
+                  this.router.navigate(['/views/transactions/invoices_AR_view/invoices_AR_view']);
                 }
               }
               else if (routePage == 'InvoiceAP') {
