@@ -315,7 +315,8 @@ export class CreditApplicationDetailsComponent implements OnInit {
     this.getbyId(selectedCreditApplicationId);
   }
 
-getbyId(selectedCreditApplicationId: any) {  
+getbyId(selectedCreditApplicationId: any) {
+  debugger  
     const payload = {
          CreditApplicationId: selectedCreditApplicationId,
         RequestType : this.RequestType,
@@ -397,6 +398,7 @@ getbyId(selectedCreditApplicationId: any) {
                       RequestRemarks : ''
                   });
               }
+              debugger
                 this.getWQuestions(result.data.Table1);
             }
 
@@ -500,23 +502,24 @@ getbyId(selectedCreditApplicationId: any) {
 }
 
 
-  fileSelected(event) {}
+fileSelected(event) {}
 
-  // * document upload functionality
-  uploadDocument(event) {
-    debugger
-    let newDoc = {
-      CustomerDocumentsID:  0,
-      CreditApplicationId: this.RequestType == true ? this.PreviousApplicationId :this.creditApplicationForm.value.CreditApplicationId,
-    //  CustomerBranchID: this.creditApplicationForm.value.CustomerBranchId,
-    //  result.data.Table[0].CustomerBranchId
-    CustomerBranchID: this.creditApplicationForm.value.CustomerBranchId,
-      DocumentName: event.DocumentName,
-      FilePath: event.FilePath,
-      // "UpdatedOn": event.UploadedOn
-      UpdateOn: new Date(),
-    };
-
+// * document upload functionality
+uploadDocument(event) {
+  debugger
+  let newDoc = {
+    
+    CreditApplicationId: this.RequestType == true ? this.creditApplicationForm.value.PreviousApplicationId :this.creditApplicationForm.value.CreditApplicationId,
+    CustomerDocumentsID:  0,
+  //  CustomerBranchID: this.creditApplicationForm.value.CustomerBranchId,
+  //  result.data.Table[0].CustomerBranchId
+   CustomerBranchID: this.creditApplicationForm.value.CustomerBranchId,
+    DocumentName: event.DocumentName,
+    FilePath: event.FilePath,
+    // "UpdatedOn": event.UploadedOn
+    UpdateOn: new Date(),
+  };
+debugger
     let payload = [];
     payload.push(...this.documentList, newDoc);
     this.documentList = payload;
@@ -524,7 +527,8 @@ getbyId(selectedCreditApplicationId: any) {
   }
 
   deleteDocument(event) {
-    const indexToDelete = event.ID;
+    debugger
+    const indexToDelete = event;
     if (indexToDelete >= 0 && indexToDelete < this.documentList.length) {
       this.documentList.splice(indexToDelete, 1);
 
@@ -716,6 +720,7 @@ getbyId(selectedCreditApplicationId: any) {
           CreatedBy: item.CreatedBy ?? this.CreatedBy,
           CreatedOn: item.CreatedOn ?? this.minDate,
           DocumentName: item.DocumentName,
+          //CreditApplicationId: this.RequestType == true ? this.PreviousApplicationId :this.creditApplicationForm.value.CreditApplicationId,
           FilePath: item.FilePath,
           ID: item.CustomerDocumentsID,
           Modifiedon: item.Modifiedon,
@@ -1331,7 +1336,7 @@ getbyId(selectedCreditApplicationId: any) {
         this.creditApplicationForm.value.SalesPersonId =
           this.customerDetail["data"].Table2[0].SalesId;
           this.patchCustomerData(this.customerDetail);
-         this.documentInfo = this.constructDocumentPayload(doc);
+         // this.documentInfo = this.constructDocumentPayload(doc);
        
       });
     this.customerService

@@ -2772,12 +2772,22 @@ export class VendorsComponent implements OnInit {
     document.body.removeChild(a);
   }
 
-  deleteDocument(deleteIndex) {
-    debugger
+  // deleteDocument(deleteIndex) {
+  //   debugger
 
-    const index = this.documentPayloadInfo.findIndex((element) => element.VendorDocumentsID == deleteIndex.VendorDocumentsID)
-    this.documentPayloadInfo.splice(index, 1);
-    // this.onSubmit();
+  //   const index = this.documentPayloadInfo.findIndex((element) => element.VendorDocumentsID == deleteIndex.VendorDocumentsID)
+  //   this.documentPayloadInfo.splice(index, 1);
+  //   // this.onSubmit();
+  // }
+
+  deleteDocument(event) {
+    debugger
+    const indexToDelete = event;
+    if (indexToDelete >= 0 && indexToDelete < this.documentPayloadInfo.length) {
+      this.documentPayloadInfo.splice(indexToDelete, 1);
+
+      // this.documentInfo = this.constructDocumentPayload(this.documentPayloadInfo);
+    }
   }
 
 

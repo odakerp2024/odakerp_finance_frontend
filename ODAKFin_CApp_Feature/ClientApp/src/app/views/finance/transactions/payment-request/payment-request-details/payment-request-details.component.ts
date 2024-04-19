@@ -726,15 +726,21 @@ markInvoiceSelected(index){
   //   }, error => {});
   // }
    
-  deleteDocument(deleteData) {
+  deleteDocument(event) {
 
     if(!this.isEditMode){
       Swal.fire("Please Click Edit Button to Delete");
       return;
     }
-    const index = this.documentInfo.findIndex((element) => element.BankAttachmentsID == deleteData.BankAttachmentsID);
-    this.documentInfo.splice(index, 1);
+    const indexToDelete = event;
+    // const index = this.documentInfo.findIndex((element) => element.BankAttachmentsID == deleteData.BankAttachmentsID);
+    // this.documentInfo.splice(index, 1);
+    if (indexToDelete >= 0 && indexToDelete < this.documentInfo.length) {
+      this.documentInfo.splice(indexToDelete, 1);
+
+     
+    }
 
   }
-
+  
 }
