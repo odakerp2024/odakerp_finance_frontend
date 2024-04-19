@@ -2280,10 +2280,18 @@ debugger
     }
   }
 
-  deleteDocument(deleteIndex) {
-    const index = this.documentPayloadInfo.findIndex((element) => element.CustomerDocumentsID == deleteIndex.CustomerDocumentsID)
-    this.documentPayloadInfo.splice(index, 1);
+  // deleteDocument(deleteIndex) {
+  //   const index = this.documentPayloadInfo.findIndex((element) => element.CustomerDocumentsID == deleteIndex.CustomerDocumentsID)
+  //   this.documentPayloadInfo.splice(index, 1);
+  // }
+  deleteDocument(event) {
+    debugger
+    const indexToDelete = event;
+    if (indexToDelete >= 0 && indexToDelete < this.documentPayloadInfo.length) {
+      this.documentPayloadInfo.splice(indexToDelete, 1);
+    }
   }
+
 
   saveOfficeDetails(event: any) {
     if (event.length > 0 || event.length == 0) {
