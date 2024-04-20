@@ -16,6 +16,8 @@ import { rejects } from "assert";
 import { relative } from "path";
 import { CustomerService } from "src/app/services/financeModule/customer.service";
 import { Customer } from "src/app/model/financeModule/Customer";
+import { WorkflowService } from "src/app/services/workflow.service";
+import { WF_EVENTS, workflowEventObj } from "src/app/model/financeModule/labels.const";
 
 @Component({
   selector: "app-credit-application-details",
@@ -47,6 +49,19 @@ export class CreditApplicationDetailsComponent implements OnInit {
   isUpdate = false;
   isEditMode = true;
   IsFinal = false;
+
+  workflowParamsNo:any=[];
+  redirectURL:string='';
+  userName: string='';
+  userDiv: string='';
+  userOff: string='';
+
+  CreditApplicationNumber: string='';
+  CreditLimitDays: string='';
+  CreditLimitAmount: string='';
+  salesPersonWF: string='';
+
+  workFlowObj!:workflowEventObj;
 
   SAVE_TYPE = "SAVE";
   FINAL_TYPE = "FINAL";
@@ -99,7 +114,7 @@ export class CreditApplicationDetailsComponent implements OnInit {
     private globals: Globals,
     private dataService: DataService,
     public commonDataService: CommonService,
-    private router: Router,
+    private router: Router,private workflow: WorkflowService,
     private datePipe: DatePipe,
     private creditApplicationService: CreditApplicationService,
     private patternService: CommonPatternService,
@@ -132,10 +147,131 @@ export class CreditApplicationDetailsComponent implements OnInit {
       this.creditId = +param["creditId"] ? +param["creditId"] : 0;
       this.PreviousApplicationId = +param["PreviousApplicationId"] ? +param["PreviousApplicationId"] : 0;
       if (this.creditId) {
-        this.isUpdate = true;       
+        this.isUpdate = true;
         this.getById();
       }
     });    
+
+    this.getWFParams();
+    this.getUserDtls();
+
+    this.redirectURL= window.location.href
+    console.log('redirectURL',this.redirectURL,window.location)
+
+  }
+
+  getUserDtls(){
+    var userid = localStorage.getItem("UserID");
+    var payload = {
+      "UserID": userid,
+    }
+    this.workflow.getUserDtls(payload).subscribe({
+      next:(res)=>{
+        console.log('getUserDtls', { res })
+        this.userDiv = res[0].DivisionName
+        this.userOff = res[0].OfficeName
+        this.userName = res[0].UserName
+      },
+      error:(e)=>{
+        console.log('error', { e })
+      }
+    });
+  }
+
+  getWFParams(){
+    this.workflow.getWorkflowParams(WF_EVENTS['creditApp'].EVENT_NO).subscribe({
+      next:(res)=>{
+        console.log('getWorkflowParams', { res })
+        if (res?.AlertMegId == 1) {
+          this.workflowParamsNo = res?.Data ? res?.Data : []
+        }
+      },
+      error:(e)=>{
+        console.log('getWorkflowParams', { e })
+      }
+    });
+  }
+
+  submitApproval(){
+
+    let eventData: any = {}
+    let checkOutstand = 'Fail'
+
+    this.workflowParamsNo.forEach((param: any) => {
+      const paramName: any = `param${param?.paramnumber}`;
+      if (WF_EVENTS['creditApp'].PARAMS.Division.toLowerCase().trim() == param?.paramname?.toLocaleLowerCase().trim()) {
+        eventData[paramName] = this.userDiv
+      }
+      else if (WF_EVENTS['creditApp'].PARAMS.Office.toLowerCase().trim() == param?.paramname?.toLocaleLowerCase().trim()) {
+        eventData[paramName] = this.userOff
+      }
+      else if (WF_EVENTS['creditApp'].PARAMS.CreditAmount.toLowerCase().trim() == param?.paramname?.toLocaleLowerCase().trim()) {
+        eventData[paramName] = this.CreditLimitAmount 
+      }
+      else if (WF_EVENTS['creditApp'].PARAMS.CreditDays.toLowerCase().trim() == param?.paramname?.toLocaleLowerCase().trim()) {
+        eventData[paramName] = this.CreditLimitDays
+      }
+      else if (WF_EVENTS['creditApp'].PARAMS.SalesPerson.toLowerCase().trim() == param?.paramname?.toLocaleLowerCase().trim()) {
+        eventData[paramName] = this.salesPersonWF
+      }
+      
+      else {
+        eventData[paramName] = ""
+      }
+    });
+
+    let callbackPayload={
+      "CreditId": this.creditId,
+      "status": 0,
+    }
+
+    this.workFlowObj = {
+      eventnumber: WF_EVENTS['creditApp'].EVENT_NO,
+      eventvalue: this.CreditApplicationNumber   ? this.CreditApplicationNumber  : "" ,
+      app: this.globals.appName,
+      division: this.userDiv ? this.userDiv :'',
+      office: this.userOff ? this.userOff :'',
+      eventdata: eventData,
+      Initiator: { userid: this.userName ? this.userName : '', usertype: "string" },
+      callbackURL:`${this.globals.APIURL}${WF_EVENTS['creditApp'].apiEndPoint}`,
+      //callbackURL:`${this.globals.APIURL}${WF_EVENTS['creditApp'].apiEndPoint}`,
+      callbackURLcontent:JSON.stringify(callbackPayload),
+      redirectURL:this.redirectURL
+    }
+    console.log(this.workFlowObj, 'workflow Obj');
+
+    this.workflow.workflowTrigger(this.workFlowObj).subscribe({
+      next: (res) => {
+        console.log('workflowTrigger', { res })
+        if(res?.AlertMegId  > 0 ){
+          
+          if(res?.AlertMegId == 1){
+            let payload = {
+              "CreditId": this.creditId,
+            }
+            this.workflow.CreditAppConfirm(payload).subscribe(data => {
+              console.log('CreditApp', data);
+            });
+            Swal.fire("Your request has Approved");
+          }
+          else{
+            Swal.fire("Your request waiting for Approval");
+          }         
+
+        }
+        else if(res?.AlertMegId == -1){
+          Swal.fire(res?.AlertMessage ?  res?.AlertMessage : "");
+          return
+        }
+      },
+      error: (err) => {
+        console.log('workflowTrigger', { err })
+        Swal.fire("Your request not claim approval");
+        // this.workflowEventMsg= "Your Quotation not claim approval"
+        // this.save();  
+      }
+  });
+
   }
 
   getByFunctionality() {
@@ -244,7 +380,11 @@ export class CreditApplicationDetailsComponent implements OnInit {
             RequestRemarks: Table.RequestRemarks,
             CreatedBy: Table.CreatedBy,
             StatusId: 1,
-          });         
+          });     
+          this.CreditApplicationNumber = Table.CreditApplicationNumber;
+          this.CreditLimitDays = Table.CreditLimitDays,
+          this.CreditLimitAmount = Table.CreditLimitAmount,
+          this.salesPersonWF = Table.SalesPIC,
           this.getWQuestions(result.data.Table1);
         
         }
@@ -538,7 +678,7 @@ debugger
 
   //  * construct the payload for save and final
   constructPayload() {
-    debugger
+    //debugger
     if (!this.isUpdate) {
       this.creditApplicationForm.value.SalesPersonId = 
            this.customerDetail["data"] .Table2[0].SalesId;
@@ -705,7 +845,7 @@ debugger
             this.updateAutoGenerated();
           }
           this.goBack();
-          Swal.fire("", result.data, "success");
+          this.submitApproval();
         }
       });
   }
