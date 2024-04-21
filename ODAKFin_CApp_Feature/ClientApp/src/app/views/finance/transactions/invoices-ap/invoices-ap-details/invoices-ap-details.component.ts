@@ -43,6 +43,7 @@ export class InvoicesApDetailsComponent implements OnInit {
   TotalCreditAmount: any;
   payload: any;
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
+  entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   newReceiptList : any =[];
   newInvoiceList : any =[];
   constructor(
@@ -146,8 +147,8 @@ export class InvoicesApDetailsComponent implements OnInit {
         });
         this.receiptList = result['data'].Table1;
         this.openInvoiceList = result['data'].Table1;
-        this.TotalDebitAmount = tableInfo.TotalDebitAmount;
-        this.TotalCreditAmount = tableInfo.TotalCreditAmount;
+        this.TotalDebitAmount = tableInfo.TotalDebitAmount.toFixed(this.entityFraction);
+        this.TotalCreditAmount = tableInfo.TotalCreditAmount.toFixed(this.entityFraction);
         if (result['data'].Table3.length > 0) this.FileList = result['data'].Table3;
       }
     }, error => { console.error(error) });
@@ -297,7 +298,7 @@ export class InvoicesApDetailsComponent implements OnInit {
       const controlAtIndex = this.ReceiptInfo.at(index);
       const pendingAmount = this.newReceiptList.at(index).PendingAmount - controlAtIndex.value.AdjustedAmount;
       if (pendingAmount >= 0) {
-        controlAtIndex.patchValue({ PendingAmount: pendingAmount });
+        controlAtIndex.patchValue({ PendingAmount: pendingAmount.toFixed(this.entityFraction) });
       }
       else {
         Swal.fire('Your amount has exceeded the limit!');
@@ -310,7 +311,7 @@ export class InvoicesApDetailsComponent implements OnInit {
       const controlAtIndex = this.OpenInvoiceInfo.at(index);
       const pendingAmount = this.newInvoiceList.at(index).PendingAmount - controlAtIndex.value.AdjustedAmount;
       if (pendingAmount >= 0) {
-        controlAtIndex.patchValue({ PendingAmount: pendingAmount });
+        controlAtIndex.patchValue({ PendingAmount: pendingAmount.toFixed(this.entityFraction) });
       }
       else {
         Swal.fire('Your amount has exceeded the limit!');
@@ -344,7 +345,7 @@ export class InvoicesApDetailsComponent implements OnInit {
           if (data.IsSelect) { AdjustedAmountReceipt += data.AdjustedAmount; }
         }
         this.invoiceForm.controls['TotalDebitAmount'].setValue(AdjustedAmountReceipt);
-        this.TotalDebitAmount = AdjustedAmountReceipt;
+        this.TotalDebitAmount = AdjustedAmountReceipt % 1 !== 0 ? AdjustedAmountReceipt.toFixed(this.entityFraction) : AdjustedAmountReceipt;
       }
       else { this.invoiceForm.controls['TotalDebitAmount'].setValue(AdjustedAmountReceipt); }
     }
@@ -355,7 +356,7 @@ export class InvoicesApDetailsComponent implements OnInit {
           if (data.IsSelect) { AdjustedAmountInvoice += data.AdjustedAmount; }
         }
         this.invoiceForm.controls['TotalCreditAmount'].setValue(AdjustedAmountInvoice);
-        this.TotalCreditAmount = AdjustedAmountInvoice;
+        this.TotalCreditAmount = AdjustedAmountInvoice % 1 !== 0 ? AdjustedAmountInvoice.toFixed(this.entityFraction) : AdjustedAmountInvoice;
       }
       else { this.invoiceForm.controls['TotalCreditAmount'].setValue(AdjustedAmountInvoice); }
     }
@@ -409,7 +410,7 @@ export class InvoicesApDetailsComponent implements OnInit {
       }
     }
 
-    await this.createPayload(status);
+ 
      let saveMsg = `Do you want to Save this Details?`;
     let finalMsg = `Final voucher not possible to edit <br> Do you want proceed?`;
     let closeMsg = `Voucher is not yet finalized <br> Do you want to still exit`;
@@ -445,7 +446,7 @@ export class InvoicesApDetailsComponent implements OnInit {
       cancelButtonText: 'No',
       reverseButtons: false,
       allowOutsideClick: false
-    }).then((result) => {
+    }).then(async(result) => {
       if (result.isConfirmed) {
 
      // If canceled 
@@ -454,6 +455,7 @@ export class InvoicesApDetailsComponent implements OnInit {
           this.ViewPage();
           return;
         }
+        await this.createPayload(status);
 
         let service = `${this.globals.APIURL}/OutStandingInvoiceAP/SaveOutStandingInvoiceAP`;
         this.dataService.post(service, this.payload).subscribe((result: any) => {

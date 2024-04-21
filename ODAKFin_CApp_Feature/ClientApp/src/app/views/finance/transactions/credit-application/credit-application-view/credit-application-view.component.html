@@ -4,172 +4,167 @@
       <span class="mt-auto">
         <h4>Credit Application</h4>
       </span>
-      <button
-        (click)="CreateNew()"
-        class="btn btn-success btn-raised bmd-btn-edit"
-      >
-        <i class="material-icons editicon">add</i>
-      </button>
     </div>
   </div>
+
   <div class="row">
     <!-- Table View -->
+
     <div class="col-sm-12 col-md-9">
-      <div class="mr-3 card">
-        <div class="row">
-          <div class="col-12">
-            <table
-              class="table table-responsive table-bordered w-100 table-striped p-3 mt-3 border-0"
-            >
-              <thead class="text-center">
-                <tr role="row">
-                  <th
-                    class="align-middle"
-                    id="th1"
-                    rowspan="2"
-                    colspan="1"
-                    tabindex="0"
-                  >
-                    CA Number
-                  </th>
-                  <th class="align-middle" id="th2" rowspan="2" colspan="1">
-                    CA Date
-                  </th>
-                  <th class="align-middle" id="th6" rowspan="2" colspan="1">
-                    Customer Name
-                  </th>
-                  <th class="align-middle" id="th6" rowspan="2" colspan="1">
-                    Customer Branch
-                  </th>
-                  <th>Credit Limit <br />(Day)</th>
-                  <th>
-                    Credit Limit <br />
-                    (Amount)
-                  </th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody class="text-center">
-                <ng-container
-                  *ngIf="creditApplicationList.length > 0; else noRecord"
-                >
-                  <tr
-                    *ngFor="let creditApplication of pagedItems; let i = index"
-                  >
-                    <td
-                      (click)="
-                        editCreditApplication(
-                          creditApplication.CreditApplicationId
-                        )
-                      "
-                      style="color: #0366d6; cursor: pointer"
-                    >
-                      {{ creditApplication.CreditApplicationNumber }}
-                    </td>
-                    <td>
-                      {{
-                        creditApplication.ApplicationDate
-                          | date
-                            : commonDataService.convertToLowerCaseDay(
-                                entityDateFormat
-                              )
-                      }}
-                    </td>
-                    <td>{{ creditApplication.CustomerName }}</td>
-
-                    <td>
-                      {{
-                        creditApplication.CityName
-                          ? creditApplication.CityName
-                          : "-"
-                      }}
-                    </td>
-
-                    <td>
-                      <!-- <select ([ngModel])="creditApplication.CreditLimitAmount" class="text-center form-control my-select disable-input--nostyle border-0">
-                                                <option value="" disabled>--SELECT CREDIT DAYS--</option>
-                                                <option *ngFor="let credit of creditLimit" [value]="credit.CreditApprovalSetupId">
-                                                    {{credit.MaxCreditDays}}
-                                                </option>
-                                            </select> -->
-                      {{ creditApplication.CreditLimitDays }}
-                    </td>
-                    <td>
-                      <!-- <select class="text-center form-control my-select disable-input--nostyle border-0" ([ngModel])="creditApplication.MaxCreditAmount">
-                                                <option value='' disabled>--SELECT CREDIT AMOUNT--</option>
-                                                <option *ngFor="let  credit of creditLimit" [value]=credit.CreditApprovalSetupId>
-                                                    {{credit.MaxCreditAmount}}
-                                                </option>
-                                                </select> -->
-                      {{ creditApplication.CreditLimitAmount }}
-                    </td>
-                    <td>
-                      <div
-                        [ngClass]="
-                          creditApplication.Status == 'Approved'
-                            ? 'badge badge-state-confirm'
-                            : creditApplication.Status == 'Rejected'
-                            ? 'badge badge-state-cancel'
-                            : creditApplication.Status == null
-                            ? ''
-                            : creditApplication.Status == 'Pending Approval'
-                            ? 'badge badge-state-pending'
-                            : 'badge badge-state'
-                        "
-                      >
-                        {{ creditApplication.Status }}
-                      </div>
-                    </td>
-                  </tr>
-                </ng-container>
-
-                <!-- no data -->
-                <ng-template #noRecord>
-                  <tr>
-                    <td class="text-center" colspan="6">No Records Found</td>
-                  </tr>
-                </ng-template>
-              </tbody>
-            </table>
+      <div>
+        <div class="row mr-1">
+          <div class="col-12 d-flex justify-content-end mb-2">
+            <div class="col-6"></div>
+            <div class="col-/2 d-flex align-items-center">
+              <span class="mr-3">
+                <div style="font-size:18px">New Request</div>
+              </span>
+              <button (click)="CreateNew(false)" class="btn btn-success btn-raised bmd-btn-edit">
+                <i class="material-icons editicon">add</i>
+              </button>
+            </div>
+  
+            <div class="col-/4 d-flex align-items-center" style="margin-left:40px;">
+              <span class="mr-3">
+                <div style="font-size:18px">Revise & Revoke</div>
+              </span>
+              <button (click)="CreateNew(true)" class="btn btn-success btn-raised bmd-btn-edit">
+                <i class="material-icons editicon">add</i>
+              </button>
+            </div>
           </div>
         </div>
-        <div style="justify-content: end" class="row page w-100">
-          <ul
-            *ngIf="pager.pages && pager?.pages?.length && pager.totalItems > 10"
-            class="pagination"
-          >
-            <li [ngClass]="{ disabled: pager.currentPage === 1 }">
-              <a (click)="setPage(1)">First</a>
-            </li>
-            <li [ngClass]="{ disabled: pager.currentPage === 1 }">
-              <a (click)="setPage(pager.currentPage - 1)">Previous</a>
-            </li>
-            <li
-              *ngFor="let page of pager.pages"
-              [ngClass]="{ active: pager.currentPage === page }"
-            >
-              <a (click)="setPage(page)">{{ page }}</a>
-            </li>
-            <li *ngIf="pager.totalPages - pager.startPage > 5">
-              <a (click)="setPage(pager.startPage + 5)">...</a>
-            </li>
-            <li *ngIf="pager.totalPages - pager.startPage > 5">
-              <a (click)="setPage(pager.totalPages)">{{ pager.totalPages }}</a>
-            </li>
-
-            <li
-              [ngClass]="{ disabled: pager.currentPage === pager.totalPages }"
-            >
-              <a (click)="setPage(pager.currentPage + 1)">Next</a>
-            </li>
-            <li
-              [ngClass]="{ disabled: pager.currentPage === pager.totalPages }"
-            >
-              <a (click)="setPage(pager.totalPages)">Last</a>
-            </li>
-          </ul>
+        <div class="mr-3 card">
+          <div class="row">
+            <div class="col-12">
+  
+              <table class="table table-responsive table-bordered w-100 table-striped p-3 mt-3 border-0">
+                <thead class="text-center">
+                  <tr role="row">
+                    <th class="align-middle" id="th1" rowspan="2" colspan="1" tabindex="0">
+                      CA Number
+                    </th>
+                    <th class="align-middle" id="th2" rowspan="2" colspan="1">
+                      CA Date
+                    </th>
+                    <th class="align-middle" id="th6" rowspan="2" colspan="1">
+                      Customer Name
+                    </th>
+                    <th class="align-middle" id="th6" rowspan="2" colspan="1">
+                      Customer Branch
+                    </th>
+                    <th>Credit Limit <br />(Day)</th>
+                    <th>
+                      Credit Limit <br />
+                      (Amount)
+                    </th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody class="text-center">
+                  <ng-container *ngIf="creditApplicationList.length > 0; else noRecord">
+                    <tr *ngFor="let creditApplication of pagedItems; let i = index">
+                      <td
+                        (click)="
+                          editCreditApplication(
+                            creditApplication.CreditApplicationId, creditApplication.IsRevise, creditApplication.IsRevoke, creditApplication.PreviousApplicationId)"
+                        style="color: #0366d6; cursor: pointer">
+                        {{ creditApplication.CreditApplicationNumber }}
+                      </td>
+                      <td>
+                        {{
+                        creditApplication.ApplicationDate
+                        | date
+                        : commonDataService.convertToLowerCaseDay(
+                        entityDateFormat
+                        )
+                        }}
+                      </td>
+                      <td>{{ creditApplication.CustomerName }}</td>
+  
+                      <td>
+                        {{
+                        creditApplication.CityName
+                        ? creditApplication.CityName
+                        : "-"
+                        }}
+                      </td>
+  
+                      <td>
+                        <!-- <select ([ngModel])="creditApplication.CreditLimitAmount" class="text-center form-control my-select disable-input--nostyle border-0">
+                                                  <option value="" disabled>--SELECT CREDIT DAYS--</option>
+                                                  <option *ngFor="let credit of creditLimit" [value]="credit.CreditApprovalSetupId">
+                                                      {{credit.MaxCreditDays}}
+                                                  </option>
+                                              </select> -->
+                        {{ creditApplication.CreditLimitDays }}
+                      </td>
+                      <td>
+                        <!-- <select class="text-center form-control my-select disable-input--nostyle border-0" ([ngModel])="creditApplication.MaxCreditAmount">
+                                                  <option value='' disabled>--SELECT CREDIT AMOUNT--</option>
+                                                  <option *ngFor="let  credit of creditLimit" [value]=credit.CreditApprovalSetupId>
+                                                      {{credit.MaxCreditAmount}}
+                                                  </option>
+                                                  </select> -->
+                        {{ creditApplication.CreditLimitAmount }}
+                      </td>
+                      <td>
+                        <div [ngClass]="
+                            creditApplication.Status == 'Approved'
+                              ? 'badge badge-state-confirm'
+                              : creditApplication.Status == 'Rejected'
+                              ? 'badge badge-state-cancel'
+                              : creditApplication.Status == null
+                              ? ''
+                              : creditApplication.Status == 'Pending Approval'
+                              ? 'badge badge-state-pending'
+                              : 'badge badge-state'
+                          ">
+                          {{ creditApplication.Status }}
+                        </div>
+                      </td>
+                    </tr>
+                  </ng-container>
+  
+                  <!-- no data -->
+                  <ng-template #noRecord>
+                    <tr>
+                      <td class="text-center" colspan="6">No Records Found</td>
+                    </tr>
+                  </ng-template>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div style="justify-content: end" class="row page w-100">
+            <ul *ngIf="pager.pages && pager?.pages?.length && pager.totalItems > 10" class="pagination">
+              <li [ngClass]="{ disabled: pager.currentPage === 1 }">
+                <a (click)="setPage(1)">First</a>
+              </li>
+              <li [ngClass]="{ disabled: pager.currentPage === 1 }">
+                <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+              </li>
+              <li *ngFor="let page of pager.pages" [ngClass]="{ active: pager.currentPage === page }">
+                <a (click)="setPage(page)">{{ page }}</a>
+              </li>
+              <li *ngIf="pager.totalPages - pager.startPage > 5">
+                <a (click)="setPage(pager.startPage + 5)">...</a>
+              </li>
+              <li *ngIf="pager.totalPages - pager.startPage > 5">
+                <a (click)="setPage(pager.totalPages)">{{ pager.totalPages }}</a>
+              </li>
+  
+              <li [ngClass]="{ disabled: pager.currentPage === pager.totalPages }">
+                <a (click)="setPage(pager.currentPage + 1)">Next</a>
+              </li>
+              <li [ngClass]="{ disabled: pager.currentPage === pager.totalPages }">
+                <a (click)="setPage(pager.totalPages)">Last</a>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
+
     </div>
 
     <!-- Filter -->
@@ -186,17 +181,13 @@
                                     </option>
                                 </ng-container>
                             </select> -->
-              <ng-select
-                class="searchdropdown custom"
-                formControlName="DivisionId"
-                [clearable]="false"
-              >
+              <ng-select class="searchdropdown custom" formControlName="DivisionId" [clearable]="false">
                 <ng-option [value]="0" disabled>--SELECT DIVISION--</ng-option>
                 <ng-container *ngFor="let division of divisionList">
                   <ng-option *ngIf="division.Active" [value]="division.ID">
                     <span class="textwrap">{{
                       division.DivisionName | uppercase
-                    }}</span>
+                      }}</span>
                   </ng-option>
                 </ng-container>
               </ng-select>
@@ -213,17 +204,13 @@
                                     </option>
                                 </ng-container>
                             </select> -->
-              <ng-select
-                class="searchdropdown"
-                formControlName="OfficeId"
-                [clearable]="false"
-              >
+              <ng-select class="searchdropdown" formControlName="OfficeId" [clearable]="false">
                 <ng-option [value]="0" disabled>--SELECT OFFICE--</ng-option>
                 <ng-container *ngFor="let office of officeList">
                   <ng-option [value]="office.ID">
                     <span class="textwrap">{{
                       office.OfficeName | uppercase
-                    }}</span>
+                      }}</span>
                   </ng-option>
                 </ng-container>
               </ng-select>
@@ -232,12 +219,8 @@
 
           <div class="col-12">
             <div class="form-group bmd-form-group">
-              <input
-                formControlName="CreditApplicationNumber"
-                type="text"
-                class="w-100"
-                placeholder="CREDIT APPLICATION NUMBER"
-              />
+              <input formControlName="CreditApplicationNumber" type="text" class="w-100"
+                placeholder="CREDIT APPLICATION NUMBER" />
             </div>
           </div>
 
@@ -253,25 +236,11 @@
                 <div class="col-md-6">
                   <label class="mb-3">From</label>
                   <div class="input-group">
-                    <mat-form-field
-                      class="tillDate mat_date_picker"
-                      appearance="outline"
-                    >
-                      <input
-                        matInput
-                        (click)="StartDate.open()"
-                        readonly
-                        autocomplete="off"
-                        [max]="validTillMinDate"
-                        [matDatepicker]="StartDate"
-                        id="StartDate"
-                        [placeholder]="entityDateFormat"
-                        formControlName="StartDate"
-                      />
-                      <mat-datepicker-toggle
-                        matSuffix
-                        [for]="StartDate"
-                      ></mat-datepicker-toggle>
+                    <mat-form-field class="tillDate mat_date_picker" appearance="outline">
+                      <input matInput (click)="StartDate.open()" readonly autocomplete="off" [max]="validTillMinDate"
+                        [matDatepicker]="StartDate" id="StartDate" [placeholder]="entityDateFormat"
+                        formControlName="StartDate" />
+                      <mat-datepicker-toggle matSuffix [for]="StartDate"></mat-datepicker-toggle>
                       <mat-datepicker #StartDate></mat-datepicker>
                     </mat-form-field>
                     <!-- <input formControlName="StartDate"  (change)="creditEvent($event.target.value)" [max]="minDate"  type="date" class="form-control"
@@ -281,25 +250,11 @@
                 <div class="col-md-6">
                   <label class="mb-3">Till</label>
                   <div class="input-group">
-                    <mat-form-field
-                      class="tillDate mat_date_picker"
-                      appearance="outline"
-                    >
-                      <input
-                        matInput
-                        (click)="EndDate.open()"
-                        readonly
-                        autocomplete="off"
-                        [min]="filterForm.get('StartDate').value"
-                        [matDatepicker]="EndDate"
-                        id="EndDate"
-                        [placeholder]="entityDateFormat"
-                        formControlName="EndDate"
-                      />
-                      <mat-datepicker-toggle
-                        matSuffix
-                        [for]="EndDate"
-                      ></mat-datepicker-toggle>
+                    <mat-form-field class="tillDate mat_date_picker" appearance="outline">
+                      <input matInput (click)="EndDate.open()" readonly autocomplete="off"
+                        [min]="filterForm.get('StartDate').value" [matDatepicker]="EndDate" id="EndDate"
+                        [placeholder]="entityDateFormat" formControlName="EndDate" />
+                      <mat-datepicker-toggle matSuffix [for]="EndDate"></mat-datepicker-toggle>
                       <mat-datepicker #EndDate></mat-datepicker>
                     </mat-form-field>
                     <!-- <input formControlName="EndDate"  [min]="validTillMinDate" type="date" class="form-control"
@@ -312,19 +267,12 @@
 
           <div class="col-12">
             <div class="form-group bmd-form-group">
-              <ng-select
-                class="searchdropdown"
-                [clearable]="false"
-                [formControlName]="'Customer'"
-              >
+              <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'Customer'">
                 <ng-option [value]="0" disabled>--SELECT CUSTOMER--</ng-option>
-                <ng-option
-                  *ngFor="let customer of customerList"
-                  [value]="customer.CustomerID"
-                >
+                <ng-option *ngFor="let customer of customerList" [value]="customer.CustomerID">
                   <span class="textwrap">{{
                     customer.CustomerName | uppercase
-                  }}</span>
+                    }}</span>
                 </ng-option>
               </ng-select>
             </div>
@@ -332,21 +280,12 @@
 
           <div class="col-12">
             <div class="form-group bmd-form-group">
-              <ng-select
-                class="searchdropdown"
-                [clearable]="false"
-                [formControlName]="'customerAndBranchList'"
-              >
-                <ng-option [value]="0" disabled
-                  >--SELECT CUSTOMER BRANCH--</ng-option
-                >
-                <ng-option
-                  *ngFor="let customerData of customerAndBranchList"
-                  [value]="customerData.CustomerBranchID"
-                >
+              <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'customerAndBranchList'">
+                <ng-option [value]="0" disabled>--SELECT CUSTOMER BRANCH--</ng-option>
+                <ng-option *ngFor="let customerData of customerAndBranchList" [value]="customerData.CustomerBranchID">
                   <span class="textwrap">{{
                     customerData.CityName | uppercase
-                  }}</span>
+                    }}</span>
                 </ng-option>
               </ng-select>
             </div>
@@ -354,29 +293,17 @@
 
           <div class="col-12">
             <div class="form-group bmd-form-group w-100">
-              <input
-                formControlName="CreditLimitAmount"
-                onkeypress="return event.charCode >= 48 && event.charCode <= 57"
-                min="0"
-                numbersOnly
-                class="form-control"
-                placeholder="CREDIT AMOUNT "
-                name="CreditAmount"
-              />
+              <input formControlName="CreditLimitAmount"
+                onkeypress="return event.charCode >= 48 && event.charCode <= 57" min="0" numbersOnly
+                class="form-control" placeholder="CREDIT AMOUNT " name="CreditAmount" />
             </div>
           </div>
 
           <div class="col-12">
             <div class="form-group bmd-form-group">
-              <input
-                onkeypress="return event.charCode >= 48 && event.charCode <= 57"
-                min="0"
-                numbersOnly
-                formControlName="CreditLimitDays"
-                class="form-control"
-                placeholder="CREDIT LIMIT (in days)"
-                name="CreditLimit"
-              />
+              <input onkeypress="return event.charCode >= 48 && event.charCode <= 57" min="0" numbersOnly
+                formControlName="CreditLimitDays" class="form-control" placeholder="CREDIT LIMIT (in days)"
+                name="CreditLimit" />
             </div>
           </div>
 
@@ -387,18 +314,12 @@
                                 <option *ngFor="let data of salesPerson" [value]=data.Id>{{data.SourceName | uppercase}}
                                 </option>
                             </select> -->
-              <ng-select
-                class="searchdropdown"
-                [clearable]="false"
-                [formControlName]="'SalesPersonId'"
-              >
-                <ng-option [value]="0" disabled
-                  >--SELECT SALES PERSON--</ng-option
-                >
+              <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'SalesPersonId'">
+                <ng-option [value]="0" disabled>--SELECT SALES PERSON--</ng-option>
                 <ng-option *ngFor="let data of salesPerson" [value]="data.Id">
                   <span class="textwrap">{{
                     data.SourceName | uppercase
-                  }}</span>
+                    }}</span>
                 </ng-option>
               </ng-select>
             </div>
@@ -414,37 +335,28 @@
                                     </option>
                                 </ng-container>
                             </select> -->
-              <ng-select
-                class="searchdropdown"
-                [clearable]="false"
-                [formControlName]="'StatusId'"
-              >
-                <ng-option [value]="0" disabled
-                  >--SELECT APPLICATION STATUS--</ng-option
-                >
-                <ng-option
-                  *ngFor="let status of applicationStatus"
-                  [value]="status.Id"
-                >
+              <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'StatusId'">
+                <ng-option [value]="0" disabled>--SELECT APPLICATION STATUS--</ng-option>
+                <ng-option *ngFor="let status of applicationStatus" [value]="status.Id">
                   <span class="textwrap">{{ status.Status | uppercase }}</span>
                 </ng-option>
               </ng-select>
             </div>
           </div>
 
-          
+
 
           <div class="col-md-12 searchbtn alrt text-center mb-3 mt-3">
             <button type="submit" style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;"
-                class="btn btn-primary btn-raised mb-0" (click)="getCreditApplication()">
-                Search
+              class="btn btn-primary btn-raised mb-0" (click)="getCreditApplication()">
+              Search
             </button>
             <button (click)="filterFormCreate();getCreditApplication()"
-                style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;"
-                class="btn btn-raised btn-danger mb-0">
-                Clear
+              style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;"
+              class="btn btn-raised btn-danger mb-0">
+              Clear
             </button>
-        </div>
+          </div>
         </div>
       </form>
     </div>

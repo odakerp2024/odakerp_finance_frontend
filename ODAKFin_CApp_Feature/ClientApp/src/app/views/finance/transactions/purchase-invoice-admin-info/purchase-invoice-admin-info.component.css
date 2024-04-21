@@ -2,4 +2,6 @@
   .searchcheckbox {
     margin-right: 10px; /* Adjust the value as needed for the desired spacing */
   }
-  
+  ::ng-deep .ng-select .ng-select-container .ng-value-container .ng-placeholder {
+    color: black !important; /* Change placeholder color to black */
+}

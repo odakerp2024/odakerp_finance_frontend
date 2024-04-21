@@ -1,3 +1,4 @@
+
 <div class="container-fluid p-0">
 
     <div class="d-flex justify-content-between headtitle mt-2">
@@ -5,7 +6,7 @@
 
         <div class="btntop">
 
-            <button *ngIf="isUpdate" type="button" (click)="this.partyCreateForm.enable();isUpdate = false"
+            <button *ngIf="isUpdate" type="button" (click)="edit()"
                 class="btn btn-warning bmd-btn-edit btn-raised btntop emarginr ng-star-inserted">
                 <i class="material-icons editicon">edit</i>
             </button>
@@ -137,7 +138,8 @@
                             (ngModelChange)="partyChanges($event,true)" formControlName="FirstParty" name="Party" >
                             <ng-option [value]="''" [disabled]="true">--SELECT PARTY--</ng-option>
                             <ng-option *ngFor="let data of vendorsList" [value]="data.VendorID">
-                                {{data.VendorName | uppercase}}
+                                {{data.VendorName | uppercase}} - {{data.CityName | uppercase}}
+                                <!-- {{data.VendorName | uppercase}} - {{data.CityName | uppercase}} -->
                             </ng-option>
                           </ng-select>
 
@@ -154,7 +156,7 @@
                             (ngModelChange)="partyChanges($event,false)" formControlName="FirstParty" name="Party" >
                             <ng-option [value]="''" [disabled]="true">--SELECT PARTY--</ng-option>
                             <ng-option *ngFor="let data of customerList" [value]="data.CustomerID">
-                                {{data.CustomerName | uppercase}}
+                                {{data.CustomerName | uppercase}} - {{data.CityName | uppercase}}
                             </ng-option>
                           </ng-select>
                     </div>
@@ -218,7 +220,7 @@
                         (ngModelChange)="partyChanges($event,false)" formControlName="SecondParty" name="Party">
                             <ng-option [value]="''" [disabled]="true">--SELECT PARTY--</ng-option>
                             <ng-option *ngFor="let data of customerList" [value]="data.CustomerID">
-                                {{data.CustomerName | uppercase}}
+                                {{data.CustomerName | uppercase}} - {{data.CityName | uppercase}}
                             </ng-option>
                           </ng-select>
 
@@ -235,7 +237,7 @@
                             (ngModelChange)="partyChanges($event,true)" formControlName="SecondParty" name="Party">
                             <ng-option [value]="''" [disabled]="true">--SELECT PARTY--</ng-option>
                             <ng-option *ngFor="let data of vendorsList" [value]="data.VendorID">
-                                {{data.VendorName | uppercase}}
+                                {{data.VendorName | uppercase}} - {{data.CityName | uppercase}}
                             </ng-option>
                           </ng-select>
                     </div>
@@ -283,9 +285,15 @@
                 <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 text-right mt-4">
                     <button *ngIf="!isUpdate" (click)="savePartyMapping()" type="submit"
                         class="btn btn-primary btn-raised btn-default cntbtn mb-0">Merge</button>
+
+                        <!-- {{isUpdate && mergeTypes == 'UnMerge'}} -->
+
                     <button *ngIf="isUpdate && mergeTypes == 'UnMerge'" [disabled]="isUpdateMode"
                         class="btn btn-primary btn-raised btn-default cntbtn mb-0"
                         (click)="savePartyMapping('Merge')">Merge</button>
+
+                        <!-- {{isUpdate && mergeTypes == 'Merge'}} -->
+
                     <button *ngIf="isUpdate && mergeTypes == 'Merge'" [disabled]="isUpdateMode"
                         class="btn btn-primary btn-raised btn-default cntbtn mb-0"
                         (click)="savePartyMapping('Unmerge')">Unmerge</button>

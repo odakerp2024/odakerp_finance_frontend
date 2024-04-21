@@ -71,6 +71,15 @@ export class PartyMappingInfoComponent implements OnInit {
     });
   }
 
+  edit(){
+    debugger
+    this.partyCreateForm.enable();
+    this.isUpdate = true;
+    this.isUpdateMode = false;
+    console.log(this.isUpdateMode , 'updatemode')
+    console.log(this.isUpdate,'update')
+    console.log(this.mergeTypes,'mergetypes')
+  }
   partyMappingForm() {
     this.partyCreateForm = this.fb.group({
       PartyMappingId: [this.currentId],
@@ -223,7 +232,6 @@ export class PartyMappingInfoComponent implements OnInit {
         this.ModifiedOn = this.datePipe.transform(partyInfo.CreatedDate, this.entityDateFormat);
         this.CreatedOn = this.datePipe.transform(partyInfo.UpdatedDate, this.entityDateFormat);
         this.getUpdatedByRecord([partyInfo.CreatedBy, partyInfo.UpdatedBy])
-
         if (partyInfo.Status == true) {
           this.mergeTypes = 'Merge'
         }

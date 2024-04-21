@@ -42,6 +42,7 @@ export class PurchaseInfoComponent implements OnInit {
   ModifiedBy: string = '';
   ModifiedOn: string = '';
   isFinalModeEnable: boolean = false;
+  entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
   minDate: string = this.datePipe.transform(new Date(), "yyyy-MM-dd");
   validTillMinDate: any = this.datePipe.transform(new Date(), "yyyy-MM-dd");
@@ -50,6 +51,7 @@ export class PurchaseInfoComponent implements OnInit {
   isShowTolerancePercentage: boolean = true;
   PurchaseDescription: any = '';
   isEditEnabled = true;
+  toleranceValue: any;
   constructor(
     private router: Router,
     private fb: FormBuilder,
@@ -272,6 +274,7 @@ export class PurchaseInfoComponent implements OnInit {
 
 
   addRow() {
+    debugger
     var validation = "";
     if (this.purchaseCreateForm.value.AccountId == "" || this.purchaseCreateForm.value.AccountId == 0) {
       validation += "<span style='color:red;'>*</span> <span>Please select Account.</span></br>"
@@ -330,6 +333,14 @@ export class PurchaseInfoComponent implements OnInit {
     this.resetPurchaseTable();
     this.setPage(1);
     this.CalculateTotalAmount();
+  }
+
+  checkFormat() {
+    const parts = this.toleranceValue.split('.');
+    if (parts.length > 2 || (parts.length === 2 && parts[1].length > 1) || (parts[0].length > 2)) {
+      // Prevent further typing
+      this.toleranceValue = parts[0] + (parts[1] ? '.' + parts[1][0] : '');
+    }
   }
 
   CalculateTotalAmount() {
@@ -527,8 +538,17 @@ export class PurchaseInfoComponent implements OnInit {
   }
 
   totalAmountCalculation(event) {
-    this.purchaseCreateForm.controls['Amount'].setValue(this.purchaseCreateForm.value.Rate * this.purchaseCreateForm.value.Quantity);
-  }
+
+    // this.purchaseCreateForm.controls['Amount'].setValue(this.purchaseCreateForm.value.Rate * this.purchaseCreateForm.value.Quantity).toFixed(entityFraction);
+    const rate = this.purchaseCreateForm.value.Rate;
+const quantity = this.purchaseCreateForm.value.Quantity;
+const entityFraction = this.entityFraction; // assuming this is a valid number
+
+    // this.purchaseCreateForm.controls['Amount'].setValue(this.purchaseCreateForm.value.Rate * this.purchaseCreateForm.value.Quantity.toFixed(this.entityFraction));
+    const calculatedAmount = (rate * quantity).toFixed(entityFraction);
+    
+    this.purchaseCreateForm.controls['Amount'].setValue(calculatedAmount);
+   }
 
   OnClickRadio(event) {
     this.editSelectedIdex = event;
@@ -545,6 +565,7 @@ export class PurchaseInfoComponent implements OnInit {
   }
 
   OnClickEditValue() {
+    debugger
     let info = this.PurchaseTableList[this.editSelectedIdex];
     this.purchaseCreateForm.patchValue({
       Id: info.Id,
@@ -707,10 +728,27 @@ export class PurchaseInfoComponent implements OnInit {
   }
 
   checkRange(event) {
-    if (event.length > 2) {
-      const NextNumber = event.slice(0, 2)
-      this.purchaseCreateForm.controls['ToleranceId'].setValue(NextNumber)
+    debugger;
+    const decimalIndex = event.indexOf('.'); // Check if decimal is present
+
+    if (decimalIndex !== -1) {
+        // If decimal is present
+        const beforeDecimal = event.slice(0, decimalIndex);
+        const afterDecimal = event.slice(decimalIndex + 1);
+
+        const truncatedBeforeDecimal = beforeDecimal.slice(0, 2); // Allow only 2 digits before decimal
+        const truncatedAfterDecimal = afterDecimal.slice(0, 1); // Allow only 1 digit after decimal
+
+        const NextNumber = truncatedBeforeDecimal + '.' + truncatedAfterDecimal;
+        this.purchaseCreateForm.controls['ToleranceId'].setValue(NextNumber);
+    } else if (event.length > 2) {
+        // If no decimal and more than 2 digits, allow only 2 digits
+        const NextNumber = event.slice(0, 2);
+        this.purchaseCreateForm.controls['ToleranceId'].setValue(NextNumber);
+    } else {
+        // If no decimal and less than or equal to 2 digits, allow as is
+        this.purchaseCreateForm.controls['ToleranceId'].setValue(event);
     }
-  }
+}
 
 }
