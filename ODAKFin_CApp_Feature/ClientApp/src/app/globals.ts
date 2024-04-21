@@ -4,6 +4,8 @@ import { Injectable } from '@angular/core';
 
 export class Globals {
 
+    appName: string = 'FI';
+
     // UAT
     // APIURL: string = 'https://odakfnuat.odaksolutions.in/api';
     // MASTER_API_URL: string = 'https://odakfnuat.odaksolutions.in/api';
@@ -13,7 +15,7 @@ export class Globals {
     // TemplateUploadURL: string = 'https://odakfnuat.odaksolutions.in';
     // LANDINGURL: string = 'https://navioindia.freighteiz.com/'
     // QA
-    //  APIURL: string = 'https://odakfnqa.odaksolutions.in/api';
+    // APIURL: string = 'https://odakfnqa.odaksolutions.in/api';
     // MASTER_API_URL: string = 'https://odakfnqa.odaksolutions.in/api';
     // SaApi: string = "https://odaksaqa.odaksolutions.in/api";
     // APIURLFF: string = 'https://odaksaqa.odaksolutions.in/ffddev/api';

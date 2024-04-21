@@ -97,7 +97,7 @@
                         <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'PartyId'"(change)="partyEvent($event)">
                             <ng-option [value]="0" disabled>--SELECT PARTY--</ng-option>
                             <ng-option *ngFor="let vendor of vendorsList" [value]="vendor.VendorID">
-                                <span class="textwrap">{{vendor.VendorName | uppercase}}</span>
+                                <span class="textwrap">{{vendor.VendorName | uppercase}} - {{vendor.CityName | uppercase}}</span>
                             </ng-option>
                         </ng-select> 
                     </div>
@@ -137,7 +137,7 @@
                             <ng-container *ngIf="receiptList?.length != 0; else noRecord2">
                                 <tr *ngFor="let receipt of invoiceForm.get('receiptInfo').controls; let i = index"
                                     [formGroupName]="i">
-                                    <td> <input class="text-center border-0"  Style="max-width:140px" formControlName="VoucherNumber" readonly
+                                    <td> <input class="text-center border-0 voucher-column"  Style="max-width:140px" formControlName="VoucherNumber" readonly
                                             [value]="receipt.VoucherNumber" type="text">
                                     </td>
                                     <td>
@@ -145,7 +145,7 @@
                                             [value]="receipt.VoucherDate" type="text">
                                     </td>
                                     <td>
-                                        <input class="text-center border-0" Style="max-width:50px" formControlName="VoucherAmount" readonly
+                                        <input class="text-center border-0 Voucher-amount" Style="max-width:50px" formControlName="VoucherAmount" readonly
                                             [value]="receipt.VoucherAmount" type="text">
                                     </td>
                                     <td>
@@ -153,15 +153,18 @@
                                             [value]="receipt.IsAdjusted" type="text">
                                     </td>
                                     <td>
-                                        <input class="text-center border-0" Style="max-width:60px" formControlName="PendingAmount" readonly
+                                        <input class="text-center border-0 Voucher-amount" Style="max-width:60px" formControlName="PendingAmount" readonly
                                             [value]="receipt.PendingAmount" type="text">
                                     </td>
                                     <td>
-                                        <input [ngClass]=" isUpdateMode ? 'block-set-off-input' : ''"
+                                        <input onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                        min="0" numbersOnly
+                                        appDynamicDecimal
+                                        [ngClass]=" isUpdateMode ? 'block-set-off-input' : ''"
                                             [readonly]="isUpdateMode" Style="max-width:60px"
                                             (change)="setOffChangeEvent($event,i,'Receipts');"
-                                            class="text-center" formControlName="AdjustedAmount"
-                                            [value]="receipt.AdjustedAmount" min="1" type="number" RemoveSpecialChars>
+                                            class="text-center setOff" formControlName="AdjustedAmount"
+                                            [value]="receipt.AdjustedAmount" min="1" type="number" Style="max-width:90px">
                                     </td>
                                     <td>
                                         <input (change)="onSelectEvent(i,'Receipts')" Style="max-width:40px" formControlName="IsSelect"
@@ -206,7 +209,7 @@
                             <ng-container *ngIf="openInvoiceList?.length != 0; else noRecord2">
                                 <tr *ngFor="let invoice of invoiceForm.get('openInvoiceInfo').controls; let i = index"
                                     [formGroupName]="i">
-                                    <td> <input class="text-center border-0" Style="max-width:140px" formControlName="InvoiceNumber" readonly
+                                    <td> <input class="text-center border-0 voucher-column" Style="max-width:140px" formControlName="InvoiceNumber" readonly
                                             [value]="invoice.InvoiceNumber" type="text">
                                     </td>
                                     <td>
@@ -214,7 +217,7 @@
                                             [value]="invoice.InvoiceDate" type="text">
                                     </td>
                                     <td>
-                                        <input class="text-center border-0" Style="max-width:40px" formControlName="InvoiceAmount" readonly
+                                        <input class="text-center border-0  Voucher-amount" Style="max-width:40px" formControlName="InvoiceAmount" readonly
                                             [value]="invoice.InvoiceAmount" type="text">
                                     </td>
                                     <td>
@@ -222,15 +225,18 @@
                                             [value]="invoice.IsAdjusted" type="text">
                                     </td>
                                     <td>
-                                        <input class="text-center border-0" Style="max-width:50px" formControlName="PendingAmount" readonly
+                                        <input class="text-center border-0  Voucher-amount" Style="max-width:50px" formControlName="PendingAmount" readonly
                                             [value]="invoice.PendingAmount" type="text">
                                     </td>
                                     <td>
-                                        <input [readonly]="isUpdateMode" Style="max-width:70px"
+                                        <input onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                        min="0" numbersOnly
+                                        appDynamicDecimal 
+                                        [readonly]="isUpdateMode" Style="max-width:70px"
                                             [ngClass]=" isUpdateMode ? 'block-set-off-input' : ''"
                                             (ngModelChange)="setOffChangeEvent($event,i,'Invoices');"
-                                            class="text-center" formControlName="AdjustedAmount"
-                                            [value]="invoice.AdjustedAmount" min="1" type="number" RemoveSpecialChars>
+                                            class="text-center setOff" formControlName="AdjustedAmount"
+                                            [value]="invoice.AdjustedAmount" min="1" type="number" >
                                     </td>
                                     <td>
                                         <input (change)="onSelectEvent(i,'Invoices')" Style="max-width:40px" formControlName="IsSelect"
@@ -324,8 +330,9 @@
                                     <td id="documentFileName">{{data.FileName}}</td>
                                     <td class="text-center">
                                         <button [disabled]="isUpdateMode" type="submit"
-                                            class="btn btn-danger bmd-btn-fab" (click)="OnClickDeleteValueFile(i)"><i
-                                                class="material-icons editicon">delete</i>
+                                        class="btn btn-danger bmd-btn-fab" (click)="OnClickDeleteValueFile(i);">
+
+                                            <i class="material-icons editicon">delete</i>
                                             <div class="ripple-container"></div>
                                         </button>
                                     </td>

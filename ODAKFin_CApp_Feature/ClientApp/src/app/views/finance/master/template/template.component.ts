@@ -36,7 +36,7 @@ export class TemplateComponent implements OnInit {
 
   checkUpdatePermission(id) {
     debugger
-    this.getPermissionListForCreate(573, 'add', id);
+    this.getPermissionListForCreate(573, 'edit', id);
   }	
 
 

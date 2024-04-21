@@ -58,7 +58,7 @@
 
                 <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group">
-                        <label>Division</label>
+                        <label class="str">Division</label>
                         <ng-select  class="searchdropdown"  formControlName="Division" [clearable]="false" (ngModelChange)="getOfficeList($event);PurchaseCreateForm.controls['Office'].setValue(0);" name="Division" >
                             <ng-option [value]="0" disabled>--SELECT DIVISION--</ng-option>
                             <ng-container  *ngFor="let division of divisionList">
@@ -72,7 +72,7 @@
 
                 <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group">
-                        <label>Office</label>
+                        <label class="str">Office</label>
                         <ng-select  class="searchdropdown"  formControlName="Office" [clearable]="false"(ngModelChange)="getOfficeGST($event)" name="Office">
                             <ng-option [value]="0" disabled>--SELECT OFFICE--</ng-option>
                             <ng-container *ngFor="let office of officeList">
@@ -94,7 +94,7 @@
                     </div>
                 </div>
 
-     
+<!--      
             <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                 <label>Booking Against</label><br>
                 <div class="row ml-1">
@@ -112,20 +112,71 @@
             <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                 <div class="form-group">
                     <label>Provision Type</label>
-                    <ng-select  class="searchdropdown"  formControlName="Provision" [clearable]="false" name="provision">
-                        <ng-option  [value]="0" disabled>--SELECT PROVISION--</ng-option>                    
-                        <ng-option value="1">FULL</ng-option>
-                        <ng-option value="0">PARTIAL</ng-option>             
+                    <ng-select  class="searchdropdown"  formControlName="ProvisionType" [clearable]="false" name="ProvisionType">
+                        <ng-option  [value]="0" disabled>--SELECT PROVISION TYPE--</ng-option>                    
+                        <ng-option [value]="1">PARTIAL</ng-option>             
+                        <ng-option [value]="2">FULL</ng-option>
                     </ng-select>  
                 </div>
             </div>            
       
             <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                <div class="form-group">
+                    <label>Provision</label>
+                    <ng-select  class="searchdropdown"  formControlName="Provision" [clearable]="false"
+                    [placeholder]="'-- SELECT PROVISION --'">
+                        <ng-option [value]="0" disabled>--SELECT PROVISION--</ng-option>
+                        <ng-container *ngFor="let provision of provisionDropDownList">
+                          <ng-option  [value]="provision.ProvisionId">
+                           <span class="textwrap">{{provision.ProvisionNumber | uppercase}}</span>
+                          </ng-option>
+                        </ng-container>
+                    </ng-select>  
+                </div>
             </div>
-           
+            -->
+
+            <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                <label>Booking Against</label><br>
+                <div class="row ml-1">
+                    <div class="form-check">
+                        <input type="radio" class="form-check-input" id="radio1" [checked]="bookingAgainst === 'general'" name="optradio" (change)="onBookingAgainstChange('general')">
+                        <label class="form-check-label" for="radio1">General</label>
+                    </div>
+                    <div class="form-check ml-5">
+                        <input type="radio" class="form-check-input" id="radio2" [checked]="bookingAgainst === 'provision'" name="optradio" (change)="onBookingAgainstChange('provision')">
+                        <label class="form-check-label" for="radio2">Against provision</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4" *ngIf="bookingAgainst === 'provision'">
+                <div class="form-group">
+                    <label>Provision Type</label>
+                    <ng-select class="searchdropdown" formControlName="ProvisionType" [clearable]="false" name="ProvisionType">
+                        <ng-option [value]="0" disabled>--SELECT PROVISION TYPE--</ng-option>                    
+                        <ng-option [value]="1">PARTIAL</ng-option>             
+                        <ng-option [value]="2">FULL</ng-option>
+                    </ng-select>  
+                </div>
+            </div>            
+            
+            <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4" *ngIf="bookingAgainst === 'provision'">
+                <div class="form-group">
+                    <label>Provision</label>
+                    <ng-select class="searchdropdown" formControlName="Provision" [clearable]="false" [placeholder]="'-- SELECT PROVISION --'">
+                        <ng-option [value]="0" disabled>--SELECT PROVISION--</ng-option>
+                        <ng-container *ngFor="let provision of provisionDropDownList">
+                            <ng-option [value]="provision.ProvisionId">
+                                <span class="textwrap">{{provision.ProvisionNumber | uppercase}}</span>
+                            </ng-option>
+                        </ng-container>
+                    </ng-select>  
+                </div>
+            </div>
                 <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group">
-                        <label class="str">Purchase Invoice #</label>
+                        <label>Purchase Invoice #</label>
                         <input formControlName="PINumber" readonly type="text" id="purchaseNo"
                             class="form-control w-100" />
                     </div>
@@ -211,7 +262,7 @@
                             <ng-option [value]="''" disabled>--SELECT VENDOR BRANCH--</ng-option>
                             <ng-container *ngFor="let vendor of vendorBranch">
                               <ng-option [value]="vendor.VendorBranchID">
-                               <span class="textwrap">{{vendor.BranchCode | uppercase}}</span>
+                               <span class="textwrap">{{vendor.CityName | uppercase}}</span>
                               </ng-option>
                             </ng-container>
                         </ng-select> 
@@ -232,7 +283,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-4 col-sm-6 col-lg-4 col-xl-4">
+                <!-- <div class="col-md-4 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group">
                         <label class="str mb-2">Vendor Invoice Date</label>
                         <mat-form-field  class="tillDate mat_date_picker"   appearance="outline">
@@ -242,13 +293,12 @@
                             <mat-datepicker-toggle matSuffix [for]="VIDate"></mat-datepicker-toggle>
                             <mat-datepicker #VIDate></mat-datepicker>
                         </mat-form-field>
-                        <!-- <input [max]="maxDate" formControlName="VIDate" class="form-control" type="date"
-                            id="txtRemarks"> -->
+                  
                     </div>
-                </div>      
-               
+                </div>       -->
 
-                <div class="col-md-4 col-sm-6 col-lg-4 col-xl-4">
+
+                <!-- <div class="col-md-4 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group">
                         <label>Due Date</label>
                         <input formControlName="DueDate" readonly class="form-control" [placeholder]="entityDateFormat" type="text" id="DueDate" *ngIf="duedatelist && duedatelist.length > 0">
@@ -260,7 +310,35 @@
                             <mat-datepicker #DueDate></mat-datepicker>
                         </mat-form-field>
                     </div>
+                </div> -->
+
+                <div class="col-md-4 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label class="str mb-2">Vendor Invoice Date</label>
+                        <mat-form-field  class="tillDate mat_date_picker"   appearance="outline">
+                            <input matInput (click)="VIDate.open()" readonly [max]="maxDate" 
+                                (dateChange)="calculateDueDate($event);"
+                                autocomplete="off" [matDatepicker]="VIDate"  id="VIDate" [placeholder]="entityDateFormat" formControlName="VIDate">
+                            <mat-datepicker-toggle matSuffix [for]="VIDate"></mat-datepicker-toggle>
+                            <mat-datepicker #VIDate></mat-datepicker>
+                        </mat-form-field>
+                    </div>
                 </div>
+                
+                <div class="col-md-4 col-sm-6 col-lg-4 col-xl-4">
+                    <div class="form-group">
+                        <label>Due Date</label>
+                        <input formControlName="DueDate" readonly class="form-control" [placeholder]="entityDateFormat" type="text" id="DueDate"  [value]="DueDateopen"
+                            *ngIf="duedatelist && duedatelist.length > 0; else currentDate">
+                    </div>
+                    <ng-template #currentDate>
+                        <div>
+                            <input formControlName="DueDate" readonly class="form-control" [placeholder]="entityDateFormat" type="text" id="DueDate"
+                                [min]="minDate" [max]="maxDate">
+                        </div>
+                    </ng-template>
+                </div>
+                
 
 
                 <div class="col-md-4 col-sm-6 col-lg-4 col-xl-4">
@@ -285,10 +363,18 @@
 
                 <div class="col-md-4 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group">
-                        <label>RCM Applicable </label>
-                        <input formControlName="RCMApplicable" readonly class="form-control" type="text"
-                            id="txtRemarks">
+                        <label>RCM Applicable</label>
+                        <ng-select class="searchdropdown" formControlName="RCMApplicable" [clearable]="false" name="RCM"   [placeholder]="'-- SELECT TDS--'"
+                                   (change)="toggleRCM($event)">
+                            <ng-option [value]="''" disabled>--SELECT RCM--</ng-option>                    
+                            <ng-option value="1">YES</ng-option>
+                            <ng-option value="0">NO</ng-option>             
+                        </ng-select>  
                     </div>
+                    
+                    
+                    
+                    
                 </div>
 
                 <div class="col-md-4 col-sm-6 col-lg-4 col-xl-4">
@@ -361,7 +447,7 @@
                 <div *ngIf="orderType == 'Purchase'" class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group">
                         <label class="str">Purchase Order</label>
-                        <select (ngModelChange)="purchaseOrderChangeEvent('Purchase');" formControlName="PurchaseOrder"
+                        <select (ngModelChange)="purchaseOrderChangeEvent('Purchase', $event);" formControlName="PurchaseOrder"
                             name="PurchaseOrder" class="form-control my-select">
                             <option disabled value="">--SELECT PURCHASE ORDER--</option>
                             <option *ngFor="let gRow of purchaseList" [value]="gRow.Id">
@@ -374,7 +460,7 @@
                 <div *ngIf="orderType == 'Internal'" class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group">
                         <label class="str">Internal Order</label>
-                        <select formControlName="InternalOrder" name="InternalOrder" class="form-control my-select">
+                        <select (ngModelChange)="purchaseOrderChangeEvent('Internal', $event);" formControlName="InternalOrder" name="InternalOrder" class="form-control my-select">
                             <option disabled value="">--SELECT INTERNAL ORDER--</option>
                             <option *ngFor="let gRow of internalOderList" [value]="gRow.Id">
                                 {{gRow.InternalNumber | uppercase}}
@@ -414,20 +500,15 @@
                                     <th>Currency</th>
                                     <th>Ex.Rate</th>
                                     <th>Amount (CCR)</th>
-                                    <th>Rcm</th>
+                                    <th>TDS</th>
                                     <th>GST Group %</th>
+                                    <th>Rcm</th>
                                     <th>Select</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>
-                                        <!-- <select formControlName="AccountId" class="form-control my-select">
-                                            <option disabled value="0">--SELECT ACCOUNT--</option>
-                                            <option *ngFor="let name of accountName" [value]="name.ChartOfAccountsId">
-                                                {{name.AccountName | uppercase}}
-                                            </option>
-                                        </select> -->                                                  
+                                    <td>                                                 
                                         <ng-select class="searchdropdown" [formControlName]="'AccountId'" [clearable]="false" [appendTo]="'body'">
                                            <ng-option [value]="0" disabled>--SELECT ACCOUNT--</ng-option>
                                            <ng-option *ngFor="let name of accountName" [value]="name.ChartOfAccountsId">
@@ -437,28 +518,22 @@
                                     </td>
                                     <td> <input formControlName="Rate"
                                             (ngModelChange)="rateQuantityChangeEvent($event)" class="form-control"
-                                            onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly id="Rate" />
+                                            onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                            min="0" numbersOnly appDynamicDecimal id="Rate" />
                                     </td>
                                     <td> <input formControlName="Qty"
                                             (ngModelChange)="rateQuantityChangeEvent($event)" class="form-control"
-                                            onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly id="Qty" />
+                                            onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly appDynamicDecimal id="Qty" />
                                     </td>
                                     <td> <input readonly formControlName="Amount"
                                             [value]="PurchaseCreateForm.value.Rate * PurchaseCreateForm.value.Qty"
-                                            class="form-control"  id="Amount" onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly/>
+                                            class="form-control"  id="Amount" onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly />
                                     </td>
                                     <td>
-                                        <!-- <select (change)="changeCurrencyEvent($event.target.value)"
-                                            formControlName="CurrencyId" class="form-control my-select">
-                                            <option disabled value="0">--SELECT CURRENCY--</option>
-                                            <option *ngFor="let currency of currencyList" [value]="currency.ID">
-                                                {{currency.Currency | uppercase}}
-                                            </option>
-                                        </select> -->
                                         <ng-select class="searchdropdown" [formControlName]="'CurrencyId'" [clearable]="false" [appendTo]="'body'" (change)="changeCurrencyEvent($event)">
                                             <ng-option [value]="0" disabled>--SELECT CURRENCY--</ng-option>
                                             <ng-option *ngFor="let currency of currencyList" [value]="currency.ID">
-                                            <span class="textwrap">{{currency.Currency | uppercase}}</span>
+                                            <span class="textwrap">{{ getCurrencyCode(currency.Currency) | uppercase }}</span>
                                            </ng-option>
                                         </ng-select> 
                                     </td>
@@ -468,30 +543,15 @@
                                     </td>
                                     <td> <input readonly formControlName="Amountccr" class="form-control" type="text"
                                             id="Amount (CCR)" /> </td>
-                                 
-                                        <!-- <select (change)="taxableChangeEvent($event.target.value)"
-                                            formControlName="IsTaxable" class="form-control my-select">
-                                            <option disabled value="">--SELECT TAXABLE--</option>
-                                            <option value="1">YES</option>
-                                            <option value="0">NO</option>
-                                        </select> -->
-                                            <!-- <mat-checkbox class="searchcheckbox" (change)="toggleRCM($event.checked ? 1 : 0)" 
-                                                          [checked]="PurchaseCreateForm.value.IsRCM === 1"></mat-checkbox>                                         -->
-                                                          <td>
-                                                            <input type="checkbox" (change)="toggleRCM($event.target.checked)" 
-                                                            [checked]="PurchaseCreateForm.value.IsRCM === true">
-                                                        </td>
-                                                        
-                                                                         
-                                                                                                                                                               
-                                 
                                     <td>
-                                        <!-- <select formControlName="GSTGroup" class="form-control my-select">
-                                            <option disabled value="0">--SELECT TAX GROUP--</option>
-                                            <option *ngFor="let tax of taxList" [value]="tax.TaxRate">
-                                                {{tax.TaxRate}} %
-                                            </option>
-                                        </select> -->
+                                        <ng-select class="searchdropdown" [formControlName]="'TDSMaster'" [clearable]="false" [appendTo]="'body'">
+                                            <ng-option [value]="0" disabled>--SELECT TDS SECTION--</ng-option>
+                                            <ng-option *ngFor="let tdsmaster of SectionMasterList"  [value]="tdsmaster.SectionID">
+                                            <span class="textwrap">{{tdsmaster.SectionName}}</span>
+                                           </ng-option>
+                                         </ng-select>   
+                                    </td>                                                                                                                                                                                       
+                                    <td>
                                         <ng-select class="searchdropdown" [formControlName]="'GSTGroup'" [clearable]="false" [appendTo]="'body'">
                                             <ng-option [value]="0" disabled>--SELECT TAX GROUP--</ng-option>
                                             <ng-option *ngFor="let tax of taxList"  [value]="tax.TaxRate">
@@ -499,9 +559,13 @@
                                            </ng-option>
                                          </ng-select>                        
                                     </td>
+                                    <td>
+                                        <input type="checkbox" formControlName="IsRCM" >
+                                    </td>
+                                                                        
                                     <td> </td>
                                 </tr>
-                                <tr *ngFor="let data of pagedItems;let i = index">
+                                <tr *ngFor="let data of PurchaseTableList;let i = index">
                                     <td>{{data.AccountName}}</td>
                                     <td>{{data.Rate}}</td>
                                     <td>{{data.Qty}}</td>
@@ -509,8 +573,9 @@
                                     <td>{{data.CurrencyName}}</td>
                                     <td>{{data.ExRate ? data.ExRate : 1}}</td>
                                     <td>{{data.Amountccr}}</td>
-                                    <td>{{data.IsRCM ? 'Checked' : 'Unchecked' }}</td>
-                                    <td>{{data.GSTGroup ? data.GSTGroup :0}} %</td>
+                                    <td>{{data.TDSName}}</td>
+                                    <td>{{data.GSTGroup ? (data.GSTGroup + '%')  : '-' }}</td>
+                                    <td><input class='disable-input' type="checkbox" [checked]="data.IsRCM"></td>
                                     <td>
                                         <input class="vertal checkbox" type="radio" name="AlertCheck" id="RadioCheck"
                                             (click)="OnClickRadio(i)" />
@@ -551,75 +616,14 @@
                 </div>
 
                 <div class="col-12 row p-0">
-                    <div class="col-8">
-                        <div class="col-7 mt-3">
-                            <label class="str">Upload File</label>
-                            <div class="file-upload">
-                                <input type="text" hidden />
-                                <input *ngIf="!isUpdateMode" class="file-upload__input" hidden type="file" name="myFile"
-                                    id="myFile" (change)="fileSelected($event)">
-
-                                <input *ngIf="isUpdateMode" class="file-upload__input" hidden readonly type="text"
-                                    name="myFile" id="myFile" (change)="fileSelected($event)">
-                                <label for="myFile" class="file-upload__button text-center"
-                                    style=" width: 50% !important; border: 1px solid #b1b1b1d1 !important;margin-top: 14px; border-radius: 10px; box-shadow: 0px 0px 5px 0px rgb(202 202 202); background-color: white; font-weight: 600; margin-right: 0.5rem !important;"
-                                    type="button">
-                                    <img class="ml-2" src="assets/images/docupload.png" alt="Upload image"
-                                        style="width: 1rem !important;" />
-                                    Choose File(s)
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="col-md-8 col-sm-6 col-lg-4 col-xl-4"> </div>
-
-                        <div class="col-md-9 mt-3">
-                            <table
-                                class="table table-responsive table-striped table-bordered w-100 dataTable no-footer">
-                                <thead class="text-center">
-                                    <tr>
-                                        <th tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
-                                            aria-label="Name: activate to sort column ascending"
-                                            style="width: 177.575px;">S.No
-                                        </th>
-                                        <th tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
-                                            aria-label="Name: activate to sort column ascending"
-                                            style="width: 177.575px;" (click)="sort('DivisionName')">File Name</th>
-
-                                        <th tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
-                                            class="text-center" aria-label="Name: activate to sort column ascending"
-                                            style="width: 177.575px;" (click)="sort('ShortName')">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="text-center" *ngIf="FileList.length > 0">
-                                    <tr *ngFor="let data of FileList;let i = index">
-                                        <td>{{i + 1}}</td>
-                                        <td id="documentFileName">{{data.FileName}}</td>
-                                        <td class="text-center">
-                                            <button [disabled]="isUpdateMode" type="submit"
-                                                class="btn btn-danger bmd-btn-fab"
-                                                (click)="OnClickDeleteValueFile(i)"><i
-                                                    class="material-icons editicon">delete</i>
-                                                <div class="ripple-container"></div>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                                <tbody *ngIf="FileList.length == 0">
-                                    <tr>
-                                        <td class="text-center" colspan="3">No records found.</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="row ml-3 mt-5">
+                    <div class="col-8 mt-3">
+                        <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
                             <div>
-                                <label>Bank Details</label>
+                                <label class="str">Bank Details</label>
                             </div>
                             <div>
-                                <div class="form-group ml-5">
-                                    <ng-select style="width:250px"class="searchdropdown" formControlName="Bankdetails" [clearable]="false"  name="bank">
+                                <div class="form-group">
+                                    <ng-select class="searchdropdown" formControlName="BankId" [clearable]="false"  name="bank">
                                         <ng-option [value]="''" >--SELECT BANK--</ng-option>
                                         <ng-option *ngFor="let bank of bankList" [value]="bank.BankID">
                                             {{ bank.BankName | uppercase }} - {{ bank.AccountNo | uppercase }}
@@ -628,39 +632,40 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row ml-3 mt-1">
+
+                        <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
                             <div>
                                 <label class="str">Invoice Currency</label>
                             </div>
                             <div>
-                                <div class="form-group ml-3">
-                                    <ng-select style="width:250px"class="searchdropdown" [formControlName]="'InvoiceCurrency'"[clearable]="false" [appendTo]="'body'" (change)="changeCurrencyEvent($event)">
+                                <div class="form-group">
+                                    <ng-select class="searchdropdown" [formControlName]="'InvoiceCurrency'"[clearable]="false" [appendTo]="'body'" (change)="changeCurrencyEvent($event)">
                                         <ng-option [value]="0" disabled>--SELECT CURRENCY--</ng-option>
                                         <ng-option *ngFor="let currency of currencyList" [value]="currency.ID">
-                                        <span class="textwrap">{{currency.Currency | uppercase}}</span>
+                                        <span class="textwrap">{{ getCurrencyCode(currency.Currency) | uppercase }}</span>
                                        </ng-option>
                                     </ng-select> 
                                 </div>
                             </div>
                         </div>
-                        <div class="row ml-3 mt-1">
+                        <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
                             <div>
-                                <label>Invoice ExRate</label>
+                                <label class="str">Invoice ExRate</label>
                             </div>
-                            <div style="margin-left: 33px;">
+                            <div >
                                 <div class="form-group">
-                                    <input style="width:250px" formControlName="InvoiceExrate"  class="form-control" type="number"
+                                    <input  formControlName="InvoiceExrate"  class="form-control" type="number"
                                     id="InvoiceExrate">
                                 </div>
                             </div>
                         </div>
-                        <div class="row ml-3 mt-1">
+                        <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
                             <div>
                                 <label>Remarks</label>
                             </div>
-                            <div style="margin-left: 67px;">
+                            <div>
                                 <div class="form-group">
-                                    <textarea   formControlName="Remarks" style="width:250px"class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                    <textarea   formControlName="Remarks" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -677,7 +682,7 @@
                         <div class="col-md-6 col-sm-6 col-lg-10 col-xl-12">
                             <div class="form-group">
                                 <label>SGST</label>
-                                <input  formControlName="SGST" class="form-control" placeholder="SGST"
+                                <input  readonly formControlName="SGST" class="form-control" placeholder="SGST"
                                     type="number" id="SubTotal">
                             </div>
                         </div>
@@ -685,7 +690,7 @@
                         <div class="col-md-6 col-sm-6 col-lg-10 col-xl-12">
                             <div class="form-group">
                                 <label>CGST</label>
-                                <input  formControlName="CGST" class="form-control" placeholder="CGST"
+                                <input readonly formControlName="CGST" class="form-control" placeholder="CGST"
                                     type="number" id="SubTotal">
                             </div>
                         </div>
@@ -693,7 +698,7 @@
                         <div class="col-md-6 col-sm-6 col-lg-10 col-xl-12">
                             <div class="form-group">
                                 <label>IGST</label>
-                                <input  formControlName="IGST" class="form-control" placeholder="IGST"
+                                <input readonly formControlName="IGST" class="form-control" placeholder="IGST"
                                     type="number" id="SubTotal">
                             </div>
                         </div>
@@ -724,20 +729,66 @@
                                     type="number" id="NetAmount">
                             </div>
                         </div>
-
-                        <!-- <div class="col-md-6 col-sm-6 col-lg-10 col-xl-12">
-                            <div class="form-group">
-                                <label>Invoice Currency</label>
-                                <select [ngClass]=" isUpdate ? 'block-input' : 'block-input'"
-                                    formControlName="InvoiceCurrency" class="form-control my-select">
-                                    <option disabled value="0">--SELECT CURRENCY--</option>
-                                    <option disabled *ngFor="let currency of currencyList" [value]="currency.ID">
-                                        {{currency.Currency | uppercase}}
-                                    </option>
-                                </select>
-                            </div>
-                        </div> -->
                     </div>
+                </div>
+
+                <div class="col-6 mt-0">
+                    <label class="str">Upload File</label>
+                    <div class="file-upload">
+                        <input type="text" hidden />
+                        <input *ngIf="!isUpdateMode" class="file-upload__input" hidden type="file" name="myFile"
+                            id="myFile" (change)="fileSelected($event)">
+
+                        <input *ngIf="isUpdateMode" class="file-upload__input" hidden readonly type="text"
+                            name="myFile" id="myFile" (change)="fileSelected($event)">
+                        <label for="myFile" class="file-upload__button text-center"
+                            style=" width: 50% !important; border: 1px solid #b1b1b1d1 !important;margin-top: 14px; border-radius: 10px; box-shadow: 0px 0px 5px 0px rgb(202 202 202); background-color: white; font-weight: 600; margin-right: 0.5rem !important;"
+                            type="button">
+                            <img class="ml-2" src="assets/images/docupload.png" alt="Upload image"
+                                style="width: 1rem !important;" />
+                            Choose File(s)
+                        </label>
+                    </div>
+                </div>
+
+                <div class="col-md-7 mt-3">
+                    <table
+                        class="table table-responsive table-striped table-bordered w-100 dataTable no-footer">
+                        <thead class="text-center">
+                            <tr>
+                                <th tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                                    aria-label="Name: activate to sort column ascending"
+                                    style="width: 177.575px;">S.No
+                                </th>
+                                <th tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                                    aria-label="Name: activate to sort column ascending"
+                                    style="width: 177.575px;" >File Name</th>
+
+                                <th tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                                    class="text-center" aria-label="Name: activate to sort column ascending"
+                                    style="width: 177.575px;" >Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-center" *ngIf="FileList.length > 0">
+                            <tr *ngFor="let data of FileList;let i = index">
+                                <td>{{i + 1}}</td>
+                                <td id="documentFileName">{{data.FileName}}</td>
+                                <td class="text-center">
+                                    <button [disabled]="isUpdateMode" type="submit"
+                                        class="btn btn-danger bmd-btn-fab"
+                                        (click)="OnClickDeleteValueFile(i)"><i
+                                            class="material-icons editicon">delete</i>
+                                        <div class="ripple-container"></div>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody *ngIf="FileList.length == 0">
+                            <tr>
+                                <td class="text-center" colspan="3">No records found.</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
 
                 <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12 text-right mt-4">
@@ -755,11 +806,11 @@
                         class="btn btn-warning text-white mr-3 mb-0 col-auto">
                         Delete
                     </button> -->
-                    <button type="button"(click)="saveInfo(3)"
-                        class="btn btn-primary text-white mr-3 mb-0 col-auto"
-                        style="background-color: #19a84c !important;border: #19a84c;border: 1px solid #19a84c !important;">
-                        Print
-                    </button>
+                    <button type="submit" class="btn btn-danger btntop btn-raised" (click)="ViewPage()">Cancel</button>
+                    <!-- <button type="button"(click)="saveInfo(3)"
+                        class="btn btn-danger text-white mr-3 mb-0 col-auto">
+                        Cancel
+                    </button> -->
                 </div>
             </div>
         </form>

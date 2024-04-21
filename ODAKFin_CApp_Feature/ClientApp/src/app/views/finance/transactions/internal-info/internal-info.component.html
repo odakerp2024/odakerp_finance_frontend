@@ -290,9 +290,10 @@
                                         </td>
                                         <td>
                                             <input (ngModelChange)="totalAmountCalculation($event)"
-                                                formControlName="Quantity" class="form-control"
-                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0"
-                                                numbersOnly name="Oty" RemoveSpecialChars/>
+                                                formControlName="Quantity"  class="form-control"
+                                                onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                                min="0" numbersOnly appDynamicDecimal
+                                                name="Oty"/>
                                         </td>
                                         <td>
                                             <!-- <select formControlName="CurrencyId" class="form-control my-select">
@@ -312,8 +313,10 @@
                                         <td>
                                             <input (ngModelChange)="totalAmountCalculation($event)"
                                                 formControlName="Rate" class="form-control"
-                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0"
-                                                numbersOnly RemoveSpecialChars/>
+                                                onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                            min="0" numbersOnly
+                                            appDynamicDecimal
+                                            />
                                         </td>
                                         <td>
                                             <input formControlName="Amount" class="form-control" type="text" readonly />
