@@ -55,6 +55,7 @@ export class FinanceMasterComponent implements OnInit {
 
   cusBID: string='';
   eventName: string='';
+  redirectURL: string='';
 
   constructor(
     private titleService: Title, private workflow: WorkflowService, public ps: PaginationService,
@@ -406,6 +407,8 @@ export class FinanceMasterComponent implements OnInit {
 
   getWorkflowDetails(workflowData: any) {
     console.log(workflowData)
+    this.redirectURL = workflowData.redirectURL;
+    console.log(this.redirectURL);
     if (workflowData?.workflowno) {
       let payload = {
 
@@ -532,6 +535,18 @@ export class FinanceMasterComponent implements OnInit {
     this.getWorkflowInbox()
     this.dispStyle = 'none',
     ($('#progressModel') as any).modal('hide')
+  }
+
+  getSuffix(step: number): string {
+    if (step == 1) {
+      return 'st';
+    } else if (step == 2) {
+      return 'nd';
+    } else if (step == 3) {
+      return 'rd';
+    } else {
+      return 'th';
+    }
   }
 
   setPageWF(page: number) {
