@@ -950,9 +950,10 @@ debugger
         "<span style='color:red;'>*</span> <span>Please select Customer Branch.</span></br>";
     }
 
-    // if (Table.SalesPersonId) {
-    //   validation += "<span style='color:red;'>*</span> <span>Please select Sales Person.</span></br>"
-    // }
+    if (!Table.SalesPersonId) {
+      validation += "<span style='color:red;'>*</span> <span>Sales Person is not linked for the selected customer</span></br>"
+    }
+   
 
     if (!Table.Trade) {
       validation +=
