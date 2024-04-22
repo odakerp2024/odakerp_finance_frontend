@@ -950,9 +950,10 @@ debugger
         "<span style='color:red;'>*</span> <span>Please select Customer Branch.</span></br>";
     }
 
-    // if (Table.SalesPersonId) {
-    //   validation += "<span style='color:red;'>*</span> <span>Please select Sales Person.</span></br>"
-    // }
+    if (!Table.SalesPersonId) {
+      validation += "<span style='color:red;'>*</span> <span>Sales Person is not linked for the selected customer</span></br>"
+    }
+   
 
     if (!Table.Trade) {
       validation +=
@@ -1461,6 +1462,7 @@ debugger
         CreditApplicationId: this.creditId,
         CustomerBranchID: event,
         CustomerID: this.creditApplicationForm.value.CustomerId,
+        RequestType: this.RequestType
       };
     }
     this.customerService
@@ -1513,6 +1515,7 @@ debugger
               CreditApplicationId: this.creditId,
               CustomerID: event,
               CustomerBranchID: branchCode,
+              RequestType : this.RequestType
             };
             this.customerService
               .getCustomerBranchDuplicate(payload)

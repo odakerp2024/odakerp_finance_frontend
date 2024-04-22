@@ -275,7 +275,7 @@ export class ProvisionDetailComponent implements OnInit {
           this.currencyList = result;
           const entityInfo: any = this.commonDataService.getLocalStorageEntityConfigurable();
           const val = entityInfo['Currency'];
-          let info = this.currencyList.find(x => x.Currency.toUpperCase() == val);
+          let info = this.currencyList.find(x => x.Currency == val);
           this.companyCurrencyId = info.ID
           this.ProvisionForm.controls['Table1']['controls']['Currency'].setValue(this.companyCurrencyId)
           resolve(true)
@@ -712,7 +712,7 @@ getFinalPayload() {
  
     let entityInfo = this.commonDataService.getLocalStorageEntityConfigurable();
     const val = entityInfo['Currency'];
-    let info = this.currencyList.find(x => x.Currency.toUpperCase() == val);
+    let info = this.currencyList.find(x => x.Currency == val);
    // let info = this.currencyList.find(x => x.Currency == entityInfo['Currency']);
     console.log(this.currencyList , 'Currency List')
     console.log(info , 'info')

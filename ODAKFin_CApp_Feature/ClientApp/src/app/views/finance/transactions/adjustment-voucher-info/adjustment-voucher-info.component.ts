@@ -571,7 +571,7 @@ export class AdjustmentVoucherInfoComponent implements OnInit {
     this.AdjustmentCreateForm.controls['AccountType'].setValue(0);
     this.AdjustmentCreateForm.controls['DrCrId'].setValue(0);
     // this.AdjustmentCreateForm.controls['Currency'].setValue(this.entityCurrency1);
-    const entitySelectedCurrency = this.currencyList.find(c => c.Currency.toUpperCase() === this.entityCurrency.toUpperCase());
+    const entitySelectedCurrency = this.currencyList.find(c => c.Currency === this.entityCurrency);
       if (entitySelectedCurrency) {
         this.AdjustmentCreateForm.controls.Currency.setValue(entitySelectedCurrency.ID);
       }
@@ -709,7 +709,7 @@ export class AdjustmentVoucherInfoComponent implements OnInit {
       if (result.length > 0) {
         this.currencyList = result;
       }
-      const entitySelectedCurrency = this.currencyList.find(c => c.Currency.toUpperCase() === this.entityCurrency.toUpperCase());
+      const entitySelectedCurrency = this.currencyList.find(c => c.Currency === this.entityCurrency);
       if (entitySelectedCurrency) {
         this.AdjustmentCreateForm.controls.Currency.setValue(entitySelectedCurrency.ID);
       }

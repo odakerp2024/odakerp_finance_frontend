@@ -92,6 +92,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
   selectedOfficeStateId = 0;
   selectedBranchStateId = 0;
   isSameState: boolean = false;
+  IsExchangeEnable: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -235,7 +236,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       Rate: [''],
       Qty: [''],
       Amount: [''],
-      CurrencyId: [1],
+      CurrencyId: [this.entityCurrencyID],
       ExRate: ['1'],
       Amountccr: [''],
       TDSMaster: [0],
@@ -292,25 +293,15 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
         this.ModifiedBy = info.UpdatedByName;
         if (info.StatusId == 2) this.isFinalRecord = true;
 
-        if (info.PurchaseOrder) this.orderType = 'Purchase';
-        else if (info.InternalOrder) this.orderType = 'Internal';
-        else this.orderType = '';
-        await this.getInternalOrderList(this.PurchaseInvoiceId);
-        await this.getPurchaseList(this.PurchaseInvoiceId);
-        // to get Purchase or Internal order number
-        if( this.orderType = 'Purchase'){
-          this.purchaseOrderChangeEvent('Purchase', info.PurchaseOrder);
-        }
-        else{
-          this.purchaseOrderChangeEvent('Internal', info.InternalOrder);
-        }
       
+      this.onBookingAgainstChange(info.BookingAgainst == 0 ? 'provision' : 'general');
+
         this.PurchaseCreateForm.patchValue({
           PurchaseInvoiceId: this.PurchaseInvoiceId,
           Division: info.Division,
           Office: info.Office,
           OfficeGST: info.OfficeGST,
-          BookingAgainst: info.BookingAgainst,
+          BookingAgainst: info.BookingAgainst == 0 ? false : true,
           PINumber: info.PINumber,
           PIDate: this.datePipe.transform(info.PIDate, 'y-MM-dd'),
           // PIDate: info.PIDate,
@@ -348,6 +339,20 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
           BankId: info.BankId,
           InvoiceExrate: info.InvoiceExRate,
         });
+
+        if (info.PurchaseOrder) this.orderType = 'Purchase';
+        else if (info.InternalOrder) this.orderType = 'Internal';
+        else this.orderType = '';
+        await this.getInternalOrderList(this.PurchaseInvoiceId);
+        await this.getPurchaseList(this.PurchaseInvoiceId);
+        // to get Purchase or Internal order number
+        // if( this.orderType == 'Purchase'){
+        //   this.purchaseOrderChangeEvent('Purchase', info.PurchaseOrder);
+        // }
+        // else{
+        //   this.purchaseOrderChangeEvent('Internal', info.InternalOrder);
+        // }
+        
         this.getOfficeList(info.Division);
         this.getVendorBranchList(info.VendorId, info.VendorBranch, false);
         const vendorDetails = await this.getVendorDetailsInfo(info.VendorBranch);
@@ -355,11 +360,11 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
 
         if (result.data.Table1.length > 0) {
           this.PurchaseTableList = []
+          
           result.data.Table1.forEach(element => {
-
             this.PurchaseTableList.push(element);
           });
-          this.setPage(1);
+          // this.setPage(1);
           // this.TdsPercentageCalculation();
           if (result.data.Table2.length > 0) {
             this.FileList = result.data.Table2;
@@ -409,7 +414,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
   }
 
   getStatus() {
-    var service = `${this.globals.APIURL}/PurchaseInvoice/GetPurchaseInvoiceDropDownList`; var payload: any = {};
+    var service = `${this.globals.APIURL}/PurchaseInvoice/GetPurchaseInvoiceDropDownList`; var payload: any = {Id: 0};
     this.dataService.post(service, payload).subscribe((result: any) => {
       this.statusList = [];
       if (result.data.Table.length > 0) {
@@ -721,8 +726,11 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
         this.currencyList = result;
         let entityInfo = this.commonDataService.getLocalStorageEntityConfigurable();
         this.entityCurrencyName = entityInfo['Currency'];
-        let info = this.currencyList.find(x => x.Currency = this.entityCurrencyName);
+        
+        let info = this.currencyList.find(x => x.Currency == this.entityCurrencyName);
+        this.entityCurrencyID = info.ID;
         this.PurchaseCreateForm.controls['InvoiceCurrency'].setValue(info.ID);
+        this.PurchaseCreateForm.controls['CurrencyId'].setValue(info.ID);
       }
     }, error => { });
   }
@@ -854,7 +862,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     this.PurchaseCreateForm.controls['Rate'].setValue('');
     this.PurchaseCreateForm.controls['Qty'].setValue('');
     this.PurchaseCreateForm.controls['Amount'].setValue('');
-    this.PurchaseCreateForm.controls['CurrencyId'].setValue(1);
+    this.PurchaseCreateForm.controls['CurrencyId'].setValue(this.entityCurrencyID);
     this.PurchaseCreateForm.controls['ExRate'].setValue('1');
     this.PurchaseCreateForm.controls['Amountccr'].setValue('');
     this.PurchaseCreateForm.controls['TDSMaster'].setValue('');
@@ -1297,7 +1305,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     return { sectionA: sectionA, sectionB: sectionB, sectionC: sectionC, sectionD: sectionD };
   }
 
-  changeCurrencyEvent(currencyId: any) {
+  changeCurrencyEvent(currencyId: any) {debugger
     let entityInfo = this.commonDataService.getLocalStorageEntityConfigurable();
     let info = this.currencyList.find(x => x.Currency == entityInfo['Currency']);
     this.entityCurrencyID = info.ID;
@@ -1305,9 +1313,11 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       this.PurchaseCreateForm.controls['ExRate'].setValue(1);
       this.PurchaseCreateForm.controls['Amountccr'].setValue(1 * this.PurchaseCreateForm.value.Rate * this.PurchaseCreateForm.value.Qty);
       this.PurchaseCreateForm.get('ExRate').disable();
+      this.IsExchangeEnable = false;
     }
     else {
       this.PurchaseCreateForm.get('ExRate').enable();
+      this.IsExchangeEnable = true;
     }
   }
 
@@ -1552,6 +1562,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       }, error => {
         console.log("error--->", error);
        });
+
     } else if (type == 'Internal') {
       var service = `${this.globals.APIURL}/InternalOrder/GetInternalOrderById`;
       this.dataService.post(service, { Id: id }).subscribe(async (result: any) => {

@@ -139,14 +139,23 @@
             <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                 <label>Booking Against</label><br>
                 <div class="row ml-1">
-                    <div class="form-check">
+                      
+                    <label class="mr-1" for="flexRadioDefault1">General</label>
+                    <input formControlName="BookingAgainst" [value]="true" mdbRadio (click)="bookingAgainst === 'general'"  (change)="onBookingAgainstChange('general')" 
+                        class="form-control mr-2" type="radio" name="General" id="General" />
+
+                    <label class="mr-1" for="flexRadioDefault2">Against provision</label>
+                    <input formControlName="BookingAgainst" [value]="false" mdbRadio (click)="bookingAgainst === 'provision'" (change)="onBookingAgainstChange('provision')"
+                        class="form-control" type="radio" name="flexRadioDefault" id="flexRadioDefault2" />
+
+                    <!-- <div class="form-check">
                         <input type="radio" class="form-check-input" id="radio1" [checked]="bookingAgainst === 'general'" name="optradio" (change)="onBookingAgainstChange('general')">
                         <label class="form-check-label" for="radio1">General</label>
                     </div>
                     <div class="form-check ml-5">
                         <input type="radio" class="form-check-input" id="radio2" [checked]="bookingAgainst === 'provision'" name="optradio" (change)="onBookingAgainstChange('provision')">
                         <label class="form-check-label" for="radio2">Against provision</label>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             
@@ -508,7 +517,7 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>                                                 
+                                    <td style="min-width: 300px;">                                                 
                                         <ng-select class="searchdropdown" [formControlName]="'AccountId'" [clearable]="false" [appendTo]="'body'">
                                            <ng-option [value]="0" disabled>--SELECT ACCOUNT--</ng-option>
                                            <ng-option *ngFor="let name of accountName" [value]="name.ChartOfAccountsId">
@@ -527,33 +536,35 @@
                                     </td>
                                     <td> <input readonly formControlName="Amount"
                                             [value]="PurchaseCreateForm.value.Rate * PurchaseCreateForm.value.Qty"
-                                            class="form-control"  id="Amount" onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly />
+                                            class="form-control"  id="Amount" onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly appDynamicDecimal />
                                     </td>
                                     <td>
                                         <ng-select class="searchdropdown" [formControlName]="'CurrencyId'" [clearable]="false" [appendTo]="'body'" (change)="changeCurrencyEvent($event)">
-                                            <ng-option [value]="0" disabled>--SELECT CURRENCY--</ng-option>
+                                            <ng-option [value]="0" disabled>--SELECT--</ng-option>
                                             <ng-option *ngFor="let currency of currencyList" [value]="currency.ID">
                                             <span class="textwrap">{{ getCurrencyCode(currency.Currency) | uppercase }}</span>
                                            </ng-option>
                                         </ng-select> 
                                     </td>
-                                    <td> <input formControlName="ExRate" disabled
+                                    <td>
+                                         <input formControlName="ExRate"  [ngClass]=" !IsExchangeEnable ? 'disable-input' : ''"
                                             (ngModelChange)="exchangeRateChangeEvent($event)" class="form-control"
-                                            onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly id="ExRate" />
+                                            onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                            min="0" numbersOnly appDynamicDecimal id="ExRate" />
                                     </td>
                                     <td> <input readonly formControlName="Amountccr" class="form-control" type="text"
                                             id="Amount (CCR)" /> </td>
-                                    <td>
-                                        <ng-select class="searchdropdown" [formControlName]="'TDSMaster'" [clearable]="false" [appendTo]="'body'">
-                                            <ng-option [value]="0" disabled>--SELECT TDS SECTION--</ng-option>
+                                    <td style="max-width: 1px;">
+                                        <ng-select class="searchdropdown"  [formControlName]="'TDSMaster'" [clearable]="false" [appendTo]="'body'">
+                                            <ng-option [value]="0" disabled>--SELECT--</ng-option>
                                             <ng-option *ngFor="let tdsmaster of SectionMasterList"  [value]="tdsmaster.SectionID">
                                             <span class="textwrap">{{tdsmaster.SectionName}}</span>
                                            </ng-option>
                                          </ng-select>   
                                     </td>                                                                                                                                                                                       
-                                    <td>
+                                    <td style="max-width: 1px;">
                                         <ng-select class="searchdropdown" [formControlName]="'GSTGroup'" [clearable]="false" [appendTo]="'body'">
-                                            <ng-option [value]="0" disabled>--SELECT TAX GROUP--</ng-option>
+                                            <ng-option [value]="0" disabled>--SELECT--</ng-option>
                                             <ng-option *ngFor="let tax of taxList"  [value]="tax.TaxRate">
                                             <span class="textwrap">{{tax.TaxRate}} %</span>
                                            </ng-option>
@@ -654,8 +665,8 @@
                             </div>
                             <div >
                                 <div class="form-group">
-                                    <input  formControlName="InvoiceExrate"  class="form-control" type="number"
-                                    id="InvoiceExrate">
+                                    <input  formControlName="InvoiceExrate"  class="form-control" onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                    min="0" numbersOnly appDynamicDecimal id="InvoiceExrate">
                                 </div>
                             </div>
                         </div>
