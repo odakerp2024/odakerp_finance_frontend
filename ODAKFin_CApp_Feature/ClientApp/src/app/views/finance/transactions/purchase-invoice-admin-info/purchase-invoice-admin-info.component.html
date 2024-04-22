@@ -547,7 +547,7 @@
                                         </ng-select> 
                                     </td>
                                     <td>
-                                         <input formControlName="ExRate" disabled
+                                         <input formControlName="ExRate"  [ngClass]=" !IsExchangeEnable ? 'disable-input' : ''"
                                             (ngModelChange)="exchangeRateChangeEvent($event)" class="form-control"
                                             onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
                                             min="0" numbersOnly appDynamicDecimal id="ExRate" />

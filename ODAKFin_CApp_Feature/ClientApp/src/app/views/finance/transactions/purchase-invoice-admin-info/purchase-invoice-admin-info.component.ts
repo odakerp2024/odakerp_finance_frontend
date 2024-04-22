@@ -92,6 +92,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
   selectedOfficeStateId = 0;
   selectedBranchStateId = 0;
   isSameState: boolean = false;
+  IsExchangeEnable: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -726,7 +727,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
         let entityInfo = this.commonDataService.getLocalStorageEntityConfigurable();
         this.entityCurrencyName = entityInfo['Currency'];
         
-        let info = this.currencyList.find(x => x.Currency.toUpperCase() == this.entityCurrencyName);
+        let info = this.currencyList.find(x => x.Currency == this.entityCurrencyName);
         this.entityCurrencyID = info.ID;
         this.PurchaseCreateForm.controls['InvoiceCurrency'].setValue(info.ID);
         this.PurchaseCreateForm.controls['CurrencyId'].setValue(info.ID);
@@ -1304,7 +1305,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     return { sectionA: sectionA, sectionB: sectionB, sectionC: sectionC, sectionD: sectionD };
   }
 
-  changeCurrencyEvent(currencyId: any) {
+  changeCurrencyEvent(currencyId: any) {debugger
     let entityInfo = this.commonDataService.getLocalStorageEntityConfigurable();
     let info = this.currencyList.find(x => x.Currency == entityInfo['Currency']);
     this.entityCurrencyID = info.ID;
@@ -1312,9 +1313,11 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       this.PurchaseCreateForm.controls['ExRate'].setValue(1);
       this.PurchaseCreateForm.controls['Amountccr'].setValue(1 * this.PurchaseCreateForm.value.Rate * this.PurchaseCreateForm.value.Qty);
       this.PurchaseCreateForm.get('ExRate').disable();
+      this.IsExchangeEnable = false;
     }
     else {
       this.PurchaseCreateForm.get('ExRate').enable();
+      this.IsExchangeEnable = true;
     }
   }
 

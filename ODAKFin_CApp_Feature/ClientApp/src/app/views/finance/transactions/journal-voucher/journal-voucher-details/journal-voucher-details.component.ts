@@ -327,7 +327,7 @@ export class JournalVoucherDetailsComponent implements OnInit {
       if (result.length > 0) {
         this.currencyList = result;
       }
-      const entitySelectedCurrency = this.currencyList.find(c => c.Currency.toUpperCase() === this.entityCurrency.toUpperCase());
+      const entitySelectedCurrency = this.currencyList.find(c => c.Currency === this.entityCurrency);
 
       if (entitySelectedCurrency) {
         this.journalForm.controls.Currency.setValue(entitySelectedCurrency.ID);
@@ -440,7 +440,7 @@ export class JournalVoucherDetailsComponent implements OnInit {
     this.journalForm.controls['AccountName'].setValue('');
     this.journalForm.controls['DrCrId'].setValue(0);
     // this.journalForm.controls['Currency'].setValue(this.entityCurrency);
-    const entitySelectedCurrency = this.currencyList.find(c => c.Currency.toUpperCase() === this.entityCurrency.toUpperCase());
+    const entitySelectedCurrency = this.currencyList.find(c => c.Currency === this.entityCurrency);
       if (entitySelectedCurrency) {
         this.journalForm.controls.Currency.setValue(entitySelectedCurrency.ID);
       }
