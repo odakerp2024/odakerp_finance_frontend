@@ -1462,6 +1462,7 @@ debugger
         CreditApplicationId: this.creditId,
         CustomerBranchID: event,
         CustomerID: this.creditApplicationForm.value.CustomerId,
+        RequestType: this.RequestType
       };
     }
     this.customerService
@@ -1514,6 +1515,7 @@ debugger
               CreditApplicationId: this.creditId,
               CustomerID: event,
               CustomerBranchID: branchCode,
+              RequestType : this.RequestType
             };
             this.customerService
               .getCustomerBranchDuplicate(payload)
