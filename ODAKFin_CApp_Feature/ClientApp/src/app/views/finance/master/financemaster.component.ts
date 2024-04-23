@@ -418,6 +418,15 @@ export class FinanceMasterComponent implements OnInit {
           console.log(res)
           if (res?.Status == true || res?.AlertMegId == 1) {
             let resData = res?.Data
+            
+            let findUser = resData?.find((item:any) => item?.user?.toLowerCase() == this.userName.toLowerCase() && item?.step !=0)
+            let findPending = resData?.find((item:any)=> item?.status?.toLowerCase() == 'pending')
+            // let findUser = res?.Data?.find((item:any) => item?.user?.toLowerCase() == this.userName?.toLowerCase() && item?.step !=0)
+            // let findstep = res?.Data?.find((item:any) => item?.status?.toLowerCase() == 'pending' && item?.step !=0)
+            // let findPending = res?.Data?.find((item:any)=> item?.status?.toLowerCase() == 'pending' && findstep?.step == item?.step)
+            if(findUser?.step == findPending?.step){
+              this.isNotApproval=true;
+            }
             let mapUserPool=resData?.reduce((acc: any, item: any) => {
               const existingItem = acc.find((group: any) => group.step === item.step);
               if (existingItem) {
@@ -428,11 +437,6 @@ export class FinanceMasterComponent implements OnInit {
               return acc;
             }, []);
             console.log(mapUserPool)
-            let findUser = resData?.find((item:any) => item?.user?.toLowerCase() == this.userName.toLowerCase() && item?.step !=0)
-            let findPending = resData?.find((item:any)=> item?.status?.toLowerCase() == 'pending')
-            if(findUser?.step == findPending?.step){
-              this.isNotApproval=true;
-            }
 
             this.workflowDetailsList = this.isNotApproval ?  resData?.filter((item: any) => item?.status?.toLowerCase() !== "pending") : mapUserPool
             
@@ -776,7 +780,7 @@ export class FinanceMasterComponent implements OnInit {
       SubfunctionID = 567;
     }
     else if (routePage == 'provision') {
-      // SubfunctionID = 533;
+      //SubfunctionID = 533;
       this.router.navigate(['/views/provision/provision-view']);
     } 
 
@@ -1146,7 +1150,7 @@ export class FinanceMasterComponent implements OnInit {
                 }
               }
               else if (routePage == 'BankMaster') {
-                debugger
+                
                 if (data[0].Read_Opt != 2) {
                   Swal.fire('Please Contact Administrator');
                 }
@@ -1154,6 +1158,15 @@ export class FinanceMasterComponent implements OnInit {
                   this.router.navigate(['/views/finance/master/bank-account/bank-accountview']);
                 }
               }
+              // else if (routePage == 'provision') {
+                
+              //   if (data[0].Read_Opt != 2) {
+              //     Swal.fire('Please Contact Administrator');
+              //   }
+              //   else {
+              //     this.router.navigate(['/views/provision/provision-view']);
+              //   }
+              // }
 
 
               else {
