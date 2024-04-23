@@ -139,14 +139,18 @@
             <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                 <label>Booking Against</label><br>
                 <div class="row ml-1">
-                      
-                    <label class="mr-1" for="flexRadioDefault1">General</label>
-                    <input formControlName="BookingAgainst" [value]="true" mdbRadio (click)="bookingAgainst === 'general'"  (change)="onBookingAgainstChange('general')" 
-                        class="form-control mr-2" type="radio" name="General" id="General" />
 
-                    <label class="mr-1" for="flexRadioDefault2">Against provision</label>
-                    <input formControlName="BookingAgainst" [value]="false" mdbRadio (click)="bookingAgainst === 'provision'" (change)="onBookingAgainstChange('provision')"
-                        class="form-control" type="radio" name="flexRadioDefault" id="flexRadioDefault2" />
+                    <label class="mr-1" for="flexRadioDefault1">General</label>
+                    <input formControlName="general" [value]="true" mdbRadio (click)="bookingAgainst === 'general';onBookingAgainstChange('general')"
+                        class="form-control mr-2" type="radio" name="general" id="flexRadioDefault1" />
+
+                    <label class="mr-1" for="flexRadioDefault2">Against Provision</label>
+                    <input formControlName="againstProvision" [value]="true" mdbRadio (click)="bookingAgainst === 'provision';onBookingAgainstChange('provision')"
+                        class="form-control" type="radio" name="againstProvision" id="flexRadioDefault2" />
+
+                    <!-- <label class="mr-1" for="flexRadioDefault2">Against provision</label>
+                    <input formControlName="againstProvision" [value]="true" mdbRadio (click)="bookingAgainst === 'provision'" (change)="onBookingAgainstChange('provision')"
+                        class="form-control" type="radio" name="againstProvision" id="flexRadioDefault2" /> -->
 
                     <!-- <div class="form-check">
                         <input type="radio" class="form-check-input" id="radio1" [checked]="bookingAgainst === 'general'" name="optradio" (change)="onBookingAgainstChange('general')">

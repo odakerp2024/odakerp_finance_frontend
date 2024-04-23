@@ -227,7 +227,7 @@ export class PurchaseInvoiseAdminComponent implements OnInit {
   }
 
   getStatus() {
-    var service = `${this.globals.APIURL}/PurchaseInvoice/GetPurchaseInvoiceDropDownList`; var payload: any = {}
+    var service = `${this.globals.APIURL}/PurchaseInvoice/GetPurchaseInvoiceDropDownList`; var payload: any = {Id: 0}
     this.dataService.post(service, payload).subscribe((result: any) => {
       this.statusList = [];
       if (result.data.Table.length > 0) {
