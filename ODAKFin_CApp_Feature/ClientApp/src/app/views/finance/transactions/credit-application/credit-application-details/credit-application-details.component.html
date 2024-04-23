@@ -522,7 +522,8 @@
                                 <div class="col-4">
                                         <div class="form-group bmd-form-group">
                                             <label class="str">With Post Dated Cheque ?</label>
-                                            <ng-select  class="searchdropdown"  formControlName="PostDatedCheques" [clearable]="false" >
+                                            <ng-select  class="searchdropdown"  formControlName="PostDatedCheques" 
+                                            [disabled]="false" [clearable]="false" >
                                                 <ng-option [value]="''" disabled>--SELECT TRADE--</ng-option>
                                                 <ng-container  *ngFor="let status of PDCValue">
                                                 <ng-option [value]="status.value">
@@ -542,15 +543,18 @@
                     
             </div>
            
-            <div *ngIf="RequestType && !creditApplicationForm.value.IsRevoke ">
+            <div *ngIf="RequestType">
                 <ng-component [ngTemplateOutlet]="currentCreditLimit"></ng-component>
                             <div class="row mb-3">
                                 <h4 class="col-12">Proposed Credit Limit</h4>
                                 <div class="col-4">
                 <div class="form-group bmd-form-group w-100">
                                         <label class="str">Credit Limit (Days)</label>
-                                        <input type="number" class="form-control" [(ngModel)]="ReviseCreditLimitDays"  [ngModelOptions]="{standalone: true}"
-                                         min="0" step="2" [disabled]="false" (change)="onCreditLimitDays($event, true)"  >
+                                        <input type="number" class="form-control"  [ngClass]="!isRevoke ? 'disable-input' : ''"  
+                                        [(ngModel)]="ReviseCreditLimitDays"  
+                                        [ngModelOptions]="{standalone: true}"
+                                        min="0" step="2"  
+                                        (change)="onCreditLimitDays($event, true)"  >
                                         <p *ngIf="creditdaysValidation" style="color: red;">The credit days limit should be "{{creditdaysValidation}}" or less</p>
                 
                                     </div>
@@ -559,7 +563,8 @@
                                 <div class="col-4"> 
                                         <div class="form-group bmd-form-group">
                                             <label class="str">Credit Limit (Amount)</label>
-                                        <input type="number" class="form-control" [(ngModel)]="ReviseCreditLimitAmount"  [ngModelOptions]="{standalone: true}" 
+                                        <input type="number" class="form-control" [(ngModel)]="ReviseCreditLimitAmount" 
+                                        [ngClass]="!isRevoke ? 'disable-input' : ''"  [ngModelOptions]="{standalone: true}" 
                                         min="0" step="2" [disabled]="false" (change)="onCreditLimitAmount($event, true)">
                                             <p *ngIf="creditAmountValidation" style="color: red;">The credit amount limit should be "{{creditAmountValidation}}" or less</p>                       
                                     </div>
@@ -568,7 +573,8 @@
                                 <div class="col-4">
                                         <div class="form-group bmd-form-group">
                                             <label class="str">With Post Dated Cheque ?</label>
-                                            <ng-select  class="searchdropdown"  [(ngModel)]="RevisePostDatedCheques" [ngModelOptions]="{standalone: true}" [clearable]="false" >
+                                            <ng-select  class="searchdropdown"  [(ngModel)]="RevisePostDatedCheques" 
+                                            [ngClass]="!isRevoke ? 'disable-input' : ''" [ngModelOptions]="{standalone: true}" [clearable]="false" >
                                                 <ng-option [value]="''" disabled>--SELECT TRADE--</ng-option>
                                                 <ng-container  *ngFor="let status of PDCValue">
                                                 <ng-option [value]="status.value">
@@ -581,12 +587,13 @@
                 
                                 <div class="col-12">
                                     <label for="" class="">Request Remarks</label><br>
-                                    <textarea class="p-1 form-control w-50" [(ngModel)]="ReviseRequestRemarks" [ngModelOptions]="{standalone: true}" name="" cols="50" rows="3"
+                                    <textarea class="p-1 form-control w-50" 
+                                     [(ngModel)]="ReviseRequestRemarks" [ngModelOptions]="{standalone: true}" name="" cols="50" rows="3"
                                         ></textarea>
                                 </div>
                             </div>
                     
-            </div>
+            </div>   
             
             
 
@@ -604,7 +611,7 @@
                             </div> -->
 
 
-            <div class="row mb-3 "  [ngClass]=" !isEditMode ? 'disabled-content' : ''" >
+            <div class="row mb-3 "   >
                 <h4 class="col-12 str">Documents</h4>
                
                     <div class="col-12">

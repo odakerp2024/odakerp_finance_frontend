@@ -49,7 +49,7 @@ export class CreditApplicationDetailsComponent implements OnInit {
   isUpdate = false;
   isEditMode = true;
   IsFinal = false;
-
+  isRevoke = true;
   workflowParamsNo:any=[];
   redirectURL:string='';
   userName: string='';
@@ -374,16 +374,23 @@ export class CreditApplicationDetailsComponent implements OnInit {
             Email: Table.Email,
             IsRevise: Table.IsRevise,
             IsRevoke: Table.IsRevoke,
-            CreditLimitDays: Table.CreditLimitDays,
-            CreditLimitAmount: Table.CreditLimitAmount,
-            PostDatedCheques: Table.PostDatedCheques ? 1 : 0,
-            RequestRemarks: Table.RequestRemarks,
+             CreditLimitDays: this.RequestType == true ? Table.ReviseCreditLimitDays : Table.CreditLimitDays,
+             CreditLimitAmount: this.RequestType == true ? Table.ReviseCreditLimitAmount: Table.CreditLimitAmount,
+            PostDatedCheques:  this.RequestType == true ? Table.RevisePostDatedCheques ? 1 : 0 : Table.PostDatedCheques ? 1 : 0,
+            RequestRemarks:  this.RequestType == true ? Table.ReviseRequestRemarks : Table.RequestRemarks,
             CreatedBy: Table.CreatedBy,
             StatusId: 1,
-          });     
+          });
+         // to disable the propose credit fields   
+          if(this.creditApplicationForm.value.IsRevoke){
+            this.isRevoke = false;
+          }  else { this.isRevoke = true}
+          
           this.CreditApplicationNumber = Table.CreditApplicationNumber;
-          this.CreditLimitDays = Table.CreditLimitDays,
-          this.CreditLimitAmount = Table.CreditLimitAmount,
+          this.ReviseCreditLimitDays = Table.CreditLimitDays,
+           this.ReviseCreditLimitAmount = Table.CreditLimitAmount,
+           this.RevisePostDatedCheques = Table.PostDatedCheques  ? 1 : 0,
+            this.ReviseRequestRemarks = Table.RequestRemarks,
           this.salesPersonWF = Table.SalesPIC,
           this.getWQuestions(result.data.Table1);
         
@@ -400,19 +407,8 @@ export class CreditApplicationDetailsComponent implements OnInit {
         if (result.data.Table1) {        
           this.questionArray = result.data.Table1;
         }
-        
-        this.reset();       
       }
     });
-  }
-
-
-
-  reset(){
-    this.ReviseCreditLimitAmount = "";
-    this.ReviseCreditLimitDays = "";
-    this.RevisePostDatedCheques = "";
-    this.ReviseRequestRemarks = "";
   }
 
   getCreditApplication() {    
@@ -521,22 +517,25 @@ getbyId(selectedCreditApplicationId: any) {
                     Telephone: Table.Telephone,
                     Mobile: Table.Mobile,
                     Email: Table.Email,
-                    CreditLimitDays: Table.CreditLimitDays,
-                    CreditLimitAmount: Table.CreditLimitAmount,
-                    PostDatedCheques: Table.PostDatedCheques ? 1 : 0,
-                    RequestRemarks: Table.RequestRemarks,
+                    CreditLimitDays: Table.ReviseCreditLimitDays,
+                    CreditLimitAmount: Table.ReviseCreditLimitAmount,
+                    PostDatedCheques: Table.RevisePostDatedCheques ? 1 : 0,
+                    RequestRemarks: Table.ReviseRequestRemarks,
                     CreatedBy: Table.CreatedBy,
                     // IsRevise: Table.IsRevise  ? true : false,
                     // IsRevoke: Table.IsRevoke  ? true : false,
                     //  StatusId: 1,
                   
-                });              
+                }); 
+
                 if (this.creditApplicationForm.value.IsRevoke) {
-                  this.creditApplicationForm.patchValue({
-                      CreditLimitDays: 0,
-                      CreditLimitAmount: 0,
-                      RequestRemarks : ''
-                  });
+                  // this.creditApplicationForm.patchValue({
+                      this.ReviseCreditLimitDays = 0 ,
+                      this.ReviseCreditLimitAmount = 0 ,
+                      this.ReviseRequestRemarks = ''
+                      this.RevisePostDatedCheques = 0
+                 
+                  // });
               }
               debugger
                 this.getWQuestions(result.data.Table1);
@@ -552,6 +551,7 @@ getbyId(selectedCreditApplicationId: any) {
                 debugger;
                 this.questionArray = result.data.Table1;
             }
+          
             this.getNumberRangeList();
             this.isGetByIdInProgress = false;       
         }
@@ -611,6 +611,7 @@ getbyId(selectedCreditApplicationId: any) {
       IsRevoke: false,
     });
     this.createForm();
+    this.isRevoke = true;
   }
 
   // Function to handle the "Revoke" radio button click
@@ -622,7 +623,9 @@ getbyId(selectedCreditApplicationId: any) {
       IsRevoke: true,
       // CreditLimitAmount: 0,
       // CreditLimitDays:  0,
-    });   
+    });  
+    this.isRevoke = false;
+    
   }
 
   onCreditLimitAmount(event: any, RequestType: boolean = false) {
@@ -706,8 +709,12 @@ debugger
             PreviousApplicationId: this.RequestType == true ? Table.PreviousApplicationId : Table.CreditApplicationId,
             CreditApplicationId: Table.CreditApplicationId,
             CreditApplicationNumber: Table.CreditApplicationNumber,
-            CreditLimitDays: this.ReviseCreditLimitDays ? this.ReviseCreditLimitDays : Table.CreditLimitDays,
-            CreditLimitAmount: this.ReviseCreditLimitAmount ? this.ReviseCreditLimitAmount : Table.CreditLimitAmount,
+            CreditLimitDays:  this.RequestType == true ? this.ReviseCreditLimitDays : Table.CreditLimitDays,
+            CreditLimitAmount:  this.RequestType == true ? this.ReviseCreditLimitAmount : Table.CreditLimitAmount,
+            // CreditLimitDays:  Table.CreditLimitDays,
+            // CreditLimitAmount:  Table.CreditLimitAmount,
+            ReviseCreditLimitDays: this.ReviseCreditLimitDays,
+            ReviseCreditLimitAmount: this.ReviseCreditLimitAmount,
             CustomerId: +Table.CustomerId,
             RequestType: this.RequestType == true ? true : false,
             IsRevise: +Table.IsRevise ? true : false, 
@@ -720,8 +727,10 @@ debugger
             Email: Table.Email,
             Mobile: Table.Mobile,
             OfficeId: +Table.OfficeId,
-            PostDatedCheques: this.RevisePostDatedCheques ? this.RevisePostDatedCheques : Table.PostDatedCheques,
-            RequestRemarks: this.ReviseRequestRemarks ? this.ReviseRequestRemarks : Table.RequestRemarks,
+            PostDatedCheques:  this.RequestType == true ? this.RevisePostDatedCheques :Table.PostDatedCheques ? 1 : 0,
+            RevisePostDatedCheques: this.RevisePostDatedCheques ? 1 : 0,
+            RequestRemarks:  this.RequestType == true ? this.ReviseRequestRemarks :Table.RequestRemarks,
+            ReviseRequestRemarks: this.ReviseRequestRemarks,
             SalesPersonId: Table.SalesPersonId,
             StatusId: +Table.StatusId,
             Telephone: Table.Telephone,
@@ -814,7 +823,9 @@ debugger
           this.router.navigate([
             "/views/transactions/credit-application/credit-application-details",
             { creditId: creditApplicationId, RequestType: RequestType, PreviousApplicationId: PreviousApplicationId },
+            
           ]);
+          
         }
       });
     }
@@ -1016,11 +1027,12 @@ debugger
       "<span style='color:red;'>*</span> <span>Please select Credit Amount.</span></br>";
   }
 
-  if (!this.RevisePostDatedCheques) {
+  if (this.RevisePostDatedCheques === "") {
 
     validation +=
       "<span style='color:red;'>*</span> <span>Please select Post Dated Cheques .</span></br>";
   }
+  
 
   // if (!this.ReviseRequestRemarks) {
   //   validation += "<span style='color:red;'>*</span> <span>Please Enter The Remarks .</span></br>"
