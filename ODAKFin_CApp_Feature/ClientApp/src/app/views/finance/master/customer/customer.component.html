@@ -157,7 +157,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <label class="str">Short Name</label>
-                                        <input (ngModelChange)="autoCodeGeneration($event)"
+                                        <input 
                                             [ngClass]=" isUpdate ? 'block-input' : ''" type="text"
                                             formControlName="ShortName" name="ShortName" autocomplete="off"
                                             id="txtShortName" class="form-control" maxlength="100">
@@ -568,6 +568,7 @@
                                                                                     </option>
                                                                                 </select> -->
                                                                             <ng-select class="searchdropdown"
+                                                                            
                                                                                 id="ddlStatusv" name="Status"
                                                                                 [clearable]="false"
                                                                                 formControlName="BranchCity"

@@ -1254,11 +1254,13 @@ export class CustomerComponent implements OnInit {
   // }
 
   async onSubmit() {
+    debugger
+    this.autoCodeGeneration(true);
     // if (this.mappingSuccess == false) {
     //   Swal.fire(this.errorMessage)
     //   return false;
     // }
-
+    
     this.officeDetailsSubmit = true;
 
     var validation = "";
@@ -1282,9 +1284,9 @@ export class CustomerComponent implements OnInit {
     }
 
     //#region Main---------------------------------------------------------------------------------------------------------------------
-    if (this.fg.value.CustomerCode == "") {
-      validation += "<span style='color:red;'>*</span> <span>Please enter Customer Code </span></br>"
-    }
+    // if (this.fg.value.CustomerCode == "") {
+    //   validation += "<span style='color:red;'>*</span> <span>Please enter Customer Code </span></br>"
+    // }
 
     if (this.fg.value.CustomerName == "") {
       validation += "<span style='color:red;'>*</span> <span>Please enter Customer Name</span></br>"
@@ -1360,15 +1362,15 @@ export class CustomerComponent implements OnInit {
     //#endregion Main---------------------------------------------------------------------------------------------------------------------
 
     //#region Office Details---------------------------------------------------------------------------------------------------------------------
-    //if (this.Current_Tab == "tabBranch") {
-    if (this.fg.value.BranchCode == "") {
-      validation += "<span style='color:red;'>*</span> <span>Please check branch code not Generate</span></br>"
-    }
+    if (this.Current_Tab == "tabBranch") {
+    // if (this.fg.value.BranchCode == "") {
+    //   validation += "<span style='color:red;'>*</span> <span>Please check branch code not Generate</span></br>"
+    // }
 
     if (this.fg.value.BranchCity == "") {
       validation += "<span style='color:red;'>*</span> <span>Please enter Branch/City</span></br>"
     }
-    //}
+    }
     //#endregion Office Details---------------------------------------------------------------------------------------------------------------------
 
 
@@ -1520,6 +1522,7 @@ export class CustomerComponent implements OnInit {
 
       // Related Party
 debugger
+
       Swal.fire({
         showCloseButton: true,
         title: '',
@@ -1531,8 +1534,11 @@ debugger
         reverseButtons: false,
       })
         .then((result) => {
+          
+          debugger
           if (result.value) {
             //-----
+            
 
             // console.log('customerModel', this.customerModel);
             // return
@@ -2391,12 +2397,13 @@ debugger
     });
   }
 
-  async autoCodeGeneration(event: any) {
+   autoCodeGeneration(event: any) {
+    debugger
     if (!this.isUpdate) {
       if (event) {
         let Info = this.autoGenerateCodeList.filter(x => x.ObjectName == 'Customers');
         if (Info.length > 0) {
-          let sectionOrderInfo = await this.checkAutoSectionItem([{ sectionA: Info[0].SectionA }, { sectionB: Info[0].SectionB }, { sectionC: Info[0].SectionC }, { sectionD: Info[0].SectionD }], Info[0].NextNumber, event);
+          let sectionOrderInfo =  this.checkAutoSectionItem([{ sectionA: Info[0].SectionA }, { sectionB: Info[0].SectionB }, { sectionC: Info[0].SectionC }, { sectionD: Info[0].SectionD }], Info[0].NextNumber, event);
           let code = this.autoCodeService.NumberRange(Info[0], sectionOrderInfo.sectionA, sectionOrderInfo.sectionB, sectionOrderInfo.sectionC, sectionOrderInfo.sectionD);
           if (code) this.fg.controls['CustomerCode'].setValue(code.trim().toUpperCase());
           this.Customer_Code = code.trim().toUpperCase();
@@ -2443,6 +2450,7 @@ debugger
   }
 
   getBranchCodeAPI(code: string) {
+    debugger
     let service = `${this.globals.APIURL}/Customer/CustomerBranchCodeGeneration`;
     this.dataService.post(service, { ID: this.updateCustomerId ? this.updateCustomerId : 0, Code: code.match(/\d+/g).join("") }).subscribe((result: any) => {
       if (result.message = "Success") {

@@ -49,7 +49,7 @@ export class CreditApplicationDetailsComponent implements OnInit {
   isUpdate = false;
   isEditMode = true;
   IsFinal = false;
-
+  isRevoke = true;
   workflowParamsNo:any=[];
   redirectURL:string='';
   userName: string='';
@@ -105,7 +105,7 @@ export class CreditApplicationDetailsComponent implements OnInit {
   IsRevoke:boolean ;
   ReviseCreditLimitDays: any;
   ReviseCreditLimitAmount: any;
-  RevisePostDatedCheques: any;
+ RevisePostDatedCheques: any = [""];
   ReviseRequestRemarks: any;
   IsSave :boolean =  false;
   constructor(
@@ -316,7 +316,7 @@ export class CreditApplicationDetailsComponent implements OnInit {
 
   // * get the credit application by ID and patch the value to the form
   getById() {
-  
+  debugger
     const payload = {
       CreditApplicationId: this.creditId,
       RequestType : this.RequestType ,
@@ -374,16 +374,18 @@ export class CreditApplicationDetailsComponent implements OnInit {
             Email: Table.Email,
             IsRevise: Table.IsRevise,
             IsRevoke: Table.IsRevoke,
-            CreditLimitDays: Table.CreditLimitDays,
-            CreditLimitAmount: Table.CreditLimitAmount,
-            PostDatedCheques: Table.PostDatedCheques ? 1 : 0,
-            RequestRemarks: Table.RequestRemarks,
+             CreditLimitDays: this.RequestType == true ? Table.ReviseCreditLimitDays : Table.CreditLimitDays,
+           CreditLimitAmount: this.RequestType == true ? Table.ReviseCreditLimitAmount: Table.CreditLimitAmount,
+            PostDatedCheques:  this.RequestType == true ? Table.RevisePostDatedCheques : Table.PostDatedCheques ? 1 : 0,
+            RequestRemarks:  this.RequestType == true ? Table.ReviseRequestRemarks : Table.RequestRemarks,
             CreatedBy: Table.CreatedBy,
             StatusId: 1,
           });     
           this.CreditApplicationNumber = Table.CreditApplicationNumber;
-          this.CreditLimitDays = Table.CreditLimitDays,
-          this.CreditLimitAmount = Table.CreditLimitAmount,
+          this.ReviseCreditLimitDays = Table.CreditLimitDays,
+           this.ReviseCreditLimitAmount = Table.CreditLimitAmount,
+           this.RevisePostDatedCheques = Table.PostDatedCheques ? 1 : 0,
+            this.ReviseRequestRemarks = Table.RequestRemarks,
           this.salesPersonWF = Table.SalesPIC,
           this.getWQuestions(result.data.Table1);
         
@@ -401,18 +403,9 @@ export class CreditApplicationDetailsComponent implements OnInit {
           this.questionArray = result.data.Table1;
         }
         
-        this.reset();       
+        // this.reset();       
       }
     });
-  }
-
-
-
-  reset(){
-    this.ReviseCreditLimitAmount = "";
-    this.ReviseCreditLimitDays = "";
-    this.RevisePostDatedCheques = "";
-    this.ReviseRequestRemarks = "";
   }
 
   getCreditApplication() {    
@@ -521,22 +514,25 @@ getbyId(selectedCreditApplicationId: any) {
                     Telephone: Table.Telephone,
                     Mobile: Table.Mobile,
                     Email: Table.Email,
-                    CreditLimitDays: Table.CreditLimitDays,
-                    CreditLimitAmount: Table.CreditLimitAmount,
-                    PostDatedCheques: Table.PostDatedCheques ? 1 : 0,
-                    RequestRemarks: Table.RequestRemarks,
+                    CreditLimitDays: Table.ReviseCreditLimitDays,
+                    CreditLimitAmount: Table.ReviseCreditLimitAmount,
+                    PostDatedCheques: Table.RevisePostDatedCheques ? 1 : 0,
+                    RequestRemarks: Table.ReviseRequestRemarks,
                     CreatedBy: Table.CreatedBy,
                     // IsRevise: Table.IsRevise  ? true : false,
                     // IsRevoke: Table.IsRevoke  ? true : false,
                     //  StatusId: 1,
                   
-                });              
+                }); 
+
                 if (this.creditApplicationForm.value.IsRevoke) {
-                  this.creditApplicationForm.patchValue({
-                      CreditLimitDays: 0,
-                      CreditLimitAmount: 0,
-                      RequestRemarks : ''
-                  });
+                  // this.creditApplicationForm.patchValue({
+                      this.ReviseCreditLimitDays = 0 ,
+                      this.ReviseCreditLimitAmount = 0 ,
+                      this.ReviseRequestRemarks = ''
+                      this.RevisePostDatedCheques = 1
+                 
+                  // });
               }
               debugger
                 this.getWQuestions(result.data.Table1);
@@ -552,6 +548,7 @@ getbyId(selectedCreditApplicationId: any) {
                 debugger;
                 this.questionArray = result.data.Table1;
             }
+          
             this.getNumberRangeList();
             this.isGetByIdInProgress = false;       
         }
@@ -611,6 +608,7 @@ getbyId(selectedCreditApplicationId: any) {
       IsRevoke: false,
     });
     this.createForm();
+    this.isRevoke = true;
   }
 
   // Function to handle the "Revoke" radio button click
@@ -622,7 +620,9 @@ getbyId(selectedCreditApplicationId: any) {
       IsRevoke: true,
       // CreditLimitAmount: 0,
       // CreditLimitDays:  0,
-    });   
+    });  
+    this.isRevoke = false;
+    
   }
 
   onCreditLimitAmount(event: any, RequestType: boolean = false) {
@@ -678,7 +678,7 @@ debugger
 
   //  * construct the payload for save and final
   constructPayload() {
-    //debugger
+    debugger
     if (!this.isUpdate) {
       this.creditApplicationForm.value.SalesPersonId = 
            this.customerDetail["data"] .Table2[0].SalesId;
@@ -706,8 +706,10 @@ debugger
             PreviousApplicationId: this.RequestType == true ? Table.PreviousApplicationId : Table.CreditApplicationId,
             CreditApplicationId: Table.CreditApplicationId,
             CreditApplicationNumber: Table.CreditApplicationNumber,
-            CreditLimitDays: this.ReviseCreditLimitDays ? this.ReviseCreditLimitDays : Table.CreditLimitDays,
-            CreditLimitAmount: this.ReviseCreditLimitAmount ? this.ReviseCreditLimitAmount : Table.CreditLimitAmount,
+            CreditLimitDays:  this.RequestType == true ? this.ReviseCreditLimitDays : Table.CreditLimitDays,
+            CreditLimitAmount:  this.RequestType == true ? this.ReviseCreditLimitAmount : Table.CreditLimitAmount,
+            ReviseCreditLimitDays: this.ReviseCreditLimitDays,
+            ReviseCreditLimitAmount: this.ReviseCreditLimitAmount,
             CustomerId: +Table.CustomerId,
             RequestType: this.RequestType == true ? true : false,
             IsRevise: +Table.IsRevise ? true : false, 
@@ -720,8 +722,10 @@ debugger
             Email: Table.Email,
             Mobile: Table.Mobile,
             OfficeId: +Table.OfficeId,
-            PostDatedCheques: this.RevisePostDatedCheques ? this.RevisePostDatedCheques : Table.PostDatedCheques,
-            RequestRemarks: this.ReviseRequestRemarks ? this.ReviseRequestRemarks : Table.RequestRemarks,
+            PostDatedCheques:  Table.PostDatedCheques ? 1 : 0,
+            RevisePostDatedCheques: this.RevisePostDatedCheques ? 1 : 0,
+            RequestRemarks:  Table.RequestRemarks,
+            ReviseRequestRemarks: this.ReviseRequestRemarks,
             SalesPersonId: Table.SalesPersonId,
             StatusId: +Table.StatusId,
             Telephone: Table.Telephone,
@@ -784,6 +788,7 @@ debugger
   }
 
   saveCredit() {
+    debugger
     // const validation = this.validationCheck();
 
     // // *  validation check
@@ -799,6 +804,7 @@ debugger
       .subscribe((result: any) => {
         if (result.message === "Success") {
           if (this.creditId == "") {
+            debugger
             this.updateAutoGenerated();
           }
           Swal.fire("", result.data.Message, "success");
@@ -807,14 +813,16 @@ debugger
     
           const isRevise = payload.CreditApplication.Table[0].IsRevise;
           const isRevoke = payload.CreditApplication.Table[0].IsRevoke;
-    
+    debugger
       
           const RequestType = isRevise || isRevoke;
     
           this.router.navigate([
             "/views/transactions/credit-application/credit-application-details",
             { creditId: creditApplicationId, RequestType: RequestType, PreviousApplicationId: PreviousApplicationId },
+            
           ]);
+          
         }
       });
     }
@@ -1461,6 +1469,7 @@ debugger
         CreditApplicationId: this.creditId,
         CustomerBranchID: event,
         CustomerID: this.creditApplicationForm.value.CustomerId,
+        RequestType: this.RequestType
       };
     }
     this.customerService
@@ -1513,6 +1522,7 @@ debugger
               CreditApplicationId: this.creditId,
               CustomerID: event,
               CustomerBranchID: branchCode,
+              RequestType: this.RequestType
             };
             this.customerService
               .getCustomerBranchDuplicate(payload)
