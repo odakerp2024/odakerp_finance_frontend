@@ -2,7 +2,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Globals } from 'src/app/globals';
-import { Currency, CurrencySearch } from 'src/app/model/bankaccount';
 
 @Injectable({
   providedIn: 'root'

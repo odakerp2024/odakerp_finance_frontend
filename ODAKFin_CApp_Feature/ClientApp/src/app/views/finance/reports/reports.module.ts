@@ -1,23 +1,22 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { ProvisionRoutingModule } from './provision-routing.module';
-import { ProvisionViewComponent } from './provision-view/provision-view.component';
-import { ProvisionDetailComponent } from './provision-detail/provision-detail.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DirectiveModule } from 'src/app/directive/directive.module';
 
+import { ReportsRoutingModule } from './reports-routing.module';
+import { ReportReceiptVoucherComponent } from './report-receipt-voucher/report-receipt-voucher.component';
+
+
 @NgModule({
   declarations: [
-    ProvisionViewComponent,
-    ProvisionDetailComponent
+    ReportReceiptVoucherComponent
   ],
   imports: [
     CommonModule,
-    ProvisionRoutingModule,
+    ReportsRoutingModule,
     ReactiveFormsModule,
     FormsModule,
     MatSelectModule,
@@ -26,4 +25,4 @@ import { DirectiveModule } from 'src/app/directive/directive.module';
     DirectiveModule
   ]
 })
-export class ProvisionModule { }
+export class ReportsModule { }

@@ -817,7 +817,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
         Amount: info.Rate * info.Qty,
         CurrencyId: info.CurrencyId,
         ExRate: info.ExRate ? info.ExRate : 1,
-        Amountccr: info.Amountccr,
+        Amountccr: Number(info.Amountccr).toFixed(this.entityFraction),
         TDSMaster: info.TDSMaster ? info.TDSMaster : 0,
         TDSName: !tds ? '-' : tds.SectionName,
         TDSValue: !tds ? '-' : tds.RatePercentage,
