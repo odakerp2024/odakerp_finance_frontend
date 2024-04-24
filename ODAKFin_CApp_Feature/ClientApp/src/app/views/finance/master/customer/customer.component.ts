@@ -143,7 +143,7 @@ export class CustomerComponent implements OnInit {
     private datePipe: DatePipe,private workflow: WorkflowService,
     private autoCodeService: AutoCodeService,
   ) {
-    this.getNumberRange();
+    // this.getNumberRange();
     this.getDivisionList();
     this.route.params.subscribe(params => {
       if (params['customer_ID']) {
@@ -1044,10 +1044,11 @@ export class CustomerComponent implements OnInit {
 
 
   updateBasicCustomerDetail() {
+    debugger
+    this.autoCodeGeneration(true);
     var CusStatus = $('#ddlStatusAuto').val();
-
     this.basicCustomerDetail.CustomerID = this.fg.value.CustomerID;
-    this.basicCustomerDetail.CustomerCode = this.fg.value.CustomerCode;
+    this.basicCustomerDetail.CustomerCode = this.fg.value.CustomerCode == "" ? this.Customer_Code : this.fg.value.CustomerCode;
     this.basicCustomerDetail.CustomerName = this.fg.value.CustomerName;
     this.basicCustomerDetail.CustomerStatus = 337;
     this.basicCustomerDetail.CountryId = Number(this.fg.value.CountryID);
@@ -1068,9 +1069,11 @@ export class CustomerComponent implements OnInit {
   }
 
   updateOfficeDetails() {
+
+    debugger
     this.TabOfficeDetails.CustomerBranchID = this.fg.value.CustomerBranchID;
     this.TabOfficeDetails.CustomerID = this.fg.value.CustomerID;
-    this.TabOfficeDetails.BranchCode = this.fg.value.BranchCode;
+    this.TabOfficeDetails.BranchCode = this.fg.value.BranchCode == "" ? this.Branch_Code :  this.fg.value.BranchCode;
 
     var status = 1;
     if (this.fg.value.IsActiveBranch == "true") { status = 1 }
@@ -1258,9 +1261,8 @@ export class CustomerComponent implements OnInit {
     //   Swal.fire(this.errorMessage)
     //   return false;
     // }
-
+    await this.getNumberRange();
     this.officeDetailsSubmit = true;
-
     var validation = "";
 
     if (this.Current_Tab == 'tabBranch') {
@@ -1282,9 +1284,9 @@ export class CustomerComponent implements OnInit {
     }
 
     //#region Main---------------------------------------------------------------------------------------------------------------------
-    if (this.fg.value.CustomerCode == "") {
-      validation += "<span style='color:red;'>*</span> <span>Please enter Customer Code </span></br>"
-    }
+    // if (this.fg.value.CustomerCode == "") {
+    //   validation += "<span style='color:red;'>*</span> <span>Please enter Customer Code </span></br>"
+    // }
 
     if (this.fg.value.CustomerName == "") {
       validation += "<span style='color:red;'>*</span> <span>Please enter Customer Name</span></br>"
@@ -1346,7 +1348,7 @@ export class CustomerComponent implements OnInit {
     // if (ddlIsActive == null) {
     //   validation += "<span style='color:red;'>*</span> <span>Please select active</span></br>"
     // }
-
+    
     var IsDivisionchecked = 0;
     this.FillDivisionMaster.forEach((element) => {
       if (element.isChecked) {
@@ -1360,15 +1362,15 @@ export class CustomerComponent implements OnInit {
     //#endregion Main---------------------------------------------------------------------------------------------------------------------
 
     //#region Office Details---------------------------------------------------------------------------------------------------------------------
-    //if (this.Current_Tab == "tabBranch") {
-    if (this.fg.value.BranchCode == "") {
-      validation += "<span style='color:red;'>*</span> <span>Please check branch code not Generate</span></br>"
-    }
+    // if (this.Current_Tab == "tabBranch") {
+    // if (this.fg.value.BranchCode == "") {
+    //   validation += "<span style='color:red;'>*</span> <span>Please check branch code not Generate</span></br>"
+    // }
 
     if (this.fg.value.BranchCity == "") {
       validation += "<span style='color:red;'>*</span> <span>Please enter Branch/City</span></br>"
     }
-    //}
+    // }
     //#endregion Office Details---------------------------------------------------------------------------------------------------------------------
 
 
@@ -1467,7 +1469,7 @@ export class CustomerComponent implements OnInit {
     //   validation += "<span style='color:red;'>*</span> <span>Please Select Status</span></br>"
     // }
 
-    // if (this.Current_Tab == "tabInterfaces") {
+    // if (this.Current_Tab == "tabInterfaces") {    
     //   if (this.fg.value.NDPCode == "") {
     //     validation += "<span style='color:red;'>*</span> <span>Please enter NDP Code</span></br>"
     //   }
@@ -1479,18 +1481,17 @@ export class CustomerComponent implements OnInit {
     //   }
     // }
 
-    if (validation != "") {
+    if (validation != "") { 
       validation = "<div class='col-md-12' style='text-align: left;'>" + validation + "</div>";
       Swal.fire('', validation, 'warning');
       return false;
-    }
+    } 
     else {
-
 
       this.customerModel = new CustomerModel();
 
       if (this.Current_Tab == 'tabAccounting') { this.fg.controls['onboardstatus'].setValue(1); }
-
+   
       this.updateBasicCustomerDetail();
       //this.customerModel.Customer.Table.push(this.basicCustomerDetail);
 
@@ -1518,6 +1519,7 @@ export class CustomerComponent implements OnInit {
 
       this.updateInputPage();
 
+     
       // Related Party
 debugger
       Swal.fire({
@@ -1533,18 +1535,22 @@ debugger
         .then((result) => {
           if (result.value) {
             //-----
+debugger  
 
-            // console.log('customerModel', this.customerModel);
-            // return
+            this.customerModel.Customer.Table1[0].BranchCode = this.fg.value.BranchCode == "" ? this.Branch_Code :  this.fg.value.BranchCode;
+
             this.customerService.SaveCustomer(this.customerModel).subscribe(data => {
               if (data["message"] == "Failed") { Swal.fire(data["data"], '', 'error') }
               else {
+                
                 Swal.fire(data["data"], '', 'success').then((result) => {
                   if (result.isConfirmed || result.isDismissed) {
                     this.onBack();
                   }
                 })
-                if (!this.isUpdate) { this.updateAutoGenerated(); }
+                debugger
+                 if (!this.isUpdate) { 
+                  this.updateAutoGenerated(); }
               }
 
               // this.fg.value.ID = data[0].ID;
@@ -1670,6 +1676,7 @@ debugger
   }
 
   updateAutoGenerated() {
+    debugger
     let Info = this.autoGenerateCodeList.filter(x => x.ObjectName == 'Customers');
     if (Info.length > 0) {
       Info[0].NextNumber = Info[0].NextNumber + 1;
@@ -2374,7 +2381,9 @@ debugger
   }
 
 
-  getNumberRange() {
+ async getNumberRange() {
+    debugger
+    return new Promise(async (resolve, rejects) => {
     let service = `${this.globals.APIURL}/COAType/GetNumberRangeCodeGenerator`;
     this.dataService.post(service, { Id: 0, ObjectId: 0 }).subscribe((result: any) => {
       if (result.message = "Success") {
@@ -2382,21 +2391,25 @@ debugger
         if (result.data.Table.length > 0) {
           for (let data of result.data.Table) {
             data.EffectiveDate = this.datePipe.transform(data.EffectiveDate, 'YYYY-MM-dd');
-          }
-          this.autoGenerateCodeList = result.data.Table;
-        }
-      }
+          } resolve(true);
+          this.autoGenerateCodeList = result.data.Table;  
+        } 
+        resolve(true);
+      } 
     }, error => {
       console.error(error);
+      resolve(true);
     });
+  })
   }
-
+  
+  
   async autoCodeGeneration(event: any) {
     if (!this.isUpdate) {
       if (event) {
         let Info = this.autoGenerateCodeList.filter(x => x.ObjectName == 'Customers');
         if (Info.length > 0) {
-          let sectionOrderInfo = await this.checkAutoSectionItem([{ sectionA: Info[0].SectionA }, { sectionB: Info[0].SectionB }, { sectionC: Info[0].SectionC }, { sectionD: Info[0].SectionD }], Info[0].NextNumber, event);
+          let sectionOrderInfo =  this.checkAutoSectionItem([{ sectionA: Info[0].SectionA }, { sectionB: Info[0].SectionB }, { sectionC: Info[0].SectionC }, { sectionD: Info[0].SectionD }], Info[0].NextNumber, event);
           let code = this.autoCodeService.NumberRange(Info[0], sectionOrderInfo.sectionA, sectionOrderInfo.sectionB, sectionOrderInfo.sectionC, sectionOrderInfo.sectionD);
           if (code) this.fg.controls['CustomerCode'].setValue(code.trim().toUpperCase());
           this.Customer_Code = code.trim().toUpperCase();
@@ -2407,11 +2420,11 @@ debugger
         }
       }
       else {
-        this.fg.controls['CustomerCode'].setValue('');
+       this.fg.controls['CustomerCode'].setValue('');
         this.getNumberRange();
       }
     }
-  }
+}
 
   checkAutoSectionItem(sectionInfo: any, runningNumber: any, Code: string) {
     var sectionA = '';
