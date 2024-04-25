@@ -660,13 +660,13 @@
                    
                         <button type="submit" [ngClass]=" !isEditMode && !IsSave ? 'disable-input--style' : ''"
                        
-                            class="btn btn-primary btn-raised mb-0" (click)="confirmFunction(SAVE_TYPE)">
+                            class="btn btn-primary btn-raised mb-0" (click)="confirmFunction(1)">
                             Save
                         </button>
 
 
                         <button type="submit" [ngClass]=" ((!isEditMode  || !isUpdate) && !IsSave) ? 'disable-input--style' : ''"
-                            class="btn btn-primary btn-raised mb-0" (click)="confirmFunction(FINAL_TYPE)">
+                            class="btn btn-primary btn-raised mb-0" (click)="finalCredit()">
                             Submit for Approval
                         </button>
                         

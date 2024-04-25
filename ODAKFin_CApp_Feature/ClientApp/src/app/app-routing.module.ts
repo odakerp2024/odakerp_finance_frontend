@@ -205,6 +205,10 @@ import { ProvisionViewComponent } from './views/finance/transactions/provision/p
 import { ProvisionDetailComponent } from './views/finance/transactions/provision/provision-detail/provision-detail.component';
 import { TrialbalancetwoComponent } from './views/finance/reports/leveltwo/trialbalancetwo/trialbalancetwo.component';
 import { TrailbalanceComponent } from './views/finance/reports/levelone/trailbalance/trailbalance.component';
+
+import { ReportDashboardViewComponent } from './views/finance/master/report-dashboard-view/report-dashboard-view/report-dashboard-view.component';
+import { ReportDashboardInfoComponent } from './views/finance/master/report-dashboard-info/report-dashboard-info/report-dashboard-info.component';
+
 const routes: Routes = [
 
     { path: '', redirectTo: "/login", pathMatch: 'full' },
@@ -517,7 +521,8 @@ const routes: Routes = [
             { path: 'transactions/openingBalances', loadChildren: () => import('./views/finance/transactions/income/income.module').then(m => m.IncomeModule) },
             { path: 'provision', loadChildren: () => import('./views/finance/transactions/provision/provision.module').then(m => m.ProvisionModule) },
 
-
+            { path: 'finance/master/report-dashboard-view/report-dashboard-view', component: ReportDashboardViewComponent },
+            { path: 'finance/master/report-dashboard-info/report-dashboard-info', component: ReportDashboardInfoComponent },
 
         ]
     },

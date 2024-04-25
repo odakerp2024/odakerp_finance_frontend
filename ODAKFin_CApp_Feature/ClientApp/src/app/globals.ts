@@ -7,7 +7,7 @@ export class Globals {
     appName: string = 'FI';
 
     // UAT
-    APIURL: string = 'https://odakfnuat.odaksolutions.in/api';
+    //APIURL: string = 'https://odakfnuat.odaksolutions.in/api';
     MASTER_API_URL: string = 'https://odakfnuat.odaksolutions.in/api';
     SaApi: string = "https://odaksauat.odaksolutions.in/api";
     APIURLFF: string = 'https://odaksauat.odaksolutions.in/ffddev/api';
@@ -22,7 +22,7 @@ export class Globals {
     // APIURLLA: string = 'https://odaklaqa.odaksolutions.in/api';
     // TemplateUploadURL: string = 'https://odakfn.odaksolutions.in';
 
-    //APIURL : string = 'https://localhost:44301/api';
+    APIURL : string = 'https://localhost:44301/api';
 
     //SaApi : string = 'https://localhost:44304/api';
 }

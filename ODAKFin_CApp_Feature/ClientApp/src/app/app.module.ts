@@ -244,6 +244,8 @@ import { PaymentVoucherDetailsComponent } from './views/finance/transactions/pay
 import { PaymentVoucherViewComponent } from './views/finance/transactions/payment-vouchers/payment-voucher-view/payment-voucher-view.component';
 import { TrialbalancetwoComponent } from './views/finance/reports/leveltwo/trialbalancetwo/trialbalancetwo.component';
 import { TrailbalanceComponent } from './views/finance/reports/levelone/trailbalance/trailbalance.component';
+import { ReportDashboardViewComponent } from './views/finance/master/report-dashboard-view/report-dashboard-view/report-dashboard-view.component';
+import { ReportDashboardInfoComponent } from './views/finance/master/report-dashboard-info/report-dashboard-info/report-dashboard-info.component';
 const EntityConfigurable = localStorage.getItem('EntityConfigurable');
 const EntityDateFormat = JSON.parse(EntityConfigurable)?.DateFormat;
 export const MY_FORMATS = {
@@ -472,7 +474,9 @@ export const MY_FORMATS = {
     ChartaccountcodeviewComponent,
     ChartaccountcodelistComponent,
     TrialbalancetwoComponent,
-    TrailbalanceComponent
+    TrailbalanceComponent,
+    ReportDashboardViewComponent,
+    ReportDashboardInfoComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

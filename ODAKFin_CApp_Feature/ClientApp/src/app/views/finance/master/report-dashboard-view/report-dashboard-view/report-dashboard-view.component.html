@@ -1,0 +1,147 @@
+
+<div class="row headtitle">
+    <div class="col-md-9">
+        <h4>Report/Dashboard Configuration</h4>
+    </div>
+    <div class="col-md-3 alrt">
+        <button data-toggle="tooltip" title="Schedule" class="nav-link dropdown-toggle arrow-none waves-effect nav-user btn bmd-btn-edit btn-raised btntop btnlog" href="#" role="button" aria-haspopup="false"
+                aria-expanded="false">
+            <i class="material-icons editicon">schedule</i>
+        </button>
+        <div class="dropdown-menu dropdown-menu-right profile-dropdown logd">
+
+
+            <a class="dropdown-item epad" href="#">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-12"><span>ModifiedOn: {{ModifiedOn}}</span> | <span>Modified By: {{ModifiedBy}}</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row emargin">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-12"><span>CreatedOn: {{CreatedOn}}</span> | <span>Created By: {{CreatedBy}}</span></div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+       
+    </div>
+</div>
+
+<form [formGroup]="ReportForm">
+    <div class="row alogtop">
+        <div class="col-md-3">
+            <div class="row">
+                <div class="col-md-12 col-lg-12">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label>Type</label>
+                                <select  class="form-control my-select" id="ddlTypeID" formControlName="TypeID">
+                                    <option value="0">--Select--</option>
+                                    <option *ngFor="let gRow of Typevalues" [value]="gRow.value">
+                                        {{gRow.viewValue}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      
+    </div>
+
+    <!--<div class="row alogtop">
+        <div class="col-md-12 alrt">
+            <button type="submit" class="btn btn-primary btn-raised btn-default cntbtn mb-0" (click)="Search()">Search<div class="ripple-container"></div></button>
+            <button type="submit" class="btn btn-danger btn-raised cntbtn mb-0" (click)="clearSearch()">Clear<div class="ripple-container"></div></button>
+        </div>
+    </div>-->
+
+    <div class="row alogtop">
+        <div class="col-md-12 alrt">
+           
+            <button data-toggle="tooltip" title="Add" type="submit" class="btn btn-success bmd-btn-fab tblbtngap" (click)="OnClickAdd()"><i class="material-icons editicon">add</i><div class="ripple-container"></div></button>
+            <button data-toggle="tooltip" title="Edit" type="submit" class="btn btn-primary bmd-btn-fab tblbtngap" (click)="EditReport()"><i class="material-icons editicon">edit</i><div class="ripple-container"></div></button>
+            <button data-toggle="tooltip" title="Delete" type="submit" class="btn btn-danger bmd-btn-fab" (click)="DeleteReport()"><i class="material-icons editicon">delete</i><div class="ripple-container"></div></button>
+        </div>
+        <div class="col-md-12 padlr0">
+            <div id="datatable-buttons_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+                <div class="row">
+                    <div class="col-md-12 bkglvl frz1">
+                        <div class="material-datatables">
+                            <table id="datatable" class="table table-responsive table-striped table-bordered w-100 dataTable scrdt no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                                <thead>
+                                    <tr role="row" class="frzth">
+                                        <th class="actwid">S.No</th>
+                                        <th>Name</th>
+                                        <th>Description</th>
+                                        <th>Active</th>                                        
+                                        <th class="actwid">Select</th>
+                                    </tr>
+                                    <tr class="frzth">
+                                        <td class="actwid"></td>
+                                        <td>
+                                            <input  autocomplete="off" type="text" class="form-control" id="txtName" formControlName="Name" style="text-transform:capitalize!important;" />
+                                        </td>
+                                       
+                                        <td>
+                                            <textarea class="form-control" style="height:50px!important;" id="txtDes" formControlName="Description"></textarea>
+                                        </td>
+                                        <td>
+                                            <select class="form-control my-select" id="ddlAction" formControlName="ActiveID">
+                                                <option value="0">--Select--</option>
+                                                <option *ngFor="let gRow of Activevalues" [value]="gRow.value">
+                                                    {{gRow.viewValue}}
+                                                </option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+
+                                    <tr *ngFor="let gRow of DynamicReport; let i= index; let last=last">
+                                        <td class="actwid"> {{i+1}}</td>
+                                        <!--<td class="fsttd" *ngIf="LinkBtn[i]">
+                                            <button class="btn btn-success bmd-btn-fab enqbtn">{{gRow.Name}}</button>
+                                        </td>
+                                        <td class="fsttd" *ngIf="NoLinkBtn[i]">
+                                            {{gRow.Name}}
+                                        </td>-->
+                                        <td class="fsttd">
+                                            <button class="btn btn-success bmd-btn-fab enqbtn" (click)="OnClickEdit(gRow.NID,gRow.TypeID)">{{gRow.Name}}</button>
+                                         </td>
+                                        <td class="fsttd">
+                                            <textarea class="form-control" disabled type="text" style="background-color: white !important; min-height: 100px !important; border: none !important; cursor: inherit !important; ">{{gRow.Description}}</textarea>
+                                         
+                                        </td>
+                                        <td class="fsttd">
+                                            {{gRow.Active}}
+                                        </td>
+
+
+                                        <td class="actwid">
+                                            <input type="radio" name="radio" id="txtradio" class="vertal checkbox" (click)="checkbutton(i,gRow.NID)" />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row alogtop">
+        <div class="col-md-12 alrt">
+            <button type="submit" (click)="Onsubmit()"  class="btn btn-primary btnadd btn-raised mb-0">Save</button>
+        </div>
+    </div>
+</form>

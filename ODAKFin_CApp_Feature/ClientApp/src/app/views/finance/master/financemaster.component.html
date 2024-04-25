@@ -534,7 +534,7 @@
                                     <div style="border-bottom: 1px dashed;"></div>
                                 </div>
                                 <div class="col-md-12">
-                                    <button class=" btn btn-link">
+                                    <button (click)="routePage('NumberRange')" class=" btn btn-link">
                                         <i class="fa fa-angle-double-right"></i>
                                         Report & Dashboard
                                     </button>
@@ -1113,13 +1113,10 @@
                                                         <a
                                                             (click)="setPageWF(wfPager.totalPages)">{{pager.totalPages}}</a>
                                                     </li>
-
-                                                    <li
-                                                        [ngClass]="{disabled:wfPager.currentPage === wfPager.totalPages}">
+                                                    <li [ngClass]="{disabled:wfPager.currentPage === wfPager.totalPages}">
                                                         <a (click)="setPageWF(wfPager.currentPage + 1)">Next</a>
                                                     </li>
-                                                    <li
-                                                        [ngClass]="{disabled:wfPager.currentPage === wfPager.totalPages}">
+                                                    <li [ngClass]="{disabled:wfPager.currentPage === wfPager.totalPages}">
                                                         <a (click)="setPageWF(wfPager.totalPages)">Last</a>
                                                     </li>
                                                 </ul>
