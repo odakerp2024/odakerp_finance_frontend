@@ -206,10 +206,10 @@ export class CreditApplicationDetailsComponent implements OnInit {
         eventData[paramName] = this.userOff
       }
       else if (WF_EVENTS['creditApp'].PARAMS.CreditAmount.toLowerCase().trim() == param?.paramname?.toLocaleLowerCase().trim()) {
-        eventData[paramName] = this.CreditLimitAmount 
+        eventData[paramName] = this.RequestType == true ? this.ReviseCreditLimitAmount: this.CreditLimitAmount 
       }
       else if (WF_EVENTS['creditApp'].PARAMS.CreditDays.toLowerCase().trim() == param?.paramname?.toLocaleLowerCase().trim()) {
-        eventData[paramName] = this.CreditLimitDays
+        eventData[paramName] = this.RequestType == true ? this.ReviseCreditLimitDays : this.CreditLimitDays
       }
       else if (WF_EVENTS['creditApp'].PARAMS.SalesPerson.toLowerCase().trim() == param?.paramname?.toLocaleLowerCase().trim()) {
         eventData[paramName] = this.salesPersonWF
@@ -391,6 +391,8 @@ export class CreditApplicationDetailsComponent implements OnInit {
            this.ReviseCreditLimitAmount = Table.CreditLimitAmount,
            this.RevisePostDatedCheques = Table.PostDatedCheques  ? 1 : 0,
             this.ReviseRequestRemarks = Table.RequestRemarks,
+            this.CreditLimitAmount = Table.CreditLimitAmount,
+            this.CreditLimitDays = Table.CreditLimitDays,
           this.salesPersonWF = Table.SalesPIC,
           this.getWQuestions(result.data.Table1);
         
