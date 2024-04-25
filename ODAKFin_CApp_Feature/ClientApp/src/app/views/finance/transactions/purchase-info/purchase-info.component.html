@@ -325,7 +325,7 @@
                                             <ng-select class="searchdropdown"  [clearable]="false" [appendTo]="'body'" formControlName="CurrencyId" >
                                                 <ng-option [value]="0" [disabled]="true">--SELECT CURRENCY--</ng-option>
                                                 <ng-option *ngFor="let currency of currencyList" [value]="currency.ID">
-                                                    {{currency.Currency | uppercase}}
+                                                    {{currency.CurrencyCode | uppercase}}
                                                 </ng-option>
                                             </ng-select>
                                         </td>
@@ -345,7 +345,7 @@
                                     <tr *ngFor="let data of pagedItems; let i = index">
                                         <td class="text-center">{{data.AccountName}} </td>
                                         <td class="text-center">{{data.Quantity}}</td>
-                                        <td class="text-center">{{data.Currency}}</td>
+                                        <td class="text-center">{{data.CurrencyName}}</td>
                                         <td class="text-center">{{data.Rate}}</td>
                                         <td class="text-center">{{data.Amount}}</td>
                                         <td class="text-center">
