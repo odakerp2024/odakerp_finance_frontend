@@ -129,7 +129,7 @@ export class ReportReceiptVoucherComponent implements OnInit {
       this.reportList = [];
       if (result['data'].Table.length > 0) {
         this.reportList = result['data'].Table;
-        // this.reportForExcelList = result['data'].Table1;
+        this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
         this.setPage(1)
       } else {
         this.pager ={};

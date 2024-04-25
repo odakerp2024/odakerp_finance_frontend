@@ -71,8 +71,8 @@
                 <div class="col-4">
                     <label class=" fontstyles">CUSTOMER</label>
                     <ng-select class="searchdropdown" formControlName="Customer" [clearable]="false" name="CategoryId"
-                        id="CategoryId">
-                        <ng-option [value]="0" disabled>--SELECT CUSTOMER--</ng-option>
+                    id="CategoryId">
+                        <ng-option [value]="0" disabled>--SELECT OFFICE--</ng-option>
                         <ng-container *ngFor="let customer of customerList">
                             <ng-option [value]="customer.CustomerID">
                                 <span class="textwrap">{{customer.CustomerName | uppercase}}
@@ -98,6 +98,9 @@
                         </ng-option>
                     </ng-select>
                 </div>
+            </div>
+
+            <div class="row">
                 <div class="col-4">
                     <label class=" fontstyles">PAYMENT MODE</label>
                     <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'PaymentMode'"
@@ -172,38 +175,38 @@
                                         style="width: 177.575px;">Date
                                     </th>
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="2" aria-label="Name: activate to sort column ascending"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
                                         style="width: 177.575px;">Receipt # </th>
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="3" aria-label="Name: activate to sort column ascending"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
                                         style="width: 177.575px;">Type</th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="4" aria-label="Name: activate to sort column ascending"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
                                         style="width: 177.575px;">Customer </th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="5" aria-label="Name: activate to sort column ascending"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
                                         style="width: 177.575px;">Branch</th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="6" aria-label="Name: activate to sort column ascending"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
                                         style="width: 177.575px;">Payment Mode</th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="7" aria-label="Name: activate to sort column ascending"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
                                         style="width: 177.575px;">Deposit To</th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="8" aria-label="Name: activate to sort column ascending"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
                                         style="width: 177.575px;">Reference no</th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="9" aria-label="Name: activate to sort column ascending"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
                                         style="width: 177.575px;">Amount</th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="10" aria-label="Name: activate to sort column ascending"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
                                         style="width: 177.575px;">Invoice #</th>
                                 </tr>
                             </thead>
@@ -216,13 +219,13 @@
                                     <td>{{data.CustomerName}}</td>
                                     <td>{{data.Branch}}</td>
                                     <td>{{data.PaymentMode}}</td>
-                                    <td>{{data.DepositTo}}</td>
+                                    <td>{{data.BankName}}</td>
                                     <td>{{data.ReferenceNo}}</td>
                                     <td>{{data.Amount}}</td>
-                                    <td>{{data.Receipt}}</td>
+                                    <td>{{data.Invoice}}</td>
                                 </tr>
 
-                                <tr  *ngIf="pagedItems.length ==0">
+                                <tr *ngIf="pagedItems.length ==0">
                                     <td class="text-center" colspan="10">No records found</td>
                                 </tr>
 
