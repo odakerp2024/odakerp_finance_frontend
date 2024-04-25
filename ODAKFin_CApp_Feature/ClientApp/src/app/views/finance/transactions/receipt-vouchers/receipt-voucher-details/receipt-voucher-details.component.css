@@ -42,10 +42,10 @@ div.form-group input.form-control.amount {
     font-size: larger !important;
 }
 
-:host ::ng-deep .mat-form-field-outline {
-    background: #e9ecef !important;
+/* :host ::ng-deep .mat-form-field-outline {
+    background: #ffffff !important;
 
-}
+} */
 
 .receipt-table.table {
     max-height: 450px;

@@ -199,10 +199,10 @@
                 <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group">
                         <label class="str mb-2">Purchase Invoice Date </label>
-                        <mat-form-field  class="tillDate mat_date_picker disable-input--nostyle"  readonly appearance="outline" >
-                            <input matInput (click)="PIDate.open()"    autocomplete="off" readonly [matDatepicker]="PIDate"   id="PIDate" [placeholder]="entityDateFormat" formControlName="PIDate">
-                            <mat-datepicker-toggle disabled matSuffix [for]="PIDate" ></mat-datepicker-toggle>
-                            <mat-datepicker #PIDate disabled></mat-datepicker>
+                        <mat-form-field  class="tillDate mat_date_picker"  readonly appearance="outline" >
+                            <input matInput (click)="PIDate.open()"    autocomplete="off" readonly [matDatepicker]="PIDate"  [max]="maxDate" id="PIDate" [placeholder]="entityDateFormat" formControlName="PIDate">
+                            <mat-datepicker-toggle matSuffix [for]="PIDate" ></mat-datepicker-toggle>
+                            <mat-datepicker #PIDate></mat-datepicker>
                         </mat-form-field>
                         <!-- <input [max]="maxDate" formControlName="PIDate" type="date" id="InvoiceDate"
                             class="form-control w-100" /> -->

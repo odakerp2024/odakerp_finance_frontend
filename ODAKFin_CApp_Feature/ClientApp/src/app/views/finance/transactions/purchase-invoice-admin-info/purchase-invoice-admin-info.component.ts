@@ -200,7 +200,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       ProvisionType: [0],
       Provision: [0],
       PINumber: [''],
-      PIDate: [this.minDate],
+      PIDate: [''],
       StatusId: [1],
       VendorId: [0],
       VendorBranch: [''],

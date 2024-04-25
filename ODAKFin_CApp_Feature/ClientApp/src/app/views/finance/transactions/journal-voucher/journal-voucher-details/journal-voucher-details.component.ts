@@ -52,7 +52,8 @@ export class JournalVoucherDetailsComponent implements OnInit {
   journalFileList: any = [];
   AmountDifference: any;
   isFinalRecord: boolean = false;
-
+  currentDate = this.datePipe.transform(new Date(), "yyyy-MM-dd");
+  fromMaxDate = this.currentDate;
   constructor(
     private fb: FormBuilder,
     private globals: Globals,
@@ -156,7 +157,7 @@ export class JournalVoucherDetailsComponent implements OnInit {
       DivisionId: [0],
       OfficeId: [0],
       JournalNumber: [''],
-      JournalDate: [this.datePipe.transform(new Date(), "yyyy-MM-dd")],
+      JournalDate: [''],
       TotalDebit: [0],
       TotalCredit: [0],
       AmountDifference: [0],
@@ -203,7 +204,7 @@ export class JournalVoucherDetailsComponent implements OnInit {
           DivisionId:info.DivisionId,
           OfficeId: info.OfficeId,
           JournalNumber: '',
-          JournalDate: new Date(),
+          JournalDate: info.JournalDate,
           Remarks: info.Remarks,
           FileName: info.FileName,
           FileURL: info.FileURL,

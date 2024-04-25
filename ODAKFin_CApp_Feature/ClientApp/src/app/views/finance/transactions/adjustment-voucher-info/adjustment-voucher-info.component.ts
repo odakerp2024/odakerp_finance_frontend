@@ -64,6 +64,8 @@ export class AdjustmentVoucherInfoComponent implements OnInit {
   typeIdArray: any;
   accountNameCheck: any;
   resultAccountTypeList: any;
+  currentDate = this.datePipe.transform(new Date(), "yyyy-MM-dd");
+  fromMaxDate = this.currentDate;
   // groupedCoaTypeList: any = {
   //   'AccountName': [],
   //   'CustomerName': [],
@@ -149,7 +151,7 @@ export class AdjustmentVoucherInfoComponent implements OnInit {
       DivisionId: [0],
       OfficeId: [0],
       AVNumber: [''],
-      AVDate: [new Date()],
+      AVDate: [''],
       TotalDebit: [''],
       TotalCredit: [''],
       AmountDifference: [''],
@@ -200,7 +202,7 @@ export class AdjustmentVoucherInfoComponent implements OnInit {
           DivisionId: info.DivisionId,
           OfficeId: info.OfficeId,
           AVNumber: '',
-          AVDate: new Date(),
+          AVDate: info.AVDate,
           Remarks: info.Remarks,
           CreatedBy: info.CreatedBy,
           StatusId: 1,
