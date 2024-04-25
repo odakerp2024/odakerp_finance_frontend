@@ -830,7 +830,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
         PurchaseInvoiceId: this.PurchaseInvoiceId,
         AccountId: info.AccountId,
         Rate: Number(info.Rate).toFixed(this.entityFraction),
-        Qty: Number(info.Qty).toFixed(this.entityFraction),
+        Qty: info.Qty,
         Amount: Number(info.Rate * info.Qty).toFixed(this.entityFraction),
         CurrencyId: info.CurrencyId,
         ExRate: info.ExRate ? info.ExRate : 1,
@@ -860,7 +860,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
         PurchaseInvoiceId: this.PurchaseInvoiceId,
         AccountId: info.AccountId,
         Rate: Number(info.Rate).toFixed(this.entityFraction),
-        Qty: Number(info.Qty).toFixed(this.entityFraction),
+        Qty: info.Qty,
         Amount: Number(info.Rate * info.Qty).toFixed(this.entityFraction),
         CurrencyId: info.CurrencyId,
         ExRate: info.ExRate ? info.ExRate : 1,
@@ -918,7 +918,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       PurchaseInvoiceId: this.PurchaseInvoiceId,
       AccountId: info.AccountId,
       Rate: Number(info.Rate).toFixed(this.entityFraction),
-      Qty: Number (info.Qty).toFixed(this.entityFraction),
+      Qty: info.Qty,
       Amount: Number(info.Amount).toFixed(this.entityFraction),
       CurrencyId: info.CurrencyId,
       ExRate: info.ExRate,
@@ -985,7 +985,6 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
   // }
 
   async saveInfo(status: any, isDelete = false) {
-
     // if(this.mappingSuccess == false){
     //   Swal.fire(this.errorMessage)
     //   return false;
@@ -1098,7 +1097,6 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       allowOutsideClick: false
     }).then(async (result) => {
       if (result.isConfirmed) {
-
         // If canceled 
 
         if (status == 3) {
@@ -1118,12 +1116,13 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
 
             Swal.fire(result.data.Message, '', 'success');
             this.isUpdateMode = true;
-            this.isUpdateMode1 = true;
+            this.isUpdateMode1 = false;
 
             if (status == 0) {
               this.PurchaseInvoiceId = result.data.Id;
               this.isUpdateMode = true;
-              this.isUpdateMode1 = true;
+              this.isUpdateMode1 = false;
+
             }
 
             if (this.isUpdate && status && !this.isFinalRecord) {
@@ -1136,8 +1135,15 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
             }
 
             if (!this.isUpdate && !this.isFinalRecord) {
-              const PurchaseInvoiceId = result.data.Id;
-              this.editpurchaseinvoice(PurchaseInvoiceId)
+          
+              this.PurchaseInvoiceId = result.data.Id;
+              this.isUpdate = true;
+              this.isUpdateMode = true;
+              this.isUpdateMode1 = false;
+              if (this.isUpdate) {
+                this.getPurchaseInvoiceAdminInfo();
+              }
+     
             }
           }
           if (status == 2) {
@@ -1151,9 +1157,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       }
     });
   }
-  editpurchaseinvoice(id: number) {
-    this.router.navigate(['/views/purchase-admin-info/purchase-invoice-info', { id: id, isUpdate: true }]);
-  }
+
 
   ViewPage() {
     this.router.navigate(['/views/purchase-invoice/purchase-invoice-view']);
