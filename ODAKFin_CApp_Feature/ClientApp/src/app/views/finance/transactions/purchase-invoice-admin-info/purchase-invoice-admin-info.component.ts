@@ -1582,10 +1582,11 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
         if (result.message == 'Success' && result.data.Table1.length > 0) {
           result.data.Table1.forEach(info => {
 
-            let account = this.accountName.find(x => x.ChartOfAccountsId == !info.AccountId ? 0 : info.AccountId);
-            let currency = this.currencyList.find(x => x.ID == !info.CurrencyId ? 0 : info.CurrencyId);
-            // let tds = this.SectionMasterList.find(x => x.SectionID == !info.TDSMaster ? 0 : info.TDSMaster);
-
+            // let account = this.accountName.find(x => x.ChartOfAccountsId == !info.AccountId ? 0 : info.AccountId);
+            // let currency = this.currencyList.find(x => x.ID == !info.CurrencyId ? 0 : info.CurrencyId);
+            let account = this.accountName.find(x => x.ChartOfAccountsId ==   info.AccountId);
+            let currency = this.currencyList.find(x => x.ID ==  info.CurrencyId);
+          
             let value = {
               Id: info.Id,
               PurchaseInvoiceId: this.PurchaseInvoiceId,
