@@ -11,6 +11,7 @@ export class ReportDashboardService {
   constructor(private http: HttpClient, private globals: Globals) { }
 
   GetReceiptVoucherReportList(FormValue: any): Observable<any> {
+    FormValue.Amount = FormValue.Amount == '' ? 0 : FormValue.Amount;
     return this.http.post<any>(this.globals.APIURL + '/Reports/ReceiptVoucherList/', FormValue);
   }
 }

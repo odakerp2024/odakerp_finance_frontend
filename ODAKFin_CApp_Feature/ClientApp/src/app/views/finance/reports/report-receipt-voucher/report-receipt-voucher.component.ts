@@ -6,7 +6,9 @@ import { Globals } from 'src/app/globals';
 import { PaginationService } from 'src/app/pagination.service';
 import { CommonService } from 'src/app/services/common.service';
 import { DataService } from 'src/app/services/data.service';
+import { ExcelService } from 'src/app/services/excel.service';
 import { ReportDashboardService } from 'src/app/services/financeModule/report-dashboard.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-report-receipt-voucher',
@@ -19,6 +21,7 @@ export class ReportReceiptVoucherComponent implements OnInit {
   divisionList: any = [];
   officeList: any = [];
   reportList: any[];
+  reportForExcelList: any[];
   customerList: any[];
   pager: any = {};// pager object  
   pagedItems: any[];// paged items
@@ -30,7 +33,7 @@ export class ReportReceiptVoucherComponent implements OnInit {
   ];
   bankList: any[];
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat')
-
+  currentDate = new Date();
   constructor(
     private commonDataService: CommonService,
     private datePipe: DatePipe,
@@ -40,6 +43,7 @@ export class ReportReceiptVoucherComponent implements OnInit {
     private ps: PaginationService,
     private dataService: DataService,
     private reportService: ReportDashboardService,
+    public excelService : ExcelService
   ) { }
 
   ngOnInit(): void {
@@ -54,13 +58,14 @@ export class ReportReceiptVoucherComponent implements OnInit {
       Division: [0],
       Office: [0],
       Customer: [0],
-      StartDate: [''],
-      EndDate: [''],
-      Amount: [0],
+      StartDate: [new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 2)],
+      EndDate: [this.datePipe.transform(this.currentDate, "yyyy-MM-dd")],
+      Amount: [''],
       Type: [0],
       PaymentMode: [0],
       DepositTo: [0]
     });
+    this.getReceiptReportList();
   }
 
   getDivisionList() {
@@ -102,15 +107,6 @@ export class ReportReceiptVoucherComponent implements OnInit {
     })
   }
 
-  getCustomerList() {
-    this.commonDataService.getCustomerList({}).subscribe((result: any)=>{
-      this.customerList = [];
-      if (result.data.Table.length > 0) {
-        // this.customerList = result.data.Table;
-      }
-    }, error => { });
-  }
-
   getDivisionBasedOffice(officeId: number, divisoinId: any) {
     if (officeId && divisoinId) {
       let service = `${this.globals.APIURL}/Common/GetBankByOfficeId`;
@@ -133,7 +129,11 @@ export class ReportReceiptVoucherComponent implements OnInit {
       this.reportList = [];
       if (result['data'].Table.length > 0) {
         this.reportList = result['data'].Table;
+        // this.reportForExcelList = result['data'].Table1;
         this.setPage(1)
+      } else {
+        this.pager ={};
+        this.pagedItems =[];
       }
     })
   }
@@ -141,6 +141,7 @@ export class ReportReceiptVoucherComponent implements OnInit {
 
   setPage(page: number) {
     if (page < 1 || page > this.pager.totalPages) return;
+
     this.pager = this.ps.getPager(this.reportList.length, page);
     this.pagedItems = this.reportList.slice(this.pager.startIndex, this.pager.endIndex + 1);
   }
@@ -150,13 +151,31 @@ export class ReportReceiptVoucherComponent implements OnInit {
       Division: 0,
       Office: 0,
       Customer: 0,
-      StartDate: '',
-      EndDate: '',
-      Amount: 0,
+      StartDate: new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 2),
+      EndDate: this.datePipe.transform(this.currentDate, "yyyy-MM-dd"),
+      Amount: '',
       Type: 0,
       PaymentMode: 0,
       DepositTo: 0
     });
+  }
+
+  downloadAsCSV() {
+    this.excelService.exportToCSV(this.reportList,'Report-ReceiptVoucher')
+    if(this.reportForExcelList.length > 0){
+      this.excelService.exportToCSV(this.reportForExcelList,'Report-ReceiptVoucher')
+    } else {
+      Swal.fire('no record found');
+    }
+  }
+  
+  downloadAsExcel() {
+    this.excelService.exportToCSV(this.reportList,'Report-ReceiptVoucher')
+    if(this.reportForExcelList.length > 0){
+      this.excelService.exportAsExcelFile(this.reportForExcelList,'Report-ReceiptVoucher')
+    } else {
+      Swal.fire('no record found');
+    }
   }
 
 
