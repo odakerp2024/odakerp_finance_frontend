@@ -470,7 +470,7 @@ export class FinanceMasterComponent implements OnInit {
   }
 
   OnApproval(){
-    if(this.eventName.toUpperCase() == "CUSTOMER"){
+    if(this.eventName.toUpperCase().trim() == "CUSTOMER"){
       this.KYCValidation();
     }
     else{
