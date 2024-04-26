@@ -15,8 +15,7 @@
                         <label class=" mb-3">From</label>
                         <div class="input-group">
                             <mat-form-field class="tillDate mat_date_picker" appearance="outline">
-                                <input matInput (click)="StartDate.open()" readonly autocomplete="off"
-                                    [min]="reportFilter.get('StartDate').value" [matDatepicker]="StartDate"
+                                <input matInput (click)="StartDate.open()" readonly autocomplete="off" [matDatepicker]="StartDate"
                                     id="StartDate" [placeholder]="entityDateFormat" formControlName="StartDate">
                                 <mat-datepicker-toggle matSuffix [for]="StartDate"></mat-datepicker-toggle>
                                 <mat-datepicker #StartDate></mat-datepicker>
@@ -29,9 +28,8 @@
                     <label class=" mb-3">To</label>
                     <div class="input-group">
                         <mat-form-field class="tillDate mat_date_picker" appearance="outline">
-                            <input matInput (click)="EndDate.open()" readonly autocomplete="off"
-                                [min]="reportFilter.get('EndDate').value" [matDatepicker]="EndDate" id="EndDate"
-                                [placeholder]="entityDateFormat" formControlName="EndDate">
+                            <input matInput (click)="EndDate.open()" readonly autocomplete="off" [matDatepicker]="EndDate" id="EndDate"
+                            [min]="reportFilter.get('StartDate').value" [placeholder]="entityDateFormat" formControlName="EndDate">
                             <mat-datepicker-toggle matSuffix [for]="EndDate"></mat-datepicker-toggle>
                             <mat-datepicker #EndDate></mat-datepicker>
                         </mat-form-field>
@@ -72,7 +70,7 @@
                     <label class=" fontstyles">CUSTOMER</label>
                     <ng-select class="searchdropdown" formControlName="Customer" [clearable]="false" name="CategoryId"
                     id="CategoryId">
-                        <ng-option [value]="0" disabled>--SELECT OFFICE--</ng-option>
+                        <ng-option [value]="0" disabled>--SELECT CUSTOMER--</ng-option>
                         <ng-container *ngFor="let customer of customerList">
                             <ng-option [value]="customer.CustomerID">
                                 <span class="textwrap">{{customer.CustomerName | uppercase}}
@@ -117,7 +115,7 @@
                     <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'DepositTo'" name="active"
                         id="active">
                         <ng-option [value]="0" disabled>--SELECT DEPOSIT TO --</ng-option>
-                        <ng-option *ngFor="let Deposit of bankList" [value]="Deposit.Id">
+                        <ng-option *ngFor="let Deposit of bankList" [value]="Deposit.BankID">
                             {{Deposit.BankName | uppercase}} - {{Deposit.AccountNo}}
                         </ng-option>
                     </ng-select>
