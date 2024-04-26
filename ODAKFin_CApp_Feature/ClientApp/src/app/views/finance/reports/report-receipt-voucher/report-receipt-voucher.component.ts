@@ -161,7 +161,6 @@ export class ReportReceiptVoucherComponent implements OnInit {
   }
 
   downloadAsCSV() {
-    this.excelService.exportToCSV(this.reportList,'Report-ReceiptVoucher')
     if(this.reportForExcelList.length > 0){
       this.excelService.exportToCSV(this.reportForExcelList,'Report-ReceiptVoucher')
     } else {
@@ -170,7 +169,6 @@ export class ReportReceiptVoucherComponent implements OnInit {
   }
   
   downloadAsExcel() {
-    this.excelService.exportToCSV(this.reportList,'Report-ReceiptVoucher')
     if(this.reportForExcelList.length > 0){
       this.excelService.exportAsExcelFile(this.reportForExcelList,'Report-ReceiptVoucher')
     } else {
