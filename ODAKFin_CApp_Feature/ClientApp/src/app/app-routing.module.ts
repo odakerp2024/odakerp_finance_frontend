@@ -206,6 +206,9 @@ import { ProvisionDetailComponent } from './views/finance/transactions/provision
 import { TrialbalancetwoComponent } from './views/finance/reports/leveltwo/trialbalancetwo/trialbalancetwo.component';
 import { TrailbalanceComponent } from './views/finance/reports/levelone/trailbalance/trailbalance.component';
 import { ReportReceiptVoucherComponent } from './views/finance/reports/report-receipt-voucher/report-receipt-voucher.component';
+import { ReportPaymentVoucherComponent } from './views/finance/reports/report-payment-voucher/report-payment-voucher.component';
+import { ReportContraVoucherComponent } from './views/finance/reports/report-contra-voucher/report-contra-voucher.component';
+import { ReportVoucherReversalComponent } from './views/finance/reports/report-voucher-reversal/report-voucher-reversal.component';
 const routes: Routes = [
 
     { path: '', redirectTo: "/login", pathMatch: 'full' },
@@ -457,6 +460,9 @@ const routes: Routes = [
             { path: 'finance/master/chartaccountcode/chartaccountcodelist', component: ChartaccountcodelistComponent },
             
             { path: 'finance/reports', component: ReportReceiptVoucherComponent },
+            { path: 'finance/reports', component: ReportPaymentVoucherComponent },
+            { path: 'finance/reports', component: ReportContraVoucherComponent },
+            { path: 'finance/reports', component: ReportVoucherReversalComponent },
             /* Finance Module - End */
 
             /** Lazy Loading modules **/
