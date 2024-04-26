@@ -794,6 +794,21 @@ debugger
       this.router.navigate(['/views/reports/report-receipt-voucher']);
     } 
 
+    else if (routePage == 'PaymentVoucher') {
+      //SubfunctionID = 533;
+      this.router.navigate(['/views/reports/report-payment-voucher']);
+    } 
+
+    else if (routePage == 'ContraVoucher') {
+      //SubfunctionID = 533;
+      this.router.navigate(['/views/reports/report-contra-voucher']);
+    } 
+
+    else if (routePage == 'VoucherReversals') {
+      //SubfunctionID = 533;
+      this.router.navigate(['/views/reports/report-voucher-reversal']);
+    }
+    
     const userID = localStorage.getItem("UserID");
     const paylod = {
       userID: Number(userID),
