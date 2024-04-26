@@ -306,7 +306,7 @@
                                                 formControlName="CurrencyId">
                                                 <ng-option [value]="0" [disabled]="true">--SELECT CURRENCY--</ng-option>
                                                 <ng-option *ngFor="let currency of currencyList" [value]="currency.ID">
-                                                    {{currency.Currency | uppercase}}
+                                                    {{currency.CurrencyCode | uppercase}}
                                                 </ng-option>
                                             </ng-select>
                                         </td>

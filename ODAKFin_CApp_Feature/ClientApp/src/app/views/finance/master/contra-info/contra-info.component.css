@@ -20,8 +20,4 @@ div.form-group input.form-control.amount {
     font-weight: bold !important;
     font-size: large !important;
 }
-:host ::ng-deep .mat-form-field-outline{
-    background:  #e9ecef !important;
-
- }
  

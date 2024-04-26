@@ -1568,10 +1568,11 @@ export class VendorsComponent implements OnInit {
   }
 
   updateBasicVendorDetail() {
+    this.autoCodeGeneration(true)
     // var VenStatus = $('#ddlStatusAuto').val();
 
     this.basicVendorDetail.VendorID = this.fg.value.VendorID;
-    this.basicVendorDetail.VendorCode = this.fg.value.VendorCode;
+    this.basicVendorDetail.VendorCode = this.fg.value.VendorCode == "" ?  this.Vendor_Code : this.fg.value.VendorCode;
     this.basicVendorDetail.VendorName = this.fg.value.VendorName;
     // this.basicVendorDetail.VendorStatus = VenStatus as number;//this.fg.value.StatusAuto;
     this.basicVendorDetail.CountryId = this.fg.value.CountryID;
@@ -1602,7 +1603,7 @@ export class VendorsComponent implements OnInit {
     //if (this.Current_Tab == "tabBranch") {
     this.TabOfficeDetails.VendorBranchID = this.fg.value.VendorBranchID;
     this.TabOfficeDetails.VendorID = this.fg.value.VendorID;
-    this.TabOfficeDetails.BranchCode = this.fg.value.BranchCode; //1
+    this.TabOfficeDetails.BranchCode = this.fg.value.BranchCode == "" ? this.Branch_Code : this.fg.value.BranchCode; //1
     this.TabOfficeDetails.City = this.fg.value.BranchCity;// 2
     this.TabOfficeDetails.PrimaryContact = '';
     this.TabOfficeDetails.Pincode = this.fg.value.PinCode;
@@ -1849,20 +1850,21 @@ export class VendorsComponent implements OnInit {
   //   });
   // }
 
-  onSubmit() {
+  async onSubmit() {
+    debugger
     // if (this.mappingSuccess == false) {
     //   Swal.fire(this.errorMessage)
     //   return false;
     // }
 
-    this.getNumberRange();
+    await this.getNumberRange();
     this.formSubmit = true;
     var validation = "";
 
     //#region Main---------------------------------------------------------------------------------------------------------------------
-    if (!this.fg.value.VendorCode) {
-      validation += "<span style='color:red;'>*</span> <span>Please Enter Vendor Code </span></br>"
-    }
+    // if (!this.fg.value.VendorCode) {
+    //   validation += "<span style='color:red;'>*</span> <span>Please Enter Vendor Code </span></br>"
+    // }
 
     if (!this.fg.value.VendorName) {
       validation += "<span style='color:red;'>*</span> <span>Please Enter Vendor Name</span></br>"
@@ -1921,9 +1923,9 @@ export class VendorsComponent implements OnInit {
 
     //}
     if (this.Current_Tab === 'tabBranch') {
-      if (!this.fg.value.BranchCode) {
-        validation += '<span style=\'color:red;\'>*</span> <span>Please Check Branch Code Not Generate</span></br>';
-      }
+      // if (!this.fg.value.BranchCode) {
+      //   validation += '<span style=\'color:red;\'>*</span> <span>Please Check Branch Code Not Generate</span></br>';
+      // }
 
       if (!this.fg.value.BranchCity) {
         validation += '<span style=\'color:red;\'>*</span> <span>Please Enter Branch/cCity</span></br>';
@@ -2153,6 +2155,7 @@ export class VendorsComponent implements OnInit {
 
       this.updateDivision();
       this.constructDivision();
+
       Swal.fire({
         showCloseButton: true,
         title: '',
@@ -2165,12 +2168,16 @@ export class VendorsComponent implements OnInit {
       })
         .then((result) => {
           if (result.value) {
+
             // ** get and set the tab name for the API payload
             let InputPage = this.InputPage[this.Current_Tab];
             //  if(!InputPage &&  this.fg.value.customerDivision  && this.fg.value.customerDivision.length) {
             //   InputPage = 'Division';
             //  }
             this.VendorModel.Vendor.Table10[0] = { 'InputPage': InputPage };
+            
+            this.VendorModel.Vendor.Table1[0].BranchCode = this.fg.value.BranchCode == "" ? this.Branch_Code : this.fg.value.BranchCode;
+            
             //-----
             // console.log('VendorModel', this.VendorModel);
             // return
@@ -3427,7 +3434,9 @@ export class VendorsComponent implements OnInit {
   }
 
 
-  getNumberRange() {
+  async getNumberRange() {
+    debugger
+    return new Promise(async (resolve, rejects) => {
     let service = `${this.globals.APIURL}/COAType/GetNumberRangeCodeGenerator`;
     this.dataService.post(service, { Id: 0, ObjectId: 0 }).subscribe((result: any) => {
       if (result.message = "Success") {
@@ -3437,20 +3446,23 @@ export class VendorsComponent implements OnInit {
             data.EffectiveDate = this.datePipe.transform(data.EffectiveDate, 'YYYY-MM-dd');
           }
           this.autoGenerateCodeList = result.data.Table;
-        }
+        }resolve(true);
       }
     }, error => {
       console.error(error);
+      resolve(true);
     });
+  })
   }
-
+  
 
   async autoCodeGeneration(event: any) {
+    debugger
     if (!this.isUpdate) {
       if (event) {
         let Info = this.autoGenerateCodeList.filter(x => x.ObjectName == 'Vendors');
         if (Info.length > 0) {
-          let sectionOrderInfo = await this.checkAutoSectionItem([{ sectionA: Info[0].SectionA }, { sectionB: Info[0].SectionB }, { sectionC: Info[0].SectionC }, { sectionD: Info[0].SectionD }], Info[0].NextNumber, event)
+          let sectionOrderInfo =  this.checkAutoSectionItem([{ sectionA: Info[0].SectionA }, { sectionB: Info[0].SectionB }, { sectionC: Info[0].SectionC }, { sectionD: Info[0].SectionD }], Info[0].NextNumber, event)
           let code = this.autoCodeService.NumberRange(Info[0], sectionOrderInfo.sectionA, sectionOrderInfo.sectionB, sectionOrderInfo.sectionC, sectionOrderInfo.sectionD);
           if (code) this.fg.controls['VendorCode'].setValue(code.trim().toUpperCase());
           this.Vendor_Code = code.trim().toUpperCase();
@@ -3469,6 +3481,7 @@ export class VendorsComponent implements OnInit {
 
   checkAutoSectionItem(sectionInfo: any, runningNumber: any, Code: string) {
     var sectionA = '';
+    debugger
     var sectionB = '';
     var sectionC = '';
     var sectionD = '';

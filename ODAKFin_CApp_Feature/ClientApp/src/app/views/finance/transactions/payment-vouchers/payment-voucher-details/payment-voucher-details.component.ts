@@ -62,6 +62,7 @@ export class PaymentVoucherDetailsComponent implements OnInit {
   ];
   paymentVoucherFor = '';
   currentDate = this.datePipe.transform(new Date(), "yyyy-MM-dd");
+  fromMaxDate = this.currentDate;
   // ** table data
 
   // exchangeTableList = [];
@@ -187,7 +188,7 @@ export class PaymentVoucherDetailsComponent implements OnInit {
         IsBill: [''],
         IsOnAccount: [''],
         PaymentVoucherNumber: [''],
-        PaymentVoucherDate: [this.currentDate],
+        PaymentVoucherDate: [''],
         VendorId: [''],
         VendorBranch: [''],
         AmountPaid: [''],
@@ -680,7 +681,7 @@ export class PaymentVoucherDetailsComponent implements OnInit {
         console.log('final payload', payload)
         payload.paymentVoucher.Table[0].IsFinal = 1; // set as final
         payload.paymentVoucher.Table[0].StatusId = 2; // ! set save type(draft(1) or final(2) or canceled(3));
-        payload.paymentVoucher.Table[0].PaymentVoucherDate = new Date();
+        // payload.paymentVoucher.Table[0].PaymentVoucherDate = new Date();
         // return
         this.savePayment(payload, 'final');
         // } else {
@@ -1038,7 +1039,7 @@ export class PaymentVoucherDetailsComponent implements OnInit {
             IsBill: tableData.IsBill,
             IsOnAccount: tableData.IsOnAccount,
             PaymentVoucherNumber: '',
-            PaymentVoucherDate: this.datePipe.transform(new Date(), "yyyy-MM-dd"),
+            PaymentVoucherDate: this.datePipe.transform(new Date(tableData.PaymentVoucherDate), "yyyy-MM-dd"),
             VendorId: tableData.VendorId,
             VendorBranch: tableData.VendorBranch,
             AmountPaid: tableData.AmountPaid,
