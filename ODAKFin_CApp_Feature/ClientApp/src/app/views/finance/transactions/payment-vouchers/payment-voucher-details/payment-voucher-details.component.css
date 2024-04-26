@@ -58,10 +58,10 @@ div.form-group input.form-control.amount {
     font-weight: bolder !important;
     font-size: larger !important; 
 }
-:host ::ng-deep .mat-form-field-outline{
+/* :host ::ng-deep .mat-form-field-outline{
     background:  #e9ecef !important;
 
- }
+ } */
  
 
  .fontstyles{

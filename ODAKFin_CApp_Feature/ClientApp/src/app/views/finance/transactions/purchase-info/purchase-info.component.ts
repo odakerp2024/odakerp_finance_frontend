@@ -44,6 +44,7 @@ export class PurchaseInfoComponent implements OnInit {
   isFinalModeEnable: boolean = false;
   entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
+  entityCurrency = this.commonDataService.getLocalStorageEntityConfigurable('Currency');
   minDate: string = this.datePipe.transform(new Date(), "yyyy-MM-dd");
   validTillMinDate: any = this.datePipe.transform(new Date(), "yyyy-MM-dd");
   autoGenerateCodeList: any[];
@@ -147,7 +148,8 @@ export class PurchaseInfoComponent implements OnInit {
       Id: [0],
       AccountId: [0],
       Quantity: [''],
-      CurrencyId: [1],
+      CurrencyId: [0],
+      CurrencyName: [''],
       Rate: [''],
       Amount: [''],
       IsDelete: [0]
@@ -259,6 +261,11 @@ export class PurchaseInfoComponent implements OnInit {
       if (result.length > 0) {
         this.currencyList = result;
       }
+      const entitySelectedCurrency = this.currencyList.find(c => c.Currency === this.entityCurrency);
+
+      if (entitySelectedCurrency) {
+        this.purchaseCreateForm.controls.CurrencyId.setValue(entitySelectedCurrency.ID);
+      }
     }, error => { });
   }
 
@@ -304,10 +311,11 @@ export class PurchaseInfoComponent implements OnInit {
         AccountId: info.AccountId,
         Quantity: info.Quantity,
         CurrencyId: info.CurrencyId,
+        CurrencyName: currency.CurrencyCode,
         Rate: info.Rate,
         Amount: info.Amount,
         AccountName: account.AccountName,
-        Currency: currency.Currency
+        // Currency: currency.Currency
       }
 
       this.PurchaseTableList[this.editSelectedIdex] = editValue
@@ -325,6 +333,7 @@ export class PurchaseInfoComponent implements OnInit {
       AccountId: info.AccountId,
       Quantity: info.Quantity,
       CurrencyId: info.CurrencyId,
+      CurrencyName: currency.CurrencyCode,
       Rate: info.Rate,
       Amount: info.Amount,
       AccountName: account.AccountName,
@@ -359,7 +368,12 @@ export class PurchaseInfoComponent implements OnInit {
   resetPurchaseTable() {
     this.purchaseCreateForm.controls['AccountId'].setValue(0);
     this.purchaseCreateForm.controls['Quantity'].setValue('');
-    this.purchaseCreateForm.controls['CurrencyId'].setValue(1);
+    const entitySelectedCurrency = this.currencyList.find(c => c.Currency === this.entityCurrency);
+    if (entitySelectedCurrency) {
+      this.purchaseCreateForm.controls.CurrencyId.setValue(entitySelectedCurrency.ID);
+    }
+    // this.purchaseCreateForm.controls['CurrencyId'].setValue(1);
+    this.purchaseCreateForm.controls['CurrencyName'].setValue('');
     this.purchaseCreateForm.controls['Rate'].setValue('');
     this.purchaseCreateForm.controls['Amount'].setValue('');
   }
@@ -573,6 +587,7 @@ const entityFraction = this.entityFraction; // assuming this is a valid number
       AccountId: info.AccountId,
       Quantity: info.Quantity,
       CurrencyId: info.CurrencyId,
+      CurrencyName: info.CurrencyName,
       Rate: info.Rate,
       Amount: info.Amount,
       TotalAmount: info.TotalAmount

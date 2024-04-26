@@ -128,7 +128,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     this.getBankList();
     this.getProvisionDropDownList();
     this.getTDSMaster();
-
+    this.onBookingAgainstChange(0);
     // this.maxDate = new Date();
     // this.maxDate.setDate( this.maxDate.getDate() + 3 );
 
@@ -200,7 +200,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       ProvisionType: [0],
       Provision: [0],
       PINumber: [''],
-      PIDate: [this.minDate],
+      PIDate: [''],
       StatusId: [1],
       VendorId: [0],
       VendorBranch: [''],
@@ -270,8 +270,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     // });
   }
 
-  onBookingAgainstChange(value: string) {
-    debugger
+  onBookingAgainstChange(value: any) {
     this.bookingAgainst = value;
     if (value == 'provision') {
       this.PurchaseCreateForm.patchValue({
@@ -308,16 +307,19 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
         if (info.StatusId == 2) this.isFinalRecord = true;
 
 
-        this.onBookingAgainstChange(info.BookingAgainst == 0 ? 'provision' : 'general');
-        
+      //  this.onBookingAgainstChange(info.BookingAgainst == 0 ? 'general' : 'provision');
+        const bookingType = info.BookingAgainst == 0 ? 'general' : 'provision';
+       // console.log('Calling onBookingAgainstChange with:', bookingType);
+        this.onBookingAgainstChange(bookingType);
+       // console.log('Before Patching', this.PurchaseCreateForm.value)
         this.PurchaseCreateForm.patchValue({
           PurchaseInvoiceId: this.PurchaseInvoiceId,
           Division: info.Division,
           Office: info.Office,
           OfficeGST: info.OfficeGST,
           BookingAgainst: info.BookingAgainst == 0 ? false : true,
-          general: info.BookingAgainst == 0 ? false : true,
-          againstProvision: info.BookingAgainst == 1 ? false : true,
+          general: info.BookingAgainst == 0 ? true : false,
+          againstProvision: info.BookingAgainst == 1 ? true : false,
           PINumber: info.PINumber,
           PIDate: this.datePipe.transform(info.PIDate, 'y-MM-dd'),
           // PIDate: info.PIDate,
@@ -355,7 +357,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
           BankId: info.BankId,
           InvoiceExrate: info.InvoiceExRate,
         });
-
+        console.log('After Patching', this.PurchaseCreateForm.value)
         if (info.PurchaseOrder) this.orderType = 'Purchase';
         else if (info.InternalOrder) this.orderType = 'Internal';
         else this.orderType = '';
@@ -509,17 +511,32 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
   // }
 
   calculateDueDate(event: any) {
+
+    // Assuming 'event' has a 'value' field with the selected date.
     const selectedDate = event.value as Date;
-    const creditDays = this.duedatelist.length > 0 ? this.duedatelist[0].CreditDays : 0;
 
-    const dueDate = new Date(selectedDate);
-    dueDate.setDate(dueDate.getDate() + creditDays);
+    // Check if 'duedatelist' has any elements
+    if (this.duedatelist.length > 0) {
+      // Get the credit days from the first item in the list
+      const creditDays = this.duedatelist[0].CreditDays;
 
-    this.DueDateopen = this.datePipe.transform(dueDate, 'yyyy-MM-dd');
+      // Calculate the due date by adding credit days to the selected date
+      const dueDate = new Date(selectedDate);
+      dueDate.setDate(dueDate.getDate() + creditDays);
 
-    // Set the DueDate field to today's date
-    const todayDate = this.datePipe.transform(new Date(), "yyyy-MM-dd")!;
-    this.PurchaseCreateForm.controls['DueDate'].setValue(todayDate);
+      // Format the due date and set it to 'DueDateopen'
+      this.DueDateopen = this.datePipe.transform(dueDate, 'yyyy-MM-dd')!;
+
+      // Set the due date in the form
+      this.PurchaseCreateForm.controls['DueDate'].setValue(this.DueDateopen);
+    } else {
+      // If 'duedatelist' is empty, set today's date as 'DueDate'
+      const todayDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd')!;
+
+      // Set today's date to 'DueDate' in the form
+      this.PurchaseCreateForm.controls['DueDate'].setValue(todayDate);
+    }
+
   }
 
 
@@ -812,12 +829,12 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
         Id: info.Id,
         PurchaseInvoiceId: this.PurchaseInvoiceId,
         AccountId: info.AccountId,
-        Rate: info.Rate,
+        Rate: Number(info.Rate).toFixed(this.entityFraction),
         Qty: info.Qty,
-        Amount: info.Rate * info.Qty,
+        Amount: Number(info.Rate * info.Qty).toFixed(this.entityFraction),
         CurrencyId: info.CurrencyId,
         ExRate: info.ExRate ? info.ExRate : 1,
-        Amountccr: info.Amountccr,
+        Amountccr: Number(info.Amountccr).toFixed(this.entityFraction),
         TDSMaster: info.TDSMaster ? info.TDSMaster : 0,
         TDSName: !tds ? '-' : tds.SectionName,
         TDSValue: !tds ? '-' : tds.RatePercentage,
@@ -842,12 +859,12 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
         Id: info.Id,
         PurchaseInvoiceId: this.PurchaseInvoiceId,
         AccountId: info.AccountId,
-        Rate: info.Rate,
+        Rate: Number(info.Rate).toFixed(this.entityFraction),
         Qty: info.Qty,
-        Amount: info.Rate * info.Qty,
+        Amount: Number(info.Rate * info.Qty).toFixed(this.entityFraction),
         CurrencyId: info.CurrencyId,
         ExRate: info.ExRate ? info.ExRate : 1,
-        Amountccr: info.Amountccr,
+        Amountccr: Number(info.Amountccr).toFixed(this.entityFraction),
         TDSMaster: info.TDSMaster ? info.TDSMaster : 0,
         TDSName: !tds ? '-' : tds.SectionName,
         TDSValue: !tds ? '-' : tds.RatePercentage,
@@ -900,12 +917,12 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       Id: info.Id,
       PurchaseInvoiceId: this.PurchaseInvoiceId,
       AccountId: info.AccountId,
-      Rate: info.Rate,
+      Rate: Number(info.Rate).toFixed(this.entityFraction),
       Qty: info.Qty,
-      Amount: info.Amount,
+      Amount: Number(info.Amount).toFixed(this.entityFraction),
       CurrencyId: info.CurrencyId,
       ExRate: info.ExRate,
-      Amountccr: info.Amountccr,
+      Amountccr: Number(info.Amountccr).toFixed(this.entityFraction),
       TDSMaster: info.TDSMaster,
       IsRCM: info.IsRCM,
       GSTGroup: info.GSTGroup,
@@ -968,7 +985,6 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
   // }
 
   async saveInfo(status: any, isDelete = false) {
-
     // if(this.mappingSuccess == false){
     //   Swal.fire(this.errorMessage)
     //   return false;
@@ -1081,7 +1097,6 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       allowOutsideClick: false
     }).then(async (result) => {
       if (result.isConfirmed) {
-
         // If canceled 
 
         if (status == 3) {
@@ -1101,12 +1116,13 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
 
             Swal.fire(result.data.Message, '', 'success');
             this.isUpdateMode = true;
-            this.isUpdateMode1 = true;
+            this.isUpdateMode1 = false;
 
             if (status == 0) {
               this.PurchaseInvoiceId = result.data.Id;
               this.isUpdateMode = true;
-              this.isUpdateMode1 = true;
+              this.isUpdateMode1 = false;
+
             }
 
             if (this.isUpdate && status && !this.isFinalRecord) {
@@ -1119,8 +1135,15 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
             }
 
             if (!this.isUpdate && !this.isFinalRecord) {
-              const PurchaseInvoiceId = result.data.Id;
-              this.editpurchaseinvoice(PurchaseInvoiceId)
+          
+              this.PurchaseInvoiceId = result.data.Id;
+              this.isUpdate = true;
+              this.isUpdateMode = true;
+              this.isUpdateMode1 = false;
+              if (this.isUpdate) {
+                this.getPurchaseInvoiceAdminInfo();
+              }
+     
             }
           }
           if (status == 2) {
@@ -1134,9 +1157,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       }
     });
   }
-  editpurchaseinvoice(id: number) {
-    this.router.navigate(['/views/purchase-admin-info/purchase-invoice-info', { id: id, isUpdate: true }]);
-  }
+
 
   ViewPage() {
     this.router.navigate(['/views/purchase-invoice/purchase-invoice-view']);
@@ -1322,7 +1343,6 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
   }
 
   changeCurrencyEvent(currencyId: any) {
-    debugger
     let entityInfo = this.commonDataService.getLocalStorageEntityConfigurable();
     let info = this.currencyList.find(x => x.Currency == entityInfo['Currency']);
     this.entityCurrencyID = info.ID;
@@ -1346,6 +1366,23 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     this.PurchaseCreateForm.controls['Amountccr'].setValue((this.PurchaseCreateForm.value.Rate ? this.PurchaseCreateForm.value.Rate : 1)
       * (this.PurchaseCreateForm.value.Qty ? this.PurchaseCreateForm.value.Qty : 1) * (this.PurchaseCreateForm.value.ExRate ? this.PurchaseCreateForm.value.ExRate : 1));
   }
+
+  // rateQuantityChangeEvent(event) {
+  //   // Convert values to numbers and use defaults if needed
+  //   let rate = Number(this.PurchaseCreateForm.value.Rate) || 1;
+  //   let qty = Number(this.PurchaseCreateForm.value.Qty) || 1;
+  //   let exRate = Number(this.PurchaseCreateForm.value.ExRate) || 1;
+  
+  //   // Calculate the result
+  //   let calculatedValue = rate * qty * exRate;
+  
+  //   // Apply toFixed with specified decimal places
+  //   let formattedValue = calculatedValue.toFixed(this.entityFraction);
+  
+  //   // Set the value in the form control with rounded output
+  //   this.PurchaseCreateForm.controls['Amountccr'].setValue(formattedValue);
+  // }
+  
 
   taxableChangeEvent(event) {
     if (event == 0) {
@@ -1545,10 +1582,11 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
         if (result.message == 'Success' && result.data.Table1.length > 0) {
           result.data.Table1.forEach(info => {
 
-            let account = this.accountName.find(x => x.ChartOfAccountsId == !info.AccountId ? 0 : info.AccountId);
-            let currency = this.currencyList.find(x => x.ID == !info.CurrencyId ? 0 : info.CurrencyId);
-            // let tds = this.SectionMasterList.find(x => x.SectionID == !info.TDSMaster ? 0 : info.TDSMaster);
-
+            // let account = this.accountName.find(x => x.ChartOfAccountsId == !info.AccountId ? 0 : info.AccountId);
+            // let currency = this.currencyList.find(x => x.ID == !info.CurrencyId ? 0 : info.CurrencyId);
+            let account = this.accountName.find(x => x.ChartOfAccountsId ==   info.AccountId);
+            let currency = this.currencyList.find(x => x.ID ==  info.CurrencyId);
+          
             let value = {
               Id: info.Id,
               PurchaseInvoiceId: this.PurchaseInvoiceId,
@@ -1636,7 +1674,8 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     var subTotalAmount = 0;
     if (this.PurchaseTableList.length > 0) {
       this.PurchaseTableList.forEach(element => {
-        subTotalAmount += element.Amountccr;
+        subTotalAmount +=  Number(element.Amountccr) ;
+       
       });
       this.PurchaseCreateForm.controls['SubTotal'].setValue(subTotalAmount);  // Handle the case when subTotalAmount is 0.
     }
@@ -1716,9 +1755,9 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       this.PurchaseCreateForm.controls['SGST'].setValue(Number(0).toFixed(this.entityFraction));
       this.PurchaseCreateForm.controls['IGST'].setValue(Number(0).toFixed(this.entityFraction));
 
-      invoiceAmount = Number((subTotalAmount).toFixed(this.entityFraction));
+      invoiceAmount = subTotalAmount;
       this.PurchaseCreateForm.controls['TDSRate'].setValue(tdsAmount.toFixed(this.entityFraction));
-      this.PurchaseCreateForm.controls['InvoiceAmount'].setValue(invoiceAmount);
+      this.PurchaseCreateForm.controls['InvoiceAmount'].setValue(invoiceAmount.toFixed(this.entityFraction));
       this.PurchaseCreateForm.controls['NetAmount'].setValue((invoiceAmount - tdsAmount).toFixed(this.entityFraction));
 
     } else {
@@ -1727,9 +1766,9 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       this.PurchaseCreateForm.controls['SGST'].setValue(Number(SGST).toFixed(this.entityFraction));
       this.PurchaseCreateForm.controls['IGST'].setValue(Number(IGST).toFixed(this.entityFraction));
 
-      invoiceAmount = Number((subTotalAmount + CGST + SGST + IGST).toFixed(this.entityFraction));
+      invoiceAmount = subTotalAmount + CGST + SGST + IGST;
       this.PurchaseCreateForm.controls['TDSRate'].setValue(tdsAmount.toFixed(this.entityFraction));
-      this.PurchaseCreateForm.controls['InvoiceAmount'].setValue(invoiceAmount);
+      this.PurchaseCreateForm.controls['InvoiceAmount'].setValue(invoiceAmount.toFixed(this.entityFraction));
       this.PurchaseCreateForm.controls['NetAmount'].setValue((invoiceAmount - tdsAmount).toFixed(this.entityFraction));
     }
 

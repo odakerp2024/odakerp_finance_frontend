@@ -22,6 +22,7 @@ import { INFERRED_TYPE } from "@angular/compiler/src/output/output_ast";
 })
 export class ContraInfoComponent implements OnInit {
   minDate: string = this.datePipe.transform(new Date(), "yyyy-MM-dd");
+  fromMaxDate = this.minDate;
   entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   editSelectedDocument: any;
   documentTableList = [];
@@ -120,7 +121,7 @@ export class ContraInfoComponent implements OnInit {
       DivisionId: [""],
       OfficeId: [""],
       ContraVoucherNumber: [""],
-      ContraVoucherDate: [this.minDate],
+      ContraVoucherDate: [''],
       FromAccount: [""],
       ToAccount: [""],
       ReferenceNo: [""],
@@ -214,7 +215,7 @@ export class ContraInfoComponent implements OnInit {
             DivisionId: info.DivisionId,
             OfficeId: info.OfficeId,
             ContraVoucherNumber: "",
-            ContraVoucherDate: new Date(),
+            ContraVoucherDate: info.ContraVoucherDate,
             FromAccount: info.FromAccount,
             ToAccount: info.ToAccount,
             ReferenceNo: info.ReferenceNo,
