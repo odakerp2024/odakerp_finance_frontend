@@ -118,6 +118,7 @@ export class InvoicesArDetailsComponent implements OnInit {
   }
 
   getInvoiceInfo() {
+    debugger
     var service = `${this.globals.APIURL}/OutStandingInvoiceAR/GetOutStandingInvoiceARById`;
     this.dataService.post(service, { OutStandingInvoiceId: this.invoiceARId }).subscribe(async (result: any) => {
       this.FileList = [];
@@ -132,6 +133,7 @@ export class InvoicesArDetailsComponent implements OnInit {
         for (let data of result['data'].Table1) { this.addReceiptInfo(); data.VoucherDate = this.datePipe.transform(data.VoucherDate, 'y-MM-dd') }
         for (let data of result['data'].Table2) { this.addOpenInvoiceInfo(); data.InvoiceDate = this.datePipe.transform(data.InvoiceDate, 'y-MM-dd') }
         if (tableInfo.IsFinal) this.IsFinal = true;
+        debugger
         this.invoiceForm.patchValue({
           OutStandingInvoiceId: tableInfo.OutStandingInvoiceId,
           ReferenceNo: tableInfo.ReferenceNo,
@@ -148,9 +150,11 @@ export class InvoicesArDetailsComponent implements OnInit {
           CreatedBy: tableInfo.CreatedBy,
           receiptInfo: result['data'].Table1,
           openInvoiceInfo: result['data'].Table2
+         
         });
+         debugger
         this.receiptList = result['data'].Table1;
-        this.openInvoiceList = result['data'].Table1;
+        this.openInvoiceList = result['data'].Table;
         this.TotalDebitAmount = tableInfo.TotalDebitAmount.toFixed(this.entityFraction);
         this.TotalCreditAmount = tableInfo.TotalCreditAmount.toFixed(this.entityFraction);
         if (result['data'].Table3.length > 0) this.FileList = result['data'].Table3;
@@ -302,10 +306,25 @@ export class InvoicesArDetailsComponent implements OnInit {
     items2.clear();
   }
 
+  getIsChecked(i, type){
+    
+    if (type == 'Receipts') {
+    if (i !== undefined){
+    return this.ReceiptInfo.value[i].IsSelect == false || this.ReceiptInfo.value[i].IsSelect == null ? false : true;
+    }
+    return false;
+  }
+  else if (type == 'Invoices') {
+    if (i !== undefined){
+      return this.OpenInvoiceInfo.value[i].IsSelect == false || this.OpenInvoiceInfo.value[i].IsSelect == null ? false : true;
+      }
+      return false;
+  }
+}
 
   
    setOffChangeEvent(data, index, type) {
-    
+    debugger
      if (type == 'Receipts') {
       const controlAtIndex = this.ReceiptInfo.at(index);
        const pendingAmount = this.newReceiptList.at(index).PendingAmount - controlAtIndex.value.AdjustedAmount;
@@ -336,9 +355,12 @@ export class InvoicesArDetailsComponent implements OnInit {
 
 
   onSelectEvent(index: number, type: string) {
+    debugger
+    
     if (type == 'Receipts') {
+
       const controlAtIndex = this.ReceiptInfo.at(index);
-      if (controlAtIndex.value.IsSelect == true) { controlAtIndex.patchValue({ IsAdjusted: 'YES' }); }
+      if (controlAtIndex.value.IsSelect == true) { controlAtIndex.patchValue({IsAdjusted: 'YES' }); }     
       else { controlAtIndex.patchValue({ IsAdjusted: 'NO' }); }
       this.calculateCreditDebitAmount(type);
     }
@@ -351,9 +373,11 @@ export class InvoicesArDetailsComponent implements OnInit {
   }
 
   calculateCreditDebitAmount(type: string) {
+    debugger
     if (type == 'Receipts') {
       var AdjustedAmountReceipt = 0;
       if (this.invoiceForm.value.receiptInfo.length > 0) {
+        debugger
         for (let data of this.invoiceForm.value.receiptInfo) {
           if (data.IsSelect) { AdjustedAmountReceipt += data.AdjustedAmount; }
         }
@@ -366,7 +390,7 @@ export class InvoicesArDetailsComponent implements OnInit {
       var AdjustedAmountInvoice = 0;
       if (this.invoiceForm.value.openInvoiceInfo.length > 0) {
         for (let data of this.invoiceForm.value.openInvoiceInfo) {
-          if (data.IsSelect) { AdjustedAmountInvoice += data.AdjustedAmount; }
+          if (data.IsSelect ) { AdjustedAmountInvoice += data.AdjustedAmount; }
         }
         this.invoiceForm.controls['TotalCreditAmount'].setValue(AdjustedAmountInvoice);
         this.TotalCreditAmount = AdjustedAmountInvoice % 1 !== 0 ? AdjustedAmountInvoice.toFixed(this.entityFraction) : AdjustedAmountInvoice;
@@ -394,6 +418,7 @@ export class InvoicesArDetailsComponent implements OnInit {
   }
 
   async saveInfo(status, isDelete = false) {
+    debugger
     var validation = "";
     if (this.invoiceForm.value.StatusId == "" || this.invoiceForm.value.StatusId == 0) {
       validation += "<span style='color:red;'>*</span> <span>Please select Status.</span></br>"
@@ -420,7 +445,7 @@ export class InvoicesArDetailsComponent implements OnInit {
       }
     }
   
-  
+  debugger
 
     let saveMsg = `Do you want to Save this Details?`;
     let finalMsg = `Final voucher not possible to edit <br> Do you want proceed?`;
@@ -449,6 +474,7 @@ export class InvoicesArDetailsComponent implements OnInit {
             return;
           }
         }
+        debugger
     Swal.fire({
       showCloseButton: true,
       title: '',
@@ -468,14 +494,14 @@ export class InvoicesArDetailsComponent implements OnInit {
         }
 
         await this.createPayload(status);
-
+debugger
         let service = `${this.globals.APIURL}/OutStandingInvoiceAR/SaveOutStandingInvoiceAR`;
         this.dataService.post(service, this.payload).subscribe((result: any) => {
           if (result.message == "Success") {
             Swal.fire(result.data.Message, '', 'success');
             this.isUpdateMode = true;
             this.isUpdateMode1 = true;
-
+debugger
             if(status == 0){
               this.invoiceARId = result.data.Id;
                 this.isUpdateMode = true;

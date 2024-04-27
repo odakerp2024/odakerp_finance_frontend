@@ -161,20 +161,23 @@
                                     </td>
                                     <td>
                                         <input class="text-center border-0 Voucher-amount" formControlName="PendingAmount" readonly
-                                            [value]="receipt.PendingAmount"  Style="max-width:70px" type="text">
+                                            [value]="receipt.PendingAmount"  Style="max-width:50px" type="text">
                                     </td>
-                                    <td>
+                                    <td> 
+                                        <!-- [ngClass]=" isUpdateMode ? 'block-set-off-input' : ''" -->
                                         <input onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
                                         min="0" numbersOnly
                                         appDynamicDecimal
                                         [ngClass]=" isUpdateMode ? 'block-set-off-input' : ''"
+                                        [ngClass]="getIsChecked(i, 'Receipts') ? '' : 'disable-input'"
                                             [readonly]="isUpdateMode"  Style="max-width:60px"
-                                            (change)="setOffChangeEvent($event,i,'Receipts');"
+                                            (ngModelChange)="setOffChangeEvent($event,i,'Receipts');"
                                             class="text-center setOff" formControlName="AdjustedAmount"
-                                            [value]="receipt.AdjustedAmount" min="1" type="number">
+                                            [value]="receipt.AdjustedAmount" min="1" type="number" Style="max-width:90px">
                                     </td>
                                     <td>
-                                        <input (change)="onSelectEvent(i,'Receipts')"  Style="max-width:50px" formControlName="IsSelect"
+                                        <input   
+                                        (change)="onSelectEvent(i,'Receipts')"  Style="max-width:50px" formControlName="IsSelect"
                                             type="checkbox" />
                                     </td>
                             </ng-container>
@@ -237,18 +240,21 @@
                                         <input class="text-center border-0 Voucher-amount" formControlName="PendingAmount" readonly
                                             [value]="invoice.PendingAmount"  Style="max-width:50px" type="text">
                                     </td>
-                                    <td>
+                                    <td> 
+                                        <!-- [ngClass]=" isUpdateMode  ? 'block-set-off-input' : ''" -->
                                         <input onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
                                         min="0" numbersOnly
-                                        appDynamicDecimal
-                                        [readonly]="isUpdateMode" Style="max-width:70px"
-                                            [ngClass]=" isUpdateMode ? 'block-set-off-input' : ''"
+                                        appDynamicDecimal 
+                                        [ngClass]=" isUpdateMode  ? 'block-set-off-input' : ''"
+                                            [ngClass]="getIsChecked(i, 'Invoices') ? '' : 'disable-input'"
+                                            [readonly]="isUpdateMode" Style="max-width:70px"
                                             (ngModelChange)="setOffChangeEvent($event,i,'Invoices');"
                                             class="text-center setOff" formControlName="AdjustedAmount"
                                             [value]="invoice.AdjustedAmount" min="1" type="number" Style="max-width:90px">
                                     </td>
                                     <td>
-                                        <input (change)="onSelectEvent(i,'Invoices')" Style="max-width:70px" formControlName="IsSelect"
+                                        <input 
+                                        (change)="onSelectEvent(i,'Invoices' )" Style="max-width:70px" formControlName="IsSelect"
                                             type="checkbox" />
                                     </td>
                             </ng-container>
