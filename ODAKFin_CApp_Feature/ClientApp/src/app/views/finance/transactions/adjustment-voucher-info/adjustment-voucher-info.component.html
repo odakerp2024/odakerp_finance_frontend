@@ -414,7 +414,7 @@
                         Final
                     </button>
                     <button type="button" *ngIf="isUpdate && !isFinalRecord" [ngClass]=" !isEditMode ? 'disable-input--style' : ''"
-                        (click)="saveInfo(1,true)" class="btn btn-warning text-white mr-3 mb-0 col-auto">
+                        (click)="deleteValue()" class="btn btn-warning text-white mr-3 mb-0 col-auto">
                         Delete
                     </button>
                     <button type="button" (click)="saveInfo(3)"

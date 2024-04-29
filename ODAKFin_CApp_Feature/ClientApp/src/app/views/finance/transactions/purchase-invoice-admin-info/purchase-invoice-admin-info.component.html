@@ -495,7 +495,7 @@
                             <div class="ripple-container"></div>
                         </button>
                         <button [disabled]="isUpdateMode" type="submit" class="btn btn-danger bmd-btn-fab"
-                            (click)="OnClickDeleteValue()"><i class="material-icons editicon">delete</i>
+                            (click)="deleteValue()"><i class="material-icons editicon">delete</i>
                             <div class="ripple-container"></div>
                         </button>
                     </div>
@@ -791,7 +791,7 @@
                                 <td class="text-center">
                                     <button [disabled]="isUpdateMode" type="submit"
                                         class="btn btn-danger bmd-btn-fab"
-                                        (click)="OnClickDeleteValueFile(i)"><i
+                                        (click)="deleteValueAttach(i)"><i
                                             class="material-icons editicon">delete</i>
                                         <div class="ripple-container"></div>
                                     </button>

@@ -1743,4 +1743,37 @@ debugger
       console.log('errr----->', err.message);
     });
   }
+
+  printValue(){
+    const userID = localStorage.getItem("UserID");
+    const paylod = {
+      userID: Number(userID),
+      Ref_Application_Id: "4",
+      SubfunctionID: 523,
+    }
+    this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
+      if (data.length > 0) {
+        console.log("PermissionObject", data);
+
+        if (data[0].SubfunctionID == paylod.SubfunctionID) {
+
+          if (data[0].Print_Opt != 2) {
+              Swal.fire('Please Contact Administrator');            
+          }
+          else {
+            this.printPage();
+          }
+        }
+        else {
+          Swal.fire('Please Contact Administrator');
+        }
+      }
+      else {
+        Swal.fire('Please Contact Administrator');
+      }
+    }, err => {
+      console.log('errr----->', err.message);
+    });
+  }
+
 }

@@ -1123,7 +1123,6 @@ export class ContraInfoComponent implements OnInit {
     );
   }
   enableEdit() {
-    debugger
     const userID = localStorage.getItem("UserID");
     const paylod = {
       userID: Number(userID),
@@ -1159,6 +1158,38 @@ export class ContraInfoComponent implements OnInit {
       }
     );
   }
+
+  deleteValue() {
+    const userID = localStorage.getItem("UserID");
+    const paylod = {
+      userID: Number(userID),
+      Ref_Application_Id: "4",
+      SubfunctionID: 505,
+    };
+    this.commonDataService.GetUserPermissionObject(paylod).subscribe(
+      (data) => {
+        if (data.length > 0) {
+          console.log("PermissionObject", data);
+
+          if (data[0].SubfunctionID == paylod.SubfunctionID) {
+            if (data[0].Delete_Opt != 2) {
+              Swal.fire("Please Contact Administrator");
+            } else {
+              this.saveContra(true);
+            }
+          } else {
+            Swal.fire("Please Contact Administrator");
+          }
+        } else {
+          Swal.fire("Please Contact Administrator");
+        }
+      },
+      (err) => {
+        console.log("errr----->", err.message);
+      }
+    );
+  }
+
   getEntityDetails() {
     return new Promise((resolve, rejects) => {
       this.contraVoucherService

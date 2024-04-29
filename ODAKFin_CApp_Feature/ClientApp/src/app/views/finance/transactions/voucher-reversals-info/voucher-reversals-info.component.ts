@@ -105,6 +105,38 @@ export class VoucherReversalsInfoComponent implements OnInit {
     });
   }
 
+  deleteValue(){
+    const userID = localStorage.getItem("UserID");
+    const paylod = {
+      userID: Number(userID),
+      Ref_Application_Id: "4",
+      SubfunctionID: 509,
+    }
+    this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
+      if (data.length > 0) {
+        console.log("PermissionObject", data);
+
+        if (data[0].SubfunctionID == paylod.SubfunctionID) {
+
+          if (data[0].Delete_Opt != 2) {
+              Swal.fire('Please Contact Administrator');            
+          }
+          else {
+            this.saveInfo(1,true);
+          }
+        }
+        else {
+          Swal.fire('Please Contact Administrator');
+        }
+      }
+      else {
+        Swal.fire('Please Contact Administrator');
+      }
+    }, err => {
+      console.log('errr----->', err.message);
+    });
+  }
+
   createVoucherReversalFormCreate() {
     this.voucherCreateForm = this.fb.group({
       VoucherReversalsId: [this.VoucherReversalsId],

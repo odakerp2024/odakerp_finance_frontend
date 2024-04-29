@@ -248,7 +248,7 @@
                             class="btn btn-primary bmd-btn-fab tblbtngap"><i class="material-icons editicon">edit</i>
                             <div class="ripple-container"></div>
                         </button>
-                        <button [disabled]="isUpdateMode" (click)="OnClickDeleteValue()" type="submit"
+                        <button [disabled]="isUpdateMode" (click)="deleteValueTable()" type="submit"
                             class="btn btn-danger bmd-btn-fab"><i class="material-icons editicon">delete</i>
                             <div class="ripple-container"></div>
                         </button>
@@ -422,7 +422,7 @@
                                 <td class="text-center" id="documentFileName">{{data.FileName}}</td>
                                 <td class="text-center">
                                     <button [disabled]="isUpdateMode" type="submit" class="btn btn-danger bmd-btn-fab"
-                                        (click)="OnClickDeleteValueFile(i)"><i
+                                        (click)="deleteValueAttach(i)"><i
                                             class="material-icons editicon">delete</i>
                                         <div class="ripple-container"></div>
                                     </button>
@@ -445,7 +445,7 @@
                         (click)="saveInternal(2);" type="submit"
                         class="btn btn-primary btn-raised btn-default cntbtn mb-0">Final</button>
                     <button type="button" *ngIf="isUpdate && !isFinalModeEnable"
-                        [ngClass]=" isUpdateMode ? 'disable-input--style' : ''" (click)="saveInternal(1,true)"
+                        [ngClass]=" isUpdateMode ? 'disable-input--style' : ''" (click)="deleteValue()"
                         class="btn btn-warning btn-raised btn-default cntbtn text-white mb-0 col-auto">
                         Delete
                     </button>
