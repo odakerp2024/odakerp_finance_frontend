@@ -67,7 +67,7 @@
                     <div class="form-group">
                         <label class="str mb-2">Date of Reversal</label>
                         <mat-form-field class="tillDate mat_date_picker"  appearance="outline">
-                            <input matInput (click)="DateOfReversal.open()" disabled readonly autocomplete="off" [matDatepicker]="DateOfReversal"  id="DateOfReversal"[placeholder]="entityDateFormat"  formControlName="DateOfReversal">
+                            <input matInput (click)="DateOfReversal.open()" readonly autocomplete="off" [matDatepicker]="DateOfReversal" [max]="fromMaxDate"  id="DateOfReversal"[placeholder]="entityDateFormat"  formControlName="DateOfReversal">
                             <mat-datepicker-toggle matSuffix [for]="DateOfReversal"></mat-datepicker-toggle>
                             <mat-datepicker #DateOfReversal></mat-datepicker>
                         </mat-form-field>

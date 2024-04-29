@@ -111,7 +111,7 @@
                                 <label class="str1 mt-0">Vendor Branch</label>
                                 <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'VendorBranch'">
                                     <ng-option [value]="''" disabled>--SELECT BRANCH--</ng-option>
-                                    <ng-option *ngFor="let Branch of VendorCodeList"  [value]="Branch.CityName">
+                                    <ng-option *ngFor="let Branch of VendorCodeList"  [value]="Branch.VendorBranchID">
                                         <span class="textwrap">{{Branch.CityName | uppercase}}</span>
                                     </ng-option>
                                 </ng-select> 

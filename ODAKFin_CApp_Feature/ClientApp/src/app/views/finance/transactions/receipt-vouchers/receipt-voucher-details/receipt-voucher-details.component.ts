@@ -96,6 +96,7 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
 
   isCopied = false;
   currentDate = this.datePipe.transform(new Date(), "yyyy-MM-dd");
+  fromMaxDate = this.currentDate;
   isInvoiceCurrencyDifferent = false
   constructor(
     private ps: PaginationService,
@@ -195,7 +196,7 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
       IsOnAccount: [false],
       IsSecurityDeposit: [false],
       VoucherNumber: [''],
-      VoucherDate: [this.currentDate],
+      VoucherDate: [''],
       VoucherTypeId: [1],
       CustomerId: [0],
       CustomerBranch: [0],
@@ -296,7 +297,7 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
           IsOnAccount: info.IsOnAccount == true ? 1 : 0.,
           IsSecurityDeposit: info.IsSecurityDeposit == true ? 1 : 0,
           VoucherNumber: '',
-          VoucherDate: new Date(),
+          VoucherDate: info.VoucherDate,
           VoucherTypeId: info.VoucherTypeId,
           CustomerId: info.CustomerId,
           CustomerBranch: info.CustomerBranch,

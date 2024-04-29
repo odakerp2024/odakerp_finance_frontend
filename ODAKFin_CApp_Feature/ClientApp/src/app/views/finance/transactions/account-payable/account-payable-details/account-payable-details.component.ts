@@ -129,12 +129,13 @@ export class AccountPayableDetailsComponent  implements OnInit {
         this.CreatedOn = this.datePipe.transform(info.CreatedDate, this.entityDateFormat1);
         this.ModifiedOn = this.datePipe.transform(info.ModifiedDate, this.entityDateFormat1);
        debugger
+       await this.getVendorBranch(info.VendorId, true);
        await this.getVendorList(info.DivisionId);
        await this.getOffice(info.DivisionId);
         this.accountPayableForm.patchValue({      
           ReceiptVoucherId: this.accountPayableId,
           VendorName: info.VendorId,
-          VendorBranch: info.BranchName.toUpperCase(),
+          VendorBranch: info.VendorBranchId,
           Division: info.Division,
           DivisionId: info.DivisionId,
           Office: info.Office,
@@ -168,7 +169,7 @@ export class AccountPayableDetailsComponent  implements OnInit {
   })
   }
 
-  getVendorBranch(event: any) {
+  getVendorBranch(event: any, isUpdate = false) {
     debugger
     const service = `${this.globals.APIURL}/PaymentVoucher/PaymentVoucherBillDuePaymentList`;
     this.dataService.post(service, { VendorId: event }).subscribe((result: any) => {
@@ -177,12 +178,14 @@ export class AccountPayableDetailsComponent  implements OnInit {
         this.VendorCodeList = result.data.Table;
       }
       console.log("okdd");
+      if (!isUpdate) {
       // console.log(this.CustomerCodeList, 'customer list');
       this.accountPayableForm.get('VendorBranch').setValue('');
       // If customer has only one branch, auto-select it
       if (this.VendorCodeList.length === 1) {
-        this.accountPayableForm.get('VendorBranch').setValue(this.VendorCodeList[0].CityName);
+        this.accountPayableForm.get('VendorBranch').setValue(this.VendorCodeList[0].VendorBranchID);
       }
+    }
       
     }, error => { });
   }

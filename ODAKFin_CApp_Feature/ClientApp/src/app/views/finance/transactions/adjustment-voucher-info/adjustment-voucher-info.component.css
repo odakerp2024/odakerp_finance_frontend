@@ -18,9 +18,6 @@
     font-size: large !important;
     font-weight: bolder !important;
 }
-:host ::ng-deep .mat-form-field-outline{
-    background:  #e9ecef !important;
 
- }
  
 

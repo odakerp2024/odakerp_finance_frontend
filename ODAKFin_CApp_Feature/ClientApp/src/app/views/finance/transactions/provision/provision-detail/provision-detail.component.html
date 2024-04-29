@@ -89,9 +89,9 @@
                     </div>
 
                     <div class="col-4">
-                        <label class="str mb-2 fontstyles">Payment Voucher Date</label>
-                        <mat-form-field class="tillDate mat_date_picker disable-datepicker" appearance="outline">
-                            <input matInput (click)="PaymentVoucherDate.open()" style="margin-bottom: 3px;"
+                        <label class="str mb-2 fontstyles">Provision Date</label>
+                        <mat-form-field class="tillDate mat_date_picker" appearance="outline">
+                            <input matInput (click)="PaymentVoucherDate.open()" readonly [max]="fromMaxDate" style="margin-bottom: 3px;"
                                 autocomplete="off" [matDatepicker]="PaymentVoucherDate" id="PaymentVoucherDate"
                                 [placeholder]="entityDateFormat" formControlName="Date">
                             <mat-datepicker-toggle matSuffix [for]="PaymentVoucherDate"></mat-datepicker-toggle>
