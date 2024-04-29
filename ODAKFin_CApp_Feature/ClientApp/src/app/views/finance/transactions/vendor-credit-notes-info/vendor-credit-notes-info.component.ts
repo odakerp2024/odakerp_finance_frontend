@@ -135,6 +135,102 @@ export class VendorCreditNotesInfoComponent implements OnInit {
     });
   }
 
+  deleteValues(){
+    const userID = localStorage.getItem("UserID");
+    const paylod = {
+      userID: Number(userID),
+      Ref_Application_Id: "4",
+      SubfunctionID: 513,
+    }
+    this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
+      if (data.length > 0) {
+        console.log("PermissionObject", data);
+
+        if (data[0].SubfunctionID == paylod.SubfunctionID) {
+
+          if (data[0].Delete_Opt != 2) {
+              Swal.fire('Please Contact Administrator');
+          }
+          else {
+            this.OnClickDeleteValue();
+          }
+        }
+        else {
+          Swal.fire('Please Contact Administrator');
+        }
+      }
+      else {
+        Swal.fire('Please Contact Administrator');
+      }
+    }, err => {
+      console.log('errr----->', err.message);
+    });
+  }
+
+  deleteValuesMain(){
+    const userID = localStorage.getItem("UserID");
+    const paylod = {
+      userID: Number(userID),
+      Ref_Application_Id: "4",
+      SubfunctionID: 513,
+    }
+    this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
+      if (data.length > 0) {
+        console.log("PermissionObject", data);
+
+        if (data[0].SubfunctionID == paylod.SubfunctionID) {
+
+          if (data[0].Delete_Opt != 2) {
+              Swal.fire('Please Contact Administrator');
+          }
+          else {
+            this.saveInfo(0,true);
+          }
+        }
+        else {
+          Swal.fire('Please Contact Administrator');
+        }
+      }
+      else {
+        Swal.fire('Please Contact Administrator');
+      }
+    }, err => {
+      console.log('errr----->', err.message);
+    });
+  }
+
+  deleteValuesAttach(index){
+    const userID = localStorage.getItem("UserID");
+    const paylod = {
+      userID: Number(userID),
+      Ref_Application_Id: "4",
+      SubfunctionID: 513,
+    }
+    this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
+      if (data.length > 0) {
+        console.log("PermissionObject", data);
+
+        if (data[0].SubfunctionID == paylod.SubfunctionID) {
+
+          if (data[0].Delete_Opt != 2) {
+              Swal.fire('Please Contact Administrator');
+          }
+          else {
+            this.OnClickDeleteValueFile(index);
+          }
+        }
+        else {
+          Swal.fire('Please Contact Administrator');
+        }
+      }
+      else {
+        Swal.fire('Please Contact Administrator');
+      }
+    }, err => {
+      console.log('errr----->', err.message);
+    });
+  }
+
   createVendorCreditForm() {
     this.vendorCreateForm = this.fb.group({
       VendorCreditNoteId: [this.vendorCreditId],

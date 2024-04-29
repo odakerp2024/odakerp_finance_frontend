@@ -339,7 +339,7 @@
                                     <td id="documentFileName">{{data.FileName}}</td>
                                     <td class="text-center">
                                         <button [disabled]="isUpdateMode" type="submit"
-                                            class="btn btn-danger bmd-btn-fab" (click)="OnClickDeleteValueFile(i)"><i
+                                            class="btn btn-danger bmd-btn-fab" (click)="deleteValueAttach(i)"><i
                                                 class="material-icons editicon">delete</i>
                                             <div class="ripple-container"></div>
                                         </button>
@@ -367,7 +367,7 @@
                         class="btn btn-primary text-white mr-3 mb-0 col-auto " (click)="saveInfo(1)">
                         Final
                     </button>
-                    <button type="button" *ngIf="isUpdate && !IsFinal" [disabled]="isUpdateMode" (click)="saveInfo(0,true)"
+                    <button type="button" *ngIf="isUpdate && !IsFinal" [disabled]="isUpdateMode" (click)="deleteValue()"
                         class="btn btn-warning text-white mr-3 mb-0 col-auto">
                         Delete
                     </button>
