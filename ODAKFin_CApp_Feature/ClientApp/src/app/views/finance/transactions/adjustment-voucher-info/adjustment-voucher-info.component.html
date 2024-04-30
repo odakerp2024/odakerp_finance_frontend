@@ -110,8 +110,8 @@
                 <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group">
                         <label class="str mb-2">Adjustment Voucher Date</label>
-                        <mat-form-field  class="tillDate mat_date_picker disable-datepicker"  appearance="outline">
-                            <input matInput (click)="AVDate.open()" readonly disabled autocomplete="off" [matDatepicker]="AVDate"  id="AVDate" [placeholder]="entityDateFormat" formControlName="AVDate">
+                        <mat-form-field  class="tillDate mat_date_picker"  appearance="outline">
+                            <input matInput (click)="AVDate.open()" readonly autocomplete="off" [matDatepicker]="AVDate"  id="AVDate" [placeholder]="entityDateFormat" [max]="fromMaxDate" formControlName="AVDate">
                             <mat-datepicker-toggle matSuffix [for]="AVDate"></mat-datepicker-toggle>
                             <mat-datepicker #AVDate></mat-datepicker>
                         </mat-form-field>
