@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Globals } from 'src/app/globals';
 import { PaginationService } from 'src/app/pagination.service';
@@ -9,11 +9,21 @@ import { DataService } from 'src/app/services/data.service';
 import { ExcelService } from 'src/app/services/excel.service';
 import { ReportDashboardService } from 'src/app/services/financeModule/report-dashboard.service';
 import Swal from 'sweetalert2';
+import {NativeDateAdapter} from '@angular/material/core';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatFormFieldModule} from '@angular/material/form-field';
+
+
+const today = new Date();
+const month = today.getMonth();
+const year = today.getFullYear();
 
 @Component({
   selector: 'app-report-receipt-voucher',
   templateUrl: './report-receipt-voucher.component.html',
-  styleUrls: ['./report-receipt-voucher.component.css']
+  styleUrls: ['./report-receipt-voucher.component.css'],  
+  // providers: [new NativeDateAdapter()],
+  // imports: [MatFormFieldModule, MatDatepickerModule, FormsModule, ReactiveFormsModule]
 })
 export class ReportReceiptVoucherComponent implements OnInit {
 
@@ -27,13 +37,28 @@ export class ReportReceiptVoucherComponent implements OnInit {
   pagedItems: any[];// paged items
   paymentModeList: any[];
   TypeList = [
-    {TypeId: 1, TypeName: 'Invoice' },
-    {TypeId: 2, TypeName: 'On Account' },
-    {TypeId: 3, TypeName: 'Security Deposit' }
+    { TypeId: 1, TypeName: 'Invoice' },
+    { TypeId: 2, TypeName: 'On Account' },
+    { TypeId: 3, TypeName: 'Security Deposit' }
+  ];
+
+  PeroidList = [
+    { peroidId: 'today', peroidName: 'CURRENT DAY' },
+    { peroidId: 'week', peroidName: 'CURRENT WEEK' },
+    { peroidId: 'month', peroidName: 'CURRENT MONTH' },
+    { peroidId: 'year', peroidName: 'CURRENT FINANCIAL YEAR' },
+    { peroidId: 'custom', peroidName: 'CUSTOM' }
   ];
   bankList: any[];
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat')
   currentDate = new Date();
+  selectedOption: string;
+
+  campaignOne = new FormGroup({
+    start: new FormControl(new Date(year, month, 13)),
+    end: new FormControl(new Date(year, month, 16)),
+  });
+
   constructor(
     private commonDataService: CommonService,
     private datePipe: DatePipe,
@@ -43,7 +68,7 @@ export class ReportReceiptVoucherComponent implements OnInit {
     private ps: PaginationService,
     private dataService: DataService,
     private reportService: ReportDashboardService,
-    public excelService : ExcelService
+    public excelService: ExcelService
   ) { }
 
   ngOnInit(): void {
@@ -51,7 +76,40 @@ export class ReportReceiptVoucherComponent implements OnInit {
     this.createReportForm();
     this.getDivisionList();
     this.getVoucherList();
+    this.onOptionChange('month');
+    this.reportFilter.controls.Peroid.setValue('month');
   }
+
+  onOptionChange(selectedOption: string) {
+    this.selectedOption = '';
+    switch (selectedOption) {
+      case 'today':
+        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
+        break;
+      case 'week':
+        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay()), "yyyy-MM-dd"));
+        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
+        break;
+      case 'month':
+        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"));
+        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
+        break;
+      case 'year':
+        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), 0, 1), "yyyy-MM-dd"));
+        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
+        break;
+      case 'custom':
+        this.selectedOption = 'custom';
+        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), 0, 1), "yyyy-MM-dd"));
+        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
+        break;
+      default:
+        this.selectedOption = '';
+        break;
+    }
+  }
+
 
   createReportForm() {
     this.reportFilter = this.fb.group({
@@ -63,7 +121,8 @@ export class ReportReceiptVoucherComponent implements OnInit {
       Amount: [''],
       Type: [0],
       PaymentMode: [0],
-      DepositTo: [0]
+      DepositTo: [0],
+      Peroid: [''],
     });
     this.getReceiptReportList();
   }
@@ -78,7 +137,7 @@ export class ReportReceiptVoucherComponent implements OnInit {
       }
     }, error => {
       console.log('err--', error);
-     });
+    });
   }
 
   getOfficeList(id: number) {
@@ -89,9 +148,9 @@ export class ReportReceiptVoucherComponent implements OnInit {
         this.officeList = result['data'].Table;
       }
 
-      if(this.officeList.length == 1){
-        const ID = 
-        this.reportFilter.controls.Office.setValue(this.officeList[0].ID);
+      if (this.officeList.length == 1) {
+        const ID =
+          this.reportFilter.controls.Office.setValue(this.officeList[0].ID);
       }
     })
   }
@@ -103,7 +162,7 @@ export class ReportReceiptVoucherComponent implements OnInit {
       this.dataService.post(service, { CustomerId: 0 }).subscribe((result: any) => {
         this.customerList = result.data.Table2;
         this.paymentModeList = result.data.Table4;
-       
+
         resolve(true)
       }, error => {
         console.error(error);
@@ -138,8 +197,8 @@ export class ReportReceiptVoucherComponent implements OnInit {
         this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
         this.setPage(1)
       } else {
-        this.pager ={};
-        this.pagedItems =[];
+        this.pager = {};
+        this.pagedItems = [];
       }
     })
   }
@@ -151,7 +210,7 @@ export class ReportReceiptVoucherComponent implements OnInit {
     this.pager = this.ps.getPager(this.reportList.length, page);
     this.pagedItems = this.reportList.slice(this.pager.startIndex, this.pager.endIndex + 1);
   }
-  
+
   clear() {
     this.reportFilter.reset({
       Division: 0,
@@ -170,16 +229,16 @@ export class ReportReceiptVoucherComponent implements OnInit {
   }
 
   downloadAsCSV() {
-    if(this.reportForExcelList.length > 0){
-      this.excelService.exportToCSV(this.reportForExcelList,'Report-ReceiptVoucher')
+    if (this.reportForExcelList.length > 0) {
+      this.excelService.exportToCSV(this.reportForExcelList, 'Report-ReceiptVoucher')
     } else {
       Swal.fire('no record found');
     }
   }
-  
+
   downloadAsExcel() {
-    if(this.reportForExcelList.length > 0){
-      this.excelService.exportAsExcelFile(this.reportForExcelList,'Report-ReceiptVoucher')
+    if (this.reportForExcelList.length > 0) {
+      this.excelService.exportAsExcelFile(this.reportForExcelList, 'Report-ReceiptVoucher')
     } else {
       Swal.fire('no record found');
     }

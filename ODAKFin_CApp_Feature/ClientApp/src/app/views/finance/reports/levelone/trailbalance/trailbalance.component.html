@@ -1,154 +1,149 @@
-
-
 <div class="card p-4">
-<form [formGroup]="filterForm">
+    <form [formGroup]="filterForm">
 
-<div class="row">
-    <div class="col-md-2">
-        <label class="str mb-2">Date</label>
-        <mat-form-field class="tillDate mat_date_picker" appearance="outline">
-            <input matInput (dateChange)="onDateChange($event)"  formControlName="Date" autocomplete="off" [matDatepicker]="ToDate" id="ToDate" style="padding:3px;">
-            <mat-datepicker-toggle matSuffix [for]="ToDate" class="center-icon"></mat-datepicker-toggle>
-            <mat-datepicker #ToDate></mat-datepicker>
-        </mat-form-field>
+        <div class="row">
+            <div class="col-md-2">
+                <label class="str mb-2">Date</label>
+                <mat-form-field class="tillDate mat_date_picker" appearance="outline">
+                    <input matInput (dateChange)="onDateChange($event)" formControlName="Date" autocomplete="off"
+                        [matDatepicker]="ToDate" id="ToDate" style="padding:3px;">
+                    <mat-datepicker-toggle matSuffix [for]="ToDate" class="center-icon"></mat-datepicker-toggle>
+                    <mat-datepicker #ToDate></mat-datepicker>
+                </mat-form-field>
+            </div>
+
+            <div class="col-md-2">
+                <label class="str" for="companyName">Select Division</label><br>
+                <ng-select class="searchdropdown custom" [clearable]="false" formControlName="DivisionId"
+                    (change)="onDivisionChange(filterForm.value.DivisionId)" (ngModelChange)="getOfficeLists($event)">
+                    <ng-option [value]="''" disabled>--SELECT DIVISION--</ng-option>
+                    <ng-container *ngFor="let division of divisionList">
+                        <ng-option *ngIf="division.Active" [value]="division.ID">
+                            <span class="textwrap">{{ division.DivisionName | uppercase }}</span>
+                        </ng-option>
+                    </ng-container>
+                </ng-select>
+            </div>
+
+            <div class="col-md-2">
+                <label class="str">Select Office</label><br>
+
+                <ng-select class="searchdropdown" [clearable]="false" formControlName="OfficeId"
+                    (change)="onOfficeChange(filterForm.value.OfficeId)">
+                    <ng-option [value]="''" disabled>--SELECT OFFICE--</ng-option>
+                    <ng-container *ngFor="let office of officeList">
+                        <ng-option [value]="office.ID">
+                            <span class="textwrap">{{office.OfficeName | uppercase}}</span>
+                        </ng-option>
+                    </ng-container>
+                </ng-select>
+            </div>
+            <div class="col-md-2 searchbtn alrt text-left mb-3 mt-4">
+                <button style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;margin-top:4px;"
+                    class="btn btn-raised btn-danger mb-0" (click)="createFilterForm();trailbalanceList();">
+                    Clear
+                </button>
+
+            </div>
+
+
+            <div class="col-md-2"></div>
+
+
+            <div class="col-md-2" style="margin-top: 39px;">
+                Download a
+                <!-- <a href="{{this.TemplateUploadURL}}/assets/Uploads/Asset Template.xlsx" (click)="downloadExcel()">Sample File</a> -->
+                <a href="javascript:;" (click)="downloadExcel()">Sample File</a>
+
+            </div>
+
+            <!-- <button (click)="downloadExcel()">downloadExcel</button> -->
+
+
+
+        </div>
+    </form>
+
+    <div class="col-md-12 mt-3"></div>
+
+
+    <div class="row">
+        <div class="col-md-4"></div>
+
+        <div class="col-md-4 txts">
+            <h3>ODAK SOLUTIONS PRIVATE LIMITED</h3>
+            <h2>Trail Balance</h2>
+            <p>Basis: Accrual</p>
+            <p>As of {{ selectedDate ? selectedDate : currentDate | date:'mediumDate' }}</p>
+
+        </div>
+
+        <div class="col-md-4"></div>
+
     </div>
-    
-    <div class="col-md-2">
-        <label class="str" for="companyName">Select Division</label><br>
-         <ng-select class="searchdropdown custom" [clearable]="false"
-         formControlName="DivisionId" (change)="onDivisionChange(filterForm.value.DivisionId)"  (ngModelChange)="getOfficeLists($event)">
-            <ng-option [value]="''" disabled>--SELECT DIVISION--</ng-option>
-            <ng-container *ngFor="let division of divisionList" >
-              <ng-option *ngIf="division.Active" [value]="division.ID">
-                <span class="textwrap">{{ division.DivisionName | uppercase }}</span>
-              </ng-option>
-            </ng-container>
-          </ng-select>
+
+    <div class="col-md-12 mt-3"></div>
+
+    <div class="col-sm-12 scrtbl">
+        <table id="datatable-buttons" #table class="table table-striped table-bordered w-100 dataTable no-footer"
+            role="grid" aria-describedby="datatable-buttons_info">
+            <thead>
+                <tr role="row">
+                    <th>Account</th>
+                    <th>Account Code</th>
+                    <th>Net Credit</th>
+                    <th>Net Debit</th>
+                </tr>
+                <tr>
+                    <th colspan="4">Assets</th>
+
+                </tr>
+
+            </thead>
+            <tbody>
+                <tr *ngFor="let balance of balanceList; let i = index">
+                    <td (click)="editBalance(balance.ChartOfAccountsId)" style="color: #0366d6;cursor: pointer;">{{
+                        balance.GrandParentAccountName }} - {{ balance.ParentAccountName }} - {{
+                        balance.ChildAccountName }}</td>
+                    <td>{{ balance.ChartOfAccountsId }}</td>
+                    <td *ngIf="balance.ChildTransaction_Type === 'Credit'">{{ balance.ChildNet_Balance }}</td>
+                    <td *ngIf="balance.ChildTransaction_Type !== 'Credit'">null</td>
+                    <td *ngIf="balance.ChildTransaction_Type === 'Debit'">{{ balance.ChildNet_Balance }}</td>
+                    <td *ngIf="balance.ChildTransaction_Type !== 'Debit'">null</td>
+                </tr>
+            </tbody>
+
+        </table>
+
     </div>
 
-    <div class="col-md-2">
-        <label class="str" >Select Office</label><br>
+    <div style=" width: 100%;justify-content: end;" class="row page">
+        <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10 && pager.totalItems > 10"
+            class="pagination">
+            <li [ngClass]="{disabled:pager.currentPage === 1}">
+                <a (click)="setPage(1)">First</a>
+            </li>
+            <li [ngClass]="{disabled:pager.currentPage === 1}">
+                <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+            </li>
+            <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                <a (click)="setPage(page)">{{page}}</a>
+            </li>
+            <li *ngIf="(pager.totalPages - pager.startPage) > 5 ">
+                <a (click)="setPage(pager.startPage + 5)">...</a>
+            </li>
+            <li *ngIf="(pager.totalPages - pager.startPage) > 5">
+                <a (click)="setPage(pager.totalPages)">{{pager.totalPages}}</a>
+            </li>
 
-        <ng-select  class="searchdropdown"  [clearable]="false"
-        formControlName="OfficeId"  (change)="onOfficeChange(filterForm.value.OfficeId)" >
-          <ng-option [value]="''" disabled>--SELECT OFFICE--</ng-option>
-          <ng-container *ngFor="let office of officeList">
-            <ng-option [value]="office.ID">
-              <span class="textwrap">{{office.OfficeName | uppercase}}</span>
-            </ng-option>
-          </ng-container>
-      </ng-select>           
-    </div>
-    <div class="col-md-2 searchbtn alrt text-left mb-3 mt-4">
-        <button style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;margin-top:4px;"
-            class="btn btn-raised btn-danger mb-0"
-            (click)="createFilterForm();trailbalanceList();">
-            Clear
-        </button>
-
-    </div>
-   
-    
-    <div class="col-md-2"></div>
-
-
-    <div class="col-md-2" style="margin-top: 39px;">
-              Download a 
-        <!-- <a href="{{this.TemplateUploadURL}}/assets/Uploads/Asset Template.xlsx" (click)="downloadExcel()">Sample File</a> -->
-        <a href="javascript:;" (click)="downloadExcel()">Sample File</a>
-        
+            <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                <a (click)="setPage(pager.currentPage + 1)">Next</a>
+            </li>
+            <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                <a (click)="setPage(pager.totalPages)">Last</a>
+            </li>
+        </ul>
     </div>
 
-    <!-- <button (click)="downloadExcel()">downloadExcel</button> -->
-   
 
- 
 </div>
-</form>
-
-<div class="col-md-12 mt-3"></div>
-
-
-<div class="row">    
-    <div class="col-md-4"></div>
-
-    <div class="col-md-4 txts">
-        <h3>ODAK SOLUTIONS PRIVATE LIMITED</h3>
-        <h2>Trail Balance</h2>
-        <p>Basis: Accrual</p>
-        <p>As of {{ selectedDate ? selectedDate : currentDate | date:'mediumDate' }}</p>
-
-    </div>
-
-    <div class="col-md-4"></div>
-
-</div>
-
-<div class="col-md-12 mt-3"></div>
-
-<div class="col-sm-12 scrtbl">
-    <table id="datatable-buttons" #table
-    class="table table-striped table-bordered w-100 dataTable no-footer" role="grid"
-    aria-describedby="datatable-buttons_info">
-    <thead>
-        <tr role="row">
-            <th >Account</th>
-            <th >Account Code</th>
-            <th >Net Credit</th>
-            <th >Net Debit</th>
-        </tr>
-        <tr>
-            <th colspan="4" >Assets</th>
-         
-        </tr>
-
-    </thead>
-    <tbody>
-        <tr *ngFor="let balance of balanceList; let i = index">
-            <td (click)="editBalance(balance.ChartOfAccountsId)" style="color: #0366d6;cursor: pointer;">{{ balance.GrandParentAccountName }} - {{ balance.ParentAccountName }} - {{ balance.ChildAccountName }}</td>
-            <td>{{ balance.ChartOfAccountsId }}</td>
-            <td *ngIf="balance.ChildTransaction_Type === 'Credit'">{{ balance.ChildNet_Balance }}</td>
-            <td *ngIf="balance.ChildTransaction_Type !== 'Credit'">null</td>
-            <td *ngIf="balance.ChildTransaction_Type === 'Debit'">{{ balance.ChildNet_Balance }}</td>
-            <td *ngIf="balance.ChildTransaction_Type !== 'Debit'">null</td>
-        </tr>
-    </tbody>
-
-</table>
-
-</div>
-
-<div style=" width: 100%;justify-content: end;" class="row page">
-    <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10 && pager.totalItems > 10" class="pagination">
-        <li [ngClass]="{disabled:pager.currentPage === 1}">
-            <a (click)="setPage(1)">First</a>
-        </li>
-        <li [ngClass]="{disabled:pager.currentPage === 1}">
-            <a (click)="setPage(pager.currentPage - 1)">Previous</a>
-        </li>
-        <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
-            <a (click)="setPage(page)">{{page}}</a>
-        </li>
-        <li *ngIf="(pager.totalPages - pager.startPage) > 5 ">
-            <a (click)="setPage(pager.startPage + 5)">...</a>
-        </li>
-        <li *ngIf="(pager.totalPages - pager.startPage) > 5">
-            <a (click)="setPage(pager.totalPages)">{{pager.totalPages}}</a>
-        </li>
-
-        <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
-            <a (click)="setPage(pager.currentPage + 1)">Next</a>
-        </li>
-        <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
-            <a (click)="setPage(pager.totalPages)">Last</a>
-        </li>
-    </ul>
-</div>
-
-
-</div>
-
-
-
-
-

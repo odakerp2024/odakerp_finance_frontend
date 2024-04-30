@@ -1,16 +1,9 @@
 <div class="container-fluid">
-
-    <div class="row headtitle rotle mt-1">
-        <div class="col-md-9">
-            <h4 class="ml-2 mt-2">Receipt Voucher</h4>
-        </div>
-    </div>
-
     <form [formGroup]="reportFilter">
         <div class="card mt-2 p-4">
 
-            <div class="row">
-                <div class="col-2">
+            <div class="row pb-3">
+                <!-- <div class="col-2">
                     <div class="form-group bmd-form-group w-100">
                         <label class=" mb-3">From</label>
                         <div class="input-group">
@@ -34,9 +27,44 @@
                             <mat-datepicker #EndDate></mat-datepicker>
                         </mat-form-field>
                     </div>
+                </div> -->
+
+
+
+                <div class="col-3">
+
+                    <label class=" fontstyles">PEROID</label>
+                    <ng-select class="searchdropdown custom" formControlName="Peroid"
+                        (ngModelChange)="onOptionChange($event);" [clearable]="false">
+                        <ng-option [value]="''" disabled>--SELECT PEROID--</ng-option>
+                        <ng-container *ngFor="let peroid of PeroidList">
+                            <ng-option [value]="peroid.peroidId">
+                                {{peroid.peroidName | uppercase}}
+                            </ng-option>
+                        </ng-container>
+                    </ng-select>
+
+                      <div *ngIf="selectedOption === 'custom'">
+
+                        <mat-form-field class="example-form-field">
+                            <mat-label>First campaign</mat-label>
+                            <mat-date-range-input
+                              [formGroup]="campaignOne"
+                              [rangePicker]="campaignOnePicker"
+                              [comparisonStart]="campaignTwo.value.start"
+                              [comparisonEnd]="campaignTwo.value.end">
+                              <input matStartDate placeholder="Start date" formControlName="StartDate">
+                              <input matEndDate placeholder="End date" formControlName="EndDate">
+                            </mat-date-range-input>
+                            <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+                            <mat-datepicker-toggle matIconSuffix [for]="campaignOnePicker"></mat-datepicker-toggle>
+                            <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
+                          </mat-form-field>
+                      </div>
+                      
                 </div>
 
-                <div class="col-4">
+                <div class="col-3">
                     <label class=" fontstyles">DIVISION</label>
                     <ng-select class="searchdropdown custom" formControlName="Division"
                         (ngModelChange)="getOfficeList($event);" [clearable]="false">
@@ -49,7 +77,7 @@
                     </ng-select>
                 </div>
 
-                <div class="col-4">
+                <div class="col-3">
                     <label class=" fontstyles">OFFICE</label>
                     <ng-select class="searchdropdown" formControlName="Office"
                         (ngModelChange)="getDivisionBasedOffice($event, reportFilter.value.Division)"
@@ -62,14 +90,11 @@
                         </ng-container>
                     </ng-select>
                 </div>
-            </div>
 
-            <div class="row">
-
-                <div class="col-4">
+                <div class="col-3">
                     <label class=" fontstyles">CUSTOMER</label>
                     <ng-select class="searchdropdown" formControlName="Customer" [clearable]="false" name="CategoryId"
-                    id="CategoryId">
+                        id="CategoryId">
                         <ng-option [value]="0" disabled>--SELECT CUSTOMER--</ng-option>
                         <ng-container *ngFor="let customer of customerList">
                             <ng-option [value]="customer.CustomerID">
@@ -79,14 +104,17 @@
                         </ng-container>
                     </ng-select>
                 </div>
+            </div>
 
-                <div class="col-4">
+            <div class="row">
+
+                <div class="col-3">
                     <label class=" fontstyles">AMOUNT</label>
                     <input formControlName="Amount" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
                         min="0" numbersOnly class="form-control" name="Amount">
                 </div>
 
-                <div class="col-4">
+                <div class="col-3">
                     <label class=" fontstyles">Type</label>
                     <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'Type'" name="active"
                         id="active">
@@ -96,10 +124,8 @@
                         </ng-option>
                     </ng-select>
                 </div>
-            </div>
 
-            <div class="row">
-                <div class="col-4">
+                <div class="col-3">
                     <label class=" fontstyles">PAYMENT MODE</label>
                     <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'PaymentMode'"
                         name="active" id="active">
@@ -110,7 +136,7 @@
                     </ng-select>
                 </div>
 
-                <div class="col-4">
+                <div class="col-3">
                     <label class=" fontstyles">DEPOSIT TO</label>
                     <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'DepositTo'" name="active"
                         id="active">
@@ -123,8 +149,7 @@
             </div>
 
 
-            <div class="col-12 pt-4 pb-4 ">
-                <!-- || paymentForm.value.Table.value.AmountPaid !== paymentForm.value.Table.value.TotalAmount  -->
+            <div class="col-12 pt-4">
                 <div class="text-center">
                     <button type="button" class="btn btn-primary text-white mr-3 mb-0 col-auto"
                         (click)="getReceiptReportList()">
@@ -145,6 +170,13 @@
             <div class="card m-b-30">
                 <div class="card-body cpad enqview">
 
+                    <div class="col-sm-12 justify-content-end text-center">
+                        <h3>NAVIO  SHIPPING PRIVATE LIMITED</h3>
+                        <h2>Receipt Voucher</h2>
+                        <p>FROM {{ reportFilter.controls.StartDate.value}}  - TO {{reportFilter.controls.EndDate.value }}</p>
+            
+                    </div>
+
                     <div class="col-sm-12 text-right d-flex justify-content-end">
                         <div style="font-weight: 600;">Export as : </div>
                         <div>
@@ -164,8 +196,7 @@
                     </div>
 
                     <div class="col-sm-12 ">
-                        <table class="table table-responsive table-striped table-bordered w-100 dataTable no-footer"
-                            style="text-align-last: center;">
+                        <table class="table table-responsive table-bordered w-100 dataTable no-footer">
                             <thead>
                                 <tr>
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
@@ -201,7 +232,12 @@
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
+                                        style="width: 177.575px;">Currency</th>
+
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
                                         style="width: 177.575px;">Amount</th>
+
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
@@ -212,18 +248,19 @@
                                 <tr *ngFor="let data of pagedItems">
                                     <td>{{data.Date | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}
                                     </td>
-                                    <td>{{data.Invoice}}</td>
+                                    <td class="hyperTextColor"><a href="#">{{data.Invoice == '' ? '-' : data.Invoice}}</a></td>
                                     <td>{{data.Type}}</td>
-                                    <td>{{data.CustomerName}}</td>
+                                    <td class="hyperTextColor">{{data.CustomerName}}</td>
                                     <td>{{data.Branch}}</td>
                                     <td>{{data.PaymentMode}}</td>
                                     <td>{{data.BankName}}</td>
                                     <td>{{data.ReferenceNo}}</td>
-                                    <td>{{data.Amount}}</td>
+                                    <td>{{data.Currency}}</td>
+                                    <td class="text-right hyperTextColor">{{data.Amount}}</td>
                                     <td>{{data.Invoice}}</td>
                                 </tr>
 
-                                <tr *ngIf="pagedItems.length ==0">
+                                <tr *ngIf="pagedItems.length == 0">
                                     <td class="text-center" colspan="10">No records found</td>
                                 </tr>
 
@@ -232,7 +269,7 @@
                     </div>
 
                     <div class="row page mr-3" align="right">
-                        <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10 && pager.totalItems > 10"
+                        <ul *ngIf="pager && pager.totalItems > 10"
                             class="pagination">
                             <li [ngClass]="{disabled:pager.currentPage === 1}">
                                 <a (click)="setPage(1)">First</a>
