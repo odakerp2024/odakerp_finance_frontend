@@ -117,6 +117,7 @@ export class CustomerComponent implements OnInit {
   isKYCDocuments: boolean = false;
   isSalesPICLink: boolean = false;
   isAccountingLink: boolean = false;
+  isCreditDetails: boolean = false;
   isEmailids: boolean = false;
   isInterfaces: boolean = false;
   parentAccountList: any[];
@@ -154,6 +155,7 @@ export class CustomerComponent implements OnInit {
         this.getPermissionListForUpdate(550, 'Sales PIC Link');
         this.getPermissionListForUpdate(551, 'KYC Documents');
         this.getPermissionListForUpdate(552, 'Accounting Link');
+        this.getPermissionListForUpdate(553, 'Credit Details');
         this.getPermissionListForUpdate(554, 'Email ids');
         this.getPermissionListForUpdate(555, 'Interfaces');
 
@@ -162,6 +164,7 @@ export class CustomerComponent implements OnInit {
         this.getPermissionListForCreate(550, 'Sales PIC Link');
         this.getPermissionListForCreate(551, 'KYC Documents');
         this.getPermissionListForCreate(552, 'Accounting Link');
+        this.getPermissionListForCreate(553, 'Credit Details');
         this.getPermissionListForCreate(554, 'Email ids');
         this.getPermissionListForCreate(555, 'Interfaces');
       }
@@ -187,6 +190,8 @@ export class CustomerComponent implements OnInit {
       this.Current_Tab = 'tabKYC'
     } else if (value == 'tabAccounting' && this.isAccountingLink == true) {
       this.Current_Tab = 'tabAccounting'
+    } else if (value == 'tabCredit' && this.isCreditDetails == true) {
+      this.Current_Tab = 'tabCredit'
     } else if (value == 'tabEmail' && this.isEmailids == true) {
       this.Current_Tab = 'tabEmail'
     } else if (value == 'tabInterfaces' && this.isInterfaces == true) {
@@ -282,6 +287,24 @@ export class CustomerComponent implements OnInit {
         }
       }
 
+      if (route == 'Credit Details') {
+
+        if (data.length > 0) {
+          console.log("PermissionObject", data);
+
+          if (data[0].SubfunctionID == paylod.SubfunctionID) {
+
+            if (data[0].Create_Opt == 2) {
+              this.isCreditDetails = true;
+            } else {
+              this.isCreditDetails = false;
+            }
+          }
+        } else {
+          this.isCreditDetails = false;
+        }
+      }
+
       if (route == 'Email ids') {
 
         if (data.length > 0) {
@@ -330,9 +353,9 @@ export class CustomerComponent implements OnInit {
       else if (this.isAccountingLink == true) {
         this.Current_Tab = 'tabAccounting';
       }
-      // else if (this.isCreditDetails == true) {
-      //   this.Current_Tab = 'creditDetails';
-      // }
+      else if (this.isCreditDetails == true) {
+        this.Current_Tab = 'tabCredit';
+      }
       else if (this.isEmailids == true) {
         this.Current_Tab = 'tabEmail';
       }
@@ -430,6 +453,25 @@ export class CustomerComponent implements OnInit {
           }
         } else {
           this.isAccountingLink = false;
+        }
+      }
+
+      if (route == 'Credit Details') {
+
+        if (data.length > 0) {
+          console.log("PermissionObject", data);
+
+          if (data[0].SubfunctionID == paylod.SubfunctionID) {
+
+            if (data[0].Update_Opt == 2) {
+              this.isCreditDetails = true;
+              this.Current_Tab = 'tabCredit';
+            } else {
+              this.isCreditDetails = false;
+            }
+          }
+        } else {
+          this.isCreditDetails = false;
         }
       }
 
@@ -1518,7 +1560,7 @@ export class CustomerComponent implements OnInit {
 
      
       // Related Party
-debugger
+
       Swal.fire({
         showCloseButton: true,
         title: '',
