@@ -405,6 +405,9 @@ export class OfficeInfoComponent implements OnInit, AfterViewChecked, AfterViewI
 
   customPayload(emailTableData) {
     const officeEmail = [];
+  //  (this.emailData.length == 0 && this.emailData.length == 0)
+    emailTableData = emailTableData.length > 0 ? emailTableData : this.emailData;
+       
     emailTableData.forEach(element => {
       const newData = {
         'ID': element.ID,
@@ -420,7 +423,7 @@ export class OfficeInfoComponent implements OnInit, AfterViewChecked, AfterViewI
       };
       officeEmail.push(newData);
     });
-
+  
     let Table3 = [{
       ID: 0,
       OfficeId: 0,
@@ -452,6 +455,7 @@ export class OfficeInfoComponent implements OnInit, AfterViewChecked, AfterViewI
         Table: [officePayload.value],
         Table1: [Table1],
         Table2: officeEmail,
+        // Table2: emailTableData ? emailTableData : officeEmail,
         Table3: table3.filter(x => x.DocumentName != '')
       }
     }
@@ -550,6 +554,7 @@ export class OfficeInfoComponent implements OnInit, AfterViewChecked, AfterViewI
           const newData = {
             'ID': element.ID,
             'OrgId': this.officeId,
+            // 'OrgId': element.OrgId,
             'Category': element.Category,
             'EmailId': element.EmailId,
             'StartDate': element.StartDate,
@@ -798,12 +803,16 @@ export class OfficeInfoComponent implements OnInit, AfterViewChecked, AfterViewI
     }
   }
 
-
-  deleteDocument(deleteIndex) {
-    const index = this.documentListInfoResponse.findIndex((element) => element.ID == deleteIndex.OfficeId)
-    this.documentListInfoResponse.splice(index, 1);
+ 
+  deleteDocument(event) {
+    const indexToDelete = event;
+    // const index = this.documentListInfoResponse.findIndex((element) => element.ID == deleteIndex.OfficeId)
+    if (indexToDelete >= 0 && indexToDelete < this.documentListInfoResponse.length) {
+      this.documentListInfoResponse.splice(indexToDelete, 1);
+    // this.documentListInfoResponse.splice(index, 1);
     this.saveOfficeDetails();
   }
+}
 
   constructDocumentPayload(docList) {
     if (docList) {
