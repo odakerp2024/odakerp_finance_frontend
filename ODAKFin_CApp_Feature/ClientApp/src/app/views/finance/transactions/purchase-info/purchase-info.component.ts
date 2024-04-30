@@ -353,7 +353,7 @@ export class PurchaseInfoComponent implements OnInit {
   }
 
   CalculateTotalAmount() {
-    var totalAmount = 0;
+    var totalAmount = '';
     this.PurchaseTableList.map(x => {
       totalAmount += x.Amount;
     });
@@ -514,7 +514,7 @@ export class PurchaseInfoComponent implements OnInit {
 
   async createPayload(status) {
     let info = this.purchaseCreateForm.value;
-    var TotalAmount = 0;
+    var TotalAmount ='';
     let PurchaseTableList = this.PurchaseTableList;
     PurchaseTableList.forEach(element => {
       delete element.AccountName;
