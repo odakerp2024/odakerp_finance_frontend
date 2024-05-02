@@ -410,7 +410,7 @@
                         </div>
 
 
-                        <div class="col-12 text-right mt-4">
+                        <div class="col-12 text-right mt-4"  >
                             <button (click)="saveOfficeDetails()" type="submit"
                                 class="btn btn-primary btn-raised btn-default cntbtn mb-0">{{isUpdate ? 'Update'
                                 :'Save'}}</button>
@@ -555,11 +555,20 @@
                         </tr>
                     </tbody>
                 </table>
-            </div> -->
-
-                <app-documents [documentList]="documentListInfo" (saveDocumentEvent)="uploadDocument($event)"
+            </div> -->  
+            
+                <app-documents [documentList]="documentListInfoResponse" (saveDocumentEvent)="uploadDocument($event)"
                     (deleteDocumentEvent)="deleteDocument($event)"></app-documents>
+                    <div class="col-12 text-right mt-4">
+                        <button (click)="saveOfficeDetails()" type="submit"
+                            class="btn btn-primary btn-raised btn-default cntbtn mb-0">{{isUpdate ? 'Update'
+                            :'Save'}}</button>
+                        <button [routerLink]="['/views/finance/financemaster']"
+                            class="btn btn-danger btn-raised cntbtn mb-0">Cancel</button>
+                    </div>
+                    
             </div>
+           
         </div>
     </div>
 

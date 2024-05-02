@@ -12,6 +12,7 @@ import { rejects } from 'assert';
 import { AutoCodeService } from 'src/app/services/auto-code.service';
 import { CommonService } from 'src/app/services/common.service';
 import { MatDatepickerInputEvent } from '@angular/material';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-office-info',
@@ -70,10 +71,11 @@ export class OfficeInfoComponent implements OnInit, AfterViewChecked, AfterViewI
   isEmailids: boolean = false;
   isDocuments: boolean = false;
   isReadDocument: boolean = false;
-
+  selectedFile: File = null;
 
   constructor(private fb: FormBuilder, private datePipe: DatePipe, private router: Router,
     private dataService: DataService,
+    private commonservice: CommonService,
     private globals: Globals,
     private route: ActivatedRoute,
     private autoCodeService: AutoCodeService,
@@ -359,7 +361,7 @@ export class OfficeInfoComponent implements OnInit, AfterViewChecked, AfterViewI
     //   return false;
     // }
 
-    this.customPayload(emailTableData);
+     this.customPayload(emailTableData);
     Swal.fire({
       showCloseButton: true,
       title: '',
@@ -403,11 +405,15 @@ export class OfficeInfoComponent implements OnInit, AfterViewChecked, AfterViewI
     }
   }
 
-  customPayload(emailTableData) {
+   customPayload(emailTableData) {
     const officeEmail = [];
   //  (this.emailData.length == 0 && this.emailData.length == 0)
-    emailTableData = emailTableData.length > 0 ? emailTableData : this.emailData;
-       
+  if(emailTableData.length == 0) {
+    emailTableData = this.emailData ?  this.emailData : [];
+  }else {
+    emailTableData = emailTableData
+  }
+     debugger  
     emailTableData.forEach(element => {
       const newData = {
         'ID': element.ID,
@@ -429,12 +435,14 @@ export class OfficeInfoComponent implements OnInit, AfterViewChecked, AfterViewI
       OfficeId: 0,
       DocumentName: this.documentForm.value.DocumentName,
       FilePath: this.documentForm.value.FilePath,
+      UniqueFilePath: this.documentForm.value.UniqueFilePath,
       CreatedBy: localStorage.getItem('UserID'),
       CreatedDate: new Date(),
       UpdatedBy: localStorage.getItem('UserID'),
       UpdatedDate: new Date(),
       UploadedBy: localStorage.getItem('UserID'),
-      uploadedOn: new Date()
+      uploadedOn: new Date(),
+   
     }]
 
     let table3 = [...this.documentListInfoResponse, ...Table3];
@@ -786,21 +794,37 @@ export class OfficeInfoComponent implements OnInit, AfterViewChecked, AfterViewI
 
   uploadDocument(event) {
     if (event) {
+
+      this.selectedFile = event.file.target.files[0];
+      const filedata = new FormData();
+      filedata.append('file', this.selectedFile, this.selectedFile.name)
+
+      this.commonservice.AttachUpload(this.selectedFile).subscribe(data => {
+        if (data) {
+debugger
       this.documentListInfoResponse.push({
         ID: 0,
         OfficeId: this.officeId,
         DocumentName: event.DocumentName,
         FilePath: event.FilePath,
+        
         CreatedBy: +localStorage.getItem('UserID'),
         CreatedDate: new Date(),
         UpdatedBy: +localStorage.getItem('UserID'),
         UpdatedDate: new Date().toISOString(),
         UploadedBy: +localStorage.getItem('UserID'),
-        UploadedOn: new Date().toISOString()
+        UploadedOn: new Date().toISOString(),
+        UniqueFilePath: data.FileNamev,
 
       });
-      this.saveOfficeDetails();
+     
+      //  this.saveOfficeDetails();
     }
+  },
+  (error: HttpErrorResponse) => {
+    Swal.fire(error.message, 'error')
+  });
+}
   }
 
  
@@ -810,7 +834,7 @@ export class OfficeInfoComponent implements OnInit, AfterViewChecked, AfterViewI
     if (indexToDelete >= 0 && indexToDelete < this.documentListInfoResponse.length) {
       this.documentListInfoResponse.splice(indexToDelete, 1);
     // this.documentListInfoResponse.splice(index, 1);
-    this.saveOfficeDetails();
+    // this.saveOfficeDetails();
   }
 }
 
@@ -823,6 +847,7 @@ export class OfficeInfoComponent implements OnInit, AfterViewChecked, AfterViewI
           uploadedOn: item.UploadedOn,
           DocumentName: item.DocumentName,
           FilePath: item.FilePath,
+         UniqueFilePath: item.UniqueFilePath,
         };
         newDocument.push(payload);
       });
