@@ -353,7 +353,7 @@ export class PurchaseInfoComponent implements OnInit {
   }
 
   CalculateTotalAmount() {
-    var totalAmount = 0;
+    var totalAmount = '';
     this.PurchaseTableList.map(x => {
       totalAmount += x.Amount;
     });
@@ -376,6 +376,102 @@ export class PurchaseInfoComponent implements OnInit {
     this.purchaseCreateForm.controls['CurrencyName'].setValue('');
     this.purchaseCreateForm.controls['Rate'].setValue('');
     this.purchaseCreateForm.controls['Amount'].setValue('');
+  }
+
+  deleteValue(){
+    const userID = localStorage.getItem("UserID");
+    const paylod = {
+      userID: Number(userID),
+      Ref_Application_Id: "4",
+      SubfunctionID: 532,
+    }
+    this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
+      if (data.length > 0) {
+        console.log("PermissionObject", data);
+
+        if (data[0].SubfunctionID == paylod.SubfunctionID) {
+
+          if (data[0].Delete_Opt != 2) {
+              Swal.fire('Please Contact Administrator');
+          }
+          else {
+            this.savePurchase(1,true);
+          }
+        }
+        else {
+          Swal.fire('Please Contact Administrator');
+        }
+      }
+      else {
+        Swal.fire('Please Contact Administrator');
+      }
+    }, err => {
+      console.log('errr----->', err.message);
+    });
+  }
+
+  deleteValueTable(){
+    const userID = localStorage.getItem("UserID");
+    const paylod = {
+      userID: Number(userID),
+      Ref_Application_Id: "4",
+      SubfunctionID: 532,
+    }
+    this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
+      if (data.length > 0) {
+        console.log("PermissionObject", data);
+
+        if (data[0].SubfunctionID == paylod.SubfunctionID) {
+
+          if (data[0].Delete_Opt != 2) {
+              Swal.fire('Please Contact Administrator');
+          }
+          else {
+            this.OnClickDeleteValue();
+          }
+        }
+        else {
+          Swal.fire('Please Contact Administrator');
+        }
+      }
+      else {
+        Swal.fire('Please Contact Administrator');
+      }
+    }, err => {
+      console.log('errr----->', err.message);
+    });
+  }
+
+  deleteValueAttach(index){
+    const userID = localStorage.getItem("UserID");
+    const paylod = {
+      userID: Number(userID),
+      Ref_Application_Id: "4",
+      SubfunctionID: 532,
+    }
+    this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
+      if (data.length > 0) {
+        console.log("PermissionObject", data);
+
+        if (data[0].SubfunctionID == paylod.SubfunctionID) {
+
+          if (data[0].Delete_Opt != 2) {
+              Swal.fire('Please Contact Administrator');
+          }
+          else {
+            this.OnClickDeleteValueFile(index);
+          }
+        }
+        else {
+          Swal.fire('Please Contact Administrator');
+        }
+      }
+      else {
+        Swal.fire('Please Contact Administrator');
+      }
+    }, err => {
+      console.log('errr----->', err.message);
+    });
   }
 
   async savePurchase(status: Number, isDelete = false) {
@@ -514,7 +610,7 @@ export class PurchaseInfoComponent implements OnInit {
 
   async createPayload(status) {
     let info = this.purchaseCreateForm.value;
-    var TotalAmount = 0;
+    var TotalAmount ='';
     let PurchaseTableList = this.PurchaseTableList;
     PurchaseTableList.forEach(element => {
       delete element.AccountName;

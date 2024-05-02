@@ -495,7 +495,7 @@
                             <div class="ripple-container"></div>
                         </button>
                         <button [disabled]="isUpdateMode" type="submit" class="btn btn-danger bmd-btn-fab"
-                            (click)="OnClickDeleteValue()"><i class="material-icons editicon">delete</i>
+                            (click)="deleteValue()"><i class="material-icons editicon">delete</i>
                             <div class="ripple-container"></div>
                         </button>
                     </div>
@@ -558,14 +558,15 @@
                                     </td>
                                     <td> <input readonly formControlName="Amountccr" class="form-control" type="text"
                                             id="Amount (CCR)" /> </td>
-                                    <td style="max-width: 1px;">
+                                    <td >
                                         <ng-select class="searchdropdown"  [formControlName]="'TDSMaster'" [clearable]="false" [appendTo]="'body'">
                                             <ng-option [value]="0" disabled>--SELECT--</ng-option>
                                             <ng-option *ngFor="let tdsmaster of SectionMasterList"  [value]="tdsmaster.SectionID">
-                                            <span class="textwrap">{{tdsmaster.SectionName}}</span>
+                                            <span class="textwrap ">{{tdsmaster.SectionName}}</span>
                                            </ng-option>
                                          </ng-select>   
-                                    </td>                                                                                                                                                                                       
+                                    </td>        
+                                  
                                     <td style="max-width: 1px;">
                                         <ng-select class="searchdropdown" [formControlName]="'GSTGroup'" [clearable]="false" [appendTo]="'body'">
                                             <ng-option [value]="0" disabled>--SELECT--</ng-option>
@@ -791,7 +792,7 @@
                                 <td class="text-center">
                                     <button [disabled]="isUpdateMode" type="submit"
                                         class="btn btn-danger bmd-btn-fab"
-                                        (click)="OnClickDeleteValueFile(i)"><i
+                                        (click)="deleteValueAttach(i)"><i
                                             class="material-icons editicon">delete</i>
                                         <div class="ripple-container"></div>
                                     </button>
