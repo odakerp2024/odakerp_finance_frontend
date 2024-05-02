@@ -560,7 +560,7 @@ export class FinanceMasterComponent implements OnInit {
   }
 
   routePage(routePage: string) {
-
+debugger
     if (routePage == 'Entity') {
       this.getPermissionListForCreate(537, 'Email ids');
       this.getPermissionListForCreate(538, 'Documents');
@@ -633,6 +633,7 @@ export class FinanceMasterComponent implements OnInit {
   }
 
   getPermissionList(routePage: string) {
+
     // Check Permission for Division Search
     let SubfunctionID = 0;
     if (routePage == 'Division') {
@@ -783,7 +784,31 @@ export class FinanceMasterComponent implements OnInit {
       //SubfunctionID = 533;
       this.router.navigate(['/views/provision/provision-view']);
     } 
+    else if (routePage == 'trailBalance') {
+      //SubfunctionID = 533;
+      this.router.navigate(['/views/finance/reports/levelone']);
+    } 
+    
+    else if (routePage == 'recieptVoucher') {
+      //SubfunctionID = 533;
+      this.router.navigate(['/views/reports/report-receipt-voucher']);
+    } 
 
+    else if (routePage == 'PaymentVoucher') {
+      //SubfunctionID = 533;
+      this.router.navigate(['/views/reports/report-payment-voucher']);
+    } 
+
+    else if (routePage == 'ContraVoucher') {
+      //SubfunctionID = 533;
+      this.router.navigate(['/views/reports/report-contra-voucher']);
+    } 
+
+    else if (routePage == 'VoucherReversals') {
+      //SubfunctionID = 533;
+      this.router.navigate(['/views/reports/report-voucher-reversal']);
+    }
+    
     const userID = localStorage.getItem("UserID");
     const paylod = {
       userID: Number(userID),
@@ -1239,11 +1264,4 @@ export class FinanceMasterComponent implements OnInit {
       });
     }
   }
-
-  navigate() {
-    this.router.navigate(['/views/finance/reports/levelone']);
-  }
-
-
-
 }

@@ -17,8 +17,29 @@ export class ExcelService {
   constructor( private commonService: CommonService) { }
 
   public exportAsExcelFile(json: any[], excelFileName: string): void {
-    
     const myworksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(json);
+
+      // Add custom formatting to the header row (row 1)
+      const headerRow = 1;
+      const range = XLSX.utils.decode_range(myworksheet['!ref']);
+      for (let C = range.s.c; C <= range.e.c; ++C) {
+        const headerCell = XLSX.utils.encode_cell({ r: headerRow, c: C });
+        if (!myworksheet[headerCell]) {
+          continue;
+        }
+        myworksheet[headerCell].s = {
+          font: { bold: true }, // Make text bold
+          fill: { fgColor: { rgb: 'FFFF00' } } // Set background color (e.g., yellow)
+        };
+      }
+
+      // const formattedWorksheet: XLSX.WorkSheet = {
+      //   ...myworksheet, // Copy original worksheet data
+      //   A1: { t: 's', v: 'Header Cell A1', s: { font: { bold: true }, fill: { fgColor: { rgb: 'FFFF00' } } } }, // Example formatting for cell A1
+      //   B1: { t: 's', v: 'Header Cell B1', s: { font: { bold: true }, fill: { fgColor: { rgb: 'FFFF00' } } } }, // Example formatting for cell B1
+      //   // Add more cells as needed with desired formatting
+      // };
+
     const myworkbook: XLSX.WorkBook = { Sheets: { 'data': myworksheet }, SheetNames: ['data'] };
     const excelBuffer: any = XLSX.write(myworkbook, { bookType: 'xlsx', type: 'array' });
     this.saveAsExcelFile(excelBuffer, excelFileName);

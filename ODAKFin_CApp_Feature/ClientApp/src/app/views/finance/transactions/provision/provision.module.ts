@@ -9,7 +9,6 @@ import { MatSelectModule } from '@angular/material';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DirectiveModule } from 'src/app/directive/directive.module';
-import { BrowserModule } from '@angular/platform-browser'
 
 @NgModule({
   declarations: [
