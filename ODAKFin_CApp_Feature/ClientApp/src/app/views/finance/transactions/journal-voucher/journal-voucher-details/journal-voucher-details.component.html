@@ -424,8 +424,13 @@
                         style="background-color: #19a84c !important;border: #19a84c;" (click)="saveJournalInfo(1,2)">
                         Final
                     </button>
-                    <button type="button" *ngIf="isUpdate && !isFinalRecord" [disabled]="isUpdateMode"
-                        (click)="saveJournalInfo(0,1, true)" class="btn btn-warning text-white mr-3 mb-0 col-auto">
+
+                    <button type="button" *ngIf="isUpdate && !isFinalRecord" [disabled]="isUpdateMode" (click)="deleteValue()"
+                        class="btn btn-warning text-white mr-3 mb-0 col-auto">
+
+                        <!-- <button type="button" *ngIf="isUpdate && !isFinalRecord" [disabled]="isUpdateMode"
+                        (click)="saveJournalInfo(0,1, true)" class="btn btn-warning text-white mr-3 mb-0 col-auto"> -->
+                        
                         Delete
                     </button>
 

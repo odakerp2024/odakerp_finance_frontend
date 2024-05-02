@@ -145,6 +145,39 @@ export class AdjustmentVoucherInfoComponent implements OnInit {
     });    
   }
 
+  deleteValue() {
+    const userID = localStorage.getItem("UserID");
+    const paylod = {
+      userID: Number(userID),
+      Ref_Application_Id: "4",
+      SubfunctionID: 507,
+    }
+    this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
+      if (data.length > 0) {
+        console.log("PermissionObject", data);
+
+        if (data[0].SubfunctionID == paylod.SubfunctionID) {
+
+          if (data[0].Delete_Opt != 2) {
+            Swal.fire('Please Contact Administrator');
+          }
+          else {
+            this.saveInfo(1,true);
+          }
+        }
+        else {
+          Swal.fire('Please Contact Administrator');
+        }
+      }
+      else {
+
+        Swal.fire('Please Contact Administrator');
+      }
+    }, err => {
+      console.log('errr----->', err.message);
+    });    
+  }
+
   createAdjustmentForm() {
     this.AdjustmentCreateForm = this.fb.group({
       AdjustmentVoucherId: [this.AdjustmentId],
