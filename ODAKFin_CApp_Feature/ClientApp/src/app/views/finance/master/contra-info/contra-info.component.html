@@ -346,16 +346,14 @@
                         [ngClass]=" !isEditMode1 ? 'disable-input--nostyle final-disable--style' : ''"
                         (click)="finalSaveContra()">Final</button>
                     <button type="button" *ngIf="isUpdate && !IsFinal" [ngClass]=" !isEditMode ? 'disable-input--style' : ''"
-                         (click)="saveContra(true)"
+                         (click)="deleteValue()"
                         class="btn btn-warning text-white mr-3 mb-0 col-auto">
                         Delete
                     </button>
                     <button  (click)="CancelContra()"
                         class="btn btn-warning text-white mr-3 mb-0 col-auto">Cancel</button>
                 </div>
-
             </div>
         </form>
     </div>
-
 </div>

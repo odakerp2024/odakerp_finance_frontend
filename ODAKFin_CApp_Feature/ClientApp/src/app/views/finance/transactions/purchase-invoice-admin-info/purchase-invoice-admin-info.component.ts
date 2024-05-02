@@ -188,6 +188,70 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     });
   }
 
+  deleteValue() {
+    const userID = localStorage.getItem("UserID");
+    const paylod = {
+      userID: Number(userID),
+      Ref_Application_Id: "4",
+      SubfunctionID: 511,
+    }
+    this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
+      if (data.length > 0) {
+        console.log("PermissionObject", data);
+
+        if (data[0].SubfunctionID == paylod.SubfunctionID) {
+
+          if (data[0].Delete_Opt != 2) {
+            Swal.fire('Please Contact Administrator');
+          }
+          else {
+            this.OnClickDeleteValue();
+          }
+        }
+        else {
+          Swal.fire('Please Contact Administrator');
+        }
+      }
+      else {
+        Swal.fire('Please Contact Administrator');
+      }
+    }, err => {
+      console.log('errr----->', err.message);
+    });
+  }
+
+  deleteValueAttach(index) {
+    const userID = localStorage.getItem("UserID");
+    const paylod = {
+      userID: Number(userID),
+      Ref_Application_Id: "4",
+      SubfunctionID: 511,
+    }
+    this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
+      if (data.length > 0) {
+        console.log("PermissionObject", data);
+
+        if (data[0].SubfunctionID == paylod.SubfunctionID) {
+
+          if (data[0].Delete_Opt != 2) {
+            Swal.fire('Please Contact Administrator');
+          }
+          else {
+            this.OnClickDeleteValueFile(index);
+          }
+        }
+        else {
+          Swal.fire('Please Contact Administrator');
+        }
+      }
+      else {
+        Swal.fire('Please Contact Administrator');
+      }
+    }, err => {
+      console.log('errr----->', err.message);
+    });
+  }
+
   createPurchaseInvoiceForm() {
     this.PurchaseCreateForm = this.fb.group({
       PurchaseInvoiceId: [this.PurchaseInvoiceId],
@@ -1624,9 +1688,11 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
         if (result.message == 'Success' && result.data.Table1.length > 0) {
           result.data.Table1.forEach(info => {
 
-            let account = this.accountName.find(x => x.ChartOfAccountsId == !info.AccountId ? 0 : info.AccountId);
-            let currency = this.currencyList.find(x => x.ID == !info.CurrencyId ? 0 : info.CurrencyId);
-            // let tds = this.SectionMasterList.find(x => x.SectionID == !info.TDSMaster ? 0 : info.TDSMaster);
+          //  let account = this.accountName.find(x => x.ChartOfAccountsId == !info.AccountId ? 0 : info.AccountId);
+           // let currency = this.currencyList.find(x => x.ID == !info.CurrencyId ? 0 : info.CurrencyId);
+            
+           let account = this.accountName.find(x => x.ChartOfAccountsId ==   info.AccountId);
+           let currency = this.currencyList.find(x => x.ID ==  info.CurrencyId);
 
             let value = {
               Id: info.Id,

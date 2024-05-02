@@ -117,6 +117,7 @@ export class CustomerComponent implements OnInit {
   isKYCDocuments: boolean = false;
   isSalesPICLink: boolean = false;
   isAccountingLink: boolean = false;
+  isCreditDetails: boolean = false;
   isEmailids: boolean = false;
   isInterfaces: boolean = false;
   parentAccountList: any[];
@@ -154,6 +155,7 @@ export class CustomerComponent implements OnInit {
         this.getPermissionListForUpdate(550, 'Sales PIC Link');
         this.getPermissionListForUpdate(551, 'KYC Documents');
         this.getPermissionListForUpdate(552, 'Accounting Link');
+        this.getPermissionListForUpdate(553, 'Credit Details');
         this.getPermissionListForUpdate(554, 'Email ids');
         this.getPermissionListForUpdate(555, 'Interfaces');
 
@@ -162,6 +164,7 @@ export class CustomerComponent implements OnInit {
         this.getPermissionListForCreate(550, 'Sales PIC Link');
         this.getPermissionListForCreate(551, 'KYC Documents');
         this.getPermissionListForCreate(552, 'Accounting Link');
+        this.getPermissionListForCreate(553, 'Credit Details');
         this.getPermissionListForCreate(554, 'Email ids');
         this.getPermissionListForCreate(555, 'Interfaces');
       }
@@ -187,6 +190,8 @@ export class CustomerComponent implements OnInit {
       this.Current_Tab = 'tabKYC'
     } else if (value == 'tabAccounting' && this.isAccountingLink == true) {
       this.Current_Tab = 'tabAccounting'
+    } else if (value == 'tabCredit' && this.isCreditDetails == true) {
+      this.Current_Tab = 'tabCredit'
     } else if (value == 'tabEmail' && this.isEmailids == true) {
       this.Current_Tab = 'tabEmail'
     } else if (value == 'tabInterfaces' && this.isInterfaces == true) {
@@ -282,6 +287,24 @@ export class CustomerComponent implements OnInit {
         }
       }
 
+      if (route == 'Credit Details') {
+
+        if (data.length > 0) {
+          console.log("PermissionObject", data);
+
+          if (data[0].SubfunctionID == paylod.SubfunctionID) {
+
+            if (data[0].Create_Opt == 2) {
+              this.isCreditDetails = true;
+            } else {
+              this.isCreditDetails = false;
+            }
+          }
+        } else {
+          this.isCreditDetails = false;
+        }
+      }
+
       if (route == 'Email ids') {
 
         if (data.length > 0) {
@@ -330,9 +353,9 @@ export class CustomerComponent implements OnInit {
       else if (this.isAccountingLink == true) {
         this.Current_Tab = 'tabAccounting';
       }
-      // else if (this.isCreditDetails == true) {
-      //   this.Current_Tab = 'creditDetails';
-      // }
+      else if (this.isCreditDetails == true) {
+        this.Current_Tab = 'tabCredit';
+      }
       else if (this.isEmailids == true) {
         this.Current_Tab = 'tabEmail';
       }
@@ -346,7 +369,7 @@ export class CustomerComponent implements OnInit {
   }
 
   getPermissionListForUpdate(value, route) {
-
+    debugger
     // Check Permission for Division Add
     const userID = localStorage.getItem("UserID");
     const paylod = {
@@ -363,7 +386,7 @@ export class CustomerComponent implements OnInit {
 
           if (data[0].SubfunctionID == paylod.SubfunctionID) {
 
-            if (data[0].Update_Opt == 2) {
+            if (data[0].Update_Opt == 2 || data[0].Read_Opt == 2) {
               this.isOffBranchDetails = true;
               this.Current_Tab = 'tabBranch';
             } else {
@@ -382,7 +405,7 @@ export class CustomerComponent implements OnInit {
 
           if (data[0].SubfunctionID == paylod.SubfunctionID) {
 
-            if (data[0].Update_Opt == 2) {
+            if (data[0].Update_Opt == 2 || data[0].Read_Opt == 2) {
               this.isSalesPICLink = true;
               this.Current_Tab = 'tabSales';
             } else {
@@ -401,7 +424,7 @@ export class CustomerComponent implements OnInit {
 
           if (data[0].SubfunctionID == paylod.SubfunctionID) {
 
-            if (data[0].Read_Opt == 2) {
+            if (data[0].Update_Opt == 2 || data[0].Read_Opt == 2) {
               this.isKYCDocuments = true;
               this.Current_Tab = 'tabKYC';
 
@@ -421,7 +444,7 @@ export class CustomerComponent implements OnInit {
 
           if (data[0].SubfunctionID == paylod.SubfunctionID) {
 
-            if (data[0].Update_Opt == 2) {
+            if (data[0].Update_Opt == 2 || data[0].Read_Opt == 2) {
               this.isAccountingLink = true;
               this.Current_Tab = 'tabAccounting';
             } else {
@@ -433,6 +456,25 @@ export class CustomerComponent implements OnInit {
         }
       }
 
+      if (route == 'Credit Details') {
+
+        if (data.length > 0) {
+          console.log("PermissionObject", data);
+
+          if (data[0].SubfunctionID == paylod.SubfunctionID) {
+
+            if (data[0].Update_Opt == 2 || data[0].Read_Opt == 2) {
+              this.isCreditDetails = true;
+              this.Current_Tab = 'tabCredit';
+            } else {
+              this.isCreditDetails = false;
+            }
+          }
+        } else {
+          this.isCreditDetails = false;
+        }
+      }
+
       if (route == 'Email ids') {
 
         if (data.length > 0) {
@@ -440,7 +482,7 @@ export class CustomerComponent implements OnInit {
 
           if (data[0].SubfunctionID == paylod.SubfunctionID) {
 
-            if (data[0].Update_Opt == 2) {
+            if (data[0].Update_Opt == 2 || data[0].Read_Opt == 2) {
               this.isEmailids = true;
               this.Current_Tab = 'tabEmail';
             } else {
@@ -459,7 +501,7 @@ export class CustomerComponent implements OnInit {
 
           if (data[0].SubfunctionID == paylod.SubfunctionID) {
 
-            if (data[0].Update_Opt == 2) {
+            if (data[0].Update_Opt == 2 || data[0].Read_Opt == 2) {
               this.isInterfaces = true;
               this.Current_Tab = 'tabInterfaces';
             } else {
@@ -483,9 +525,9 @@ export class CustomerComponent implements OnInit {
       else if (this.isAccountingLink == true) {
         this.Current_Tab = 'tabAccounting';
       }
-      // else if (this.isCreditDetails == true) {
-      //   this.Current_Tab = 'creditDetails';
-      // }
+      else if (this.isCreditDetails == true) {
+        this.Current_Tab = 'tabCredit';
+      }
       else if (this.isEmailids == true) {
         this.Current_Tab = 'tabEmail';
       }
@@ -1489,7 +1531,9 @@ export class CustomerComponent implements OnInit {
 
       this.customerModel = new CustomerModel();
 
-      if (this.Current_Tab == 'tabAccounting') { this.fg.controls['onboardstatus'].setValue(1); }
+      //For the customer once the workflow status CONFIRMED it does not be changes further for anyother conditions 
+      
+      // if (this.Current_Tab == 'tabAccounting') { this.fg.controls['onboardstatus'].setValue(1); }
    
       this.updateBasicCustomerDetail();
       //this.customerModel.Customer.Table.push(this.basicCustomerDetail);
