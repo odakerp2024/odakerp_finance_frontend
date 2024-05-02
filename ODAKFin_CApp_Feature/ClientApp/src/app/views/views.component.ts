@@ -29,7 +29,7 @@ export class ViewsComponent implements OnInit {
       }
       function resetTimer() {
         clearTimeout(time);
-        time = setTimeout(logout, 1200000)
+        time = setTimeout(logout, 3600000)
       }
 
     };
