@@ -1531,7 +1531,9 @@ export class CustomerComponent implements OnInit {
 
       this.customerModel = new CustomerModel();
 
-      if (this.Current_Tab == 'tabAccounting') { this.fg.controls['onboardstatus'].setValue(1); }
+      //For the customer once the workflow status CONFIRMED it does not be changes further for anyother conditions 
+      
+      // if (this.Current_Tab == 'tabAccounting') { this.fg.controls['onboardstatus'].setValue(1); }
    
       this.updateBasicCustomerDetail();
       //this.customerModel.Customer.Table.push(this.basicCustomerDetail);
