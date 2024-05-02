@@ -52,7 +52,8 @@ export class JournalVoucherDetailsComponent implements OnInit {
   journalFileList: any = [];
   AmountDifference: any;
   isFinalRecord: boolean = false;
-
+  currentDate = this.datePipe.transform(new Date(), "yyyy-MM-dd");
+  fromMaxDate = this.currentDate;
   constructor(
     private fb: FormBuilder,
     private globals: Globals,
@@ -129,6 +130,39 @@ export class JournalVoucherDetailsComponent implements OnInit {
     });    
   }
 
+  deleteValue() {
+    const userID = localStorage.getItem("UserID");
+    const paylod = {
+      userID: Number(userID),
+      Ref_Application_Id: "4",
+      SubfunctionID: 501,
+    }
+    this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
+      if (data.length > 0) {
+        console.log("PermissionObject", data);
+
+        if (data[0].SubfunctionID == paylod.SubfunctionID) {
+
+          if (data[0].Delete_Opt != 2) {
+            Swal.fire('Please Contact Administrator');
+          }
+          else {
+            this.saveJournalInfo(0,1, true);
+          }
+        }
+        else {
+          Swal.fire('Please Contact Administrator');
+        }
+      }
+      else {
+
+        Swal.fire('Please Contact Administrator');
+      }
+    }, err => {
+      console.log('errr----->', err.message);
+    });    
+  }
+
   onFileChange(event: any) {
     const target: DataTransfer = <DataTransfer>(event.target);
     if (target.files.length !== 1) {
@@ -156,7 +190,7 @@ export class JournalVoucherDetailsComponent implements OnInit {
       DivisionId: [0],
       OfficeId: [0],
       JournalNumber: [''],
-      JournalDate: [this.datePipe.transform(new Date(), "yyyy-MM-dd")],
+      JournalDate: [''],
       TotalDebit: [0],
       TotalCredit: [0],
       AmountDifference: [0],
@@ -203,7 +237,7 @@ export class JournalVoucherDetailsComponent implements OnInit {
           DivisionId:info.DivisionId,
           OfficeId: info.OfficeId,
           JournalNumber: '',
-          JournalDate: new Date(),
+          JournalDate: info.JournalDate,
           Remarks: info.Remarks,
           FileName: info.FileName,
           FileURL: info.FileURL,

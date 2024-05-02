@@ -86,7 +86,7 @@
                 </div>
 
                 <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
-                    <label class="str fontstyles">Payment Voucher for</label><br>
+                    <label class="str fontstyles">Receipt Voucher for</label><br>
                     <!-- update and copied mode -->
                     <div *ngIf="isUpdate || isCopied" class="row ml-1">
 
@@ -176,10 +176,10 @@
 
                 <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                     <label class="str mb-1 fontstyles">Receipt Voucher Date</label>
-                    <div class="form-group bmd-form-group">
-                        <mat-form-field class="tillDate mat_date_picker disable-input--nostyle" appearance="outline">
-                            <input matInput style="margin-bottom: 3px;" autocomplete="off" (click)="VoucherDate.open()"
-                                readonly [matDatepicker]="VoucherDate" id="VoucherDate" [placeholder]="entityDateFormat"
+                    <div class="form-group bmd-form-group w-100">
+                        <mat-form-field class="tillDate mat_date_picker" appearance="outline">
+                            <input matInput style="margin-bottom: 3px;" readonly autocomplete="off" (click)="VoucherDate.open()"  [max]="fromMaxDate"
+                                 [matDatepicker]="VoucherDate" id="VoucherDate" [placeholder]="entityDateFormat"
                                 formControlName="VoucherDate">
                             <mat-datepicker-toggle matSuffix [for]="VoucherDate"></mat-datepicker-toggle>
                             <mat-datepicker #VoucherDate></mat-datepicker>
@@ -1167,7 +1167,7 @@
                         Final
                     </button> -->
 
-                    <button type="button" *ngIf="isUpdate && !isFinalMode" (click)="saveVoucherInfo(0, true)"
+                    <button type="button" *ngIf="isUpdate && !isFinalMode" (click)="deleteValue()"
                         class="btn btn-warning text-white mr-3 mb-0 col-auto">
                         Delete
                     </button>

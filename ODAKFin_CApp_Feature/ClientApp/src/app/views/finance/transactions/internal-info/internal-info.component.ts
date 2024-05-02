@@ -42,6 +42,7 @@ export class InternalInfoComponent implements OnInit {
   isFinalModeEnable: boolean = false; 
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
   entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
+  entityCurrency = this.commonDataService.getLocalStorageEntityConfigurable('Currency');
   minDate: string = this.datePipe.transform(new Date(), "yyyy-MM-dd");
   isCopyMode: boolean = false;
   CreatedBy: string = '';
@@ -123,6 +124,102 @@ export class InternalInfoComponent implements OnInit {
     });
   }
 
+  deleteValue(){
+    const userID = localStorage.getItem("UserID");
+    const paylod = {
+      userID: Number(userID),
+      Ref_Application_Id: "4",
+      SubfunctionID: 534,
+    }
+    this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
+      if (data.length > 0) {
+        console.log("PermissionObject", data);
+
+        if (data[0].SubfunctionID == paylod.SubfunctionID) {
+
+          if (data[0].Delete_Opt != 2) {
+              Swal.fire('Please Contact Administrator');            
+          }
+          else {
+            this.saveInternal(1,true);
+          }
+        }
+        else {
+          Swal.fire('Please Contact Administrator');
+        }
+      }
+      else {
+        Swal.fire('Please Contact Administrator');
+      }
+    }, err => {
+      console.log('errr----->', err.message);
+    });
+  }
+
+  deleteValueTable(){
+    const userID = localStorage.getItem("UserID");
+    const paylod = {
+      userID: Number(userID),
+      Ref_Application_Id: "4",
+      SubfunctionID: 534,
+    }
+    this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
+      if (data.length > 0) {
+        console.log("PermissionObject", data);
+
+        if (data[0].SubfunctionID == paylod.SubfunctionID) {
+
+          if (data[0].Delete_Opt != 2) {
+              Swal.fire('Please Contact Administrator');            
+          }
+          else {
+            this.OnClickDeleteValue();
+          }
+        }
+        else {
+          Swal.fire('Please Contact Administrator');
+        }
+      }
+      else {
+        Swal.fire('Please Contact Administrator');
+      }
+    }, err => {
+      console.log('errr----->', err.message);
+    });
+  }
+
+  deleteValueAttach(index){
+    const userID = localStorage.getItem("UserID");
+    const paylod = {
+      userID: Number(userID),
+      Ref_Application_Id: "4",
+      SubfunctionID: 534,
+    }
+    this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
+      if (data.length > 0) {
+        console.log("PermissionObject", data);
+
+        if (data[0].SubfunctionID == paylod.SubfunctionID) {
+
+          if (data[0].Delete_Opt != 2) {
+              Swal.fire('Please Contact Administrator');            
+          }
+          else {
+            this.OnClickDeleteValueFile(index);
+          }
+        }
+        else {
+          Swal.fire('Please Contact Administrator');
+        }
+      }
+      else {
+        Swal.fire('Please Contact Administrator');
+      }
+    }, err => {
+      console.log('errr----->', err.message);
+    });
+  }
+
   purchaseForm() {
     this.internalCreateForm = this.fb.group({
       InternalOrderId: [0],
@@ -146,6 +243,7 @@ export class InternalInfoComponent implements OnInit {
       AccountId: [0],
       Quantity: [''],
       CurrencyId: [0],
+      CurrencyName: [''],
       Rate: [''],
       Amount: [''],
       IsDelete: [0]
@@ -268,6 +366,11 @@ export class InternalInfoComponent implements OnInit {
       if (result.length > 0) {
         this.currencyList = result;
       }
+      const entitySelectedCurrency = this.currencyList.find(c => c.Currency === this.entityCurrency);
+
+      if (entitySelectedCurrency) {
+        this.internalCreateForm.controls.CurrencyId.setValue(entitySelectedCurrency.ID);
+      }
     }, error => { });
   }
 
@@ -314,7 +417,7 @@ export class InternalInfoComponent implements OnInit {
       AccountName: account.AccountName,
       Quantity: Number(info.Quantity),
       CurrencyId: info.CurrencyId,
-      CurrencyName: currency.Currency,
+      CurrencyName: currency.CurrencyCode,
       Rate: Number(info.Rate),
       Amount: info.Amount
       }
@@ -334,7 +437,7 @@ export class InternalInfoComponent implements OnInit {
       AccountName: account.AccountName,
       Quantity: Number(info.Quantity),
       CurrencyId: info.CurrencyId,
-      CurrencyName: currency.Currency,
+      CurrencyName: currency.CurrencyCode,
       Rate: Number(info.Rate),
       Amount: info.Amount
     });
@@ -376,7 +479,12 @@ export class InternalInfoComponent implements OnInit {
   resetTable() {
     this.internalCreateForm.controls['AccountId'].setValue(0);
     this.internalCreateForm.controls['Quantity'].setValue('');
-    this.internalCreateForm.controls['CurrencyId'].setValue(0);
+    const entitySelectedCurrency = this.currencyList.find(c => c.Currency === this.entityCurrency);
+    if (entitySelectedCurrency) {
+      this.internalCreateForm.controls.CurrencyId.setValue(entitySelectedCurrency.ID);
+    }
+    this.internalCreateForm.controls['CurrencyName'].setValue('');
+   // this.internalCreateForm.controls['CurrencyId'].setValue(0);
     this.internalCreateForm.controls['Rate'].setValue('');
     this.internalCreateForm.controls['Amount'].setValue('');
   }
@@ -588,6 +696,7 @@ export class InternalInfoComponent implements OnInit {
       AccountId: info.AccountId,
       Quantity: info.Quantity,
       CurrencyId: info.CurrencyId,
+      CurrencyName: info.CurrencyName,
       Rate: info.Rate,
       Amount: info.Amount,
       TotalAmount: info.TotalAmount

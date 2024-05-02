@@ -7,12 +7,11 @@
         <div class="col-3 mt-auto">
             <div class="float-right">
                 <!-- edit -->
-                <button (click)="enableEdit()" *ngIf="isUpdate && !isFinalRecord" type="button" class="btn btn-warning bmd-btn-edit text-white mr-3">
+                <button (click)="enableEdit()" *ngIf="isUpdate && !isFinalRecord" type="button"
+                    class="btn btn-warning bmd-btn-edit text-white mr-3">
                     <i class="material-icons editicon">edit</i>
                 </button>
-                <button type="button" class="btn btn-success bmd-btn-edit text-white mr-3"
-                (click)="goBack()"
-                    >
+                <button type="button" class="btn btn-success bmd-btn-edit text-white mr-3" (click)="goBack()">
                     <i class="material-icons editicon">reply</i>
                 </button>
                 <!-- clock details -->
@@ -27,13 +26,17 @@
                     <a class="dropdown-item p-4">
                         <div class="row">
                             <div class="col-md-12">
-                                <span>ModifiedOn: {{ModifiedOn | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}</span> | <span>Modified By:
+                                <span>ModifiedOn: {{ModifiedOn |
+                                    date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}</span> |
+                                <span>Modified By:
                                     {{ModifiedBy}}</span>
                             </div>
                         </div>
                         <div class="row" style="margin-top:10px;">
                             <div class="col-md-12">
-                                <span>CreatedOn: {{CreatedOn | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}</span> | <span>Created By:
+                                <span>CreatedOn: {{CreatedOn |
+                                    date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}</span> |
+                                <span>Created By:
                                     {{CreatedBy}}</span>
                             </div>
                         </div>
@@ -49,8 +52,8 @@
         <form [formGroup]="journalForm">
             <div class="row">
                 <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
-                    <label class="str"  >Division</label>
-<!--                  
+                    <label class="str">Division</label>
+                    <!--                  
                     <select (ngModelChange)="getOfficeList($event)" [attr.disabled]="isCopied ? 'disabled' : null"  formControlName="DivisionId"
                      
                         class="form-control my-select">
@@ -61,13 +64,13 @@
                             {{division.DivisionName | uppercase}}
                         </option>
                     </select> -->
-                    <ng-select  class="searchdropdown custom" [attr.disabled]="isCopied ? 'disabled' : null"  [formControlName]="'DivisionId'" [clearable]="false"
-                        (ngModelChange)="getOfficeList($event)">
-                     <ng-option [value]="0" disabled>--SELECT DIVISION--</ng-option>
-                     <ng-option *ngFor="let division of divisionList" [value]="division.ID">
-                        {{ division.DivisionName | uppercase }}
-                     </ng-option>
-                    </ng-select>        
+                    <ng-select class="searchdropdown custom" [attr.disabled]="isCopied ? 'disabled' : null"
+                        [formControlName]="'DivisionId'" [clearable]="false" (ngModelChange)="getOfficeList($event)">
+                        <ng-option [value]="0" disabled>--SELECT DIVISION--</ng-option>
+                        <ng-option *ngFor="let division of divisionList" [value]="division.ID">
+                            {{ division.DivisionName | uppercase }}
+                        </ng-option>
+                    </ng-select>
                 </div>
 
                 <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
@@ -79,18 +82,21 @@
                             {{office.OfficeName | uppercase}}
                         </option>
                     </select> -->
-                    <ng-select  class="searchdropdown custom" [attr.disabled]="isCopied ? 'disabled' : null" [formControlName]="'OfficeId'" [clearable]="false">
+                    <ng-select class="searchdropdown custom" [attr.disabled]="isCopied ? 'disabled' : null"
+                        [formControlName]="'OfficeId'" [clearable]="false">
                         <ng-option [value]="0" disabled>--SELECT OFFICE--</ng-option>
                         <ng-option *ngFor="let office of officeList" [value]="office.ID">
-                          {{ office.OfficeName | uppercase }}
+                            {{ office.OfficeName | uppercase }}
                         </ng-option>
-                    </ng-select>                      
+                    </ng-select>
                 </div>
-                
+
                 <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group">
                         <label class="str ">Status</label>
-                        <select class="form-control my-select disable-input--nostyle" [ngClass]=" isUpdate ? 'block-input' : 'block-input'" readonly formControlName="StatusId" name="Status">
+                        <select class="form-control my-select disable-input--nostyle"
+                            [ngClass]=" isUpdate ? 'block-input' : 'block-input'" readonly formControlName="StatusId"
+                            name="Status">
                             <option disabled value="">--SELECT STATUS--</option>
                             <option disabled *ngFor="let status of statusList" [value]="status.ID">
                                 {{status.StatusName | uppercase}}
@@ -98,7 +104,7 @@
                         </select>
                     </div>
                 </div>
-                
+
                 <div class="col"> </div>
             </div>
             <div class="row">
@@ -111,12 +117,16 @@
                     <!-- <input readonly formControlName="JournalDate" class="form-control hide-date-icon" type="date"> -->
 
                     <label class="str mb-2" for="Party">Journal Date</label>
-                    <mat-form-field class="tillDate mat_date_picker disable-datepicker"  appearance="outline">
-                        <input matInput style="margin-bottom: 2px;" (click)="journalVoucherDate.open()" autocomplete="off" readonly [matDatepicker]="journalVoucherDate"  id="journalVoucherDate" [placeholder]="entityDateFormat" formControlName="JournalDate">
-                        <mat-datepicker-toggle matSuffix [for]="journalVoucherDate"></mat-datepicker-toggle>
-                        <mat-datepicker #journalVoucherDate></mat-datepicker>
-                    </mat-form-field>
-                    
+                    <div class="form-group bmd-form-group w-100">
+                        <mat-form-field class="tillDate mat_date_picker" appearance="outline">
+                            <input matInput style="margin-bottom: 2px;" (click)="journalVoucherDate.open()"
+                                autocomplete="off" readonly [matDatepicker]="journalVoucherDate" [max]="fromMaxDate"
+                                id="journalVoucherDate" [placeholder]="entityDateFormat" formControlName="JournalDate">
+                            <mat-datepicker-toggle matSuffix [for]="journalVoucherDate"></mat-datepicker-toggle>
+                            <mat-datepicker #journalVoucherDate></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+
                 </div>
             </div>
 
@@ -174,12 +184,15 @@
                                                             {{name.AccountName | uppercase}}
                                                         </option>
                                                     </select> -->
-                                                    <ng-select class="searchdropdown custom" formControlName="AccountId" [clearable]="false" [appendTo]="'body'">
-                                                        <ng-option [value]="0" disabled>--SELECT ACCOUNT NAME--</ng-option>
-                                                        <ng-option *ngFor="let name of accountName" [value]="name.ChartOfAccountsId">
-                                                          {{ name.AccountName | uppercase }}
+                                                    <ng-select class="searchdropdown custom" formControlName="AccountId"
+                                                        [clearable]="false" [appendTo]="'body'">
+                                                        <ng-option [value]="0" disabled>--SELECT ACCOUNT
+                                                            NAME--</ng-option>
+                                                        <ng-option *ngFor="let name of accountName"
+                                                            [value]="name.ChartOfAccountsId">
+                                                            {{ name.AccountName | uppercase }}
                                                         </ng-option>
-                                                    </ng-select>                                                      
+                                                    </ng-select>
                                                 </td>
                                                 <td>
                                                     <!-- <select formControlName="DrCrId" class="form-control my-select">
@@ -188,12 +201,14 @@
                                                             {{item.TransactionName | uppercase}}
                                                         </option>
                                                     </select> -->
-                                                    <ng-select class="searchdropdown custom" formControlName="DrCrId"  [clearable]="false"  [appendTo]="'body'">
+                                                    <ng-select class="searchdropdown custom" formControlName="DrCrId"
+                                                        [clearable]="false" [appendTo]="'body'">
                                                         <ng-option [value]="0" disabled>--SELECT Dr/Cr--</ng-option>
-                                                        <ng-option *ngFor="let item of debitCreditList" [value]="item.Id">
-                                                          {{ item.TransactionName | uppercase }}
+                                                        <ng-option *ngFor="let item of debitCreditList"
+                                                            [value]="item.Id">
+                                                            {{ item.TransactionName | uppercase }}
                                                         </ng-option>
-                                                      </ng-select>                                                     
+                                                    </ng-select>
                                                 </td>
                                                 <td>
                                                     <!-- <select formControlName="Currency" class="form-control my-select">
@@ -203,49 +218,54 @@
                                                             {{currency.Currency | uppercase}}
                                                         </option>
                                                     </select> -->
-                                                    <ng-select class="searchdropdown custom" formControlName="Currency"  [clearable]="false"  [appendTo]="'body'">
+                                                    <ng-select class="searchdropdown custom" formControlName="Currency"
+                                                        [clearable]="false" [appendTo]="'body'">
                                                         <ng-option [value]="0" disabled>--SELECT CURRENCY--</ng-option>
-                                                        <ng-option *ngFor="let currency of currencyList" [value]="currency.ID">
-                                                          <!-- {{ currency.Currency | uppercase }} -->
-                                                          {{ currency.CurrencyCode | uppercase }}
+                                                        <ng-option *ngFor="let currency of currencyList"
+                                                            [value]="currency.ID">
+                                                            <!-- {{ currency.Currency | uppercase }} -->
+                                                            {{ currency.CurrencyCode | uppercase }}
 
                                                         </ng-option>
-                                                      </ng-select>                                                      
+                                                    </ng-select>
                                                 </td>
 
                                                 <td>
-                                                        <input
+                                                    <input
                                                         onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
-                                                        min="0" numbersOnly
-                                                        appDynamicDecimal class="form-control my-select amount w-100 mr-0"
-                                                        formControlName="ROE"/>
+                                                        min="0" numbersOnly appDynamicDecimal
+                                                        class="form-control my-select amount w-100 mr-0"
+                                                        formControlName="ROE" />
                                                 </td>
 
                                                 <td>
-                                                     <input
+                                                    <input
                                                         onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
-                                                        min="0" numbersOnly 
-                                                        appDynamicDecimal class="form-control my-select amount w-100 mr-0"
-                                                        formControlName="Amount"/>
-                                                    </td>
-
-                                                <td>
-                                                    <input [value]="(journalForm.value.ROE && journalForm.value.Amount) ? (journalForm.value.ROE * journalForm.value.Amount).toFixed(3) : '0'"
-                                                    formControlName="CompanyCurrencyAmount"
-                                                    class="form-control w-100" readonly autocomplete="off"
-                                                    onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly>
+                                                        min="0" numbersOnly appDynamicDecimal
+                                                        class="form-control my-select amount w-100 mr-0"
+                                                        formControlName="Amount" />
                                                 </td>
 
                                                 <td>
-                                                    <input type="text" class="w-100 inputs" formControlName="Narration"  onkeypress="return event.charCode != 46 && ((event.charCode >= 48 && event.charCode <= 57) || (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122))" />
+                                                    <input
+                                                        [value]="(journalForm.value.ROE && journalForm.value.Amount) ? (journalForm.value.ROE * journalForm.value.Amount).toFixed(3) : '0'"
+                                                        formControlName="CompanyCurrencyAmount"
+                                                        class="form-control w-100" readonly autocomplete="off"
+                                                        onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+                                                        min="0" numbersOnly>
                                                 </td>
-                                                
+
+                                                <td>
+                                                    <input type="text" class="w-100 inputs" formControlName="Narration"
+                                                        onkeypress="return event.charCode != 46 && ((event.charCode >= 48 && event.charCode <= 57) || (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122))" />
+                                                </td>
+
                                                 <td>
 
                                                 </td>
                                             </tr>
                                             <ng-container *ngIf="pagedItems.length > 0 else noRecord">
-                                                <tr *ngFor="let data of pagedItems;let i = index"   >
+                                                <tr *ngFor="let data of pagedItems;let i = index">
                                                     <td>{{data.AccountName}}</td>
                                                     <td>{{data.DrCrName}}</td>
                                                     <td>{{data.CurrencyName}}</td>
@@ -269,7 +289,8 @@
                                     </table>
 
                                     <div class="row page mr-3" align="right">
-                                        <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10" class="pagination">
+                                        <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10"
+                                            class="pagination">
                                             <li [ngClass]="{disabled:pager.currentPage === 1}">
                                                 <a (click)="setPage(1)">First</a>
                                             </li>
@@ -305,16 +326,18 @@
             <div class="row mt-4">
                 <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                     <label>Total Debit</label>
-                    <input formControlName="TotalDebit"  readonly class="form-control debit " autocomplete="off" type="text">
+                    <input formControlName="TotalDebit" readonly class="form-control debit " autocomplete="off"
+                        type="text">
                 </div>
                 <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                     <label>Total Credit</label>
-                    <input formControlName="TotalCredit" readonly  class="form-control credit" autocomplete="off" type="text">
+                    <input formControlName="TotalCredit" readonly class="form-control credit" autocomplete="off"
+                        type="text">
                 </div>
                 <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                     <label>Difference</label>
-                    <input formControlName="AmountDifference" readonly class="form-control difference" autocomplete="off"
-                        type="text">
+                    <input formControlName="AmountDifference" readonly class="form-control difference"
+                        autocomplete="off" type="text">
                 </div>
 
                 <div class="col-md-12 col-sm-12 col-lg-4 col-xl-4 mt-2">
@@ -401,14 +424,17 @@
                         style="background-color: #19a84c !important;border: #19a84c;" (click)="saveJournalInfo(1,2)">
                         Final
                     </button>
-                    <button type="button" *ngIf="isUpdate && !isFinalRecord" [disabled]="isUpdateMode" (click)="saveJournalInfo(0,1, true)"
+
+                    <button type="button" *ngIf="isUpdate && !isFinalRecord" [disabled]="isUpdateMode" (click)="deleteValue()"
                         class="btn btn-warning text-white mr-3 mb-0 col-auto">
+
+                        <!-- <button type="button" *ngIf="isUpdate && !isFinalRecord" [disabled]="isUpdateMode"
+                        (click)="saveJournalInfo(0,1, true)" class="btn btn-warning text-white mr-3 mb-0 col-auto"> -->
+                        
                         Delete
                     </button>
 
-                    <button type="button" 
-
-                    (click)="saveJournalInfo(2,3)"
+                    <button type="button" (click)="saveJournalInfo(2,3)"
                         class="btn btn-warning text-white mr-3 mb-0 col-auto">
                         Cancel
                     </button>

@@ -117,6 +117,70 @@ export class InvoicesArDetailsComponent implements OnInit {
     });
   }
 
+  deleteValue(){
+    const userID = localStorage.getItem("UserID");
+    const paylod = {
+      userID: Number(userID),
+      Ref_Application_Id: "4",
+      SubfunctionID: 519,
+    }
+    this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
+      if (data.length > 0) {
+        console.log("PermissionObject", data);
+
+        if (data[0].SubfunctionID == paylod.SubfunctionID) {
+
+          if (data[0].Delete_Opt != 2) {
+              Swal.fire('Please Contact Administrator');
+          }
+          else {
+            this.saveInfo(0,true);
+          }
+        }
+        else {
+          Swal.fire('Please Contact Administrator');
+        }
+      }
+      else {
+        Swal.fire('Please Contact Administrator');
+      }
+    }, err => {
+      console.log('errr----->', err.message);
+    });
+  }
+
+  deleteValueAttach(index){
+    const userID = localStorage.getItem("UserID");
+    const paylod = {
+      userID: Number(userID),
+      Ref_Application_Id: "4",
+      SubfunctionID: 519,
+    }
+    this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
+      if (data.length > 0) {
+        console.log("PermissionObject", data);
+
+        if (data[0].SubfunctionID == paylod.SubfunctionID) {
+
+          if (data[0].Delete_Opt != 2) {
+              Swal.fire('Please Contact Administrator');
+          }
+          else {
+            this.OnClickDeleteValueFile(index);
+          }
+        }
+        else {
+          Swal.fire('Please Contact Administrator');
+        }
+      }
+      else {
+        Swal.fire('Please Contact Administrator');
+      }
+    }, err => {
+      console.log('errr----->', err.message);
+    });
+  }
+
   getInvoiceInfo() {
     var service = `${this.globals.APIURL}/OutStandingInvoiceAR/GetOutStandingInvoiceARById`;
     this.dataService.post(service, { OutStandingInvoiceId: this.invoiceARId }).subscribe(async (result: any) => {

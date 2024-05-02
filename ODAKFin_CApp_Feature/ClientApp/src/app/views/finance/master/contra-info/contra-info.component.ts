@@ -22,6 +22,7 @@ import { INFERRED_TYPE } from "@angular/compiler/src/output/output_ast";
 })
 export class ContraInfoComponent implements OnInit {
   minDate: string = this.datePipe.transform(new Date(), "yyyy-MM-dd");
+  fromMaxDate = this.minDate;
   entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   editSelectedDocument: any;
   documentTableList = [];
@@ -120,7 +121,7 @@ export class ContraInfoComponent implements OnInit {
       DivisionId: [""],
       OfficeId: [""],
       ContraVoucherNumber: [""],
-      ContraVoucherDate: [this.minDate],
+      ContraVoucherDate: [''],
       FromAccount: [""],
       ToAccount: [""],
       ReferenceNo: [""],
@@ -214,7 +215,7 @@ export class ContraInfoComponent implements OnInit {
             DivisionId: info.DivisionId,
             OfficeId: info.OfficeId,
             ContraVoucherNumber: "",
-            ContraVoucherDate: new Date(),
+            ContraVoucherDate: info.ContraVoucherDate,
             FromAccount: info.FromAccount,
             ToAccount: info.ToAccount,
             ReferenceNo: info.ReferenceNo,
@@ -1123,7 +1124,6 @@ export class ContraInfoComponent implements OnInit {
     );
   }
   enableEdit() {
-    debugger
     const userID = localStorage.getItem("UserID");
     const paylod = {
       userID: Number(userID),
@@ -1159,6 +1159,38 @@ export class ContraInfoComponent implements OnInit {
       }
     );
   }
+
+  deleteValue() {
+    const userID = localStorage.getItem("UserID");
+    const paylod = {
+      userID: Number(userID),
+      Ref_Application_Id: "4",
+      SubfunctionID: 505,
+    };
+    this.commonDataService.GetUserPermissionObject(paylod).subscribe(
+      (data) => {
+        if (data.length > 0) {
+          console.log("PermissionObject", data);
+
+          if (data[0].SubfunctionID == paylod.SubfunctionID) {
+            if (data[0].Delete_Opt != 2) {
+              Swal.fire("Please Contact Administrator");
+            } else {
+              this.saveContra(true);
+            }
+          } else {
+            Swal.fire("Please Contact Administrator");
+          }
+        } else {
+          Swal.fire("Please Contact Administrator");
+        }
+      },
+      (err) => {
+        console.log("errr----->", err.message);
+      }
+    );
+  }
+
   getEntityDetails() {
     return new Promise((resolve, rejects) => {
       this.contraVoucherService

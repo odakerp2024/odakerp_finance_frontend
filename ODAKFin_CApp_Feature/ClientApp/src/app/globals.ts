@@ -22,7 +22,4 @@ export class Globals {
     // APIURLLA: string = 'https://odaklaqa.odaksolutions.in/api';
     // TemplateUploadURL: string = 'https://odakfn.odaksolutions.in';
 
-    //APIURL : string = 'https://localhost:44301/api';
-
-    //SaApi : string = 'https://localhost:44304/api';
 }

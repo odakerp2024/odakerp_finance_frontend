@@ -96,6 +96,7 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
 
   isCopied = false;
   currentDate = this.datePipe.transform(new Date(), "yyyy-MM-dd");
+  fromMaxDate = this.currentDate;
   isInvoiceCurrencyDifferent = false
   constructor(
     private ps: PaginationService,
@@ -195,7 +196,7 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
       IsOnAccount: [false],
       IsSecurityDeposit: [false],
       VoucherNumber: [''],
-      VoucherDate: [this.currentDate],
+      VoucherDate: [''],
       VoucherTypeId: [1],
       CustomerId: [0],
       CustomerBranch: [0],
@@ -296,7 +297,7 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
           IsOnAccount: info.IsOnAccount == true ? 1 : 0.,
           IsSecurityDeposit: info.IsSecurityDeposit == true ? 1 : 0,
           VoucherNumber: '',
-          VoucherDate: new Date(),
+          VoucherDate: info.VoucherDate,
           VoucherTypeId: info.VoucherTypeId,
           CustomerId: info.CustomerId,
           CustomerBranch: info.CustomerBranch,
@@ -700,6 +701,39 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
     }, error => {
       console.error(error);
     });
+  }
+
+  deleteValue() {
+    const userID = localStorage.getItem("UserID");
+    const paylod = {
+      userID: Number(userID),
+      Ref_Application_Id: "4",
+      SubfunctionID: 499,
+    }
+    this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
+      if (data.length > 0) {
+        console.log("PermissionObject", data);
+
+        if (data[0].SubfunctionID == paylod.SubfunctionID) {
+
+          if (data[0].Delete_Opt != 2) {
+            Swal.fire('Please Contact Administrator');
+          }
+          else {
+            this.saveVoucherInfo(0, true);
+          }
+        }
+        else {
+          Swal.fire('Please Contact Administrator');
+        }
+      }
+      else {
+        Swal.fire('Please Contact Administrator');
+      }
+    }, err => {
+      console.log('errr----->', err.message);
+    });
+
   }
 
   async saveVoucherInfo(finalNumber: number, isDelete = false) {
