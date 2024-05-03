@@ -29,14 +29,13 @@ export class ReportPaymentVoucherComponent implements OnInit  {
   officeList: any = [];
   reportList: any[];
   reportForExcelList: any[];
-  customerList: any[];
+  vendorList: any[];
   pager: any = {};// pager object  
   pagedItems: any[];// paged items
   paymentModeList: any[];
   TypeList = [
-    {TypeId: 1, TypeName: 'Invoice' },
-    {TypeId: 2, TypeName: 'On Account' },
-    {TypeId: 3, TypeName: 'Security Deposit' }
+    {TypeId: 1, TypeName: 'Bill' },
+    {TypeId: 2, TypeName: 'On Account' }
   ];
   PeroidList = [
     { peroidId: 'today', peroidName: 'CURRENT DAY' },
@@ -71,6 +70,7 @@ export class ReportPaymentVoucherComponent implements OnInit  {
     this.createReportForm();
     this.getDivisionList();
     this.getVoucherList();
+    this.getVendorList();
     this.onOptionChange('month');
     this.reportFilter.controls.Peroid.setValue('month');
   }
@@ -143,13 +143,41 @@ export class ReportPaymentVoucherComponent implements OnInit  {
     })
   }
 
+  getVendorList() {
+    return new Promise((resolve, reject) => {
+      this.reportService.getVendorList().subscribe((result: any) => {
+        if (result.message == "Success") {
+          if (result["data"].Table.length) {
+            const uniqueVendor = this.removeDuplicatesVendorId(result["data"].Table, 'VendorID');
+            this.vendorList = uniqueVendor;
+            resolve(true);
+            // console.log('vendorList', this.vendorList);
+          }
+        }
+      }, (error) => {
+        // Swal.fire(error.message, 'error');
+        reject();
+      });
+    })
+  }
+
+  removeDuplicatesVendorId(arr, key) {
+    const uniqueMap = new Map();
+    arr.forEach((item) => {
+      const value = item[key];
+      if (!uniqueMap.has(value)) {
+        uniqueMap.set(value, item);
+      }
+    });
+    return Array.from(uniqueMap.values());
+  }
+
   getVoucherList() {
     return new Promise((resolve, rejects) => {
      
 
       let service = `${this.globals.APIURL}/ReceiptVoucher/GetReceiptVoucherDropDownList`
       this.dataService.post(service, { CustomerId: 0 }).subscribe((result: any) => {
-        this.customerList = result.data.Table2;
         this.paymentModeList = result.data.Table4;
        
         resolve(true)

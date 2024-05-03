@@ -98,9 +98,9 @@
                     <ng-select class="searchdropdown" formControlName="Vendor" [clearable]="false" name="CategoryId"
                     id="CategoryId">
                         <ng-option [value]="0" disabled>--SELECT VENDOR--</ng-option>
-                        <ng-container *ngFor="let customer of customerList">
-                            <ng-option [value]="customer.CustomerID">
-                                <span class="textwrap">{{customer.CustomerName | uppercase}}
+                        <ng-container *ngFor="let vendor of vendorList">
+                            <ng-option [value]="vendor.VendorID">
+                                <span class="textwrap">{{vendor.VendorName | uppercase}}
                                 </span>
                             </ng-option>
                         </ng-container>

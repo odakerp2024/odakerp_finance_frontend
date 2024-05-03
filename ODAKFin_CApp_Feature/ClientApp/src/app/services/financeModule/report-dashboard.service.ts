@@ -14,4 +14,9 @@ export class ReportDashboardService {
     FormValue.Amount = FormValue.Amount == '' ? 0 : FormValue.Amount;
     return this.http.post<any>(this.globals.APIURL + '/Reports/ReceiptVoucherList/', FormValue);
   }
+
+  getVendorList(): Observable<any[]> {
+    return this.http.post<any[]>(this.globals.APIURL + '/Vendor/GetVendorList/', {});
+  }
+
 }
