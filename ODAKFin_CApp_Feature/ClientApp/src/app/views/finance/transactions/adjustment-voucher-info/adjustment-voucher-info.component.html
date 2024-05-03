@@ -110,8 +110,8 @@
                 <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group">
                         <label class="str mb-2">Adjustment Voucher Date</label>
-                        <mat-form-field  class="tillDate mat_date_picker disable-datepicker"  appearance="outline">
-                            <input matInput (click)="AVDate.open()" readonly disabled autocomplete="off" [matDatepicker]="AVDate"  id="AVDate" [placeholder]="entityDateFormat" formControlName="AVDate">
+                        <mat-form-field  class="tillDate mat_date_picker"  appearance="outline">
+                            <input matInput (click)="AVDate.open()" readonly autocomplete="off" [matDatepicker]="AVDate"  id="AVDate" [placeholder]="entityDateFormat" [max]="fromMaxDate" formControlName="AVDate">
                             <mat-datepicker-toggle matSuffix [for]="AVDate"></mat-datepicker-toggle>
                             <mat-datepicker #AVDate></mat-datepicker>
                         </mat-form-field>
@@ -414,7 +414,7 @@
                         Final
                     </button>
                     <button type="button" *ngIf="isUpdate && !isFinalRecord" [ngClass]=" !isEditMode ? 'disable-input--style' : ''"
-                        (click)="saveInfo(1,true)" class="btn btn-warning text-white mr-3 mb-0 col-auto">
+                        (click)="deleteValue()" class="btn btn-warning text-white mr-3 mb-0 col-auto">
                         Delete
                     </button>
                     <button type="button" (click)="saveInfo(3)"

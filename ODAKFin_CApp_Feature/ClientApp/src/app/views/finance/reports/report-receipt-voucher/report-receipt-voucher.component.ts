@@ -11,9 +11,6 @@ import { ReportDashboardService } from 'src/app/services/financeModule/report-da
 import Swal from 'sweetalert2';
 import { Workbook } from 'exceljs';
 import { saveAs } from 'file-saver';
-import {NativeDateAdapter} from '@angular/material/core';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatFormFieldModule} from '@angular/material/form-field';
 
 
 const today = new Date();
@@ -23,9 +20,7 @@ const year = today.getFullYear();
 @Component({
   selector: 'app-report-receipt-voucher',
   templateUrl: './report-receipt-voucher.component.html',
-  styleUrls: ['./report-receipt-voucher.component.css'],  
-  // providers: [new NativeDateAdapter()],
-  // imports: [MatFormFieldModule, MatDatepickerModule, FormsModule, ReactiveFormsModule]
+  styleUrls: ['./report-receipt-voucher.component.css'],
 })
 export class ReportReceiptVoucherComponent implements OnInit {
 
@@ -61,6 +56,9 @@ export class ReportReceiptVoucherComponent implements OnInit {
     end: new FormControl(new Date(year, month, 16)),
   });
 
+  startDate = '';
+  endDate = '';
+
   constructor(
     private commonDataService: CommonService,
     private datePipe: DatePipe,
@@ -76,9 +74,9 @@ export class ReportReceiptVoucherComponent implements OnInit {
   ngOnInit(): void {
     // this.getCustomerList();
     this.createReportForm();
+    this.onOptionChange('month');
     this.getDivisionList();
     this.getVoucherList();
-    this.onOptionChange('month');
     this.reportFilter.controls.Peroid.setValue('month');
   }
 
@@ -91,20 +89,25 @@ export class ReportReceiptVoucherComponent implements OnInit {
         break;
       case 'week':
         this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay()), "yyyy-MM-dd"));
-        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() + (6 - this.currentDate.getDay())), "yyyy-MM-dd"));
         break;
       case 'month':
-        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"));
-        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
+        const startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd")
+        const endDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd")
+
+        this.reportFilter.controls.StartDate.setValue(startDate);
+        this.reportFilter.controls.EndDate.setValue(endDate);
+
+
         break;
       case 'year':
-        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), 0, 1), "yyyy-MM-dd"));
-        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), 3, 1), "yyyy-MM-dd"));
+        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), 2, 31), "yyyy-MM-dd"));
         break;
       case 'custom':
         this.selectedOption = 'custom';
-        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), 0, 1), "yyyy-MM-dd"));
-        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
+        this.startDate = this.reportFilter.controls.StartDate.value;
+        this.endDate = this.reportFilter.controls.EndDate.value;
         break;
       default:
         this.selectedOption = '';
@@ -118,8 +121,8 @@ export class ReportReceiptVoucherComponent implements OnInit {
       Division: [0],
       Office: [0],
       Customer: [0],
-      StartDate: [new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 2)],
-      EndDate: [this.datePipe.transform(this.currentDate, "yyyy-MM-dd")],
+      StartDate: [this.startDate],
+      EndDate: [this.endDate],
       Amount: [''],
       Type: [0],
       PaymentMode: [0],
@@ -194,9 +197,14 @@ export class ReportReceiptVoucherComponent implements OnInit {
   getReceiptReportList() {
     this.reportService.GetReceiptVoucherReportList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
+
+      this.startDate = this.reportFilter.controls.StartDate.value;
+      this.endDate = this.reportFilter.controls.EndDate.value;
+
       if (result['data'].Table.length > 0) {
         this.reportList = result['data'].Table;
         this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
+        console.log("reportList--->", this.reportList);
         this.setPage(1)
       } else {
         this.pager = {};
@@ -214,12 +222,15 @@ export class ReportReceiptVoucherComponent implements OnInit {
   }
 
   clear() {
+    this.startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd");
+    this.endDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd");
+
     this.reportFilter.reset({
       Division: 0,
       Office: 0,
       Customer: 0,
-      StartDate: new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 2),
-      EndDate: this.datePipe.transform(this.currentDate, "yyyy-MM-dd"),
+      StartDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
+      EndDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd"),
       Amount: '',
       Type: 0,
       PaymentMode: 0,
@@ -227,6 +238,7 @@ export class ReportReceiptVoucherComponent implements OnInit {
     });
     this.bankList = [];
     this.officeList = [];
+    this.reportFilter.controls.Peroid.setValue('month');
     this.getReceiptReportList();
   }
 
@@ -246,21 +258,21 @@ export class ReportReceiptVoucherComponent implements OnInit {
   //   }
   // }
 
-  
-async  downloadAsExcel() {
-  if (this.reportForExcelList.length === 0) {
-    Swal.fire('No record found');
-    return;
-  }
+
+  async downloadAsExcel() {
+    if (this.reportForExcelList.length === 0) {
+      Swal.fire('No record found');
+      return;
+    }
 
     // Create a new workbook and worksheet
     const workbook = new Workbook();
     const worksheet = workbook.addWorksheet('Report');
-  
+
     // Define header row and style it with yellow background, bold, and centered text
     const header = Object.keys(this.reportForExcelList[0]);
     const headerRow = worksheet.addRow(header);
-  
+
     headerRow.eachCell((cell) => {
       cell.fill = {
         type: 'pattern',
@@ -280,12 +292,12 @@ async  downloadAsExcel() {
         right: { style: 'thin' },
       };
     });
-  
+
     // Add data rows
     this.reportForExcelList.forEach((data) => {
       worksheet.addRow(Object.values(data));
     });
-  
+
     // Adjust column widths to fit content
     worksheet.columns.forEach((column) => {
       let maxLength = 0;
@@ -297,7 +309,7 @@ async  downloadAsExcel() {
       });
       column.width = maxLength + 2; // Add some padding
     });
-  
+
     // Style the footer row with yellow background, bold, and centered text
     const footerRow = worksheet.addRow(['End of Report']); // Footer text
     footerRow.eachCell((cell) => {
@@ -313,89 +325,89 @@ async  downloadAsExcel() {
         horizontal: 'center',
       };
     });
-  
+
     // Merge footer cells if needed
     worksheet.mergeCells(`A${footerRow.number}:${String.fromCharCode(65 + header.length - 1)}${footerRow.number}`);
-  
+
     // Write to Excel and save
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     saveAs(blob, 'Report-ReceiptVoucher.xlsx');
-}
-
- async downloadAsCSV() {
-  if (this.reportForExcelList.length === 0) {
-    Swal.fire('No record found');
-    return;
   }
 
-  // Create a new workbook and worksheet
-  const workbook = new Workbook();
-  const worksheet = workbook.addWorksheet('Report');
+  async downloadAsCSV() {
+    if (this.reportForExcelList.length === 0) {
+      Swal.fire('No record found');
+      return;
+    }
 
-  // Define header row and style it with yellow background, bold, and centered text
-  const header = Object.keys(this.reportForExcelList[0]);
-  const headerRow = worksheet.addRow(header);
+    // Create a new workbook and worksheet
+    const workbook = new Workbook();
+    const worksheet = workbook.addWorksheet('Report');
 
-  headerRow.eachCell((cell) => {
-    cell.fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      fgColor: { argb: 'FFFFFF00' }, // Yellow background
-    };
-    cell.font = {
-      bold: true, // Bold font
-    };
-    cell.alignment = {
-      horizontal: 'center', // Center alignment
-    };
-    cell.border = {
-      top: { style: 'thin' },
-      left: { style: 'thin' },
-      bottom: { style: 'thin' },
-      right: { style: 'thin' },
-    };
-  });
+    // Define header row and style it with yellow background, bold, and centered text
+    const header = Object.keys(this.reportForExcelList[0]);
+    const headerRow = worksheet.addRow(header);
 
-  // Add data rows
-  this.reportForExcelList.forEach((data) => {
-    worksheet.addRow(Object.values(data));
-  });
-
-  // Adjust column widths to fit content
-  worksheet.columns.forEach((column) => {
-    let maxLength = 0;
-    column.eachCell({ includeEmpty: true }, (cell) => {
-      const cellLength = cell.value ? cell.value.toString().length : 0;
-      if (cellLength > maxLength) {
-        maxLength = cellLength;
-      }
+    headerRow.eachCell((cell) => {
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FFFFFF00' }, // Yellow background
+      };
+      cell.font = {
+        bold: true, // Bold font
+      };
+      cell.alignment = {
+        horizontal: 'center', // Center alignment
+      };
+      cell.border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' },
+      };
     });
-    column.width = maxLength + 2; // Add some padding
-  });
 
-  // Style the footer row with yellow background, bold, and centered text
-  const footerRow = worksheet.addRow(['End of Report']); // Footer text
-  footerRow.eachCell((cell) => {
-    cell.fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      fgColor: { argb: 'FFFFFF00' }, // Yellow background
-    };
-    cell.font = {
-      bold: true,
-    };
-    cell.alignment = {
-      horizontal: 'center',
-    };
-  });
+    // Add data rows
+    this.reportForExcelList.forEach((data) => {
+      worksheet.addRow(Object.values(data));
+    });
 
-  // Merge footer cells if needed
-  worksheet.mergeCells(`A${footerRow.number}:${String.fromCharCode(65 + header.length - 1)}${footerRow.number}`);
+    // Adjust column widths to fit content
+    worksheet.columns.forEach((column) => {
+      let maxLength = 0;
+      column.eachCell({ includeEmpty: true }, (cell) => {
+        const cellLength = cell.value ? cell.value.toString().length : 0;
+        if (cellLength > maxLength) {
+          maxLength = cellLength;
+        }
+      });
+      column.width = maxLength + 2; // Add some padding
+    });
 
-  // Write to Excel and save
-  const buffer = await workbook.xlsx.writeBuffer();
-  const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-  saveAs(blob, 'Report-ReceiptVoucher.xlsx');
-}
+    // Style the footer row with yellow background, bold, and centered text
+    const footerRow = worksheet.addRow(['End of Report']); // Footer text
+    footerRow.eachCell((cell) => {
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FFFFFF00' }, // Yellow background
+      };
+      cell.font = {
+        bold: true,
+      };
+      cell.alignment = {
+        horizontal: 'center',
+      };
+    });
+
+    // Merge footer cells if needed
+    worksheet.mergeCells(`A${footerRow.number}:${String.fromCharCode(65 + header.length - 1)}${footerRow.number}`);
+
+    // Write to Excel and save
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    saveAs(blob, 'Report-ReceiptVoucher.xlsx');
+  }
 }

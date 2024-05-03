@@ -96,10 +96,10 @@
                 <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                     <div class=" form-group">
                         <label class="str mb-2" for="Party">Contra Date</label>
-                        <mat-form-field class="tillDate mat_date_picker disable-input--noStyle" appearance="outline">
-                            <input matInput style="margin-bottom: 3px;" (click)="ContraVoucherDate.open()" disabled autocomplete="off" readonly [matDatepicker]="ContraVoucherDate"  id="ContraVoucherDate" [placeholder]="entityDateFormat" formControlName="ContraVoucherDate">
-                            <mat-datepicker-toggle disabled matSuffix [for]="ContraVoucherDate"></mat-datepicker-toggle>
-                            <mat-datepicker #ContraVoucherDate disabled></mat-datepicker>
+                        <mat-form-field class="tillDate mat_date_picker" appearance="outline">
+                            <input matInput style="margin-bottom: 3px;" (click)="ContraVoucherDate.open()" readonly autocomplete="off" [matDatepicker]="ContraVoucherDate"  id="ContraVoucherDate" [max]="fromMaxDate" [placeholder]="entityDateFormat" formControlName="ContraVoucherDate">
+                            <mat-datepicker-toggle matSuffix [for]="ContraVoucherDate"></mat-datepicker-toggle>
+                            <mat-datepicker #ContraVoucherDate></mat-datepicker>
                         </mat-form-field>
                         <!-- <input type="date" class="w-100 py-0 hide-date-icon bg-light border" readonly
                             formControlName="ContraVoucherDate" /> -->
@@ -346,16 +346,14 @@
                         [ngClass]=" !isEditMode1 ? 'disable-input--nostyle final-disable--style' : ''"
                         (click)="finalSaveContra()">Final</button>
                     <button type="button" *ngIf="isUpdate && !IsFinal" [ngClass]=" !isEditMode ? 'disable-input--style' : ''"
-                         (click)="saveContra(true)"
+                         (click)="deleteValue()"
                         class="btn btn-warning text-white mr-3 mb-0 col-auto">
                         Delete
                     </button>
                     <button  (click)="CancelContra()"
                         class="btn btn-warning text-white mr-3 mb-0 col-auto">Cancel</button>
                 </div>
-
             </div>
         </form>
     </div>
-
 </div>

@@ -169,13 +169,15 @@
 
                     <div class="col-4">
                         <label class="str mb-2 fontstyles">Payment Voucher Date</label>
-                        <mat-form-field class="tillDate mat_date_picker disable-datepicker" appearance="outline">
-                            <input matInput (click)="PaymentVoucherDate.open()" style="margin-bottom: 3px;"
+                        <div class="form-group bmd-form-group w-100">
+                        <mat-form-field class="tillDate mat_date_picker" appearance="outline">
+                            <input matInput readonly (click)="PaymentVoucherDate.open()" style="margin-bottom: 3px;" [max]="fromMaxDate"
                                 autocomplete="off" [matDatepicker]="PaymentVoucherDate" id="PaymentVoucherDate"
                                 [placeholder]="entityDateFormat" formControlName="PaymentVoucherDate">
                             <mat-datepicker-toggle matSuffix [for]="PaymentVoucherDate"></mat-datepicker-toggle>
                             <mat-datepicker #PaymentVoucherDate></mat-datepicker>
                         </mat-form-field>
+                        </div>
                         <!-- <input type="date" class="w-100 py-0 hide-date-icon " formControlName="PaymentVoucherDate"
                         [ngClass]="isCopied ? 'disable-input' : ''" [min]="minDate" readonly placeholder=" current Date" /> -->
                     </div>
