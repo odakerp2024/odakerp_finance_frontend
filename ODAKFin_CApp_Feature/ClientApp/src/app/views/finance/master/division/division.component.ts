@@ -154,7 +154,7 @@ export class DivisionComponent implements OnInit {
 
           if (data[0].SubfunctionID == paylod.SubfunctionID) {
 
-            if (data[0].Update_Opt == 2 && route == 'Division') {
+            if (data[0].Update_Opt == 2 || data[0].Read_Opt == 2 && route == 'Division') {
               this.isDivision = true;
             } else {
               this.isDivision = false;
@@ -173,7 +173,7 @@ export class DivisionComponent implements OnInit {
 
           if (data[0].SubfunctionID == paylod.SubfunctionID) {
 
-            if (data[0].Update_Opt == 2 && route == 'Email') {
+            if (data[0].Update_Opt == 2 || data[0].Read_Opt == 2 && route == 'Email') {
               this.isEmail = true;
             } else {
               this.isEmail = false;

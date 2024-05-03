@@ -80,6 +80,39 @@ export class DivisionInfoComponent implements OnInit {
     });
   }
 
+  EditValue(){
+    const userID = localStorage.getItem("UserID");
+    const paylod = {
+      userID: Number(userID),
+      Ref_Application_Id: "4",
+      SubfunctionID: 540,
+    }
+    this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
+      if (data.length > 0) {
+        console.log("PermissionObject", data);
+
+        if (data[0].SubfunctionID == paylod.SubfunctionID) {
+
+          if (data[0].Update_Opt != 2) {
+              Swal.fire('Please Contact Administrator');
+          }
+          else {
+            this.divisionForm.enable();
+            this.isUpdateEnable = true
+          }
+        }
+        else {
+          Swal.fire('Please Contact Administrator');
+        }
+      }
+      else {
+        Swal.fire('Please Contact Administrator');
+      }
+    }, err => {
+      console.log('errr----->', err.message);
+    });
+  }
+
   cerateDivisionForm() {
     this.divisionForm = this.fb.group({
       Id: [0],

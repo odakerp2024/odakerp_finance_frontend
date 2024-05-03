@@ -8,6 +8,7 @@ import { Status, StatusView } from 'src/app/model/common';
 import { DataService } from 'src/app/services/data.service';
 import { ChartaccountService } from 'src/app/services/financeModule/chartaccount.service';
 import { MastersService } from 'src/app/services/masters.service';
+import { CommonService } from 'src/app/services/common.service';
 import Swal from 'sweetalert2';
 
 declare let $: any;
@@ -48,7 +49,7 @@ export class ChartaccountsComponent implements OnInit {
   currentSequencyId: any[];
   AccountName: string = '';
 
-  constructor(private router: Router, private route: ActivatedRoute,
+  constructor(private router: Router, private route: ActivatedRoute, private CommonService: CommonService,
     private ms: MastersService, private fb: FormBuilder, private ChartaccountService: ChartaccountService,
     private dataService: DataService, private globals: Globals
   ) {
@@ -75,6 +76,36 @@ export class ChartaccountsComponent implements OnInit {
     }
 
     $('.my-select').select2();
+  }
+
+  updateValue(){
+    const userID = localStorage.getItem("UserID");
+        const paylod = {
+          userID: Number(userID),
+          Ref_Application_Id: "4",
+          SubfunctionID: 578
+        }
+        this.CommonService.GetUserPermissionObject(paylod).subscribe(data => {
+          debugger
+          if (data.length > 0) {
+            console.log("PermissionObject", data);
+    
+            if (data[0].SubfunctionID == paylod.SubfunctionID) {
+    
+              if (data[0].Update_Opt == 2) {
+                this.fg.enable();
+                this.isUpdateEnable = false
+              } else {
+                Swal.fire('Please Contact Administrator');
+              }
+            }
+          } else {
+            Swal.fire('Please Contact Administrator');
+          }
+    
+        }, err => {
+          console.log('errr----->', err.message);
+        });
   }
 
   onBack() {

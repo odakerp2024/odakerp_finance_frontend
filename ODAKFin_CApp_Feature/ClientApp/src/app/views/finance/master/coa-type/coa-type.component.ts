@@ -60,7 +60,7 @@ export class CoaTypeComponent implements OnInit {
 
           if (data[0].Create_Opt == 2 && route != 'edit') {
             this.router.navigate(['views/coa-type-info/cao-type-info-view']);
-          } else if (data[0].Update_Opt == 2 && route == 'edit') {
+          } else if (data[0].Update_Opt == 2 || data[0].Read_Opt == 2 && route == 'edit') {
             this.router.navigate(['views/coa-type-info/cao-type-info-view', { isCreate: false, id: id }]);
           } else {
             Swal.fire('Please Contact Administrator');

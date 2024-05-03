@@ -74,7 +74,7 @@ export class BankAccountviewComponent implements OnInit {
 
           if (data[0].Create_Opt == 2 && Id == 0) {
             this.router.navigate(['/views/finance/master/bank-account/bank-account/']);
-          } else if (data[0].Update_Opt == 2 && Id != 0) {
+          } else if (data[0].Update_Opt == 2 || data[0].Read_Opt == 2 && Id != 0) {
             this.router.navigate(['/views/finance/master/bank-account/bank-account/', { id: Id }]);
           } else {
             Swal.fire('Please Contact Administrator');

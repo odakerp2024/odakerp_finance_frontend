@@ -125,7 +125,7 @@ export class BankAccountComponent implements OnInit {
     } else {
       this.getPermissionListForCreate(569, 'Cheque Management');
       this.getPermissionListForCreate(570, 'Statement Template');
-      this.getPermissionListForCreate(571, 'Attachments');      
+      this.getPermissionListForCreate(571, 'Attachments');
     }
 
     this.getTemplateName();
@@ -205,7 +205,7 @@ export class BankAccountComponent implements OnInit {
 
           if (data[0].SubfunctionID == paylod.SubfunctionID) {
 
-            if (data[0].Update_Opt == 2) {
+            if (data[0].Update_Opt == 2 || data[0].Read_Opt == 2) {
               this.isChequeTab = true;
               this.Current_Tab = 'tabCheque';
             } else {
@@ -224,7 +224,7 @@ export class BankAccountComponent implements OnInit {
 
           if (data[0].SubfunctionID == paylod.SubfunctionID) {
 
-            if (data[0].Update_Opt == 2) {
+            if (data[0].Update_Opt == 2 || data[0].Read_Opt == 2) {
               this.isStatement = true;
               this.Current_Tab = 'tabStatement';
             } else {
@@ -243,7 +243,7 @@ export class BankAccountComponent implements OnInit {
 
           if (data[0].SubfunctionID == paylod.SubfunctionID) {
 
-            if (data[0].Update_Opt == 2) {
+            if (data[0].Update_Opt == 2 || data[0].Read_Opt == 2) {
               this.isAttachemnt = true;
               this.Current_Tab = 'tabAttachment';
 
