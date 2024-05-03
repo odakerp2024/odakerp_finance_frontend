@@ -86,6 +86,9 @@ export class PurchaseInvoiseAdminComponent implements OnInit {
       if (result.message == 'Success' && result.data.Table.length > 0) {
         this.purchaseInvoiceList = result.data.Table;
         this.setPage(1);
+      } else {
+        this.pager = {};
+        this.pagedItems = [];
       }
     }, error => { console.error(error) });
   }
