@@ -383,9 +383,9 @@ export class FinanceMasterComponent implements OnInit {
         }
       });
 
-      this.BindTokenValues();
       this.setEntityConfigurable();
     }
+    this.BindTokenValues();
   }
 
   getUserDtls(){
