@@ -76,6 +76,7 @@ export class BasicCustomerDetails {
     IsActive = 1;
     ShortName = '';
     URL = '';
+    UpdatedBy = '';
     // InputPage = '';
 }
 

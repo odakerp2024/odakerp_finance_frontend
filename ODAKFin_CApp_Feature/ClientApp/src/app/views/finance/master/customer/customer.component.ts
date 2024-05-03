@@ -69,6 +69,7 @@ export class CustomerComponent implements OnInit {
   Customer_Code: string = "";
   Branch_Code: string = "";
   LoginUsername = localStorage.getItem("UserName");
+  LoginUserId = localStorage.getItem("UserID");
   DateNow = new Date().toISOString().split('T')[0];
   Current_Tab: string = '';
   statusvalues: Status[] = new StatusView().statusvalues;
@@ -1022,6 +1023,7 @@ export class CustomerComponent implements OnInit {
       onboardstatus: '1',
       //Status: '',
       primaryTelephone: ['', [Validators.pattern(this.telephonePattern), Validators.minLength(12), Validators.maxLength(16)]],
+      UpdatedBy: this.LoginUserId,
 
       // Sales PIc
       SalesId: 0,
@@ -1097,6 +1099,7 @@ export class CustomerComponent implements OnInit {
     this.basicCustomerDetail.IsActive = this.fg.value.IsActive === 'true' ? 1 : 0;
     this.basicCustomerDetail.ShortName = this.fg.value.ShortName;
     this.basicCustomerDetail.URL = this.fg.value.URL;
+    this.basicCustomerDetail.UpdatedBy = this.LoginUserId;
 
 
     // if (this.Current_Tab == "tabKYC") this.basicCustomerDetail.InputPage = "KYC";

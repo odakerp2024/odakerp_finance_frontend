@@ -193,7 +193,7 @@ export class CreditApplicationDetailsComponent implements OnInit {
   }
 
   submitApproval(){
-
+debugger
     let eventData: any = {}
     let checkOutstand = 'Fail'
 

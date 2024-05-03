@@ -370,6 +370,9 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
         this.ModifiedBy = info.UpdatedByName;
         if (info.StatusId == 2) this.isFinalRecord = true;
 
+        this.getVendorBranchList(info.VendorId, info.VendorBranch, false);
+        await this.getVendorDetailsInfo(info.VendorBranch);
+
 
       //  this.onBookingAgainstChange(info.BookingAgainst == 0 ? 'general' : 'provision');
         const bookingType = info.BookingAgainst == 0 ? 'general' : 'provision';
@@ -436,8 +439,6 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
         // }
 
         this.getOfficeList(info.Division);
-        this.getVendorBranchList(info.VendorId, info.VendorBranch, false);
-        const vendorDetails = await this.getVendorDetailsInfo(info.VendorBranch);
 
 
         if (result.data.Table1.length > 0) {

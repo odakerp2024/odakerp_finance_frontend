@@ -205,6 +205,10 @@ import { ProvisionViewComponent } from './views/finance/transactions/provision/p
 import { ProvisionDetailComponent } from './views/finance/transactions/provision/provision-detail/provision-detail.component';
 import { TrialbalancetwoComponent } from './views/finance/reports/leveltwo/trialbalancetwo/trialbalancetwo.component';
 import { TrailbalanceComponent } from './views/finance/reports/levelone/trailbalance/trailbalance.component';
+import { ReportReceiptVoucherComponent } from './views/finance/reports/report-receipt-voucher/report-receipt-voucher.component';
+import { ReportPaymentVoucherComponent } from './views/finance/reports/report-payment-voucher/report-payment-voucher.component';
+import { ReportContraVoucherComponent } from './views/finance/reports/report-contra-voucher/report-contra-voucher.component';
+import { ReportVoucherReversalComponent } from './views/finance/reports/report-voucher-reversal/report-voucher-reversal.component';
 const routes: Routes = [
 
     // { path: '', redirectTo: "/login", pathMatch: 'full' },
@@ -466,6 +470,11 @@ const routes: Routes = [
 
             { path: 'finance/master/chartaccountcode/chartaccountcodeview', component: ChartaccountcodeviewComponent },
             { path: 'finance/master/chartaccountcode/chartaccountcodelist', component: ChartaccountcodelistComponent },
+            
+            { path: 'finance/reports', component: ReportReceiptVoucherComponent },
+            { path: 'finance/reports', component: ReportPaymentVoucherComponent },
+            { path: 'finance/reports', component: ReportContraVoucherComponent },
+            { path: 'finance/reports', component: ReportVoucherReversalComponent },
             /* Finance Module - End */
 
             /** Lazy Loading modules **/
@@ -528,6 +537,7 @@ const routes: Routes = [
             { path: 'transactions/openingBalances', loadChildren: () => import('./views/finance/transactions/equity/equity.module').then(m => m.EquityModule) },
             { path: 'transactions/openingBalances', loadChildren: () => import('./views/finance/transactions/income/income.module').then(m => m.IncomeModule) },
             { path: 'provision', loadChildren: () => import('./views/finance/transactions/provision/provision.module').then(m => m.ProvisionModule) },
+            { path: 'reports', loadChildren: () => import('./views/finance/reports/reports.module').then(m => m.ReportsModule) },
 
 
 

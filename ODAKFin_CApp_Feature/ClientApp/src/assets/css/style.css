@@ -6729,9 +6729,9 @@ input[type=checkbox].comchk1 {
 }
 
 
-.enqview .table > tbody > tr > td {
+/* .enqview .table > tbody > tr > td {
     text-align: center !important;
-}
+} */
 
 .btn.btnlog {
     background-color: #e9ecef;
