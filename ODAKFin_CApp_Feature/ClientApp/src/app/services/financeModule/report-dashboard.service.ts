@@ -19,4 +19,10 @@ export class ReportDashboardService {
     return this.http.post<any[]>(this.globals.APIURL + '/Vendor/GetVendorList/', {});
   }
 
+  GetContraVoucherReportList(FormValue: any): Observable<any> {
+    FormValue.Amount = FormValue.Amount == '' ? 0 : FormValue.Amount;
+    return this.http.post<any>(this.globals.APIURL + '/Reports/ContraVoucherList/', FormValue);
+  }
+
+
 }

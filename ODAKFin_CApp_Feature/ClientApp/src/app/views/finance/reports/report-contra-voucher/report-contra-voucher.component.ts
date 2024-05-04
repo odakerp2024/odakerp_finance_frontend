@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Globals } from 'src/app/globals';
 import { PaginationService } from 'src/app/pagination.service';
@@ -8,7 +8,16 @@ import { CommonService } from 'src/app/services/common.service';
 import { DataService } from 'src/app/services/data.service';
 import { ExcelService } from 'src/app/services/excel.service';
 import { ReportDashboardService } from 'src/app/services/financeModule/report-dashboard.service';
+import { ContraVoucherService } from 'src/app/services/contra-voucher.service';
 import Swal from 'sweetalert2';
+import { Workbook } from 'exceljs';
+import { saveAs } from 'file-saver';
+
+
+const today = new Date();
+const month = today.getMonth();
+const year = today.getFullYear();
+
 
 @Component({
   selector: 'app-report-contra-voucher',
@@ -29,7 +38,25 @@ export class ReportContraVoucherComponent implements OnInit  {
   // paymentModeList: any[];
   // bankList: any[];
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat')
+  PeroidList = [
+    { peroidId: 'today', peroidName: 'CURRENT DAY' },
+    { peroidId: 'week', peroidName: 'CURRENT WEEK' },
+    { peroidId: 'month', peroidName: 'CURRENT MONTH' },
+    { peroidId: 'year', peroidName: 'CURRENT FINANCIAL YEAR' },
+    { peroidId: 'custom', peroidName: 'CUSTOM' }
+  ];
+  selectedOption: string;
+  bankList: any;
+  campaignOne = new FormGroup({
+    start: new FormControl(new Date(year, month, 13)),
+    end: new FormControl(new Date(year, month, 16)),
+  });
+  fromAccount: any;
+  toAccount = [];
+  startDate = '';
+  endDate = '';
   currentDate = new Date();
+
   constructor(
     private commonDataService: CommonService,
     private datePipe: DatePipe,
@@ -37,29 +64,84 @@ export class ReportContraVoucherComponent implements OnInit  {
     private globals: Globals,
     private fb: FormBuilder,
     private ps: PaginationService,
+    private contraVoucherService: ContraVoucherService,
     private dataService: DataService,
     private reportService: ReportDashboardService,
     public excelService : ExcelService
   ) { }
 
   ngOnInit(): void {
+    debugger
     // this.getCustomerList();
     this.createReportForm();
+    this.onOptionChange('month');
     this.getDivisionList();
+    this.getBankList();
     this.getVoucherList();
+    this.reportFilter.controls.Peroid.setValue('month');
   }
 
+  onOptionChange(selectedOption: string) {
+    debugger
+    this.selectedOption = '';
+    switch (selectedOption) {
+      case 'today':
+        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
+        break;
+      case 'week':
+        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay()), "yyyy-MM-dd"));
+        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() + (6 - this.currentDate.getDay())), "yyyy-MM-dd"));
+        break;
+      case 'month':
+        const startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd")
+        const endDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd")
+
+        this.reportFilter.controls.FromDate.setValue(startDate);
+        this.reportFilter.controls.ToDate.setValue(endDate);
+
+
+        break;
+      case 'year':
+        // this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), 3, 1), "yyyy-MM-dd"));
+        // this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), 2, 31), "yyyy-MM-dd"));
+        
+        const currentYear = this.currentDate.getFullYear();
+        const startYear = this.currentDate.getMonth() >= 3 ? currentYear : currentYear - 1;
+        const endYear = startYear + 1;
+      
+        // Set the StartDate to April 1 of the startYear
+        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(new Date(startYear, 3, 1), "yyyy-MM-dd"));
+      
+        // Set the EndDate to March 31 of the endYear
+        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(new Date(endYear, 2, 31), "yyyy-MM-dd"));
+        
+        break;
+      case 'custom':
+        this.selectedOption = 'custom';
+        this.startDate = this.reportFilter.controls.FromDate.value;
+        this.endDate = this.reportFilter.controls.ToDate.value;
+        break;
+      default:
+        this.selectedOption = '';
+        break;
+    }
+  }
+ 
   createReportForm() {
     this.reportFilter = this.fb.group({
-      Division: [0],
-      Office: [0],
+      DivisionId: [0],
+      OfficeId: [0],
       FromAccount: [0],
       ToAccount: [0],
-      StartDate: [new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 2)],
-      EndDate: [this.datePipe.transform(this.currentDate, "yyyy-MM-dd")],
+      FromDate: [this.startDate],
+      ToDate: [this.endDate],
+      // StartDate: [new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 2)],
+      // EndDate: [this.datePipe.transform(this.currentDate, "yyyy-MM-dd")],
       Amount: [''],
+      Peroid: [''],
     });
-    this.getReceiptReportList();
+    this.getContraReportList();
   }
 
   getDivisionList() {
@@ -83,8 +165,10 @@ export class ReportContraVoucherComponent implements OnInit  {
       }
     })
   }
-
+ 
+  
   getVoucherList() {
+
     return new Promise((resolve, rejects) => {
   
 
@@ -100,6 +184,33 @@ export class ReportContraVoucherComponent implements OnInit  {
       });
     })
   }
+
+  getBankList() {
+    let payload = {
+      OfficeId: 0,
+      DivisionId: 0,
+    };
+
+    this.commonDataService
+      .getBankByOfficeId(payload)
+      .subscribe((result: any) => {
+        if (result.message == "Success") {
+          // console.log(result['data'].Table)
+          this.bankList = result["data"].Table;
+          this.fromAccount = this.bankList;
+        }
+      });
+  }
+
+  getToAccount(fromAccountId) {
+    this.reportFilter.controls["ToAccount"].setValue("");
+    const toAccount = this.bankList?.filter(
+      (res) => res.BankID != +fromAccountId
+    );
+    this.toAccount = toAccount;
+  }
+
+ 
 
   getDivisionBasedOffice(officeId: number, divisoinId: any) {
     if (officeId && divisoinId) {
@@ -118,9 +229,13 @@ export class ReportContraVoucherComponent implements OnInit  {
     }
   }
 
-  getReceiptReportList() {
-    this.reportService.GetReceiptVoucherReportList(this.reportFilter.value).subscribe(result => {
+  getContraReportList() {
+    this.reportService.GetContraVoucherReportList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
+      
+      this.startDate = this.reportFilter.controls.FromDate.value;
+      this.endDate = this.reportFilter.controls.ToDate.value;
+
       if (result['data'].Table.length > 0) {
         this.reportList = result['data'].Table;
         this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
@@ -141,35 +256,191 @@ export class ReportContraVoucherComponent implements OnInit  {
   }
   
   clear() {
+
+    this.startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd");
+    this.endDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd");
+
     this.reportFilter.reset({
-      Division: 0,
-      Office: 0,
-      FromAccount: 0,
-      ToAccount: 0,
-      StartDate: new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 2),
-      EndDate: this.datePipe.transform(this.currentDate, "yyyy-MM-dd"),
+      DivisionId: 0,
+      OfficeId: 0,
+      FromAccount: [''],
+      ToAccount: [''],
+      FormData: new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 2),
+      ToDate: this.datePipe.transform(this.currentDate, "yyyy-MM-dd"),
       Amount: '',
     });
+    this.reportFilter.controls.Peroid.setValue('month');
+    this.getContraReportList();
   }
 
-  downloadAsCSV() {
-    this.excelService.exportToCSV(this.reportList,'Report-ReceiptVoucher')
-    if(this.reportForExcelList.length > 0){
-      this.excelService.exportToCSV(this.reportForExcelList,'Report-ReceiptVoucher')
-    } else {
-      Swal.fire('no record found');
-    }
-  }
+  // downloadAsCSV() {
+  //   this.excelService.exportToCSV(this.reportList,'Report-ReceiptVoucher')
+  //   if(this.reportForExcelList.length > 0){
+  //     this.excelService.exportToCSV(this.reportForExcelList,'Report-ReceiptVoucher')
+  //   } else {
+  //     Swal.fire('no record found');
+  //   }
+  // }
   
-  downloadAsExcel() {
-    this.excelService.exportToCSV(this.reportList,'Report-ReceiptVoucher')
-    if(this.reportForExcelList.length > 0){
-      this.excelService.exportAsExcelFile(this.reportForExcelList,'Report-ReceiptVoucher')
-    } else {
-      Swal.fire('no record found');
+  // downloadAsExcel() {
+  //   this.excelService.exportToCSV(this.reportList,'Report-ReceiptVoucher')
+  //   if(this.reportForExcelList.length > 0){
+  //     this.excelService.exportAsExcelFile(this.reportForExcelList,'Report-ReceiptVoucher')
+  //   } else {
+  //     Swal.fire('no record found');
+  //   }
+  // }
+  async downloadAsExcel() {
+    if (this.reportForExcelList.length === 0) {
+      Swal.fire('No record found');
+      return;
     }
+
+    // Create a new workbook and worksheet
+    const workbook = new Workbook();
+    const worksheet = workbook.addWorksheet('Report');
+
+    // Define header row and style it with yellow background, bold, and centered text
+    const header = Object.keys(this.reportForExcelList[0]);
+    const headerRow = worksheet.addRow(header);
+
+    headerRow.eachCell((cell) => {
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FFFFFF00' }, // Yellow background
+      };
+      cell.font = {
+        bold: true, // Bold font
+      };
+      cell.alignment = {
+        horizontal: 'center', // Center alignment
+      };
+      cell.border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' },
+      };
+    });
+
+    // Add data rows
+    this.reportForExcelList.forEach((data) => {
+      worksheet.addRow(Object.values(data));
+    });
+
+    // Adjust column widths to fit content
+    worksheet.columns.forEach((column) => {
+      let maxLength = 0;
+      column.eachCell({ includeEmpty: true }, (cell) => {
+        const cellLength = cell.value ? cell.value.toString().length : 0;
+        if (cellLength > maxLength) {
+          maxLength = cellLength;
+        }
+      });
+      column.width = maxLength + 2; // Add some padding
+    });
+
+    // Style the footer row with yellow background, bold, and centered text
+    const footerRow = worksheet.addRow(['End of Report']); // Footer text
+    footerRow.eachCell((cell) => {
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FFFFFF00' }, // Yellow background
+      };
+      cell.font = {
+        bold: true,
+      };
+      cell.alignment = {
+        horizontal: 'center',
+      };
+    });
+
+    // Merge footer cells if needed
+    worksheet.mergeCells(`A${footerRow.number}:${String.fromCharCode(65 + header.length - 1)}${footerRow.number}`);
+
+    // Write to Excel and save
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    saveAs(blob, 'Report-ReceiptVoucher.xlsx');
   }
 
+  async downloadAsCSV() {
+    if (this.reportForExcelList.length === 0) {
+      Swal.fire('No record found');
+      return;
+    }
+
+    // Create a new workbook and worksheet
+    const workbook = new Workbook();
+    const worksheet = workbook.addWorksheet('Report');
+
+    // Define header row and style it with yellow background, bold, and centered text
+    const header = Object.keys(this.reportForExcelList[0]);
+    const headerRow = worksheet.addRow(header);
+
+    headerRow.eachCell((cell) => {
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FFFFFF00' }, // Yellow background
+      };
+      cell.font = {
+        bold: true, // Bold font
+      };
+      cell.alignment = {
+        horizontal: 'center', // Center alignment
+      };
+      cell.border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' },
+      };
+    });
+
+    // Add data rows
+    this.reportForExcelList.forEach((data) => {
+      worksheet.addRow(Object.values(data));
+    });
+
+    // Adjust column widths to fit content
+    worksheet.columns.forEach((column) => {
+      let maxLength = 0;
+      column.eachCell({ includeEmpty: true }, (cell) => {
+        const cellLength = cell.value ? cell.value.toString().length : 0;
+        if (cellLength > maxLength) {
+          maxLength = cellLength;
+        }
+      });
+      column.width = maxLength + 2; // Add some padding
+    });
+
+    // Style the footer row with yellow background, bold, and centered text
+    const footerRow = worksheet.addRow(['End of Report']); // Footer text
+    footerRow.eachCell((cell) => {
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FFFFFF00' }, // Yellow background
+      };
+      cell.font = {
+        bold: true,
+      };
+      cell.alignment = {
+        horizontal: 'center',
+      };
+    });
+
+    // Merge footer cells if needed
+    worksheet.mergeCells(`A${footerRow.number}:${String.fromCharCode(65 + header.length - 1)}${footerRow.number}`);
+
+    // Write to Excel and save
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    saveAs(blob, 'Report-ReceiptVoucher.xlsx');
+  }
 
 }
 
