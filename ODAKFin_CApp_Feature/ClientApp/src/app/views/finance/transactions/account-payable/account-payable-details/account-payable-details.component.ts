@@ -174,8 +174,8 @@ export class AccountPayableDetailsComponent  implements OnInit {
     const service = `${this.globals.APIURL}/PaymentVoucher/PaymentVoucherBillDuePaymentList`;
     this.dataService.post(service, { VendorId: event }).subscribe((result: any) => {
       this.VendorCodeList = [];
-      if (result.data.Table.length > 0) { 
-        this.VendorCodeList = result.data.Table;
+      if (result.data.Table1.length > 0) { 
+        this.VendorCodeList = result.data.Table1;
       }
       console.log("okdd");
       if (!isUpdate) {
