@@ -78,6 +78,7 @@ export class VendorsComponent implements OnInit {
   Vendor_Code: string = "";
   Branch_Code: string = "";
   LoginUsername = localStorage.getItem("UserName");
+  LoginUserId = localStorage.getItem("UserID");
   DateNow = new Date().toISOString().split('T')[0];
   Current_Tab: string = "tabBranch";
   TDSValue = "";
@@ -1580,6 +1581,7 @@ export class VendorsComponent implements OnInit {
     this.basicVendorDetail.IsActive = this.fg.value.IsActive === 'true' ? 1 : 0;
     this.basicVendorDetail.VendorStatus = 337;
     this.basicVendorDetail.URL = this.fg.value.URL;
+    this.basicVendorDetail.UpdatedBy = this.LoginUserId;
     this.basicVendorDetail.ShortName = this.fg.value.ShortName;
     // this.basicVendorDetail.TDSApplicability = this.fg.value.TDSApplicability;
     // this.basicVendorDetail.NonTDSReason = this.fg.value.ReasonForNonTDS;

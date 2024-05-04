@@ -84,6 +84,7 @@ export class BasicVendorDetails {
   IsActive: any = '';
   ShortName = '';
   URL = '';
+  UpdatedBy = '';
 
   // old keys need to remove later
     // VendorID = 0;
