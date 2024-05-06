@@ -138,13 +138,6 @@
                         <div class="row">
                            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6" >
                                 <label class="str" for="Status">Currency</label>
-                                
-                                <!-- <ng-select  class="searchdropdown custom" formControlName="CurrencyId" (change)="setCurrencyId($event); getExchangeRate()" [clearable]="false">
-                                <ng-option [value]="''" [disabled]="true">--SELECT CURRENCY--</ng-option>
-                                <ng-option *ngFor="let currency of currencyList" [value]="currency.CurrencyID">
-                                  {{ currency.CurrencyCode | uppercase }}
-                                </ng-option>
-                              </ng-select>                               -->
                               <ng-select class="searchdropdown custom" [formControlName]="'CurrencyId'"
                               (change)="setCurrencyId($event); getExchangeRate()" [clearable]="false">
                               <ng-option [value]="''" [disabled]="true" selected>--SELECT CURRENCY--</ng-option>

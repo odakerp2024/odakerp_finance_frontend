@@ -87,7 +87,6 @@ export class ContraInfoComponent implements OnInit {
     this.getDivisionList();
     this.getStatus();
     // this.getOffice();
-    // this.getCurrency();
     this.getModeOfPayment();
     this.getNumberRangeList();
     await this.getCurrency();
@@ -368,22 +367,6 @@ export class ContraInfoComponent implements OnInit {
     });
   }
 
-  // getCurrency() {
-  //   debugger
-  //   return new Promise((resolve, rejects) => {
-  //     const payload = { currencyId: 0, countryId: 0 };
-  //     let service = `${this.globals.SaApi}/SystemAdminApi/GetCurrency`
-  //     this.dataService.post(service, {}).subscribe((result: any) =>{
-  //         if (result.length > 0) {
-  //           this.currencyList = result;
-  //           console.log( this.currencyList ,'currencylist')
-  //           resolve(true);
-  //         } else {
-  //           resolve(false);
-  //         }
-  //       });
-  //   });
-  // }
 
   getCurrency() {
     return new Promise((resolve, rejects) => {
