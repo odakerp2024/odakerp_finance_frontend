@@ -200,10 +200,10 @@ export class CreditApplicationDetailsComponent implements OnInit {
     this.workflowParamsNo.forEach((param: any) => {
       const paramName: any = `param${param?.paramnumber}`;
       if (WF_EVENTS['creditApp'].PARAMS.Division.toLowerCase().trim() == param?.paramname?.toLocaleLowerCase().trim()) {
-        eventData[paramName] = this.userDiv
+        eventData[paramName] = this.userDiv.trim();
       }
       else if (WF_EVENTS['creditApp'].PARAMS.Office.toLowerCase().trim() == param?.paramname?.toLocaleLowerCase().trim()) {
-        eventData[paramName] = this.userOff
+        eventData[paramName] = this.userOff.trim();
       }
       else if (WF_EVENTS['creditApp'].PARAMS.CreditAmount.toLowerCase().trim() == param?.paramname?.toLocaleLowerCase().trim()) {
         eventData[paramName] = this.RequestType == true ? this.ReviseCreditLimitAmount: this.CreditLimitAmount 
@@ -229,10 +229,10 @@ export class CreditApplicationDetailsComponent implements OnInit {
       eventnumber: WF_EVENTS['creditApp'].EVENT_NO,
       eventvalue: this.CreditApplicationNumber   ? this.CreditApplicationNumber  : "" ,
       app: this.globals.appName,
-      division: this.userDiv ? this.userDiv :'',
-      office: this.userOff ? this.userOff :'',
+      division: this.userDiv ? this.userDiv.trim() : '',
+      office: this.userOff ? this.userOff.trim() : '',
       eventdata: eventData,
-      Initiator: { userid: this.userName ? this.userName : '', usertype: "string" },
+      Initiator: { userid: this.userName ? this.userName.trim() : '', usertype: "string" },
       callbackURL:`${this.globals.APIURL}${WF_EVENTS['creditApp'].apiEndPoint}`,
       //callbackURL:`${this.globals.APIURL}${WF_EVENTS['creditApp'].apiEndPoint}`,
       callbackURLcontent:JSON.stringify(callbackPayload),

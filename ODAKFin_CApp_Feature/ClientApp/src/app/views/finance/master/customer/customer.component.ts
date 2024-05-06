@@ -1582,7 +1582,7 @@ debugger
     this.workflowParamsNo.forEach((param: any) => {
       const paramName: any = `param${param?.paramnumber}`;
       if (WF_EVENTS['customerApproval'].PARAMS.Division.toLowerCase().trim() == param?.paramname?.toLocaleLowerCase().trim()) {
-        eventData[paramName] = this.userDiv
+        eventData[paramName] = this.userDiv.trim();
       }
       else if (WF_EVENTS['customerApproval'].PARAMS.Category.toLowerCase().trim() == param?.paramname?.toLocaleLowerCase().trim()) {
         eventData[paramName] = JSON.stringify(this.fg.value.Category);
@@ -1591,7 +1591,7 @@ debugger
         eventData[paramName] = this.fg.value.CountryID 
       }
       else if (WF_EVENTS['customerApproval'].PARAMS.Created_by.toLowerCase().trim() == param?.paramname?.toLocaleLowerCase().trim()) {
-        eventData[paramName] = this.userName
+        eventData[paramName] = this.userName.trim();
       }
       
       else {
@@ -1611,10 +1611,10 @@ debugger
       eventnumber: WF_EVENTS['customerApproval'].EVENT_NO,
       eventvalue: this.Branch_Code  ? this.Branch_Code : "" ,
       app: this.globals.appName,
-      division: this.userDiv ? this.userDiv :'',
-      office: this.userOff ? this.userOff :'',
+      division: this.userDiv ? this.userDiv.trim() : '',
+      office: this.userOff ? this.userOff.trim() : '',
       eventdata: eventData,
-      Initiator: { userid: this.userName ? this.userName : '', usertype: "string" },
+      Initiator: { userid: this.userName ? this.userName.trim() : '', usertype: "string" },
       //callbackURL:`${this.globals.APIURLlocal}${WF_EVENTS['customerApproval'].apiEndPoint}`,
       callbackURL:`${this.globals.APIURL}${WF_EVENTS['customerApproval'].apiEndPoint}`,
       callbackURLcontent:JSON.stringify(callbackPayload),
