@@ -53,8 +53,12 @@ export class ReportPaymentVoucherComponent implements OnInit  {
     start: new FormControl(new Date(year, month, 13)),
     end: new FormControl(new Date(year, month, 16)),
   });
+
+  startDate = '';
+  endDate = '';
+
   constructor(
-    private commonDataService: CommonService,
+    public commonDataService: CommonService,
     private datePipe: DatePipe,
     private router: Router,
     private globals: Globals,
@@ -79,25 +83,30 @@ export class ReportPaymentVoucherComponent implements OnInit  {
     this.selectedOption = '';
     switch (selectedOption) {
       case 'today':
-        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
-        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
         break;
       case 'week':
-        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay()), "yyyy-MM-dd"));
-        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay()), "yyyy-MM-dd"));
+        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() + (6 - this.currentDate.getDay())), "yyyy-MM-dd"));
         break;
       case 'month':
-        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"));
-        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
+        const startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd")
+        const endDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd")
+
+        this.reportFilter.controls.FromDate.setValue(startDate);
+        this.reportFilter.controls.ToDate.setValue(endDate);
+
+
         break;
-      case 'year':
-        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), 0, 1), "yyyy-MM-dd"));
-        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
-        break;
+        case 'year':
+          this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), 2, 1), "yyyy-MM-dd")); // March 1st
+          this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(new Date(2025, 3, 30), "yyyy-MM-dd")); // April 30th
+          break;      
       case 'custom':
         this.selectedOption = 'custom';
-        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), 0, 1), "yyyy-MM-dd"));
-        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
+        this.startDate = this.reportFilter.controls.FromDate.value;
+        this.endDate = this.reportFilter.controls.ToDate.value;
         break;
       default:
         this.selectedOption = '';
@@ -107,19 +116,20 @@ export class ReportPaymentVoucherComponent implements OnInit  {
 
   createReportForm() {
     this.reportFilter = this.fb.group({
-      Division: [0],
-      Office: [0],
-      Vendor: [0],
-      StartDate: [new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 2)],
-      EndDate: [this.datePipe.transform(this.currentDate, "yyyy-MM-dd")],
-      Amount: [''],
+      FromDate: [this.startDate],
+      ToDate: [this.endDate],
+      DivisionId: [0],
+      OfficeId: [0],
+      VendorId: [0], 
+      Amount: [0],
       Type: [0],
       PaymentMode: [0],
-      Paidfrom: [0],
+      PaidFrom: [0],
       Peroid: [''],
     });
-    this.getReceiptReportList();
+    this.getPaymentVoucherReportList();
   }
+  
 
   getDivisionList() {
     var service = `${this.globals.APIURL}/Division/GetOrganizationDivisionList`; var payload: any = {}
@@ -205,9 +215,13 @@ export class ReportPaymentVoucherComponent implements OnInit  {
     }
   }
 
-  getReceiptReportList() {
-    this.reportService.GetReceiptVoucherReportList(this.reportFilter.value).subscribe(result => {
+  getPaymentVoucherReportList() {
+
+    this.reportService.getPaymentVoucherReportList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
+      this.startDate = this.reportFilter.controls.FromDate.value;
+      this.endDate = this.reportFilter.controls.ToDate.value;
+
       if (result['data'].Table.length > 0) {
         this.reportList = result['data'].Table;
         this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
@@ -228,19 +242,23 @@ export class ReportPaymentVoucherComponent implements OnInit  {
   }
   
   clear() {
+    this.startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd");
+    this.endDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd");
     this.reportFilter.reset({
-      Division: 0,
-      Office: 0,
-      Vendor: 0,
-      StartDate: new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 2),
-      EndDate: this.datePipe.transform(this.currentDate, "yyyy-MM-dd"),
+      FromDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
+      ToDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd"),
+      DivisionId: 0,
+      OfficeId: 0,
+      VendorId: 0,
       Amount: '',
       Type: 0,
       PaymentMode: 0,
-      Paidfrom: 0
+      PaidFrom: 0,
+      Peroid: ['']
     });
-    this.getReceiptReportList();
+    this.getPaymentVoucherReportList();
   }
+
 
   // downloadAsCSV() {
   //   this.excelService.exportToCSV(this.reportList,'Report-ReceiptVoucher')

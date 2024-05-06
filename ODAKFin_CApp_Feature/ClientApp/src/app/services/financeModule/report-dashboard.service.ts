@@ -25,4 +25,9 @@ export class ReportDashboardService {
   }
 
 
+  getPaymentVoucherReportList(FormValue: any): Observable<any> {
+    FormValue.Amount = FormValue.Amount == '' ? 0 : FormValue.Amount;
+    return this.http.post<any>(this.globals.APIURL + '/Reports/PaymentVoucherList', FormValue);
+  }
+
 }
