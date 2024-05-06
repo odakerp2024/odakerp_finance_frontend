@@ -110,10 +110,7 @@ export class ReportContraVoucherComponent implements OnInit  {
         const startYear = this.currentDate.getMonth() >= 3 ? currentYear : currentYear - 1;
         const endYear = startYear + 1;
       
-        // Set the StartDate to April 1 of the startYear
         this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(new Date(startYear, 3, 1), "yyyy-MM-dd"));
-      
-        // Set the EndDate to March 31 of the endYear
         this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(new Date(endYear, 2, 31), "yyyy-MM-dd"));
         
         break;
