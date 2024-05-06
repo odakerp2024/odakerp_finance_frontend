@@ -1,46 +1,57 @@
 <div class="container-fluid">
-
-    <div class="row headtitle rotle mt-1">
-        <div class="col-md-9">
-            <h4 class="ml-2 mt-2">Payment Voucher</h4>
-        </div>
-    </div>
-
     <form [formGroup]="reportFilter">
-        <div class="card mt-2 p-4">
-
+        <div class="card mt-2 p-3">
             <div class="row">
-                <div class="col-2">
-                    <div class="form-group bmd-form-group w-100">
-                        <label class=" mb-3">FROM</label>
+            <div class="col-10">
+            <div class="row pb-3">
+
+                <div class="col-3">
+
+                    <label class=" fontstyles">PEROID</label>
+                    <ng-select class="searchdropdown custom" formControlName="Peroid"
+                        (ngModelChange)="onOptionChange($event);" [clearable]="false">
+                        <ng-option [value]="''" disabled>--SELECT PEROID--</ng-option>
+                        <ng-container *ngFor="let peroid of PeroidList">
+                            <ng-option [value]="peroid.peroidId">
+                                {{peroid.peroidName | uppercase}}
+                            </ng-option>
+                        </ng-container>
+                    </ng-select>
+
+                    <div class="col-3" *ngIf="selectedOption === 'custom'">
+                        <div class="form-group bmd-form-group w-100">
+                            <label class=" mb-3">From</label>
+                            <div class="input-group">
+                                <mat-form-field class="tillDate mat_date_picker" appearance="outline">
+                                    <input matInput (click)="FromDate.open()" readonly autocomplete="off" (onchange)="formatchange(true)"
+                                        [matDatepicker]="FromDate" id="FromDate" [placeholder]="entityDateFormat"
+                                        formControlName="FromDate">
+                                    <mat-datepicker-toggle matSuffix [for]="FromDate"></mat-datepicker-toggle>
+                                    <mat-datepicker #FromDate></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-3" *ngIf="selectedOption === 'custom'">
+
+                        <label class=" mb-3">To</label>
                         <div class="input-group">
                             <mat-form-field class="tillDate mat_date_picker" appearance="outline">
-                                <input matInput (click)="StartDate.open()" readonly autocomplete="off"
-                                    [min]="reportFilter.get('StartDate').value" [matDatepicker]="StartDate"
-                                    id="StartDate" [placeholder]="entityDateFormat" formControlName="StartDate">
-                                <mat-datepicker-toggle matSuffix [for]="StartDate"></mat-datepicker-toggle>
-                                <mat-datepicker #StartDate></mat-datepicker>
+                                <input matInput (click)="ToDate.open()" readonly autocomplete="off" formControlName="ToDate"
+                                    [matDatepicker]="ToDate" id="ToDate"
+                                    [min]="reportFilter.get('FromDate').value" [placeholder]="entityDateFormat" (ngModelChange)="formatchange(false)">
+                                <mat-datepicker-toggle matSuffix [for]="ToDate"></mat-datepicker-toggle>
+                                <mat-datepicker #ToDate></mat-datepicker>
                             </mat-form-field>
                         </div>
                     </div>
+                      
                 </div>
 
-                <div class="col-2">
-                    <label class=" mb-3">TO</label>
-                    <div class="input-group">
-                        <mat-form-field class="tillDate mat_date_picker" appearance="outline">
-                            <input matInput (click)="EndDate.open()" readonly autocomplete="off"
-                                [min]="reportFilter.get('EndDate').value" [matDatepicker]="EndDate" id="EndDate"
-                                [placeholder]="entityDateFormat" formControlName="EndDate">
-                            <mat-datepicker-toggle matSuffix [for]="EndDate"></mat-datepicker-toggle>
-                            <mat-datepicker #EndDate></mat-datepicker>
-                        </mat-form-field>
-                    </div>
-                </div>
-
-                <div class="col-4">
+                <div class="col-3">
                     <label class=" fontstyles">DIVISION</label>
-                    <ng-select class="searchdropdown custom" formControlName="Division"
+                    <ng-select class="searchdropdown custom" formControlName="DivisionId"
                         (ngModelChange)="getOfficeList($event);" [clearable]="false">
                         <ng-option [value]="0" disabled>--SELECT DIVISION--</ng-option>
                         <ng-container *ngFor="let division of divisionList">
@@ -51,9 +62,9 @@
                     </ng-select>
                 </div>
 
-                <div class="col-4">
+                <div class="col-3">
                     <label class=" fontstyles">OFFICE</label>
-                    <ng-select class="searchdropdown" formControlName="Office"
+                    <ng-select class="searchdropdown" formControlName="OfficeId"
                         (ngModelChange)="getDivisionBasedOffice($event, reportFilter.value.Division)"
                         [clearable]="false" name="CategoryId" id="CategoryId">
                         <ng-option [value]="0" disabled>--SELECT OFFICE--</ng-option>
@@ -64,31 +75,31 @@
                         </ng-container>
                     </ng-select>
                 </div>
-            </div>
+           
 
-            <div class="row">
 
-                <div class="col-4">
+                <div class="col-3">
                     <label class=" fontstyles">VENDOR</label>
-                    <ng-select class="searchdropdown" formControlName="Vendor" [clearable]="false" name="CategoryId"
+                    <ng-select class="searchdropdown" formControlName="VendorId" [clearable]="false" name="CategoryId"
                     id="CategoryId">
                         <ng-option [value]="0" disabled>--SELECT VENDOR--</ng-option>
-                        <ng-container *ngFor="let customer of customerList">
-                            <ng-option [value]="customer.CustomerID">
-                                <span class="textwrap">{{customer.CustomerName | uppercase}}
+                        <ng-container *ngFor="let vendor of vendorList">
+                            <ng-option [value]="vendor.VendorID">
+                                <span class="textwrap">{{vendor.VendorName | uppercase}}
                                 </span>
                             </ng-option>
                         </ng-container>
                     </ng-select>
                 </div>
-
-                <div class="col-4">
+            </div>    
+             <div class="row">
+                <div class="col-3">
                     <label class=" fontstyles">AMOUNT</label>
                     <input formControlName="Amount" onkeypress='return event.charCode >= 48 && event.charCode <= 57'
                         min="0" numbersOnly class="form-control" name="Amount">
                 </div>
 
-                <div class="col-4">
+                <div class="col-3">
                     <label class=" fontstyles">TYPE</label>
                     <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'Type'" name="active"
                         id="active">
@@ -98,10 +109,10 @@
                         </ng-option>
                     </ng-select>
                 </div>
-            </div>
+       
 
-            <div class="row">
-                <div class="col-4 mt-4">
+           
+                <div class="col-3">
                     <label class=" fontstyles">PAYMENT MODE</label>
                     <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'PaymentMode'"
                         name="active" id="active">
@@ -112,9 +123,9 @@
                     </ng-select>
                 </div>
 
-                <div class="col-4 mt-4">
+                <div class="col-3">
                     <label class=" fontstyles">PAID FROM</label>
-                    <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'Paidfrom'" name="active"
+                    <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'PaidFrom'" name="active"
                         id="active">
                         <ng-option [value]="0" disabled>--SELECT PAID FROM --</ng-option>
                         <ng-option *ngFor="let Deposit of bankList" [value]="Deposit.Id">
@@ -123,21 +134,24 @@
                     </ng-select>
                 </div>
             </div>
-
-
-            <div class="col-12 pt-4 pb-4 ">
-                <!-- || paymentForm.value.Table.value.AmountPaid !== paymentForm.value.Table.value.TotalAmount  -->
-                <div class="text-center">
-                    <button type="button" class="btn btn-primary text-white mr-3 mb-0 col-auto"
-                        (click)="getReceiptReportList()">
-                        SEARCH
-                    </button>
-
-                    <button type="button" (click)="clear()" class="btn btn-warning text-white mr-3 mb-0 col-auto">
-                        CLEAR
-                    </button>
-                </div>
             </div>
+        </div>
+
+
+
+        <div class="d-flex flex-column justify-content-between align-items-end custom-margin-top " style= "height: 100px" >
+            <div class="text-center"> 
+                <button type="button"class="btn btn-primary text-white col-auto"
+                    (click)="getPaymentVoucherReportList()">
+                    SEARCH
+                </button>
+            </div>
+        
+            <button type="button" (click)="clear()" class="btn btn-warning text-white mb-0 col-auto clear-btn">
+                CLEAR
+            </button>
+        </div>
+        
 
         </div>
     </form>
@@ -147,6 +161,16 @@
             <div class="card m-b-30">
                 <div class="card-body cpad enqview">
 
+                    <div class="col-sm-12 justify-content-end text-center ">
+                        <h3 class="title">NAVIO  SHIPPING PRIVATE LIMITED</h3>
+                        <h2 class="subtitle">Payment Voucher</h2>
+                        <!-- <p>FROM {{ reportFilter.controls.StartDate.value}}  - TO {{reportFilter.controls.EndDate.value }}</p> -->
+                            
+                        <p>FROM {{ startDate | date: commonDataService.convertToLowerCaseDay(entityDateFormat) }} -
+                            TO {{ endDate | date:commonDataService.convertToLowerCaseDay(entityDateFormat) }}
+                         </p>
+                    </div>
+
                     <div class="col-sm-12 text-right d-flex justify-content-end">
                         <div style="font-weight: 600;">Export as : </div>
                         <div>
@@ -154,13 +178,13 @@
                                 class="exportAs mx-1 align-baseline"
                                 src="../../../../assets/images/icon/file-pdf-solid.jpeg" (click)="downloadAsPDF()"
                                 alt="logo"> -->
-                            <img style="cursor: pointer;" width="22px" height="22px"
+                            <img style="cursor: pointer;" width="38px" height="38px"
                                 class="exportAs mx-1 align-baseline"
-                                src="../../../../assets/images/icon/file-csv-solid.jpeg" (click)="downloadAsCSV()"
+                                src="../../../../../assets/images/csv_color.png" (click)="downloadAsCSV()"
                                 alt="logo">
-                            <img style="cursor: pointer;" width="22px" height="22px"
+                            <img style="cursor: pointer;" width="38px" height="38px"
                                 class="exportAs mx-1 align-baseline"
-                                src="../../../../assets/images/icon/file-excel-solid.jpeg" (click)="downloadAsExcel()"
+                                src="../../../../../assets/images/xlsx_color.png" (click)="downloadAsExcel()"
                                 alt="logo">
                         </div>
                     </div>
