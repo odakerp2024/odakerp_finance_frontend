@@ -101,8 +101,17 @@ export class ReportReceiptVoucherComponent implements OnInit {
 
         break;
       case 'year':
-        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), 3, 1), "yyyy-MM-dd"));
-        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), 2, 31), "yyyy-MM-dd"));
+        // this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), 3, 1), "yyyy-MM-dd"));
+        // this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), 2, 31), "yyyy-MM-dd"));
+
+          const currentYear = this.currentDate.getFullYear();
+          const startYear = this.currentDate.getMonth() >= 3 ? currentYear : currentYear - 1;
+          const endYear = startYear + 1;
+        
+          this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(new Date(startYear, 3, 1), "yyyy-MM-dd"));
+          this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(new Date(endYear, 2, 31), "yyyy-MM-dd"));
+       
+       
         break;
       case 'custom':
         this.selectedOption = 'custom';
