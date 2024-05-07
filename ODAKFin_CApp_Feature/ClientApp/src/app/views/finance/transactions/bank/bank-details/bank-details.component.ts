@@ -82,7 +82,6 @@ export class BankDetailsComponent implements OnInit {
       Office: [''],
       OfficeId:[0],
       AccountName: [''],
-      AccountNUmber:'',
       GroupName: [''],
       DebitorCredit: [''],
       Exchange: [''],
@@ -110,7 +109,6 @@ export class BankDetailsComponent implements OnInit {
           DivisionId: info.DivisionId,
           OfficeId: info.OfficeId,
           AccountName: info.AccountName,
-          AccountNUmber : info.AccountNUmber,
           GroupName: info.GroupName,
           DebitorCredit: info.DebitorCredit,
           Currency: info.Currency,
@@ -188,16 +186,17 @@ export class BankDetailsComponent implements OnInit {
   // this.accountBankForm.controls['AccountName'].setValue(this.AccountList.AccountName);
   // this.accountBankForm.get('AccountName').setValue(this.AccountList.AccountName);
 
-let selectedBank = this.accountBankForm.value.AccountName;
-let filteredAccounts = this.AccountList.filter(AccountList => AccountList.AccountName === selectedBank);
-let filteredAccountsNumber = this.AccountList.filter(AccountList => AccountList.AccountName === selectedBank);
+  
+// let selectedBank = this.accountBankForm.value.AccountName;
+// let filteredAccounts = this.AccountList.filter(AccountList => AccountList.AccountName === selectedBank);
+// let filteredAccountsNumber = this.AccountList.filter(AccountList => AccountList.AccountName === selectedBank);
 
-  let accountName = filteredAccounts[0].AccountName.split(' - ')[0];
-  let accountNumber = filteredAccountsNumber[0].AccountName.split(' - ')[1]; // Use [1] to get the account number part
+  // let accountName = filteredAccounts[0].AccountName.split(' - ')[0];
+  // let accountNumber = filteredAccountsNumber[0].AccountName.split(' - ')[1]; // Use [1] to get the account number part
 
 //   // Set the extracted account name and account number to the form controls
-  this.accountBankForm.controls['AccountName'].setValue(accountName);
-  this.accountBankForm.controls['AccountNUmber'].setValue(accountNumber);
+  // this.accountBankForm.controls['AccountName'].setValue(accountName);
+  // this.accountBankForm.controls['AccountNUmber'].setValue(accountNumber);
 
 
 
@@ -221,7 +220,6 @@ let filteredAccountsNumber = this.AccountList.filter(AccountList => AccountList.
         "Office": this.accountBankForm.value.Office,
         "OfficeId":this.accountBankForm.value.OfficeId,
         "AccountName": this.accountBankForm.value.AccountName,
-        "AccountNUmber":this.accountBankForm.value.AccountNUmber,
         "Group": this.accountBankForm.value.GroupName,
         "DebitorCredit": this.accountBankForm.value.DebitorCredit,
         "Currency": this.accountBankForm.value.Currency,
@@ -339,18 +337,29 @@ let filteredAccountsNumber = this.AccountList.filter(AccountList => AccountList.
       });
     })
   }
-  getGroup( ) {    
-    const divisionId = this.accountBankForm.get('DivisionId').value;
-    const officeId =  this.accountBankForm.get('OfficeId').value;
-    const payload = { DivisionId: divisionId, OfficeId: officeId};
-  this.commonDataService.GetAccountBankList((payload)).subscribe(result => {
-     this.AccountList = [];
-      if (result['data'].Table.length > 0) {
-        this.AccountList = result['data'].Table;
-      }
-    }, error => {
-      console.error(error);
-    }); 
+
+  getGroup() {
+    debugger
+    const payload = {
+      ModuleType: 5
+    }
+    this.commonDataService.getLedgerMappingParentAccountList(payload).subscribe(data => {
+      this.AccountList = data["data"].Table;
+    });
   }
+
+  // getGroup( ) {    
+  //   const divisionId = this.accountBankForm.get('DivisionId').value;
+  //   const officeId =  this.accountBankForm.get('OfficeId').value;
+  //   const payload = { DivisionId: divisionId, OfficeId: officeId};
+  // this.commonDataService.GetAccountBankList((payload)).subscribe(result => {
+  //    this.AccountList = [];
+  //     if (result['data'].Table.length > 0) {
+  //       this.AccountList = result['data'].Table;
+  //     }
+  //   }, error => {
+  //     console.error(error);
+  //   }); 
+  // }
 }
 
