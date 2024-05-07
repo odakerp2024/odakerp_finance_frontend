@@ -54,7 +54,7 @@ export class ReportVoucherReversalComponent implements OnInit  {
   dropDownListVoucherList: any = [];
   currentDate = new Date();
   constructor(
-    private commonDataService: CommonService,
+    public commonDataService: CommonService,
     private datePipe: DatePipe,
     private router: Router,
     private globals: Globals,
@@ -78,19 +78,19 @@ export class ReportVoucherReversalComponent implements OnInit  {
     this.selectedOption = '';
     switch (selectedOption) {
       case 'today':
-        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
-        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
         break;
       case 'week':
-        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay()), "yyyy-MM-dd"));
-        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() + (6 - this.currentDate.getDay())), "yyyy-MM-dd"));
+        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay()), "yyyy-MM-dd"));
+        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() + (6 - this.currentDate.getDay())), "yyyy-MM-dd"));
         break;
       case 'month':
         const startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd")
         const endDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd")
 
-        this.reportFilter.controls.StartDate.setValue(startDate);
-        this.reportFilter.controls.EndDate.setValue(endDate);
+        this.reportFilter.controls.FromDate.setValue(startDate);
+        this.reportFilter.controls.ToDate.setValue(endDate);
 
 
         break;
@@ -102,14 +102,14 @@ export class ReportVoucherReversalComponent implements OnInit  {
           const startYear = this.currentDate.getMonth() >= 3 ? currentYear : currentYear - 1;
           const endYear = startYear + 1;
         
-          this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(new Date(startYear, 3, 1), "yyyy-MM-dd"));
-          this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(new Date(endYear, 2, 31), "yyyy-MM-dd"));
+          this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(new Date(startYear, 3, 1), "yyyy-MM-dd"));
+          this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(new Date(endYear, 2, 31), "yyyy-MM-dd"));
           
           break;
       case 'custom':
         this.selectedOption = 'custom';
-        this.startDate = this.reportFilter.controls.StartDate.value;
-        this.endDate = this.reportFilter.controls.EndDate.value;
+        this.startDate = this.reportFilter.controls.FromDate.value;
+        this.endDate = this.reportFilter.controls.ToDate.value;
         break;
       default:
         this.selectedOption = '';
@@ -118,16 +118,16 @@ export class ReportVoucherReversalComponent implements OnInit  {
   }
   createReportForm() {
     this.reportFilter = this.fb.group({
-      Division: [0],
-      Office: [0],
-      VoucherType: [0],
-      StartDate: [this.startDate],
-      EndDate: [this.endDate],
+      FromDate: [this.startDate],
+      ToDate: [this.endDate],
+      DivisionId: [0],
+      OfficeId: [0],
+      VoucherType: [0], 
       Peroid: [''],
       // StartDate: [new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 2)],
       // EndDate: [this.datePipe.transform(this.currentDate, "yyyy-MM-dd")],
     });
-    this.getReceiptReportList();
+    this.getVoucherReversalReportList();
   }
 
   getDivisionList() {
@@ -186,12 +186,12 @@ export class ReportVoucherReversalComponent implements OnInit  {
     }
   }
 
-  getReceiptReportList() {
-    this.reportService.GetReceiptVoucherReportList(this.reportFilter.value).subscribe(result => {
+  getVoucherReversalReportList() {
+    this.reportService.getVoucherReversalReportList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
 
-      this.startDate = this.reportFilter.controls.StartDate.value;
-      this.endDate = this.reportFilter.controls.EndDate.value;
+      this.startDate = this.reportFilter.controls.FromDate.value;
+      this.endDate = this.reportFilter.controls.ToDate.value;
       
       if (result['data'].Table.length > 0) {
         this.reportList = result['data'].Table;
@@ -226,15 +226,15 @@ export class ReportVoucherReversalComponent implements OnInit  {
     this.endDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd");
    
     this.reportFilter.reset({
-      Division: 0,
-      Office: 0,
+      DivisionId: 0,
+      OfficeId: 0,
       VoucherType: 0,
-      StartDate: new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 2),
-      EndDate: this.datePipe.transform(this.currentDate, "yyyy-MM-dd"),
+      FromDate: new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 2),
+      ToDate: this.datePipe.transform(this.currentDate, "yyyy-MM-dd"),
 
     });
     this.reportFilter.controls.Peroid.setValue('month');
-    this.getReceiptReportList();
+    this.getVoucherReversalReportList();
   }
 
   // 
