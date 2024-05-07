@@ -61,6 +61,7 @@ export class ContraInfoComponent implements OnInit {
   entityCurrencyName: any;
   isSameCurrency = false;
   exchangePairDetails = [];
+  receivedCurrencyName = '';
   showExchangeRate: Boolean = false;
   ContraVoucherId_copy: any;
   entityDateFormat =
@@ -86,7 +87,6 @@ export class ContraInfoComponent implements OnInit {
     this.getDivisionList();
     this.getStatus();
     // this.getOffice();
-    // this.getCurrency();
     this.getModeOfPayment();
     this.getNumberRangeList();
     await this.getCurrency();
@@ -236,7 +236,6 @@ export class ContraInfoComponent implements OnInit {
   }
 
   getContraById() {
-    debugger;
     // this.showExchangeRate = true;
 
     return new Promise((resolve, rejects) => {
@@ -368,20 +367,22 @@ export class ContraInfoComponent implements OnInit {
     });
   }
 
+
   getCurrency() {
     return new Promise((resolve, rejects) => {
-      const payload = { currencyId: 0, countryId: 0 };
-      this.contraVoucherService
-        .getCurrencyLists(payload)
-        .subscribe((result: any) => {
-          if (result.message == "Success") {
-            this.currencyList = result["data"];
-            resolve(true);
-          } else {
-            resolve(false);
-          }
-        });
-    });
+      const payload = { "currencyId": 0, "countryId": 0 };
+      let service = `${this.globals.SaApi}/SystemAdminApi/GetCurrency`
+      this.dataService.post(service, {}).subscribe((result: any) => {
+        if (result.length > 0) {
+          this.currencyList = result;
+          const entityInfo: any = this.commonDataService.getLocalStorageEntityConfigurable();
+          let info = this.currencyList.find(x => x.Currency == entityInfo.Currency);
+          let currencyCode = entityInfo.Currency.split('-');
+         this.receivedCurrencyName = currencyCode[0].trim();
+          resolve(true)
+        }
+      });
+    })
   }
 
   disableField() {
@@ -505,12 +506,11 @@ export class ContraInfoComponent implements OnInit {
   //   }
   // }
   getExchangeRate() {
-    debugger;
     const payload = {
       FromCurrencyId: +this.entityCurrencyId,
       ToCurrencyId: +this.contraForm.controls["CurrencyId"].value,
     };
-    debugger;
+   
 
     if (payload.FromCurrencyId !== payload.ToCurrencyId) {
       this.contraForm.controls["Exchange"].setValue(null);
@@ -851,12 +851,10 @@ export class ContraInfoComponent implements OnInit {
   }
 
   setCurrencyId(CurrencyID) {
-    const currencyDetails = this.currencyList.find(
-      (curr) => curr.CurrencyID == CurrencyID
-    );
-    this.contraForm.controls["CurrencyName"].setValue(
-      currencyDetails.CurrencyCode
-    );
+    const currencyDetails = this.currencyList.find((curr) => curr.ID == CurrencyID);
+    this.receivedCurrencyName = currencyDetails.CurrencyCode;
+    this.contraForm.controls['CurrencyName'].setValue(currencyDetails.CurrencyCode);
+    this.contraForm.controls['CurrencyId'].setValue(currencyDetails.ID)
     // this.contraForm.controls['CurrencyId'].setValue(currencyDetails.CurrencyID)
 
     // this.contraForm.controls['TotalAmount'].setValue(Number(this.contraForm.value.AmountPaid) * Number(this.contraForm.value.Rate));
@@ -900,7 +898,6 @@ export class ContraInfoComponent implements OnInit {
   //   }
 
   calculateLocalAmount() {
-    debugger;
     if (this.contraForm.value.AmountPaid && !this.isSameCurrency) {
       const data = (
         Number(this.contraForm.value.AmountPaid) *
