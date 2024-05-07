@@ -34,11 +34,11 @@
                         <label class=" mb-3">FROM</label>
                         <div class="input-group">
                             <mat-form-field class="tillDate mat_date_picker" appearance="outline">
-                                <input matInput (click)="StartDate.open()" readonly autocomplete="off"
-                                    [min]="reportFilter.get('StartDate').value" [matDatepicker]="StartDate"
-                                    id="StartDate" [placeholder]="entityDateFormat" formControlName="StartDate">
-                                <mat-datepicker-toggle matSuffix [for]="StartDate"></mat-datepicker-toggle>
-                                <mat-datepicker #StartDate></mat-datepicker>
+                                <input matInput (click)="FromDate.open()" readonly autocomplete="off"
+                                    [min]="reportFilter.get('FromDate').value" [matDatepicker]="FromDate"
+                                    id="FromDate" [placeholder]="entityDateFormat" formControlName="FromDate">
+                                <mat-datepicker-toggle matSuffix [for]="FromDate"></mat-datepicker-toggle>
+                                <mat-datepicker #FromDate></mat-datepicker>
                             </mat-form-field>
                         </div>
                     </div>
@@ -48,18 +48,18 @@
                     <label class=" mb-3">TO</label>
                     <div class="input-group">
                         <mat-form-field class="tillDate mat_date_picker" appearance="outline">
-                            <input matInput (click)="EndDate.open()" readonly autocomplete="off"
-                                [min]="reportFilter.get('EndDate').value" [matDatepicker]="EndDate" id="EndDate"
-                                [placeholder]="entityDateFormat" formControlName="EndDate">
-                            <mat-datepicker-toggle matSuffix [for]="EndDate"></mat-datepicker-toggle>
-                            <mat-datepicker #EndDate></mat-datepicker>
+                            <input matInput (click)="ToDate.open()" readonly autocomplete="off"
+                                [min]="reportFilter.get('ToDate').value" [matDatepicker]="ToDate" id="ToDate"
+                                [placeholder]="entityDateFormat" formControlName="ToDate">
+                            <mat-datepicker-toggle matSuffix [for]="ToDate"></mat-datepicker-toggle>
+                            <mat-datepicker #ToDate></mat-datepicker>
                         </mat-form-field>
                     </div>
                 </div>
 
                 <div class="col-3">
                     <label class=" fontstyles">DIVISION</label>
-                    <ng-select class="searchdropdown custom" formControlName="Division"
+                    <ng-select class="searchdropdown custom" formControlName="DivisionId"
                         (ngModelChange)="getOfficeList($event);" [clearable]="false">
                         <ng-option [value]="0" disabled>--SELECT DIVISION--</ng-option>
                         <ng-container *ngFor="let division of divisionList">
@@ -72,7 +72,7 @@
 
                 <div class="col-3">
                     <label class=" fontstyles">OFFICE</label>
-                    <ng-select class="searchdropdown" formControlName="Office"
+                    <ng-select class="searchdropdown" formControlName="OfficeId"
                         (ngModelChange)="getDivisionBasedOffice($event, reportFilter.value.Division)"
                         [clearable]="false" name="CategoryId" id="CategoryId">
                         <ng-option [value]="0" disabled>--SELECT OFFICE--</ng-option>
@@ -106,7 +106,7 @@
                 <!-- || paymentForm.value.Table.value.AmountPaid !== paymentForm.value.Table.value.TotalAmount  -->
                 <div class="text-center">
                     <button type="button" class="btn btn-primary text-white  col-auto"
-                        (click)="getReceiptReportList()">
+                        (click)="getVoucherReversalReportList()">
                         SEARCH
                     </button>
                 </div>
@@ -179,11 +179,11 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="let data of pagedItems">
-                                    <td>{{data.Date | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}
+                                    <td>{{data.DateOfReversal | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}
                                     </td>
-                                    <td>{{data.Invoice}}</td>
-                                    <td>{{data.Type}}</td>
-                                    <td>{{data.CustomerName}}</td>
+                                    <td>{{data.ReversalReference}}</td>
+                                    <td>{{data.VoucherName}}</td>
+                                    <td>{{data.AccountOrParty}}</td>
                                 </tr>
 
                                 <!-- <tr *ngIf="pagedItems.length ==0">
