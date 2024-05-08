@@ -71,7 +71,6 @@ export class ReportContraVoucherComponent implements OnInit  {
   ) { }
 
   ngOnInit(): void {
-    debugger
     // this.getCustomerList();
     this.createReportForm();
     this.onOptionChange('month');
@@ -82,7 +81,6 @@ export class ReportContraVoucherComponent implements OnInit  {
   }
 
   onOptionChange(selectedOption: string) {
-    debugger
     this.selectedOption = '';
     switch (selectedOption) {
       case 'today':
@@ -125,7 +123,7 @@ export class ReportContraVoucherComponent implements OnInit  {
     }
   }
  
-  createReportForm() {
+  async createReportForm() {
     this.reportFilter = this.fb.group({
       DivisionId: [0],
       OfficeId: [0],
@@ -133,12 +131,11 @@ export class ReportContraVoucherComponent implements OnInit  {
       ToAccount: [0],
       FromDate: [this.startDate],
       ToDate: [this.endDate],
-      // StartDate: [new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 2)],
-      // EndDate: [this.datePipe.transform(this.currentDate, "yyyy-MM-dd")],
       Amount: [''],
       Peroid: [''],
     });
-    this.getContraReportList();
+    this.onOptionChange('month');
+    await this.getContraReportList();
   }
 
   getDivisionList() {
@@ -227,11 +224,10 @@ export class ReportContraVoucherComponent implements OnInit  {
   }
 
   getContraReportList() {
+    this.startDate = this.reportFilter.controls.FromDate.value;
+    this.endDate = this.reportFilter.controls.ToDate.value;
     this.reportService.GetContraVoucherReportList(this.reportFilter.value).subscribe(result => {
-      this.reportList = [];
-      
-      this.startDate = this.reportFilter.controls.FromDate.value;
-      this.endDate = this.reportFilter.controls.ToDate.value;
+    this.reportList = [];
 
       if (result['data'].Table.length > 0) {
         this.reportList = result['data'].Table;
@@ -262,10 +258,11 @@ export class ReportContraVoucherComponent implements OnInit  {
       OfficeId: 0,
       FromAccount: [''],
       ToAccount: [''],
-      FormData: new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 2),
-      ToDate: this.datePipe.transform(this.currentDate, "yyyy-MM-dd"),
+      FormData:  this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
+      ToDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd"),
       Amount: '',
     });
+    this.officeList = [];
     this.reportFilter.controls.Peroid.setValue('month');
     this.getContraReportList();
   }

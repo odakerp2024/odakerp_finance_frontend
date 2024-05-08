@@ -54,7 +54,7 @@ export class ReportVoucherReversalComponent implements OnInit  {
   dropDownListVoucherList: any = [];
   currentDate = new Date();
   constructor(
-    public commonDataService: CommonService,
+    private commonDataService: CommonService,
     private datePipe: DatePipe,
     private router: Router,
     private globals: Globals,

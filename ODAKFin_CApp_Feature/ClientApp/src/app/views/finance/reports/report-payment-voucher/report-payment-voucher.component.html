@@ -17,7 +17,7 @@
                             </ng-option>
                         </ng-container>
                     </ng-select>
-
+                </div>
                     <div class="col-3" *ngIf="selectedOption === 'custom'">
                         <div class="form-group bmd-form-group w-100">
                             <label class=" mb-3">From</label>
@@ -47,8 +47,7 @@
                         </div>
                     </div>
                       
-                </div>
-
+              
                 <div class="col-3">
                     <label class=" fontstyles">DIVISION</label>
                     <ng-select class="searchdropdown custom" formControlName="DivisionId"
@@ -65,7 +64,7 @@
                 <div class="col-3">
                     <label class=" fontstyles">OFFICE</label>
                     <ng-select class="searchdropdown" formControlName="OfficeId"
-                        (ngModelChange)="getDivisionBasedOffice($event, reportFilter.value.Division)"
+                        (ngModelChange)="getDivisionBasedOffice($event, reportFilter.value.Division);getBankList()"
                         [clearable]="false" name="CategoryId" id="CategoryId">
                         <ng-option [value]="0" disabled>--SELECT OFFICE--</ng-option>
                         <ng-container *ngFor="let office of officeList">
@@ -130,8 +129,8 @@
                         <ng-option [value]="0" disabled>--SELECT PAID FROM --</ng-option>
                         <ng-option *ngFor="let Deposit of bankList" [value]="Deposit.Id">
                             {{Deposit.BankName | uppercase}} - {{Deposit.AccountNo}}
-                        </ng-option>
-                    </ng-select>
+                    </ng-option>
+                </ng-select>
                 </div>
             </div>
             </div>
@@ -227,6 +226,10 @@
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
+                                        style="width: 177.575px;">Currency</th>
+
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
                                         style="width: 177.575px;">Amount</th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
@@ -238,26 +241,27 @@
                                 <tr *ngFor="let data of pagedItems">
                                     <td>{{data.Date | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}
                                     </td>
-                                    <td>{{data.Invoice}}</td>
+                                    <td class="hyperTextColor">{{data.Payment}}</td>
                                     <td>{{data.Type}}</td>
-                                    <td>{{data.CustomerName}}</td>
+                                    <td class="hyperTextColor">{{data.VendorName}}</td>
                                     <td>{{data.Branch}}</td>
                                     <td>{{data.PaymentMode}}</td>
                                     <td>{{data.BankName}}</td>
                                     <td>{{data.ReferenceNo}}</td>
-                                    <td>{{data.Amount}}</td>
+                                    <td>{{data.Currency}}</td>
+                                    <td  class=" text-right hyperTextColor">{{data.Amount}}</td>
                                     <td>{{data.Invoice}}</td>
                                 </tr>
 
-                                <!-- <tr *ngIf="pagedItems.length ==0">
+                                <tr *ngIf="pagedItems.length ==0">
                                     <td class="text-center" colspan="10">No records found</td>
-                                </tr> -->
+                                </tr>
 
                             </tbody>
                         </table>
                     </div>
 
-                    <!-- <div class="row page mr-3" align="right">
+                    <div class="row page mr-3" align="right">
                         <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10 && pager.totalItems > 10"
                             class="pagination">
                             <li [ngClass]="{disabled:pager.currentPage === 1}">
@@ -283,7 +287,7 @@
                                 <a (click)="setPage(pager.totalPages)">Last</a>
                             </li>
                         </ul>
-                    </div> -->
+                    </div>
                 </div>
             </div>
         </div>

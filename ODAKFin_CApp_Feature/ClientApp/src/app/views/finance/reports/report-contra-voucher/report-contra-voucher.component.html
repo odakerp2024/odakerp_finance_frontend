@@ -32,9 +32,9 @@
                         <label class=" mb-3">FROM</label>
                         <div class="input-group">
                             <mat-form-field class="tillDate mat_date_picker" appearance="outline">
-                                <input matInput (click)="FromDate.open()" readonly autocomplete="off"
-                                    [min]="reportFilter.get('FromDate').value" [matDatepicker]="FromDate"
-                                    id="FromDate" [placeholder]="entityDateFormat" formControlName="FromDate">
+                                <input matInput (click)="FromDate.open()" readonly autocomplete="off" (onchange)="formatchange(true)"
+                                    [matDatepicker]="FromDate" id="FromDate" [placeholder]="entityDateFormat"
+                                    formControlName="FromDate">
                                 <mat-datepicker-toggle matSuffix [for]="FromDate"></mat-datepicker-toggle>
                                 <mat-datepicker #FromDate></mat-datepicker>
                             </mat-form-field>
@@ -46,9 +46,9 @@
                     <label class=" mb-3">TO</label>
                     <div class="input-group">
                         <mat-form-field class="tillDate mat_date_picker" appearance="outline">
-                            <input matInput (click)="ToDate.open()" readonly autocomplete="off"
-                                [min]="reportFilter.get('ToDate').value" [matDatepicker]="ToDate" id="ToDate"
-                                [placeholder]="entityDateFormat" formControlName="ToDate">
+                            <input matInput (click)="ToDate.open()" readonly autocomplete="off" formControlName="ToDate"
+                                [matDatepicker]="ToDate" id="ToDate"
+                                [min]="reportFilter.get('FromDate').value" [placeholder]="entityDateFormat" (ngModelChange)="formatchange(false)">
                             <mat-datepicker-toggle matSuffix [for]="ToDate"></mat-datepicker-toggle>
                             <mat-datepicker #ToDate></mat-datepicker>
                         </mat-form-field>
@@ -225,22 +225,22 @@
                                 <tr *ngFor="let data of pagedItems">
                                     <td>{{data.ContraVoucherDate | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}
                                     </td>
-                                    <td>{{data.ContraVoucherNumber}}</td>
+                                    <td class="hyperTextColor">{{data.ContraVoucherNumber}}</td>
                                     <td>{{data.FromAccount}}</td>
                                     <td>{{data.ToAccount}}</td>
-                                    <td>{{data.Amount}}</td>
+                                    <td class=" text-right hyperTextColor">{{data.Amount}}</td>
                                     <td>{{data.PaymentType}}</td>
                                 </tr>
 
-                                <!-- <tr *ngIf="pagedItems.length ==0">
+                                <tr *ngIf="pagedItems.length ==0">
                                     <td class="text-center" colspan="10">No records found</td>
-                                </tr> -->
+                                </tr>
 
                             </tbody>
                         </table>
                     </div>
 
-                    <!-- <div class="row page mr-3" align="right">
+                    <div class="row page mr-3" align="right">
                         <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10 && pager.totalItems > 10"
                             class="pagination">
                             <li [ngClass]="{disabled:pager.currentPage === 1}">
@@ -266,7 +266,7 @@
                                 <a (click)="setPage(pager.totalPages)">Last</a>
                             </li>
                         </ul>
-                    </div> -->
+                    </div>
                 </div>
             </div>
         </div>

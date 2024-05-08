@@ -60,7 +60,7 @@ export class ReportReceiptVoucherComponent implements OnInit {
   endDate = '';
 
   constructor(
-    public commonDataService: CommonService,
+    private commonDataService: CommonService,
     private datePipe: DatePipe,
     private router: Router,
     private globals: Globals,
