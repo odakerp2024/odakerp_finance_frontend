@@ -60,7 +60,7 @@ export class ReportReceiptVoucherComponent implements OnInit {
   endDate = '';
 
   constructor(
-    private commonDataService: CommonService,
+    public commonDataService: CommonService,
     private datePipe: DatePipe,
     private router: Router,
     private globals: Globals,
@@ -125,7 +125,7 @@ export class ReportReceiptVoucherComponent implements OnInit {
   }
 
 
-  createReportForm() {
+  async createReportForm() {
     this.reportFilter = this.fb.group({
       Division: [0],
       Office: [0],
@@ -138,7 +138,8 @@ export class ReportReceiptVoucherComponent implements OnInit {
       DepositTo: [0],
       Peroid: [''],
     });
-    this.getReceiptReportList();
+    this.onOptionChange('month');
+    await this.getReceiptReportList();
   }
 
   getDivisionList() {
@@ -204,16 +205,17 @@ export class ReportReceiptVoucherComponent implements OnInit {
   }
 
   getReceiptReportList() {
-    this.reportService.GetReceiptVoucherReportList(this.reportFilter.value).subscribe(result => {
-      this.reportList = [];
-
       this.startDate = this.reportFilter.controls.StartDate.value;
       this.endDate = this.reportFilter.controls.EndDate.value;
+
+    this.reportService.GetReceiptVoucherReportList(this.reportFilter.value).subscribe(result => {
+      this.reportList = [];
+ 
 
       if (result['data'].Table.length > 0) {
         this.reportList = result['data'].Table;
         this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
-        console.log("reportList--->", this.reportList);
+        // console.log("reportList--->", this.reportList);
         this.setPage(1)
       } else {
         this.pager = {};
