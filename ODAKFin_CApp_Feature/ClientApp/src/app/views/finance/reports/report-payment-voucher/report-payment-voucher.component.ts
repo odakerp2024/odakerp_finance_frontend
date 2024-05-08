@@ -58,7 +58,7 @@ export class ReportPaymentVoucherComponent implements OnInit  {
   endDate = '';
 
   constructor(
-    public commonDataService: CommonService,
+    private commonDataService: CommonService,
     private datePipe: DatePipe,
     private router: Router,
     private globals: Globals,
@@ -72,10 +72,11 @@ export class ReportPaymentVoucherComponent implements OnInit  {
   ngOnInit(): void {
     // this.getCustomerList();
     this.createReportForm();
+    this.onOptionChange('month');
     this.getDivisionList();
     this.getVoucherList();
     this.getVendorList();
-    this.onOptionChange('month');
+    this.getBankList();
     this.reportFilter.controls.Peroid.setValue('month');
   }
 
@@ -122,7 +123,7 @@ export class ReportPaymentVoucherComponent implements OnInit  {
     }
   }
 
-  createReportForm() {
+  async createReportForm() {
     this.reportFilter = this.fb.group({
       FromDate: [this.startDate],
       ToDate: [this.endDate],
@@ -135,7 +136,8 @@ export class ReportPaymentVoucherComponent implements OnInit  {
       PaidFrom: [0],
       Peroid: [''],
     });
-    this.getPaymentVoucherReportList();
+    this.onOptionChange('month');
+    await this.getPaymentVoucherReportList();
   }
   
 
@@ -178,6 +180,21 @@ export class ReportPaymentVoucherComponent implements OnInit  {
       });
     })
   }
+
+  getBankList() {
+    let payload = {
+      "OfficeId": this.reportFilter.value.OfficeId,
+      "DivisionId": this.reportFilter.value.DivisionId
+    }
+    this.commonDataService.getBankByOfficeId(payload).subscribe((result: any) => {
+      if (result.message == "Success") {
+        this.bankList = result['data'].Table;
+        console.log(this.bankList ,' banklist')
+      }
+    })
+
+  }
+
 
   removeDuplicatesVendorId(arr, key) {
     const uniqueMap = new Map();
@@ -224,12 +241,12 @@ export class ReportPaymentVoucherComponent implements OnInit  {
   }
 
   getPaymentVoucherReportList() {
+    this.startDate = this.reportFilter.controls.FromDate.value;
+    this.endDate = this.reportFilter.controls.ToDate.value;
 
     this.reportService.getPaymentVoucherReportList(this.reportFilter.value).subscribe(result => {
-      this.reportList = [];
-      this.startDate = this.reportFilter.controls.FromDate.value;
-      this.endDate = this.reportFilter.controls.ToDate.value;
-
+    this.reportList = [];
+    
       if (result['data'].Table.length > 0) {
         this.reportList = result['data'].Table;
         this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
@@ -262,8 +279,10 @@ export class ReportPaymentVoucherComponent implements OnInit  {
       Type: 0,
       PaymentMode: 0,
       PaidFrom: 0,
-      Peroid: ['']
     });
+    this.bankList = [];
+    this.officeList = [];
+    this.reportFilter.controls.Peroid.setValue('month');
     this.getPaymentVoucherReportList();
   }
 
