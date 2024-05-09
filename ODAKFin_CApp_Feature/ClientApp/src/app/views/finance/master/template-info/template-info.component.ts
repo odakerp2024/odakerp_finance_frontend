@@ -64,6 +64,36 @@ export class TemplateInfoComponent implements OnInit {
     });
   }
 
+  updateValue(){
+    const userID = localStorage.getItem("UserID");
+    const paylod = {
+      userID: Number(userID),
+      Ref_Application_Id: "4",
+      SubfunctionID: 573
+    }
+    this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
+      debugger
+      if (data.length > 0) {
+        console.log("PermissionObject", data);
+
+        if (data[0].SubfunctionID == paylod.SubfunctionID) {
+
+          if (data[0].Update_Opt == 2) {
+            this.templateCreateForm.enable();
+            this.isEditMode =false;
+          } else {
+            Swal.fire('Please Contact Administrator');
+          }
+        }
+      } else {
+        Swal.fire('Please Contact Administrator');
+      }
+
+    }, err => {
+      console.log('errr----->', err.message);
+    });
+  }
+
   createTemplateForm() {
     this.templateCreateForm = this.fb.group({
       Id: [this.templateId],

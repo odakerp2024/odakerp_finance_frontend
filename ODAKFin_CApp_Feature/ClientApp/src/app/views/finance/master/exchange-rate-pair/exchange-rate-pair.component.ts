@@ -54,7 +54,7 @@ export class ExchangeRatePairComponent implements OnInit {
 
           if (data[0].Create_Opt == 2 && route != 'edit') {
             this.router.navigate(['/views/exchange-add-info/exchange-ratePair-add']);
-          } else if (data[0].Update_Opt == 2 && route == 'edit') {
+          } else if (data[0].Update_Opt == 2 || data[0].Read_Opt == 2 && route == 'edit') {
             this.router.navigate(['/views/exchange-add-info/exchange-ratePair-add', { isUpdate: true, id: id }]);
           } else {
             Swal.fire('Please Contact Administrator');

@@ -87,6 +87,36 @@ export class TDSComponent implements OnInit {
     })
   }
 
+  updateValue(){
+    const userID = localStorage.getItem("UserID");
+    const paylod = {
+      userID: Number(userID),
+      Ref_Application_Id: "4",
+      SubfunctionID: 589
+    }
+    this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
+      
+      if (data.length > 0) {
+        console.log("PermissionObject", data);
+
+        if (data[0].SubfunctionID == paylod.SubfunctionID) {
+
+          if (data[0].Update_Opt == 2) {
+            this.fg.enable();
+            this.isUpdateEnable = true;
+          } else {
+            Swal.fire('Please Contact Administrator');
+          }
+        }
+      } else {
+        Swal.fire('Please Contact Administrator');
+      }
+
+    }, err => {
+      console.log('errr----->', err.message);
+    });
+  }
+
   onBack() {
     this.router.navigate(['/views/finance/master/tds/tdsview']);
   }
