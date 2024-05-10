@@ -26,11 +26,11 @@
                                 <label class=" mb-3">From</label>
                                 <div class="input-group">
                                     <mat-form-field class="tillDate mat_date_picker" appearance="outline">
-                                        <input matInput (click)="StartDate.open()" readonly autocomplete="off" (onchange)="formatchange(true)"
-                                            [matDatepicker]="StartDate" id="StartDate" [placeholder]="entityDateFormat"
-                                            formControlName="StartDate">
-                                        <mat-datepicker-toggle matSuffix [for]="StartDate"></mat-datepicker-toggle>
-                                        <mat-datepicker #StartDate></mat-datepicker>
+                                        <input matInput (click)="FromDate.open()" readonly autocomplete="off" (onchange)="formatchange(true)"
+                                            [matDatepicker]="FromDate" id="FromDate" [placeholder]="entityDateFormat"
+                                            formControlName="FromDate">
+                                        <mat-datepicker-toggle matSuffix [for]="FromDate"></mat-datepicker-toggle>
+                                        <mat-datepicker #FromDate></mat-datepicker>
                                     </mat-form-field>
                                 </div>
                             </div>
@@ -41,18 +41,18 @@
                             <label class=" mb-3">To</label>
                             <div class="input-group">
                                 <mat-form-field class="tillDate mat_date_picker" appearance="outline">
-                                    <input matInput (click)="EndDate.open()" readonly autocomplete="off" formControlName="EndDate"
-                                        [matDatepicker]="EndDate" id="EndDate"
-                                        [min]="reportFilter.get('StartDate').value" [placeholder]="entityDateFormat" (ngModelChange)="formatchange(false)">
-                                    <mat-datepicker-toggle matSuffix [for]="EndDate"></mat-datepicker-toggle>
-                                    <mat-datepicker #EndDate></mat-datepicker>
+                                    <input matInput (click)="ToDate.open()" readonly autocomplete="off" formControlName="ToDate"
+                                        [matDatepicker]="ToDate" id="ToDate"
+                                        [min]="reportFilter.get('FromDate').value" [placeholder]="entityDateFormat" (ngModelChange)="formatchange(false)">
+                                    <mat-datepicker-toggle matSuffix [for]="ToDate"></mat-datepicker-toggle>
+                                    <mat-datepicker #ToDate></mat-datepicker>
                                 </mat-form-field>
                             </div>
                         </div>
 
                         <div class="col-3">
                             <label class=" fontstyles">DIVISION</label>
-                            <ng-select class="searchdropdown custom" formControlName="Division"
+                            <ng-select class="searchdropdown custom" formControlName="DivisionId"
                                 (ngModelChange)="getOfficeList($event);" [clearable]="false">
                                 <ng-option [value]="0" disabled>--SELECT DIVISION--</ng-option>
                                 <ng-container *ngFor="let division of divisionList">
@@ -65,7 +65,7 @@
 
                         <div class="col-3">
                             <label class=" fontstyles">OFFICE</label>
-                            <ng-select class="searchdropdown" formControlName="Office"
+                            <ng-select class="searchdropdown" formControlName="OfficeId"
                                 (ngModelChange)="getDivisionBasedOffice($event, reportFilter.value.Division)"
                                 [clearable]="false" name="CategoryId" id="CategoryId">
                                 <ng-option [value]="0" disabled>--SELECT OFFICE--</ng-option>
@@ -79,8 +79,8 @@
 
                         <div class="col-3">
                             <label class=" fontstyles">CUSTOMER</label>
-                            <ng-select class="searchdropdown" formControlName="Customer" [clearable]="false"
-                                name="CustomerId" id="CustomerId" (change)="isShowBranch = true;getCustomerBranchCode($event)">
+                            <ng-select class="searchdropdown" formControlName="CustomerId" [clearable]="false"
+                                name="CustomerId" id="CustomerId" (change)="isShowBranch = true;selectedCustomerBranch($event)">
                                 <ng-option [value]="0" disabled>--SELECT CUSTOMER--</ng-option>
                                 <ng-container *ngFor="let customer of customerList">
                                     <ng-option [value]="customer.CustomerID">
@@ -93,7 +93,7 @@
                          
                         <div class="col-3">
                             <label class="fontstyles">CUSTOMER BRANCH</label>
-                            <ng-select class="searchdropdown custom" [formControlName]="'CustomerBranch'"
+                            <ng-select class="searchdropdown custom" [formControlName]="'BranchId'"
                               [clearable]="false" >
                              <ng-option [value]="0" disabled>--SELECT CUSTOMER BRANCH--</ng-option>
                             <ng-option *ngFor="let branch of branchList" [value]="branch.BranchCode">
@@ -121,7 +121,7 @@
 
                         <div class="col-3">
                             <label class=" fontstyles">INVOICE NO</label>
-                            <input formControlName="Invoiceno"
+                            <input formControlName="InvoiceNo"
                                 onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly
                                 class="form-control" name="Invoiceno">
                         </div>
@@ -143,7 +143,7 @@
                 <div class="col-2" style="padding-top: 42px;">
                     <div class="text-center">
                         <button type="button" class="btn btn-primary text-white col-auto"
-                            (click)="getReceiptReportList()">
+                            (click)="getSalesVoucherReportList()">
                             SEARCH
                         </button>
                     </div>
@@ -171,9 +171,6 @@
                     <div class="col-sm-12 justify-content-end text-center ">
                         <h3 class="title">NAVIO SHIPPING PRIVATE LIMITED</h3>
                         <h2 class="subtitle">Sales Voucher</h2>
-                        <!-- <p *ngIf="startDate == '' && endDate == '' ">FROM {{ reportFilter.controls.StartDate.value | date: commonDataService.convertToLowerCaseDay(entityDateFormat) }} -
-                           TO {{reportFilter.controls.EndDate.value | date:commonDataService.convertToLowerCaseDay(entityDateFormat) }}
-                        </p> -->
                         
                         <p>FROM {{ startDate | date: commonDataService.convertToLowerCaseDay(entityDateFormat) }} -
                            TO {{ endDate | date:commonDataService.convertToLowerCaseDay(entityDateFormat) }}
@@ -243,29 +240,30 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="let data of pagedItems">
-                                    <td>{{data.Date | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}
+                                    <td>{{data.Invoice_date | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}
                                     </td>
-                                    <td class="hyperTextColor"><a>{{data.Receipt == '' ? '-' :
-                                            data.Receipt}}</a></td>
-                                    <td>{{data.Type}}</td>
+                                    <td class="hyperTextColor"><a>{{data.Invoice_no == '' ? '-' :
+                                            data.Invoice_no}}</a></td>
+                                    <td>{{data.Invoice_type}}</td>
                                     <td class="hyperTextColor">{{data.CustomerName}}</td>
-                                    <td>{{data.Branch}}</td>
-                                    <td>{{data.PaymentMode}}</td>
-                                    <td>{{data.BankName}}</td>
-                                    <td>{{data.ReferenceNo}}</td>
-                                    <td>{{data.Currency}}</td>
-                                    <td class="text-right hyperTextColor">{{data.Amount}}</td>
+                                    <td>{{data.CityName}}</td>
+                                    <td>{{data.CurrencyCode}}</td>
+                                    <td class="text-right hyperTextColor">{{data.InvoiceAmountICY}}</td>
+                                    <td class="text-right hyperTextColor">{{data.InvoiceAmountCCY}}</td>
+                                    <td>{{data.invoice_Tax}}</td>
+                                    <td [ngClass]="data.Status== 'Paid' ? 'green' : 'red'">{{data.Status}}</td>
+
                                 </tr>
 
-                                <!-- <tr *ngIf="pagedItems.length == 0">
+                                <tr *ngIf="pagedItems.length == 0">
                                     <td class="text-center" colspan="10">No records found</td>
-                                </tr> -->
+                                </tr>
 
                             </tbody>
                         </table>
                     </div>
 
-                    <!-- <div class="row page mr-3" align="right">
+                    <div class="row page mr-3" align="right">
                         <ul *ngIf="pager && pager.totalItems > 10" class="pagination">
                             <li [ngClass]="{disabled:pager.currentPage === 1}">
                                 <a (click)="setPage(1)">First</a>
@@ -290,7 +288,7 @@
                                 <a (click)="setPage(pager.totalPages)">Last</a>
                             </li>
                         </ul>
-                    </div> -->
+                    </div>
                 </div>
             </div>
         </div>

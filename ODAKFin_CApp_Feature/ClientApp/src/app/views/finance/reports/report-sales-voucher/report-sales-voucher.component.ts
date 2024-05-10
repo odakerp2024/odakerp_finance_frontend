@@ -102,39 +102,36 @@ export class ReportSalesVoucherComponent implements OnInit {
       this.selectedOption = '';
       switch (selectedOption) {
         case 'today':
-          this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
-          this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
+          this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
+          this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
           break;
         case 'week':
-          this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay()), "yyyy-MM-dd"));
-          this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() + (6 - this.currentDate.getDay())), "yyyy-MM-dd"));
+          this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay()), "yyyy-MM-dd"));
+          this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() + (6 - this.currentDate.getDay())), "yyyy-MM-dd"));
           break;
         case 'month':
           const startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd")
           const endDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd")
   
-          this.reportFilter.controls.StartDate.setValue(startDate);
-          this.reportFilter.controls.EndDate.setValue(endDate);
-  
-  
+          this.reportFilter.controls.FromDate.setValue(startDate);
+          this.reportFilter.controls.ToDate.setValue(endDate);
           break;
         case 'year':
-          // this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), 3, 1), "yyyy-MM-dd"));
-          // this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), 2, 31), "yyyy-MM-dd"));
+        
   
             const currentYear = this.currentDate.getFullYear();
             const startYear = this.currentDate.getMonth() >= 3 ? currentYear : currentYear - 1;
             const endYear = startYear + 1;
           
-            this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(new Date(startYear, 3, 1), "yyyy-MM-dd"));
-            this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(new Date(endYear, 2, 31), "yyyy-MM-dd"));
+            this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(new Date(startYear, 3, 1), "yyyy-MM-dd"));
+            this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(new Date(endYear, 2, 31), "yyyy-MM-dd"));
          
          
           break;
         case 'custom':
           this.selectedOption = 'custom';
-          this.startDate = this.reportFilter.controls.StartDate.value;
-          this.endDate = this.reportFilter.controls.EndDate.value;
+          this.startDate = this.reportFilter.controls.FromDate.value;
+          this.endDate = this.reportFilter.controls.ToDate.value;
           break;
         default:
           this.selectedOption = '';
@@ -145,20 +142,20 @@ export class ReportSalesVoucherComponent implements OnInit {
   
     async createReportForm() {
       this.reportFilter = this.fb.group({
-        Division: [0],
-        Office: [0],
-        Customer: [0],
-        CustomerBranch:[0],
-        StartDate: [this.startDate],
-        EndDate: [this.endDate],
+        DivisionId: [0],
+        OfficeId: [0],
+        CustomerId: [0],
+        BranchId:[0],
+        FromDate: [this.startDate],
+        ToDate: [this.endDate],
         Amount: [''],
         Type: [0],
-        Invoiceno: [],
+        InvoiceNo: [],
         InvoiceType: [0],
         Peroid: [''],
       });
       this.onOptionChange('month');
-      await this.getReceiptReportList();
+      await this.getSalesVoucherReportList();
     }
   
     getDivisionList() {
@@ -191,19 +188,9 @@ export class ReportSalesVoucherComponent implements OnInit {
   
     getVoucherList(customerId: any) {
       return new Promise((resolve, rejects) => {
-  
         let service = `${this.globals.APIURL}/ReceiptVoucher/GetReceiptVoucherDropDownList`
         this.dataService.post(service, { CustomerId: customerId }).subscribe((result: any) => {
           this.customerList = result.data.Table2;
-          this.branchList = result.data.Table3;
-          if (result.data.Table3.length > 0 && this.isShowBranch) {
-            this.reportFilter.controls['CustomerBranch'].setValue(0);
-             if (this.branchList.length == 1) {
-              const branchCode = this.branchList[0].BranchCode;
-              this.reportFilter.controls['CustomerBranch'].setValue(branchCode);          
-             }
-          }
-      
           resolve(true)
         }, error => {
           console.error(error);
@@ -213,11 +200,22 @@ export class ReportSalesVoucherComponent implements OnInit {
     }
 
 
-    getCustomerBranchCode(event) {
-      this.getVoucherList(0);
-          this.reportFilter.controls['CustomerBranch'].setValue(0);
+    selectedCustomerBranch(event:any) {
+      let service = `${this.globals.APIURL}/ReceiptVoucher/GetReceiptVoucherDropDownList`
+      this.dataService.post(service, { CustomerId: event }).subscribe((result: any) => {
+        this.branchList = [];
+        this.branchList = result.data.Table3;
+        if (result.data.Table3.length > 0) { 
+            this.reportFilter.controls['BranchId'].setValue(0);
+             if (this.branchList.length == 1) {
+              const branchCode = this.branchList[0].BranchCode;
+              this.reportFilter.controls['BranchId'].setValue(branchCode);          
+             }
+         }
+      }, error => { });
     }
 
+    
   
     getDivisionBasedOffice(officeId: number, divisoinId: any) {
       this.reportFilter.controls.DepositTo.setValue(0);
@@ -237,18 +235,17 @@ export class ReportSalesVoucherComponent implements OnInit {
       }
     }
   
-    getReceiptReportList() {
-        this.startDate = this.reportFilter.controls.StartDate.value;
-        this.endDate = this.reportFilter.controls.EndDate.value;
+    getSalesVoucherReportList() {
+        this.startDate = this.reportFilter.controls.FromDate.value;
+        this.endDate = this.reportFilter.controls.ToDate.value;
   
-      this.reportService.GetReceiptVoucherReportList(this.reportFilter.value).subscribe(result => {
+      this.reportService.getSalesVoucherReportList(this.reportFilter.value).subscribe(result => {
         this.reportList = [];
    
   
         if (result['data'].Table.length > 0) {
           this.reportList = result['data'].Table;
           this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
-          // console.log("reportList--->", this.reportList);
           this.setPage(1)
         } else {
           this.pager = {};
@@ -270,40 +267,24 @@ export class ReportSalesVoucherComponent implements OnInit {
       this.endDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd");
   
       this.reportFilter.reset({
-        Division: 0,
-        Office: 0,
-        Customer: 0,
-        CustomerBranch: 0,
-        StartDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
-        EndDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd"),
+        DivisionId: 0,
+        OfficeId: 0,
+        CustomerId: 0,
+        BranchId: 0,
+        FromDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
+        ToDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd"),
         Amount: '',
         Type: 0,
-        Invoiceno: 0,
+        InvoiceNo: 0,
         InvoiceType: 0
       });
       this.bankList = [];
       this.officeList = [];
       this.reportFilter.controls.Peroid.setValue('month');
-      this.getReceiptReportList();
+      this.getSalesVoucherReportList();
     }
   
-    // downloadAsCSV() {
-    //   if (this.reportForExcelList.length > 0) {
-    //     this.excelService.exportToCSV(this.reportForExcelList, 'Report-ReceiptVoucher')
-    //   } else {
-    //     Swal.fire('no record found');
-    //   }
-    // }
-  
-    // downloadAsExcel() {
-    //   if (this.reportForExcelList.length > 0) {
-    //     this.excelService.exportAsExcelFile(this.reportForExcelList, 'Report-ReceiptVoucher')
-    //   } else {
-    //     Swal.fire('no record found');
-    //   }
-    // }
-  
-  
+    
     async downloadAsExcel() {
       if (this.reportForExcelList.length === 0) {
         Swal.fire('No record found');
