@@ -31,9 +31,11 @@ export class ReportSalesVoucherComponent implements OnInit {
     reportList: any[];
     reportForExcelList: any[];
     customerList: any[];
+    branchList: any[];
     pager: any = {};// pager object  
     pagedItems: any[];// paged items
     paymentModeList: any[];
+    isShowBranch: boolean = false;
     TypeList = [
       { TypeId: 1, TypeName: 'LA-Export'},
       { TypeId: 2, TypeName: 'LA-Import'},
@@ -92,7 +94,7 @@ export class ReportSalesVoucherComponent implements OnInit {
       this.createReportForm();
       this.onOptionChange('month');
       this.getDivisionList();
-      this.getVoucherList();
+      this.getVoucherList(0);
       this.reportFilter.controls.Peroid.setValue('month');
     }
   
@@ -187,14 +189,21 @@ export class ReportSalesVoucherComponent implements OnInit {
       })
     }
   
-    getVoucherList() {
+    getVoucherList(customerId: any) {
       return new Promise((resolve, rejects) => {
   
         let service = `${this.globals.APIURL}/ReceiptVoucher/GetReceiptVoucherDropDownList`
-        this.dataService.post(service, { CustomerId: 0 }).subscribe((result: any) => {
+        this.dataService.post(service, { CustomerId: customerId }).subscribe((result: any) => {
           this.customerList = result.data.Table2;
-          this.paymentModeList = result.data.Table4;
-  
+          this.branchList = result.data.Table3;
+          if (result.data.Table3.length > 0 && this.isShowBranch) {
+            this.reportFilter.controls['CustomerBranch'].setValue(0);
+             if (this.branchList.length == 1) {
+              const branchCode = this.branchList[0].BranchCode;
+              this.reportFilter.controls['CustomerBranch'].setValue(branchCode);          
+             }
+          }
+      
           resolve(true)
         }, error => {
           console.error(error);
@@ -202,6 +211,13 @@ export class ReportSalesVoucherComponent implements OnInit {
         });
       })
     }
+
+
+    getCustomerBranchCode(event) {
+      this.getVoucherList(0);
+          this.reportFilter.controls['CustomerBranch'].setValue(0);
+    }
+
   
     getDivisionBasedOffice(officeId: number, divisoinId: any) {
       this.reportFilter.controls.DepositTo.setValue(0);

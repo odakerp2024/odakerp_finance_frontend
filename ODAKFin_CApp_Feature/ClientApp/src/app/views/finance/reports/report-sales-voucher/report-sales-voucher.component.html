@@ -80,7 +80,7 @@
                         <div class="col-3">
                             <label class=" fontstyles">CUSTOMER</label>
                             <ng-select class="searchdropdown" formControlName="Customer" [clearable]="false"
-                                name="CategoryId" id="CategoryId">
+                                name="CustomerId" id="CustomerId" (change)="isShowBranch = true;getCustomerBranchCode($event)">
                                 <ng-option [value]="0" disabled>--SELECT CUSTOMER--</ng-option>
                                 <ng-container *ngFor="let customer of customerList">
                                     <ng-option [value]="customer.CustomerID">
@@ -94,12 +94,12 @@
                         <div class="col-3">
                             <label class="fontstyles">CUSTOMER BRANCH</label>
                             <ng-select class="searchdropdown custom" [formControlName]="'CustomerBranch'"
-                                [clearable]="false">
-                                <ng-option [value]="0" disabled>--SELECT CUSTOMER BRANCH--</ng-option>
-                                <!-- <ng-option *ngFor="let type of voucherCustomerCodeList" [value]="type.BranchCode">
-                                    {{ type.CityName | uppercase }}
-                                </ng-option> -->
-                            </ng-select>
+                              [clearable]="false" >
+                             <ng-option [value]="0" disabled>--SELECT CUSTOMER BRANCH--</ng-option>
+                            <ng-option *ngFor="let branch of branchList" [value]="branch.BranchCode">
+                            {{ branch.CityName | uppercase }}
+                           </ng-option>
+                         </ng-select>
                         </div>
 
                         <div class="col-3">
