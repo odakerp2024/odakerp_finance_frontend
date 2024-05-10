@@ -10,6 +10,8 @@ import { ReportReceiptVoucherComponent } from './report-receipt-voucher/report-r
 import { ReportPaymentVoucherComponent } from './report-payment-voucher/report-payment-voucher.component';
 import { ReportContraVoucherComponent } from './report-contra-voucher/report-contra-voucher.component';
 import { ReportVoucherReversalComponent } from './report-voucher-reversal/report-voucher-reversal.component';
+import { ReportAdjustmentVoucherComponent } from './report-adjustment-voucher/report-adjustment-voucher.component';
+import { ReportJournalVoucherComponent } from './report-journal-voucher/report-journal-voucher.component';
 
 
 @NgModule({
@@ -17,7 +19,9 @@ import { ReportVoucherReversalComponent } from './report-voucher-reversal/report
     ReportReceiptVoucherComponent,
     ReportPaymentVoucherComponent,
     ReportContraVoucherComponent,
-    ReportVoucherReversalComponent
+    ReportVoucherReversalComponent,
+    ReportAdjustmentVoucherComponent,
+    ReportJournalVoucherComponent
   ],
   imports: [
     CommonModule,

@@ -4,6 +4,9 @@ import { ReportReceiptVoucherComponent } from './report-receipt-voucher/report-r
 import { ReportPaymentVoucherComponent } from './report-payment-voucher/report-payment-voucher.component';
 import { ReportContraVoucherComponent } from './report-contra-voucher/report-contra-voucher.component';
 import { ReportVoucherReversalComponent } from './report-voucher-reversal/report-voucher-reversal.component';
+import { ReportJournalVoucherComponent } from './report-journal-voucher/report-journal-voucher.component';
+import { ReportAdjustmentVoucherComponent } from './report-adjustment-voucher/report-adjustment-voucher.component';
+
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'report-receipt-voucher' },
@@ -11,6 +14,8 @@ const routes: Routes = [
   { path: 'report-payment-voucher'  ,  component : ReportPaymentVoucherComponent},
   { path: 'report-contra-voucher'   ,  component : ReportContraVoucherComponent},
   { path: 'report-voucher-reversal' ,  component : ReportVoucherReversalComponent},
+  { path: 'report-journal-voucher'   ,  component : ReportJournalVoucherComponent },
+  { path: 'report-adjustment-voucher'   ,  component : ReportAdjustmentVoucherComponent },
 ];
 
 @NgModule({

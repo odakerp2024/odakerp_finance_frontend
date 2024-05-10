@@ -804,6 +804,16 @@ debugger
       this.router.navigate(['/views/reports/report-contra-voucher']);
     } 
 
+    else if (routePage == 'JournalVoucher') {
+      //SubfunctionID = 533;
+      this.router.navigate(['/views/reports/report-journal-voucher']);
+    }
+
+    else if (routePage == 'AdjustmentVoucher') {
+      //SubfunctionID = 533;
+      this.router.navigate(['/views/reports/report-adjustment-voucher']);
+    }
+
     else if (routePage == 'VoucherReversals') {
       //SubfunctionID = 533;
       this.router.navigate(['/views/reports/report-voucher-reversal']);
