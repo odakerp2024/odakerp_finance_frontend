@@ -47,7 +47,8 @@ export class ReportReceiptVoucherComponent implements OnInit {
     { peroidId: 'custom', peroidName: 'CUSTOM' }
   ];
   bankList: any[];
-  entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat')
+  entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
+  entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   currentDate = new Date();
   selectedOption: string;
 
@@ -253,23 +254,84 @@ export class ReportReceiptVoucherComponent implements OnInit {
     this.getReceiptReportList();
   }
 
-  // downloadAsCSV() {
-  //   if (this.reportForExcelList.length > 0) {
-  //     this.excelService.exportToCSV(this.reportForExcelList, 'Report-ReceiptVoucher')
-  //   } else {
-  //     Swal.fire('no record found');
+
+  // async downloadAsExcel() {
+  //   if (this.reportForExcelList.length === 0) {
+  //     Swal.fire('No record found');
+  //     return;
   //   }
+
+  //   // Create a new workbook and worksheet
+  //   const workbook = new Workbook();
+  //   const worksheet = workbook.addWorksheet('Report');
+
+  //   // Define header row and style it with yellow background, bold, and centered text
+  //   const header = Object.keys(this.reportForExcelList[0]);
+  //   const headerRow = worksheet.addRow(header);
+
+  //   headerRow.eachCell((cell) => {
+  //     cell.fill = {
+  //       type: 'pattern',
+  //       pattern: 'solid',
+  //       fgColor: { argb: 'FFFFFF00' }, // Yellow background
+  //     };
+  //     cell.font = {
+  //       bold: true, // Bold font
+  //     };
+  //     cell.alignment = {
+  //       horizontal: 'center', // Center alignment
+  //     };
+  //     cell.border = {
+  //       top: { style: 'thin' },
+  //       left: { style: 'thin' },
+  //       bottom: { style: 'thin' },
+  //       right: { style: 'thin' },
+  //     };
+  //   });
+
+  //   // Add data rows
+  //   this.reportForExcelList.forEach((data) => {
+  //     worksheet.addRow(Object.values(data));
+  //   });
+
+  //   // Adjust column widths to fit content
+  //   worksheet.columns.forEach((column) => {
+  //     let maxLength = 0;
+  //     column.eachCell({ includeEmpty: true }, (cell) => {
+  //       const cellLength = cell.value ? cell.value.toString().length : 0;
+  //       if (cellLength > maxLength) {
+  //         maxLength = cellLength;
+  //       }
+  //     });
+  //     column.width = maxLength + 2; // Add some padding
+  //   });
+
+  //   // Style the footer row with yellow background, bold, and centered text
+  //   const footerRow = worksheet.addRow(['End of Report']); // Footer text
+  //   footerRow.eachCell((cell) => {
+  //     cell.fill = {
+  //       type: 'pattern',
+  //       pattern: 'solid',
+  //       fgColor: { argb: 'FFFFFF00' }, // Yellow background
+  //     };
+  //     cell.font = {
+  //       bold: true,
+  //     };
+  //     cell.alignment = {
+  //       horizontal: 'center',
+  //     };
+  //   });
+
+  //   // Merge footer cells if needed
+  //   worksheet.mergeCells(`A${footerRow.number}:${String.fromCharCode(65 + header.length - 1)}${footerRow.number}`);
+
+  //   // Write to Excel and save
+  //   const buffer = await workbook.xlsx.writeBuffer();
+  //   const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  //   saveAs(blob, 'Report-ReceiptVoucher.xlsx');
   // }
 
-  // downloadAsExcel() {
-  //   if (this.reportForExcelList.length > 0) {
-  //     this.excelService.exportAsExcelFile(this.reportForExcelList, 'Report-ReceiptVoucher')
-  //   } else {
-  //     Swal.fire('no record found');
-  //   }
-  // }
-
-
+  
   async downloadAsExcel() {
     if (this.reportForExcelList.length === 0) {
       Swal.fire('No record found');
@@ -304,9 +366,14 @@ export class ReportReceiptVoucherComponent implements OnInit {
       };
     });
 
-    // Add data rows
+    // Add data rows with concatenated symbol and amount
     this.reportForExcelList.forEach((data) => {
+      data['Amount (ICY)'] = `${data.Symbol} ${data['Amount (ICY)']}`;
+     
       worksheet.addRow(Object.values(data));
+      //   delete data['Amount (ICY)'];
+      // delete data['Amount (CCY)'];
+      // delete data.Symbol;     
     });
 
     // Adjust column widths to fit content
@@ -344,7 +411,9 @@ export class ReportReceiptVoucherComponent implements OnInit {
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     saveAs(blob, 'Report-ReceiptVoucher.xlsx');
-  }
+}
+
+
 
   async downloadAsCSV() {
     if (this.reportForExcelList.length === 0) {
@@ -419,6 +488,6 @@ export class ReportReceiptVoucherComponent implements OnInit {
     // Write to Excel and save
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    saveAs(blob, 'Report-ReceiptVoucher.xlsx');
+    saveAs(blob, 'Report-ReceiptVoucher.csv');
   }
 }

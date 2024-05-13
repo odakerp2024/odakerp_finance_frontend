@@ -249,7 +249,7 @@
                                     <td>{{data.BankName}}</td>
                                     <td>{{data.ReferenceNo}}</td>
                                     <td>{{data.Currency}}</td>
-                                    <td  class=" text-right hyperTextColor">{{data.Amount}}</td>
+                                    <td class="text-right hyperTextColor">{{ data.Symbol + ' ' + (data.Amount | dynamicDecimal: entityFraction) }}</td>
                                     <td>{{data.Invoice}}</td>
                                 </tr>
 

@@ -228,7 +228,7 @@
                                     <td class="hyperTextColor">{{data.ContraVoucherNumber}}</td>
                                     <td>{{data.FromAccount}}</td>
                                     <td>{{data.ToAccount}}</td>
-                                    <td class=" text-right hyperTextColor">{{data.Amount}}</td>
+                                    <td class="text-right hyperTextColor">{{ data.Symbol + ' ' + (data.Amount | dynamicDecimal: entityFraction) }}</td>
                                     <td>{{data.PaymentType}}</td>
                                 </tr>
 

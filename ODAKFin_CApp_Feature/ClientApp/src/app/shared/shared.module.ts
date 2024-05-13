@@ -24,7 +24,8 @@ const components = [EMailTableComponent, DocumentsComponent, DynamicDecimalDirec
     MatDatepickerModule,
     MatFormFieldModule,
     MatInputModule,
-    NgSelectModule
+    NgSelectModule,
+    
   ],
   exports: [...components, MatDatepickerModule, MatInputModule]
 })

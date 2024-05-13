@@ -45,7 +45,8 @@ export class ReportPaymentVoucherComponent implements OnInit  {
     { peroidId: 'custom', peroidName: 'CUSTOM' }
   ];
   bankList: any[];
-  entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat')
+  entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
+  entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   currentDate = new Date();
   selectedOption: string;
   

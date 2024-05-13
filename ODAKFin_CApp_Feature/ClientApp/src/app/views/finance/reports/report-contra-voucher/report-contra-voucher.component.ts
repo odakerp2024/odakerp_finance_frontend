@@ -37,7 +37,8 @@ export class ReportContraVoucherComponent implements OnInit  {
   pagedItems: any[];// paged items
   // paymentModeList: any[];
   // bankList: any[];
-  entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat')
+  entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
+  entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   PeroidList = [
     { peroidId: 'today', peroidName: 'CURRENT DAY' },
     { peroidId: 'week', peroidName: 'CURRENT WEEK' },
