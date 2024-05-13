@@ -358,10 +358,11 @@ export class ReportSalesVoucherComponent implements OnInit {
       // Write to Excel and save
       const buffer = await workbook.xlsx.writeBuffer();
       const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      saveAs(blob, 'Report-ReceiptVoucher.xlsx');
+      saveAs(blob, 'Report-SalesVoucher.xlsx');
     }
   
     async downloadAsCSV() {
+      debugger
       if (this.reportForExcelList.length === 0) {
         Swal.fire('No record found');
         return;
@@ -434,7 +435,7 @@ export class ReportSalesVoucherComponent implements OnInit {
       // Write to Excel and save
       const buffer = await workbook.xlsx.writeBuffer();
       const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      saveAs(blob, 'Report-ReceiptVoucher.xlsx');
+      saveAs(blob, 'Report-SalesVoucher.csv');
     }
   }
   
