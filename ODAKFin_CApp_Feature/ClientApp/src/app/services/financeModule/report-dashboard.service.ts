@@ -34,4 +34,15 @@ export class ReportDashboardService {
     FormValue.Amount = FormValue.Amount == '' ? 0 : FormValue.Amount;
     return this.http.post<any>(this.globals.APIURL + '/Reports/VoucherReversalList/', FormValue);
   }
+
+  
+  getJournalVoucherReportList(FormValue: any): Observable<any> {
+    FormValue.Amount = FormValue.Amount == '' ? 0 : FormValue.Amount;
+    return this.http.post<any>(this.globals.APIURL + '/Reports/JournalVoucherList', FormValue);
+  }
+
+  getAdjustmentReportList(FormValue: any): Observable<any> {
+    FormValue.Amount = FormValue.Amount == '' ? 0 : FormValue.Amount;
+    return this.http.post<any>(this.globals.APIURL + '/Reports/AdjustmentVoucherList', FormValue);
+  }
 }

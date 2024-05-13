@@ -119,7 +119,7 @@ export class ReportAdjustmentVoucherComponent implements OnInit {
     this.reportFilter = this.fb.group({
       DivisionId: [0],
       OfficeId: [0],
-      Account: [0],
+      AccountId: [0],
       FromDate: [this.startDate],
       ToDate: [this.endDate],
       Amount: [''],
@@ -127,7 +127,7 @@ export class ReportAdjustmentVoucherComponent implements OnInit {
       Peroid: [''],
     });
     this.onOptionChange('month');
-    await this.getContraReportList();
+    await this.getAdjustmentReportList();
   }
 
   getDivisionList() {
@@ -207,10 +207,10 @@ export class ReportAdjustmentVoucherComponent implements OnInit {
     }
   }
 
-  getContraReportList() {
+  getAdjustmentReportList() {
     this.startDate = this.reportFilter.controls.FromDate.value;
     this.endDate = this.reportFilter.controls.ToDate.value;
-    this.reportService.GetContraVoucherReportList(this.reportFilter.value).subscribe(result => {
+    this.reportService.getAdjustmentReportList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
 
       if (result['data'].Table.length > 0) {
@@ -240,7 +240,7 @@ export class ReportAdjustmentVoucherComponent implements OnInit {
     this.reportFilter.reset({
       DivisionId: 0,
       OfficeId: 0,
-      Account: [''],
+      AccountId: [''],
       FormData: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
       ToDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd"),
       Amount: '',
@@ -248,7 +248,7 @@ export class ReportAdjustmentVoucherComponent implements OnInit {
     });
     this.officeList = [];
     this.reportFilter.controls.Peroid.setValue('month');
-    this.getContraReportList();
+    this.getAdjustmentReportList();
   }
 
   async downloadAsExcel() {
