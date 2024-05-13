@@ -85,7 +85,7 @@
                                             </option>
                                         </select>
                                     </td>
-                                    <td>{{contra.AmountPaid}}</td>
+                                    <td>{{contra.AmountPaid | dynamicDecimal: entityFraction }}</td>
                                     <td>{{contra.CurrencyName}}</td>
                                     <td>{{contra.ReferenceNo || '-' }}</td>
                                     <td>

@@ -23,6 +23,7 @@ pagedItems: any[];// paged items
 
 // * Dropdown
 entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat')
+entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
 // minDate: string = this.datePipe.transform(new Date(), this.entityDateFormat);
 validTillMinDate: string = this.datePipe.transform(new Date(), this.entityDateFormat);
   filterForm: any;

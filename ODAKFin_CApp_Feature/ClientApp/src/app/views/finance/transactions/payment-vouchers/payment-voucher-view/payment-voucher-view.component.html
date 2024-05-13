@@ -76,7 +76,7 @@
                                       </td>
 
                                     <!-- <td>{{voucher.VendorBranch}}</td> -->
-                                    <td>{{voucher.AmountPaid}}</td>
+                                    <td>{{voucher.AmountPaid | dynamicDecimal: entityFraction}}</td>
                                     <td>{{voucher.CurrencyName}}</td>
                                     <!-- <td>
                                         <select class="form-control my-select  disable-input--noStyle border-0 "

@@ -24,7 +24,7 @@ export class JournalVoucherViewComponent implements OnInit {
  
   // minDate: string = this.datePipe.transform(new Date(), "yyyy-MM-dd");
   validTillMinDate: string = this.datePipe.transform(new Date(), "yyyy-MM-dd");
-
+  entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
   filterForm: FormGroup;
   divisionDropdown = [];
