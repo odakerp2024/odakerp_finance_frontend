@@ -30,6 +30,7 @@ export class PurchaseInvoiseAdminComponent implements OnInit {
   //maxDate: string = this.datePipe.transform(new Date(), "yyyy-MM-dd");
   //minDate: string = this.datePipe.transform(new Date(), this.entityDateFormat);
   validTillMinDate: string = this.datePipe.transform(new Date(), this.entityDateFormat);
+  entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   divisionList: any = [];
   officeList: any = [];
   vendorsList: any = [];

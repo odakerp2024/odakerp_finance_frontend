@@ -67,7 +67,7 @@
                                       </td>
                                     <!-- <td>{{data.VendorName}}</td> -->
                                     <td>{{data.VendorBranch}}</td>
-                                    <td>{{data.InvoiceAmount}}</td>
+                                    <td>{{data.InvoiceAmount | dynamicDecimal: entityFraction }}</td>
                                     <td>{{data.InvoiceCurrency}}</td>
                                     <td>
                                         <div
