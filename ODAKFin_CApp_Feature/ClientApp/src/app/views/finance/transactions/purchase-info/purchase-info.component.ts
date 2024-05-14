@@ -623,12 +623,12 @@ debugger
 
   async createPayload(status) {
     let info = this.purchaseCreateForm.value;
-    var TotalAmount ='';
+    // var TotalAmount ='';
     let PurchaseTableList = this.PurchaseTableList;
     PurchaseTableList.forEach(element => {
       delete element.AccountName;
       delete element.Currency;
-      TotalAmount += element.Amount;
+      // TotalAmount += Number(element.Amount).toFixed(this.entityFraction);
     });
 
     let table = {
@@ -647,7 +647,9 @@ debugger
       Remarks: info.Remarks,
       CreatedBy: info.CreatedBy,
       Status: status,
-      TotalAmount: TotalAmount ? TotalAmount : info.Status,
+      //TotalAmount: TotalAmount ? TotalAmount : info.Status,
+      //info.TotalAmount.toFixed(this.entityFraction),
+      TotalAmount: info.TotalAmount,
       IsDelete: info.IsDelete
     }
 
