@@ -256,7 +256,7 @@
                                             <span aria-hidden="true">&times;</span>
                                         </button>
                                     </div>
-                                    <table style="max-height: 500px;"
+                                    <table style="max-height: 500px;" 
                                         class="table table-responsive  table-bordered w-100 table-striped border-0 agingTable mt-2">
                                         <thead>
                                             <tr class="header-position-sticky">
@@ -307,7 +307,7 @@
                         </div>
                     </div>
                     <div class="col-12">
-                        <table style="max-height: 500px;"
+                        <table style="max-height: 500px;"  *ngIf="divisiontable !== 2 && divisiontable !== 1 && divisiontable !== 5" 
                             class="table table-responsive  table-bordered w-100 table-striped border-0 agingTable mt-2">
                             <thead class="text-center">
                                 <tr class="header-position-sticky" role="row">
@@ -320,6 +320,154 @@
                                     <th class="align-middle"  rowspan="2" colspan="1" >Booking Party</th>
                                     <th class="align-middle"  rowspan="1" colspan="2" >Credit Terms </th>
                                     <th class="align-middle" rowspan="2" colspan="1" >Attachment</th>
+                                    <th class="align-middle"  rowspan="2" colspan="1" >Select</th>
+                                </tr>
+                                <tr>
+                                    <th scope="col">Credit Days</th>
+                                    <th scope="col">Credit Limit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- seleted Invoice -->
+                                <ng-container>
+                                    <tr *ngFor="let invoice of selectedInvoices; let i = index" class="text-center border-0">
+                                        <td >{{invoice.VINumber}}</td>
+                                        <td>{{invoice.VIDueDate | date:'dd-MM-YYYY'}}</td>
+                                        <td>{{invoice.PurchaseInvoice}}</td>
+                                        <!-- <td>{{invoice.Amount}}</td> -->
+                                        <td>{{invoice.VendorInvoice}}</td>
+                                        <td>{{invoice.VendorInvoice}}</td>
+                                        <td>{{invoice.VendorInvoice}}</td> 
+                                        <td>{{invoice.CreditDays || '-'}}</td>
+                                        <td>{{invoice.CreditLimit || '-'}}</td>
+                                        <td>{{invoice.Attachment || '-'}}</td>
+                                        <td>
+                                         <input type="radio" class="vertal checkbox" name="AlertCheck" (click)="markInvoiceSelected(i)"  />
+                                        </td>
+                                    </tr>
+                                </ng-container>
+                                <!-- no data -->
+                                <ng-template #noRecord>
+                                    <tr>
+                                        <td class="text-center" colspan="8" style="height: 100px;">No Records Found</td>
+                                    </tr>
+                                </ng-template>
+                            </tbody>
+
+                        </table>
+                        <table style="max-height: 500px;" *ngIf="this.divisiontable == 2 "
+                            class="table table-responsive  table-bordered w-100 table-striped border-0 agingTable mt-2">
+                            <thead class="text-center">
+                                <tr class="header-position-sticky" role="row">
+                                    <th class="align-middle" rowspan="2" colspan="1">Vendor Invoice #</th>
+                                    <th class="align-middle"  rowspan="2" colspan="1" >Vendor Invoice Due Date</th>
+                                    <th class="align-middle" rowspan="2" colspan="1" >Purchase Invoice #</th>
+                                    <!-- <th class="text-center" scope="col">Amount</th> -->
+                                    <th class="align-middle"  rowspan="2" colspan="1" >Job</th>
+                                    <!-- <th class="align-middle"  rowspan="2" colspan="1" >Job Outstanding</th> -->
+                                    <th class="align-middle"  rowspan="2" colspan="1" >Booking Party</th>
+                                    <th class="align-middle"  rowspan="2" colspan="1" >Amount</th>
+                                    <th class="align-middle"  rowspan="1" colspan="2" >Credit Terms </th>
+                                    <th class="align-middle" rowspan="2" colspan="1" >Attachment</th>
+                                    <th class="align-middle"  rowspan="2" colspan="1" >Select</th>
+                                </tr>
+                                <tr>
+                                    <th scope="col">Credit Days</th>
+                                    <th scope="col">Credit Limit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- seleted Invoice -->
+                                <ng-container>
+                                    <tr *ngFor="let invoice of selectedInvoices; let i = index" class="text-center border-0">
+                                        <td >{{invoice.VINumber}}</td>
+                                        <td>{{invoice.VIDueDate | date:'dd-MM-YYYY'}}</td>
+                                        <td>{{invoice.PurchaseInvoice}}</td>
+                                        <!-- <td>{{invoice.Amount}}</td> -->
+                                        <td>{{invoice.VendorInvoice}}</td>
+                                        <td>{{invoice.VendorInvoice}}</td>
+                                        <td>{{invoice.VendorInvoice}}</td> 
+                                        <td>{{invoice.CreditDays || '-'}}</td>
+                                        <td>{{invoice.CreditLimit || '-'}}</td>
+                                        <td>{{invoice.Attachment || '-'}}</td>
+                                        <td>
+                                         <input type="radio" class="vertal checkbox" name="AlertCheck" (click)="markInvoiceSelected(i)"  />
+                                        </td>
+                                    </tr>
+                                </ng-container>
+                                <!-- no data -->
+                                <ng-template #noRecord>
+                                    <tr>
+                                        <td class="text-center" colspan="8" style="height: 100px;">No Records Found</td>
+                                    </tr>
+                                </ng-template>
+                            </tbody>
+
+                        </table>
+                        <table style="max-height: 500px;" *ngIf="this.divisiontable == 1"
+                            class="table table-responsive  table-bordered w-100 table-striped border-0 agingTable mt-2">
+                            <thead class="text-center">
+                                <tr class="header-position-sticky" role="row">
+                                    <th class="align-middle" rowspan="2" colspan="1">Vendor Invoice #</th>
+                                    <th class="align-middle"  rowspan="2" colspan="1" >Vendor Invoice Due Date</th>
+                                    <th class="align-middle" rowspan="2" colspan="1" >Purchase Invoice #</th>
+                                    <!-- <th class="text-center" scope="col">Amount</th> -->
+                                    <th class="align-middle"  rowspan="2" colspan="1" >No Of CNTRS</th>
+                                    <!-- <th class="align-middle"  rowspan="2" colspan="1" >Job Outstanding</th> -->
+                                    <th class="align-middle"  rowspan="2" colspan="1" >Vessel/Voy</th>
+                                    <th class="align-middle"  rowspan="2" colspan="1" >Amount</th>
+                                    <th class="align-middle"  rowspan="1" colspan="2" >Credit Terms </th>
+                                    <!-- <th class="align-middle" rowspan="2" colspan="1" >Attachment</th> -->
+                                    <th class="align-middle"  rowspan="2" colspan="1" >Select</th>
+                                </tr>
+                                <tr>
+                                    <th scope="col">Credit Days</th>
+                                    <th scope="col">Credit Limit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- seleted Invoice -->
+                                <ng-container>
+                                    <tr *ngFor="let invoice of selectedInvoices; let i = index" class="text-center border-0">
+                                        <td >{{invoice.VINumber}}</td>
+                                        <td>{{invoice.VIDueDate | date:'dd-MM-YYYY'}}</td>
+                                        <td>{{invoice.PurchaseInvoice}}</td>
+                                        <!-- <td>{{invoice.Amount}}</td> -->
+                                        <td>{{invoice.VendorInvoice}}</td>
+                                        <td>{{invoice.VendorInvoice}}</td>
+                                        <td>{{invoice.VendorInvoice}}</td> 
+                                        <td>{{invoice.CreditDays || '-'}}</td>
+                                        <td>{{invoice.CreditLimit || '-'}}</td>
+                                        <td>{{invoice.Attachment || '-'}}</td>
+                                        <td>
+                                         <input type="radio" class="vertal checkbox" name="AlertCheck" (click)="markInvoiceSelected(i)"  />
+                                        </td>
+                                    </tr>
+                                </ng-container>
+                                <!-- no data -->
+                                <ng-template #noRecord>
+                                    <tr>
+                                        <td class="text-center" colspan="8" style="height: 100px;">No Records Found</td>
+                                    </tr>
+                                </ng-template>
+                            </tbody>
+
+                        </table>
+
+                        <table style="max-height: 500px;" *ngIf="this.divisiontable == 5"
+                            class="table table-responsive  table-bordered w-100 table-striped border-0 agingTable mt-2">
+                            <thead class="text-center">
+                                <tr class="header-position-sticky" role="row">
+                                    <th class="align-middle" rowspan="2" colspan="1">Vendor Invoice #</th>
+                                    <th class="align-middle"  rowspan="2" colspan="1" >Vendor Invoice Due Date</th>
+                                    <th class="align-middle" rowspan="2" colspan="1" >Purchase Invoice #</th>
+                                    <!-- <th class="text-center" scope="col">Amount</th> -->
+                                    <!-- <th class="align-middle"  rowspan="2" colspan="1" >Job No</th>
+                                    <th class="align-middle"  rowspan="2" colspan="1" >Job Outstanding</th>
+                                    <th class="align-middle"  rowspan="2" colspan="1" >Booking Party</th> -->
+                                    <th class="align-middle"  rowspan="2" colspan="1" >Amount</th>
+                                    <th class="align-middle"  rowspan="1" colspan="2" >Credit Terms </th>
+                                    <!-- <th class="align-middle" rowspan="2" colspan="1" >Attachment</th> -->
                                     <th class="align-middle"  rowspan="2" colspan="1" >Select</th>
                                 </tr>
                                 <tr>

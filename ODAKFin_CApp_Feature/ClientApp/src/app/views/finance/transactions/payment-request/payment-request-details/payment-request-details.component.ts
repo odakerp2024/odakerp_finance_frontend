@@ -63,6 +63,7 @@ export class PaymentRequestDetailsComponent implements OnInit {
   deleteInvoice: any;
   UpdatedBy: any;
   currentDate = this.datePipe.transform(new Date(), "dd-MM-yyyy | HH:MM:SS");
+  divisiontable: any;
 
   constructor(
     private ps: PaginationService,
@@ -165,11 +166,13 @@ export class PaymentRequestDetailsComponent implements OnInit {
 
 
   getDivision() {
+    debugger
     return new Promise((resolve, rejects) => {
       this.commonService.getDivision({}).subscribe((result: any) => {
         this.divisionList = [];
         if (result.data.Table.length > 0) {
           this.divisionList = result.data.Table;
+          
           resolve(true);
         }
       }, error => { 
@@ -179,6 +182,7 @@ export class PaymentRequestDetailsComponent implements OnInit {
   }
 
   getOfficeList(DivisionId) {
+    debugger
     return new Promise((resolve, rejects) => {
       const payload = { DivisionId };
       this.commonService.getOfficeByDivisionId(payload).subscribe((result: any) => {
@@ -190,6 +194,7 @@ export class PaymentRequestDetailsComponent implements OnInit {
             resolve(true);
           }
         }
+       this.divisiontable = DivisionId;
       }, error => {
         rejects();
       });
