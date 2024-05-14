@@ -43,6 +43,7 @@ export class PurchaseInfoComponent implements OnInit {
   ModifiedOn: string = '';
   isFinalModeEnable: boolean = false;
   entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
+  
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
   entityCurrency = this.commonDataService.getLocalStorageEntityConfigurable('Currency');
   minDate: string = this.datePipe.transform(new Date(), "yyyy-MM-dd");
@@ -157,6 +158,7 @@ export class PurchaseInfoComponent implements OnInit {
   }
 
   getPurchaseInfo() {
+    debugger
     var service = `${this.globals.APIURL}/PurchaseOrder/GetPurchaseOrderById`;
     this.dataService.post(service, { Id: this.purchaseId }).subscribe(async(result: any) => {
       if (result.message == 'Success' && result.data.Table.length > 0) {
@@ -169,6 +171,7 @@ export class PurchaseInfoComponent implements OnInit {
         this.CreatedOn = this.datePipe.transform(info.CreatedDate, this.entityDateFormat);
         this.ModifiedBy = info.UpdatedByName;
         this.ModifiedOn = this.datePipe.transform(info.UpdatedDate, this.entityDateFormat);
+       // const formattedAmount = Number(info.Amount).toFixed(2);
         await this.getOfficeList(info.DivisionId);
         this.purchaseCreateForm.patchValue({
           PurchaseOrderId: info.Id,
@@ -186,14 +189,20 @@ export class PurchaseInfoComponent implements OnInit {
           Remarks: info.Remarks,
           CreatedBy: info.CreatedBy,
           Status: info.Status,
-          TotalAmount: info.TotalAmount,
+          TotalAmount: info.TotalAmount.toFixed(this.entityFraction),
           IsDelete: info.IsDelete ? info.IsDelete : 0
         });
-
+debugger
         // if (this.isCopyMode) this.autoCodeGeneration('Purchase');
-        if (result.data.Table2.length > 0) this.purchaseFileList = result.data.Table2;
+        if (result.data.Table2.length > 0) 
+          
+          this.purchaseFileList = result.data.Table2;
+        
         if (result.data.Table1.length > 0) {
           this.PurchaseTableList = result.data.Table1;
+            this.PurchaseTableList.forEach(element => { element.Amount = Number(element.Amount).toFixed(this.entityFraction); 
+            }); 
+
           this.setPage(1);
         }
 
@@ -300,11 +309,13 @@ export class PurchaseInfoComponent implements OnInit {
       Swal.fire(validation)
       return false;
     }
+   debugger
     let info = this.purchaseCreateForm.value;
     let account = this.accountName.find(x => x.ChartOfAccountsId == info.AccountId);
     let currency = this.currencyList.find(x => x.ID == info.CurrencyId);
-
+    debugger
     if (this.isEditMode) {
+     // const formattedAmount = Number(info.Amount).toFixed(2);
       let editValue = {
         Id: info.Id,
         PurchaseOrderId: this.purchaseId ? this.purchaseId : info.PurchaseOrderId,
@@ -313,7 +324,7 @@ export class PurchaseInfoComponent implements OnInit {
         CurrencyId: info.CurrencyId,
         CurrencyName: currency.CurrencyCode,
         Rate: info.Rate,
-        Amount: info.Amount,
+        Amount:  Number(info.Amount).toFixed(this.entityFraction),
         AccountName: account.AccountName,
         // Currency: currency.Currency
       }
@@ -326,7 +337,7 @@ export class PurchaseInfoComponent implements OnInit {
       this.CalculateTotalAmount();
       return;
     }
-
+    //const formattedAmount = Number(info.Amount).toFixed(2);
     this.PurchaseTableList.unshift({
       Id: info.Id,
       PurchaseOrderId: this.purchaseId ? this.purchaseId : info.PurchaseOrderId,
@@ -335,7 +346,7 @@ export class PurchaseInfoComponent implements OnInit {
       CurrencyId: info.CurrencyId,
       CurrencyName: currency.CurrencyCode,
       Rate: info.Rate,
-      Amount: info.Amount,
+      Amount: Number(info.Amount).toFixed(this.entityFraction),
       AccountName: account.AccountName,
       Currency: currency.Currency
     });
@@ -353,12 +364,14 @@ export class PurchaseInfoComponent implements OnInit {
   }
 
   CalculateTotalAmount() {
-    var totalAmount = '';
-    this.PurchaseTableList.map(x => {
-      totalAmount += x.Amount;
+    let totalAmount = 0;
+    this.PurchaseTableList.forEach(x => {
+        totalAmount += Number(x.Amount);
     });
-    this.purchaseCreateForm.controls['TotalAmount'].setValue(totalAmount);
-  }
+
+    const formattedTotalAmount = totalAmount.toFixed(this.entityFraction);
+    this.purchaseCreateForm.controls['TotalAmount'].setValue(formattedTotalAmount);
+}
 
   setPage(page: number) {
     this.pager = this.ps.getPager(this.PurchaseTableList.length, page);
