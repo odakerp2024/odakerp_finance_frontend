@@ -34,3 +34,18 @@ tr:hover {
 .clear-btn {
   width: 96px;
 }
+
+@media (min-width: 1000px) and (max-width: 1800px) {
+  .field-responsive#active {
+    width: 102% !important;
+    max-width: 105% !important; 
+    overflow: visible !important;
+  }
+}
+
+
+
+
+
+
+
