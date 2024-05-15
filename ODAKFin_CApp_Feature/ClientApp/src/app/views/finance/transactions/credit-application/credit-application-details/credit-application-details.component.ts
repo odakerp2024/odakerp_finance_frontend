@@ -60,6 +60,8 @@ export class CreditApplicationDetailsComponent implements OnInit {
   CreditLimitDays: string='';
   CreditLimitAmount: string='';
   salesPersonWF: string='';
+  wfcustomerID: string= '';
+  wfcustomerName: string='';
 
   workFlowObj!:workflowEventObj;
 
@@ -229,8 +231,9 @@ debugger
       eventnumber: WF_EVENTS['creditApp'].EVENT_NO,
       eventvalue: this.CreditApplicationNumber   ? this.CreditApplicationNumber  : "" ,
       app: this.globals.appName,
-      division: this.userDiv ? this.userDiv.trim() : '',
-      office: this.userOff ? this.userOff.trim() : '',
+      division: this.userDiv ? this.userDiv :'',
+      office: this.userOff ? this.userOff :'',
+      customername: this.wfcustomerName ? this.wfcustomerName : '',
       eventdata: eventData,
       Initiator: { userid: this.userName ? this.userName.trim() : '', usertype: "string" },
       callbackURL:`${this.globals.APIURL}${WF_EVENTS['creditApp'].apiEndPoint}`,
@@ -396,6 +399,13 @@ debugger
           this.salesPersonWF = Table.SalesPIC,
           this.getWQuestions(result.data.Table1);
         
+          this.wfcustomerID = Table.CustomerId;
+
+          for(let item of this.customerAndBranchList){
+            if(this.wfcustomerID == item.CustomerID){
+              this.wfcustomerName = item.CustomerName;
+            }
+          }
         }
 
         if (result.data.Table2) {
