@@ -19,6 +19,7 @@ export class DynamicDecimalDirective {
   @HostListener('input', ['$event.target.value'])
 
   setDecimalPlaces(inputValue: string) {
+    
     const inputData = +inputValue;
     // const enteredDecimalCount = inputData % 1 !== 0 ? inputData.toString().split('.')[1]?.length || 0 : 0;
     // if (enteredDecimalCount > this.entityFraction) {
@@ -32,13 +33,29 @@ export class DynamicDecimalDirective {
     }
   }
 
-  transform(value: number, decimalPlaces: number): string {
-    if (value || value === 0) {
-      return value.toFixed(decimalPlaces);
+  // transform(value: number, decimalPlaces: number): string {
+  //   debugger
+  //   if (value || value === 0) {
+  //     return value.toFixed(decimalPlaces);
+  //   }
+  //   return '';
+  // }
+
+  transform(value: number | string, decimalPlaces: number): string {
+    // Parse the input value to a number
+    const numericValue = parseFloat(value as string);
+  
+    // Check if the parsed value is a valid number
+    if (!isNaN(numericValue)) {
+      // If the value is valid, format it with the specified number of decimal places
+      return numericValue.toFixed(decimalPlaces);
     }
+    
+    // If the input value is not a valid number, return an empty string
     return '';
   }
-
+  
+  
 
 
 
