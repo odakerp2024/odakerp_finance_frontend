@@ -46,7 +46,7 @@ export class ReportReceiptVoucherComponent implements OnInit {
     { peroidId: 'week', peroidName: 'CURRENT WEEK' },
     { peroidId: 'month', peroidName: 'CURRENT MONTH' },
     { peroidId: 'year', peroidName: 'CURRENT FINANCIAL YEAR' },
-    { peroidId: 'custom', peroidName: 'CUSTOM' }
+        { peroidId: 'custom', peroidName: 'CUSTOM' }
   ];
   bankList: any[];
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
@@ -433,9 +433,9 @@ export class ReportReceiptVoucherComponent implements OnInit {
       const formattedDate = date.split('T')[0];
       data.Date = formattedDate;
 
-  // Merge the symbol and amount into a single string with fixed decimal places
-const mergedICYAmount = `${data.Symbol} ${parseFloat(data['Amount (ICY)']).toFixed(2)}`;
-const mergedCCYAmount = `${data.Symbol} ${parseFloat(data['Amount (CCY)']).toFixed(2)}`;
+      // Merge the symbol and amount into a single string with fixed decimal places
+      const mergedICYAmount = `${data.Symbol} ${parseFloat(data['Amount (ICY)']).toFixed(2)}`;
+      const mergedCCYAmount = `${data.Symbol} ${parseFloat(data['Amount (CCY)']).toFixed(2)}`;
 
       // Filter out properties you don't want to include in the Excel sheet
       const filteredData = Object.keys(data)
@@ -449,7 +449,7 @@ const mergedCCYAmount = `${data.Symbol} ${parseFloat(data['Amount (CCY)']).toFix
       filteredData['Amount (ICY)'] = mergedICYAmount;
       filteredData['Amount (CCY)'] = mergedCCYAmount;
 
-      
+
 
       // Add the filtered data to the worksheet
       worksheet.addRow(Object.values(filteredData));
@@ -506,21 +506,61 @@ const mergedCCYAmount = `${data.Symbol} ${parseFloat(data['Amount (CCY)']).toFix
     const workbook = new Workbook();
     const worksheet = workbook.addWorksheet('Report');
 
+    // Add title and subtitle rows
+    const titleRow = worksheet.addRow(['', '', '', '', '', 'NAVIO SHIPPING PRIVATE LIMITED', '']);
+    titleRow.getCell(6).font = { size: 15, bold: true };
+    titleRow.getCell(6).alignment = { horizontal: 'center' };
+
+    // Calculate the length of the title string
+    const titleLength = 'NAVIO SHIPPING PRIVATE LIMITED'.length;
+
+    // Iterate through each column to adjust the width based on the title length
+    worksheet.columns.forEach((column) => {
+      if (column.number === 6) {
+        column.width = titleLength + 2;
+      }
+    });
+
+    // Merge cells for the title
+    worksheet.mergeCells(`F${titleRow.number}:G${titleRow.number}`);
+
+    // Add subtitle row
+    const subtitleRow = worksheet.addRow(['', '', '', '', '', 'Receipt Voucher', '']);
+    subtitleRow.getCell(6).font = { size: 14 };
+    subtitleRow.getCell(6).alignment = { horizontal: 'center' };
+
+    // Merge cells for the subtitle
+    worksheet.mergeCells(`F${subtitleRow.number}:G${subtitleRow.number}`);
+
+    // Add "FROM Date" and "TO Date" to the worksheet
+    const dateRow = worksheet.addRow(['', '', '', '', '', `FROM ${this.startDate} - TO ${this.endDate}`]);
+    dateRow.eachCell((cell) => {
+      cell.alignment = { horizontal: 'center' };
+    });
+    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
+    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
+
+    // Merge cells for "FROM Date" and "TO Date"
+    worksheet.mergeCells(`F${dateRow.number}:G${dateRow.number}`);
+
+
     // Define header row and style it with yellow background, bold, and centered text
-    const header = Object.keys(this.reportForExcelList[0]);
+    const header = Object.keys(this.reportForExcelList[0]).filter(key => key !== 'Symbol');
     const headerRow = worksheet.addRow(header);
+
 
     headerRow.eachCell((cell) => {
       cell.fill = {
         type: 'pattern',
         pattern: 'solid',
-        fgColor: { argb: 'FFFFFF00' }, // Yellow background
+        fgColor: { argb: '8A9A5B' },
       };
       cell.font = {
-        bold: true, // Bold font
+        bold: true,
+        color: { argb: 'FFFFF7' }
       };
       cell.alignment = {
-        horizontal: 'center', // Center alignment
+        horizontal: 'center',
       };
       cell.border = {
         top: { style: 'thin' },
@@ -530,9 +570,35 @@ const mergedCCYAmount = `${data.Symbol} ${parseFloat(data['Amount (CCY)']).toFix
       };
     });
 
-    // Add data rows
+    // Add data rows with concatenated symbol and amount
     this.reportForExcelList.forEach((data) => {
-      worksheet.addRow(Object.values(data));
+
+      //To Remove Time from date field data
+      const date = data.Date
+      const formattedDate = date.split('T')[0];
+      data.Date = formattedDate;
+
+      // Merge the symbol and amount into a single string with fixed decimal places
+      const mergedICYAmount = `${data.Symbol} ${parseFloat(data['Amount (ICY)']).toFixed(2)}`;
+      const mergedCCYAmount = `${data.Symbol} ${parseFloat(data['Amount (CCY)']).toFixed(2)}`;
+
+      // Filter out properties you don't want to include in the Excel sheet
+      const filteredData = Object.keys(data)
+        .filter(key => key !== 'Symbol')
+        .reduce((obj, key) => {
+          obj[key] = data[key];
+          return obj;
+        }, {});
+
+      // Update the 'Amount (ICY)' property in the filtered data object with the merged amount
+      filteredData['Amount (ICY)'] = mergedICYAmount;
+      filteredData['Amount (CCY)'] = mergedCCYAmount;
+
+
+
+      // Add the filtered data to the worksheet
+      worksheet.addRow(Object.values(filteredData));
+
     });
 
     // Adjust column widths to fit content
@@ -544,19 +610,20 @@ const mergedCCYAmount = `${data.Symbol} ${parseFloat(data['Amount (CCY)']).toFix
           maxLength = cellLength;
         }
       });
-      column.width = maxLength + 2; // Add some padding
+      column.width = maxLength + 2;
     });
 
     // Style the footer row with yellow background, bold, and centered text
-    const footerRow = worksheet.addRow(['End of Report']); // Footer text
+    const footerRow = worksheet.addRow(['End of Report']);
     footerRow.eachCell((cell) => {
       cell.fill = {
         type: 'pattern',
         pattern: 'solid',
-        fgColor: { argb: 'FFFFFF00' }, // Yellow background
+        fgColor: { argb: '8A9A5B' },
       };
       cell.font = {
         bold: true,
+        color: { argb: 'FFFFF7' }
       };
       cell.alignment = {
         horizontal: 'center',
@@ -569,6 +636,6 @@ const mergedCCYAmount = `${data.Symbol} ${parseFloat(data['Amount (CCY)']).toFix
     // Write to Excel and save
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    saveAs(blob, 'Report-ReceiptVoucher.csv');
+    saveAs(blob, 'Report-ReceiptVoucher.xlsx');
   }
 }
