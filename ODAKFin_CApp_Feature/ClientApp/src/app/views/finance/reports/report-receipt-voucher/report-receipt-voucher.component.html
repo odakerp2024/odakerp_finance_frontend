@@ -22,7 +22,7 @@
 
                         <div class="col-3" *ngIf="selectedOption === 'custom'">
                             <div class="form-group bmd-form-group w-100">
-                                <label class="col-md-6 col-sm-6 col-lg-4 col-xl-4">From</label>
+                                <label class="mb-3">From</label>
                                 <div class="input-group">
                                     <mat-form-field class="tillDate mat_date_picker" appearance="outline">
                                         <input matInput (click)="StartDate.open()" readonly autocomplete="off" (onchange)="formatchange(true)"
@@ -37,7 +37,7 @@
 
                         <div class="col-3" *ngIf="selectedOption === 'custom'">
 
-                            <label class=" col-md-6 col-sm-6 col-lg-4 col-xl-4">To</label>
+                            <label class="mb-3">To</label>
                             <div class="input-group">
                                 <mat-form-field class="tillDate mat_date_picker" appearance="outline">
                                     <input matInput (click)="EndDate.open()" readonly autocomplete="off" formControlName="EndDate"
@@ -127,16 +127,6 @@
                             </ng-select>
                         </div>
 
-                        <!-- <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
-                            <label class=" fontstyles">DEPOSIT TO</label>
-                            <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'DepositTo'"
-                                name="active" id="active" >
-                                <ng-option [value]="0" disabled>-- SELECT --</ng-option>
-                                <ng-option *ngFor="let Deposit of bankList" [value]="Deposit.BankID">
-                                    <span class="textwrap"> {{Deposit.BankName | uppercase}} - {{Deposit.AccountNo}} </span>
-                                </ng-option>
-                            </ng-select>
-                        </div> -->
 
                         <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                             <label class="fontstyles">DEPOSIT TO</label>
@@ -198,10 +188,6 @@
                     <div class="col-sm-12 text-right d-flex justify-content-end">
                         <div style="font-weight: 600; padding-top: 14px;">Export as : </div>
                         <div>
-                            <!-- <img style="cursor: pointer;" width="22px" height="22px"
-                                class="exportAs mx-1 align-baseline"
-                                src="../../../../assets/images/icon/file-pdf-solid.jpeg" (click)="downloadAsPDF()"
-                                alt="logo"> -->
                             <img style="cursor: pointer;" width="38px" height="38px"
                                 class="exportAs mx-1 align-baseline" src="../../../../../assets/images/csv_color.png"
                                 (click)="downloadAsCSV()" alt="logo">

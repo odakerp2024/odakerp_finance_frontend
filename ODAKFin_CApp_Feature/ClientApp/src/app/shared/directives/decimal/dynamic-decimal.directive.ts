@@ -42,19 +42,25 @@ export class DynamicDecimalDirective {
   // }
 
   transform(value: number | string, decimalPlaces: number): string {
+    debugger
+    // Check if the value is empty or null
+    if (value === '' || value === null) {
+        return '0';
+    }
+
     // Parse the input value to a number
     const numericValue = parseFloat(value as string);
-  
+
     // Check if the parsed value is a valid number
     if (!isNaN(numericValue)) {
-      // If the value is valid, format it with the specified number of decimal places
-      return numericValue.toFixed(decimalPlaces);
+        // If the value is valid, format it with the specified number of decimal places
+        return numericValue.toFixed(decimalPlaces);
     }
-    
+
     // If the input value is not a valid number, return an empty string
     return '';
-  }
-  
+}
+
   
 
 
