@@ -69,6 +69,7 @@ export class TrailbalanceComponent implements OnInit {
   }
 
   setPage(page: number) {
+    if (this.balanceList.length) {
     if (page < 1 || page > this.pager.totalPages) {
       return;
     }
@@ -77,8 +78,10 @@ export class TrailbalanceComponent implements OnInit {
 
     // get current page of items
     this.pagedItems = this.balanceList.slice(this.pager.startIndex, this.pager.endIndex + 1);
+  } else {
+    this.pagedItems = [];
   }
-
+}
 
   getDivisionList() {
     var service = `${this.globals.APIURL}/Division/GetOrganizationDivisionList`; var payload: any = {}
@@ -121,9 +124,14 @@ export class TrailbalanceComponent implements OnInit {
         if (result.message == 'Success' && result.data.Table.length > 0) {
             this.balanceList = result.data.Table;
             this.setPage(1);
+        }else{
+          this.pager = {};
+          this.balanceList = []
+          this.pagedItems = [];
         }
     }, error => {
         console.error("Error occurred:", error); 
+        
     });
 }
 
@@ -174,6 +182,10 @@ onDivisionChange(value: any) {
     if (result.message == 'Success' && result.data.Table.length > 0) {
       this.balanceList = result.data.Table;
       this.setPage(1);
+    }else{
+      this.pager = {};
+      this.balanceList = []
+      this.pagedItems = [];
     }
   }, error => {
     console.error("Error occurred:", error); // Log the error for debugging
@@ -195,6 +207,10 @@ onOfficeChange(values: any) {
     if (result.message == 'Success' && result.data.Table.length > 0) {
       this.balanceList = result.data.Table;
       this.setPage(1);
+    }else{
+      this.pager = {};
+      this.balanceList = []
+      this.pagedItems = [];
     }
   }, error => {
     console.error("Error occurred:", error); 
@@ -218,6 +234,10 @@ BasedOnDate(selectedDate: any) {
     if (result.message == 'Success' && result.data.Table.length > 0) {
       this.balanceList = result.data.Table;
       this.setPage(1);
+    }else{
+      this.pager = {};
+      this.balanceList = []
+      this.pagedItems = [];
     }
   }, error => {
     console.error("Error occurred:", error); 

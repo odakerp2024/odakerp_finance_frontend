@@ -101,7 +101,9 @@
 
             </thead>
             <tbody>
-                <tr *ngFor="let balance of balanceList; let i = index">
+                <ng-container *ngIf="pagedItems.length > 0 else noRecord">
+                    <!-- <tr *ngFor="let balance of balancelist"> --> 
+                <tr *ngFor="let balance of pagedItems; let i = index">
                     <td (click)="editBalance(balance.ChartOfAccountsId)" style="color: #0366d6;cursor: pointer;">{{
                         balance.GrandParentAccountName }} - {{ balance.ParentAccountName }} - {{
                         balance.ChildAccountName }}</td>
@@ -111,6 +113,12 @@
                     <td *ngIf="balance.ChildTransaction_Type === 'Debit'">{{ balance.ChildNet_Balance }}</td>
                     <td *ngIf="balance.ChildTransaction_Type !== 'Debit'">null</td>
                 </tr>
+            </ng-container>
+            <ng-template #noRecord>
+                <tr  *ngIf="pagedItems.length == 0">
+                    <td class="text-center" colspan="9" style="height: 100px;">No Records Found</td>
+                </tr>
+            </ng-template>
             </tbody>
 
         </table>
@@ -118,7 +126,7 @@
     </div>
 
     <div style=" width: 100%;justify-content: end;" class="row page">
-        <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10 && pager.totalItems > 10"
+        <ul *ngIf="pager.totalItems > 10 && pager.totalItems > 10"
             class="pagination">
             <li [ngClass]="{disabled:pager.currentPage === 1}">
                 <a (click)="setPage(1)">First</a>
@@ -147,3 +155,4 @@
 
 
 </div>
+
