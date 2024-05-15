@@ -46,7 +46,11 @@ export class ReportReceiptVoucherComponent implements OnInit {
     { peroidId: 'week', peroidName: 'CURRENT WEEK' },
     { peroidId: 'month', peroidName: 'CURRENT MONTH' },
     { peroidId: 'year', peroidName: 'CURRENT FINANCIAL YEAR' },
-        { peroidId: 'custom', peroidName: 'CUSTOM' }
+    { peroidId: 'custom', peroidName: 'CUSTOM' },
+    { peroidId: 'previoustoday', peroidName: 'PREVIOUS DAY' },
+    { peroidId: 'previousweek', peroidName: 'PREVIOUS WEEK' },
+    { peroidId: 'previousmonth', peroidName: 'PREVIOUS MONTH' },
+    { peroidId: 'previousyear', peroidName: 'PREVIOUS FINANCIAL YEAR' }
   ];
   bankList: any[];
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
@@ -86,41 +90,67 @@ export class ReportReceiptVoucherComponent implements OnInit {
   onOptionChange(selectedOption: string) {
     this.selectedOption = '';
     switch (selectedOption) {
+
       case 'today':
         this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
         this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
         break;
+
       case 'week':
         this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay()), "yyyy-MM-dd"));
         this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() + (6 - this.currentDate.getDay())), "yyyy-MM-dd"));
         break;
+
       case 'month':
         const startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd")
         const endDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd")
-
         this.reportFilter.controls.StartDate.setValue(startDate);
         this.reportFilter.controls.EndDate.setValue(endDate);
-
-
         break;
-      case 'year':
-        // this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), 3, 1), "yyyy-MM-dd"));
-        // this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), 2, 31), "yyyy-MM-dd"));
 
+      case 'year':
         const currentYear = this.currentDate.getFullYear();
         const startYear = this.currentDate.getMonth() >= 3 ? currentYear : currentYear - 1;
         const endYear = startYear + 1;
-
         this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(new Date(startYear, 3, 1), "yyyy-MM-dd"));
         this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(new Date(endYear, 2, 31), "yyyy-MM-dd"));
-
-
         break;
+
+      case 'previoustoday':
+        const previousDay = new Date(this.currentDate);
+        previousDay.setDate(previousDay.getDate() - 1);
+        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(previousDay, "yyyy-MM-dd"));
+        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(previousDay, "yyyy-MM-dd"));
+        break;
+
+      case 'previousweek':
+        const previousWeekStartDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay() - 7);
+        const previousWeekEndDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay() - 1);
+        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(previousWeekStartDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(previousWeekEndDate, "yyyy-MM-dd"));
+        break;
+
+      case 'previousmonth':
+        const previousMonthStartDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() - 1, 1);
+        const previousMonthEndDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 0);
+        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(previousMonthStartDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(previousMonthEndDate, "yyyy-MM-dd"));
+        break;
+
+      case 'previousyear':
+        const previousYear = this.currentDate.getFullYear() - 1;
+        const previousYearStartDate = new Date(previousYear, 3, 1);
+        const previousYearEndDate = new Date(previousYear + 1, 2, 31);
+        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(previousYearStartDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(previousYearEndDate, "yyyy-MM-dd"));
+        break;
+
       case 'custom':
         this.selectedOption = 'custom';
         this.startDate = this.reportFilter.controls.StartDate.value;
         this.endDate = this.reportFilter.controls.EndDate.value;
         break;
+
       default:
         this.selectedOption = '';
         break;
@@ -274,83 +304,6 @@ export class ReportReceiptVoucherComponent implements OnInit {
   }
 
 
-  // async downloadAsExcel() {
-  //   if (this.reportForExcelList.length === 0) {
-  //     Swal.fire('No record found');
-  //     return;
-  //   }
-
-  //   // Create a new workbook and worksheet
-  //   const workbook = new Workbook();
-  //   const worksheet = workbook.addWorksheet('Report');
-
-  //   // Define header row and style it with yellow background, bold, and centered text
-  //   const header = Object.keys(this.reportForExcelList[0]);
-  //   const headerRow = worksheet.addRow(header);
-
-  //   headerRow.eachCell((cell) => {
-  //     cell.fill = {
-  //       type: 'pattern',
-  //       pattern: 'solid',
-  //       fgColor: { argb: 'FFFFFF00' }, // Yellow background
-  //     };
-  //     cell.font = {
-  //       bold: true, // Bold font
-  //     };
-  //     cell.alignment = {
-  //       horizontal: 'center', // Center alignment
-  //     };
-  //     cell.border = {
-  //       top: { style: 'thin' },
-  //       left: { style: 'thin' },
-  //       bottom: { style: 'thin' },
-  //       right: { style: 'thin' },
-  //     };
-  //   });
-
-  //   // Add data rows
-  //   this.reportForExcelList.forEach((data) => {
-  //     worksheet.addRow(Object.values(data));
-  //   });
-
-  //   // Adjust column widths to fit content
-  //   worksheet.columns.forEach((column) => {
-  //     let maxLength = 0;
-  //     column.eachCell({ includeEmpty: true }, (cell) => {
-  //       const cellLength = cell.value ? cell.value.toString().length : 0;
-  //       if (cellLength > maxLength) {
-  //         maxLength = cellLength;
-  //       }
-  //     });
-  //     column.width = maxLength + 2; // Add some padding
-  //   });
-
-  //   // Style the footer row with yellow background, bold, and centered text
-  //   const footerRow = worksheet.addRow(['End of Report']); // Footer text
-  //   footerRow.eachCell((cell) => {
-  //     cell.fill = {
-  //       type: 'pattern',
-  //       pattern: 'solid',
-  //       fgColor: { argb: 'FFFFFF00' }, // Yellow background
-  //     };
-  //     cell.font = {
-  //       bold: true,
-  //     };
-  //     cell.alignment = {
-  //       horizontal: 'center',
-  //     };
-  //   });
-
-  //   // Merge footer cells if needed
-  //   worksheet.mergeCells(`A${footerRow.number}:${String.fromCharCode(65 + header.length - 1)}${footerRow.number}`);
-
-  //   // Write to Excel and save
-  //   const buffer = await workbook.xlsx.writeBuffer();
-  //   const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-  //   saveAs(blob, 'Report-ReceiptVoucher.xlsx');
-  // }
-
-
   async downloadAsExcel() {
     if (this.reportForExcelList.length === 0) {
       Swal.fire('No record found');
@@ -434,8 +387,8 @@ export class ReportReceiptVoucherComponent implements OnInit {
       data.Date = formattedDate;
 
       // Merge the symbol and amount into a single string with fixed decimal places
-      const mergedICYAmount = `${data.Symbol} ${parseFloat(data['Amount (ICY)']).toFixed(2)}`;
-      const mergedCCYAmount = `${data.Symbol} ${parseFloat(data['Amount (CCY)']).toFixed(2)}`;
+      const mergedICYAmount = `${data.Symbol} ${data['Amount (ICY)'] !== null ? parseFloat(data['Amount (ICY)']).toFixed(2) : '0.00'}`;
+      const mergedCCYAmount = `${data.Symbol} ${data['Amount (CCY)'] !== null ? parseFloat(data['Amount (CCY)']).toFixed(2) : '0.00'}`;
 
       // Filter out properties you don't want to include in the Excel sheet
       const filteredData = Object.keys(data)
@@ -450,9 +403,18 @@ export class ReportReceiptVoucherComponent implements OnInit {
       filteredData['Amount (CCY)'] = mergedCCYAmount;
 
 
-
       // Add the filtered data to the worksheet
-      worksheet.addRow(Object.values(filteredData));
+      const row = worksheet.addRow(Object.values(filteredData));
+
+      // Set text color for customer, receipt, and amount columns
+      const columnsToColor = ['Customer', 'Receipt', 'Amount (CCY)', 'Amount (ICY)'];
+      columnsToColor.forEach(columnName => {
+        const columnIndex = Object.keys(filteredData).indexOf(columnName);
+        if (columnIndex !== -1) {
+          const cell = row.getCell(columnIndex + 1);
+          cell.font = { color: { argb: '8B0000' }, bold: true, }; // Red color
+        }
+      });
 
     });
 
@@ -579,8 +541,8 @@ export class ReportReceiptVoucherComponent implements OnInit {
       data.Date = formattedDate;
 
       // Merge the symbol and amount into a single string with fixed decimal places
-      const mergedICYAmount = `${data.Symbol} ${parseFloat(data['Amount (ICY)']).toFixed(2)}`;
-      const mergedCCYAmount = `${data.Symbol} ${parseFloat(data['Amount (CCY)']).toFixed(2)}`;
+      const mergedICYAmount = `${data.Symbol} ${data['Amount (ICY)'] !== null ? parseFloat(data['Amount (ICY)']).toFixed(2) : '0.00'}`;
+      const mergedCCYAmount = `${data.Symbol} ${data['Amount (CCY)'] !== null ? parseFloat(data['Amount (CCY)']).toFixed(2) : '0.00'}`;
 
       // Filter out properties you don't want to include in the Excel sheet
       const filteredData = Object.keys(data)
@@ -595,9 +557,18 @@ export class ReportReceiptVoucherComponent implements OnInit {
       filteredData['Amount (CCY)'] = mergedCCYAmount;
 
 
-
       // Add the filtered data to the worksheet
-      worksheet.addRow(Object.values(filteredData));
+      const row = worksheet.addRow(Object.values(filteredData));
+
+      // Set text color for customer, receipt, and amount columns
+      const columnsToColor = ['Customer', 'Receipt', 'Amount (CCY)', 'Amount (ICY)'];
+      columnsToColor.forEach(columnName => {
+        const columnIndex = Object.keys(filteredData).indexOf(columnName);
+        if (columnIndex !== -1) {
+          const cell = row.getCell(columnIndex + 1);
+          cell.font = { color: { argb: '8B0000' }, bold: true, }; // Red color
+        }
+      });
 
     });
 
