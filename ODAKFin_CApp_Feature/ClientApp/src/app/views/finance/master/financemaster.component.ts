@@ -808,6 +808,12 @@ debugger
       //SubfunctionID = 533;
       this.router.navigate(['/views/reports/report-voucher-reversal']);
     }
+    else if (routePage == 'SalesVoucher') {
+  
+      //SubfunctionID = 533;
+      this.router.navigate(['/views/reports/report-sales-voucher']);
+    }
+    
     
     const userID = localStorage.getItem("UserID");
     const paylod = {
