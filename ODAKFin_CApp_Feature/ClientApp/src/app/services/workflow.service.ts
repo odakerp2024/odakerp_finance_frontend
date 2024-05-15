@@ -22,7 +22,7 @@ export class WorkflowService {
     }
    
     getWorkflowInbox(payload:any):Observable<any> {
-      return this.http.get<any>(`${this.workFlowAPI}/Workflowenginestatusinbox/${payload.userEmail}`);
+      return this.http.get<any>(`${this.workFlowAPI}/Workflowenginestatusinbox/${payload.userEmail}/${payload.wfnumber}/${payload.eventnumber}/${payload.fromdate}/${payload.tilldate}/${payload.event_value}/${payload.customername}/${payload.status}`);
     }
 
     getWorkflowDetails(payload:any):Observable<any> {
@@ -35,6 +35,10 @@ export class WorkflowService {
 
     getUserDtls(payload:any):Observable<any> {
       return this.http.post<any>(`${this.APIURL}/User/GetUserDtls/`, payload);
+    }
+
+    getwfEventList(payload:any):Observable<any> {
+      return this.http.post<any>(`${this.workFlowAPI}/WorkflowEngineHistoryInbox/WFEventList/`, payload);
     }
 
 

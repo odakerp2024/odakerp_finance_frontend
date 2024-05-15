@@ -60,6 +60,8 @@ export class CreditApplicationDetailsComponent implements OnInit {
   CreditLimitDays: string='';
   CreditLimitAmount: string='';
   salesPersonWF: string='';
+  wfcustomerID: string= '';
+  wfcustomerName: string='';
 
   workFlowObj!:workflowEventObj;
 
@@ -231,6 +233,7 @@ export class CreditApplicationDetailsComponent implements OnInit {
       app: this.globals.appName,
       division: this.userDiv ? this.userDiv :'',
       office: this.userOff ? this.userOff :'',
+      customername: this.wfcustomerName ? this.wfcustomerName : '',
       eventdata: eventData,
       Initiator: { userid: this.userName ? this.userName : '', usertype: "string" },
       callbackURL:`${this.globals.APIURL}${WF_EVENTS['creditApp'].apiEndPoint}`,
@@ -396,6 +399,13 @@ export class CreditApplicationDetailsComponent implements OnInit {
           this.salesPersonWF = Table.SalesPIC,
           this.getWQuestions(result.data.Table1);
         
+          this.wfcustomerID = Table.CustomerId;
+
+          for(let item of this.customerAndBranchList){
+            if(this.wfcustomerID == item.CustomerID){
+              this.wfcustomerName = item.CustomerName;
+            }
+          }
         }
 
         if (result.data.Table2) {

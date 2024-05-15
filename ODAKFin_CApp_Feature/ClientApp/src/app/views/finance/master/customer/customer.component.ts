@@ -1613,6 +1613,7 @@ debugger
       app: this.globals.appName,
       division: this.userDiv ? this.userDiv :'',
       office: this.userOff ? this.userOff :'',
+      customername: this.fg.value.CustomerName ? this.fg.value.CustomerName : '',
       eventdata: eventData,
       Initiator: { userid: this.userName ? this.userName : '', usertype: "string" },
       //callbackURL:`${this.globals.APIURLlocal}${WF_EVENTS['customerApproval'].apiEndPoint}`,

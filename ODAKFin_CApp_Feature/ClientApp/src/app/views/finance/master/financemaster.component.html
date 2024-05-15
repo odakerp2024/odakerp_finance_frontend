@@ -834,18 +834,65 @@
 
             <div *ngIf="selectedTabName === 'myWorkspace'" class="container-fluid pt-4">
                 <div class="row">
-                    <div class="col-md-2">
+                    <div class="col-md-4">
                         <ul class="nav nav-pills nav-justified" role="tablist">
                             <li class="nav-item waves-effect waves-light">
-                                <a class="nav-link active" data-toggle="tab" role="tab" aria-selected="true">My
-                                    Workflow</a>
+                                <a class="nav-link active" data-toggle="tab" role="tab" (click)="tabClick(1)" aria-selected="true">My Workflow</a>
+                            </li>
+                            <li class="nav-item waves-effect waves-light">
+                                <a class="nav-link" data-toggle="tab" role="tab" (click)="tabClick(2)" aria-selected="true">Workflow History</a>
                             </li>
                         </ul>
                     </div>
 
                     <div class="col-md-12">
                         <div class="tab-content">
-                            <div class="tab-pane pt-3 active show" role="tabpanel">
+                            <div class="tab-pane pt-3 active show" id="pending" role="tabpanel">
+                                <div class="row alogtop">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label>Workflow Number</label>
+                                                <select class="form-control my-select" id="ddlwfnumber">
+                                                    <option value="0">--select--</option>
+                                                    <option *ngFor="let gRow of wfItems" [value]="gRow.workflowno">{{gRow.workflowno}}</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label>Workflow Type</label>
+                                                <select class="form-control my-select" id="ddlwfeventName">
+                                                    <option value="0">--select--</option>
+                                                    <option *ngFor="let gRow of wfEventList" [value]="gRow.eventnumber">{{gRow.eventname}}</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label>Details</label>
+                                                <select class="form-control my-select" id="ddlwfdetails">
+                                                    <option value="0">--select--</option>
+                                                    <option *ngFor="let gRow of wfItems" [value]="gRow.details">{{gRow.details}}</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label>Customer Name</label>
+                                                <input style="text-transform:uppercase" type="text" name="customerName" id="ddlCustomerName" 
+                                                autocomplete="off" class="form-control">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label>From Date</label>
+                                                <input type="date" id="ddlfromDate" class="form-control">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label>Till Date</label>
+                                                <input type="date" id="ddltillDate" class="form-control">
+                                            </div>
+                                            <div class="col-md-12 alogtop alrt">
+                                                <button type="submit" (click)="wfSearch()" class="btn btn-primary btn-raised mb-0">Search</button>
+                                                <button type="submit" (click)="wfClear()" class="btn btn-danger btn-raised mb-0">Clear</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
                                 <div class="row alogtop">
                                     <div class="col-md-12 padlr0">
                                         <div id="datatable-buttons_wrapper"
@@ -861,14 +908,15 @@
                                                                 <th>Workflow Type</th>
                                                                 <th>Submitter</th>
                                                                 <th>Details</th>
-                                                                <th>Current Stop</th>
+                                                                <th>Party Name</th>
+                                                                <th>Current Step</th>
                                                                 <th>Age</th>
                                                                 <th class="actwid">Actions</th>
                                                             </tr>
                                                         </thead>
 
                                                         <tbody>
-                                                            <tr *ngFor="let workflow of wfAllItems">
+                                                            <tr *ngFor="let workflow of PagedItems">
                                                                 <td>{{workflow.workflowno}}</td>
                                                                 <td>{{workflow.eventname}}</td>
                                                                 <td>{{workflow.submitter}}</td>
@@ -876,6 +924,9 @@
                                                                     data-placement="top" title={{workflow.details}}>
                                                                     <a href="{{workflow.redirectURL}}"
                                                                         target="_blank">{{workflow.details}}</a>
+                                                                </td>
+                                                                <td>
+                                                                    {{workflow.customername}}
                                                                 </td>
                                                                 <td>
                                                                     <span
@@ -891,8 +942,8 @@
                                                                 </td>
                                                                 <td class="ellipsis" data-toggle="tooltip"
                                                                     data-placement="top"
-                                                                    title={{workflow.createddatetime}}>
-                                                                    {{workflow.createddatetime}}</td>
+                                                                    title={{workflow.createddate}}>
+                                                                    {{workflow.createddate}}</td>
                                                                 <td class="ellipsis" data-toggle="tooltip"
                                                                     data-placement="top" title=Progress>
                                                                     <div class="th-center">
@@ -901,7 +952,7 @@
                                                                             style="padding: 10px;"><img
                                                                                 src="assets/images/workflow_action.png"
                                                                                 title="Progress" style="width: 20px;"
-                                                                                (click)="getWorkflowDetails(workflow)"></a>
+                                                                                (click)="getWorkflowDetails(workflow , 1)"></a>
                                                                     </div>
                                                                 </td>
                                                             </tr>
@@ -909,7 +960,220 @@
                                                     </table>
                                                 </div>
                                             </div>
-                                            <div class="modal fade" id="progressModel" tabindex="-1" role="dialog"
+                                            
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <ul class="pagination ">
+                                                        <li>Showing</li>
+                                                        <li>{{Pager.startIndex + 1}}</li>
+                                                        <li>to</li>
+                                                        <li>{{Pager.endIndex + 1}}</li>
+                                                        <li>of</li>
+                                                        <li>{{Pager.totalItems}}</li>
+                                                    </ul>
+                                                </div>
+                                                <div class="col-md-6" style="text-align:right;">
+                                                    <ul *ngIf="Pager.pages && Pager.pages.length" class="pagination" style="float:right;">
+                                                        <li [ngClass]="{'pag-disable':Pager.currentPage === 1}">
+                                                            <a (click)="setPageWF(1)">First</a>
+                                                        </li>
+                                                        <li [ngClass]="{'pag-disable':Pager.currentPage === 1}">
+                                                            <a (click)="setPageWF(pager.currentPage - 1)">Previous</a>
+                                                        </li>
+                                                        <li *ngFor="let page of Pager.pages" [ngClass]="{active:Pager.currentPage === page}">
+                                                            <a (click)="setPageWF(page)">{{page}}</a>
+                                                        </li>
+                                                        <li *ngIf="(Pager.totalPages - Pager.startPage) > 5 ">
+                                                            <a (click)="setPageWF(Pager.startPage + 5)">...</a>
+                                                        </li>
+                                                        <li *ngIf="(Pager.totalPages - Pager.startPage) > 5">
+                                                            <a (click)="setPageWF(Pager.totalPages)">{{pager.totalPages}}</a>
+                                                        </li>
+                                            
+                                                        <li [ngClass]="{'pag-disable':Pager.endIndex + 1 === Pager.totalItems}">
+                                                            <a (click)="setPageWF(Pager.currentPage + 1)">Next</a>
+                                                        </li>
+                                                        <li [ngClass]="{'pag-disable':Pager.currentPage === Pager.totalPages}">
+                                                            <a (click)="setPageWF(Pager.totalPages)">Last</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="tab-pane pt-3" id="history" role="tabpanel">
+                                <div class="row alogtop">
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label>Workflow Number</label>
+                                                <select class="form-control my-select" id="ddlwfnumberH">
+                                                    <option value="0">--select--</option>
+                                                    <option *ngFor="let gRow of wfItems" [value]="gRow.workflowno">{{gRow.workflowno}}</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label>Workflow Type</label>
+                                                <select class="form-control my-select" id="ddlwfeventNameH">
+                                                    <option value="0">--select--</option>
+                                                    <option *ngFor="let gRow of wfEventList" [value]="gRow.eventnumber">{{gRow.eventname}}</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label>Details</label>
+                                                <select class="form-control my-select" id="ddlwfdetailsH">
+                                                    <option value="0">--select--</option>
+                                                    <option *ngFor="let gRow of wfItems" [value]="gRow.details">{{gRow.details}}</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label>Customer Name</label>
+                                                <input style="text-transform:uppercase" type="text" name="customerName" id="ddlCustomerNameH" 
+                                                autocomplete="off" class="form-control">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label>From Date</label>
+                                                <input type="date" id="ddlfromDateH" class="form-control">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label>Till Date</label>
+                                                <input type="date" id="ddltillDateH" class="form-control">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label>Status</label>
+                                                <select class="form-control my-select" id="ddlwfStatusH">
+                                                    <option value="0">--select--</option>
+                                                    <option value="approve">Approved</option>
+                                                    <option value="reject">Rejected</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-12 alogtop alrt">
+                                                <button type="submit" (click)="wfSearchHistory()" class="btn btn-primary btn-raised mb-0">Search</button>
+                                                <button type="submit" (click)="wfClearHistory()" class="btn btn-danger btn-raised mb-0">Clear</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                <div class="row alogtop">
+                                    <div class="col-md-12 padlr0">
+                                        <div id="datatable-buttons_wrapper"
+                                            class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+                                            <div class="row">
+                                                <div class="col-md-12 bkglvl cntralign">
+                                                    <table id="datatable"
+                                                        class="table table-responsive table-striped table-bordered w-100 dataTable no-footer"
+                                                        role="grid" aria-describedby="datatable-buttons_info">
+                                                        <thead>
+                                                            <tr role="row">
+                                                                <th>Workflow Number</th>
+                                                                <th>Workflow Type</th>
+                                                                <th>Submitter</th>
+                                                                <th>Details</th>
+                                                                <th>Party Name</th>
+                                                                <th>Status</th>
+                                                                <th>Age</th>
+                                                                <th class="actwid">Actions</th>
+                                                            </tr>
+                                                        </thead>
+
+                                                        <tbody>
+                                                            <tr *ngFor="let workflow of PagedItems">
+                                                                <td>{{workflow.workflowno}}</td>
+                                                                <td>{{workflow.eventname}}</td>
+                                                                <td>{{workflow.submitter}}</td>
+                                                                <td class="ellipsis" data-toggle="tooltip"
+                                                                    data-placement="top" title={{workflow.details}}>
+                                                                    <a href="{{workflow.redirectURL}}"
+                                                                        target="_blank">{{workflow.details}}</a>
+                                                                </td>
+                                                                <td>
+                                                                    {{workflow.customername}}
+                                                                </td>
+                                                                <td>
+                                                                    <span
+                                                                        *ngIf="status == 'approve'">
+                                                                        Approved
+                                                                    </span>
+                                                                    <span
+                                                                        *ngIf="status == 'reject'">
+                                                                        Rejected
+                                                                    </span>
+                                                                </td>
+                                                                <td class="ellipsis" data-toggle="tooltip"
+                                                                    data-placement="top"
+                                                                    title={{workflow.createddate}}>
+                                                                    {{workflow.createddate}}</td>
+                                                                <td class="ellipsis" data-toggle="tooltip"
+                                                                    data-placement="top" title=Progress>
+                                                                    <div class="th-center">
+                                                                        <!-- data-toggle="modal" data-target="#progressModel" -->
+                                                                        <a type="button" class="th-center"
+                                                                            style="padding: 10px;"><img
+                                                                                src="assets/images/workflow_action.png"
+                                                                                title="Progress" style="width: 20px;"
+                                                                                (click)="getWorkflowDetails(workflow , 2)"></a>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <ul class="pagination ">
+                                                        <li>Showing</li>
+                                                        <li>{{Pager.startIndex + 1}}</li>
+                                                        <li>to</li>
+                                                        <li>{{Pager.endIndex + 1}}</li>
+                                                        <li>of</li>
+                                                        <li>{{Pager.totalItems}}</li>
+                                                    </ul>
+                                                </div>
+                                                <div class="col-md-6" style="text-align:right;">
+                                                    <ul *ngIf="Pager.pages && Pager.pages.length" class="pagination" style="float:right;">
+                                                        <li [ngClass]="{'pag-disable':Pager.currentPage === 1}">
+                                                            <a (click)="setPageWF(1)">First</a>
+                                                        </li>
+                                                        <li [ngClass]="{'pag-disable':Pager.currentPage === 1}">
+                                                            <a (click)="setPageWF(pager.currentPage - 1)">Previous</a>
+                                                        </li>
+                                                        <li *ngFor="let page of Pager.pages" [ngClass]="{active:Pager.currentPage === page}">
+                                                            <a (click)="setPageWF(page)">{{page}}</a>
+                                                        </li>
+                                                        <li *ngIf="(Pager.totalPages - Pager.startPage) > 5 ">
+                                                            <a (click)="setPageWF(Pager.startPage + 5)">...</a>
+                                                        </li>
+                                                        <li *ngIf="(Pager.totalPages - Pager.startPage) > 5">
+                                                            <a (click)="setPageWF(Pager.totalPages)">{{pager.totalPages}}</a>
+                                                        </li>
+                                            
+                                                        <li [ngClass]="{'pag-disable':Pager.endIndex + 1 === Pager.totalItems}">
+                                                            <a (click)="setPageWF(Pager.currentPage + 1)">Next</a>
+                                                        </li>
+                                                        <li [ngClass]="{'pag-disable':Pager.currentPage === Pager.totalPages}">
+                                                            <a (click)="setPageWF(Pager.totalPages)">Last</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="modal fade" id="progressModel" tabindex="-1" role="dialog"
                                                 aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                                 <div class="modal-dialog modal-xl modal-dialog-centered dialog1200 "
                                                     role="document" style="max-width: 65%;">
@@ -1090,51 +1354,147 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                            <div class="row page" align="right">
+                        </div>
 
-                                                <!-- pager -->
-                                                <ul *ngIf="wfPager.pages && wfPager.pages.length && wfPager.totalItems > 10"
-                                                    class="pagination">
-                                                    <li [ngClass]="{disabled:wfPager.currentPage === 1}">
-                                                        <a (click)="setPageWF(1)">First</a>
-                                                    </li>
-                                                    <li [ngClass]="{disabled:wfPager.currentPage === 1}">
-                                                        <a (click)="setPageWF(wfPager.currentPage - 1)">Previous</a>
-                                                    </li>
-                                                    <li *ngFor="let page of wfPager.pages"
-                                                        [ngClass]="{active:wfPager.currentPage === page}">
-                                                        <a (click)="setPageWF(page)">{{page}}</a>
-                                                    </li>
-                                                    <li *ngIf="(wfPager.totalPages - wfPager.startPage) > 5 ">
-                                                        <a (click)="setPageWF(wfPager.startPage + 5)">...</a>
-                                                    </li>
-                                                    <li *ngIf="(wfPager.totalPages - wfPager.startPage) > 5">
-                                                        <a
-                                                            (click)="setPageWF(wfPager.totalPages)">{{pager.totalPages}}</a>
-                                                    </li>
+                        <div class="modal fade" id="progressModelHistory" tabindex="-1" role="dialog"
+                                                aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                                <div class="modal-dialog modal-xl modal-dialog-centered dialog1200 "
+                                                    role="document" style="max-width: 65%;">
+                                                    <div class="modal-content ">
+                                                        <div class="modal-header">
+                                                            <div class="row">
+                                                                <div class="col-md-1">
+                                                                    <a type="button" class=""><img
+                                                                            src="assets/images/workflow_action.png"
+                                                                            style="width: 20px;" />
+                                                                    </a>
+                                                                </div>
+                                                                <div class="col-md-10">
+                                                                    <a href="{{redirectURL}}"
+                                                                        target="_blank">{{workflowDetailTitle}}</a>
+                                                                    <!-- <h5>{{workflowDetailTitle}}</h5> -->
+                                                                </div>
+                                                                <div class="col-md-1">
 
-                                                    <li
-                                                        [ngClass]="{disabled:wfPager.currentPage === wfPager.totalPages}">
-                                                        <a (click)="setPageWF(wfPager.currentPage + 1)">Next</a>
-                                                    </li>
-                                                    <li
-                                                        [ngClass]="{disabled:wfPager.currentPage === wfPager.totalPages}">
-                                                        <a (click)="setPageWF(wfPager.totalPages)">Last</a>
-                                                    </li>
-                                                </ul>
+                                                                </div>
 
-
-                                                <!--<pagination-controls (pageChange)="p = $event" class="float-right"></pagination-controls>-->
-                                                <!--<pagination-controls (pageChange)="p = $event" class="float-right"></pagination-controls>-->
-                                                <!--<div class="col-sm-12 col-md-5"><div class="dataTables_info" id="datatable-buttons_info" role="status" aria-live="polite">Showing 1 to 10 of 57 entries</div></div><div class="col-sm-12 col-md-7"><div class="dataTables_paginate paging_simple_numbers" id="datatable-buttons_paginate"><ul class="pagination"><li class="paginate_button page-item previous disabled" id="datatable-buttons_previous"><a href="#" aria-controls="datatable-buttons" data-dt-idx="0" tabindex="0" class="page-link">Previous</a></li><li class="paginate_button page-item active"><a href="#" aria-controls="datatable-buttons" data-dt-idx="1" tabindex="0" class="page-link">1</a></li><li class="paginate_button page-item "><a href="#" aria-controls="datatable-buttons" data-dt-idx="2" tabindex="0" class="page-link">2</a></li><li class="paginate_button page-item "><a href="#" aria-controls="datatable-buttons" data-dt-idx="3" tabindex="0" class="page-link">3</a></li><li class="paginate_button page-item "><a href="#" aria-controls="datatable-buttons" data-dt-idx="4" tabindex="0" class="page-link">4</a></li><li class="paginate_button page-item "><a href="#" aria-controls="datatable-buttons" data-dt-idx="5" tabindex="0" class="page-link">5</a></li><li class="paginate_button page-item "><a href="#" aria-controls="datatable-buttons" data-dt-idx="6" tabindex="0" class="page-link">6</a></li><li class="paginate_button page-item next" id="datatable-buttons_next"><a href="#" aria-controls="datatable-buttons" data-dt-idx="7" tabindex="0" class="page-link">Next</a></li></ul></div></div>-->
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
+                                                            </div>
+                                                            <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close" (click)="onBackWorkflowInbox()">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-header headtitle">
+                                                            <h4 class="modal-title ">
+                                                                Workflow Progress</h4>
+                                                        </div>
+                                                        <div class="modal-body mt-3"
+                                                            *ngIf="workflowDetailsList?.length">
+                                                            <div class="row">
+                                                                <div class="col-md-1 master progress-icon">
+                                                                    <table id="datatable-buttons"
+                                                                        style="margin-left: auto !important;">
+                                                                        <thead class="th-center">
+                                                                            <tr>
+                                                                                <th></th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <tr
+                                                                                *ngFor="let dataItems of workflowDetailsList; let i = index">
+                                                                                <td>
+                                                                                    <span class="dot"></span>
+                                                                                    <div class="vl text-center"></div>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                                <div
+                                                                    class=" col-md-11 master new  material-datatables mt-2 overflow-hidden-table">
+                                                                    <table id="datatable-buttons"
+                                                                        class="table table-striped table-bordered table-hover"
+                                                                        cellspacing="0" role="grid"
+                                                                        aria-describedby="datatable-buttons_info">
+                                                                        <thead class="th-center">
+                                                                            <tr>
+                                                                                <th style="width:20% !important;">
+                                                                                    Details
+                                                                                </th>
+                                                                                <th style="width:25% !important;">
+                                                                                    Step
+                                                                                </th>
+                                                                                <th style="width:25% !important;">
+                                                                                    User
+                                                                                </th>
+                                                                                <th style="width:30% !important;">
+                                                                                    Remarks
+                                                                                </th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <tr *ngFor="let details of workflowDetailsList;let i = index"
+                                                                                [ngClass]="{'highlight' : details}">
+                                                                                <td style="padding: 8px !important;height: 50px !important;"
+                                                                                    data-toggle="tooltip"
+                                                                                    data-placement="top"
+                                                                                    class="text-decorder td-text-over-flow-row actwid"
+                                                                                    title={{details?.date}}> <span
+                                                                                        *ngIf="details?.date">{{
+                                                                                        details?.date |
+                                                                                        date:'dd MMM yyyy HH:mm'
+                                                                                        }}</span></td>
+                                                                                <td style="padding: 8px !important;"
+                                                                                    data-toggle="tooltip"
+                                                                                    data-placement="top"
+                                                                                    class="text-decorder td-text-over-flow-row actwid"
+                                                                                    title={{details?.status}}>
+                                                                                    <span
+                                                                                        *ngIf="details?.isFinalapproval == false && details?.step !=0">
+                                                                                        {{details?.step}}
+                                                                                        <sup>{{getSuffix(details?.step)}}</sup>
+                                                                                        &nbsp;level&nbsp;
+                                                                                        <span
+                                                                                            *ngIf="details?.status == 'pending' ">
+                                                                                            Approval Pending</span>
+                                                                                        <span
+                                                                                            *ngIf="details?.status == 'approve' || details?.status == 'alreadyapprove'">
+                                                                                            Approved </span>
+                                                                                        <span
+                                                                                            *ngIf="(details?.status != 'pending' && details?.status != 'approve' && details?.status != 'alreadyapprove')">
+                                                                                            Rejected </span>
+                                                                                    </span>
+                                                                                    <span
+                                                                                        *ngIf="details?.isFinalapproval == true && details?.step !=0">Final
+                                                                                        level {{details?.status |
+                                                                                        titlecase
+                                                                                        }}</span>
+                                                                                    <span
+                                                                                        *ngIf="details?.step == 0">{{details?.status
+                                                                                        | titlecase }}</span>
+                                                                                </td>
+                                                                                <td style="padding: 8px !important;"
+                                                                                    data-toggle="tooltip"
+                                                                                    data-placement="top"
+                                                                                    class="text-decorder td-text-over-flow-row actwid"
+                                                                                    title={{details?.user}}>
+                                                                                    {{details?.user}}</td>
+                                                                                <td style="padding: 8px !important;"
+                                                                                    data-toggle="tooltip"
+                                                                                    data-placement="top"
+                                                                                    class="text-decorder td-text-over-flow-row actwid"
+                                                                                    title={{details?.remarks}}><span
+                                                                                        *ngIf="i > 0"
+                                                                                        class="td-text-over-flow-row">
+                                                                                        {{details?.remarks}}</span></td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                         </div>
                     </div>
                 </div>
