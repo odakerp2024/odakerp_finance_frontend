@@ -35,26 +35,11 @@ export class ReportSalesVoucherComponent implements OnInit {
   pager: any = {};// pager object  
   pagedItems: any[];// paged items
   paymentModeList: any[];
+  TypeList: any[];
   isShowBranch: boolean = false;
-  TypeList = [
-      { TypeId: 1, TypeName: 'LA-Export'},
-      { TypeId: 2, TypeName: 'LA-Import'},
-      { TypeId: 3, TypeName: 'LA-Switch BL'},
-      { TypeId: 4, TypeName: 'LA-MNR'},
-      { TypeId: 5, TypeName: 'LA-Non-vessel'},
-      { TypeId: 6, TypeName: 'LA-Interdivision'},
-      { TypeId: 7, TypeName: 'FF-Job'},
-      { TypeId: 8, TypeName: 'FF-Interdivision'},
-      { TypeId: 9, TypeName: 'FI-Debit Note'},
-      { TypeId: 10, TypeName: 'LA-Export'},
-      { TypeId: 11, TypeName: 'LA-Import'},
-      { TypeId: 12, TypeName: 'LA-Switch BL'},
-      { TypeId: 13, TypeName: 'LA-MNR'},
-      { TypeId: 14, TypeName: 'LA-Non-vessel'},
-      { TypeId: 15, TypeName: 'LA-Interdivision'},
-      { TypeId: 16, TypeName: 'FF-Job'},
-      { TypeId: 17, TypeName: 'FF-Interdivision'},
-      { TypeId: 18, TypeName: 'FI-Debit Note'}
+  VoucherTypeList = [
+      { TypeId: 2, TypeName: 'CREDIT'},
+      { TypeId: 1, TypeName: 'DEBIT'}
   ];
 
   PeroidList = [
@@ -99,6 +84,7 @@ export class ReportSalesVoucherComponent implements OnInit {
     this.onOptionChange('month');
     this.getDivisionList();
     this.getVoucherList(0);
+    this.getVoucherTypeList();
     this.reportFilter.controls.Peroid.setValue('month');
   }
 
@@ -204,16 +190,10 @@ export class ReportSalesVoucherComponent implements OnInit {
   }
 
   getOfficeList(id: number) {
-    this.reportFilter.controls.Office.setValue(0);
     this.commonDataService.getOfficeByDivisionId({ DivisionId: id }).subscribe(result => {
       this.officeList = [];
       if (result['data'].Table.length > 0) {
         this.officeList = result['data'].Table;
-      }
-
-      if (this.officeList.length == 1) {
-        const ID =
-          this.reportFilter.controls.Office.setValue(this.officeList[0].ID);
       }
     })
   }
@@ -236,12 +216,12 @@ export class ReportSalesVoucherComponent implements OnInit {
     let service = `${this.globals.APIURL}/ReceiptVoucher/GetReceiptVoucherDropDownList`
     this.dataService.post(service, { CustomerId: event }).subscribe((result: any) => {
       this.branchList = [];
-      this.branchList = result.data.Table3;
+      this.branchList = result.data.Table3;   
       if (result.data.Table3.length > 0) {
         this.reportFilter.controls['BranchId'].setValue(0);
         if (this.branchList.length == 1) {
-          const branchCode = this.branchList[0].BranchCode;
-          this.reportFilter.controls['BranchId'].setValue(branchCode);
+          const CustomerBranchID = this.branchList[0].CustomerBranchID;
+          this.reportFilter.controls['BranchId'].setValue(CustomerBranchID);
         }
       }
     }, error => { });
@@ -288,6 +268,12 @@ export class ReportSalesVoucherComponent implements OnInit {
     })
   }
 
+
+  getVoucherTypeList() {
+   this.commonDataService.getVoucherTypeList().subscribe(data => {
+      this.TypeList = data["data"].Table;
+    });
+  }
 
   setPage(page: number) {
     if (page < 1 || page > this.pager.totalPages) return;
