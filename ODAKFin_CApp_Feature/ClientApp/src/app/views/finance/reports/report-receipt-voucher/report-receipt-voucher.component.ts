@@ -163,7 +163,7 @@ export class ReportReceiptVoucherComponent implements OnInit {
       Division: [0],
       Office: [0],
       Customer: [0],
-      BranchId: [0],
+      Branch: [0],
       StartDate: [this.startDate],
       EndDate: [this.endDate],
       Amount: [''],
@@ -226,10 +226,10 @@ export class ReportReceiptVoucherComponent implements OnInit {
       this.branchList = [];
       this.branchList = result.data.Table3;
       if (result.data.Table3.length > 0) {
-        this.reportFilter.controls['BranchId'].setValue(0);
+        this.reportFilter.controls['Branch'].setValue(0);
         if (this.branchList.length == 1) {
-          const branchCode = this.branchList[0].BranchCode;
-          this.reportFilter.controls['BranchId'].setValue(branchCode);
+          const CustomerBranchID = this.branchList[0].CustomerBranchID;
+          this.reportFilter.controls['Branch'].setValue(CustomerBranchID);
         }
       }
     }, error => { });
@@ -289,7 +289,7 @@ export class ReportReceiptVoucherComponent implements OnInit {
       Division: 0,
       Office: 0,
       Customer: 0,
-      BranchId: 0,
+      Branch: 0,
       StartDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
       EndDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd"),
       Amount: '',

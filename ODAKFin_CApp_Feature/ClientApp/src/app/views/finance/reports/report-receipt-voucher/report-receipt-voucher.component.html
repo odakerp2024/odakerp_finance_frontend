@@ -92,10 +92,10 @@
                         
                         <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                             <label class="fontstyles">CUSTOMER BRANCH</label>
-                            <ng-select class="searchdropdown custom" [formControlName]="'BranchId'"
+                            <ng-select class="searchdropdown custom" [formControlName]="'Branch'"
                               [clearable]="false" >
                              <ng-option [value]="0" disabled>-- SELECT --</ng-option>
-                            <ng-option *ngFor="let branch of branchList" [value]="branch.BranchCode">
+                            <ng-option *ngFor="let branch of branchList" [value]="branch.CustomerBranchID">
                             {{ branch.CityName | uppercase }}
                            </ng-option>
                          </ng-select>
