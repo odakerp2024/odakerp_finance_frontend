@@ -1,17 +1,17 @@
 
 <div class="container-fluid">
     <form [formGroup]="reportFilter">
-        <div class="card mt-2 p-3">
+        <div class="card mt-0 p-3">
             <div class="row">
                 <div class="col-10">
                     <div class="row pb-3">
 
-                        <div class="col-3">
+                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
 
                             <label class=" fontstyles">PEROID</label>
                             <ng-select class="searchdropdown custom" formControlName="Peroid"
                                 (ngModelChange)="onOptionChange($event);" [clearable]="false">
-                                <ng-option [value]="''" disabled>--SELECT PEROID--</ng-option>
+                                <ng-option [value]="''" disabled>-- SELECT --</ng-option>
                                 <ng-container *ngFor="let peroid of PeroidList">
                                     <ng-option [value]="peroid.peroidId">
                                         {{peroid.peroidName | uppercase}}
@@ -50,11 +50,11 @@
                             </div>
                         </div>
 
-                        <div class="col-3">
+                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                             <label class=" fontstyles">DIVISION</label>
                             <ng-select class="searchdropdown custom" formControlName="DivisionId"
                                 (ngModelChange)="getOfficeList($event);" [clearable]="false">
-                                <ng-option [value]="0" disabled>--SELECT DIVISION--</ng-option>
+                                <ng-option [value]="0" disabled>-- SELECT --</ng-option>
                                 <ng-container *ngFor="let division of divisionList">
                                     <ng-option *ngIf="division.Active" [value]="division.ID">
                                         {{division.DivisionName | uppercase}}
@@ -63,12 +63,12 @@
                             </ng-select>
                         </div>
 
-                        <div class="col-3">
+                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                             <label class=" fontstyles">OFFICE</label>
                             <ng-select class="searchdropdown" formControlName="OfficeId"
                                 (ngModelChange)="getDivisionBasedOffice($event, reportFilter.value.Division)"
                                 [clearable]="false" name="CategoryId" id="CategoryId">
-                                <ng-option [value]="0" disabled>--SELECT OFFICE--</ng-option>
+                                <ng-option [value]="0" disabled>-- SELECT --</ng-option>
                                 <ng-container *ngFor="let office of officeList">
                                     <ng-option [value]="office.ID">
                                         {{office.OfficeName | uppercase}}
@@ -77,11 +77,11 @@
                             </ng-select>
                         </div>
 
-                        <div class="col-3">
+                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                             <label class=" fontstyles">CUSTOMER</label>
                             <ng-select class="searchdropdown" formControlName="CustomerId" [clearable]="false"
                                 name="CustomerId" id="CustomerId" (change)="isShowBranch = true;selectedCustomerBranch($event)">
-                                <ng-option [value]="0" disabled>--SELECT CUSTOMER--</ng-option>
+                                <ng-option [value]="0" disabled>-- SELECT --</ng-option>
                                 <ng-container *ngFor="let customer of customerList">
                                     <ng-option [value]="customer.CustomerID">
                                         <span class="textwrap">{{customer.CustomerName | uppercase}}
@@ -91,46 +91,46 @@
                             </ng-select>
                         </div>
                          
-                        <div class="col-3">
+                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                             <label class="fontstyles">CUSTOMER BRANCH</label>
                             <ng-select class="searchdropdown custom" [formControlName]="'BranchId'"
                               [clearable]="false" >
-                             <ng-option [value]="0" disabled>--SELECT CUSTOMER BRANCH--</ng-option>
+                             <ng-option [value]="0" disabled>-- SELECT --</ng-option>
                             <ng-option *ngFor="let branch of branchList" [value]="branch.BranchCode">
                             {{ branch.CityName | uppercase }}
                            </ng-option>
                          </ng-select>
                         </div>
 
-                        <div class="col-3">
+                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                             <label class=" fontstyles">AMOUNT</label>
                             <input formControlName="Amount"
                                 onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly
                                 class="form-control" name="Amount">
                         </div>
-                        <div class="col-3">
+                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                             <label class=" fontstyles">TYPE</label>
                             <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'Type'"
                                 name="active" id="active">
-                                <ng-option [value]="0" disabled>--SELECT TYPE--</ng-option>
+                                <ng-option [value]="0" disabled>-- SELECT --</ng-option>
                                 <ng-option *ngFor="let TypeItem of TypeList" [value]="TypeItem.TypeId">
                                     {{ TypeItem.TypeName | uppercase }}
                                 </ng-option>
                             </ng-select>
                         </div>
 
-                        <div class="col-3">
+                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                             <label class=" fontstyles">INVOICE NO</label>
                             <input formControlName="InvoiceNo"
                                 onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly
                                 class="form-control" name="Invoiceno">
                         </div>
 
-                        <div class="col-3">
+                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                             <label class=" fontstyles">INVOICE TYPE</label>
                             <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'InvoiceType'"
                                 name="active" id="active">
-                                <ng-option [value]="0" disabled>--SELECT INVOICE TYPE--</ng-option>
+                                <ng-option [value]="0" disabled>-- SELECT --</ng-option>
                                 <!-- <ng-option *ngFor="let Deposit of bankList" [value]="Deposit.BankID">
                                     {{Deposit.BankName | uppercase}} - {{Deposit.AccountNo}}
                                 </ng-option> -->
@@ -181,10 +181,6 @@
                     <div class="col-sm-12 text-right d-flex justify-content-end">
                         <div style="font-weight: 600; padding-top: 14px;">Export as : </div>
                         <div>
-                            <!-- <img style="cursor: pointer;" width="22px" height="22px"
-                                class="exportAs mx-1 align-baseline"
-                                src="../../../../assets/images/icon/file-pdf-solid.jpeg" (click)="downloadAsPDF()"
-                                alt="logo"> -->
                             <img style="cursor: pointer;" width="38px" height="38px"
                                 class="exportAs mx-1 align-baseline" src="../../../../../assets/images/csv_color.png"
                                 (click)="downloadAsCSV()" alt="logo">
@@ -248,11 +244,12 @@
                                     <td class="hyperTextColor">{{data.CustomerName}}</td>
                                     <td>{{data.CityName}}</td>
                                     <td>{{data.CurrencyCode}}</td>
-                                    <td class="text-right hyperTextColor">{{data.InvoiceAmountICY}}</td>
-                                    <td class="text-right hyperTextColor">{{data.InvoiceAmountCCY}}</td>
+                                    <td class="text-right hyperTextColor">{{ data.Symbol + ' ' + (data.InvoiceAmountICY | dynamicDecimal: entityFraction) }}</td>
+                                    <td class="text-right hyperTextColor">{{ data.Symbol + ' ' + (data.InvoiceAmountCCY | dynamicDecimal: entityFraction) }}</td>
                                     <td>{{data.invoice_Tax}}</td>
-                                    <td [ngClass]="data.Status== 'Paid' ? 'green' : 'red'">{{data.Status}}</td>
-
+                                    <td  [ngClass]="data.Status == 'Paid' ? 'badge badge-state-confirm' : data.Status == 'Due' ? 'badge badge-state-cancel' : 'badge badge-state'"
+                                          class="status-cell">{{data.Status}}</td>
+                          
                                 </tr>
 
                                 <tr *ngIf="pagedItems.length == 0">
