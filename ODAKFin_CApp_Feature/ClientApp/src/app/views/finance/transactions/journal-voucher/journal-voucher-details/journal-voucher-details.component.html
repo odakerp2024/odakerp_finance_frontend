@@ -165,8 +165,8 @@
                                                 <th scope="col">Account Name</th>
                                                 <th scope="col">Dr / Cr</th>
                                                 <th scope="col">Currency</th>
+                                               <th scope="col">Amount</th>
                                                 <th scope="col">ROE</th>
-                                                <th scope="col">Amount</th>
                                                 <th scope="col">
                                                     <div>Local Amount</div>
                                                 </th>
@@ -235,15 +235,14 @@
                                                         onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
                                                         min="0" numbersOnly appDynamicDecimal
                                                         class="form-control my-select amount w-100 mr-0"
-                                                        formControlName="ROE" />
+                                                        formControlName="Amount" />
                                                 </td>
-
                                                 <td>
                                                     <input
                                                         onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
                                                         min="0" numbersOnly appDynamicDecimal
                                                         class="form-control my-select amount w-100 mr-0"
-                                                        formControlName="Amount" />
+                                                        formControlName="ROE" />
                                                 </td>
 
                                                 <td>
@@ -269,8 +268,8 @@
                                                     <td>{{data.AccountName}}</td>
                                                     <td>{{data.DrCrName}}</td>
                                                     <td>{{data.CurrencyName}}</td>
-                                                    <td>{{data.ROE}}</td>
                                                     <td>{{data.Amount}}</td>
+                                                    <td>{{data.ROE}}</td>
                                                     <td>{{data.CompanyCurrencyAmount}}</td>
                                                     <td>{{data.Narration}}</td>
                                                     <td>
