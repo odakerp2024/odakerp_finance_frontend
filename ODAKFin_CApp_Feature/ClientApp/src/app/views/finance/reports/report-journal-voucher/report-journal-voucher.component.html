@@ -11,7 +11,7 @@
                             <label class=" fontstyles">PEROID</label>
                             <ng-select class="searchdropdown custom" formControlName="Peroid"
                                 (ngModelChange)="onOptionChange($event);" [clearable]="false">
-                                <ng-option [value]="''" disabled>--SELECT PEROID--</ng-option>
+                                <ng-option [value]="''" disabled>-- SELECT --</ng-option>
                                 <ng-container *ngFor="let peroid of PeroidList">
                                     <ng-option [value]="peroid.peroidId">
                                         {{peroid.peroidName | uppercase}}
@@ -53,7 +53,7 @@
                             <label class=" fontstyles">DIVISION</label>
                             <ng-select class="searchdropdown custom" formControlName="DivisionId"
                                 (ngModelChange)="getOfficeList($event);" [clearable]="false">
-                                <ng-option [value]="0" disabled>--SELECT DIVISION--</ng-option>
+                                <ng-option [value]="0" disabled>-- SELECT --</ng-option>
                                 <ng-container *ngFor="let division of divisionList">
                                     <ng-option *ngIf="division.Active" [value]="division.ID">
                                         {{division.DivisionName | uppercase}}
@@ -67,7 +67,7 @@
                             <ng-select class="searchdropdown" formControlName="OfficeId"
                                 (ngModelChange)="getDivisionBasedOffice($event, reportFilter.value.Division)"
                                 [clearable]="false" name="CategoryId" id="CategoryId">
-                                <ng-option [value]="0" disabled>--SELECT OFFICE--</ng-option>
+                                <ng-option [value]="0" disabled>-- SELECT --</ng-option>
                                 <ng-container *ngFor="let office of officeList">
                                     <ng-option [value]="office.ID">
                                         {{office.OfficeName | uppercase}}
@@ -81,7 +81,7 @@
                             <label class="fontstyles">ACCOUNT</label>
                             <ng-select class="searchdropdown" formControlName="AccountId" [clearable]="false"
                                 name="CategoryId" id="CategoryId">
-                                <ng-option [value]="0" [disabled]="true">--SELECT THE ACCOUNT--</ng-option>
+                                <ng-option [value]="0" [disabled]="true">-- SELECT --</ng-option>
                                 <ng-container *ngFor="let bank of bankList">
                                     <ng-option [value]="bank.BankID">
                                         <span class="textwrap">{{bank.BankName | uppercase}} - {{bank.AccountNo}}
@@ -196,16 +196,17 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="let data of pagedItems">
-                                    <td>{{data.journaldate |
+                                    <td>{{data.JournalDate |
                                         date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}
                                     </td>
-                                    <td class="hyperTextColor">{{data.voucherNumber}}</td>
-                                    <td>{{data.AccountName}}</td>
+                                    <td class="hyperTextColor">{{data.JournalNumber}}</td>
+                                    <td class="hyperTextColor">{{data.AccountName }}</td>
                                     <td>{{data.Invoice_type}}</td>
-                                    <td class=" text-right hyperTextColor">{{data.Amount}}</td>
+                                    <td class=" text-right hyperTextColor">{{ data.Symbol + ' ' + (data.Amount | dynamicDecimal: entityFraction) }}</td>
                                     <td>{{data.CurrencyCode}}</td>
-                                    <td class=" text-right hyperTextColor">{{data.CompanyCurrencyAmount}}</td>
-                                    <td>{{data.Status}}</td>
+                                    <td class=" text-right hyperTextColor">{{ data.Symbol + ' ' + (data.CompanyCurrencyAmount | dynamicDecimal: entityFraction) }}</td>
+                                    <td [ngClass]="data.StatusName == 'Confirmed' ? 'badge badge-state-confirm' : data.StatusName == 'Cancelled' ? 'badge badge-state-cancel' : 'badge badge-state'"
+                                    class="status-cell">{{data.StatusName}}</td>
                                 </tr>
 
                                 <tr *ngIf="pagedItems.length ==0">
