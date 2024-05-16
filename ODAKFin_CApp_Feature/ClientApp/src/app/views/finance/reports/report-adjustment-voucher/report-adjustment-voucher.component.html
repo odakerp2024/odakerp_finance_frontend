@@ -190,7 +190,7 @@
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        style="width: 177.575px;">Status</th>
+                                        style="width: 177.580px;">Status</th>
 
                                 </tr>
                             </thead>
@@ -202,14 +202,11 @@
                                     <td class="hyperTextColor">{{data.JournalNumber}}</td>
                                     <td>{{data.AccountName}}</td>
                                     <td>{{data.Invoice_type}}</td>
-                                    <td class=" text-right hyperTextColor">{{ data.Symbol + ' ' + (data.Amount | dynamicDecimal: entityFraction) }}
-                                       </td>
+                                    <td class=" text-right hyperTextColor">{{ data.Symbol + ' ' + (data.Amount | dynamicDecimal: entityFraction) }}</td>
                                     <td>{{data.CurrencyCode}}</td>
-                                    <td class=" text-right hyperTextColor">{{ data.Symbol + ' ' + (data.CompanyCurrencyAmount | dynamicDecimal: entityFraction) }}
-                                       </td>
-                                       <td [ngClass]="data.StatusName == 'Confirmed' ? 'badge badge-state-confirm' : data.StatusName == 'Cancelled' ? 'badge badge-state-cancel' : 'badge badge-state'"
-                                    class="status-cell">{{data.StatusName}}</td>
-                                    <!-- <td>{{data.StatusName}}</td> -->
+                                    <td class=" text-right hyperTextColor">{{ data.Symbol + ' ' + (data.CompanyCurrencyAmount | dynamicDecimal: entityFraction) }}</td>
+                                        <td  [ngClass]="data.StatusName == 'Confirmed' ? ' badge-confirm' : data.StatusName == 'Cancelled' ? 'badge-cancel' : 'badge-draft'">
+                                            {{data.StatusName}}</td>
                                     
                                 </tr>
 

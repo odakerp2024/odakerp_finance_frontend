@@ -96,7 +96,7 @@
                             <ng-select class="searchdropdown custom" [formControlName]="'BranchId'"
                               [clearable]="false" >
                              <ng-option [value]="0" disabled>-- SELECT --</ng-option>
-                            <ng-option *ngFor="let branch of branchList" [value]="branch.BranchCode">
+                            <ng-option *ngFor="let branch of branchList" [value]="branch.CustomerBranchID">
                             {{ branch.CityName | uppercase }}
                            </ng-option>
                          </ng-select>
@@ -113,8 +113,8 @@
                             <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'Type'"
                                 name="active" id="active">
                                 <ng-option [value]="0" disabled>-- SELECT --</ng-option>
-                                <ng-option *ngFor="let TypeItem of TypeList" [value]="TypeItem.TypeId">
-                                    {{ TypeItem.TypeName | uppercase }}
+                                <ng-option *ngFor="let Type of TypeList" [value]="Type.BLTypeID">
+                                    {{Type.BLType | uppercase}} 
                                 </ng-option>
                             </ng-select>
                         </div>
@@ -131,9 +131,9 @@
                             <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'InvoiceType'"
                                 name="active" id="active">
                                 <ng-option [value]="0" disabled>-- SELECT --</ng-option>
-                                <!-- <ng-option *ngFor="let Deposit of bankList" [value]="Deposit.BankID">
-                                    {{Deposit.BankName | uppercase}} - {{Deposit.AccountNo}}
-                                </ng-option> -->
+                                <ng-option *ngFor="let Type of VoucherTypeList" [value]="Type.TypeId">
+                                    {{Type.TypeName | uppercase}} 
+                                </ng-option>
                             </ng-select>
                         </div>
 
@@ -247,8 +247,8 @@
                                     <td class="text-right hyperTextColor">{{ data.Symbol + ' ' + (data.InvoiceAmountICY | dynamicDecimal: entityFraction) }}</td>
                                     <td class="text-right hyperTextColor">{{ data.Symbol + ' ' + (data.InvoiceAmountCCY | dynamicDecimal: entityFraction) }}</td>
                                     <td>{{data.invoice_Tax}}</td>
-                                    <td  [ngClass]="data.Status == 'Paid' ? 'badge badge-state-confirm' : data.Status == 'Due' ? 'badge badge-state-cancel' : 'badge badge-state'"
-                                          class="status-cell">{{data.Status}}</td>
+                                    <td  [ngClass]="data.Status == 'Paid' ? ' badge-confirm' : data.Status == 'Due' ? 'badge-cancel' : ' badge-draft'">
+                                        {{data.Status}}</td>
                           
                                 </tr>
 

@@ -35,29 +35,6 @@
   .clear-btn {
     width: 96px;
   }
-  .table>tbody>tr>td.status-cell.badge.badge-state{
-    padding: 7px !important;
-    width: 150px !important; 
-    margin-top: 12px !important;
-    margin-left: 50px !important;
-
   
-   }
-  
-   .table>tbody>tr>td.status-cell.badge.badge-state-confirm{
-    padding: 7px !important;
-    width: 150px !important; 
-    margin-top: 12px !important;
-    margin-left: 50px !important;
-
-   }
-  
-   .table>tbody>tr>td.status-cell.badge.badge-state-cancel{
-    padding: 7px !important;
-    width: 150px !important; 
-    margin-top: 12px !important;
-    margin-left: 50px !important;
-
-   }
   
   

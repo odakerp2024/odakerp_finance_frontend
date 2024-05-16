@@ -263,4 +263,10 @@ export class CommonService {
     getNumberPipeExpression(decimalValue): string {
         return `1.${decimalValue}-${decimalValue}`;
     }
+
+    getVoucherTypeList(){
+        return this.http.post<any[]>(this.globals.APIURL + '/Common/GetSalesBLType', {});
+    }
 }
+
+
