@@ -12,6 +12,7 @@ import { rejects } from 'assert';
 import { AutoCodeService } from 'src/app/services/auto-code.service';
 import { CommonService } from 'src/app/services/common.service';
 import { MatDatepickerInputEvent } from '@angular/material';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-office-info',
@@ -70,7 +71,7 @@ export class OfficeInfoComponent implements OnInit, AfterViewChecked, AfterViewI
   isEmailids: boolean = false;
   isDocuments: boolean = false;
   isReadDocument: boolean = false;
-
+  selectedFile: File = null;
 
   constructor(private fb: FormBuilder, private datePipe: DatePipe, private router: Router,
     private dataService: DataService,
@@ -187,13 +188,14 @@ export class OfficeInfoComponent implements OnInit, AfterViewChecked, AfterViewI
       ID: 0,
       OfficeId: 0,
       DocumentName: [''],
-      FilePath: [''],
+      FilePath: [''], 
       CreatedBy: [localStorage.getItem('UserID')],
       CreatedDate: [new Date()],
       UpdatedBy: [localStorage.getItem('UserID')],
       UpdatedDate: [new Date()],
       UploadedBy: [localStorage.getItem('UserID')],
       uploadedOn: [new Date()],
+      UniqueFilePath: '',
     });
   }
 
@@ -423,7 +425,6 @@ export class OfficeInfoComponent implements OnInit, AfterViewChecked, AfterViewI
       };
       officeEmail.push(newData);
     });
-  
     let Table3 = [{
       ID: 0,
       OfficeId: 0,
@@ -434,9 +435,9 @@ export class OfficeInfoComponent implements OnInit, AfterViewChecked, AfterViewI
       UpdatedBy: localStorage.getItem('UserID'),
       UpdatedDate: new Date(),
       UploadedBy: localStorage.getItem('UserID'),
-      uploadedOn: new Date()
+      uploadedOn: new Date(),
+      UniqueFilePath: this.documentForm.value.UniqueFilePath,
     }]
-
     let table3 = [...this.documentListInfoResponse, ...Table3];
     let officePayload = this.officeForm;
     const businessDivision = this.officeForm.value.BusinessDIvision.toString();
@@ -450,6 +451,7 @@ export class OfficeInfoComponent implements OnInit, AfterViewChecked, AfterViewI
     const Table1 = this.officeDetailsForm.value;
     Table1.IsSalesOffice = Table1.IsSalesOffice.toString();
     Table1.Active = Table1.Active === 'true' ? true : Table1.Active == 'YES' ? true: false;
+
     this.payload = {
       Office: {
         Table: [officePayload.value],
@@ -573,9 +575,12 @@ export class OfficeInfoComponent implements OnInit, AfterViewChecked, AfterViewI
             data.OfficeId = officeDetails.OfficeId;
           }
         }
+        if (result.data.Documents) {
+          // 
         this.documentListInfoResponse = result.data.Documents;
         this.documentListInfo = this.constructDocumentPayload(this.documentListInfoResponse);
       }
+    }
     }, error => { });
   }
 
@@ -784,24 +789,41 @@ export class OfficeInfoComponent implements OnInit, AfterViewChecked, AfterViewI
   }
 
 
-  uploadDocument(event) {
+  async uploadDocument(event: any) {
     if (event) {
+
+      this.selectedFile = event.file.target.files[0];
+      const filedata = new FormData();
+      filedata.append('file', this.selectedFile, this.selectedFile.name)
+
+      this.commonDataService.AttachUpload(this.selectedFile).subscribe(data => {
+        if (data) {
+
       this.documentListInfoResponse.push({
         ID: 0,
         OfficeId: this.officeId,
         DocumentName: event.DocumentName,
-        FilePath: event.FilePath,
+        FilePath: event.FilePath,      
         CreatedBy: +localStorage.getItem('UserID'),
         CreatedDate: new Date(),
         UpdatedBy: +localStorage.getItem('UserID'),
         UpdatedDate: new Date().toISOString(),
         UploadedBy: +localStorage.getItem('UserID'),
-        UploadedOn: new Date().toISOString()
+        UploadedOn: new Date().toISOString(),
+        UniqueFilePath: data.FileNamev,
 
       });
+
       this.saveOfficeDetails();
+      }   
+    },
+      (error: HttpErrorResponse) => {
+         Swal.fire(error.message, 'error')
+      });
+        
     }
   }
+
 
  
   deleteDocument(event) {
@@ -818,11 +840,12 @@ export class OfficeInfoComponent implements OnInit, AfterViewChecked, AfterViewI
     if (docList) {
       const newDocument = [];
       docList.forEach((item) => {
-        const payload = {
+        const payload = {  
           OfficeId: item.ID,
           uploadedOn: item.UploadedOn,
           DocumentName: item.DocumentName,
           FilePath: item.FilePath,
+          UniqueFilePath: item.UniqueFilePath,
         };
         newDocument.push(payload);
       });
