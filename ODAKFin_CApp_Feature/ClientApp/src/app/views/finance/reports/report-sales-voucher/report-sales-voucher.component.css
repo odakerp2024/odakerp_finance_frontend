@@ -50,3 +50,12 @@
     margin-left: 12px !important;
 
    }
+
+   .table>tbody>tr>td.status-cell.badge.badge-state-confirm{
+    padding: 7px !important;
+    width: 100px !important; 
+    margin-top: 12px !important;
+    margin-left: 12px !important;
+
+   }
+
