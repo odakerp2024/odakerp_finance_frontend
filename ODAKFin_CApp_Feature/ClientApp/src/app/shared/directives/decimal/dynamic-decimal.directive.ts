@@ -42,7 +42,6 @@ export class DynamicDecimalDirective {
   // }
 
   transform(value: number | string, decimalPlaces: number): string {
-    debugger
     // Check if the value is empty or null
     if (value === '' || value === null) {
         return '0';
