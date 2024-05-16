@@ -207,7 +207,9 @@
                                     <td>{{data.CurrencyCode}}</td>
                                     <td class=" text-right hyperTextColor">{{ data.Symbol + ' ' + (data.CompanyCurrencyAmount | dynamicDecimal: entityFraction) }}
                                        </td>
-                                    <td>{{data.StatusName}}</td>
+                                       <td [ngClass]="data.StatusName == 'Confirmed' ? 'badge badge-state-confirm' : data.StatusName == 'Cancelled' ? 'badge badge-state-cancel' : 'badge badge-state'"
+                                    class="status-cell">{{data.StatusName}}</td>
+                                    <!-- <td>{{data.StatusName}}</td> -->
                                     
                                 </tr>
 
