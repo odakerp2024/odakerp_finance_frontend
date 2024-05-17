@@ -65,7 +65,7 @@ export class BankAccountComponent implements OnInit {
   isUpdate: boolean = false;
   isCreate: boolean = true;
   isUpdateEnable: boolean = false;
-
+  selectedFile: File = null;
   CreatedOn: string = '';
   CreatedBy: string = '';
   ModifiedOn: string = '';
@@ -121,7 +121,7 @@ export class BankAccountComponent implements OnInit {
 
       this.getPermissionListForUpdate(569, 'Cheque Management');
       this.getPermissionListForUpdate(570, 'Statement Template');
-      this.getPermissionListForUpdate(571, 'Attachments ');
+      this.getPermissionListForUpdate(571, 'Attachments');
     } else {
       this.getPermissionListForCreate(569, 'Cheque Management');
       this.getPermissionListForCreate(570, 'Statement Template');
@@ -235,7 +235,6 @@ export class BankAccountComponent implements OnInit {
           this.isStatement = false;
         }
       }
-
       if (route == 'Attachments') {
 
         if (data.length > 0) {
@@ -243,7 +242,7 @@ export class BankAccountComponent implements OnInit {
 
           if (data[0].SubfunctionID == paylod.SubfunctionID) {
 
-            if (data[0].Update_Opt == 2 || data[0].Read_Opt == 2) {
+            if (data[0].Create_Opt == 2 || data[0].Read_Opt == 2) {
               this.isAttachemnt = true;
               this.Current_Tab = 'tabAttachment';
 
@@ -702,6 +701,7 @@ export class BankAccountComponent implements OnInit {
     this.basicAttachmentDetails.DateOfStart = newDoc.DateOfStart;
     this.basicAttachmentDetails.DocumentName = newDoc.DocumentName;
     this.basicAttachmentDetails.FilePath = newDoc.FilePath;
+   this.basicAttachmentDetails.UniqueFilePath = newDoc.UniqueFilePath;
     this.basicAttachmentDetails.SlNo = newDoc.SlNo;
     this.documentListInfo.push(this.basicAttachmentDetails);
     this.onSubmit();
@@ -1289,15 +1289,31 @@ export class BankAccountComponent implements OnInit {
     });
   }
   uploadDocument(event) {
+    debugger
+    if (event) {
+
+      this.selectedFile = event.file.target.files[0];
+      const filedata = new FormData();
+      filedata.append('file', this.selectedFile, this.selectedFile.name)
+ this.commonDataService.AttachUpload(this.selectedFile).subscribe(data => {
+        if (data) {
+debugger
     const payload = {
       BankAttachmentsID: 0,
-      BankID: this.editbankId,
+      BankID: this.editbankId,  
       DateOfStart: event.UploadedOn,
       DocumentName: event.DocumentName,
       FilePath: event.FilePath,
+      UniqueFilePath: data.FileNamev,
       SlNo: 0
     };
     this.updateAttachment(payload);
+  }
+},
+  (error: HttpErrorResponse) => {
+    Swal.fire(error.message, 'error')
+  });
+}
   }
 
   deleteDocument(deleteData) {
@@ -1317,6 +1333,7 @@ export class BankAccountComponent implements OnInit {
           uploadedOn: item.DateOfStart,
           DocumentName: item.DocumentName,
           FilePath: item.FilePath,
+          UniqueFilePath: item.UniqueFilePath,
           SlNo: item.SlNo ? item.SlNo : 0
         };
         newDocument.push(payload);
