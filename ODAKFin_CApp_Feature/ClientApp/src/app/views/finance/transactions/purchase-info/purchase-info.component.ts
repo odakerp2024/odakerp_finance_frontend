@@ -150,7 +150,7 @@ export class PurchaseInfoComponent implements OnInit {
       AccountId: [0],
       Quantity: [''],
       CurrencyId: [0],
-      CurrencyName: [''],
+      Currency: [''],
       Rate: [''],
       Amount: [''],
       IsDelete: [0]
@@ -321,8 +321,8 @@ debugger
         PurchaseOrderId: this.purchaseId ? this.purchaseId : info.PurchaseOrderId,
         AccountId: info.AccountId,
         Quantity: info.Quantity,
-        CurrencyId: info.CurrencyId,
-        CurrencyName: currency.CurrencyCode,
+        CurrencyId: currency.ID,
+        Currency: currency.CurrencyCode,
         Rate: info.Rate,
         Amount:  Number(info.Amount).toFixed(this.entityFraction),
         AccountName: account.AccountName,
@@ -343,12 +343,12 @@ debugger
       PurchaseOrderId: this.purchaseId ? this.purchaseId : info.PurchaseOrderId,
       AccountId: info.AccountId,
       Quantity: info.Quantity,
-      CurrencyId: info.CurrencyId,
-      CurrencyName: currency.CurrencyCode,
+      CurrencyId: currency.ID,
+      Currency: currency.CurrencyCode,
       Rate: info.Rate,
       Amount: Number(info.Amount).toFixed(this.entityFraction),
       AccountName: account.AccountName,
-      Currency: currency.Currency
+      // Currency: currency.Currency
     });
     this.resetPurchaseTable();
     this.setPage(1);
@@ -386,7 +386,7 @@ debugger
       this.purchaseCreateForm.controls.CurrencyId.setValue(entitySelectedCurrency.ID);
     }
     // this.purchaseCreateForm.controls['CurrencyId'].setValue(1);
-    this.purchaseCreateForm.controls['CurrencyName'].setValue('');
+    this.purchaseCreateForm.controls['Currency'].setValue('');
     this.purchaseCreateForm.controls['Rate'].setValue('');
     this.purchaseCreateForm.controls['Amount'].setValue('');
   }
@@ -661,19 +661,30 @@ debugger
       }
     }
   }
+ totalAmountCalculation(event) {
+    debugger
+  const rate = Number(this.purchaseCreateForm.value.Rate)
+  const qty = Number( this.purchaseCreateForm.value.Quantity)
+ 
 
-  totalAmountCalculation(event) {
+  const amount = rate * qty;
+  this.purchaseCreateForm.controls['Amount'].setValue(amount.toFixed(this.entityFraction));
+  const currentAmountValue = Number(this.purchaseCreateForm.controls['Amount'].value);
+  this.purchaseCreateForm.controls['Amount'].setValue(currentAmountValue);
+  }
+
+ // totalAmountCalculation(event) {
 
     // this.purchaseCreateForm.controls['Amount'].setValue(this.purchaseCreateForm.value.Rate * this.purchaseCreateForm.value.Quantity).toFixed(entityFraction);
-    const rate = this.purchaseCreateForm.value.Rate;
-const quantity = this.purchaseCreateForm.value.Quantity;
-const entityFraction = this.entityFraction; // assuming this is a valid number
+   // const rate = this.purchaseCreateForm.value.Rate;
+// const quantity = this.purchaseCreateForm.value.Quantity;
+// const entityFraction = this.entityFraction; // assuming this is a valid number
 
     // this.purchaseCreateForm.controls['Amount'].setValue(this.purchaseCreateForm.value.Rate * this.purchaseCreateForm.value.Quantity.toFixed(this.entityFraction));
-    const calculatedAmount = (rate * quantity).toFixed(entityFraction);
+    // const calculatedAmount = (rate * quantity).toFixed(entityFraction);
     
-    this.purchaseCreateForm.controls['Amount'].setValue(calculatedAmount);
-   }
+    // this.purchaseCreateForm.controls['Amount'].setValue(calculatedAmount);
+ //  }
 
   OnClickRadio(event) {
     this.editSelectedIdex = event;
@@ -698,7 +709,7 @@ const entityFraction = this.entityFraction; // assuming this is a valid number
       AccountId: info.AccountId,
       Quantity: info.Quantity,
       CurrencyId: info.CurrencyId,
-      CurrencyName: info.CurrencyName,
+      Currency: info.CurrencyId,
       Rate: info.Rate,
       Amount: info.Amount,
       TotalAmount: info.TotalAmount
