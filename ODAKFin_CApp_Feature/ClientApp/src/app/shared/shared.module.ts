@@ -8,9 +8,10 @@ import { MAT_DATE_FORMATS, MatDatepickerModule, MatFormFieldModule, MatInputModu
 import { DynamicDecimalDirective } from './directives/decimal/dynamic-decimal.directive';
 import { TextOnlyDirective } from './directives/decimal/text-only.directive';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { DynamicDecimalPipeDirective } from './directives/decimal/dynamic-decimal-pipe.directive';
 
 
-const components = [EMailTableComponent, DocumentsComponent, DynamicDecimalDirective,TextOnlyDirective];
+const components = [EMailTableComponent, DocumentsComponent, DynamicDecimalDirective,TextOnlyDirective, DynamicDecimalPipeDirective];
 @NgModule({
   declarations: [
     ...components,

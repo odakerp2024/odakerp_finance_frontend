@@ -2,7 +2,7 @@ import { Directive, ElementRef, HostListener, Input } from '@angular/core';
 import { CommonService } from 'src/app/services/common.service';
 import { Pipe, PipeTransform } from '@angular/core';
 
-@Pipe({ name: 'dynamicDecimal' })
+// @Pipe({ name: 'dynamicDecimal' })
 
 @Directive({
   selector: '[appDynamicDecimal]'
@@ -14,54 +14,24 @@ export class DynamicDecimalDirective {
   constructor(
     private el: ElementRef,
     private commonDataService: CommonService
-    ) { }
-  
+  ) { }
+
   @HostListener('input', ['$event.target.value'])
 
   setDecimalPlaces(inputValue: string) {
-    
-    const inputData = +inputValue;
-    // const enteredDecimalCount = inputData % 1 !== 0 ? inputData.toString().split('.')[1]?.length || 0 : 0;
-    // if (enteredDecimalCount > this.entityFraction) {
-    //   const fixedDecimal = inputData.toFixed(this.entityFraction);
-    //   this.el.nativeElement.value = fixedDecimal;
-    // }
-    
-    if (inputData) {
-      const fixedDecimal =  `1.${this.decimalPlaces}-${this.decimalPlaces}`;
-      this.el.nativeElement.value = fixedDecimal;
+
+    const regex = new RegExp(`^\\d*(\\.\\d{0,${this.entityFraction}})?$`);
+
+    if (!regex.test(inputValue)) {
+      let inputData = inputValue;
+      if (inputData.includes('.')) {
+        const [integerPart, decimalPart] = inputData.split('.');
+        const truncatedDecimal = decimalPart.substring(0, this.entityFraction);
+        inputData = `${integerPart}.${truncatedDecimal}`;
+      } else {
+        inputData = inputValue;
+      }
+      this.el.nativeElement.value = inputData;
     }
   }
-
-  // transform(value: number, decimalPlaces: number): string {
-  //   debugger
-  //   if (value || value === 0) {
-  //     return value.toFixed(decimalPlaces);
-  //   }
-  //   return '';
-  // }
-
-  transform(value: number | string, decimalPlaces: number): string {
-    // Check if the value is empty or null
-    if (value === '' || value === null) {
-        return '0';
-    }
-
-    // Parse the input value to a number
-    const numericValue = parseFloat(value as string);
-
-    // Check if the parsed value is a valid number
-    if (!isNaN(numericValue)) {
-        // If the value is valid, format it with the specified number of decimal places
-        return numericValue.toFixed(decimalPlaces);
-    }
-
-    // If the input value is not a valid number, return an empty string
-    return '';
-}
-
-  
-
-
-
 }
