@@ -42,7 +42,7 @@ export class PurchaseInfoComponent implements OnInit {
   ModifiedBy: string = '';
   ModifiedOn: string = '';
   isFinalModeEnable: boolean = false;
-  entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
+  entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions')); 
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
   entityCurrency = this.commonDataService.getLocalStorageEntityConfigurable('Currency');
   minDate: string = this.datePipe.transform(new Date(), "yyyy-MM-dd");
@@ -149,7 +149,7 @@ export class PurchaseInfoComponent implements OnInit {
       AccountId: [0],
       Quantity: [''],
       CurrencyId: [0],
-      CurrencyName: [''],
+      Currency: [''],
       Rate: [''],
       Amount: [''],
       IsDelete: [0]
@@ -169,6 +169,7 @@ export class PurchaseInfoComponent implements OnInit {
         this.CreatedOn = this.datePipe.transform(info.CreatedDate, this.entityDateFormat);
         this.ModifiedBy = info.UpdatedByName;
         this.ModifiedOn = this.datePipe.transform(info.UpdatedDate, this.entityDateFormat);
+       // const formattedAmount = Number(info.Amount).toFixed(2);
         await this.getOfficeList(info.DivisionId);
         this.purchaseCreateForm.patchValue({
           PurchaseOrderId: info.Id,
@@ -186,14 +187,17 @@ export class PurchaseInfoComponent implements OnInit {
           Remarks: info.Remarks,
           CreatedBy: info.CreatedBy,
           Status: info.Status,
-          TotalAmount: info.TotalAmount,
+          TotalAmount: info.TotalAmount.toFixed(this.entityFraction),
           IsDelete: info.IsDelete ? info.IsDelete : 0
         });
-
         // if (this.isCopyMode) this.autoCodeGeneration('Purchase');
-        if (result.data.Table2.length > 0) this.purchaseFileList = result.data.Table2;
+        if (result.data.Table2.length > 0)         
+          this.purchaseFileList = result.data.Table2;       
         if (result.data.Table1.length > 0) {
           this.PurchaseTableList = result.data.Table1;
+            this.PurchaseTableList.forEach(element => { element.Amount = Number(element.Amount).toFixed(this.entityFraction); 
+            }); 
+
           this.setPage(1);
         }
 
@@ -303,17 +307,17 @@ export class PurchaseInfoComponent implements OnInit {
     let info = this.purchaseCreateForm.value;
     let account = this.accountName.find(x => x.ChartOfAccountsId == info.AccountId);
     let currency = this.currencyList.find(x => x.ID == info.CurrencyId);
-
     if (this.isEditMode) {
+     // const formattedAmount = Number(info.Amount).toFixed(2);
       let editValue = {
         Id: info.Id,
         PurchaseOrderId: this.purchaseId ? this.purchaseId : info.PurchaseOrderId,
         AccountId: info.AccountId,
-        Quantity: info.Quantity,
-        CurrencyId: info.CurrencyId,
-        CurrencyName: currency.CurrencyCode,
-        Rate: info.Rate,
-        Amount: info.Amount,
+        Quantity: Number(info.Quantity).toFixed(this.entityFraction),
+        CurrencyId: currency.ID,
+        Currency: currency.CurrencyCode,
+        Rate: Number(info.Rate).toFixed(this.entityFraction),
+        Amount:  Number(info.Amount).toFixed(this.entityFraction),
         AccountName: account.AccountName,
         // Currency: currency.Currency
       }
@@ -326,18 +330,18 @@ export class PurchaseInfoComponent implements OnInit {
       this.CalculateTotalAmount();
       return;
     }
-
+    //const formattedAmount = Number(info.Amount).toFixed(2);
     this.PurchaseTableList.unshift({
       Id: info.Id,
       PurchaseOrderId: this.purchaseId ? this.purchaseId : info.PurchaseOrderId,
       AccountId: info.AccountId,
-      Quantity: info.Quantity,
-      CurrencyId: info.CurrencyId,
-      CurrencyName: currency.CurrencyCode,
-      Rate: info.Rate,
-      Amount: info.Amount,
+      Quantity: Number(info.Quantity).toFixed(this.entityFraction),
+      CurrencyId: currency.ID,
+      Currency: currency.CurrencyCode,
+      Rate: Number(info.Rate).toFixed(this.entityFraction),
+      Amount: Number(info.Amount).toFixed(this.entityFraction),
       AccountName: account.AccountName,
-      Currency: currency.Currency
+      // Currency: currency.Currency
     });
     this.resetPurchaseTable();
     this.setPage(1);
@@ -353,12 +357,14 @@ export class PurchaseInfoComponent implements OnInit {
   }
 
   CalculateTotalAmount() {
-    var totalAmount = '';
-    this.PurchaseTableList.map(x => {
-      totalAmount += x.Amount;
+    let totalAmount = 0;
+    this.PurchaseTableList.forEach(x => {
+        totalAmount += Number(x.Amount);
     });
-    this.purchaseCreateForm.controls['TotalAmount'].setValue(totalAmount);
-  }
+
+    const formattedTotalAmount = totalAmount.toFixed(this.entityFraction);
+    this.purchaseCreateForm.controls['TotalAmount'].setValue(formattedTotalAmount);
+}
 
   setPage(page: number) {
     this.pager = this.ps.getPager(this.PurchaseTableList.length, page);
@@ -373,7 +379,7 @@ export class PurchaseInfoComponent implements OnInit {
       this.purchaseCreateForm.controls.CurrencyId.setValue(entitySelectedCurrency.ID);
     }
     // this.purchaseCreateForm.controls['CurrencyId'].setValue(1);
-    this.purchaseCreateForm.controls['CurrencyName'].setValue('');
+    this.purchaseCreateForm.controls['Currency'].setValue('');
     this.purchaseCreateForm.controls['Rate'].setValue('');
     this.purchaseCreateForm.controls['Amount'].setValue('');
   }
@@ -610,12 +616,12 @@ export class PurchaseInfoComponent implements OnInit {
 
   async createPayload(status) {
     let info = this.purchaseCreateForm.value;
-    var TotalAmount ='';
+    // var TotalAmount ='';
     let PurchaseTableList = this.PurchaseTableList;
     PurchaseTableList.forEach(element => {
       delete element.AccountName;
       delete element.Currency;
-      TotalAmount += element.Amount;
+      // TotalAmount += Number(element.Amount).toFixed(this.entityFraction);
     });
 
     let table = {
@@ -634,7 +640,9 @@ export class PurchaseInfoComponent implements OnInit {
       Remarks: info.Remarks,
       CreatedBy: info.CreatedBy,
       Status: status,
-      TotalAmount: TotalAmount ? TotalAmount : info.Status,
+      //TotalAmount: TotalAmount ? TotalAmount : info.Status,
+      //info.TotalAmount.toFixed(this.entityFraction),
+      TotalAmount: info.TotalAmount,
       IsDelete: info.IsDelete
     }
 
@@ -646,19 +654,30 @@ export class PurchaseInfoComponent implements OnInit {
       }
     }
   }
+ totalAmountCalculation(event) {
+    debugger
+  const rate = Number(this.purchaseCreateForm.value.Rate)
+  const qty = Number( this.purchaseCreateForm.value.Quantity)
+ 
 
-  totalAmountCalculation(event) {
+  const amount = rate * qty;
+  this.purchaseCreateForm.controls['Amount'].setValue(amount.toFixed(this.entityFraction));
+  const currentAmountValue = Number(this.purchaseCreateForm.controls['Amount'].value);
+  this.purchaseCreateForm.controls['Amount'].setValue(currentAmountValue);
+  }
+
+ // totalAmountCalculation(event) {
 
     // this.purchaseCreateForm.controls['Amount'].setValue(this.purchaseCreateForm.value.Rate * this.purchaseCreateForm.value.Quantity).toFixed(entityFraction);
-    const rate = this.purchaseCreateForm.value.Rate;
-const quantity = this.purchaseCreateForm.value.Quantity;
-const entityFraction = this.entityFraction; // assuming this is a valid number
+   // const rate = this.purchaseCreateForm.value.Rate;
+// const quantity = this.purchaseCreateForm.value.Quantity;
+// const entityFraction = this.entityFraction; // assuming this is a valid number
 
     // this.purchaseCreateForm.controls['Amount'].setValue(this.purchaseCreateForm.value.Rate * this.purchaseCreateForm.value.Quantity.toFixed(this.entityFraction));
-    const calculatedAmount = (rate * quantity).toFixed(entityFraction);
+    // const calculatedAmount = (rate * quantity).toFixed(entityFraction);
     
-    this.purchaseCreateForm.controls['Amount'].setValue(calculatedAmount);
-   }
+    // this.purchaseCreateForm.controls['Amount'].setValue(calculatedAmount);
+ //  }
 
   OnClickRadio(event) {
     this.editSelectedIdex = event;
@@ -683,7 +702,7 @@ const entityFraction = this.entityFraction; // assuming this is a valid number
       AccountId: info.AccountId,
       Quantity: info.Quantity,
       CurrencyId: info.CurrencyId,
-      CurrencyName: info.CurrencyName,
+      Currency: info.CurrencyId,
       Rate: info.Rate,
       Amount: info.Amount,
       TotalAmount: info.TotalAmount

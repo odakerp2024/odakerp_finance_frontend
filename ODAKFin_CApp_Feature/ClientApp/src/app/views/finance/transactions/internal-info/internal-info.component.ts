@@ -244,6 +244,7 @@ export class InternalInfoComponent implements OnInit {
       Quantity: [''],
       CurrencyId: [0],
       CurrencyName: [''],
+      Currency: [''],
       Rate: [''],
       Amount: [''],
       IsDelete: [0]
@@ -279,14 +280,16 @@ export class InternalInfoComponent implements OnInit {
           Remarks: info.Remarks,
           CreatedBy: info.CreatedBy,
           Status: info.Status,
-          TotalAmount: info.TotalAmount,
+          TotalAmount: info.TotalAmount.toFixed(this.entityFraction),
           IsDelete:  info.IsDelete ? info.IsDelete : 0
         });
 
         if (result.data.Table2.length > 0) this.FileList = result.data.Table2;
         if (result.data.Table1.length > 0) {
           this.internalTableList = result.data.Table1;
-          this.setPage(1);
+          this.internalTableList.forEach(element => { element.Amount = Number(element.Amount).toFixed(this.entityFraction); 
+           });
+          this.setPage(1); 
         }
 
         //  Copy Scenario
@@ -416,10 +419,10 @@ export class InternalInfoComponent implements OnInit {
       AccountId: info.AccountId,
       AccountName: account.AccountName,
       Quantity: Number(info.Quantity),
-      CurrencyId: info.CurrencyId,
-      CurrencyName: currency.CurrencyCode,
+      CurrencyId: currency.ID,
+      Currency: currency.CurrencyCode,
       Rate: Number(info.Rate),
-      Amount: info.Amount
+      Amount: Number(info.Amount).toFixed(this.entityFraction)
       }
       this.internalTableList[this.editSelectedIdex] = editValue;
       this.isEditMode = !this.isEditMode;
@@ -436,10 +439,11 @@ export class InternalInfoComponent implements OnInit {
       AccountId: info.AccountId,
       AccountName: account.AccountName,
       Quantity: Number(info.Quantity),
-      CurrencyId: info.CurrencyId,
-      CurrencyName: currency.CurrencyCode,
+      CurrencyId: currency.ID,
+       Currency: currency.CurrencyCode,
+      // CurrencyName: currency.CurrencyCode,
       Rate: Number(info.Rate),
-      Amount: info.Amount
+      Amount: Number(info.Amount).toFixed(this.entityFraction)
     });
     this.resetTable();
     this.setPage(1);
@@ -449,7 +453,7 @@ export class InternalInfoComponent implements OnInit {
   CalculateTotalAmount() {
     var totalAmount = 0;
     this.internalTableList.map(x => {
-      totalAmount += x.Amount;
+      totalAmount += Number(x.Amount);
     });
 
     const fixedTotalAmount = totalAmount.toFixed(this.entityFraction); // Fixed to three decimal places
@@ -542,7 +546,7 @@ export class InternalInfoComponent implements OnInit {
         return;
       }
     }
-    await this.createPayload(status);
+   
 
 
     let saveMsg = `Do you want to Save this Details?`;
@@ -569,8 +573,10 @@ export class InternalInfoComponent implements OnInit {
       cancelButtonText: 'No',
       reverseButtons: false,
       allowOutsideClick: false
-    }).then((result) => {
+    }).then(async  (result) => {
       if (result.isConfirmed) {
+       await this.createPayload(status);
+
         let service = `${this.globals.APIURL}/InternalOrder/SaveInternalOrderInfo`;
         this.dataService.post(service, this.payload).subscribe((result: any) => {
           if (result.message == "Success") {
@@ -619,8 +625,8 @@ export class InternalInfoComponent implements OnInit {
     let internalTableList = this.internalTableList;
     internalTableList.forEach(element => {
       element.AccountName;
-      element.CurrencyName;
-      TotalAmount += element.Amount;
+      element.Currency;
+      //TotalAmount += element.Amount;
     });
 
     let table = {
@@ -639,7 +645,8 @@ export class InternalInfoComponent implements OnInit {
       Remarks: info.Remarks,
       CreatedBy: info.CreatedBy,
       Status: status,
-      TotalAmount: TotalAmount ? TotalAmount : info.Status,
+      // TotalAmount: TotalAmount ? TotalAmount : info.Status,
+       TotalAmount: info.TotalAmount,
       IsDelete: info.IsDelete
     }
 
@@ -652,8 +659,21 @@ export class InternalInfoComponent implements OnInit {
     }
   }
 
+ // totalAmountCalculation(event) {
+   // this.internalCreateForm.controls['Amount'].setValue(this.internalCreateForm.value.Rate * this.internalCreateForm.value.Quantity);
+  // }
+
+
   totalAmountCalculation(event) {
-    this.internalCreateForm.controls['Amount'].setValue(this.internalCreateForm.value.Rate * this.internalCreateForm.value.Quantity);
+    debugger
+  const rate = Number(this.internalCreateForm.value.Rate)
+  const qty = Number( this.internalCreateForm.value.Quantity)
+ 
+
+  const amount = rate * qty;
+  this.internalCreateForm.controls['Amount'].setValue(amount.toFixed(this.entityFraction));
+  const currentAmountValue = Number(this.internalCreateForm.controls['Amount'].value);
+  this.internalCreateForm.controls['Amount'].setValue(currentAmountValue);
   }
 
 
@@ -696,7 +716,8 @@ export class InternalInfoComponent implements OnInit {
       AccountId: info.AccountId,
       Quantity: info.Quantity,
       CurrencyId: info.CurrencyId,
-      CurrencyName: info.CurrencyName,
+       Currency: info.CurrencyId,
+     // CurrencyName: info.CurrencyName,
       Rate: info.Rate,
       Amount: info.Amount,
       TotalAmount: info.TotalAmount
