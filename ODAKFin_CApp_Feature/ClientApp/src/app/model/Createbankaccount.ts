@@ -41,6 +41,7 @@ export class Attachment {
   DocumentName: String = "";
   DateOfStart = '';
 	FilePath: String = "";
+	UniqueFilePath: String = "";
 }
 
 export class Statement {
