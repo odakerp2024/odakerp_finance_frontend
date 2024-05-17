@@ -96,7 +96,7 @@
                     <ng-select class="searchdropdown custom" formControlName='VendorBranch'
                         [ngClass]="!IsBranchEnable " (change)="getVendorTan($event)" [clearable]="false">
                         <ng-option [value]="0" [disabled]="true">--SELECT--</ng-option>
-                        <ng-option *ngFor="let vendor of vendorBranch" [value]="vendor.CityName">
+                        <ng-option *ngFor="let vendor of vendorBranch" [value]="vendor.VendorBranchID">
                             {{ vendor.CityName | uppercase }}
                         </ng-option>
                     </ng-select>

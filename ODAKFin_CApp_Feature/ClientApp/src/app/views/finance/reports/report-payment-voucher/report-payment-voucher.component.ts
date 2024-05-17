@@ -222,9 +222,9 @@ export class ReportPaymentVoucherComponent implements OnInit {
       this.vendorBranch = this.vendorList.filter(vendor => { return vendor.VendorName === vendorDetails.VendorName });
       if (this.vendorBranch.length) {
         const selectedBranch = this.vendorBranch[0].BranchCode;
-        this.reportFilter.value.vendorBranch = this.vendorBranch[0].CityName
+        this.reportFilter.value.vendorBranch = this.vendorBranch[0].VendorBranchID
         this.getVendorTan(selectedBranch);
-        this.reportFilter.controls['VendorBranch'].setValue(this.vendorBranch[0].CityName);
+        this.reportFilter.controls['VendorBranch'].setValue(this.vendorBranch[0].VendorBranchID);
       }
       // this.branches = this.vendorBranch.length
       // this.newOne = this.vendorBranch[0].BranchCode;
