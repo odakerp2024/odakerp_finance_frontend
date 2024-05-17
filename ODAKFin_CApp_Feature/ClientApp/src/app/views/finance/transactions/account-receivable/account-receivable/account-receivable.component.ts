@@ -23,7 +23,8 @@ export class AccountReceivableComponent implements OnInit {
 
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable("DateFormat");
   currentDate: string = this.datePipe.transform(new Date(), "dd-MM-yyyy");
-  ImportUrl: any
+  ImportUrl: any;
+  entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   divisionList: any;
   divisionFilter: FormGroup;
   pager: any = {};
@@ -96,7 +97,7 @@ export class AccountReceivableComponent implements OnInit {
 
   
 
-  CreateForm() {
+  async CreateForm() {
     this.amountReceivableForm = this.fb.group({
       OBReference: [''],
       Customer: [''],
@@ -109,12 +110,13 @@ export class AccountReceivableComponent implements OnInit {
       UploadDate: [this.getCurrentDate()],
       FileName: [''],
     });
+    await this.getPaymentReceivableList();
   }
   getCurrentDate(): string {
     return this.datePipe.transform(new Date(), 'yyyy-MM-dd');
   }
   setPage(page: number) {
-
+debugger
     if (this.PaymentReceivableList.length) {
       if (page < 1 || page > this.pager.totalPages) {
         return;
@@ -128,11 +130,14 @@ export class AccountReceivableComponent implements OnInit {
       this.pagedItems = [];
     }
   }
+
   getPaymentReceivableList() {
+    debugger
     const payload = this.amountReceivableForm.value
     this.PaymentReceivableService.GetPaymentReceivableList(payload).subscribe((result) => {
       if (result.message == "Success" && result.data.Table.length > 0) {
-        this.PaymentReceivableList = result.data.Table;
+        // this.PaymentReceivableList = result.data.Table;
+        this.PaymentReceivableList = result['data'].Table;
         this.setPage(1);
       } else {
         this.PaymentReceivableList = []

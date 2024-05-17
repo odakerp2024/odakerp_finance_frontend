@@ -319,13 +319,16 @@
                                             />
                                         </td>
                                         <td>
-                                            <input formControlName="Amount" class="form-control" type="text" readonly />
+                                           <input   class="form-control" type="text" readonly
+                                            onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                            min="0" numbersOnly formControlName="Amount" appDynamicDecimal />
+                                            <!-- <input formControlName="Amount" class="form-control" type="text" readonly /> -->
                                         </td>
                                     </tr>
                                     <tr *ngFor="let data of pagedItems; let i = index">
                                         <td class="text-center">{{data.AccountName}} </td>
                                         <td class="text-center">{{data.Quantity}}</td>
-                                        <td class="text-center">{{data.CurrencyName}}</td>
+                                        <td class="text-center">{{data.Currency}}</td>
                                         <td class="text-center">{{data.Rate}}</td>
                                         <td class="text-center">{{data.Amount}}</td>
                                         <td class="text-center">

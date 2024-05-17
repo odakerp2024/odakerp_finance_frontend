@@ -30,7 +30,7 @@ export class ReceiptVouchersViewComponent implements OnInit {
 //  minDate: string = this.datePipe.transform(new Date(), this.entityDateFormat);
  validTillMinDate: string = this.datePipe.transform(new Date(), this.entityDateFormat);
  
-
+ entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   receiptList: any = [];
   divisionList: any = [];
   officeList: any = [];

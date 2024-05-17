@@ -51,7 +51,7 @@
                                       </td>
                                     <!-- <td>{{journal.AccountName}}</td> -->
                                     <td>{{journal.CurrencyName}}</td>
-                                    <td>{{journal.Amount}}</td>
+                                    <td>{{journal.Amount | dynamicDecimal: entityFraction }}</td>
                                     <td>
                                         <div
                                     [ngClass]="journal.Status == 'Confirmed' ? 'badge badge-state-confirm' : journal.Status == 'Cancelled' ? 'badge badge-state-cancel' : 'badge badge-state'">

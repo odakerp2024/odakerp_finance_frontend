@@ -72,7 +72,7 @@
                                     
                                     <!-- <td>{{receipt.CustomerName ? receipt.CustomerName : ''}}</td> -->
                                     <!-- <td>{{receipt.CustomerBranch}}</td> -->
-                                    <td>{{receipt.AmountReceived}}</td>
+                                    <td>{{receipt.AmountReceived | dynamicDecimal: entityFraction }}</td>
                                     <td>{{receipt.AmountTypeName}}</td>
                                     <td>{{receipt.BankName ? receipt.BankName : ''}}</td>
                                     <td>{{receipt.ReferenceNo || '-'}}</td>

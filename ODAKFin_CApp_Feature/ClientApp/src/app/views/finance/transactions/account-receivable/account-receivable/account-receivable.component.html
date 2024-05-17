@@ -136,7 +136,7 @@
                                          <th tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                          colspan="1" aria-label="Name: activate to sort column ascending"
                                         >Invoice Date</th>
- 
+
                                      <th tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                          colspan="1" aria-label="Name: activate to sort column ascending"
                                           >Amount</th>
@@ -144,7 +144,7 @@
                             </thead>
                             <tbody>
                                 
-                                <tbody *ngIf="pagedItems.length > 0">
+                                <!-- <tbody *ngIf="pagedItems.length > 0"> -->
                                 <tr *ngFor="let data of pagedItems">
                                     <td (click)="editDivision(data.Id)" style="color: #0366d6;cursor: pointer;">{{data.OBReference }}</td>
                                     <td >
@@ -157,11 +157,11 @@
                                   
                                           <td>{{ data.InvoiceDate | date: 'dd-MM-yyyy' }}</td>
                                          
-                                    <td>{{data.Amount }}</td>
+                                    <td class="text-right ">{{data.Amount | dynamicDecimal: entityFraction }}</td>
                                 </tr>
-                                </tbody>
-                                <tbody *ngIf="pagedItems.length === 0">
-                                    <tr>
+                                <!-- </tbody> -->
+                                <!-- <tbody *ngIf="pagedItems.length === 0"> -->
+                                    <tr *ngIf="pagedItems.length == 0">
                                         <td class="text-center" colspan="6" >No records found</td>
                                     </tr>
                                   </tbody>

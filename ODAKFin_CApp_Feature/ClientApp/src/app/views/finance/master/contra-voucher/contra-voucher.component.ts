@@ -33,7 +33,8 @@ export class ContraVoucherComponent implements OnInit, OnDestroy {
 
 //  minDate: string = this.datePipe.transform(new Date(), "yyyy-MM-dd");
  validTillMinDate: string = this.datePipe.transform(new Date(), "yyyy-MM-dd");
-  entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat')
+ entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
+ entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat')
   contraVoucherList: any[];
   private ngUnsubscribe = new Subject<void>();
   constructor(

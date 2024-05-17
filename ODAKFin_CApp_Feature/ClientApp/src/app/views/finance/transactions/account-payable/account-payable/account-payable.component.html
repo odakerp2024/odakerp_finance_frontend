@@ -154,7 +154,7 @@
                                         : commonService.convertToLowerCaseDay(
                                             entityDateFormat
                                           ) }}</td>
-                                    <td>{{data.Amount }}</td>
+                                    <td class="text-right ">{{data.Amount | dynamicDecimal: entityFraction }}</td>
                                 </tr>
                             </tbody>
                             <tbody *ngIf="pagedItems.length === 0">

@@ -148,7 +148,7 @@
                                     <td>{{data.GroupName }}</td>
                                     <td>{{data.AccountName }}</td>
                                     <td>{{data.CRDR}}</td>
-                                    <td>{{data.Amount }}</td>
+                                    <td class="text-right ">{{data.Amount | dynamicDecimal: entityFraction}}</td>
                                 </tr>
                             </tbody>
                             <tbody *ngIf="pagedItems.length === 0">

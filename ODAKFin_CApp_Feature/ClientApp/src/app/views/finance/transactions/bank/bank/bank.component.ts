@@ -23,6 +23,7 @@ import Swal from 'sweetalert2';
 })
 export class BankComponent implements OnInit {
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable("DateFormat");
+  entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   currentDate: string = this.datePipe.transform(new Date(), "dd-MM-yyyy");
   ImportUrl: any
   divisionList: any;
