@@ -9,6 +9,7 @@ import { CommonService } from 'src/app/services/common.service';
 import { LoginService } from 'src/app/services/login.service';
 import { WorkflowService } from 'src/app/services/workflow.service';
 import Swal from 'sweetalert2';
+declare let $: any;
 
 @Component({
   selector: 'app-financemaster',
@@ -39,8 +40,11 @@ export class FinanceMasterComponent implements OnInit {
   payloadupdatepermission: { userId: any; };
 
   private wfAllItems = [];
-  wfPager: any = {};
-  wfPagedItems = [];
+  private wfItems = [];
+  Pager: any = {};
+  PagedItems = [];
+
+  wfEventList: any = [];
 
   isShowWorkflowInbox: boolean = true;
   isShowWorkflowDetails: boolean = false;
@@ -55,6 +59,14 @@ export class FinanceMasterComponent implements OnInit {
   dispStyle: any = 'none';
 
   userName: string='';
+
+  wfnumber: string = "0";
+  eventnumber: string = "0";
+  fromdate: string = "0";
+  tilldate: string = "0";
+  event_value: string = "0";
+  customername: string = "0";
+  status: string = "pending";
 
   cusBID: string='';
   eventName: string='';
@@ -351,6 +363,7 @@ export class FinanceMasterComponent implements OnInit {
 
   ngOnInit() {
     this.titleService.setTitle(this.title);
+    $('.my-select').select2();
     //this.getUserDtls();
     if (localStorage.getItem('DashboardType')) {
       this.selectedTabName = localStorage.getItem('DashboardType');
@@ -398,6 +411,8 @@ export class FinanceMasterComponent implements OnInit {
         console.log('getUserDtls', { res })
         this.userName = res[0].UserName;
         this.getWorkflowInbox();
+        this.getWorkflowInboxSearch();
+        this.getwfEventList();
       },
       error:(e)=>{
         console.log('error', { e })
@@ -405,11 +420,143 @@ export class FinanceMasterComponent implements OnInit {
     });
   }
 
+  tabClick(value){
+    if(value == 1){
+      this.wfnumber = "0";
+      this.event_value = "0";
+      this.eventnumber = "0";
+      this.customername = "0";
+      this.fromdate = "0";
+      this.tilldate = "0";
+      this.status = "pending";
+      $('#pending').show();
+      $('#history').hide();
+      this.getWorkflowInboxSearch();
+      this.wfClear();
+    }
+    else if(value == 2){
+      this.wfnumber = "0";
+      this.event_value = "0";
+      this.eventnumber = "0";
+      this.customername = "0";
+      this.fromdate = "0";
+      this.tilldate = "0";
+      this.status = "approve";
+      $('#history').show();
+      $('#pending').hide();
+      this.getWorkflowInboxSearch();
+      this.wfClearHistory();
+    }
+  }
+
+  getWorkflowInboxSearch() {
+    let payload = {
+      userEmail: this.userName,
+      wfnumber: "0",
+      eventnumber: "0",
+      fromdate: "0",
+      tilldate: "0",
+      event_value:"0",
+      customername: "0",
+      status: this.status,
+    }
+    
+    this.workflow.getWorkflowInbox(payload).subscribe(data => {
+        console.log(data)
+        if ((data.Status == true) && (data.AlertMegId == 1)) {
+          
+          this.wfItems = data.Data
+          
+        }
+        else {
+          
+        }
+      });
+  }
+
+  wfSearch(){
+    this.wfnumber = $('#ddlwfnumber').val() ? $('#ddlwfnumber').val().toString() : "0";
+    this.event_value = $('#ddlwfdetails').val() ? $('#ddlwfdetails').val().toString() : "0";
+    this.eventnumber = $('#ddlwfeventName').val() ? $('#ddlwfeventName').val().toString() : "0";
+    this.customername = $('#ddlCustomerName').val() ? $('#ddlCustomerName').val().toString() : "0";
+    this.fromdate = $('#ddlfromDate').val() ? $('#ddlfromDate').val().toString() : "0";
+    this.tilldate = $('#ddltillDate').val() ? $('#ddltillDate').val().toString() : "0";
+    
+    
+    this.getWorkflowInbox();
+  }
+
+  wfSearchHistory(){
+    this.wfnumber = $('#ddlwfnumberH').val() ? $('#ddlwfnumberH').val().toString() : "0";
+    this.event_value = $('#ddlwfdetailsH').val() ? $('#ddlwfdetailsH').val().toString() : "0";
+    this.eventnumber = $('#ddlwfeventNameH').val() ? $('#ddlwfeventNameH').val().toString() : "0";
+    this.customername = $('#ddlCustomerNameH').val() ? $('#ddlCustomerNameH').val().toString() : "0";
+    this.fromdate = $('#ddlfromDateH').val() ? $('#ddlfromDateH').val().toString() : "0";
+    this.tilldate = $('#ddltillDateH').val() ? $('#ddltillDateH').val().toString() : "0";
+    this.status = $('#ddlwfStatusH').val() ? $('#ddlwfStatusH').val().toString() : "0";
+    this.getWorkflowInboxHistory();
+  }
+
+  wfClear(){
+    $('#ddlwfnumber').val(0).trigger("change");
+    $('#ddlwfdetails').val(0).trigger("change");
+    $('#ddlwfeventName').val(0).trigger("change");
+    $('#ddlCustomerName').val('').trigger("change");
+    $('#ddlfromDate').val('').trigger("change");
+    $('#ddltillDate').val('').trigger("change");
+    
+    this.wfnumber = "0";
+    this.event_value = "0";
+    this.eventnumber = "0";
+    this.customername = "0";
+    this.fromdate = "0";
+    this.tilldate = "0";
+
+    this.getWorkflowInbox();
+  }
+
+  wfClearHistory(){
+    $('#ddlwfnumberH').val(0).trigger("change");
+    $('#ddlwfdetailsH').val(0).trigger("change");
+    $('#ddlwfeventNameH').val(0).trigger("change");
+    $('#ddlCustomerNameH').val('').trigger("change");
+    $('#ddlfromDateH').val('').trigger("change");
+    $('#ddltillDateH').val('').trigger("change");
+    $('#ddlwfStatusH').val(0).trigger("change");
+    this.wfnumber = "0";
+    this.event_value = "0";
+    this.eventnumber = "0";
+    this.customername = "0";
+    this.fromdate = "0";
+    this.tilldate = "0";
+    this.status = "approve";
+
+    this.getWorkflowInboxHistory();
+  }
+
+  getwfEventList(){
+    let payload = {
+
+    }
+    this.workflow.getwfEventList(payload).subscribe(data => {
+      console.log(data);
+      this.wfEventList = data;
+    });
+  }
+
   getWorkflowInbox() {
     let payload = {
       //userEmail: "anuja@odaksolutions.com",
       userEmail: this.userName,
+      wfnumber: this.wfnumber,
+      eventnumber: this.eventnumber,
+      fromdate: this.fromdate,
+      tilldate: this.tilldate,
+      event_value: this.event_value,
+      customername: this.customername,
+      status: this.status,
     }
+
     this.workflow.getWorkflowInbox(payload).subscribe(data => {
         console.log(data)
         if ((data.Status == true) && (data.AlertMegId == 1)) {
@@ -423,7 +570,33 @@ export class FinanceMasterComponent implements OnInit {
       });
   }
 
-  getWorkflowDetails(workflowData: any) {
+  getWorkflowInboxHistory() {
+    let payload = {
+      //userEmail: "anuja@odaksolutions.com",
+      userEmail: this.userName,
+      wfnumber: this.wfnumber,
+      eventnumber: this.eventnumber,
+      fromdate: this.fromdate,
+      tilldate: this.tilldate,
+      event_value: this.event_value,
+      customername: this.customername,
+      status: this.status,
+    }
+
+    this.workflow.getWorkflowInbox(payload).subscribe(data => {
+        console.log(data)
+        if ((data.Status == true) && (data.AlertMegId == 1)) {
+          this.wfAllItems = data.Data
+          this.setPageWF(1)
+        }
+        else {
+          this.wfAllItems = []
+          this.setPageWF(1)
+        }
+      });
+  }
+
+  getWorkflowDetails(workflowData: any, value) {
     console.log(workflowData)
     this.redirectURL = workflowData.redirectURL;
     console.log(this.redirectURL);
@@ -465,14 +638,20 @@ export class FinanceMasterComponent implements OnInit {
             this.eventName = workflowData?.eventname;
             //alert(this.cusBID);
             console.log('CusBID',this.cusBID);
-            this.workflowDetailTitle = `${workflowData?.workflowno} - ${workflowData?.eventname} - ${workflowData.details}`
+            this.workflowDetailTitle = `${workflowData?.workflowno} - ${workflowData?.eventname} - ${workflowData.details} - ${workflowData.customername}`
             this.workFlowUpdateForm.patchValue({
               userEmail: this.userName,
               workflowNo: workflowData.workflowno,
               currentStep: workflowData.currentstep,
               totalStep: workflowData.totalstep
             });
-            ($('#progressModel') as any).modal('show');
+            if(value == 1){
+              ($('#progressModel') as any).modal('show');
+            }
+            if(value == 2){
+              ($('#progressModelHistory') as any).modal('show');
+            }
+            
             // this.dispStyle = 'block'
           }
           else {
@@ -573,8 +752,8 @@ export class FinanceMasterComponent implements OnInit {
 
   setPageWF(page: number) {
     
-    this.wfPager = this.ps.getPager(this.wfAllItems.length, page);
-    this.wfPagedItems = this.wfAllItems.slice(this.wfPager.startIndex, this.wfPager.endIndex + 1)
+    this.Pager = this.ps.getPager(this.wfAllItems.length, page);
+    this.PagedItems = this.wfAllItems.slice(this.Pager.startIndex, this.Pager.endIndex + 1)
   }
 
   BindTokenValues() {
@@ -914,10 +1093,26 @@ debugger
       this.router.navigate(['/views/reports/report-contra-voucher']);
     } 
 
+    else if (routePage == 'JournalVoucher') {
+      //SubfunctionID = 533;
+      this.router.navigate(['/views/reports/report-journal-voucher']);
+    }
+
+    else if (routePage == 'AdjustmentVoucher') {
+      //SubfunctionID = 533;
+      this.router.navigate(['/views/reports/report-adjustment-voucher']);
+    }
+
     else if (routePage == 'VoucherReversals') {
       //SubfunctionID = 533;
       this.router.navigate(['/views/reports/report-voucher-reversal']);
     }
+    else if (routePage == 'SalesVoucher') {
+  
+      //SubfunctionID = 533;
+      this.router.navigate(['/views/reports/report-sales-voucher']);
+    }
+    
     
     const userID = localStorage.getItem("UserID");
     const paylod = {

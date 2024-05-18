@@ -18,7 +18,7 @@
                     <label class=" fontstyles">PEROID</label>
                     <ng-select class="searchdropdown custom" formControlName="Peroid"
                         (ngModelChange)="onOptionChange($event);" [clearable]="false">
-                        <ng-option [value]="''" disabled>--SELECT PEROID--</ng-option>
+                        <ng-option [value]="''" disabled>--SELECT--</ng-option>
                         <ng-container *ngFor="let peroid of PeroidList">
                             <ng-option [value]="peroid.peroidId">
                                 {{peroid.peroidName | uppercase}}
@@ -59,7 +59,7 @@
                     <label class=" fontstyles">DIVISION</label>
                     <ng-select class="searchdropdown custom" formControlName="DivisionId"
                         (ngModelChange)="getOfficeList($event);" [clearable]="false">
-                        <ng-option [value]="0" disabled>--SELECT DIVISION--</ng-option>
+                        <ng-option [value]="0" disabled>--SELECT--</ng-option>
                         <ng-container *ngFor="let division of divisionList">
                             <ng-option *ngIf="division.Active" [value]="division.ID">
                                 {{division.DivisionName | uppercase}}
@@ -73,7 +73,7 @@
                     <ng-select class="searchdropdown" formControlName="OfficeId"
                         (ngModelChange)="getDivisionBasedOffice($event, reportFilter.value.Division)"
                         [clearable]="false" name="CategoryId" id="CategoryId">
-                        <ng-option [value]="0" disabled>--SELECT OFFICE--</ng-option>
+                        <ng-option [value]="0" disabled>--SELECT--</ng-option>
                         <ng-container *ngFor="let office of officeList">
                             <ng-option [value]="office.ID">
                                 {{office.OfficeName | uppercase}}
@@ -87,7 +87,7 @@
                     <label class="fontstyles">FROM ACCOUNT</label>
                     <ng-select class="searchdropdown" formControlName="FromAccount" [clearable]="false" name="CategoryId"
                     id="CategoryId" (change)="getToAccount($event)">
-                        <ng-option [value]="0" [disabled]="true">--SELECT FROM ACCOUNT--</ng-option>
+                        <ng-option [value]="0" [disabled]="true">--SELECT--</ng-option>
                         <ng-container *ngFor="let bank of bankList">
                             <ng-option [value]="bank.BankID">
                                 <span class="textwrap">{{bank.BankName | uppercase}} - {{bank.AccountNo}}
@@ -101,7 +101,7 @@
                     <label class=" fontstyles">TO ACCOUNT</label>
                     <ng-select class="searchdropdown" formControlName="ToAccount" [clearable]="false" name="CategoryId"
                     id="CategoryId">
-                        <ng-option [value]="0" [disabled]="true">--SELECT TO ACCOUNT--</ng-option>
+                        <ng-option [value]="0" [disabled]="true">--SELECT--</ng-option>
                         <ng-container *ngFor="let bank of toAccount">
                             <ng-option [value]="bank.BankID">
                                 <span class="textwrap">{{bank.BankName | uppercase}} - {{bank.AccountNo}}
@@ -228,11 +228,11 @@
                                     <td class="hyperTextColor">{{data.ContraVoucherNumber}}</td>
                                     <td>{{data.FromAccount}}</td>
                                     <td>{{data.ToAccount}}</td>
-                                    <td class=" text-right hyperTextColor">{{data.Amount}}</td>
+                                    <td class="text-right hyperTextColor">{{ data.Symbol + ' ' + (data.Amount | dynamicDecimal: entityFraction) }}</td>
                                     <td>{{data.PaymentType}}</td>
                                 </tr>
 
-                                <tr *ngIf="pagedItems.length ==0">
+                                <tr *ngIf="pagedItems.length == 0">
                                     <td class="text-center" colspan="10">No records found</td>
                                 </tr>
 

@@ -246,13 +246,13 @@ export class VendorsComponent implements OnInit {
       if (params['Vendor_ID']) {
         this.updateVendorId = params['Vendor_ID']
         this.getPermissionListForUpdate(563, 'Branch Details');
-        this.getPermissionListForCreate(563, 'Bank Details');
-        this.getPermissionListForCreate(558, 'KYC Documents');
-        this.getPermissionListForCreate(559, 'Accounting');
-        this.getPermissionListForCreate(560, 'TDS');
-        this.getPermissionListForCreate(561, 'Credit Details');
-        this.getPermissionListForCreate(561, 'Email ids');
-        this.getPermissionListForCreate(564, 'Interfaces');
+        this.getPermissionListForUpdate(563, 'Bank Details');
+        this.getPermissionListForUpdate(558, 'KYC Documents');
+        this.getPermissionListForUpdate(559, 'Accounting');
+        this.getPermissionListForUpdate(560, 'TDS');
+        this.getPermissionListForUpdate(561, 'Credit Details');
+        this.getPermissionListForUpdate(561, 'Email ids');
+        this.getPermissionListForUpdate(564, 'Interfaces');
       } else {
         this.getPermissionListForCreate(563, 'Branch Details');
         this.getPermissionListForCreate(563, 'Bank Details');
@@ -503,7 +503,7 @@ export class VendorsComponent implements OnInit {
 
           if (data[0].SubfunctionID == paylod.SubfunctionID) {
 
-            if (data[0].Update_Opt == 2) {
+            if (data[0].Update_Opt == 2 || data[0].Read_Opt == 2) {
               this.isBranchDetails = true;
             } else {
               this.isBranchDetails = false;
@@ -521,7 +521,7 @@ export class VendorsComponent implements OnInit {
 
           if (data[0].SubfunctionID == paylod.SubfunctionID) {
 
-            if (data[0].Update_Opt == 2) {
+            if (data[0].Update_Opt == 2 || data[0].Read_Opt == 2) {
               this.isBankDetails = true;
             } else {
               this.isBankDetails = false;
@@ -539,7 +539,7 @@ export class VendorsComponent implements OnInit {
 
           if (data[0].SubfunctionID == paylod.SubfunctionID) {
 
-            if (data[0].Update_Opt == 2) {
+            if (data[0].Update_Opt == 2 || data[0].Read_Opt == 2) {
               this.isKYCDocuments = true;
             } else {
               this.isKYCDocuments = false;
@@ -557,7 +557,7 @@ export class VendorsComponent implements OnInit {
 
           if (data[0].SubfunctionID == paylod.SubfunctionID) {
 
-            if (data[0].Update_Opt == 2) {
+            if (data[0].Update_Opt == 2 || data[0].Read_Opt == 2) {
               this.isAccounting = true;
             } else {
               this.isAccounting = false;
@@ -575,7 +575,7 @@ export class VendorsComponent implements OnInit {
 
           if (data[0].SubfunctionID == paylod.SubfunctionID) {
 
-            if (data[0].Update_Opt == 2) {
+            if (data[0].Update_Opt == 2 || data[0].Read_Opt == 2) {
               this.isTDS = true;
 
             } else {
@@ -594,7 +594,7 @@ export class VendorsComponent implements OnInit {
 
           if (data[0].SubfunctionID == paylod.SubfunctionID) {
 
-            if (data[0].Update_Opt == 2) {
+            if (data[0].Update_Opt == 2 || data[0].Read_Opt == 2) {
               this.isCreditDetails = true;
 
             } else {
@@ -613,7 +613,7 @@ export class VendorsComponent implements OnInit {
 
           if (data[0].SubfunctionID == paylod.SubfunctionID) {
 
-            if (data[0].Update_Opt == 2) {
+            if (data[0].Update_Opt == 2 || data[0].Read_Opt == 2) {
               this.isEmailids = true;
             } else {
               this.isEmailids = false;
@@ -631,7 +631,7 @@ export class VendorsComponent implements OnInit {
 
           if (data[0].SubfunctionID == paylod.SubfunctionID) {
 
-            if (data[0].Update_Opt == 2) {
+            if (data[0].Update_Opt == 2 || data[0].Read_Opt == 2) {
               this.isInterfaces = true;
             } else {
               this.isInterfaces = false;
@@ -769,6 +769,38 @@ export class VendorsComponent implements OnInit {
 
   getToday(): string {
     return new Date().toISOString().split('T')[0];
+  }
+
+  DeleteKYC(){
+    const userID = localStorage.getItem("UserID");
+    const paylod = {
+      userID: Number(userID),
+      Ref_Application_Id: "4",
+      SubfunctionID: 558,
+    }
+    this.commonservice.GetUserPermissionObject(paylod).subscribe(data => {
+      if (data.length > 0) {
+        console.log("PermissionObject", data);
+
+        if (data[0].SubfunctionID == paylod.SubfunctionID) {
+
+          if (data[0].Delete_Opt != 2) {
+              Swal.fire('Please Contact Administrator');            
+          }
+          else {
+            
+          }
+        }
+        else {
+          Swal.fire('Please Contact Administrator');
+        }
+      }
+      else {
+        Swal.fire('Please Contact Administrator');
+      }
+    }, err => {
+      console.log('errr----->', err.message);
+    });
   }
 
   createForm() {

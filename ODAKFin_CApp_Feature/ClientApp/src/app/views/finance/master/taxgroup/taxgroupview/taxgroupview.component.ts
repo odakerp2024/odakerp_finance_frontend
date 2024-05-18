@@ -163,7 +163,7 @@ export class TaxgroupviewComponent implements OnInit {
 
         if (data[0].SubfunctionID == paylod.SubfunctionID) {
 
-          if (data[0].Update_Opt == 2) {
+          if (data[0].Update_Opt == 2 || data[0].Read_Opt == 2) {
            this.router.navigate(['/views/finance/master/taxgroup/taxgroup/', { isCreate: false, id: id }])
           } else {
             Swal.fire('Please Contact Administrator');

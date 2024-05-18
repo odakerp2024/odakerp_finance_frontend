@@ -37,13 +37,21 @@ export class ReportContraVoucherComponent implements OnInit  {
   pagedItems: any[];// paged items
   // paymentModeList: any[];
   // bankList: any[];
-  entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat')
+  entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
+  entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   PeroidList = [
     { peroidId: 'today', peroidName: 'CURRENT DAY' },
     { peroidId: 'week', peroidName: 'CURRENT WEEK' },
     { peroidId: 'month', peroidName: 'CURRENT MONTH' },
     { peroidId: 'year', peroidName: 'CURRENT FINANCIAL YEAR' },
-    { peroidId: 'custom', peroidName: 'CUSTOM' }
+    { peroidId: 'custom', peroidName: 'CUSTOM' },
+    { peroidId: 'previoustoday', peroidName: 'PREVIOUS DAY' },
+    { peroidId: 'previousweek', peroidName: 'PREVIOUS WEEK' },
+    { peroidId: 'previousmonth', peroidName: 'PREVIOUS MONTH' },
+    { peroidId: 'previousyear', peroidName: 'PREVIOUS FINANCIAL YEAR' }
+
+
+
   ];
   selectedOption: string;
   bankList: any;
@@ -112,11 +120,40 @@ export class ReportContraVoucherComponent implements OnInit  {
         this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(new Date(endYear, 2, 31), "yyyy-MM-dd"));
         
         break;
+        case 'previoustoday':
+          const previousDay = new Date(this.currentDate);
+          previousDay.setDate(previousDay.getDate() - 1);
+          this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(previousDay, "yyyy-MM-dd"));
+          this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(previousDay, "yyyy-MM-dd"));
+          break;
+  
+        case 'previousweek':
+          const previousWeekStartDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay() - 7);
+          const previousWeekEndDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay() - 1);
+          this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(previousWeekStartDate, "yyyy-MM-dd"));
+          this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(previousWeekEndDate, "yyyy-MM-dd"));
+          break;
+  
+        case 'previousmonth':
+          const previousMonthStartDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() - 1, 1);
+          const previousMonthEndDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 0);
+          this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(previousMonthStartDate, "yyyy-MM-dd"));
+          this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(previousMonthEndDate, "yyyy-MM-dd"));
+          break;
+  
+        case 'previousyear':
+          const previousYear = this.currentDate.getFullYear() - 1;
+          const previousYearStartDate = new Date(previousYear, 3, 1);
+          const previousYearEndDate = new Date(previousYear + 1, 2, 31);
+          this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(previousYearStartDate, "yyyy-MM-dd"));
+          this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(previousYearEndDate, "yyyy-MM-dd"));
+          break;
       case 'custom':
         this.selectedOption = 'custom';
         this.startDate = this.reportFilter.controls.FromDate.value;
         this.endDate = this.reportFilter.controls.ToDate.value;
         break;
+
       default:
         this.selectedOption = '';
         break;
@@ -224,6 +261,7 @@ export class ReportContraVoucherComponent implements OnInit  {
   }
 
   getContraReportList() {
+    debugger
     this.startDate = this.reportFilter.controls.FromDate.value;
     this.endDate = this.reportFilter.controls.ToDate.value;
     this.reportService.GetContraVoucherReportList(this.reportFilter.value).subscribe(result => {
@@ -294,18 +332,56 @@ export class ReportContraVoucherComponent implements OnInit  {
     const workbook = new Workbook();
     const worksheet = workbook.addWorksheet('Report');
 
+     // Add title and subtitle rows
+     const titleRow = worksheet.addRow(['', '', '', '', '', 'NAVIO SHIPPING PRIVATE LIMITED', '']);
+     titleRow.getCell(6).font = { size: 15, bold: true };
+     titleRow.getCell(6).alignment = { horizontal: 'center' };
+ 
+     // Calculate the length of the title string
+     const titleLength = 'NAVIO SHIPPING PRIVATE LIMITED'.length;
+ 
+     // Iterate through each column to adjust the width based on the title length
+     worksheet.columns.forEach((column) => {
+       if (column.number === 6) {
+         column.width = titleLength + 2;
+       }
+     });
+ 
+     // Merge cells for the title
+     worksheet.mergeCells(`F${titleRow.number}:G${titleRow.number}`);
+ 
+     const subtitleRow = worksheet.addRow(['', '', '', '', '', 'Contra Voucher', '']);
+     subtitleRow.getCell(6).font = { size: 14 };
+     subtitleRow.getCell(6).alignment = { horizontal: 'center' };
+ 
+     // Merge cells for the subtitle
+     worksheet.mergeCells(`F${subtitleRow.number}:G${subtitleRow.number}`);
+ 
+
+
+    const dateRow = worksheet.addRow(['', '', '', '', '', `FROM ${this.startDate} - TO ${this.endDate}`]);
+    dateRow.eachCell((cell) => {
+      cell.alignment = { horizontal: 'center' };
+    });
+    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
+    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
+
+    // Merge cells for "FROM Date" and "TO Date"
+    worksheet.mergeCells(`F${dateRow.number}:G${dateRow.number}`);
+
     // Define header row and style it with yellow background, bold, and centered text
-    const header = Object.keys(this.reportForExcelList[0]);
+    const header = Object.keys(this.reportForExcelList[0]).filter(key => key !== 'Symbol');
     const headerRow = worksheet.addRow(header);
 
     headerRow.eachCell((cell) => {
       cell.fill = {
         type: 'pattern',
         pattern: 'solid',
-        fgColor: { argb: 'FFFFFF00' }, // Yellow background
+        fgColor: { argb: '8A9A5B' }, // Yellow background
       };
       cell.font = {
-        bold: true, // Bold font
+        bold: true,
+        color: { argb: 'FFFFF7' } // Bold font
       };
       cell.alignment = {
         horizontal: 'center', // Center alignment
@@ -318,10 +394,42 @@ export class ReportContraVoucherComponent implements OnInit  {
       };
     });
 
-    // Add data rows
     this.reportForExcelList.forEach((data) => {
-      worksheet.addRow(Object.values(data));
+
+      //To Remove Time from date field data
+      const date = data.Date
+      const formattedDate = date.split('T')[0];
+      data.Date = formattedDate;
+
+      // Merge the symbol and amount into a single string with fixed decimal places
+      const mergedICYAmount = `${data.Symbol} ${parseFloat(data['Amount']).toFixed(this.entityFraction)}`;
+
+      // Filter out properties you don't want to include in the Excel sheet
+      const filteredData = Object.keys(data)
+        .filter(key => key !== 'Symbol' )
+        .reduce((obj, key) => {
+          obj[key] = data[key];
+          return obj;
+        }, {});
+
+      // Update the 'Amount (ICY)' property in the filtered data object with the merged amount
+      filteredData['Amount'] = mergedICYAmount;
+
+      // Add the filtered data to the worksheet
+ const row = worksheet.addRow(Object.values(filteredData));
+
+ // Set text color for customer, receipt, and amount columns
+ const columnsToColor = ['Contra Voucher', 'Amount'];
+ columnsToColor.forEach(columnName => {
+     const columnIndex = Object.keys(filteredData).indexOf(columnName);
+     if (columnIndex !== -1) {
+         const cell = row.getCell(columnIndex + 1);
+         cell.font = { color: { argb: '8B0000' }, bold: true,}; // Red color
+     }
+ });
+
     });
+
 
     // Adjust column widths to fit content
     worksheet.columns.forEach((column) => {
@@ -341,10 +449,11 @@ export class ReportContraVoucherComponent implements OnInit  {
       cell.fill = {
         type: 'pattern',
         pattern: 'solid',
-        fgColor: { argb: 'FFFFFF00' }, // Yellow background
+        fgColor: { argb: '8A9A5B' }, // Yellow background
       };
       cell.font = {
         bold: true,
+        color: { argb: 'FFFFF7' }
       };
       cell.alignment = {
         horizontal: 'center',
@@ -357,8 +466,9 @@ export class ReportContraVoucherComponent implements OnInit  {
     // Write to Excel and save
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    saveAs(blob, 'Report-ReceiptVoucher.xlsx');
+    saveAs(blob, 'Report-ContraVoucher.xlsx');
   }
+
 
   async downloadAsCSV() {
     if (this.reportForExcelList.length === 0) {
@@ -370,18 +480,57 @@ export class ReportContraVoucherComponent implements OnInit  {
     const workbook = new Workbook();
     const worksheet = workbook.addWorksheet('Report');
 
+     // Add title and subtitle rows
+     const titleRow = worksheet.addRow(['', '', '', '', '', 'NAVIO SHIPPING PRIVATE LIMITED', '']);
+     titleRow.getCell(6).font = { size: 15, bold: true };
+     titleRow.getCell(6).alignment = { horizontal: 'center' };
+ 
+     // Calculate the length of the title string
+     const titleLength = 'NAVIO SHIPPING PRIVATE LIMITED'.length;
+
+    // Iterate through each column to adjust the width based on the title length
+    worksheet.columns.forEach((column) => {
+      if (column.number === 6) {
+        column.width = titleLength + 2;
+      }
+    });
+
+    // Merge cells for the title
+    worksheet.mergeCells(`F${titleRow.number}:G${titleRow.number}`);
+
+    // Add subtitle row
+    const subtitleRow = worksheet.addRow(['', '', '', '', '', 'Contra Voucher', '']);
+    subtitleRow.getCell(6).font = { size: 14 };
+    subtitleRow.getCell(6).alignment = { horizontal: 'center' };
+
+    // Merge cells for the subtitle
+    worksheet.mergeCells(`F${subtitleRow.number}:G${subtitleRow.number}`);
+
+    // Add "FROM Date" and "TO Date" to the worksheet
+    const dateRow = worksheet.addRow(['', '', '', '', '', `FROM ${this.startDate} - TO ${this.endDate}`]);
+    dateRow.eachCell((cell) => {
+      cell.alignment = { horizontal: 'center' };
+    });
+    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
+    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
+
+    // Merge cells for "FROM Date" and "TO Date"
+    worksheet.mergeCells(`F${dateRow.number}:G${dateRow.number}`);
+
+
     // Define header row and style it with yellow background, bold, and centered text
-    const header = Object.keys(this.reportForExcelList[0]);
+    const header = Object.keys(this.reportForExcelList[0]).filter(key => key !== 'Symbol');
     const headerRow = worksheet.addRow(header);
 
     headerRow.eachCell((cell) => {
       cell.fill = {
         type: 'pattern',
         pattern: 'solid',
-        fgColor: { argb: 'FFFFFF00' }, // Yellow background
+        fgColor: { argb: '8A9A5B' }, // Yellow background
       };
       cell.font = {
         bold: true, // Bold font
+        color: { argb: 'FFFFF7' }
       };
       cell.alignment = {
         horizontal: 'center', // Center alignment
@@ -396,9 +545,40 @@ export class ReportContraVoucherComponent implements OnInit  {
 
     // Add data rows
     this.reportForExcelList.forEach((data) => {
-      worksheet.addRow(Object.values(data));
-    });
+       //To Remove Time from date field data
+       const date = data.Date
+       const formattedDate = date.split('T')[0];
+       data.Date = formattedDate;
+ 
+       // Merge the symbol and amount into a single string with fixed decimal places
+       const mergedICYAmount = `${data.Symbol} ${parseFloat(data['Amount']).toFixed(this.entityFraction)}`;
+      
+       // Filter out properties you don't want to include in the Excel sheet
+       const filteredData = Object.keys(data)
+         .filter(key => key !== 'Symbol')
+         .reduce((obj, key) => {
+           obj[key] = data[key];
+           return obj;
+         }, {});
+ 
+       // Update the 'Amount' property in the filtered data object with the merged amount
+       filteredData['Amount'] = mergedICYAmount;
 
+       // Add the filtered data to the worksheet
+  const row = worksheet.addRow(Object.values(filteredData));
+ 
+  // Set text color for customer, receipt, and amount columns
+  const columnsToColor = ['Contra Voucher', 'Amount'];
+  columnsToColor.forEach(columnName => {
+      const columnIndex = Object.keys(filteredData).indexOf(columnName);
+      if (columnIndex !== -1) {
+          const cell = row.getCell(columnIndex + 1);
+          cell.font = { color: { argb: '8B0000' }, bold: true,}; // Red color
+      }
+  });
+ 
+     });
+ 
     // Adjust column widths to fit content
     worksheet.columns.forEach((column) => {
       let maxLength = 0;
@@ -417,10 +597,11 @@ export class ReportContraVoucherComponent implements OnInit  {
       cell.fill = {
         type: 'pattern',
         pattern: 'solid',
-        fgColor: { argb: 'FFFFFF00' }, // Yellow background
+        fgColor: { argb: '8A9A5B' }, // Yellow background
       };
       cell.font = {
         bold: true,
+        color: { argb: 'FFFFF7' }
       };
       cell.alignment = {
         horizontal: 'center',
@@ -433,7 +614,7 @@ export class ReportContraVoucherComponent implements OnInit  {
     // Write to Excel and save
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    saveAs(blob, 'Report-ReceiptVoucher.xlsx');
+    saveAs(blob, 'Report-ContraVoucher.xlsx');
   }
 
 }

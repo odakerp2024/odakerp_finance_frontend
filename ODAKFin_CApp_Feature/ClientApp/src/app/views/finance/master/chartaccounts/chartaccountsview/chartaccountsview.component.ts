@@ -68,7 +68,7 @@ export class ChartaccountsviewComponent implements OnInit {
     
               if (data[0].Create_Opt == 2 && route != 'edit') {
                 this.router.navigate(['views/finance/master/chartaccounts/chartaccounts']);
-              } else if (data[0].Update_Opt == 2 && route == 'edit') {
+              } else if (data[0].Update_Opt == 2 || data[0].Read_Opt == 2 && route == 'edit') {
                 this.router.navigate(['/views/finance/master/chartaccounts/chartaccounts', { id: id }]);
               } else {
                 Swal.fire('Please Contact Administrator');

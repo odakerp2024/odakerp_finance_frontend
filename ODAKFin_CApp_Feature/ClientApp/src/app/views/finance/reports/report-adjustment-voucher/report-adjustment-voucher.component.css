@@ -1,0 +1,40 @@
+.table>tbody>tr>td {
+    /* text-align: left !important; */
+    padding: 15px !important;
+    font-size: 14px !important;
+   
+  }
+  
+  tr:hover {
+    background-color: aliceblue;
+    text-decoration: underline;
+    text-decoration-color: rgb(0, 162, 255)
+  }
+  
+  .hyperTextColor {
+    color: #0366d6;
+  }
+  
+  .example-form-field {
+    margin: 0 8px 16px 0;
+  }
+  
+  .custom-margin-top {
+    margin-top: -100px;
+    margin-right: 80px;
+  }
+  
+  .title {
+    font-size: 1.6rem !important
+  }
+  
+  .subtitle {
+    font-size: 1.3rem !important
+  }
+  
+  .clear-btn {
+    width: 96px;
+  }
+  
+  
+  

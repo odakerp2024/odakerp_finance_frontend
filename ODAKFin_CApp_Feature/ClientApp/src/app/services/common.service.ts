@@ -257,7 +257,7 @@ export class CommonService {
     }
 
     AttachUpload(file): Observable<any> {
-    
+
         const formData = new FormData();
         formData.append("file", file, file.name);
         return this.http.post(this.globals.APIURL + '/Common/DocumentUpload/', formData)
@@ -271,4 +271,13 @@ export class CommonService {
         });
     }
 
+    getNumberPipeExpression(decimalValue): string {
+        return `1.${decimalValue}-${decimalValue}`;
+    }
+
+    getVoucherTypeList(){
+        return this.http.post<any[]>(this.globals.APIURL + '/Common/GetSalesBLType', {});
+    }
 }
+
+
