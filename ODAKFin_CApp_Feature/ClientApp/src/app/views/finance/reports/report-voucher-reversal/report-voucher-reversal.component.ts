@@ -11,6 +11,7 @@ import { ReportDashboardService } from 'src/app/services/financeModule/report-da
 import Swal from 'sweetalert2';
 import { Workbook } from 'exceljs';
 import { saveAs } from 'file-saver';
+import { GridSort } from 'src/app/model/common';
 
 
 const today = new Date();
@@ -34,8 +35,7 @@ export class ReportVoucherReversalComponent implements OnInit  {
   customerList: any[];
   pager: any = {};// pager object  
   pagedItems: any[];// paged items
-  // paymentModeList: any[];
-  // bankList: any[];
+  pagesort: any = new GridSort().sort;
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat')
   PeroidList = [
     { peroidId: 'today', peroidName: 'CURRENT DAY' },
@@ -209,6 +209,10 @@ export class ReportVoucherReversalComponent implements OnInit  {
 
     this.pager = this.ps.getPager(this.reportList.length, page);
     this.pagedItems = this.reportList.slice(this.pager.startIndex, this.pager.endIndex + 1);
+  }
+
+  sort(property) {
+    this.pagesort(property, this.pagedItems);
   }
   
   clear() {
