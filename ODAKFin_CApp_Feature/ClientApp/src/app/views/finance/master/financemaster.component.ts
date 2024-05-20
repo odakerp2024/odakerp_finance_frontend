@@ -168,7 +168,7 @@ export class FinanceMasterComponent implements OnInit {
       SubfunctionID: value
     }
     this.LService.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
+
 
       if (route == 'Bank Summary') {
 
@@ -290,7 +290,7 @@ export class FinanceMasterComponent implements OnInit {
       SubfunctionID: value
     }
     this.LService.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
+   
 
       if (route == 'Open Request') {
 
@@ -739,7 +739,7 @@ export class FinanceMasterComponent implements OnInit {
   }
 
   routePage(routePage: string) {
-debugger
+
     if (routePage == 'Entity') {
       this.getPermissionListForCreate(537, 'Email ids');
       this.getPermissionListForCreate(538, 'Documents');
@@ -966,6 +966,12 @@ debugger
     else if (routePage == 'trailBalance') {
       //SubfunctionID = 533;
       this.router.navigate(['/views/finance/reports/levelone']);
+    } 
+
+    else if (routePage == 'DayBook') {
+    
+      //SubfunctionID = 533;
+      this.router.navigate(['/views/reports/report-day-book']);
     } 
     
     else if (routePage == 'recieptVoucher') {

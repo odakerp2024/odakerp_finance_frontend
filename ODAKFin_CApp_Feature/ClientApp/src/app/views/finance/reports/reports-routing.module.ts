@@ -7,17 +7,20 @@ import { ReportVoucherReversalComponent } from './report-voucher-reversal/report
 import { ReportSalesVoucherComponent } from './report-sales-voucher/report-sales-voucher.component';
 import { ReportJournalVoucherComponent } from './report-journal-voucher/report-journal-voucher.component';
 import { ReportAdjustmentVoucherComponent } from './report-adjustment-voucher/report-adjustment-voucher.component';
+import { ReportDayBookComponent } from './report-day-book/report-day-book.component';
 
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'report-receipt-voucher' },
-  { path: 'report-receipt-voucher'  ,  component : ReportReceiptVoucherComponent },
-  { path: 'report-payment-voucher'  ,  component : ReportPaymentVoucherComponent},
-  { path: 'report-contra-voucher'   ,  component : ReportContraVoucherComponent},
-  { path: 'report-voucher-reversal' ,  component : ReportVoucherReversalComponent},
-  { path: 'report-sales-voucher' ,  component : ReportSalesVoucherComponent},
-  { path: 'report-journal-voucher'   ,  component : ReportJournalVoucherComponent },
+  { path: 'report-receipt-voucher'      ,  component : ReportReceiptVoucherComponent },
+  { path: 'report-payment-voucher'      ,  component : ReportPaymentVoucherComponent},
+  { path: 'report-contra-voucher'       ,  component : ReportContraVoucherComponent},
+  { path: 'report-voucher-reversal'     ,  component : ReportVoucherReversalComponent},
+  { path: 'report-sales-voucher'        ,  component : ReportSalesVoucherComponent},
+  { path: 'report-journal-voucher'      ,  component : ReportJournalVoucherComponent },
   { path: 'report-adjustment-voucher'   ,  component : ReportAdjustmentVoucherComponent },
+  { path: 'report-day-book'             ,  component : ReportDayBookComponent },
+
 ];
 
 @NgModule({

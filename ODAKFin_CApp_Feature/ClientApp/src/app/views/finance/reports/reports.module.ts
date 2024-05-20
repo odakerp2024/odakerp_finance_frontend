@@ -13,6 +13,7 @@ import { ReportVoucherReversalComponent } from './report-voucher-reversal/report
 import { ReportSalesVoucherComponent } from './report-sales-voucher/report-sales-voucher.component';
 import { ReportAdjustmentVoucherComponent } from './report-adjustment-voucher/report-adjustment-voucher.component';
 import { ReportJournalVoucherComponent } from './report-journal-voucher/report-journal-voucher.component';
+import { ReportDayBookComponent } from './report-day-book/report-day-book.component';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { ReportJournalVoucherComponent } from './report-journal-voucher/report-j
     ReportVoucherReversalComponent,
     ReportSalesVoucherComponent,
     ReportAdjustmentVoucherComponent,
-    ReportJournalVoucherComponent
+    ReportJournalVoucherComponent,
+    ReportDayBookComponent
   ],
   imports: [
     CommonModule,
