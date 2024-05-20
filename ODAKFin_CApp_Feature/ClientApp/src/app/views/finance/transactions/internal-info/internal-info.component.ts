@@ -1,3 +1,4 @@
+import { HttpErrorResponse, HttpEventType, HttpResponse } from '@angular/common/http';
 import { InternalOrderComponent } from './../internal-order/internal-order.component';
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
@@ -52,7 +53,10 @@ export class InternalInfoComponent implements OnInit {
   isShowTolerancePercentage: boolean = true;
   validTillMinDate: string = this.datePipe.transform(new Date(), "yyyy-MM-dd");
   InternalDescription: string = "";
-  isEditEnabled = true
+  isEditEnabled = true;
+  selectedFile: File = null;
+  fileUrl: string;
+
   constructor(
     private router: Router,
     private dataService: DataService,
@@ -63,6 +67,7 @@ export class InternalInfoComponent implements OnInit {
     private datePipe: DatePipe,
     private commonDataService: CommonService,
     private autoCodeService: AutoCodeService,
+    private commonservice: CommonService,
     private route: ActivatedRoute
   ) { }
 
@@ -730,19 +735,77 @@ export class InternalInfoComponent implements OnInit {
     this.isEditEnabled  = true
   }
 
+  // fileSelected(event) {
+  //   if (event.target.files.length > 0 && this.FileList.length < 5) {
+  //     this.FileList.push({
+  //       Id: 0,
+  //       InternalOrderId: this.internalId ? this.internalId : this.internalCreateForm.value.InternalOrderId,
+  //       FileName: event.target.files[0].name,
+  //       FilePath: event.target.files[0].name
+  //     })
+  //   }
+  //   else {
+  //     Swal.fire('A maximum of five files must be allowed.');
+  //   }
+  // }
+
   fileSelected(event) {
-    if (event.target.files.length > 0 && this.FileList.length < 5) {
+    if (event) {
+      this.selectedFile = event.target.files[0];
+      const filedata = new FormData();
+      filedata.append('file', this.selectedFile, this.selectedFile.name)
+
+      this.commonservice.AttachUpload(this.selectedFile).subscribe(data => {
+        if (data) {
+
       this.FileList.push({
         Id: 0,
         InternalOrderId: this.internalId ? this.internalId : this.internalCreateForm.value.InternalOrderId,
         FileName: event.target.files[0].name,
-        FilePath: event.target.files[0].name
-      })
+        FilePath: event.target.files[0].name,
+        UniqueFilePath: data.FileNamev,
+
+      });
     }
+  },
+    (error: HttpErrorResponse) => {
+      Swal.fire(error.message, 'error')
+    });
+}
     else {
-      Swal.fire('A maximum of five files must be allowed.');
-    }
+      Swal.fire('A maximum of five files must be allowed.')  
+    }   
   }
+
+   /*File Download*/
+download = (fileUrl) => {
+  this.fileUrl = "UploadFolder\\Attachments\\" + fileUrl;
+  this.commonDataService.download(fileUrl).subscribe((event) => {
+
+      if (event.type === HttpEventType.UploadProgress){ 
+        
+      }
+          // this.progress1 = Math.round((100 * event.loaded) / event.total);
+
+      else if (event.type === HttpEventType.Response) {
+          // this.message = 'Download success.';
+          this.downloadFile(event);
+      }
+  });
+}
+
+private downloadFile = (data: HttpResponse<Blob>) => {
+  const downloadedFile = new Blob([data.body], { type: data.body.type });
+  const a = document.createElement('a');
+  a.setAttribute('style', 'display:none;');
+  document.body.appendChild(a);
+  a.download = this.fileUrl;
+  a.href = URL.createObjectURL(downloadedFile);
+  a.target = '_blank';
+  a.click();
+  document.body.removeChild(a);
+}
+ 
 
   OnClickDeleteValueFile(index: number) {
     this.FileList.splice(index, 1);
