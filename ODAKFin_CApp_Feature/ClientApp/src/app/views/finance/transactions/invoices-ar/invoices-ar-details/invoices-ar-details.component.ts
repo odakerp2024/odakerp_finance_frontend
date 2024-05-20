@@ -1,4 +1,5 @@
 import { DatePipe } from '@angular/common';
+import { HttpErrorResponse, HttpEventType, HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Route, Router } from '@angular/router';
@@ -48,7 +49,8 @@ export class InvoicesArDetailsComponent implements OnInit {
   isUpdateMode1: boolean = false;
   newReceiptList : any =[];
   newInvoiceList : any = [];
-
+  selectedFile: File = null;
+  fileUrl: string;
   
   payload: any;
   isUpdate: boolean = false;
@@ -59,6 +61,7 @@ export class InvoicesArDetailsComponent implements OnInit {
     private fb: FormBuilder,
     public commonDataService: CommonService,
     private datePipe: DatePipe,
+    private commonservice: CommonService,
     private route: ActivatedRoute,
     private autoCodeService: AutoCodeService,
     private globals: Globals,
@@ -439,19 +442,78 @@ export class InvoicesArDetailsComponent implements OnInit {
     }
   }
 
+  // fileSelected(event) {
+  //   if (event.target.files.length > 0 && this.FileList.length < 5) {
+  //     this.FileList.push({
+  //       OutStandingDocumentId: 0,
+  //       OutStandingInvoiceId: this.invoiceARId,
+  //       FileName: event.target.files[0].name,
+  //       FilePath: event.target.files[0].name
+  //     })
+  //   }
+  //   else {
+  //     Swal.fire('A maximum of five files must be allowed.');
+  //   }
+  // }
+
   fileSelected(event) {
-    if (event.target.files.length > 0 && this.FileList.length < 5) {
+    if (event) {
+      this.selectedFile = event.target.files[0];
+      const filedata = new FormData();
+      filedata.append('file', this.selectedFile, this.selectedFile.name)
+
+      this.commonservice.AttachUpload(this.selectedFile).subscribe(data => {
+        if (data) {
+
       this.FileList.push({
         OutStandingDocumentId: 0,
         OutStandingInvoiceId: this.invoiceARId,
         FileName: event.target.files[0].name,
-        FilePath: event.target.files[0].name
-      })
+        FilePath: event.target.files[0].name,
+        UniqueFilePath: data.FileNamev,
+
+      });
     }
+  },
+    (error: HttpErrorResponse) => {
+      Swal.fire(error.message, 'error')
+    });
+}
     else {
-      Swal.fire('A maximum of five files must be allowed.');
-    }
+      Swal.fire('A maximum of five files must be allowed.')  
+    }   
   }
+
+   /*File Download*/
+download = (fileUrl) => {
+  this.fileUrl = "UploadFolder\\Attachments\\" + fileUrl;
+  this.commonDataService.download(fileUrl).subscribe((event) => {
+
+      if (event.type === HttpEventType.UploadProgress){ 
+        
+      }
+          // this.progress1 = Math.round((100 * event.loaded) / event.total);
+
+      else if (event.type === HttpEventType.Response) {
+          // this.message = 'Download success.';
+          this.downloadFile(event);
+      }
+  });
+}
+
+private downloadFile = (data: HttpResponse<Blob>) => {
+  const downloadedFile = new Blob([data.body], { type: data.body.type });
+  const a = document.createElement('a');
+  a.setAttribute('style', 'display:none;');
+  document.body.appendChild(a);
+  a.download = this.fileUrl;
+  a.href = URL.createObjectURL(downloadedFile);
+  a.target = '_blank';
+  a.click();
+  document.body.removeChild(a);
+}
+ 
+
 
   OnClickDeleteValueFile(index: number) {
     this.FileList.splice(index, 1);

@@ -336,7 +336,10 @@
                             <tbody class="text-center" *ngIf="FileList.length > 0">
                                 <tr *ngFor="let data of FileList;let i = index">
                                     <td>{{i + 1}}</td>
-                                    <td id="documentFileName">{{data.FileName}}</td>
+                                    <!-- <td id="documentFileName">{{data.FileName}}</td> -->
+                                    <td  class="text-center" id="documentFileName"><button [disabled]="isUpdateMode"
+                                        class="btn btn-success bmd-btn-fab enqbtn"
+                                        (click)="download(data.UniqueFilePath)">{{data.FilePath}}</button></td>
                                     <td class="text-center">
                                         <button [disabled]="isUpdateMode" type="submit"
                                             class="btn btn-danger bmd-btn-fab" (click)="deleteValueAttach(i)"><i
