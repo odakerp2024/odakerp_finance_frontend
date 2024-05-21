@@ -14,6 +14,7 @@ import { DataService } from "src/app/services/data.service";
 import { resolve } from "dns";
 import { rejects } from "assert";
 import { INFERRED_TYPE } from "@angular/compiler/src/output/output_ast";
+import { HttpErrorResponse, HttpEventType, HttpResponse } from "@angular/common/http";
 
 @Component({
   selector: "app-contra-info",
@@ -64,6 +65,8 @@ export class ContraInfoComponent implements OnInit {
   receivedCurrencyName = '';
   showExchangeRate: Boolean = false;
   ContraVoucherId_copy: any;
+  selectedFile: File = null;
+  fileUrl: string;
   entityDateFormat =
     this.commonDataService.getLocalStorageEntityConfigurable("DateFormat");
   constructor(
@@ -72,6 +75,8 @@ export class ContraInfoComponent implements OnInit {
     private fb: FormBuilder,
     private commonDataService: CommonService,
     private datePipe: DatePipe,
+    private commonservice: CommonService,
+
     private autoGenerationCodeService: AutoGenerationCodeService,
     private autoCodeService: AutoCodeService,
     private route: ActivatedRoute,
@@ -304,10 +309,14 @@ export class ContraInfoComponent implements OnInit {
       this.uploadFilePath = event.target.files[0].name;
       this.uploadFileName = event.target.files[0].name;
     }
-    this.uploadDocument();
+    this.uploadDocument(event);
   }
 
-  uploadDocument() {
+  uploadDocument(event) {
+    if (event) {
+      this.selectedFile = event.target.files[0];
+      const filedata = new FormData();
+      filedata.append('file', this.selectedFile, this.selectedFile.name)
     let validation = "";
     if (
       this.documentTableList.length >= 5 &&
@@ -319,15 +328,56 @@ export class ContraInfoComponent implements OnInit {
       Swal.fire(validation);
       return true;
     }
+    this.commonservice.AttachUpload(this.selectedFile).subscribe(data => {
+      if (data) {
     const payload = {
       BankAttachmentsID: 0,
       ContraVoucherId: 0,
       DocumentName: this.uploadFilePath,
       FilePath: this.uploadFileName,
+      UniqueFilePath: data.FileNamev,
     };
     this.documentTableList.push(payload);
     this.documentUploadReset();
   }
+  (error: HttpErrorResponse) => {
+    Swal.fire(error.message, 'error')
+    };
+  });
+    
+}
+  
+}
+
+     /*File Download*/
+download = (fileUrl) => {
+  this.fileUrl = "UploadFolder\\Attachments\\" + fileUrl;
+  this.commonDataService.download(fileUrl).subscribe((event) => {
+
+      if (event.type === HttpEventType.UploadProgress){ 
+        
+      }
+          // this.progress1 = Math.round((100 * event.loaded) / event.total);
+
+      else if (event.type === HttpEventType.Response) {
+          // this.message = 'Download success.';
+          this.downloadFile(event);
+      }
+  });
+}
+
+private downloadFile = (data: HttpResponse<Blob>) => {
+  const downloadedFile = new Blob([data.body], { type: data.body.type });
+  const a = document.createElement('a');
+  a.setAttribute('style', 'display:none;');
+  document.body.appendChild(a);
+  a.download = this.fileUrl;
+  a.href = URL.createObjectURL(downloadedFile);
+  a.target = '_blank';
+  a.click();
+  document.body.removeChild(a);
+}
+ 
 
   documentUploadReset() {
     this.uploadFilePath = "";
