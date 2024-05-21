@@ -1,4 +1,5 @@
 import { DatePipe } from '@angular/common';
+import { HttpErrorResponse, HttpEventType, HttpResponse } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -92,7 +93,8 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
   IsExchangeRateEnable: boolean = false;
   IsExGainEnable: boolean = false;
   IsExLossEnable: boolean = false;
-
+  selectedFile: File = null;
+  fileUrl: string;
 
   isCopied = false;
   currentDate = this.datePipe.transform(new Date(), "yyyy-MM-dd");
@@ -107,6 +109,8 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
     public commonDataService: CommonService,
     private ms: BankService,
     private router: Router,
+    
+  private commonservice: CommonService,
     private autoCodeService: AutoCodeService,
     private route: ActivatedRoute,
   ) { }
@@ -202,7 +206,6 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
       CustomerBranch: [0],
       PaymentbythirdParty: [0],
       AmountReceived: [0],
-
       AmountTypeId: [0],
       AmountTypeName: [''],
       TDSDeducted: [null],
@@ -318,13 +321,12 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
           ReceiptRemarks: info.ReceiptRemarks,
           RatePairId: info.RatePairId,
           Rate: info.Rate,
-
+          IsDelete: 0,
           TotalAmount: info.TotalAmount,
           IsFinal: 0,
           LocalAmount: info.LocalAmount,
           StatusId: 1, // set as draft
           SDMode: info.SDMode,
-          IsDelete: info.IsDelete,
           CurrentExRate: info.CurrentExRate ? info.CurrentExRate : 0
         });
         // this.receiptForm.controls['AmountTypeId'].setValue(info.AmountTypeId)
@@ -640,24 +642,84 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
     }
   }
 
-  fileSelected(event) {
+  // fileSelected(event) {
 
-    if (this.isFinalMode || !this.isEditMode) {
-      if (!this.isEditMode) Swal.fire('Clik edit to Upload')
-      return;
-    }
-    if (event.target.files.length > 0 && this.voucherFileList.length < 5) {
+  //   if (this.isFinalMode || !this.isEditMode) {
+  //     if (!this.isEditMode) Swal.fire('Clik edit to Upload')
+  //     return;
+  //   }
+  //   if (event.target.files.length > 0 && this.voucherFileList.length < 5) {
+  //     this.voucherFileList.push({
+  //       Id: 0,
+  //       ReceiptVoucherId: 0,
+  //       FileName: event.target.files[0].name,
+  //       FilePath: event.target.files[0].name
+  //     })
+  //   }
+  //   else {
+  //     Swal.fire('A maximum of five files must be allowed.');
+  //   }
+  // }
+
+  fileSelected(event) {
+    debugger
+    if (event) {
+      this.selectedFile = event.target.files[0];
+      const filedata = new FormData();
+      filedata.append('file', this.selectedFile, this.selectedFile.name)
+
+      this.commonservice.AttachUpload(this.selectedFile).subscribe(data => {
+        if (data) {
+
       this.voucherFileList.push({
         Id: 0,
         ReceiptVoucherId: 0,
         FileName: event.target.files[0].name,
-        FilePath: event.target.files[0].name
-      })
+        FilePath: event.target.files[0].name,
+        UniqueFilePath: data.FileNamev,
+
+      });
     }
+  },
+    (error: HttpErrorResponse) => {
+      Swal.fire(error.message, 'error')
+    });
+}
     else {
-      Swal.fire('A maximum of five files must be allowed.');
-    }
+      Swal.fire('A maximum of five files must be allowed.')  
+    }   
   }
+
+   /*File Download*/
+download = (fileUrl) => {
+  debugger
+  this.fileUrl = "UploadFolder\\Attachments\\" + fileUrl;
+  this.commonDataService.download(fileUrl).subscribe((event) => {
+
+      if (event.type === HttpEventType.UploadProgress){ 
+        
+      }
+          // this.progress1 = Math.round((100 * event.loaded) / event.total);
+
+      else if (event.type === HttpEventType.Response) {
+          // this.message = 'Download success.';
+          this.downloadFile(event);
+      }
+  });
+}
+
+private downloadFile = (data: HttpResponse<Blob>) => {
+  debugger
+  const downloadedFile = new Blob([data.body], { type: data.body.type });
+  const a = document.createElement('a');
+  a.setAttribute('style', 'display:none;');
+  document.body.appendChild(a);
+  a.download = this.fileUrl;
+  a.href = URL.createObjectURL(downloadedFile);
+  a.target = '_blank';
+  a.click();
+  document.body.removeChild(a);
+}
 
   OnClickDeleteValueFile(index: number) {
     this.voucherFileList.splice(index, 1);
