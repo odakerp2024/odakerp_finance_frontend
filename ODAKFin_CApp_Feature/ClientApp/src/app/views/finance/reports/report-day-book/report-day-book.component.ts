@@ -11,35 +11,30 @@ import { ReportDashboardService } from 'src/app/services/financeModule/report-da
 import Swal from 'sweetalert2';
 import { Workbook } from 'exceljs';
 import { saveAs } from 'file-saver';
-import { GridSort } from 'src/app/model/common';
+
 
 const today = new Date();
 const month = today.getMonth();
 const year = today.getFullYear();
 
 @Component({
-  selector: 'app-report-payment-voucher',
-  templateUrl: './report-payment-voucher.component.html',
-  styleUrls: ['./report-payment-voucher.component.css']
+  selector: 'app-report-day-book',
+  templateUrl: './report-day-book.component.html',
+  styleUrls: ['./report-day-book.component.css']
 })
-
-export class ReportPaymentVoucherComponent implements OnInit {
+export class ReportDayBookComponent implements OnInit {
 
   reportFilter: FormGroup;
   divisionList: any = [];
   officeList: any = [];
   reportList: any[];
   reportForExcelList: any[];
-  IsBranchEnable: boolean = false;
-  vendorList: any[];
-  pager: any = {};// pager object  
-  pagedItems: any[];// paged items
-  paymentModeList: any[];
-  vendorBranch: any;
-  pagesort: any = new GridSort().sort;
-  TypeList = [
-    { TypeId: 1, TypeName: 'Bill' },
-    { TypeId: 2, TypeName: 'On Account' }
+  pager: any = {};
+  pagedItems: any[];
+  categoryList: any[];
+  VoucherTypeList = [
+    { TypeId: 2, TypeName: 'CREDIT' },
+    { TypeId: 1, TypeName: 'DEBIT' }
   ];
   PeroidList = [
     { peroidId: 'today', peroidName: 'CURRENT DAY' },
@@ -52,7 +47,6 @@ export class ReportPaymentVoucherComponent implements OnInit {
     { peroidId: 'previousmonth', peroidName: 'PREVIOUS MONTH' },
     { peroidId: 'previousyear', peroidName: 'PREVIOUS FINANCIAL YEAR' }
   ];
-  bankList: any[];
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
   entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   currentDate = new Date();
@@ -82,9 +76,6 @@ export class ReportPaymentVoucherComponent implements OnInit {
     this.createReportForm();
     this.onOptionChange('month');
     this.getDivisionList();
-    this.getVoucherList();
-    this.getVendorList();
-    this.getBankList();
     this.reportFilter.controls.Peroid.setValue('month');
   }
 
@@ -93,63 +84,63 @@ export class ReportPaymentVoucherComponent implements OnInit {
     switch (selectedOption) {
 
       case 'today':
-        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
-        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
         break;
 
       case 'week':
-        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay()), "yyyy-MM-dd"));
-        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() + (6 - this.currentDate.getDay())), "yyyy-MM-dd"));
+        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay()), "yyyy-MM-dd"));
+        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() + (6 - this.currentDate.getDay())), "yyyy-MM-dd"));
         break;
 
       case 'month':
         const startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd")
         const endDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd")
-        this.reportFilter.controls.FromDate.setValue(startDate);
-        this.reportFilter.controls.ToDate.setValue(endDate);
+        this.reportFilter.controls.StartDate.setValue(startDate);
+        this.reportFilter.controls.EndDate.setValue(endDate);
         break;
 
       case 'year':
         const currentYear = this.currentDate.getFullYear();
         const startYear = this.currentDate.getMonth() >= 3 ? currentYear : currentYear - 1;
         const endYear = startYear + 1;
-        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(new Date(startYear, 3, 1), "yyyy-MM-dd"));
-        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(new Date(endYear, 2, 31), "yyyy-MM-dd"));
+        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(new Date(startYear, 3, 1), "yyyy-MM-dd"));
+        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(new Date(endYear, 2, 31), "yyyy-MM-dd"));
         break;
 
       case 'previoustoday':
         const previousDay = new Date(this.currentDate);
         previousDay.setDate(previousDay.getDate() - 1);
-        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(previousDay, "yyyy-MM-dd"));
-        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(previousDay, "yyyy-MM-dd"));
+        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(previousDay, "yyyy-MM-dd"));
+        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(previousDay, "yyyy-MM-dd"));
         break;
 
       case 'previousweek':
         const previousWeekStartDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay() - 7);
         const previousWeekEndDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay() - 1);
-        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(previousWeekStartDate, "yyyy-MM-dd"));
-        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(previousWeekEndDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(previousWeekStartDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(previousWeekEndDate, "yyyy-MM-dd"));
         break;
 
       case 'previousmonth':
         const previousMonthStartDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() - 1, 1);
         const previousMonthEndDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 0);
-        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(previousMonthStartDate, "yyyy-MM-dd"));
-        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(previousMonthEndDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(previousMonthStartDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(previousMonthEndDate, "yyyy-MM-dd"));
         break;
 
       case 'previousyear':
         const previousYear = this.currentDate.getFullYear() - 1;
         const previousYearStartDate = new Date(previousYear, 3, 1);
         const previousYearEndDate = new Date(previousYear + 1, 2, 31);
-        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(previousYearStartDate, "yyyy-MM-dd"));
-        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(previousYearEndDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(previousYearStartDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(previousYearEndDate, "yyyy-MM-dd"));
         break;
 
       case 'custom':
         this.selectedOption = 'custom';
-        this.startDate = this.reportFilter.controls.FromDate.value;
-        this.endDate = this.reportFilter.controls.ToDate.value;
+        this.startDate = this.reportFilter.controls.StartDate.value;
+        this.endDate = this.reportFilter.controls.EndDate.value;
         break;
 
       default:
@@ -158,24 +149,20 @@ export class ReportPaymentVoucherComponent implements OnInit {
     }
   }
 
+
   async createReportForm() {
     this.reportFilter = this.fb.group({
-      FromDate: [this.startDate],
-      ToDate: [this.endDate],
-      DivisionId: [0],
-      OfficeId: [0],
-      VendorId: [0],
-      VendorBranch: [0],
-      Amount: [''],
-      Type: [0],
-      PaymentMode: [0],
-      PaidFrom: [0],
+      Division: [0],
+      Office: [0],
+      StartDate: [this.startDate],
+      EndDate: [this.endDate],
+      TransactionType: [0],
+      docCategory: [0],
       Peroid: [''],
     });
     this.onOptionChange('month');
-    await this.getPaymentVoucherReportList();
+    await this.getReceiptReportList();
   }
-
 
   getDivisionList() {
     var service = `${this.globals.APIURL}/Division/GetOrganizationDivisionList`; var payload: any = {}
@@ -191,102 +178,21 @@ export class ReportPaymentVoucherComponent implements OnInit {
   }
 
   getOfficeList(id: number) {
+    this.reportFilter.controls.Office.setValue(0);
     this.commonDataService.getOfficeByDivisionId({ DivisionId: id }).subscribe(result => {
       this.officeList = [];
       if (result['data'].Table.length > 0) {
         this.officeList = result['data'].Table;
       }
-    })
-  }
-
-  getVendorList() {
-    return new Promise((resolve, reject) => {
-      this.reportService.getVendorList().subscribe((result: any) => {
-        if (result.message == "Success") {
-          if (result["data"].Table.length) {
-            const uniqueVendor = this.removeDuplicatesVendorId(result["data"].Table, 'VendorID');
-            this.vendorList = uniqueVendor;
-            resolve(true);
-            // console.log('vendorList', this.vendorList);
-          }
-        }
-      }, (error) => {
-        // Swal.fire(error.message, 'error');
-        reject();
-      });
-    })
-  }
-
-  getVendorBranch(vendorId) {
-    const vendorDetails = this.vendorList.find((vendor) => vendor.VendorID == vendorId);
-    this.reportFilter.controls['VendorBranch'].setValue('');
-    if (vendorDetails) {
-      this.vendorBranch = this.vendorList.filter(vendor => { return vendor.VendorName === vendorDetails.VendorName });
-      if (this.vendorBranch.length) {
-        const selectedBranch = this.vendorBranch[0].BranchCode;
-        this.reportFilter.value.vendorBranch = this.vendorBranch[0].VendorBranchID
-        this.getVendorTan(selectedBranch);
-        this.reportFilter.controls['VendorBranch'].setValue(this.vendorBranch[0].VendorBranchID);
+      if (this.officeList.length == 1) {
+        const ID =
+          this.reportFilter.controls.Office.setValue(this.officeList[0].ID);
       }
-      // this.branches = this.vendorBranch.length
-      // this.newOne = this.vendorBranch[0].BranchCode;
-    }
-  }
-
-  getVendorTan(vendorBranch) {
-    const vendorTanDetails = this.vendorList.filter(vendor => { return vendor.BranchCode == vendorBranch }); // ! need to vendorTanDetails is present
-    if (vendorTanDetails.length == 0) {
-      return;
-    }
-    const payload = {
-      VendorID: vendorTanDetails[0].VendorID,
-      VendorBranchID: vendorTanDetails[0].VendorBranchID
-    }
-  }
-
-  getBankList() {
-    let payload = {
-      "OfficeId": this.reportFilter.value.OfficeId,
-      "DivisionId": this.reportFilter.value.DivisionId
-    }
-    this.commonDataService.getBankByOfficeId(payload).subscribe((result: any) => {
-      if (result.message == "Success") {
-        this.bankList = result['data'].Table;
-      //  console.log(this.bankList, ' banklist')
-      }
-    })
-
-  }
-
-
-  removeDuplicatesVendorId(arr, key) {
-    const uniqueMap = new Map();
-    arr.forEach((item) => {
-      const value = item[key];
-      if (!uniqueMap.has(value)) {
-        uniqueMap.set(value, item);
-      }
-    });
-    return Array.from(uniqueMap.values());
-  }
-
-  getVoucherList() {
-    return new Promise((resolve, rejects) => {
-
-
-      let service = `${this.globals.APIURL}/ReceiptVoucher/GetReceiptVoucherDropDownList`
-      this.dataService.post(service, { CustomerId: 0 }).subscribe((result: any) => {
-        this.paymentModeList = result.data.Table4;
-
-        resolve(true)
-      }, error => {
-        console.error(error);
-        resolve(true)
-      });
     })
   }
 
   getDivisionBasedOffice(officeId: number, divisoinId: any) {
+    this.reportFilter.controls.DepositTo.setValue(0);
     if (officeId && divisoinId) {
       let service = `${this.globals.APIURL}/Common/GetBankByOfficeId`;
       let payload = {
@@ -295,7 +201,6 @@ export class ReportPaymentVoucherComponent implements OnInit {
       }
       this.dataService.post(service, payload).subscribe((result: any) => {
         if (result.message = "Success") {
-          this.bankList = result.data.Table;
         }
       }, error => {
         console.error(error);
@@ -303,13 +208,11 @@ export class ReportPaymentVoucherComponent implements OnInit {
     }
   }
 
-  getPaymentVoucherReportList() {
-    this.startDate = this.reportFilter.controls.FromDate.value;
-    this.endDate = this.reportFilter.controls.ToDate.value;
-
-    this.reportService.getPaymentVoucherReportList(this.reportFilter.value).subscribe(result => {
+  getReceiptReportList() {
+    this.startDate = this.reportFilter.controls.StartDate.value;
+    this.endDate = this.reportFilter.controls.EndDate.value;
+    this.reportService.GetReceiptVoucherReportList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
-
       if (result['data'].Table.length > 0) {
         this.reportList = result['data'].Table;
         this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
@@ -324,34 +227,24 @@ export class ReportPaymentVoucherComponent implements OnInit {
 
   setPage(page: number) {
     if (page < 1 || page > this.pager.totalPages) return;
-
     this.pager = this.ps.getPager(this.reportList.length, page);
     this.pagedItems = this.reportList.slice(this.pager.startIndex, this.pager.endIndex + 1);
-  }
-
-  sort(property) {
-    this.pagesort(property, this.pagedItems);
   }
 
   clear() {
     this.startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd");
     this.endDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd");
     this.reportFilter.reset({
-      FromDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
-      ToDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd"),
-      DivisionId: 0,
-      OfficeId: 0,
-      VendorId: 0,
-      VendorBranch: 0,
-      Amount: '',
-      Type: 0,
-      PaymentMode: 0,
-      PaidFrom: 0,
+      Division: 0,
+      Office: 0,
+      StartDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
+      EndDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd"),
+      TransactionType: 0,
+      docCategory: 0,
     });
-    this.bankList = [];
     this.officeList = [];
     this.reportFilter.controls.Peroid.setValue('month');
-    this.getPaymentVoucherReportList();
+    this.getReceiptReportList();
   }
 
 
@@ -360,7 +253,6 @@ export class ReportPaymentVoucherComponent implements OnInit {
       Swal.fire('No record found');
       return;
     }
-
     // Create a new workbook and worksheet
     const workbook = new Workbook();
     const worksheet = workbook.addWorksheet('Report');
@@ -384,7 +276,7 @@ export class ReportPaymentVoucherComponent implements OnInit {
     worksheet.mergeCells(`F${titleRow.number}:G${titleRow.number}`);
 
     // Add subtitle row
-    const subtitleRow = worksheet.addRow(['', '', '', '', '', 'Payment Voucher', '']);
+    const subtitleRow = worksheet.addRow(['', '', '', '', '', 'DAYBOOK', '']);
     subtitleRow.getCell(6).font = { size: 14 };
     subtitleRow.getCell(6).alignment = { horizontal: 'center' };
 
@@ -436,17 +328,10 @@ export class ReportPaymentVoucherComponent implements OnInit {
       const date = data.Date
       const formattedDate = date.split('T')[0];
       data.Date = formattedDate;
-      const defalutvalue=0;
+
       // Merge the symbol and amount into a single string with fixed decimal places
       const mergedICYAmount = `${data.Symbol} ${data['Amount (ICY)'] !== null ? parseFloat(data['Amount (ICY)']).toFixed(2) : '0.00'}`;
       const mergedCCYAmount = `${data.Symbol} ${data['Amount (CCY)'] !== null ? parseFloat(data['Amount (CCY)']).toFixed(2) : '0.00'}`;
-      const TDSamount = ` ${data['TDS amount'] !== null ? parseFloat(data['TDS amount']).toFixed(this.entityFraction) :  (defalutvalue).toFixed(this.entityFraction)}`;
-      const ExRateGain = ` ${data['Ex rate Gain'] !== null ? parseFloat(data['Ex rate Gain']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const ExRateLoss = ` ${data['Ex rate Loss'] !== null ? parseFloat(data['Ex rate Loss']).toFixed(this.entityFraction) :  (defalutvalue).toFixed(this.entityFraction)}`;
-      const BankCharges = ` ${data['Bank charges'] !== null ? parseFloat(data['Bank charges']).toFixed(this.entityFraction) :  (defalutvalue).toFixed(this.entityFraction)}`;
-      const Payment = ` ${data['Payments'] !== null ? parseFloat(data['Payments']).toFixed(this.entityFraction) :  (defalutvalue).toFixed(this.entityFraction)}`;
-
-
 
       // Filter out properties you don't want to include in the Excel sheet
       const filteredData = Object.keys(data)
@@ -459,18 +344,13 @@ export class ReportPaymentVoucherComponent implements OnInit {
       // Update the 'Amount (ICY)' property in the filtered data object with the merged amount
       filteredData['Amount (ICY)'] = mergedICYAmount;
       filteredData['Amount (CCY)'] = mergedCCYAmount;
-      filteredData['TDS amount']   =TDSamount;
-      filteredData['Ex rate Gain'] = ExRateGain;
-      filteredData['Ex rate Loss'] = ExRateLoss;
-      filteredData['Bank charges']  =BankCharges;
-      filteredData['Payments']  =Payment;
 
 
       // Add the filtered data to the worksheet
       const row = worksheet.addRow(Object.values(filteredData));
 
       // Set text color for customer, receipt, and amount columns
-      const columnsToColor = ['Vendor', 'Payment', 'Amount (CCY)', 'Amount (ICY)'];
+      const columnsToColor = ['Customer', 'Receipt', 'Amount (CCY)', 'Amount (ICY)'];
       columnsToColor.forEach(columnName => {
         const columnIndex = Object.keys(filteredData).indexOf(columnName);
         if (columnIndex !== -1) {
@@ -516,7 +396,7 @@ export class ReportPaymentVoucherComponent implements OnInit {
     // Write to Excel and save
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    saveAs(blob, 'Report-PaymentVoucher.xlsx');
+    saveAs(blob, 'Report-DayBook.xlsx');
   }
 
 
@@ -550,7 +430,7 @@ export class ReportPaymentVoucherComponent implements OnInit {
     worksheet.mergeCells(`F${titleRow.number}:G${titleRow.number}`);
 
     // Add subtitle row
-    const subtitleRow = worksheet.addRow(['', '', '', '', '', 'Payment Voucher', '']);
+    const subtitleRow = worksheet.addRow(['', '', '', '', '', 'DAY BOOK', '']);
     subtitleRow.getCell(6).font = { size: 14 };
     subtitleRow.getCell(6).alignment = { horizontal: 'center' };
 
@@ -603,16 +483,9 @@ export class ReportPaymentVoucherComponent implements OnInit {
       const formattedDate = date.split('T')[0];
       data.Date = formattedDate;
 
-      const defalutvalue=0;
       // Merge the symbol and amount into a single string with fixed decimal places
       const mergedICYAmount = `${data.Symbol} ${data['Amount (ICY)'] !== null ? parseFloat(data['Amount (ICY)']).toFixed(2) : '0.00'}`;
       const mergedCCYAmount = `${data.Symbol} ${data['Amount (CCY)'] !== null ? parseFloat(data['Amount (CCY)']).toFixed(2) : '0.00'}`;
-      const TDSamount = ` ${data['TDS amount'] !== null ? parseFloat(data['TDS amount']).toFixed(this.entityFraction) :  (defalutvalue).toFixed(this.entityFraction)}`;
-      const ExRateGain = ` ${data['Ex rate Gain'] !== null ? parseFloat(data['Ex rate Gain']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const ExRateLoss = ` ${data['Ex rate Loss'] !== null ? parseFloat(data['Ex rate Loss']).toFixed(this.entityFraction) :  (defalutvalue).toFixed(this.entityFraction)}`;
-      const BankCharges = ` ${data['Bank charges'] !== null ? parseFloat(data['Bank charges']).toFixed(this.entityFraction) :  (defalutvalue).toFixed(this.entityFraction)}`;
-      const Payment = ` ${data['Payments'] !== null ? parseFloat(data['Payments']).toFixed(this.entityFraction) :  (defalutvalue).toFixed(this.entityFraction)}`;
-      
 
       // Filter out properties you don't want to include in the Excel sheet
       const filteredData = Object.keys(data)
@@ -625,18 +498,13 @@ export class ReportPaymentVoucherComponent implements OnInit {
       // Update the 'Amount (ICY)' property in the filtered data object with the merged amount
       filteredData['Amount (ICY)'] = mergedICYAmount;
       filteredData['Amount (CCY)'] = mergedCCYAmount;
-      filteredData['TDS amount']   =TDSamount;
-      filteredData['Ex rate Gain'] = ExRateGain;
-      filteredData['Ex rate Loss'] = ExRateLoss;
-      filteredData['Bank charges']  =BankCharges;
-      filteredData['Payments']  =Payment;
 
 
       // Add the filtered data to the worksheet
       const row = worksheet.addRow(Object.values(filteredData));
 
       // Set text color for customer, receipt, and amount columns
-      const columnsToColor = ['Vendor', 'Payment', 'Amount (CCY)', 'Amount (ICY)'];
+      const columnsToColor = ['Customer', 'Receipt', 'Amount (CCY)', 'Amount (ICY)'];
       columnsToColor.forEach(columnName => {
         const columnIndex = Object.keys(filteredData).indexOf(columnName);
         if (columnIndex !== -1) {
@@ -682,7 +550,6 @@ export class ReportPaymentVoucherComponent implements OnInit {
     // Write to Excel and save
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    saveAs(blob, 'Report-PaymentVoucher.xlsx');
+    saveAs(blob, 'Report-DayBook.xlsx');
   }
-  
 }

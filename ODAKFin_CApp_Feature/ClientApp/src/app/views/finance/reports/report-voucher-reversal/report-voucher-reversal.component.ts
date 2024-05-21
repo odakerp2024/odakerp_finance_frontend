@@ -11,6 +11,7 @@ import { ReportDashboardService } from 'src/app/services/financeModule/report-da
 import Swal from 'sweetalert2';
 import { Workbook } from 'exceljs';
 import { saveAs } from 'file-saver';
+import { GridSort } from 'src/app/model/common';
 
 
 const today = new Date();
@@ -34,8 +35,7 @@ export class ReportVoucherReversalComponent implements OnInit  {
   customerList: any[];
   pager: any = {};// pager object  
   pagedItems: any[];// paged items
-  // paymentModeList: any[];
-  // bankList: any[];
+  pagesort: any = new GridSort().sort;
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat')
   PeroidList = [
     { peroidId: 'today', peroidName: 'CURRENT DAY' },
@@ -88,20 +88,15 @@ export class ReportVoucherReversalComponent implements OnInit  {
       case 'month':
         const startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd")
         const endDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd")
-
         this.reportFilter.controls.FromDate.setValue(startDate);
         this.reportFilter.controls.ToDate.setValue(endDate);
 
 
         break;
         case 'year':
-          // this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), 3, 1), "yyyy-MM-dd"));
-          // this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), 2, 31), "yyyy-MM-dd"));
-          
           const currentYear = this.currentDate.getFullYear();
           const startYear = this.currentDate.getMonth() >= 3 ? currentYear : currentYear - 1;
           const endYear = startYear + 1;
-        
           this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(new Date(startYear, 3, 1), "yyyy-MM-dd"));
           this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(new Date(endYear, 2, 31), "yyyy-MM-dd"));
           
@@ -123,9 +118,7 @@ export class ReportVoucherReversalComponent implements OnInit  {
       DivisionId: [0],
       OfficeId: [0],
       VoucherType: [0], 
-      Peroid: [''],
-      // StartDate: [new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 2)],
-      // EndDate: [this.datePipe.transform(this.currentDate, "yyyy-MM-dd")],
+      Peroid: ['']
     });
     this.getVoucherReversalReportList();
   }
@@ -159,8 +152,6 @@ export class ReportVoucherReversalComponent implements OnInit  {
       let service = `${this.globals.APIURL}/ReceiptVoucher/GetReceiptVoucherDropDownList`
       this.dataService.post(service, { CustomerId: 0 }).subscribe((result: any) => {
         this.customerList = result.data.Table2;
-        // this.paymentModeList = result.data.Table4;
-       
         resolve(true)
       }, error => {
         console.error(error);
@@ -178,7 +169,7 @@ export class ReportVoucherReversalComponent implements OnInit  {
       }
       this.dataService.post(service, payload).subscribe((result: any) => {
         if (result.message = "Success") {
-          // this.bankList = result.data.Table;
+   
         }
       }, error => {
         console.error(error);
@@ -219,6 +210,10 @@ export class ReportVoucherReversalComponent implements OnInit  {
     this.pager = this.ps.getPager(this.reportList.length, page);
     this.pagedItems = this.reportList.slice(this.pager.startIndex, this.pager.endIndex + 1);
   }
+
+  sort(property) {
+    this.pagesort(property, this.pagedItems);
+  }
   
   clear() {
 
@@ -237,8 +232,7 @@ export class ReportVoucherReversalComponent implements OnInit  {
     this.getVoucherReversalReportList();
   }
 
-  // 
-  
+
   async downloadAsExcel() {
     if (this.reportForExcelList.length === 0) {
       Swal.fire('No record found');
@@ -249,21 +243,60 @@ export class ReportVoucherReversalComponent implements OnInit  {
     const workbook = new Workbook();
     const worksheet = workbook.addWorksheet('Report');
 
-    // Define header row and style it with yellow background, bold, and centered text
+    // Add title and subtitle rows
+    const titleRow = worksheet.addRow(['', '', '', '', '', 'NAVIO SHIPPING PRIVATE LIMITED', '']);
+    titleRow.getCell(6).font = { size: 15, bold: true };
+    titleRow.getCell(6).alignment = { horizontal: 'center' };
+
+    // Calculate the length of the title string
+    const titleLength = 'NAVIO SHIPPING PRIVATE LIMITED'.length;
+
+    // Iterate through each column to adjust the width based on the title length
+    worksheet.columns.forEach((column) => {
+      if (column.number === 6) {
+        column.width = titleLength + 2;
+      }
+    });
+
+    // Merge cells for the title
+    worksheet.mergeCells(`F${titleRow.number}:G${titleRow.number}`);
+
+    // Add subtitle row
+    const subtitleRow = worksheet.addRow(['', '', '', '', '', 'Voucher Reversal', '']);
+    subtitleRow.getCell(6).font = { size: 14 };
+    subtitleRow.getCell(6).alignment = { horizontal: 'center' };
+
+    // Merge cells for the subtitle
+    worksheet.mergeCells(`F${subtitleRow.number}:G${subtitleRow.number}`);
+
+    // Add "FROM Date" and "TO Date" to the worksheet
+    const dateRow = worksheet.addRow(['', '', '', '', '', `FROM ${this.startDate} - TO ${this.endDate}`]);
+    dateRow.eachCell((cell) => {
+      cell.alignment = { horizontal: 'center' };
+    });
+    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
+    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
+
+    // Merge cells for "FROM Date" and "TO Date"
+    worksheet.mergeCells(`F${dateRow.number}:G${dateRow.number}`);
+
+
     const header = Object.keys(this.reportForExcelList[0]);
     const headerRow = worksheet.addRow(header);
+
 
     headerRow.eachCell((cell) => {
       cell.fill = {
         type: 'pattern',
         pattern: 'solid',
-        fgColor: { argb: 'FFFFFF00' }, // Yellow background
+        fgColor: { argb: '8A9A5B' },
       };
       cell.font = {
-        bold: true, // Bold font
+        bold: true,
+        color: { argb: 'FFFFF7' }
       };
       cell.alignment = {
-        horizontal: 'center', // Center alignment
+        horizontal: 'center',
       };
       cell.border = {
         top: { style: 'thin' },
@@ -273,9 +306,30 @@ export class ReportVoucherReversalComponent implements OnInit  {
       };
     });
 
-    // Add data rows
+    // Add data rows with concatenated symbol and amount
     this.reportForExcelList.forEach((data) => {
-      worksheet.addRow(Object.values(data));
+
+      //To Remove Time from date field data
+      const date = data.Date
+      const formattedDate = date ? date.split('T')[0] : null;
+
+      data.Date = formattedDate;
+
+
+
+      // Add the filtered data to the worksheet
+      const row = worksheet.addRow(Object.values(data));
+
+      // Set text color for customer, receipt, and amount columns
+      const columnsToColor = ['Voucher Reversal'];
+      columnsToColor.forEach(columnName => {
+        const columnIndex = Object.keys(data).indexOf(columnName);
+        if (columnIndex !== -1) {
+          const cell = row.getCell(columnIndex + 1);
+          cell.font = { color: { argb: '8B0000' }, bold: true, }; // Red color
+        }
+      });
+
     });
 
     // Adjust column widths to fit content
@@ -287,19 +341,20 @@ export class ReportVoucherReversalComponent implements OnInit  {
           maxLength = cellLength;
         }
       });
-      column.width = maxLength + 2; // Add some padding
+      column.width = maxLength + 2;
     });
 
     // Style the footer row with yellow background, bold, and centered text
-    const footerRow = worksheet.addRow(['End of Report']); // Footer text
+    const footerRow = worksheet.addRow(['End of Report']);
     footerRow.eachCell((cell) => {
       cell.fill = {
         type: 'pattern',
         pattern: 'solid',
-        fgColor: { argb: 'FFFFFF00' }, // Yellow background
+        fgColor: { argb: '8A9A5B' },
       };
       cell.font = {
         bold: true,
+        color: { argb: 'FFFFF7' }
       };
       cell.alignment = {
         horizontal: 'center',
@@ -312,9 +367,10 @@ export class ReportVoucherReversalComponent implements OnInit  {
     // Write to Excel and save
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    saveAs(blob, 'Report-ReceiptVoucher.xlsx');
+    saveAs(blob, 'Report-VoucherReversal.xlsx');
   }
 
+ 
   async downloadAsCSV() {
     if (this.reportForExcelList.length === 0) {
       Swal.fire('No record found');
@@ -325,21 +381,60 @@ export class ReportVoucherReversalComponent implements OnInit  {
     const workbook = new Workbook();
     const worksheet = workbook.addWorksheet('Report');
 
-    // Define header row and style it with yellow background, bold, and centered text
+    // Add title and subtitle rows
+    const titleRow = worksheet.addRow(['', '', '', '', '', 'NAVIO SHIPPING PRIVATE LIMITED', '']);
+    titleRow.getCell(6).font = { size: 15, bold: true };
+    titleRow.getCell(6).alignment = { horizontal: 'center' };
+
+    // Calculate the length of the title string
+    const titleLength = 'NAVIO SHIPPING PRIVATE LIMITED'.length;
+
+    // Iterate through each column to adjust the width based on the title length
+    worksheet.columns.forEach((column) => {
+      if (column.number === 6) {
+        column.width = titleLength + 2;
+      }
+    });
+
+    // Merge cells for the title
+    worksheet.mergeCells(`F${titleRow.number}:G${titleRow.number}`);
+
+    // Add subtitle row
+    const subtitleRow = worksheet.addRow(['', '', '', '', '', 'Voucher Reversal', '']);
+    subtitleRow.getCell(6).font = { size: 14 };
+    subtitleRow.getCell(6).alignment = { horizontal: 'center' };
+
+    // Merge cells for the subtitle
+    worksheet.mergeCells(`F${subtitleRow.number}:G${subtitleRow.number}`);
+
+    // Add "FROM Date" and "TO Date" to the worksheet
+    const dateRow = worksheet.addRow(['', '', '', '', '', `FROM ${this.startDate} - TO ${this.endDate}`]);
+    dateRow.eachCell((cell) => {
+      cell.alignment = { horizontal: 'center' };
+    });
+    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
+    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
+
+    // Merge cells for "FROM Date" and "TO Date"
+    worksheet.mergeCells(`F${dateRow.number}:G${dateRow.number}`);
+
+
     const header = Object.keys(this.reportForExcelList[0]);
     const headerRow = worksheet.addRow(header);
+
 
     headerRow.eachCell((cell) => {
       cell.fill = {
         type: 'pattern',
         pattern: 'solid',
-        fgColor: { argb: 'FFFFFF00' }, // Yellow background
+        fgColor: { argb: '8A9A5B' },
       };
       cell.font = {
-        bold: true, // Bold font
+        bold: true,
+        color: { argb: 'FFFFF7' }
       };
       cell.alignment = {
-        horizontal: 'center', // Center alignment
+        horizontal: 'center',
       };
       cell.border = {
         top: { style: 'thin' },
@@ -349,9 +444,30 @@ export class ReportVoucherReversalComponent implements OnInit  {
       };
     });
 
-    // Add data rows
+    // Add data rows with concatenated symbol and amount
     this.reportForExcelList.forEach((data) => {
-      worksheet.addRow(Object.values(data));
+
+      //To Remove Time from date field data
+      const date = data.Date
+      const formattedDate = date ? date.split('T')[0] : null;
+
+      data.Date = formattedDate;
+
+
+
+      // Add the filtered data to the worksheet
+      const row = worksheet.addRow(Object.values(data));
+
+      // Set text color for customer, receipt, and amount columns
+      const columnsToColor = ['Voucher Reversal'];
+      columnsToColor.forEach(columnName => {
+        const columnIndex = Object.keys(data).indexOf(columnName);
+        if (columnIndex !== -1) {
+          const cell = row.getCell(columnIndex + 1);
+          cell.font = { color: { argb: '8B0000' }, bold: true, }; // Red color
+        }
+      });
+
     });
 
     // Adjust column widths to fit content
@@ -363,19 +479,20 @@ export class ReportVoucherReversalComponent implements OnInit  {
           maxLength = cellLength;
         }
       });
-      column.width = maxLength + 2; // Add some padding
+      column.width = maxLength + 2;
     });
 
     // Style the footer row with yellow background, bold, and centered text
-    const footerRow = worksheet.addRow(['End of Report']); // Footer text
+    const footerRow = worksheet.addRow(['End of Report']);
     footerRow.eachCell((cell) => {
       cell.fill = {
         type: 'pattern',
         pattern: 'solid',
-        fgColor: { argb: 'FFFFFF00' }, // Yellow background
+        fgColor: { argb: '8A9A5B' },
       };
       cell.font = {
         bold: true,
+        color: { argb: 'FFFFF7' }
       };
       cell.alignment = {
         horizontal: 'center',
@@ -388,8 +505,9 @@ export class ReportVoucherReversalComponent implements OnInit  {
     // Write to Excel and save
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    saveAs(blob, 'Report-ReceiptVoucher.xlsx');
+    saveAs(blob, 'Report-VoucherReversal.xlsx');
   }
+
 
 
 }

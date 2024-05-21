@@ -12,6 +12,7 @@ import { ContraVoucherService } from 'src/app/services/contra-voucher.service';
 import Swal from 'sweetalert2';
 import { Workbook } from 'exceljs';
 import { saveAs } from 'file-saver';
+import { GridSort } from 'src/app/model/common';
 
 
 const today = new Date();
@@ -35,6 +36,7 @@ export class ReportAdjustmentVoucherComponent implements OnInit {
   customerList: any[];
   pager: any = {};// pager object  
   pagedItems: any[];// paged items
+  pagesort: any = new GridSort().sort;
   entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat')
   PeroidList = [
@@ -267,6 +269,11 @@ export class ReportAdjustmentVoucherComponent implements OnInit {
     this.pagedItems = this.reportList.slice(this.pager.startIndex, this.pager.endIndex + 1);
   }
 
+  
+  sort(property) {
+    this.pagesort(property, this.pagedItems);
+  }
+
   clear() {
 
     this.startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd");
@@ -296,43 +303,42 @@ export class ReportAdjustmentVoucherComponent implements OnInit {
     const workbook = new Workbook();
     const worksheet = workbook.addWorksheet('Report');
 
-  // Add title and subtitle rows
-  const titleRow = worksheet.addRow(['', '', '', '', 'NAVIO SHIPPING PRIVATE LIMITED', '', '', '']);
-  titleRow.getCell(5).font = { size: 15, bold: true };
-  titleRow.getCell(5).alignment = { horizontal: 'center' };
+   // Add title and subtitle rows
+   const titleRow = worksheet.addRow(['', '', '', '', '', 'NAVIO SHIPPING PRIVATE LIMITED', '']);
+   titleRow.getCell(6).font = { size: 15, bold: true };
+   titleRow.getCell(6).alignment = { horizontal: 'center' };
 
-  // Calculate the length of the title string
-  const titleLength = 'NAVIO SHIPPING PRIVATE LIMITED'.length;
+   // Calculate the length of the title string
+   const titleLength = 'NAVIO SHIPPING PRIVATE LIMITED'.length;
 
-  // Iterate through each column to adjust the width based on the title length
-  worksheet.columns.forEach((column) => {
-    if (column.number === 6) {
-      column.width = titleLength + 2;
-    }
-  });
+   // Iterate through each column to adjust the width based on the title length
+   worksheet.columns.forEach((column) => {
+     if (column.number === 6) {
+       column.width = titleLength + 2;
+     }
+   });
 
-  // Merge cells for the title
-  worksheet.mergeCells(`F${titleRow.number}:G${titleRow.number}`);
+   // Merge cells for the title
+   worksheet.mergeCells(`F${titleRow.number}:G${titleRow.number}`);
 
-  const subtitleRow = worksheet.addRow(['', '', '', '', 'Adjustment Voucher', '', '', '']);
-  subtitleRow.getCell(5).font = { size: 14 };
-  subtitleRow.getCell(5).alignment = { horizontal: 'center' };
+   // Add subtitle row
+   const subtitleRow = worksheet.addRow(['', '', '', '', '', 'Adjustment Voucher', '']);
+   subtitleRow.getCell(6).font = { size: 14 };
+   subtitleRow.getCell(6).alignment = { horizontal: 'center' };
 
-  // Merge cells for the subtitle
-  worksheet.mergeCells(`F${subtitleRow.number}:G${subtitleRow.number}`);
+   // Merge cells for the subtitle
+   worksheet.mergeCells(`F${subtitleRow.number}:G${subtitleRow.number}`);
 
+   // Add "FROM Date" and "TO Date" to the worksheet
+   const dateRow = worksheet.addRow(['', '', '', '', '', `FROM ${this.startDate} - TO ${this.endDate}`]);
+   dateRow.eachCell((cell) => {
+     cell.alignment = { horizontal: 'center' };
+   });
+   dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
+   dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
 
-
- const dateRow = worksheet.addRow(['', '', '', '', `FROM ${this.startDate} - TO ${this.endDate}`]);
- dateRow.eachCell((cell) => {
-   cell.alignment = { horizontal: 'center' };
- });
- dateRow.getCell(5).numFmt = 'dd-MM-yyyy';
- dateRow.getCell(5).numFmt = 'dd-MM-yyyy';
-
- // Merge cells for "FROM Date" and "TO Date"
- worksheet.mergeCells(`F${dateRow.number}:G${dateRow.number}`);
-
+   // Merge cells for "FROM Date" and "TO Date"
+   worksheet.mergeCells(`F${dateRow.number}:G${dateRow.number}`);
 
 
    // Define header row and style it with yellow background, bold, and centered text
@@ -368,9 +374,11 @@ export class ReportAdjustmentVoucherComponent implements OnInit {
       const formattedDate = date.split('T')[0];
       data.Date = formattedDate;
 
+     const defaultvalue = 0;
       // Merge the symbol and amount into a single string with fixed decimal places
-      const mergedICYAmount = `${data.Symbol} ${parseFloat(data['Amount']).toFixed(this.entityFraction)}`;
-      const mergedCCYAmount = `${data.Symbol} ${parseFloat(data['Amount (CCY)']).toFixed(this.entityFraction)}`;
+      const mergedICYAmount = `${data.Symbol} ${data['Amount'] !== null ? parseFloat(data['Amount']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction)}`;
+      const mergedCCYAmount = `${data.Symbol} ${data['Amount (CCY)'] !== null ? parseFloat(data['Amount (CCY)']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction)}`;
+      const Exrate = ` ${data['Ex rate'] !== null ? parseFloat(data['Ex rate']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction)}`;
 
       // Filter out properties you don't want to include in the Excel sheet
       const filteredData = Object.keys(data)
@@ -383,6 +391,7 @@ export class ReportAdjustmentVoucherComponent implements OnInit {
       // Update the 'Amount (ICY)' property in the filtered data object with the merged amount
       filteredData['Amount'] = mergedICYAmount;
       filteredData['Amount (CCY)'] = mergedCCYAmount;
+      filteredData['Ex rate'] = Exrate;
 
       // Add the filtered data to the worksheet
  const row = worksheet.addRow(Object.values(filteredData));
@@ -448,41 +457,41 @@ export class ReportAdjustmentVoucherComponent implements OnInit {
     const worksheet = workbook.addWorksheet('Report');
 
      // Add title and subtitle rows
-     const titleRow = worksheet.addRow(['', '', '', '',  'NAVIO SHIPPING PRIVATE LIMITED', '',  '', '']);
-     titleRow.getCell(5).font = { size: 15, bold: true };
-     titleRow.getCell(5).alignment = { horizontal: 'center' };
+     const titleRow = worksheet.addRow(['', '', '', '', '', 'NAVIO SHIPPING PRIVATE LIMITED', '']);
+     titleRow.getCell(6).font = { size: 15, bold: true };
+     titleRow.getCell(6).alignment = { horizontal: 'center' };
  
      // Calculate the length of the title string
      const titleLength = 'NAVIO SHIPPING PRIVATE LIMITED'.length;
-
-    // Iterate through each column to adjust the width based on the title length
-    worksheet.columns.forEach((column) => {
-      if (column.number === 6) {
-        column.width = titleLength + 2;
-      }
-    });
-
-    // Merge cells for the title
-    worksheet.mergeCells(`F${titleRow.number}:G${titleRow.number}`);
-
-    // Add subtitle row
-    const subtitleRow = worksheet.addRow(['', '', '','', 'Adjustemnt Voucher', '',  '', '']);
-    subtitleRow.getCell(5).font = { size: 14 };
-    subtitleRow.getCell(5).alignment = { horizontal: 'center' };
-
-    // Merge cells for the subtitle
-    worksheet.mergeCells(`F${subtitleRow.number}:G${subtitleRow.number}`);
-
-    // Add "FROM Date" and "TO Date" to the worksheet
-    const dateRow = worksheet.addRow(['', '', '', '',  `FROM ${this.startDate} - TO ${this.endDate}`]);
-    dateRow.eachCell((cell) => {
-      cell.alignment = { horizontal: 'center' };
-    });
-    dateRow.getCell(5).numFmt = 'dd-MM-yyyy';
-    dateRow.getCell(5).numFmt = 'dd-MM-yyyy';
-
-    // Merge cells for "FROM Date" and "TO Date"
-    worksheet.mergeCells(`F${dateRow.number}:G${dateRow.number}`);
+ 
+     // Iterate through each column to adjust the width based on the title length
+     worksheet.columns.forEach((column) => {
+       if (column.number === 6) {
+         column.width = titleLength + 2;
+       }
+     });
+ 
+     // Merge cells for the title
+     worksheet.mergeCells(`F${titleRow.number}:G${titleRow.number}`);
+ 
+     // Add subtitle row
+     const subtitleRow = worksheet.addRow(['', '', '', '', '', 'Journal Voucher', '']);
+     subtitleRow.getCell(6).font = { size: 14 };
+     subtitleRow.getCell(6).alignment = { horizontal: 'center' };
+ 
+     // Merge cells for the subtitle
+     worksheet.mergeCells(`F${subtitleRow.number}:G${subtitleRow.number}`);
+ 
+     // Add "FROM Date" and "TO Date" to the worksheet
+     const dateRow = worksheet.addRow(['', '', '', '', '', `FROM ${this.startDate} - TO ${this.endDate}`]);
+     dateRow.eachCell((cell) => {
+       cell.alignment = { horizontal: 'center' };
+     });
+     dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
+     dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
+ 
+     // Merge cells for "FROM Date" and "TO Date"
+     worksheet.mergeCells(`F${dateRow.number}:G${dateRow.number}`);
 
 
     // Define header row and style it with yellow background, bold, and centered text
@@ -517,10 +526,11 @@ export class ReportAdjustmentVoucherComponent implements OnInit {
       const date = data.Date
       const formattedDate = date.split('T')[0];
       data.Date = formattedDate;
-
+      const defaultvalue =0 ; 
       // Merge the symbol and amount into a single string with fixed decimal places
-      const mergedICYAmount = `${data.Symbol} ${parseFloat(data['Amount']).toFixed(this.entityFraction)}`;
-      const mergedCCYAmount = `${data.Symbol} ${parseFloat(data['Amount (CCY)']).toFixed(this.entityFraction)}`;
+      const mergedICYAmount = `${data.Symbol} ${data['Amount'] !== null ? parseFloat(data['Amount']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction)}`;
+      const mergedCCYAmount = `${data.Symbol} ${data['Amount (CCY)'] !== null ? parseFloat(data['Amount (CCY)']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction)}`;
+      const Exrate = ` ${data['Ex rate'] !== null ? parseFloat(data['Ex rate']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction)}`;
      
       // Filter out properties you don't want to include in the Excel sheet
       const filteredData = Object.keys(data)
@@ -533,6 +543,7 @@ export class ReportAdjustmentVoucherComponent implements OnInit {
       // Update the 'Amount' property in the filtered data object with the merged amount
       filteredData['Amount'] = mergedICYAmount;
       filteredData['Amount (CCY)'] = mergedCCYAmount;
+      filteredData['Ex rate'] = Exrate;
 
       // Add the filtered data to the worksheet
  const row = worksheet.addRow(Object.values(filteredData));

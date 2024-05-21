@@ -1,11 +1,4 @@
 <div class="container-fluid">
-
-    <!-- <div class="row headtitle rotle mt-1">
-        <div class="col-md-9">
-            <h4 class="ml-2 mt-2">Voucher  Reversals</h4>
-        </div>
-    </div> -->
-
     <form [formGroup]="reportFilter">
         <div class="card mt-2 p-3">
 
@@ -103,7 +96,6 @@
 
 
             <div class="col-2" style="padding-top: 30px;">
-                <!-- || paymentForm.value.Table.value.AmountPaid !== paymentForm.value.Table.value.TotalAmount  -->
                 <div class="text-center">
                     <button type="button" class="btn btn-primary text-white  col-auto"
                         (click)="getVoucherReversalReportList()">
@@ -127,11 +119,7 @@
                 <div class="card-body cpad enqview">
                     <div class="col-sm-12 justify-content-end text-center ">
                         <h3 class="title">NAVIO SHIPPING PRIVATE LIMITED</h3>
-                        <h2 class="subtitle">Voucher  Reversals</h2>
-                        <!-- <p *ngIf="startDate == '' && endDate == '' ">FROM {{ reportFilter.controls.StartDate.value | date: commonDataService.convertToLowerCaseDay(entityDateFormat) }} -
-                           TO {{reportFilter.controls.EndDate.value | date:commonDataService.convertToLowerCaseDay(entityDateFormat) }}
-                        </p> -->
-                        
+                        <h2 class="subtitle">Voucher  Reversals</h2>                       
                         <p>FROM {{ startDate | date: commonDataService.convertToLowerCaseDay(entityDateFormat) }} -
                            TO {{ endDate | date:commonDataService.convertToLowerCaseDay(entityDateFormat) }}
                         </p>
@@ -140,10 +128,6 @@
                     <div class="col-sm-12 text-right d-flex justify-content-end">
                         <div style="font-weight: 600; padding-top: 14px;">Export as : </div>
                         <div>
-                            <!-- <img style="cursor: pointer;" width="22px" height="22px"
-                                class="exportAs mx-1 align-baseline"
-                                src="../../../../assets/images/icon/file-pdf-solid.jpeg" (click)="downloadAsPDF()"
-                                alt="logo"> -->
                             <img style="cursor: pointer;" width="38px" height="38px"
                                 class="exportAs mx-1 align-baseline"
                                 src="../../../../../assets/images/csv_color.png" (click)="downloadAsCSV()"
@@ -156,24 +140,24 @@
                     </div>
 
                     <div class="col-sm-12 ">
-                        <table class="table table-responsive table-striped table-bordered w-100 dataTable no-footer"
+                        <table class="table table-responsive table-bordered w-100 dataTable no-footer"
                             style="text-align-last: center;">
                             <thead>
                                 <tr>
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Date: activate to sort column ascending"
-                                        style="width: 177.575px;">Date
+                                        (click)="sort('DateOfReversal')"style="width: 177.575px;">Date
                                     </th>
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        style="width: 177.575px;">Voucher Reversal # </th>
+                                        (click)="sort('ReversalReference')"style="width: 177.575px;">Voucher Reversal # </th>
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        style="width: 177.575px;">Voucher Type</th>
+                                        (click)="sort('VoucherName')"style="width: 177.575px;">Voucher Type</th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        style="width: 177.575px;">Customer / Vendor </th>
+                                        (click)="sort('AccountOrParty')"style="width: 177.575px;">Customer / Vendor </th>
 
                                 </tr>
                             </thead>
@@ -186,15 +170,15 @@
                                     <td>{{data.AccountOrParty}}</td>
                                 </tr>
 
-                                <!-- <tr *ngIf="pagedItems.length ==0">
+                                 <tr *ngIf="pagedItems.length ==0">
                                     <td class="text-center" colspan="10">No records found</td>
-                                </tr> -->
+                                </tr> 
 
                             </tbody>
                         </table>
                     </div>
 
-                    <!-- <div class="row page mr-3" align="right">
+                     <div class="row page mr-3" align="right">
                         <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10 && pager.totalItems > 10"
                             class="pagination">
                             <li [ngClass]="{disabled:pager.currentPage === 1}">
@@ -220,7 +204,7 @@
                                 <a (click)="setPage(pager.totalPages)">Last</a>
                             </li>
                         </ul>
-                    </div> -->
+                    </div> 
                 </div>
             </div>
         </div>

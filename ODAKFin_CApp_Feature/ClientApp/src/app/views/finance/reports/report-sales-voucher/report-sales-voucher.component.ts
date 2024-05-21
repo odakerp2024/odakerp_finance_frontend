@@ -11,6 +11,7 @@ import { ReportDashboardService } from 'src/app/services/financeModule/report-da
 import Swal from 'sweetalert2';
 import { Workbook } from 'exceljs';
 import { saveAs } from 'file-saver';
+import { GridSort } from 'src/app/model/common';
 
 
 const today = new Date();
@@ -37,6 +38,7 @@ export class ReportSalesVoucherComponent implements OnInit {
   paymentModeList: any[];
   TypeList: any[];
   isShowBranch: boolean = false;
+  pagesort: any = new GridSort().sort;
   VoucherTypeList = [
       { TypeId: 2, TypeName: 'CREDIT'},
       { TypeId: 1, TypeName: 'DEBIT'}
@@ -282,6 +284,10 @@ export class ReportSalesVoucherComponent implements OnInit {
     this.pagedItems = this.reportList.slice(this.pager.startIndex, this.pager.endIndex + 1);
   }
 
+  sort(property) {
+    this.pagesort(property, this.pagedItems);
+  }
+
   clear() {
     this.startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd");
     this.endDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd");
@@ -386,10 +392,11 @@ export class ReportSalesVoucherComponent implements OnInit {
       const date = data.Date
       const formattedDate = date.split('T')[0];
       data.Date = formattedDate;
-
+      const defalutvalue = 0;
       // Merge the symbol and amount into a single string with fixed decimal places
-      const mergedICYAmount = `${data.Symbol} ${data['Invoice Amount (ICY)'] !== null ? parseFloat(data['Invoice Amount (ICY)']).toFixed() : '0.00'}`;
-      const mergedCCYAmount = `${data.Symbol} ${data['Invoice Amount (CCY)'] !== null ? parseFloat(data['Invoice Amount (CCY)']).toFixed() : '0.00'}`;
+      const mergedICYAmount = `${data.Symbol} ${data['InvoiceAmountICY)']  !== null ? parseFloat(data['InvoiceAmountICY'] ).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      const mergedCCYAmount = `${data.Symbol} ${data['InvoiceAmountCCY'] !== null ? parseFloat(data['InvoiceAmountCCY']).toFixed() : (defalutvalue).toFixed(this.entityFraction)}`;
+      const invoicetax = `${data.Symbol} ${data['invoice_Tax'] !== null ? parseFloat(data['invoice_Tax']).toFixed() : (defalutvalue).toFixed(this.entityFraction)}`;
 
 
       // Filter out properties you don't want to include in the Excel sheet
@@ -401,15 +408,15 @@ export class ReportSalesVoucherComponent implements OnInit {
         }, {});
 
       // Update the 'Amount (ICY)' property in the filtered data object with the merged amount
-      filteredData['Invoice Amount (ICY)'] = mergedICYAmount;
-      filteredData['Invoice Amount (CCY)'] = mergedCCYAmount;
-
+      filteredData['InvoiceAmountICY'] = mergedICYAmount;
+      filteredData['InvoiceAmountCCY'] = mergedCCYAmount;
+      filteredData['invoice_Tax'] = invoicetax;
 
       // Add the filtered data to the worksheet
       const row = worksheet.addRow(Object.values(filteredData));
 
       // Set text color for customer, receipt, and amount columns
-      const columnsToColor = ['Invoice', 'CustomerName', 'Invoice Amount (ICY)', 'Invoice Amount (CCY)'];
+      const columnsToColor = ['Invoice', 'CustomerName', 'InvoiceAmountICY', 'InvoiceAmountCCY'];
       columnsToColor.forEach(columnName => {
         const columnIndex = Object.keys(filteredData).indexOf(columnName);
         if (columnIndex !== -1) {
@@ -541,11 +548,11 @@ export class ReportSalesVoucherComponent implements OnInit {
       const date = data.Date
       const formattedDate = date.split('T')[0];
       data.Date = formattedDate;
-
+      const defalutvalue = 0;
       // Merge the symbol and amount into a single string with fixed decimal places
-      const mergedICYAmount = `${data.Symbol} ${data['Invoice Amount (ICY)'] !== null ? parseFloat(data['Invoice Amount (ICY)']).toFixed() : '0.00'}`;
-      const mergedCCYAmount = `${data.Symbol} ${data['Invoice Amount (CCY)'] !== null ? parseFloat(data['Invoice Amount (CCY)']).toFixed() : '0.00'}`;
-
+      const mergedICYAmount = `${data.Symbol} ${data['InvoiceAmountICY']  !== null ? parseFloat(data['InvoiceAmountICY'] ).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      const mergedCCYAmount = `${data.Symbol} ${data['InvoiceAmountCCY'] !== null ? parseFloat(data['InvoiceAmountCCY']).toFixed() : (defalutvalue).toFixed(this.entityFraction)}`;
+      const invoicetax = `${data.Symbol} ${data['invoice_Tax'] !== null ? parseFloat(data['invoice_Tax']).toFixed() : (defalutvalue).toFixed(this.entityFraction)}`;
 
       // Filter out properties you don't want to include in the Excel sheet
       const filteredData = Object.keys(data)
@@ -556,15 +563,16 @@ export class ReportSalesVoucherComponent implements OnInit {
         }, {});
 
       // Update the 'Amount (ICY)' property in the filtered data object with the merged amount
-      filteredData['Invoice Amount (ICY)'] = mergedICYAmount;
-      filteredData['Invoice Amount (CCY)'] = mergedCCYAmount;
+      filteredData['InvoiceAmountICY'] = mergedICYAmount;
+      filteredData['InvoiceAmountCCY'] = mergedCCYAmount;
+      filteredData['invoice_Tax'] = invoicetax;
 
 
       // Add the filtered data to the worksheet
       const row = worksheet.addRow(Object.values(filteredData));
 
       // Set text color for customer, receipt, and amount columns
-      const columnsToColor = ['Invoice', 'CustomerName', 'Invoice Amount (ICY)', 'Invoice Amount (CCY)'];
+      const columnsToColor = ['Invoice', 'CustomerName', 'InvoiceAmountICY', 'InvoiceAmountCCY'];
       columnsToColor.forEach(columnName => {
         const columnIndex = Object.keys(filteredData).indexOf(columnName);
         if (columnIndex !== -1) {

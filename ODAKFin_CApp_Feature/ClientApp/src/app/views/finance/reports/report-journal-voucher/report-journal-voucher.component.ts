@@ -12,6 +12,7 @@ import { ContraVoucherService } from 'src/app/services/contra-voucher.service';
 import Swal from 'sweetalert2';
 import { Workbook } from 'exceljs';
 import { saveAs } from 'file-saver';
+import { GridSort } from 'src/app/model/common';
 
 
 const today = new Date();
@@ -49,6 +50,7 @@ export class ReportJournalVoucherComponent implements OnInit {
   ];
   selectedOption: string;
   bankList: any;
+  pagesort: any = new GridSort().sort;
   campaignOne = new FormGroup({
     start: new FormControl(new Date(year, month, 13)),
     end: new FormControl(new Date(year, month, 16)),
@@ -263,6 +265,10 @@ export class ReportJournalVoucherComponent implements OnInit {
     this.pagedItems = this.reportList.slice(this.pager.startIndex, this.pager.endIndex + 1);
   }
 
+  sort(property) {
+    this.pagesort(property, this.pagedItems);
+  }
+
   clear() {
 
     this.startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd");
@@ -363,11 +369,11 @@ export class ReportJournalVoucherComponent implements OnInit {
       const date = data.Date
       const formattedDate = date.split('T')[0];
       data.Date = formattedDate;
-
+      const defaultvalue = 0;
       // Merge the symbol and amount into a single string with fixed decimal places
-      const mergedICYAmount = `${data.Symbol} ${data['Amount'] !== null ? parseFloat(data['Amount']).toFixed(2) : '0.00'}`;
-      const mergedCCYAmount = `${data.Symbol} ${data['Amount (CCY)'] !== null ? parseFloat(data['Amount (CCY)']).toFixed(2) : '0.00'}`;
-
+      const mergedICYAmount = `${data.Symbol} ${data['Amount'] !== null ? parseFloat(data['Amount']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction)}`;
+      const mergedCCYAmount = `${data.Symbol} ${data['Amount (CCY)'] !== null ? parseFloat(data['Amount (CCY)']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction)}`;
+      const Exrate = ` ${data['Ex rate'] !== null ? parseFloat(data['Ex rate']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction)}`;
 
       // Filter out properties you don't want to include in the Excel sheet
       const filteredData = Object.keys(data)
@@ -380,6 +386,7 @@ export class ReportJournalVoucherComponent implements OnInit {
       // Update the 'Amount (ICY)' property in the filtered data object with the merged amount
       filteredData['Amount'] = mergedICYAmount;
       filteredData['Amount (CCY)'] = mergedCCYAmount;
+      filteredData['Ex rate'] =Exrate;
 
 
       // Add the filtered data to the worksheet
@@ -517,10 +524,11 @@ export class ReportJournalVoucherComponent implements OnInit {
       const formattedDate = date.split('T')[0];
       data.Date = formattedDate;
 
+      const defaultvalue = 0;
       // Merge the symbol and amount into a single string with fixed decimal places
-      const mergedICYAmount = `${data.Symbol} ${data['Amount'] !== null ? parseFloat(data['Amount']).toFixed(2) : '0.00'}`;
-      const mergedCCYAmount = `${data.Symbol} ${data['Amount (CCY)'] !== null ? parseFloat(data['Amount (CCY)']).toFixed(2) : '0.00'}`;
-
+      const mergedICYAmount = `${data.Symbol} ${data['Amount'] !== null ? parseFloat(data['Amount']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction)}`;
+      const mergedCCYAmount = `${data.Symbol} ${data['Amount (CCY)'] !== null ? parseFloat(data['Amount (CCY)']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction)}`;
+      const Exrate = ` ${data['Ex rate'] !== null ? parseFloat(data['Ex rate']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction)}`;
 
       // Filter out properties you don't want to include in the Excel sheet
       const filteredData = Object.keys(data)
@@ -533,6 +541,7 @@ export class ReportJournalVoucherComponent implements OnInit {
       // Update the 'Amount (ICY)' property in the filtered data object with the merged amount
       filteredData['Amount'] = mergedICYAmount;
       filteredData['Amount (CCY)'] = mergedCCYAmount;
+      filteredData['Ex rate'] =Exrate;
 
 
       // Add the filtered data to the worksheet

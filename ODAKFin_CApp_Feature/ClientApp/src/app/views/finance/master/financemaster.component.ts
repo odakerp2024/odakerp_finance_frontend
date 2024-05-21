@@ -41,8 +41,12 @@ export class FinanceMasterComponent implements OnInit {
 
   private wfAllItems = [];
   private wfItems = [];
+  private wfAllItemsHistory = [];
   Pager: any = {};
   PagedItems = [];
+
+  PagerH: any = {};
+  PagedItemsH = [];
 
   wfEventList: any = [];
 
@@ -172,7 +176,7 @@ export class FinanceMasterComponent implements OnInit {
       SubfunctionID: value
     }
     this.LService.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
+
 
       if (route == 'Bank Summary') {
 
@@ -294,7 +298,7 @@ export class FinanceMasterComponent implements OnInit {
       SubfunctionID: value
     }
     this.LService.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
+   
 
       if (route == 'Open Request') {
 
@@ -586,12 +590,12 @@ export class FinanceMasterComponent implements OnInit {
     this.workflow.getWorkflowInbox(payload).subscribe(data => {
         console.log(data)
         if ((data.Status == true) && (data.AlertMegId == 1)) {
-          this.wfAllItems = data.Data
-          this.setPageWF(1)
+          this.wfAllItemsHistory = data.Data
+          this.setPageWFH(1)
         }
         else {
-          this.wfAllItems = []
-          this.setPageWF(1)
+          this.wfAllItemsHistory = []
+          this.setPageWFH(1)
         }
       });
   }
@@ -848,8 +852,14 @@ export class FinanceMasterComponent implements OnInit {
   }
 
 
+  setPageWFH(page: number) {
+    
+    this.PagerH = this.ps.getPager(this.wfAllItemsHistory.length, page);
+    this.PagedItemsH = this.wfAllItemsHistory.slice(this.PagerH.startIndex, this.PagerH.endIndex + 1)
+  }
+
   routePage(routePage: string) {
-debugger
+
     if (routePage == 'Entity') {
       this.getPermissionListForCreate(537, 'Email ids');
       this.getPermissionListForCreate(538, 'Documents');
@@ -1076,6 +1086,12 @@ debugger
     else if (routePage == 'trailBalance') {
       //SubfunctionID = 533;
       this.router.navigate(['/views/finance/reports/levelone']);
+    } 
+
+    else if (routePage == 'DayBook') {
+    
+      //SubfunctionID = 533;
+      this.router.navigate(['/views/reports/report-day-book']);
     } 
     
     else if (routePage == 'recieptVoucher') {

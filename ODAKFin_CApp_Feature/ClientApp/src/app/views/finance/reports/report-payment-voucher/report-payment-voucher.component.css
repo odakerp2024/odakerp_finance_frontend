@@ -40,3 +40,58 @@ tr:hover {
       overflow: visible !important;
     }
   }
+
+  
+@media (min-width: 1701px) and (max-width: 1820px) {
+  
+  .table>tbody>tr>td {
+    /* text-align: left !important; */
+    padding: 13px !important;
+    font-size: 13px !important;
+  }
+ 
+}
+
+
+
+@media (min-width: 1601px) and (max-width: 1700px) {
+  
+  .table>tbody>tr>td {
+    /* text-align: left !important; */
+    padding: 12px !important;
+    font-size: 12px !important;
+  }
+ 
+}
+
+@media (min-width: 1498px) and (max-width: 1600px) {
+  
+  .table>tbody>tr>td {
+    /* text-align: left !important; */
+    padding: 11px !important;
+    font-size: 11px !important;
+  }
+ 
+}
+
+
+@media (min-width: 1400px) and (max-width: 1498px) {
+  
+  .table>tbody>tr>td {
+    /* text-align: left !important; */
+    padding: 10px !important;
+    font-size: 10px !important;
+  }
+ 
+}
+
+
+@media (min-width: 700px) and (max-width: 1399px) {
+  
+  .table>tbody>tr>td {
+    /* text-align: left !important; */
+    padding: 9px !important;
+    font-size: 9px !important;
+  }
+ 
+}
