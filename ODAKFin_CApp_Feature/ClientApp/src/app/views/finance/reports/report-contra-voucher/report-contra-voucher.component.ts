@@ -12,6 +12,7 @@ import { ContraVoucherService } from 'src/app/services/contra-voucher.service';
 import Swal from 'sweetalert2';
 import { Workbook } from 'exceljs';
 import { saveAs } from 'file-saver';
+import { GridSort } from 'src/app/model/common';
 
 
 const today = new Date();
@@ -35,8 +36,7 @@ export class ReportContraVoucherComponent implements OnInit  {
   customerList: any[];
   pager: any = {};// pager object  
   pagedItems: any[];// paged items
-  // paymentModeList: any[];
-  // bankList: any[];
+  pagesort: any = new GridSort().sort;
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
   entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   PeroidList = [
@@ -261,7 +261,6 @@ export class ReportContraVoucherComponent implements OnInit  {
   }
 
   getContraReportList() {
-    debugger
     this.startDate = this.reportFilter.controls.FromDate.value;
     this.endDate = this.reportFilter.controls.ToDate.value;
     this.reportService.GetContraVoucherReportList(this.reportFilter.value).subscribe(result => {
@@ -284,6 +283,11 @@ export class ReportContraVoucherComponent implements OnInit  {
 
     this.pager = this.ps.getPager(this.reportList.length, page);
     this.pagedItems = this.reportList.slice(this.pager.startIndex, this.pager.endIndex + 1);
+  }
+
+  
+  sort(property) {
+    this.pagesort(property, this.pagedItems);
   }
   
   clear() {
