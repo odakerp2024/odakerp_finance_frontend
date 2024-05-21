@@ -1083,7 +1083,7 @@
                                                         </thead>
 
                                                         <tbody>
-                                                            <tr *ngFor="let workflow of PagedItems">
+                                                            <tr *ngFor="let workflow of PagedItemsH">
                                                                 <td>{{workflow.workflowno}}</td>
                                                                 <td>{{workflow.eventname}}</td>
                                                                 <td>{{workflow.submitter}}</td>
@@ -1130,36 +1130,36 @@
                                                 <div class="col-md-6">
                                                     <ul class="pagination ">
                                                         <li>Showing</li>
-                                                        <li>{{Pager.startIndex + 1}}</li>
+                                                        <li>{{PagerH.startIndex + 1}}</li>
                                                         <li>to</li>
-                                                        <li>{{Pager.endIndex + 1}}</li>
+                                                        <li>{{PagerH.endIndex + 1}}</li>
                                                         <li>of</li>
-                                                        <li>{{Pager.totalItems}}</li>
+                                                        <li>{{PagerH.totalItems}}</li>
                                                     </ul>
                                                 </div>
                                                 <div class="col-md-6" style="text-align:right;">
-                                                    <ul *ngIf="Pager.pages && Pager.pages.length" class="pagination" style="float:right;">
-                                                        <li [ngClass]="{'pag-disable':Pager.currentPage === 1}">
-                                                            <a (click)="setPageWF(1)">First</a>
+                                                    <ul *ngIf="PagerH.pages && PagerH.pages.length" class="pagination" style="float:right;">
+                                                        <li [ngClass]="{'pag-disable':PagerH.currentPage === 1}">
+                                                            <a (click)="setPageWFH(1)">First</a>
                                                         </li>
-                                                        <li [ngClass]="{'pag-disable':Pager.currentPage === 1}">
-                                                            <a (click)="setPageWF(pager.currentPage - 1)">Previous</a>
+                                                        <li [ngClass]="{'pag-disable':PagerH.currentPage === 1}">
+                                                            <a (click)="setPageWFH(pagerH.currentPage - 1)">Previous</a>
                                                         </li>
-                                                        <li *ngFor="let page of Pager.pages" [ngClass]="{active:Pager.currentPage === page}">
-                                                            <a (click)="setPageWF(page)">{{page}}</a>
+                                                        <li *ngFor="let page of PagerH.pages" [ngClass]="{active:PagerH.currentPage === page}">
+                                                            <a (click)="setPageWFH(page)">{{page}}</a>
                                                         </li>
-                                                        <li *ngIf="(Pager.totalPages - Pager.startPage) > 5 ">
-                                                            <a (click)="setPageWF(Pager.startPage + 5)">...</a>
+                                                        <li *ngIf="(PagerH.totalPages - PagerH.startPage) > 5 ">
+                                                            <a (click)="setPageWFH(PagerH.startPage + 5)">...</a>
                                                         </li>
-                                                        <li *ngIf="(Pager.totalPages - Pager.startPage) > 5">
-                                                            <a (click)="setPageWF(Pager.totalPages)">{{pager.totalPages}}</a>
+                                                        <li *ngIf="(PagerH.totalPages - PagerH.startPage) > 5">
+                                                            <a (click)="setPageWFH(PagerH.totalPages)">{{pagerH.totalPages}}</a>
                                                         </li>
                                             
-                                                        <li [ngClass]="{'pag-disable':Pager.endIndex + 1 === Pager.totalItems}">
-                                                            <a (click)="setPageWF(Pager.currentPage + 1)">Next</a>
+                                                        <li [ngClass]="{'pag-disable':PagerH.endIndex + 1 === PagerH.totalItems}">
+                                                            <a (click)="setPageWFH(PagerH.currentPage + 1)">Next</a>
                                                         </li>
-                                                        <li [ngClass]="{'pag-disable':Pager.currentPage === Pager.totalPages}">
-                                                            <a (click)="setPageWF(Pager.totalPages)">Last</a>
+                                                        <li [ngClass]="{'pag-disable':PagerH.currentPage === PagerH.totalPages}">
+                                                            <a (click)="setPageWFH(PagerH.totalPages)">Last</a>
                                                         </li>
                                                     </ul>
                                                 </div>

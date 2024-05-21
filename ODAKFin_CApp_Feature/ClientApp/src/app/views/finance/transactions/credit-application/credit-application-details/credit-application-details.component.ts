@@ -259,8 +259,7 @@ export class CreditApplicationDetailsComponent implements OnInit {
           }
           else{
             Swal.fire("Your request waiting for Approval");
-          }         
-
+          }
         }
         else if(res?.AlertMegId == -1){
           Swal.fire(res?.AlertMessage ?  res?.AlertMessage : "");
