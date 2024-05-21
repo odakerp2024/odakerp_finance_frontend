@@ -38,8 +38,12 @@ export class FinanceMasterComponent implements OnInit {
 
   private wfAllItems = [];
   private wfItems = [];
+  private wfAllItemsHistory = [];
   Pager: any = {};
   PagedItems = [];
+
+  PagerH: any = {};
+  PagedItemsH = [];
 
   wfEventList: any = [];
 
@@ -568,12 +572,12 @@ export class FinanceMasterComponent implements OnInit {
     this.workflow.getWorkflowInbox(payload).subscribe(data => {
         console.log(data)
         if ((data.Status == true) && (data.AlertMegId == 1)) {
-          this.wfAllItems = data.Data
-          this.setPageWF(1)
+          this.wfAllItemsHistory = data.Data
+          this.setPageWFH(1)
         }
         else {
-          this.wfAllItems = []
-          this.setPageWF(1)
+          this.wfAllItemsHistory = []
+          this.setPageWFH(1)
         }
       });
   }
@@ -736,6 +740,12 @@ export class FinanceMasterComponent implements OnInit {
     
     this.Pager = this.ps.getPager(this.wfAllItems.length, page);
     this.PagedItems = this.wfAllItems.slice(this.Pager.startIndex, this.Pager.endIndex + 1)
+  }
+
+  setPageWFH(page: number) {
+    
+    this.PagerH = this.ps.getPager(this.wfAllItemsHistory.length, page);
+    this.PagedItemsH = this.wfAllItemsHistory.slice(this.PagerH.startIndex, this.PagerH.endIndex + 1)
   }
 
   routePage(routePage: string) {
