@@ -6246,6 +6246,7 @@ input[type="date"] {
     white-space: nowrap !important;
     text-align: center;
     vertical-align: middle !important;
+    padding-right: 29px !important;
 }
 
 .bkgtab .nav .nav-item {
