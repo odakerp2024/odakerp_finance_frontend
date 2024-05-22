@@ -652,29 +652,29 @@ export class FinanceMasterComponent implements OnInit {
     }
   }
 
-  OnApproval(){
-    if(this.eventName.toUpperCase().trim() == "CUSTOMER"){
-      this.KYCValidation();
-    }
-    else{
-      this.updateWorkflowStatus('1');
-    }
-  }
+  // OnApproval(){
+  //   if(this.eventName.toUpperCase().trim() == "CUSTOMER"){
+  //     this.KYCValidation();
+  //   }
+  //   else{
+  //     this.updateWorkflowStatus('1');
+  //   }
+  // }
 
-  KYCValidation(){
-    let payload = {
-      "CusBranchCode": this.cusBID,
-    }
-    this.workflow.KYCValidation(payload).subscribe(data => {
-      if(data.length > 0){
-        this.updateWorkflowStatus('1');
-      }
-      else {
-        Swal.fire("Please Update the Accounting Details");
-      }
+  // KYCValidation(){
+  //   let payload = {
+  //     "CusBranchCode": this.cusBID,
+  //   }
+  //   this.workflow.KYCValidation(payload).subscribe(data => {
+  //     if(data.length > 0){
+  //       this.updateWorkflowStatus('1');
+  //     }
+  //     else {
+  //       Swal.fire("Please Update the Accounting Details");
+  //     }
       
-    });
-  }
+  //   });
+  // }
 
   updateWorkflowStatus(statuscode: string) {
     if (this.workFlowUpdateForm.valid) {
