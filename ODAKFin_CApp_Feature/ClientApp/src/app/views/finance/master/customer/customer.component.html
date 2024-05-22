@@ -1964,7 +1964,7 @@
 
                     <div class="divide"></div>
 
-                    <div *ngIf="Current_Tab != 'tabEmail' && Current_Tab != 'tabKYC'" class="row">
+                    <div *ngIf="Current_Tab != 'tabEmail' && Current_Tab != 'tabAccounting'" class="row">
                         <div class="col-md-12 alrt">
                             <button type="submit" (click)="onSubmit();" class="btn btn-primary btn-raised mb-0  m-r-15">
                                 Save </button>
@@ -1975,7 +1975,7 @@
                             name="RegId" />
                     </div>
 
-                    <div *ngIf="Current_Tab == 'tabKYC'" class="row">
+                    <div *ngIf="Current_Tab == 'tabAccounting'" class="row">
                         <div class="col-md-12 alrt">
                             <button type="submit"(click)="submitApproval()" [disabled]="disableSave" class="btn btn-primary btn-raised mb-0  m-r-15">
                                 Submit for Approval </button>
