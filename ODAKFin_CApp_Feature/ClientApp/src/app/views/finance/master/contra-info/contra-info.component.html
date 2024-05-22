@@ -306,7 +306,10 @@
                                     <ng-container *ngIf="documentTableList.length; else noRecord">
                                         <tr *ngFor="let document of documentTableList;let i = index">
                                             <td>{{ i + 1 }}</td>
-                                            <td>{{ document.DocumentName }}</td>
+                                            <!-- <td>{{ document.DocumentName }}</td> -->
+                                            <td  class="text-center" id="documentFileName"><button [disabled]="isUpdateMode"
+                                                class="btn btn-success bmd-btn-fab enqbtn"
+                                                (click)="download(document.UniqueFilePath)">{{document.DocumentName}}</button></td>
                                             <td class="alc actwid chktbl">
                                                 <!-- <input class="vertal checkbox" type="radio" name="AlertCheck" id="RadioCheck"
                                                     (click)="onFileSelected(i)" /> -->
