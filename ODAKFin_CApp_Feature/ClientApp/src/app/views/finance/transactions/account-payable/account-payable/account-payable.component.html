@@ -148,13 +148,17 @@
                                         : commonService.convertToLowerCaseDay(
                                             entityDateFormat
                                           ) }}</td>
-                                    <td>{{data.Vendor }}</td>
+                                 
+                                    <td [title]="data.Vendor | uppercase" >
+                                        {{ (data.Vendor && data.Vendor.length > 30) ? data.Vendor.slice(0, 30) + '-' : data.Vendor|| '-'  }}
+                                    </td>
                      
                                     <td>{{data.PurchaseInvoiceDate   | date
                                         : commonService.convertToLowerCaseDay(
                                             entityDateFormat
                                           ) }}</td>
-                                    <td>{{data.Amount }}</td>
+                                    
+                                    <td class="text-right">{{ data.Amount | dynamicDecimal: entityFraction }}</td>
                                 </tr>
                             </tbody>
                             <tbody *ngIf="pagedItems.length === 0">
@@ -195,7 +199,7 @@
             </div> -->
 
                         <div style="justify-content: end;" class="row page w-100">
-                <ul *ngIf="pager.pages && pager?.pages?.length && pager.totalItems > 10"  class="pagination">
+                <ul *ngIf="pager.pages && pager?.pages?.length && pager.totalItems > 25"  class="pagination">
                     <li [ngClass]="{disabled:pager.currentPage === 1}">
                         <a (click)="setPage(1)">First</a>
                     </li>

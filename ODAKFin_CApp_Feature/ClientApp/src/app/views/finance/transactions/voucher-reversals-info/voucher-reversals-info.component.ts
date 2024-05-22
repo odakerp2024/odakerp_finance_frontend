@@ -1,4 +1,5 @@
 import { DatePipe } from '@angular/common';
+import { HttpErrorResponse, HttpEventType, HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -41,12 +42,15 @@ export class VoucherReversalsInfoComponent implements OnInit {
   isEditMode = true;
   currentDate = this.datePipe.transform(new Date(), "yyyy-MM-dd");
   fromMaxDate = this.currentDate;
+  selectedFile: File = null;
+  fileUrl: string;
 
   constructor(
     private fb: FormBuilder,
     private globals: Globals,
     private dataService: DataService,
     private datePipe: DatePipe,
+    private commonservice: CommonService,
     private router: Router,
     private route: ActivatedRoute,
     private ps: PaginationService,
@@ -195,19 +199,77 @@ export class VoucherReversalsInfoComponent implements OnInit {
     }, error => { });
   }
 
+  // fileSelected(event) {
+  //   if (event.target.files.length > 0 && this.FileList.length < 5) {
+  //     this.FileList.push({
+  //       Id: 0,
+  //       VoucherReversalsId: this.VoucherReversalsId,
+  //       FileName: event.target.files[0].name,
+  //       FilePath: event.target.files[0].name
+  //     });
+  //   }
+  //   else {
+  //     Swal.fire('A maximum of five files must be allowed.')
+  //   }
+  // }
+
   fileSelected(event) {
-    if (event.target.files.length > 0 && this.FileList.length < 5) {
+    if (event) {
+      this.selectedFile = event.target.files[0];
+      const filedata = new FormData();
+      filedata.append('file', this.selectedFile, this.selectedFile.name)
+
+      this.commonservice.AttachUpload(this.selectedFile).subscribe(data => {
+        if (data) {
+
       this.FileList.push({
         Id: 0,
         VoucherReversalsId: this.VoucherReversalsId,
         FileName: event.target.files[0].name,
-        FilePath: event.target.files[0].name
+        FilePath: event.target.files[0].name,
+        UniqueFilePath: data.FileNamev,
+
       });
     }
+  },
+    (error: HttpErrorResponse) => {
+      Swal.fire(error.message, 'error')
+    });
+}
     else {
-      Swal.fire('A maximum of five files must be allowed.')
-    }
+      Swal.fire('A maximum of five files must be allowed.')  
+    }   
   }
+
+   /*File Download*/
+download = (fileUrl) => {
+  this.fileUrl = "UploadFolder\\Attachments\\" + fileUrl;
+  this.commonDataService.download(fileUrl).subscribe((event) => {
+
+      if (event.type === HttpEventType.UploadProgress){ 
+        
+      }
+          // this.progress1 = Math.round((100 * event.loaded) / event.total);
+
+      else if (event.type === HttpEventType.Response) {
+          // this.message = 'Download success.';
+          this.downloadFile(event);
+      }
+  });
+}
+
+private downloadFile = (data: HttpResponse<Blob>) => {
+  const downloadedFile = new Blob([data.body], { type: data.body.type });
+  const a = document.createElement('a');
+  a.setAttribute('style', 'display:none;');
+  document.body.appendChild(a);
+  a.download = this.fileUrl;
+  a.href = URL.createObjectURL(downloadedFile);
+  a.target = '_blank';
+  a.click();
+  document.body.removeChild(a);
+}
+ 
 
   OnClickDeleteValueFile(index: number) {
     this.FileList.splice(index, 1);

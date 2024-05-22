@@ -22,6 +22,7 @@ import Swal from 'sweetalert2';
 export class AccountReceivableComponent implements OnInit {
 
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable("DateFormat");
+  entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   currentDate: string = this.datePipe.transform(new Date(), "dd-MM-yyyy");
   ImportUrl: any
   divisionList: any;
@@ -114,13 +115,12 @@ export class AccountReceivableComponent implements OnInit {
     return this.datePipe.transform(new Date(), 'yyyy-MM-dd');
   }
   setPage(page: number) {
-
     if (this.PaymentReceivableList.length) {
       if (page < 1 || page > this.pager.totalPages) {
         return;
       }
       // get pager object from service
-      this.pager = this.ps.getPager(this.PaymentReceivableList.length, page);
+      this.pager = this.ps.getPagers(this.PaymentReceivableList.length, page);
 
       // get current page of items
       this.pagedItems = this.PaymentReceivableList.slice(this.pager.startIndex, this.pager.endIndex + 1);

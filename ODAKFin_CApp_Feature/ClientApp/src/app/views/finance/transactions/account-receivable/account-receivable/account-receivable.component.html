@@ -152,12 +152,15 @@
                                         {{data.Invoice }}</td>
                                         <td>{{ data.OBDate | date: 'dd-MM-yyyy' }}</td>
 
-                                     
-                                    <td>{{data.Customer }}</td>
+                                    <td [title]="data.Customer | uppercase" >
+                                        {{ (data.Customer && data.Customer.length > 30) ? data.Customer.slice(0, 30) + '-' : data.Customer|| '-'  }}
+                                    </td>
                                   
                                           <td>{{ data.InvoiceDate | date: 'dd-MM-yyyy' }}</td>
                                          
-                                    <td>{{data.Amount }}</td>
+                                    <!-- <td>{{data.Amount }}</td> -->
+                                    <td class="text-right">{{ data.Amount | dynamicDecimal: entityFraction }}</td>
+
                                 </tr>
                                 </tbody>
                                 <tbody *ngIf="pagedItems.length === 0">
@@ -171,7 +174,7 @@
            
 
             <div style="justify-content: end;" class="row page w-100">
-                <ul *ngIf="pager.pages && pager?.pages?.length && pager.totalItems > 10"  class="pagination">
+                <ul *ngIf="pager.pages && pager?.pages?.length && pager.totalItems > 25"  class="pagination">
                     <li [ngClass]="{disabled:pager.currentPage === 1}">
                         <a (click)="setPage(1)">First</a>
                     </li>
@@ -224,7 +227,7 @@
                     </div>
 
                     <div class="col-md-12 col-sm-12 col-lg-12 col-xl-12">
-                        <div class="form-group bmd-form-group">
+                        <div class="form-group bmd-form-group">                     
                             <input onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
                               min="0" numbersOnly appDynamicDecimal class="form-control my-select amount w-100 mr-0"
                               formControlName="Amount" placeholder="Amount" numbersOnly/>

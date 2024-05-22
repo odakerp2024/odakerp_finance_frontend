@@ -22,6 +22,7 @@ import Swal from 'sweetalert2';
 })
 export class LiabilityComponent implements OnInit {
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable("DateFormat");
+  entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   currentDate: string = this.datePipe.transform(new Date(), "dd-MM-yyyy");
   ImportUrl: any
   divisionList: any;
@@ -92,7 +93,7 @@ export class LiabilityComponent implements OnInit {
         return;
       }
       // get pager object from service
-      this.pager = this.ps.getPager(this.PaymentLiabilityList.length, page);
+      this.pager = this.ps.getPagers(this.PaymentLiabilityList.length, page);
 
       // get current page of items
       this.pagedItems = this.PaymentLiabilityList.slice(this.pager.startIndex, this.pager.endIndex + 1);

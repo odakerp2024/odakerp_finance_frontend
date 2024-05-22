@@ -246,7 +246,7 @@
                                     <td>{{data.CurrencyCode}}</td>
                                     <td class="text-right hyperTextColor">{{ data.Symbol + ' ' + (data.InvoiceAmountICY | dynamicDecimal: entityFraction) }}</td>
                                     <td class="text-right hyperTextColor">{{ data.Symbol + ' ' + (data.InvoiceAmountCCY | dynamicDecimal: entityFraction) }}</td>
-                                    <td>{{data.invoice_Tax}}</td>
+                                    <td class="text-right hyperTextColor">{{data.invoice_Tax}}</td>
                                     <td  [ngClass]="data.Status == 'Paid' ? ' badge-confirm' : data.Status == 'Due' ? 'badge-cancel' : ' badge-draft'">
                                         {{data.Status}}</td>
                           

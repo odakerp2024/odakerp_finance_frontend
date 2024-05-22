@@ -830,9 +830,11 @@ export class CustomerComponent implements OnInit {
 
     //KYC Documents
     if (response['data'].Table3.length > 0) {
-      this.documentPayloadInfo = response['data'].Table3;
-      if(this.onBoardStatus != 2){
-        this.disableSave = false;
+      if (response['data'].Table4.length > 0) {
+        this.documentPayloadInfo = response['data'].Table3;
+        if(this.onBoardStatus != 2){
+          this.disableSave = false;
+        }
       }
     }
 
