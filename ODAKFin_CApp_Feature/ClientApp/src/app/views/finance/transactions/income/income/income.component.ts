@@ -22,6 +22,7 @@ import Swal from 'sweetalert2';
 export class IncomeComponent implements OnInit {
 
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable("DateFormat");
+  entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   currentDate: string = this.datePipe.transform(new Date(), "dd-MM-yyyy");
   ImportUrl: any
   divisionList: any;
@@ -115,7 +116,7 @@ export class IncomeComponent implements OnInit {
         return;
       }
       // get pager object from service
-      this.pager = this.ps.getPager(this.PaymentIncomeList.length, page);
+      this.pager = this.ps.getPagers(this.PaymentIncomeList.length, page);
 
       // get current page of items
       this.pagedItems = this.PaymentIncomeList.slice(this.pager.startIndex, this.pager.endIndex + 1);
