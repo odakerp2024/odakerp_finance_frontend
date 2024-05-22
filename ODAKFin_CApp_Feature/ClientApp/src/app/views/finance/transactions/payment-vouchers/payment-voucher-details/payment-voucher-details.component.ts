@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PaymentVoucherService } from 'src/app/services/payment-voucher.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpEventType, HttpResponse } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
 import { AutoGenerationCodeService } from 'src/app/services/auto-generation-code.service';
 import { AutoCodeService } from 'src/app/services/auto-code.service';
@@ -128,7 +128,8 @@ export class PaymentVoucherDetailsComponent implements OnInit {
   IsExLossEnable: boolean = false;
   IsVendorEnable: boolean = false;
   IsBranchEnable: boolean = false;
-
+  selectedFile: File = null;
+  fileUrl: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -138,6 +139,7 @@ export class PaymentVoucherDetailsComponent implements OnInit {
     private autoGenerationCodeService: AutoGenerationCodeService,
     private autoCodeService: AutoCodeService,
     private commonDataService: CommonService,
+    private commonservice: CommonService,
     private globals: Globals,
     private dataService: DataService,
     private router: Router
@@ -243,6 +245,7 @@ export class PaymentVoucherDetailsComponent implements OnInit {
         PaymentVoucherId: [0],
         DocumentName: [''],
         FilePath: [''],
+        UniqueFilePath: [''],
         IsBill: [''],
         IsOnAccount: [''],
         CreatedDate: [this.CreatedDate],
@@ -1495,11 +1498,16 @@ export class PaymentVoucherDetailsComponent implements OnInit {
     if (event.target.files.length > 0) {
       this.paymentForm.controls.document.controls.FilePath.setValue(event.target.files[0].name);
       this.paymentForm.controls.document.controls.DocumentName.setValue(event.target.files[0].name);
-      this.uploadDocument();
+      this.uploadDocument(event);
     }
   }
 
-  uploadDocument() {
+  uploadDocument(event) {
+    if (event) {
+      this.selectedFile = event.target.files[0];
+      const filedata = new FormData();
+      filedata.append('file', this.selectedFile, this.selectedFile.name)
+
     let validation = '';
     if (this.documentTableList.length >= 5) {
       validation += '<span style=\'color:red;\'>*</span> <span>You can upload Maximum of 5 </span></br>';
@@ -1516,15 +1524,54 @@ export class PaymentVoucherDetailsComponent implements OnInit {
       Swal.fire(validation);
       return false;
     } else {
+      this.commonservice.AttachUpload(this.selectedFile).subscribe(data => {
+        if (data) {
       const Table = this.paymentForm.value.Table
       let document = this.paymentForm.value.document;
       document.IsBill = Table.IsBill ? 1 : 0;
       document.IsOnAccount = Table.IsOnAccount ? 1 : 0;
+      document.UniqueFilePath = data.FileNamev,
       this.documentTableList.push(document)
       this.documentUploadReset()
     }
-  }
+    (error: HttpErrorResponse) => {
+      Swal.fire(error.message, 'error')
 
+    }
+    });
+
+    }
+  }
+}
+   /*File Download*/
+   download = (fileUrl) => {
+    this.fileUrl = "UploadFolder\\Attachments\\" + fileUrl;
+    this.commonDataService.download(fileUrl).subscribe((event) => {
+  
+        if (event.type === HttpEventType.UploadProgress){ 
+          
+        }
+            // this.progress1 = Math.round((100 * event.loaded) / event.total);
+  
+        else if (event.type === HttpEventType.Response) {
+            // this.message = 'Download success.';
+            this.downloadFile(event);
+        }
+    });
+  }
+  
+  private downloadFile = (data: HttpResponse<Blob>) => {
+    const downloadedFile = new Blob([data.body], { type: data.body.type });
+    const a = document.createElement('a');
+    a.setAttribute('style', 'display:none;');
+    document.body.appendChild(a);
+    a.download = this.fileUrl;
+    a.href = URL.createObjectURL(downloadedFile);
+    a.target = '_blank';
+    a.click();
+    document.body.removeChild(a);
+  }
+  
   documentUploadReset() {
     this.paymentForm.controls['document'].controls['FilePath'].setValue('');
     this.paymentForm.controls['document'].controls['IsOnAccount'].setValue('');
