@@ -1,4 +1,5 @@
 import { DatePipe } from '@angular/common';
+import { HttpErrorResponse, HttpEventType, HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -54,12 +55,17 @@ export class JournalVoucherDetailsComponent implements OnInit {
   isFinalRecord: boolean = false;
   currentDate = this.datePipe.transform(new Date(), "yyyy-MM-dd");
   fromMaxDate = this.currentDate;
+  selectedFile: File = null;
+  fileUrl: string;
+
+
   constructor(
     private fb: FormBuilder,
     private globals: Globals,
     private dataService: DataService,
     private datePipe: DatePipe,
     public commonDataService: CommonService,
+    private commonservice: CommonService,
     private chartAccountService: ChartaccountService,
     private router: Router,
     private autoCodeService: AutoCodeService,
@@ -380,20 +386,78 @@ export class JournalVoucherDetailsComponent implements OnInit {
     }, error => { });
   }
 
+  // fileSelected(event) {
+  //   if (event.target.files.length > 0 && this.journalFileList.length < 5) {
+  //     this.journalForm.controls.FileName.setValue(event.target.files[0].name);
+  //     this.journalFileList.push({
+  //       Id: 0,
+  //       JournalVoucherId: this.journalId ? this.journalId : this.journalForm.value.JournalVoucherId,
+  //       FileName: event.target.files[0].name,
+  //       FilePath: event.target.files[0].name
+  //     })
+  //   }
+  //   else {
+  //     Swal.fire('A maximum of five files must be allowed.')
+  //   }
+  // }
+
   fileSelected(event) {
-    if (event.target.files.length > 0 && this.journalFileList.length < 5) {
+    if (event) {
+      this.selectedFile = event.target.files[0];
+      const filedata = new FormData();
+      filedata.append('file', this.selectedFile, this.selectedFile.name)
       this.journalForm.controls.FileName.setValue(event.target.files[0].name);
+      this.commonservice.AttachUpload(this.selectedFile).subscribe(data => {
+        if (data) {
+
       this.journalFileList.push({
         Id: 0,
         JournalVoucherId: this.journalId ? this.journalId : this.journalForm.value.JournalVoucherId,
         FileName: event.target.files[0].name,
-        FilePath: event.target.files[0].name
-      })
+        FilePath: event.target.files[0].name,
+        UniqueFilePath: data.FileNamev,
+
+      });
     }
+  },
+    (error: HttpErrorResponse) => {
+      Swal.fire(error.message, 'error')
+    });
+}
     else {
-      Swal.fire('A maximum of five files must be allowed.')
-    }
+      Swal.fire('A maximum of five files must be allowed.')  
+    }   
   }
+
+   /*File Download*/
+download = (fileUrl) => {
+  this.fileUrl = "UploadFolder\\Attachments\\" + fileUrl;
+  this.commonDataService.download(fileUrl).subscribe((event) => {
+
+      if (event.type === HttpEventType.UploadProgress){ 
+        
+      }
+          // this.progress1 = Math.round((100 * event.loaded) / event.total);
+
+      else if (event.type === HttpEventType.Response) {
+          // this.message = 'Download success.';
+          this.downloadFile(event);
+      }
+  });
+}
+
+private downloadFile = (data: HttpResponse<Blob>) => {
+  const downloadedFile = new Blob([data.body], { type: data.body.type });
+  const a = document.createElement('a');
+  a.setAttribute('style', 'display:none;');
+  document.body.appendChild(a);
+  a.download = this.fileUrl;
+  a.href = URL.createObjectURL(downloadedFile);
+  a.target = '_blank';
+  a.click();
+  document.body.removeChild(a);
+}
+
 
   addRow() {
     var validation = "";
