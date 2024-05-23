@@ -8,6 +8,7 @@ import { ReportSalesVoucherComponent } from './report-sales-voucher/report-sales
 import { ReportJournalVoucherComponent } from './report-journal-voucher/report-journal-voucher.component';
 import { ReportAdjustmentVoucherComponent } from './report-adjustment-voucher/report-adjustment-voucher.component';
 import { ReportDayBookComponent } from './report-day-book/report-day-book.component';
+import { ReportPurchaseVoucherComponent } from './report-purchase-voucher/report-purchase-voucher.component';
 
 
 const routes: Routes = [
@@ -20,6 +21,7 @@ const routes: Routes = [
   { path: 'report-journal-voucher'      ,  component : ReportJournalVoucherComponent },
   { path: 'report-adjustment-voucher'   ,  component : ReportAdjustmentVoucherComponent },
   { path: 'report-day-book'             ,  component : ReportDayBookComponent },
+  { path: 'report-purchase-voucher'     ,  component : ReportPurchaseVoucherComponent},
 
 ];
 
