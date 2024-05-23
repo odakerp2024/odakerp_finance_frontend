@@ -2,3 +2,10 @@
     width: 11% !important;
     text-align: center;
 }
+::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items .ng-optgroup {
+    color: black !important;
+    text-transform: uppercase !important;
+    font-weight: bold !important;
+    background-color: #d6d9db !important;
+  }
+

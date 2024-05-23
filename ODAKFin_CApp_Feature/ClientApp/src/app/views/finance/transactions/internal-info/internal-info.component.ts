@@ -55,7 +55,10 @@ export class InternalInfoComponent implements OnInit {
   InternalDescription: string = "";
   isEditEnabled = true;
   selectedFile: File = null;
-  fileUrl: string;
+  fileUrl: string;  
+  AccountList: any[];
+  groupedCoaTypeList: { [key: string]: any[] }
+
 
   constructor(
     private router: Router,
@@ -78,7 +81,9 @@ export class InternalInfoComponent implements OnInit {
     // this.getOfficeList();
     this.getStatusList();
     this.getCurrency();
-    this.ChartAccountList();
+    // this.ChartAccountList();
+    this.getParentAccountList();
+
     this.route.params.subscribe(param => {
       if (param.id) {
         if (param.isCopy == "true") { this.isCopyMode = true; }
@@ -93,6 +98,32 @@ export class InternalInfoComponent implements OnInit {
       }
     });
     // if (!this.isUpdate && !this.isCopyMode) { this.getNumberRange(); }
+  }
+
+  getParentAccountList() {
+    
+    this.commonDataService.getChartaccountsFilter().subscribe(async data => {
+      this.AccountList = [];
+      if (data["data"].length > 0) {
+        data["data"].forEach(e => e.AccountName = e.AccountName.toUpperCase());
+        this.AccountList = data["data"];
+        this.groupedCoaTypeList = this.groupDataByCEOGroupId(this.AccountList);
+      }
+    });
+}
+
+ groupDataByCEOGroupId(data: any[]): { [key: string]: any[] } {
+    const groupedData: { [key: string]: any[] } = {};
+
+    for (const item of data) {
+      const groupId = item.GroupName.toUpperCase();
+      if (!groupedData[groupId]) {
+        groupedData[groupId] = [];
+      }
+      groupedData[groupId].push(item);
+    }
+
+    return groupedData;
   }
 
   updateValue(){
@@ -414,7 +445,8 @@ export class InternalInfoComponent implements OnInit {
     }
 
     let info = this.internalCreateForm.value;
-    let account = this.accountName.find(x => x.ChartOfAccountsId == info.AccountId);
+    // let account = this.accountName.find(x => x.ChartOfAccountsId == info.AccountId);
+    let account = this.AccountList.find(e => { return e.ChartOfAccountsId == info.AccountId })
     let currency = this.currencyList.find(x => x.ID == info.CurrencyId);
 
     if (this.isEditMode) {

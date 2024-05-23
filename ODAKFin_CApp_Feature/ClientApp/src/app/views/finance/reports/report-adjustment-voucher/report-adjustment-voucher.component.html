@@ -196,10 +196,10 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="let data of pagedItems">
-                                    <td>{{data.JournalDate |
+                                    <td>{{data.AVDate |
                                         date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}
                                     </td>
-                                    <td class="hyperTextColor">{{data.JournalNumber}}</td>
+                                    <td class="hyperTextColor">{{data.AVNumber}}</td>
                                     <td>{{data.AccountName}}</td>
                                     <td>{{data.Invoice_type}}</td>
                                     <td class=" text-right hyperTextColor">{{ data.Symbol + ' ' + (data.Amount | dynamicDecimal: entityFraction) }}</td>

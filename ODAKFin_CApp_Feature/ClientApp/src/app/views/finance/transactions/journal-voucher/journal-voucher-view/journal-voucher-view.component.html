@@ -187,18 +187,13 @@
                      </div>
                     <div class="col-12">
                         <div class="form-group bmd-form-group">
-                            <!-- <select class="form-control my-select" formControlName="AccountId">
-                                <option value='' disabled>--SELECT ACCOUNT--</option>
-                                <option *ngFor="let name of accountName" [value]="name.ChartOfAccountsId">
-                                    {{name.AccountName | uppercase}}
-                                </option>
-                            </select> -->
-                            <ng-select class="searchdropdown custom"  formControlName="AccountId"[clearable]="false" >
-                                <ng-option [value]="''" [disabled]="true">--SELECT ACCOUNT--</ng-option>
-                                <ng-option  *ngFor="let name of accountName" [value]="name.ChartOfAccountsId">
-                                    <span class="textwrap"> {{name.AccountName | uppercase}}</span>
-                                </ng-option>
-                            </ng-select>   
+                            <ng-select class="searchdropdown" [clearable]="false" [appendTo]="'body'"
+                            [items]="AccountList" bindLabel="AccountName" bindValue="ChartOfAccountsId"
+                            groupBy="GroupName" formControlName="AccountId">
+                            <ng-template ng-optgroup let-item="item" >
+                                {{item.GroupName | uppercase}}
+                            </ng-template>
+                        </ng-select>
                         </div>
                     </div>
 
