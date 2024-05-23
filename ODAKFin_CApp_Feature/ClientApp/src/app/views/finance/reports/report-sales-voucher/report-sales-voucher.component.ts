@@ -274,6 +274,7 @@ export class ReportSalesVoucherComponent implements OnInit {
   getVoucherTypeList() {
    this.commonDataService.getVoucherTypeList().subscribe(data => {
       this.TypeList = data["data"].Table;
+      this.TypeList = this.TypeList.filter(x => x.Seqvalue == "INCOME" );
     });
   }
 

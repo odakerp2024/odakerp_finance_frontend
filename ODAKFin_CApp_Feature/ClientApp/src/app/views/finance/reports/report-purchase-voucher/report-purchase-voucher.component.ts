@@ -163,7 +163,8 @@ export class ReportPurchaseVoucherComponent implements OnInit {
       DivisionId: [0],
       OfficeId: [0],
       VendorId: [0],
-      VendorBranch: [0],
+     
+      BranchId: [0],
       Amount: [''],
       Type: [0],
       InvoiceNo: [''],
@@ -171,6 +172,7 @@ export class ReportPurchaseVoucherComponent implements OnInit {
       VendorInvoice: [''],
       Peroid: [''],
     });
+    
     this.onOptionChange('month');
     await this.getPurchaseVoucherReportList();
   }
@@ -215,21 +217,34 @@ export class ReportPurchaseVoucherComponent implements OnInit {
       });
     })
   }
-
   getVendorBranch(vendorId) {
     const vendorDetails = this.vendorList.find((vendor) => vendor.VendorID == vendorId);
-    this.reportFilter.controls['VendorBranch'].setValue('');
+    this.reportFilter.controls['BranchId'].setValue('');
     if (vendorDetails) {
-      this.vendorBranch = this.vendorList.filter(vendor => { return vendor.VendorName == vendorDetails.VendorName });
-      if (this.vendorBranch.length > 0) {
-        this.reportFilter.controls['VendorBranch'].setValue(0);
-        if (this.vendorBranch.length == 1) {
-          this.reportFilter.value.vendorBranch = this.vendorBranch[0].VendorBranchID
-          this.reportFilter.controls['VendorBranch'].setValue(this.vendorBranch[0].VendorBranchID);
-        }
+      this.vendorBranch = this.vendorList.filter(vendor => { return vendor.VendorName === vendorDetails.VendorName });
+      if (this.vendorBranch.length) {
+        const selectedBranch = this.vendorBranch[0].BranchCode;
+        this.reportFilter.value.vendorBranch = this.vendorBranch[0].VendorBranchID
+        this.getVendorTan(selectedBranch);
+        this.reportFilter.controls['BranchId'].setValue(this.vendorBranch[0].VendorBranchID);
       }
+      // this.branches = this.vendorBranch.length
+      // this.newOne = this.vendorBranch[0].BranchCode;
     }
   }
+  getVendorTan(vendorBranch) {
+    debugger
+    const vendorTanDetails = this.vendorList.filter(vendor => { return vendor.BranchCode == vendorBranch }); // ! need to vendorTanDetails is present
+    if (vendorTanDetails.length == 0) {
+      return;
+    }
+    const payload = {
+      VendorID: vendorTanDetails[0].VendorID,
+      VendorBranchID: vendorTanDetails[0].VendorBranchID
+    }
+  }
+
+
 
   removeDuplicatesVendorId(arr, key) {
     const uniqueMap = new Map();
@@ -264,6 +279,8 @@ export class ReportPurchaseVoucherComponent implements OnInit {
   getVoucherTypeList() {
     this.commonDataService.getVoucherTypeList().subscribe(data => {
       this.TypeList = data["data"].Table;
+       this.TypeList = this.TypeList.filter(x => x.Seqvalue == "Expense" );
+      
     });
   }
 
@@ -272,7 +289,7 @@ export class ReportPurchaseVoucherComponent implements OnInit {
     this.startDate = this.reportFilter.controls.FromDate.value;
     this.endDate = this.reportFilter.controls.ToDate.value;
 
-    this.reportService.getPaymentVoucherReportList(this.reportFilter.value).subscribe(result => {
+    this.reportService.getPurchaseVoucherReportList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
 
       if (result['data'].Table.length > 0) {
