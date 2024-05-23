@@ -162,7 +162,7 @@
                     </div>
                 </div>
             <div style="justify-content: end;" class="row page w-100">
-                <ul *ngIf="pager.pages && pager?.pages?.length && pager.totalItems > 25"  class="pagination">
+                <ul *ngIf="pager.pages && pager?.pages?.length && pager.totalItems > 15"  class="pagination">
                     <li [ngClass]="{disabled:pager.currentPage === 1}">
                         <a (click)="setPage(1)">First</a>
                     </li>
