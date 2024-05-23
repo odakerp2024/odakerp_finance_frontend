@@ -71,7 +71,7 @@ export class PaginationService {
         };
     }
     
-    getPagers(totalItems: number, currentPage: number = 1, pageSize: number = 25) {
+    getPagers(totalItems: number, currentPage: number = 1, pageSize: number = 15) {
         // calculate total pages
         let totalPages = Math.ceil(totalItems / pageSize);
 
