@@ -69,6 +69,13 @@ export class FinanceMasterComponent implements OnInit {
   customername: string = "0";
   status: string = "pending";
 
+  wfnumberH: string = "0";
+  eventnumberH: string = "0";
+  fromdateH: string = "0";
+  tilldateH: string = "0";
+  event_valueH: string = "0";
+  customernameH: string = "0";
+
   cusBID: string='';
   eventName: string='';
   redirectURL: string='';
@@ -473,12 +480,12 @@ export class FinanceMasterComponent implements OnInit {
   }
 
   wfSearchHistory(){
-    this.wfnumber = $('#ddlwfnumberH').val() ? $('#ddlwfnumberH').val().toString() : "0";
-    this.event_value = $('#ddlwfdetailsH').val() ? $('#ddlwfdetailsH').val().toString() : "0";
-    this.eventnumber = $('#ddlwfeventNameH').val() ? $('#ddlwfeventNameH').val().toString() : "0";
-    this.customername = $('#ddlCustomerNameH').val() ? $('#ddlCustomerNameH').val().toString() : "0";
-    this.fromdate = $('#ddlfromDateH').val() ? $('#ddlfromDateH').val().toString() : "0";
-    this.tilldate = $('#ddltillDateH').val() ? $('#ddltillDateH').val().toString() : "0";
+    this.wfnumberH = $('#ddlwfnumberH').val() ? $('#ddlwfnumberH').val().toString() : "0";
+    this.event_valueH = $('#ddlwfdetailsH').val() ? $('#ddlwfdetailsH').val().toString() : "0";
+    this.eventnumberH = $('#ddlwfeventNameH').val() ? $('#ddlwfeventNameH').val().toString() : "0";
+    this.customernameH = $('#ddlCustomerNameH').val() ? $('#ddlCustomerNameH').val().toString() : "0";
+    this.fromdateH = $('#ddlfromDateH').val() ? $('#ddlfromDateH').val().toString() : "0";
+    this.tilldateH = $('#ddltillDateH').val() ? $('#ddltillDateH').val().toString() : "0";
     this.status = $('#ddlwfStatusH').val() ? $('#ddlwfStatusH').val().toString() : "0";
     this.getWorkflowInboxHistory();
   }
@@ -509,12 +516,12 @@ export class FinanceMasterComponent implements OnInit {
     $('#ddlfromDateH').val('').trigger("change");
     $('#ddltillDateH').val('').trigger("change");
     $('#ddlwfStatusH').val(0).trigger("change");
-    this.wfnumber = "0";
-    this.event_value = "0";
-    this.eventnumber = "0";
-    this.customername = "0";
-    this.fromdate = "0";
-    this.tilldate = "0";
+    this.wfnumberH = "0";
+    this.event_valueH = "0";
+    this.eventnumberH = "0";
+    this.customernameH = "0";
+    this.fromdateH = "0";
+    this.tilldateH = "0";
     this.status = "approve";
 
     this.getWorkflowInboxHistory();
