@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpEventType, HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
@@ -57,6 +57,8 @@ export class VendorCreditNotesInfoComponent implements OnInit {
   isFinalRecord: boolean = false;
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
   entityCurrencyName: any;
+  selectedFile: File = null;
+  fileUrl: string;
   newOne: any;
 
   constructor(
@@ -66,6 +68,8 @@ export class VendorCreditNotesInfoComponent implements OnInit {
     private datePipe: DatePipe,
     private VendorService: VendorService,
     public ps: PaginationService,
+    
+  private commonservice: CommonService,
     private router: Router,
     private route: ActivatedRoute,
     private autoCodeService: AutoCodeService,
@@ -329,20 +333,74 @@ export class VendorCreditNotesInfoComponent implements OnInit {
     }, error => { });
   }
 
+  // fileSelected(event) {
+  //   if (event.target.files.length > 0 && this.FileList.length < 5) {
+  //     this.FileList.push({
+  //       Id: 0,
+  //       VendorCreditNoteId: this.vendorCreditId,
+  //       FileName: event.target.files[0].name,
+  //       FilePath: event.target.files[0].name
+  //     })
+  //   }
+  //   else {
+  //     Swal.fire('A maximum of five files must be allowed.')
+  //   }
+  // }
   fileSelected(event) {
-    if (event.target.files.length > 0 && this.FileList.length < 5) {
+    if (event) {
+      this.selectedFile = event.target.files[0];
+      const filedata = new FormData();
+      filedata.append('file', this.selectedFile, this.selectedFile.name)
+
+      this.commonservice.AttachUpload(this.selectedFile).subscribe(data => {
+        if (data) {
+
       this.FileList.push({
         Id: 0,
         VendorCreditNoteId: this.vendorCreditId,
         FileName: event.target.files[0].name,
-        FilePath: event.target.files[0].name
-      })
-    }
-    else {
-      Swal.fire('A maximum of five files must be allowed.')
-    }
-  }
+        FilePath: event.target.files[0].name,
+        UniqueFilePath: data.FileNamev,
 
+      });
+    }
+  },
+    (error: HttpErrorResponse) => {
+      Swal.fire(error.message, 'error')
+    });
+}
+    else {
+      Swal.fire('A maximum of five files must be allowed.')  
+    }   
+  }
+   /*File Download*/
+   download = (fileUrl) => {
+    this.fileUrl = "UploadFolder\\Attachments\\" + fileUrl;
+    this.commonDataService.download(fileUrl).subscribe((event) => {
+  
+        if (event.type === HttpEventType.UploadProgress){ 
+          
+        }
+            // this.progress1 = Math.round((100 * event.loaded) / event.total);
+  
+        else if (event.type === HttpEventType.Response) {
+            // this.message = 'Download success.';
+            this.downloadFile(event);
+        }
+    });
+  }
+  
+  private downloadFile = (data: HttpResponse<Blob>) => {
+    const downloadedFile = new Blob([data.body], { type: data.body.type });
+    const a = document.createElement('a');
+    a.setAttribute('style', 'display:none;');
+    document.body.appendChild(a);
+    a.download = this.fileUrl;
+    a.href = URL.createObjectURL(downloadedFile);
+    a.target = '_blank';
+    a.click();
+    document.body.removeChild(a);
+  }
   getDivisionList() {
     var service = `${this.globals.APIURL}/Division/GetOrganizationDivisionList`; var payload: any = {}
     this.dataService.post(service, payload).subscribe((result: any) => {
