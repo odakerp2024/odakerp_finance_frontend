@@ -79,15 +79,12 @@
 
                         <div class="col-4">
                             <label class="fontstyles">ACCOUNT</label>
-                            <ng-select class="searchdropdown" formControlName="AccountId" [clearable]="false"
-                                name="CategoryId" id="CategoryId">
-                                <ng-option [value]="0" [disabled]="true">--SELECT--</ng-option>
-                                <ng-container *ngFor="let bank of bankList">
-                                    <ng-option [value]="bank.BankID">
-                                        <span class="textwrap">{{bank.BankName | uppercase}} - {{bank.AccountNo}}
-                                        </span>
-                                    </ng-option>
-                                </ng-container>
+                            <ng-select class="searchdropdown" [clearable]="false" [appendTo]="'body'"
+                               [items]="AccountList" bindLabel="AccountName" bindValue="ChartOfAccountsId"
+                                groupBy="GroupName" formControlName="AccountId">
+                                <ng-template ng-optgroup let-item="item">
+                                     {{item.GroupName | uppercase}}
+                                </ng-template>
                             </ng-select>
                         </div>
 

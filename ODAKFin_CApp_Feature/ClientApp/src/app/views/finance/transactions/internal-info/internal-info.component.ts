@@ -413,14 +413,14 @@ export class InternalInfoComponent implements OnInit {
     }, error => { });
   }
 
-  ChartAccountList() {
-    this.commonDataService.getChartaccountsFilter().subscribe(async data => {
-      this.accountName = [];
-      if (data["data"].length > 0) {
-        this.accountName = data["data"];
-      }
-    });
-  }
+  // ChartAccountList() {
+  //   this.commonDataService.getChartaccountsFilter().subscribe(async data => {
+  //     this.accountName = [];
+  //     if (data["data"].length > 0) {
+  //       this.accountName = data["data"];
+  //     }
+  //   });
+  // }
 
 
   addRow() {

@@ -52,7 +52,6 @@ export class ReportAdjustmentVoucherComponent implements OnInit {
 
   ];
   selectedOption: string;
-  bankList: any;
   campaignOne = new FormGroup({
     start: new FormControl(new Date(year, month, 13)),
     end: new FormControl(new Date(year, month, 16)),
@@ -60,6 +59,8 @@ export class ReportAdjustmentVoucherComponent implements OnInit {
   startDate = '';
   endDate = '';
   currentDate = new Date();
+  AccountList: any[];
+  groupedCoaTypeList: { [key: string]: any[] }
 
   constructor(
     private commonDataService: CommonService,
@@ -78,9 +79,10 @@ export class ReportAdjustmentVoucherComponent implements OnInit {
     this.createReportForm();
     this.onOptionChange('month');
     this.getDivisionList();
-    this.getBankList();
     this.getVoucherList();
+    this.getParentAccountList();
     this.reportFilter.controls.Peroid.setValue('month');
+
   }
 
   onOptionChange(selectedOption: string) {
@@ -208,23 +210,31 @@ export class ReportAdjustmentVoucherComponent implements OnInit {
     })
   }
 
-  getBankList() {
-    let payload = {
-      OfficeId: 0,
-      DivisionId: 0,
-    };
+  getParentAccountList() {
+    
+    this.commonDataService.getChartaccountsFilter().subscribe(async data => {
+      this.AccountList = [];
+      if (data["data"].length > 0) {
+        data["data"].forEach(e => e.AccountName = e.AccountName.toUpperCase());
+        this.AccountList = data["data"];
+        this.groupedCoaTypeList = this.groupDataByCEOGroupId(this.AccountList);
+      }
+    });
+}
 
-    this.commonDataService
-      .getBankByOfficeId(payload)
-      .subscribe((result: any) => {
-        if (result.message == "Success") {
+ groupDataByCEOGroupId(data: any[]): { [key: string]: any[] } {
+    const groupedData: { [key: string]: any[] } = {};
 
-          this.bankList = result["data"].Table;
+    for (const item of data) {
+      const groupId = item.GroupName.toUpperCase();
+      if (!groupedData[groupId]) {
+        groupedData[groupId] = [];
+      }
+      groupedData[groupId].push(item);
+    }
 
-        }
-      });
+    return groupedData;
   }
-
 
 
   getDivisionBasedOffice(officeId: number, divisoinId: any) {
