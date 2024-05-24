@@ -114,7 +114,7 @@ export class EquityDetailsComponent implements OnInit {
           DebitorCredit: info.DebitorCredit,
           Currency: info.Currency,
           Exchange: info.Exchange,
-          AmountCCY: info.AmountCCY,
+          AmountCCY: parseFloat(info.AmountCCY).toFixed(3),
           ModifiedBy: info.ModifiedBy,
           OBReference: info.OBReference,
           OBDate: this.datePipe.transform(info.OBDate, 'dd-MM-yyyy'),
