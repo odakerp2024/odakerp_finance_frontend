@@ -1128,11 +1128,11 @@ export class FinanceMasterComponent implements OnInit {
       //SubfunctionID = 533;
       this.router.navigate(['/views/reports/report-sales-voucher']);
     }
-    else if (routePage == 'PurchaseVoucher') {
+    // else if (routePage == 'PurchaseVoucher') {
   
-      //SubfunctionID = 533;
-      this.router.navigate(['/views/reports/report-purchase-voucher']);
-    }
+    //   //SubfunctionID = 533;
+    //   this.router.navigate(['/views/reports/report-purchase-voucher']);
+    // }
     
     
     const userID = localStorage.getItem("UserID");
