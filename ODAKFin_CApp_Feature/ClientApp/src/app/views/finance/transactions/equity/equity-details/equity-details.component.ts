@@ -17,6 +17,9 @@ import Swal from 'sweetalert2';
 export class EquityDetailsComponent implements OnInit {
 
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat')
+  entityFraction = Number(
+    this.commonDataService.getLocalStorageEntityConfigurable("NoOfFractions")
+  );
   equityId: any;
   CreatedOn: string = '';
   private ngUnsubscribe = new Subject<void>();
@@ -114,7 +117,7 @@ export class EquityDetailsComponent implements OnInit {
           DebitorCredit: info.DebitorCredit,
           Currency: info.Currency,
           Exchange: info.Exchange,
-          AmountCCY: info.AmountCCY,
+          AmountCCY: parseFloat(info.AmountCCY).toFixed(this.entityFraction),
           ModifiedBy: info.ModifiedBy,
           OBReference: info.OBReference,
           OBDate: this.datePipe.transform(info.OBDate, 'dd-MM-yyyy'),

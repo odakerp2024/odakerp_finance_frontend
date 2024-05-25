@@ -24,6 +24,9 @@ export class LiabilityDetailsComponent implements OnInit {
   ModifiedBy: string = '';
   private ngUnsubscribe = new Subject<void>();
  entityDateFormat1 = this.commonDataService.convertToLowerCaseDayMonth(this.entityDateFormat);
+ entityFraction = Number(
+  this.commonDataService.getLocalStorageEntityConfigurable("NoOfFractions")
+);
   accountLiabilityForm: FormGroup;
   isUpdate: Boolean = false;
   isCreate: Boolean = true;
@@ -114,7 +117,7 @@ async  getLiabilityByID() {
           DebitorCredit: info.DebitorCredit,
           Currency: info.Currency,
           Exchange: info.Exchange,
-          AmountCCY: info.AmountCCY,
+          AmountCCY: parseFloat(info.AmountCCY).toFixed(this.entityFraction),
           ModifiedBy: info.ModifiedBy,
           OBReference: info.OBReference,
           OBDate: this.datePipe.transform(info.OBDate, 'dd-MM-y'),
