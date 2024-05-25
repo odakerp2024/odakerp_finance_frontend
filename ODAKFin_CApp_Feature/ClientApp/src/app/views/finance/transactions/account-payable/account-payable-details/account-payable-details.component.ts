@@ -17,6 +17,7 @@ import { takeUntil, map } from 'rxjs/operators';
 })
 export class AccountPayableDetailsComponent  implements OnInit {
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat')
+  entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   accountPayableId: any;
   divisionList: any[];
   officeList: any[];
@@ -145,10 +146,10 @@ export class AccountPayableDetailsComponent  implements OnInit {
           InvoiceCurrency: info.InvoiceCurrency,
           Exchange: info.Exchange,
           DebitorCredit: info.DebitorCredit,
-          InvoiceAmountICY: parseFloat(info.InvoiceAmountICY).toFixed(3),
-          InvoiceAmountCCY: parseFloat(info.InvoiceAmountCCY).toFixed(3),
-          DueAmountICY: parseFloat(info.DueAmountICY).toFixed(3),
-          DueAmountCCY: parseFloat(info.DueAmountCCY).toFixed(3),
+          InvoiceAmountICY: parseFloat(info.InvoiceAmountICY).toFixed(this.entityFraction),
+          InvoiceAmountCCY: parseFloat(info.InvoiceAmountCCY).toFixed(this.entityFraction),
+          DueAmountICY: parseFloat(info.DueAmountICY).toFixed(this.entityFraction),
+          DueAmountCCY: parseFloat(info.DueAmountCCY).toFixed(this.entityFraction),
           ModifiedBy: info.ModifiedBy,
           OBReference: info.OBReference,
           OBDate: this.datePipe.transform(info.OBDate, 'dd-MM-yyyy'),

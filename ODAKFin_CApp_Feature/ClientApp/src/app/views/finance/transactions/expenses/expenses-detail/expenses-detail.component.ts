@@ -18,6 +18,9 @@ import { takeUntil, map } from 'rxjs/operators';
 export class ExpensesDetailComponent implements OnInit {
 
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat')
+  entityFraction = Number(
+    this.commonDataService.getLocalStorageEntityConfigurable("NoOfFractions")
+  );
   expenseId: any;
   CreatedOn: string = '';
   CreatedBy =  localStorage.getItem('UserID')
@@ -116,7 +119,7 @@ export class ExpensesDetailComponent implements OnInit {
           DebitorCredit: info.DebitorCredit,
           Currency: info.Currency,
           Exchange: info.Exchange,
-          AmountCCY: parseFloat(info.AmountCCY).toFixed(3),
+          AmountCCY: parseFloat(info.AmountCCY).toFixed(this.entityFraction),
           ModifiedBy: info.ModifiedBy,
           OBReference: info.OBReference,
           OBDate: this.datePipe.transform(info.OBDate,"dd-MM-yyyy"),
