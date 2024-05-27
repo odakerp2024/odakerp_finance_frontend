@@ -114,7 +114,7 @@ export class AssetDetailComponent implements OnInit {
           Group: info.GroupName,
           DebitorCredit: info.DebitorCredit,
           Currency: info.Currency,
-          Exchange: info.Exchange,
+          Exchange:parseFloat(info.Exchange).toFixed(this.entityFraction),
           AmountCCY: parseFloat(info.AmountCCY).toFixed(this.entityFraction),
           ModifiedBy: info.ModifiedBy,
           OBReference: info.OBReference,
