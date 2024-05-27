@@ -190,7 +190,7 @@ export class AccountReceivableDetailsComponent implements OnInit {
               "yyyy-MM-dd"
             ),
             InvoiceCurrency: info.InvoiceCurrency,
-            Exchange: info.Exchange,
+            Exchange:parseFloat(info.Exchange).toFixed(this.entityFraction),
             // CustomerBranchID: info.CustomerBranchId,
             CustomerBranch: info.CustomerBranchId,
             DebitorCredit: info.DebitorCredit,

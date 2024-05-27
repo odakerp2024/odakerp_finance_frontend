@@ -115,7 +115,7 @@ export class BankDetailsComponent implements OnInit {
           GroupName: info.GroupName,
           DebitorCredit: info.DebitorCredit,
           Currency: info.Currency,
-          Exchange: info.Exchange,
+          Exchange:parseFloat(info.Exchange).toFixed(this.entityFraction),
           AmountCCY: parseFloat(info.AmountCCY).toFixed(this.entityFraction),
           ModifiedBy: info.ModifiedBy,
           OBReference: info.OBReference,

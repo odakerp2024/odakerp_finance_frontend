@@ -144,7 +144,7 @@ export class AccountPayableDetailsComponent  implements OnInit {
           PurchaseInvoice: info.PurchaseInvoice,
           PurchaseInvoiceDate: this.datePipe.transform(new Date(info.PurchaseInvoiceDate), "yyyy-MM-dd") ,
           InvoiceCurrency: info.InvoiceCurrency,
-          Exchange: info.Exchange,
+          Exchange:parseFloat(info.Exchange).toFixed(this.entityFraction),
           DebitorCredit: info.DebitorCredit,
           InvoiceAmountICY: parseFloat(info.InvoiceAmountICY).toFixed(this.entityFraction),
           InvoiceAmountCCY: parseFloat(info.InvoiceAmountCCY).toFixed(this.entityFraction),
