@@ -522,12 +522,19 @@
                             <tbody>
                                 <tr>
                                     <td style="min-width: 300px;">                                                 
-                                        <ng-select class="searchdropdown" [formControlName]="'AccountId'" [clearable]="false" [appendTo]="'body'">
+                                        <!-- <ng-select class="searchdropdown" [formControlName]="'AccountId'" [clearable]="false" [appendTo]="'body'">
                                            <ng-option [value]="0" disabled>--SELECT ACCOUNT--</ng-option>
                                            <ng-option *ngFor="let name of accountName" [value]="name.ChartOfAccountsId">
                                            <span class="textwrap">{{name.AccountName | uppercase}}</span>
                                           </ng-option>
-                                        </ng-select> 
+                                        </ng-select>  -->
+                                        <ng-select class="searchdropdown" [clearable]="false" [appendTo]="'body'"
+                                        [items]="AccountList" bindLabel="AccountName" bindValue="ChartOfAccountsId"
+                                        groupBy="GroupName" formControlName="AccountId">
+                                        <ng-template ng-optgroup let-item="item">
+                                            {{item.GroupName | uppercase}}
+                                        </ng-template>
+                                    </ng-select>
                                     </td>
                                     <td> <input formControlName="Rate"
                                             (ngModelChange)="rateQuantityChangeEvent($event)" class="form-control"

@@ -5,3 +5,10 @@
   ::ng-deep .ng-select .ng-select-container .ng-value-container .ng-placeholder {
     color: black !important; /* Change placeholder color to black */
 }
+
+::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items .ng-optgroup {
+  color: black !important;
+  text-transform: uppercase !important;
+  font-weight: bold !important;
+  background-color: #d6d9db !important;
+}

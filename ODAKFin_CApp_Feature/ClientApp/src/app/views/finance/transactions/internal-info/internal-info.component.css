@@ -11,3 +11,10 @@
     background: #e2e3e5;
     z-index: 4;
 }
+
+::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items .ng-optgroup {
+    color: black !important;
+    text-transform: uppercase !important;
+    font-weight: bold !important;
+    background-color: #d6d9db !important;
+  }

@@ -34,6 +34,8 @@ export class JournalVoucherViewComponent implements OnInit {
   currencyList: any = [];
   accountName: any = [];
   statusList: any = [];
+  AccountList: any[];
+  groupedCoaTypeList: { [key: string]: any[] };
 
   constructor(
     private ps: PaginationService,
@@ -52,8 +54,9 @@ export class JournalVoucherViewComponent implements OnInit {
     this.getDivisionList();
     this.getOfficeList();
     this.getCurrency();
-    this.ChartAccountList();
+   // this.ChartAccountList();
     this.getDropDownList();
+    this.getParentAccountList();
   }
 
   filterFormCreate() {
@@ -70,6 +73,31 @@ export class JournalVoucherViewComponent implements OnInit {
     });
   }
 
+  getParentAccountList() {
+    
+    this.commonDataService.getChartaccountsFilter().subscribe(async data => {
+      this.AccountList = [];
+      if (data["data"].length > 0) {
+        data["data"].forEach(e => e.AccountName = e.AccountName.toUpperCase());
+        this.AccountList = data["data"];
+        this.groupedCoaTypeList = this.groupDataByCEOGroupId(this.AccountList);
+      }
+    });
+}
+
+ groupDataByCEOGroupId(data: any[]): { [key: string]: any[] } {
+    const groupedData: { [key: string]: any[] } = {};
+
+    for (const item of data) {
+      const groupId = item.GroupName.toUpperCase();
+      if (!groupedData[groupId]) {
+        groupedData[groupId] = [];
+      }
+      groupedData[groupId].push(item);
+    }
+
+    return groupedData;
+  }
   CreateNew(){
     const userID = localStorage.getItem("UserID");
     const paylod = {
@@ -205,15 +233,15 @@ export class JournalVoucherViewComponent implements OnInit {
     
   }
 
-  ChartAccountList() {
-    let payLoad = { ID: 0, ChartOfAccountsId: 0, AcctCode: '', AccountName: '', AccountType: 0, MainGroup: 0, ParentAccountID: 0, IsActive: true, Status: '' }
-    this.chartAccountService.getChartaccountList(payLoad).subscribe(async data => {
-      this.accountName = [];
-      if (data["data"].length > 0) {
-        this.accountName = data["data"];
-      }
-    })
-  }
+  // ChartAccountList() {
+  //   let payLoad = { ID: 0, ChartOfAccountsId: 0, AcctCode: '', AccountName: '', AccountType: 0, MainGroup: 0, ParentAccountID: 0, IsActive: true, Status: '' }
+  //   this.chartAccountService.getChartaccountList(payLoad).subscribe(async data => {
+  //     this.accountName = [];
+  //     if (data["data"].length > 0) {
+  //       this.accountName = data["data"];
+  //     }
+  //   })
+  // }
   copyPaste(id: number) {
     this.router.navigate(['/views/transactions/journal/journal-details', { copy_id: id, isCopy: true  }]);
   }

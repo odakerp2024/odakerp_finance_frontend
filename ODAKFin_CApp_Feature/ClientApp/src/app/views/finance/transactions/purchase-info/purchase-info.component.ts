@@ -56,6 +56,8 @@ export class PurchaseInfoComponent implements OnInit {
   PurchaseDescription: any = '';
   isEditEnabled = true;
   toleranceValue: any;
+  AccountList: any[];
+  groupedCoaTypeList: { [key: string]: any[] };
   constructor(
     private router: Router,
     private fb: FormBuilder,
@@ -77,7 +79,10 @@ export class PurchaseInfoComponent implements OnInit {
     this.getDivisionList();
     this.getDropDownList();
     this.getVendorList();
-    this.ChartAccountList();
+    // this.ChartAccountList();
+    this.getParentAccountList();
+
+
     this.getCurrency();
     this.route.params.subscribe(param => {
       if (param.id) {
@@ -94,6 +99,34 @@ export class PurchaseInfoComponent implements OnInit {
     });
     // if (!this.isUpdate && !this.isCopyMode) { this.getNumberRange(); }
   }
+
+  
+  getParentAccountList() {
+    
+    this.commonDataService.getChartaccountsFilter().subscribe(async data => {
+      this.AccountList = [];
+      if (data["data"].length > 0) {
+        data["data"].forEach(e => e.AccountName = e.AccountName.toUpperCase());
+        this.AccountList = data["data"];
+        this.groupedCoaTypeList = this.groupDataByCEOGroupId(this.AccountList);
+      }
+    });
+}
+
+ groupDataByCEOGroupId(data: any[]): { [key: string]: any[] } {
+    const groupedData: { [key: string]: any[] } = {};
+
+    for (const item of data) {
+      const groupId = item.GroupName.toUpperCase();
+      if (!groupedData[groupId]) {
+        groupedData[groupId] = [];
+      }
+      groupedData[groupId].push(item);
+    }
+
+    return groupedData;
+  }
+
 
   updateValue(){
     const userID = localStorage.getItem("UserID");
@@ -309,7 +342,8 @@ export class PurchaseInfoComponent implements OnInit {
       return false;
     }
     let info = this.purchaseCreateForm.value;
-    let account = this.accountName.find(x => x.ChartOfAccountsId == info.AccountId);
+    // let account = this.accountName.find(x => x.ChartOfAccountsId == info.AccountId);
+    let account = this.AccountList.find(e => { return e.ChartOfAccountsId == info.AccountId })
     let currency = this.currencyList.find(x => x.ID == info.CurrencyId);
     if (this.isEditMode) {
      // const formattedAmount = Number(info.Amount).toFixed(2);

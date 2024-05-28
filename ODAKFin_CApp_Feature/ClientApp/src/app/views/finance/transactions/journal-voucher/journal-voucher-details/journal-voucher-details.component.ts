@@ -57,6 +57,8 @@ export class JournalVoucherDetailsComponent implements OnInit {
   fromMaxDate = this.currentDate;
   selectedFile: File = null;
   fileUrl: string;
+  AccountList: any[];
+  groupedCoaTypeList: { [key: string]: any[] };
 
 
   constructor(
@@ -80,7 +82,8 @@ export class JournalVoucherDetailsComponent implements OnInit {
     this.createJournalForm();
     this.getDivisionList();
     // this.getOfficeList();
-    this.ChartAccountList();
+    // this.ChartAccountList(); 
+    this.getParentAccountList();
     this.getCurrency();
     this.getDrCr();
     this.route.params.subscribe(param => {
@@ -99,6 +102,33 @@ export class JournalVoucherDetailsComponent implements OnInit {
      
     })
   }
+
+  getParentAccountList() {
+    
+    this.commonDataService.getChartaccountsFilter().subscribe(async data => {
+      this.AccountList = [];
+      if (data["data"].length > 0) {
+        data["data"].forEach(e => e.AccountName = e.AccountName.toUpperCase());
+        this.AccountList = data["data"];
+        this.groupedCoaTypeList = this.groupDataByCEOGroupId(this.AccountList);
+      }
+    });
+}
+
+ groupDataByCEOGroupId(data: any[]): { [key: string]: any[] } {
+    const groupedData: { [key: string]: any[] } = {};
+
+    for (const item of data) {
+      const groupId = item.GroupName.toUpperCase();
+      if (!groupedData[groupId]) {
+        groupedData[groupId] = [];
+      }
+      groupedData[groupId].push(item);
+    }
+
+    return groupedData;
+  }
+
 
 
   enableEdit() {
@@ -350,14 +380,14 @@ export class JournalVoucherDetailsComponent implements OnInit {
   //   }, error => { });
   // }
 
-  ChartAccountList() {
-    this.commonDataService.getChartaccountsFilter().subscribe(async data => {
-        this.accountName = [];
-        if (data["data"].length > 0) {
-          this.accountName = data["data"];
-        }
-      });
-    }
+  // ChartAccountList() {
+  //   this.commonDataService.getChartaccountsFilter().subscribe(async data => {
+  //       this.accountName = [];
+  //       if (data["data"].length > 0) {
+  //         this.accountName = data["data"];
+  //       }
+  //     });
+  //   }
    
 
   getCurrency() {
@@ -483,7 +513,8 @@ private downloadFile = (data: HttpResponse<Blob>) => {
     }
 
     let info = this.journalForm.value;
-    let account = this.accountName.find(x => x.ChartOfAccountsId == info.AccountId);
+    // let account = this.accountName.find(x => x.ChartOfAccountsId == info.AccountId);
+    let account = this.AccountList.find(e => { return e.ChartOfAccountsId == info.AccountId })
     let DrCrId = this.debitCreditList.find(x => x.Id == info.DrCrId);
     let currency = this.currencyList.find(x => x.ID == info.Currency);
 

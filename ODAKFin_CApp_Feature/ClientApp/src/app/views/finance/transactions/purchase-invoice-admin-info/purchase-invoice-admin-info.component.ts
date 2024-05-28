@@ -95,6 +95,8 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
   IsExchangeEnable: boolean = false;
   selectedFile: File = null;
   fileUrl: string;
+  AccountList: any[];
+  groupedCoaTypeList: { [key: string]: any[] };
 
   constructor(
     private fb: FormBuilder,
@@ -132,6 +134,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     this.getProvisionDropDownList();
     this.getTDSMaster();
     this.onBookingAgainstChange(0);
+    this.getParentAccountList();
     // this.maxDate = new Date();
     // this.maxDate.setDate( this.maxDate.getDate() + 3 );
 
@@ -155,6 +158,33 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     //     Swal.fire(this.errorMessage)
     //   }
     // });
+  }
+
+  getParentAccountList() {
+    
+    this.commonDataService.getChartaccountsFilter().subscribe(async data => {
+      this.AccountList = [];
+      if (data["data"].length > 0) {
+        data["data"].forEach(e => e.AccountName = e.AccountName.toUpperCase());
+        this.AccountList = data["data"];
+        this.groupedCoaTypeList = this.groupDataByCEOGroupId(this.AccountList);
+      }
+    });
+
+  }
+
+ groupDataByCEOGroupId(data: any[]): { [key: string]: any[] } {
+    const groupedData: { [key: string]: any[] } = {};
+
+    for (const item of data) {
+      const groupId = item.GroupName.toUpperCase();
+      if (!groupedData[groupId]) {
+        groupedData[groupId] = [];
+      }
+      groupedData[groupId].push(item);
+    }
+
+    return groupedData;
   }
 
   updateValue() {
