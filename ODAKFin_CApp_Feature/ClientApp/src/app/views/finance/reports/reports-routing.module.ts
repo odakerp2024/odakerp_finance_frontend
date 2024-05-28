@@ -9,6 +9,11 @@ import { ReportJournalVoucherComponent } from './report-journal-voucher/report-j
 import { ReportAdjustmentVoucherComponent } from './report-adjustment-voucher/report-adjustment-voucher.component';
 import { ReportDayBookComponent } from './report-day-book/report-day-book.component';
 import { ReportPurchaseVoucherComponent } from './report-purchase-voucher/report-purchase-voucher.component';
+import { ReportArLeveloneComponent } from './report-ar-levelone/report-ar-levelone.component';
+import { ReportArLeveltwoComponent } from './report-ar-leveltwo/report-ar-leveltwo.component';
+import { ReportArLevelthreeComponent } from './report-ar-levelthree/report-ar-levelthree.component';
+import { ReportApLeveloneComponent } from './report-ap-levelone/report-ap-levelone.component';
+import { ReportApLeveltwoComponent } from './report-ap-leveltwo/report-ap-leveltwo.component';
 
 
 const routes: Routes = [
@@ -22,6 +27,11 @@ const routes: Routes = [
   { path: 'report-adjustment-voucher'   ,  component : ReportAdjustmentVoucherComponent },
   { path: 'report-day-book'             ,  component : ReportDayBookComponent },
   { path: 'report-purchase-voucher'     ,  component : ReportPurchaseVoucherComponent},
+  { path: 'report-ar-levelone'          ,  component : ReportArLeveloneComponent },
+  { path: 'report-ar-leveltwo'          ,  component : ReportArLeveltwoComponent },
+  { path: 'report-ar-levelthree'        ,  component : ReportArLevelthreeComponent},
+  { path: 'report-ap-levelone'          ,  component : ReportApLeveloneComponent},
+  { path: 'report-ap-leveltwo'          ,  component : ReportApLeveltwoComponent },
 
 ];
 
