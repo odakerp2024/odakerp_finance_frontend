@@ -61,6 +61,8 @@ export class EntityComponent implements OnInit, AfterViewInit {
   isDocuments: boolean = false;
   isEmailids: boolean = false;
   isReadDocument: boolean = false;
+  selectedFile: File = null;
+
 
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
   entityDateFormat1 = this.commonDataService.convertToLowerCaseDayMonth(this.entityDateFormat);
@@ -161,20 +163,19 @@ export class EntityComponent implements OnInit, AfterViewInit {
     });
   }
 
-
-
   createDocumentForm() {
     this.documentForm = this.fb.group({
       ID: 0,
       OrgId: 0,
       DocumentName: [''],
       FilePath: [''],
+      UniqueFilePath: [''],
       UploadedBy: [localStorage.getItem('UserID')],
       uploadedOn: [localStorage.getItem('UserID')],
       CreatedBy: [localStorage.getItem('UserID')],
       UpdatedBy: [localStorage.getItem('UserID')],
       CreatedOn: [new Date()],
-      Modifiedon: [new Date()],
+      Modifiedon: [new Date()],   
     });
   }
 
@@ -440,7 +441,7 @@ export class EntityComponent implements OnInit, AfterViewInit {
   }
 
   async customService(newDocument?) {
-    await this.getCompanyDetails();
+  await this.getCompanyDetails();
     await this.customPayload(newDocument);
     let service = `${this.globals.APIURL}/Organization/SaveOrganizationEntity`;
     this.dataService.post(service, this.payload).subscribe((result: any) => {
@@ -573,12 +574,14 @@ export class EntityComponent implements OnInit, AfterViewInit {
         OrgId: this.companyDetailId,
         DocumentName: newDocument.DocumentName,
         FilePath: newDocument.FilePath,
+        UniqueFilePath: newDocument.UniqueFilePath,
         UploadedBy: localStorage.getItem('UserID'),
         uploadedOn: new Date(),
         CreatedBy: localStorage.getItem('UserID'),
         UpdatedBy: localStorage.getItem('UserID'),
         CreatedOn: new Date(),
-        Modifiedon: new Date()
+        Modifiedon: new Date(),
+       
       }];
 
     }
@@ -658,7 +661,7 @@ export class EntityComponent implements OnInit, AfterViewInit {
     });
   }
 
-  uploadDocument(event) {
+   uploadDocument(event) {
     // alert('common component');
     // return;
     var validation = "";
@@ -669,6 +672,10 @@ export class EntityComponent implements OnInit, AfterViewInit {
     //   validation += "<span style='color:red;'>*</span> <span>Please Enter Browser File</span></br>"
     // }
     if (event) {
+      this.selectedFile = event.file.target.files[0];
+      const filedata = new FormData();
+      filedata.append('file', this.selectedFile, this.selectedFile.name)
+
       if (!event.DocumentName) {
         validation += "<span style='color:red;'>*</span> <span>Please Enter Document Name </span></br>"
       }
@@ -681,9 +688,18 @@ export class EntityComponent implements OnInit, AfterViewInit {
       Swal.fire(validation)
       return false;
     }
+    return new Promise((resolve) => {
+    this.commonDataService.AttachUpload(this.selectedFile).subscribe(data => {
+      if (data) {
+        debugger
+        event.UniqueFilePath = data.FileNamev
+      } resolve(true);
 
-    this.customService(event);
-    this.getOrganization();
+      this.customService(event);
+      this.getOrganization();
+
+  }, error => { });
+});
   }
 
   updateEmailDetails(emailTableData) {
@@ -773,20 +789,24 @@ export class EntityComponent implements OnInit, AfterViewInit {
   }
   // pass the data to document component
   constructDocumentPayload(docList) {
+
     if (docList) {
       const newDocument = [];
       docList.forEach((item) => {
         const payload = {
-          CreatedBy: item.CreatedBy,
-          CreatedOn: item.CreatedOn,
+          ID: item.ID,
+          OrgId: item.OrgId,
           DocumentName: item.DocumentName,
           FilePath: item.FilePath,
-          ID: item.ID,
+          UniqueFilePath: item.UniqueFilePath,
           Modifiedon: item.Modifiedon,
-          OrgId: item.OrgId,
           UpdatedBy: item.UpdatedBy,
           UploadedBy: item.UploadedBy,
-          uploadedOn: item.uploadedOn
+          uploadedOn: item.uploadedOn,
+          CreatedBy: item.CreatedBy,
+          CreatedOn: item.CreatedOn,
+         
+
         };
         newDocument.push(payload);
       });
@@ -794,12 +814,16 @@ export class EntityComponent implements OnInit, AfterViewInit {
     }
   }
 
-  deleteDocument(deleteIndex) {
-    let index = this.documentListInfo.findIndex((element) => element.ID == deleteIndex.ID);
-    this.documentListInfo.splice(index, 1);
-    Swal.fire("Deleted Successfully");
-    console.log('documentListInfo');
-    this.saveConfiguration();
+  deleteDocument(event) {
+    const indexToDelete = event;
+    // let index = this.documentListInfo.findIndex((element) => element.ID == deleteIndex.ID);
+    if (indexToDelete >= 0 && indexToDelete < this.documentListInfo.length) {
+      this.documentListInfo.splice(indexToDelete, 1);
+      // this.documentListInfoResponse.splice(index, 1);
+      Swal.fire("Deleted Successfully");
+      console.log('documentListInfo');
+      this.saveConfiguration();
+    }
   }
 
   getUpdatedByRecord(data: any) {
