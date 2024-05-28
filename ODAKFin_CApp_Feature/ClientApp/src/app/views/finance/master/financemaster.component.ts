@@ -970,59 +970,68 @@ export class FinanceMasterComponent implements OnInit {
       SubfunctionID = 567;
     }
     else if (routePage == 'provision') {
-      //SubfunctionID = 533;
       this.router.navigate(['/views/provision/provision-view']);
     } 
     else if (routePage == 'trailBalance') {
-      //SubfunctionID = 533;
       this.router.navigate(['/views/finance/reports/levelone']);
     } 
 
     else if (routePage == 'DayBook') {
-    
-      //SubfunctionID = 533;
       this.router.navigate(['/views/reports/report-day-book']);
     } 
     
     else if (routePage == 'recieptVoucher') {
-      //SubfunctionID = 533;
       this.router.navigate(['/views/reports/report-receipt-voucher']);
     } 
 
     else if (routePage == 'PaymentVoucher') {
-      //SubfunctionID = 533;
       this.router.navigate(['/views/reports/report-payment-voucher']);
     } 
 
     else if (routePage == 'ContraVoucher') {
-      //SubfunctionID = 533;
       this.router.navigate(['/views/reports/report-contra-voucher']);
     } 
 
     else if (routePage == 'JournalVoucher') {
-      //SubfunctionID = 533;
       this.router.navigate(['/views/reports/report-journal-voucher']);
     }
 
     else if (routePage == 'AdjustmentVoucher') {
-      //SubfunctionID = 533;
       this.router.navigate(['/views/reports/report-adjustment-voucher']);
     }
 
     else if (routePage == 'VoucherReversals') {
-      //SubfunctionID = 533;
       this.router.navigate(['/views/reports/report-voucher-reversal']);
     }
     else if (routePage == 'SalesVoucher') {
-  
-      //SubfunctionID = 533;
       this.router.navigate(['/views/reports/report-sales-voucher']);
     }
-    // else if (routePage == 'PurchaseVoucher') {
-  
-    //   //SubfunctionID = 533;
-    //   this.router.navigate(['/views/reports/report-purchase-voucher']);
-    // }
+
+    else if (routePage == 'PurchaseVoucher') {
+      this.router.navigate(['/views/reports/report-purchase-voucher']);
+    }
+
+    else if (routePage == 'ARBalanceSummary') {
+      this.router.navigate(['/views/reports/report-ar-levelone']);
+    } 
+
+    else if (routePage == 'ARAgingSummary') {
+      this.router.navigate(['/views/reports/report-ar-leveltwo']);
+    } 
+
+    else if (routePage == 'ARSalesSummary') {
+      this.router.navigate(['/views/reports/report-ar-levelthree']);
+    } 
+
+    else if (routePage == 'APBalanceSummary') {
+      this.router.navigate(['/views/reports/report-ap-levelone']);
+    } 
+
+    else if (routePage == 'APAgingSummary') {
+      this.router.navigate(['/views/reports/report-ap-leveltwo']);
+    } 
+
+
     
     
     const userID = localStorage.getItem("UserID");
