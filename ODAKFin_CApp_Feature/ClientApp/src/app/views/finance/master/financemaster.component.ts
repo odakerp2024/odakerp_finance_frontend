@@ -468,10 +468,32 @@ export class FinanceMasterComponent implements OnInit {
   }
 
   wfSearch(){
-    this.wfnumber = $('#ddlwfnumber').val() ? $('#ddlwfnumber').val().toString() : "0";
-    this.event_value = $('#ddlwfdetails').val() ? $('#ddlwfdetails').val().toString() : "0";
+    
+    if($('#ddlwfnumber').val() == "" || $('#ddlwfnumber').val() == null){
+      this.wfnumber = "0";
+    }
+    else{
+      this.wfnumber = $('#ddlwfnumber').val().toString();
+    }
+    //this.wfnumber = $('#ddlwfnumber').val() ? $('#ddlwfnumber').val().toString() : "0";
+    
+    if($('#ddlwfdetails').val() == "" || $('#ddlwfdetails').val() == null){
+      this.event_value = "0";
+    }
+    else{
+      this.event_value = $('#ddlwfdetails').val().toString();
+    }
+    //this.event_value = $('#ddlwfdetails').val() ? $('#ddlwfdetails').val().toString() : "0";
+    
     this.eventnumber = $('#ddlwfeventName').val() ? $('#ddlwfeventName').val().toString() : "0";
-    this.customername = $('#ddlCustomerName').val() ? $('#ddlCustomerName').val().toString() : "0";
+    
+    if($('#ddlCustomerName').val() == "" || $('#ddlCustomerName').val() == null){
+      this.customername = "0";
+    }
+    else{
+      this.customername = $('#ddlCustomerName').val().toString();
+    }
+    //this.customername = $('#ddlCustomerName').val() ? $('#ddlCustomerName').val().toString() : "0";
     this.fromdate = $('#ddlfromDate').val() ? $('#ddlfromDate').val().toString() : "0";
     this.tilldate = $('#ddltillDate').val() ? $('#ddltillDate').val().toString() : "0";
     
@@ -480,19 +502,47 @@ export class FinanceMasterComponent implements OnInit {
   }
 
   wfSearchHistory(){
-    this.wfnumberH = $('#ddlwfnumberH').val() ? $('#ddlwfnumberH').val().toString() : "0";
-    this.event_valueH = $('#ddlwfdetailsH').val() ? $('#ddlwfdetailsH').val().toString() : "0";
+    if($('#ddlwfnumberH').val() == "" || $('#ddlwfnumberH').val() == null){
+      this.wfnumberH = "0";
+    }
+    else{
+      this.wfnumberH = $('#ddlwfnumberH').val().toString();
+    }
+    //this.wfnumberH = $('#ddlwfnumberH').val() ? $('#ddlwfnumberH').val().toString() : "0";
+
+    if($('#ddlwfdetailsH').val() == "" || $('#ddlwfdetailsH').val() == null){
+      this.event_valueH = "0";
+    }
+    else{
+      this.event_valueH = $('#ddlwfdetailsH').val().toString();
+    }
+    //this.event_valueH = $('#ddlwfdetailsH').val() ? $('#ddlwfdetailsH').val().toString() : "0";
     this.eventnumberH = $('#ddlwfeventNameH').val() ? $('#ddlwfeventNameH').val().toString() : "0";
-    this.customernameH = $('#ddlCustomerNameH').val() ? $('#ddlCustomerNameH').val().toString() : "0";
+
+    if($('#ddlCustomerNameH').val() == "" || $('#ddlCustomerNameH').val() == null){
+      this.customernameH = "0";
+    }
+    else{
+      this.customernameH = $('#ddlCustomerNameH').val().toString();
+    }
+    //this.customernameH = $('#ddlCustomerNameH').val() ? $('#ddlCustomerNameH').val().toString() : "0";
     this.fromdateH = $('#ddlfromDateH').val() ? $('#ddlfromDateH').val().toString() : "0";
     this.tilldateH = $('#ddltillDateH').val() ? $('#ddltillDateH').val().toString() : "0";
-    this.status = $('#ddlwfStatusH').val() ? $('#ddlwfStatusH').val().toString() : "0";
+    alert($('#ddlwfStatusH').val());
+    if($('#ddlwfStatusH').val() == 0 || $('#ddlwfStatusH').val() == null){
+      this.status = "approve";
+    }
+    else{
+      this.status = $('#ddlwfStatusH').val().toString();
+    }
+    //this.status = $('#ddlwfStatusH').val() ? $('#ddlwfStatusH').val().toString() : "approve";
+    alert(this.status);
     this.getWorkflowInboxHistory();
   }
 
   wfClear(){
-    $('#ddlwfnumber').val(0).trigger("change");
-    $('#ddlwfdetails').val(0).trigger("change");
+    $('#ddlwfnumber').val('').trigger("change");
+    $('#ddlwfdetails').val('').trigger("change");
     $('#ddlwfeventName').val(0).trigger("change");
     $('#ddlCustomerName').val('').trigger("change");
     $('#ddlfromDate').val('').trigger("change");
@@ -509,8 +559,8 @@ export class FinanceMasterComponent implements OnInit {
   }
 
   wfClearHistory(){
-    $('#ddlwfnumberH').val(0).trigger("change");
-    $('#ddlwfdetailsH').val(0).trigger("change");
+    $('#ddlwfnumberH').val('').trigger("change");
+    $('#ddlwfdetailsH').val('').trigger("change");
     $('#ddlwfeventNameH').val(0).trigger("change");
     $('#ddlCustomerNameH').val('').trigger("change");
     $('#ddlfromDateH').val('').trigger("change");
@@ -567,12 +617,12 @@ export class FinanceMasterComponent implements OnInit {
     let payload = {
       //userEmail: "anuja@odaksolutions.com",
       userEmail: this.userName,
-      wfnumber: this.wfnumber,
-      eventnumber: this.eventnumber,
-      fromdate: this.fromdate,
-      tilldate: this.tilldate,
-      event_value: this.event_value,
-      customername: this.customername,
+      wfnumber: this.wfnumberH,
+      eventnumber: this.eventnumberH,
+      fromdate: this.fromdateH,
+      tilldate: this.tilldateH,
+      event_value: this.event_valueH,
+      customername: this.customernameH,
       status: this.status,
     }
 
