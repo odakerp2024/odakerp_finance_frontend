@@ -130,6 +130,10 @@
 
                     </div>
 
+                    <button type="button" class="btn btn-success bmd-btn-edit text-white float-right mr-5 mt-5" style="position: absolute; top: 0; right: 0;" 
+                    *ngIf="type != 'overall'" (click)="goBack()"><i class="material-icons editicon">reply</i>
+                    </button>
+
                     <div class="col-sm-12 text-right d-flex justify-content-end">
                         <div style="font-weight: 600; padding-top: 14px;">Export as : </div>
                         <div>
@@ -188,6 +192,19 @@
                                 </tr> -->
 
                             </tbody>
+                            <tfoot class="table-footer"  *ngFor="let data of categorylist">
+                                <tr class="footer-position-sticky">
+                                  <td colspan="1" class="text-left">
+                                    <span style="font-size: medium;">Grand Total : {{data.GrandTotal}}</span>
+                                  </td>
+                                  <td colspan="1" >{{data.totalcustomer}}</td>
+                                  <td colspan="1" >{{data.totalinvoice}}</td>
+                                  <td colspan="1" >{{data.totalcustomer}}</td>
+                                  <td colspan="1" >{{data.totalinvoice}}</td>
+                                  <td colspan="1" >{{data.totalcustomer}}</td>
+                                  <td class="text-right" colspan="1">XXX{{data.totalbalance}}</td>
+                                </tr>
+                              </tfoot>
                         </table>
                     </div>
 
@@ -267,6 +284,25 @@
                                 </tr> -->
 
                             </tbody>
+                            <tfoot class="table-footer"  *ngFor="let data of list">
+                                <tr class="footer-position-sticky">
+                                  <td colspan="1" class="text-left">
+                                    <span style="font-size: medium;">Grand Total : {{data.GrandTotal}}</span>
+                                  </td>
+                                  <td colspan="1" >{{data.totalcustomer}}</td>
+                                  <td colspan="1" >{{data.totalinvoice}}</td>
+                                  <td colspan="1" >{{data.totalcustomer}}</td>
+                                  <td colspan="1" >{{data.totalinvoice}}</td>
+                                  <td colspan="1" >{{data.totalcustomer}}</td>
+                                  <td colspan="1" >{{data.totalinvoice}}</td>
+                                  <td colspan="1" >{{data.totalinvoice}}</td>
+                                  <td colspan="1" >{{data.totalinvoice}}</td>
+                                  <td colspan="1" >{{data.totalinvoice}}</td>
+                                  <td colspan="1" >{{data.totalinvoice}}</td>
+                                  <td colspan="1" >{{data.totalinvoice}}</td>
+                                  <td class="text-right" colspan="1">XXX{{data.totalbalance}}</td>
+                                </tr>
+                              </tfoot>
                         </table>
                     </div>
 
@@ -335,6 +371,22 @@
                                 </tr> -->
 
                             </tbody>
+                            <tfoot class="table-footer"  *ngFor="let data of list">
+                                <tr class="footer-position-sticky">
+                                  <td colspan="1" class="text-left">
+                                    <span style="font-size: medium;">Grand Total : {{data.GrandTotal}}</span>
+                                  </td>
+                                  <td colspan="1" >{{data.totalcustomer}}</td>
+                                  <td colspan="1" >{{data.totalinvoice}}</td>
+                                  <td colspan="1" >{{data.totalcustomer}}</td>
+                                  <td colspan="1" >{{data.totalinvoice}}</td>
+                                  <td colspan="1" >{{data.totalcustomer}}</td>
+                                  <td colspan="1" >{{data.totalinvoice}}</td>
+                                  <td colspan="1" >{{data.totalinvoice}}</td>
+                                  <td colspan="1" >{{data.totalinvoice}}</td>
+                                  <td class="text-right" colspan="1">XXX{{data.totalbalance}}</td>
+                                </tr>
+                              </tfoot>
                         </table>
                     </div>
 

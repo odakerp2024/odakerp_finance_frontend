@@ -83,15 +83,25 @@ const year = today.getFullYear();
       this.getCustomerList(0);
       this.reportFilter.controls.Peroid.setValue('month');
     }
-  
-    async showCustomerWise(data) {
+
+    async goBack() {
+      if (this.type === 'customerinvoicewise') {
+        this.type = 'customerwise';
+        await this.showCustomerWise(); 
+      } else if (this.type === 'customerwise') {
+        this.type = 'overall';    
+        await this.getCustomerList(0); 
+      }
+    }
+
+    async showCustomerWise() {
       // Load customer-wise data based on the clicked row
       this.pagedItems = []; // Load customer-wise data here
       this.type = 'customerwise';
       await this.createReportForm();
     }
   
-    async showCustomerInvoiceWise(data) {
+    async showCustomerInvoiceWise() {
       // Load customer-invoice-wise data based on the clicked row
       this.pagedItems = []; // Load customer-invoice-wise data here
       this.type = 'customerinvoicewise';
@@ -312,7 +322,7 @@ const year = today.getFullYear();
       worksheet.mergeCells(`F${titleRow.number}:G${titleRow.number}`);
   
       // Add subtitle row
-      const subtitleRow = worksheet.addRow(['', '', '', '', '', 'Receivable Balance Summary', '']);
+      const subtitleRow = worksheet.addRow(['', '', '', '', '', 'Receivable Aging Summary', '']);
       subtitleRow.getCell(6).font = { size: 14 };
       subtitleRow.getCell(6).alignment = { horizontal: 'center' };
   
@@ -444,7 +454,7 @@ const year = today.getFullYear();
       // Write to Excel and save
       const buffer = await workbook.xlsx.writeBuffer();
       const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      saveAs(blob, 'Report-ReceivableBalanceSummary.xlsx');
+      saveAs(blob, 'Report-ReceivableAgingSummary.xlsx');
     }
   
   
@@ -478,7 +488,7 @@ const year = today.getFullYear();
       worksheet.mergeCells(`F${titleRow.number}:G${titleRow.number}`);
   
       // Add subtitle row
-      const subtitleRow = worksheet.addRow(['', '', '', '', '', 'Receivable Balance Summary', '']);
+      const subtitleRow = worksheet.addRow(['', '', '', '', '', 'Receivable Aging Summary', '']);
       subtitleRow.getCell(6).font = { size: 14 };
       subtitleRow.getCell(6).alignment = { horizontal: 'center' };
   
@@ -608,6 +618,6 @@ const year = today.getFullYear();
       // Write to Excel and save
       const buffer = await workbook.xlsx.writeBuffer();
       const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-      saveAs(blob, 'Report-ReceivableBalanceSummary.xlsx');
+      saveAs(blob, 'Report-ReceivableAgingSummary.xlsx');
     }
   }

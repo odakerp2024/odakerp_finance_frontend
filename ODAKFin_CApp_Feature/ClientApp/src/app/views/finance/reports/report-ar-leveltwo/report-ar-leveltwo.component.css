@@ -96,3 +96,14 @@ tr:hover {
     }
 
 }
+
+.footer-position-sticky {
+    background-image: linear-gradient(#3A5BA0, #273773) !important;
+    color: #fff !important;
+    position: sticky;
+    bottom: 0;
+  }
+  
+  .table-footer td {
+    border-top: 2px solid #dee2e6;
+  }

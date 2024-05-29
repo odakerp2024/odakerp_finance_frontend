@@ -85,16 +85,24 @@ export class ReportArLeveloneComponent implements OnInit {
     this.reportFilter.controls.Peroid.setValue('month');
   }
 
-  async showCustomerWise(data) {
-    // Load customer-wise data based on the clicked row
-    this.pagedItems = []; // Load customer-wise data here
+  async goBack() {
+    if (this.type === 'customerinvoicewise') {
+      this.type = 'customerwise';
+      await this.showCustomerWise(); 
+    } else if (this.type === 'customerwise') {
+      this.type = 'overall';    
+      await this.getCustomerList(0); 
+    }
+  }
+
+  async showCustomerWise() {
+    this.pagedItems = [];
     this.type = 'customerwise';
     await this.createReportForm();
   }
 
-  async showCustomerInvoiceWise(data) {
-    // Load customer-invoice-wise data based on the clicked row
-    this.pagedItems = []; // Load customer-invoice-wise data here
+  async showCustomerInvoiceWise() {
+    this.pagedItems = []; 
     this.type = 'customerinvoicewise';
     await this.createReportForm();
   }
