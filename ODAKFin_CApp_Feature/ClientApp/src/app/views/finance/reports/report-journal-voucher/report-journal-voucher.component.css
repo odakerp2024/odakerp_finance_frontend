@@ -1,7 +1,7 @@
 .table>tbody>tr>td {
   /* text-align: left !important; */
-  padding: 15px !important;
-  font-size: 14px !important;
+  padding: 12px !important;
+  font-size: 13px !important;
 }
 
 tr:hover {
@@ -24,17 +24,24 @@ tr:hover {
 }
 
 .title {
-  font-size: 1.6rem !important
+  font-size: 1.2rem !important
 }
 
 .subtitle {
-  font-size: 1.3rem !important
+  font-size: 1.1rem !important
 }
 
 .clear-btn {
   width: 96px;
 }
 
+@media (min-width: 1000px) and (max-width: 1800px) {
+  .field-responsive#active {
+    width: 102% !important;
+    max-width: 105% !important; 
+    overflow: visible !important;
+  }
+}
 
 @media (min-width: 1701px) and (max-width: 1820px) {
   
@@ -52,24 +59,13 @@ tr:hover {
   
   .table>tbody>tr>td {
     /* text-align: left !important; */
-    padding: 12px !important;
-    font-size: 12px !important;
-  }
- 
-}
-
-@media (min-width: 1498px) and (max-width: 1600px) {
-  
-  .table>tbody>tr>td {
-    /* text-align: left !important; */
     padding: 11px !important;
     font-size: 11px !important;
   }
  
 }
 
-
-@media (min-width: 1400px) and (max-width: 1498px) {
+@media (min-width: 1498px) and (max-width: 1600px) {
   
   .table>tbody>tr>td {
     /* text-align: left !important; */
@@ -80,12 +76,23 @@ tr:hover {
 }
 
 
-@media (min-width: 700px) and (max-width: 1399px) {
+@media (min-width: 1400px) and (max-width: 1498px) {
   
   .table>tbody>tr>td {
     /* text-align: left !important; */
     padding: 9px !important;
     font-size: 9px !important;
+  }
+ 
+}
+
+
+@media (min-width: 700px) and (max-width: 1399px) {
+  
+  .table>tbody>tr>td {
+    /* text-align: left !important; */
+    padding: 8px !important;
+    font-size: 8px !important;
   }
  
 }
