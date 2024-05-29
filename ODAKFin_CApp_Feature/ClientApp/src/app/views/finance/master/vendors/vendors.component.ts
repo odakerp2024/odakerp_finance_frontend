@@ -2082,7 +2082,7 @@ export class VendorsComponent implements OnInit {
       }
 
       if (!this.fg.value.LegalName && this.gstCategoryInput.legalName) {
-        validation += '<span style=\'color:red;\'>*</span> <span>Please Enter Legal Trade/ Name </span></br>'
+        validation += '<span style=\'color:red;\'>*</span> <span>Please Enter Legal Name </span></br>'
       }
 
       if (!this.fg.value.CompanyStatus && this.gstCategoryInput.companyStatus) {

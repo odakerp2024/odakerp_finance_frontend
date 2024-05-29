@@ -1463,7 +1463,7 @@ export class CustomerComponent implements OnInit {
       }
 
       if (this.fg.value.LegalTradeName == "") {
-        validation += "<span style='color:red;'>*</span> <span>Please enter Legal Trade Name</span></br>"
+        validation += "<span style='color:red;'>*</span> <span>Please enter Legal Name</span></br>"
       }
 
       if (this.gstCategoryName != "Overseas")
