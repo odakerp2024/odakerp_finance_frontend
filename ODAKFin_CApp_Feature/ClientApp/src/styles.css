@@ -137,6 +137,7 @@ body {
   border: 0px;
   min-height: 0px;
   border-radius: 0;
+  font-size: 11px !important;
 }
 
 /* select with search <ng-select> end */
