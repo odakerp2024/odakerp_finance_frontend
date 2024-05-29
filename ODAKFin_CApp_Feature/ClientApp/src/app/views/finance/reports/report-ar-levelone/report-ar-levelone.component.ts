@@ -45,9 +45,6 @@ export class ReportArLeveloneComponent implements OnInit {
     { peroidId: 'previousmonth', peroidName: 'PREVIOUS MONTH' },
     { peroidId: 'previousyear', peroidName: 'PREVIOUS FINANCIAL YEAR' }
   ];
-  categorylist = [
-    { Id: '1', SubCategory: 'Category-A' },
-  ];
   list = [
     { Id: '1', Customer: 'Customer-A' },
   ]
@@ -64,6 +61,9 @@ export class ReportArLeveloneComponent implements OnInit {
   startDate = '';
   endDate = '';
   type = 'overall';
+  totalcustomer: number = 0;
+  totalinvoice: number = 0;
+  totalbalance: number = 0;
 
   constructor(
     private commonDataService: CommonService,
@@ -91,7 +91,7 @@ export class ReportArLeveloneComponent implements OnInit {
       await this.showCustomerWise(); 
     } else if (this.type === 'customerwise') {
       this.type = 'overall';    
-      await this.getCustomerList(0); 
+      await this.getBalanceSummaryOverallList();
     }
   }
 
@@ -112,63 +112,63 @@ export class ReportArLeveloneComponent implements OnInit {
     switch (selectedOption) {
 
       case 'today':
-        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
-        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
         break;
 
       case 'week':
-        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay()), "yyyy-MM-dd"));
-        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() + (6 - this.currentDate.getDay())), "yyyy-MM-dd"));
+        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay()), "yyyy-MM-dd"));
+        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() + (6 - this.currentDate.getDay())), "yyyy-MM-dd"));
         break;
 
       case 'month':
         const startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd")
         const endDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd")
-        this.reportFilter.controls.StartDate.setValue(startDate);
-        this.reportFilter.controls.EndDate.setValue(endDate);
+        this.reportFilter.controls.FromDate.setValue(startDate);
+        this.reportFilter.controls.ToDate.setValue(endDate);
         break;
 
       case 'year':
         const currentYear = this.currentDate.getFullYear();
         const startYear = this.currentDate.getMonth() >= 3 ? currentYear : currentYear - 1;
         const endYear = startYear + 1;
-        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(new Date(startYear, 3, 1), "yyyy-MM-dd"));
-        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(new Date(endYear, 2, 31), "yyyy-MM-dd"));
+        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(new Date(startYear, 3, 1), "yyyy-MM-dd"));
+        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(new Date(endYear, 2, 31), "yyyy-MM-dd"));
         break;
 
       case 'previoustoday':
         const previousDay = new Date(this.currentDate);
         previousDay.setDate(previousDay.getDate() - 1);
-        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(previousDay, "yyyy-MM-dd"));
-        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(previousDay, "yyyy-MM-dd"));
+        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(previousDay, "yyyy-MM-dd"));
+        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(previousDay, "yyyy-MM-dd"));
         break;
 
       case 'previousweek':
         const previousWeekStartDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay() - 7);
         const previousWeekEndDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay() - 1);
-        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(previousWeekStartDate, "yyyy-MM-dd"));
-        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(previousWeekEndDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(previousWeekStartDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(previousWeekEndDate, "yyyy-MM-dd"));
         break;
 
       case 'previousmonth':
         const previousMonthStartDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() - 1, 1);
         const previousMonthEndDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 0);
-        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(previousMonthStartDate, "yyyy-MM-dd"));
-        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(previousMonthEndDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(previousMonthStartDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(previousMonthEndDate, "yyyy-MM-dd"));
         break;
 
       case 'previousyear':
         const previousYear = this.currentDate.getFullYear() - 1;
         const previousYearStartDate = new Date(previousYear, 3, 1);
         const previousYearEndDate = new Date(previousYear + 1, 2, 31);
-        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(previousYearStartDate, "yyyy-MM-dd"));
-        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(previousYearEndDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(previousYearStartDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(previousYearEndDate, "yyyy-MM-dd"));
         break;
 
       case 'custom':
         this.selectedOption = 'custom';
-        this.startDate = this.reportFilter.controls.StartDate.value;
-        this.endDate = this.reportFilter.controls.EndDate.value;
+        this.startDate = this.reportFilter.controls.FromDate.value;
+        this.endDate = this.reportFilter.controls.ToDate.value;
         break;
 
       default:
@@ -181,25 +181,28 @@ export class ReportArLeveloneComponent implements OnInit {
   async createReportForm() {
     if (this.type == 'overall') {
       this.reportFilter = this.fb.group({
-        Division: [0],
-        Office: [0],
-        StartDate: [this.startDate],
-        EndDate: [this.endDate],
+        DivisionId: [0],
+        OfficeId: [0],
+        FromDate: [this.startDate],
+        ToDate: [this.endDate],
         Peroid: [''],
       });
     } else {
       this.reportFilter = this.fb.group({
-        Division: [0],
-        Office: [0],
+        DivisionId: [0],
+        OfficeId: [0],
         Customer: [0], 
-        StartDate: [this.startDate],
-        EndDate: [this.endDate],
+        FromDate: [this.startDate],
+        ToDate: [this.endDate],
         Peroid: [''],
       });
     }
   
     this.onOptionChange('month');
-    await this.getReceiptReportList();
+    if(this.type == 'overall'){
+      await this.getBalanceSummaryOverallList();
+    }
+   
   }
   
 
@@ -245,23 +248,39 @@ export class ReportArLeveloneComponent implements OnInit {
     })
   }
 
-  getReceiptReportList() {
-    this.startDate = this.reportFilter.controls.StartDate.value;
-    this.endDate = this.reportFilter.controls.EndDate.value;
+  getBalanceSummaryOverallList() {
+    this.startDate = this.reportFilter.controls.FromDate.value;
+    this.endDate = this.reportFilter.controls.ToDate.value;
 
-    this.reportService.GetReceiptVoucherReportList(this.reportFilter.value).subscribe(result => {
+    this.reportService.getBalanceSummaryOverallList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
-
-
       if (result['data'].Table.length > 0) {
         this.reportList = result['data'].Table;
         this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
-        this.setPage(1)
+        this.setPage(1);
+        this.totalcustomer = this.calculateTotalCustomers(this.reportList);
+        this.totalinvoice = this.calculateTotalInvoices(this.reportList);
+        this.totalbalance = this.calculateTotalBalance(this.reportList);
       } else {
         this.pager = {};
         this.pagedItems = [];
+        this.totalcustomer = 0;
+        this.totalinvoice = 0;
+        this.totalbalance = 0;
       }
     })
+  }
+
+  calculateTotalCustomers(items: any[]): number {
+    return items.reduce((sum, item) => sum + item.CustomerCount, 0);
+  }
+
+  calculateTotalInvoices(items: any[]): number {
+    return items.reduce((sum, item) => sum + item.InvoiceNumberCount, 0);
+  }
+
+  calculateTotalBalance(items: any[]): number {
+    return items.reduce((sum, item) => sum + item.DueAmount, 0);
   }
 
 
@@ -281,14 +300,14 @@ export class ReportArLeveloneComponent implements OnInit {
     this.endDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd");
 
     this.reportFilter.reset({
-      Division: 0,
-      Office: 0,
-      StartDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
-      EndDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd"),
+      DivisionId: 0,
+      OfficeId: 0,
+      FromDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
+      ToDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd"),
     });
     this.officeList = [];
     this.reportFilter.controls.Peroid.setValue('month');
-    this.getReceiptReportList();
+    this.getBalanceSummaryOverallList();
   }
 
 
