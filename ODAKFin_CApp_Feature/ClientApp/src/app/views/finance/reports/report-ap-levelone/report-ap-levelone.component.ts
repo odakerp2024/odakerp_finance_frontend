@@ -166,7 +166,7 @@ export class ReportApLeveloneComponent implements OnInit {
   }
 
   async createReportForm() {
-    if (this.type == 'Overal-list' ){
+    if (this.type == 'Overall-list' ){
     this.reportFilter = this.fb.group({
       FromDate: [this.startDate],
       ToDate: [this.endDate],
@@ -187,20 +187,28 @@ export class ReportApLeveloneComponent implements OnInit {
     this.onOptionChange('month');
     await this.getPaymentVoucherReportList();
   }
+  
   async showVendor(){
-    debugger
-this.pagedItems = [];
-this.type = 'Vendor-wise';
-await this.createReportForm();
+    this.pagedItems = [];
+    this.type = 'Vendor-wise';
+    await this.createReportForm();
+
   }
 
   async showVendorinvoicewise(){
-    debugger
-this.pagedItems = [];
-this.type = 'Vendor-Invoice-wise';
-await this.createReportForm();
+    this.pagedItems = [];
+    this.type = 'Vendor-Invoice-wise';
+    await this.createReportForm();
 
   }
+
+  async Cancel(){
+    debugger
+     this.pagedItems = [];
+    this.type = 'Overall-list';
+    await this.createReportForm();
+  }
+
   getDivisionList() {
     var service = `${this.globals.APIURL}/Division/GetOrganizationDivisionList`; var payload: any = {}
     this.dataService.post(service, payload).subscribe((result: any) => {
