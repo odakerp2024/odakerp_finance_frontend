@@ -1,1 +1,449 @@
-<p>report-ap-leveltwo works!</p>
+<div class="container-fluid">
+    
+    <form [formGroup]="reportFilter">
+        <div class="card mt-2 p-3">
+            <div class="col-12 mt-auto" *ngIf="type != 'Overall-list'">
+                <div class="float-right">
+        
+                    <!-- back -->
+                    <button type="button" class="btn btn-success bmd-btn-edit text-white mr-3" (click)="Cancel()">
+                        <i class="material-icons editicon">reply</i>
+                    </button>
+                    </div>
+                    </div>
+            <div class="row">
+            <div class="col-10">
+            <div class="row pb-3">
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+
+                    <label class=" fontstyles">PEROID</label>
+                    <ng-select class="searchdropdown custom" formControlName="Peroid"
+                        (ngModelChange)="onOptionChange($event);" [clearable]="false">
+                        <ng-option [value]="''" disabled>-- SELECT --</ng-option>
+                        <ng-container *ngFor="let peroid of PeroidList">
+                            <ng-option [value]="peroid.peroidId">
+                                {{peroid.peroidName | uppercase}}
+                            </ng-option>
+                        </ng-container>
+                    </ng-select>
+                </div>
+                    <div class="col-3" *ngIf="selectedOption === 'custom'">
+                        <div class="form-group bmd-form-group w-100">
+                            <label class=" mb-3">From</label>
+                            <div class="input-group">
+                                <mat-form-field class="tillDate mat_date_picker" appearance="outline">
+                                    <input matInput (click)="FromDate.open()" readonly autocomplete="off" (onchange)="formatchange(true)"
+                                        [matDatepicker]="FromDate" id="FromDate" [placeholder]="entityDateFormat"
+                                        formControlName="FromDate">
+                                    <mat-datepicker-toggle matSuffix [for]="FromDate"></mat-datepicker-toggle>
+                                    <mat-datepicker #FromDate></mat-datepicker>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-3" *ngIf="selectedOption === 'custom'">
+
+                        <label class=" mb-3">To</label>
+                        <div class="input-group">
+                            <mat-form-field class="tillDate mat_date_picker" appearance="outline">
+                                <input matInput (click)="ToDate.open()" readonly autocomplete="off" formControlName="ToDate"
+                                    [matDatepicker]="ToDate" id="ToDate"
+                                    [min]="reportFilter.get('FromDate').value" [placeholder]="entityDateFormat" (ngModelChange)="formatchange(false)">
+                                <mat-datepicker-toggle matSuffix [for]="ToDate"></mat-datepicker-toggle>
+                                <mat-datepicker #ToDate></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                      
+              
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <label class=" fontstyles">DIVISION</label>
+                    <ng-select class="searchdropdown custom" formControlName="DivisionId"
+                        (ngModelChange)="getOfficeList($event);" [clearable]="false">
+                        <ng-option [value]="0" disabled>-- SELECT --</ng-option>
+                        <ng-container *ngFor="let division of divisionList">
+                            <ng-option *ngIf="division.Active" [value]="division.ID">
+                                {{division.DivisionName | uppercase}}
+                            </ng-option>
+                        </ng-container>
+                    </ng-select>
+                </div>
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                    <label class=" fontstyles">OFFICE</label>
+                    <ng-select class="searchdropdown" formControlName="OfficeId"
+                        (ngModelChange)="getDivisionBasedOffice($event, reportFilter.value.Division);getBankList()"
+                        [clearable]="false" name="CategoryId" id="CategoryId">
+                        <ng-option [value]="0" disabled>-- SELECT --</ng-option>
+                        <ng-container class="field-responsive"  *ngFor="let office of officeList">
+                            <ng-option [value]="office.ID">
+                                {{office.OfficeName | uppercase}}
+                            </ng-option>
+                        </ng-container>
+                    </ng-select>
+                </div>
+           
+
+
+                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4"  *ngIf="type != 'Overall-list'">
+                    <label class=" fontstyles">VENDOR</label>
+                    <ng-select class="searchdropdown" formControlName="VendorId" [clearable]="false" name="CategoryId"
+                    id="CategoryId" (change)="getVendorBranch($event)">
+                        <ng-option [value]="0" disabled>-- SELECT --</ng-option>
+                        <ng-container *ngFor="let vendor of vendorList">
+                            <ng-option [value]="vendor.VendorID">
+                                <span class="textwrap">{{vendor.VendorName | uppercase}}
+                                </span>
+                            </ng-option>
+                        </ng-container>
+                    </ng-select>
+                </div>
+            </div>
+            </div>
+
+            <div class="col-2" style="padding-top: 42px;">
+                    <div class="text-center">
+                        <button type="button" class="btn btn-primary text-white col-auto"
+                            (click)="getPaymentVoucherReportList()">
+                            SEARCH
+                        </button>
+                    </div>
+        
+                    <div class="text-center">
+                        <button type="button" (click)="clear()"
+                            class="btn btn-warning text-white mb-0 col-auto clear-btn">
+                            CLEAR
+                        </button>
+                    </div>
+            </div>
+
+        
+        </div>
+        </div>
+    </form>
+
+    <div class="row">
+        <div class="col-md-12 mt-2">
+            <div class="card m-b-30">
+                <div class="card-body cpad enqview">
+
+                    <div class="col-sm-12 justify-content-end text-center ">
+                        <h3 class="title">NAVIO  SHIPPING PRIVATE LIMITED</h3>
+                        <h2 class="subtitle" *ngIf="type === 'Overall-list'">Payable Aging Summary </h2>
+                        <h2 class="subtitle" *ngIf="type === 'Vendor-wise'">Payable Aging Summary - Vendor wise </h2>
+                        <h2 class="subtitle" *ngIf="type === 'Vendor-Invoice-wise'">Payable Aging Summary - Vendor Invoice wise </h2>
+                      
+                            
+                        <p>FROM {{ startDate | date: commonDataService.convertToLowerCaseDay(entityDateFormat) }} -
+                            TO {{ endDate | date:commonDataService.convertToLowerCaseDay(entityDateFormat) }}
+                         </p>
+                    </div>
+
+                    <div class="col-sm-12 text-right d-flex justify-content-end">
+                        <div style="font-weight: 600;">Export as : </div>
+                        <div>
+                 
+                            <img style="cursor: pointer;" width="38px" height="38px"
+                                class="exportAs mx-1 align-baseline"
+                                src="../../../../../assets/images/csv_color.png" (click)="downloadAsCSV()"
+                                alt="logo">
+                            <img style="cursor: pointer;" width="38px" height="38px"
+                                class="exportAs mx-1 align-baseline"
+                                src="../../../../../assets/images/xlsx_color.png" (click)="downloadAsExcel()"
+                                alt="logo">
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 "  *ngIf="type === 'Overall-list'">
+                        <table class="table table-responsive  table-bordered w-100 dataTable no-footer">
+                            <thead>
+                                <tr>
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Date: activate to sort column ascending"
+                                        (click)="sort('Date')"  style="width: 177.575px;">Sub Category
+                                    </th>
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        (click)="sort('Payment')" style="width: 177.575px;">0-15 DAYS
+                                    </th>
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        (click)="sort('Type')" style="width: 177.575px;">16-30 DAYS
+                                    </th>
+
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        (click)="sort('VendorName')"  style="width: 177.575px;">31-45 DAYS
+                                    </th>
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        (click)="sort('VendorName')"  style="width: 177.575px;">45-60 DAYS
+                                    </th>
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        (click)="sort('VendorName')"  style="width: 177.575px;">>60 DAYS
+                                    </th>
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        (click)="sort('VendorName')"  style="width: 177.575px;">Total (Company Currency)
+                                    </th>
+
+                                   
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let data of Overalllist">
+                                    
+                                    <td class="hyperTextColor"  (click)="showVendor()">{{data.SubCategory}}</td>
+                                    <td>{{data.Type}}</td>
+                                    <td class="hyperTextColor">{{data.VendorName}}</td>
+                                    <td>{{data.Branch}}</td>
+                                    <td>{{data.Type}}</td>
+                                    <td class="hyperTextColor">{{data.VendorName}}</td>
+                                    <td>{{data.Branch}}</td>
+                                    
+                                </tr>
+
+                                <!-- <tr *ngIf="pagedItems.length ==0">
+                                    <td class="text-center" colspan="10">No records found</td>
+                                </tr> -->
+
+                            </tbody>
+                            <tfoot>
+                                <tr class="footer-position-sticky" style=" padding: 7px !important;
+                                background-image: linear-gradient(#3A5BA0, #273773) !important;
+                                color: #fff !important;">
+                                    <td colspan="6" class="text-left">
+                                        <span style="font-size: medium;">Grand Total : </span>
+                                    </td>
+                                    <td 
+                                    class="text-right" colspan="1">XXX
+                                        {{selectedInvoiceTotal}}
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <div class="col-sm-12 "  *ngIf="type === 'Vendor-wise'">
+                        <table class="table table-responsive  table-bordered w-100 dataTable no-footer">
+                            <thead>
+                                <tr>
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Date: activate to sort column ascending"
+                                        (click)="sort('Date')"  style="width: 177.575px;">Sub Category
+                                    </th>
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        (click)="sort('Payment')" style="width: 177.575px;">Vendor
+                                    </th>
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        (click)="sort('Type')" style="width: 177.575px;">Branch
+                                    </th>
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        (click)="sort('VendorName')"  style="width: 177.575px;">Credit Days 
+                                    </th>
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        (click)="sort('Branch')"style="width: 177.575px;">Credit Amount 
+                                        </th>
+
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        (click)="sort('PaymentMode')"style="width: 177.575px;">0-15 DAYS
+                                        </th>
+
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        (click)="sort('BankName')" style="width: 177.575px;">16-30 DAYS
+                                        </th>
+
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        (click)="sort('ReferenceNo')"style="width: 177.575px;">31-45 DAYS
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        (click)="sort('ReferenceNo')"style="width: 177.575px;">45-60 DAYS
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        (click)="sort('ReferenceNo')"style="width: 177.575px;">>60 DAYS
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        (click)="sort('ReferenceNo')"style="width: 177.575px;">Balance (Company Currency)
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        (click)="sort('ReferenceNo')"style="width: 177.575px;">Balance (Invoice currency)                                
+                                        </th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let data of vendorwiselist">
+                                
+                                    <td class="hyperTextColor">{{data.Payment}}</td>
+                                    <td class="hyperTextColor"  (click)="showVendorinvoicewise()">{{data.Vendor}}</td>
+                                    <td class="hyperTextColor">{{data.VendorName}}</td>
+                                    <td>{{data.Branch}}</td>
+                                    <td>{{data.PaymentMode}}</td>
+                                    <td>{{data.BankName}}</td>
+                                    <td>{{data.ReferenceNo}}</td>
+                                    <td>{{data.Currency}}</td>
+                                    <td>{{data.PaymentMode}}</td>
+                                    <td>{{data.BankName}}</td>
+                                    <td>{{data.ReferenceNo}}</td>
+                                    <td>{{data.Currency}}</td>
+                                
+                                </tr>
+
+                                <!-- <tr *ngIf="pagedItems.length ==0">
+                                    <td class="text-center" colspan="10">No records found</td>
+                                </tr> -->
+
+                            </tbody>
+                            <tfoot>
+                                <tr class="footer-position-sticky" style=" padding: 7px !important;
+                                background-image: linear-gradient(#3A5BA0, #273773) !important;
+                                color: #fff !important;">
+                                    <td colspan="11" class="text-left">
+                                        <span style="font-size: medium;">Grand Total : </span>
+                                    </td>
+                                    <td 
+                                    class="text-right" colspan="1">XXX
+                                        {{selectedInvoiceTotal}}
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <div class="col-sm-12 "  *ngIf="type === 'Vendor-Invoice-wise'">
+                        <table class="table table-responsive  table-bordered w-100 dataTable no-footer">
+                            <thead>
+                                <tr>
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Date: activate to sort column ascending"
+                                        (click)="sort('Date')"  style="width: 177.575px;">Vendor 
+                                    </th>
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        (click)="sort('Payment')" style="width: 177.575px;">Branch
+                                    </th>
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        (click)="sort('Type')" style="width: 177.575px;">Date
+                                    </th>
+
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        (click)="sort('VendorName')"  style="width: 177.575px;">Purchase Invoice #
+                                    </th>
+
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        (click)="sort('Branch')"style="width: 177.575px;">Vendor Invoice #
+                                    </th>
+
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        (click)="sort('PaymentMode')"style="width: 177.575px;">Transaction Type 
+                                    </th>
+
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        (click)="sort('BankName')" style="width: 177.575px;">Age (Days)
+                                    </th>
+
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        (click)="sort('ReferenceNo')"style="width: 177.575px;">Aging Slab
+                                        </th>
+
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        (click)="sort('Currency')"style="width: 177.575px;">Invoice Amount
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        (click)="sort('Currency')"style="width: 177.575px;">Balance (Invoice currency)                                       
+                                        </th>
+                                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        (click)="sort('Currency')"style="width: 177.575px;">Balance (Company Currency )                                        
+                                        </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let data of vendorinvoicewiselist">
+                                    
+                                    <td class="hyperTextColor">{{data.Payment}}</td>
+                                    <td>{{data.Type}}</td>
+                                    <td class="hyperTextColor">{{data.VendorName}}</td>
+                                    <td class="hyperTextColor" >{{data.PurchaseInvoice}}</td>
+                                    <td>{{data.PaymentMode}}</td>
+                                    <td>{{data.BankName}}</td>
+                                    <td>{{data.ReferenceNo}}</td>
+                                    <td>{{data.Currency}}</td>
+                                    <td>{{data.Invoice}}</td>
+                                </tr>
+
+                                <!-- <tr *ngIf="pagedItems.length ==0">
+                                    <td class="text-center" colspan="10">No records found</td>
+                                </tr> -->
+
+                            </tbody>
+                            <tfoot>
+                                <tr class="footer-position-sticky" style=" padding: 7px !important;
+                                background-image: linear-gradient(#3A5BA0, #273773) !important;
+                                color: #fff !important;">
+                                    <td colspan="10" class="text-left">
+                                        <span style="font-size: medium;">Grand Total : </span>
+                                    </td>
+                                    <td 
+                                    class="text-right" colspan="1">XXX
+                                        {{selectedInvoiceTotal}}
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <!-- <div class="row page mr-3" align="right">
+                        <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10 && pager.totalItems > 10"
+                            class="pagination">
+                            <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                <a (click)="setPage(1)">First</a>
+                            </li>
+                            <li [ngClass]="{disabled:pager.currentPage === 1}">
+                                <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+                            </li>
+                            <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                                <a (click)="setPage(page)">{{page}}</a>
+                            </li>
+                            <li *ngIf="(pager.totalPages - pager.startPage) > 5 ">
+                                <a (click)="setPage(pager.startPage + 5)">...</a>
+                            </li>
+                            <li *ngIf="(pager.totalPages - pager.startPage) > 5">
+                                <a (click)="setPage(pager.totalPages)">{{pager.totalPages}}</a>
+                            </li>
+
+                            <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                <a (click)="setPage(pager.currentPage + 1)">Next</a>
+                            </li>
+                            <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                                <a (click)="setPage(pager.totalPages)">Last</a>
+                            </li>
+                        </ul>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
