@@ -18,7 +18,7 @@ export class DynamicDecimalPipeDirective {
   @HostListener('input', ['$event.target.value'])
 
   transform(value: number | string, decimalPlaces: number): string {
-    debugger
+
     // Check if the value is empty or null
     if (value === '' || value === null) {
       return '0';

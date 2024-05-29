@@ -394,11 +394,11 @@ export class ReportReceiptVoucherComponent implements OnInit {
       // Merge the symbol and amount into a single string with fixed decimal places
       const mergedICYAmount = `${data['Amount (ICY)'] !== null ? parseFloat(data['Amount (ICY)']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
       const mergedCCYAmount = `${data['Amount (CCY)'] !== null ? parseFloat(data['Amount (CCY)']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const TDSamount = ` ${data['TDS amount'] !== null ? parseFloat(data['TDS amount']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const ExRateGain = ` ${data['Ex rate Gain'] !== null ? parseFloat(data['Ex rate Gain']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const ExRateLoss = ` ${data['Ex rate Loss'] !== null ? parseFloat(data['Ex rate Loss']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const BankCharges = ` ${data['Bank charges'] !== null ? parseFloat(data['Bank charges']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const Payment = ` ${data['Payment'] !== null ? parseFloat(data['Payment']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      const TDSamount = ` ${data['TDS Amount'] !== null ? parseFloat(data['TDS Amount']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      const ExRateGain = ` ${data['Ex Rate Gain'] !== null ? parseFloat(data['Ex Rate Gain']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      const ExRateLoss = ` ${data['Ex Rate Loss'] !== null ? parseFloat(data['Ex Rate Loss']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      const BankCharges = ` ${data['Bank Charges'] !== null ? parseFloat(data['Bank Charges']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+
 
       // Filter out properties you don't want to include in the Excel sheet
       const filteredData = Object.keys(data)
@@ -411,11 +411,11 @@ export class ReportReceiptVoucherComponent implements OnInit {
       // Update the 'Amount (ICY)' property in the filtered data object with the merged amount
       filteredData['Amount (ICY)'] = mergedICYAmount;
       filteredData['Amount (CCY)'] = mergedCCYAmount;
-      filteredData['TDS amount'] = TDSamount;
-      filteredData['Ex rate Gain'] = ExRateGain;
-      filteredData['Ex rate Loss'] = ExRateLoss;
-      filteredData['Bank charges'] = BankCharges;
-      filteredData['Payment'] = Payment;
+      filteredData['TDS Amount'] = TDSamount;
+      filteredData['Ex Rate Gain'] = ExRateGain;
+      filteredData['Ex Rate Loss'] = ExRateLoss;
+      filteredData['Bank Charges'] = BankCharges;
+    
 
 
       // Add the filtered data to the worksheet
@@ -428,6 +428,7 @@ export class ReportReceiptVoucherComponent implements OnInit {
         if (columnIndex !== -1) {
           const cell = row.getCell(columnIndex + 1);
           cell.font = { color: { argb: '8B0000' }, bold: true, }; // Red color
+          cell.alignment = { horizontal: 'right' };
         }
       });
 
@@ -556,13 +557,13 @@ export class ReportReceiptVoucherComponent implements OnInit {
       data.Date = formattedDate;
       const defalutvalue = 0;
       // Merge the symbol and amount into a single string with fixed decimal places
-      const mergedICYAmount = data['Amount (ICY)'] !== null ? parseFloat(data['Amount (ICY)']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction);
-      const mergedCCYAmount = data['Amount (CCY)'] !== null ? parseFloat(data['Amount (CCY)']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction);
-      const TDSamount = data['TDS amount'] !== null ? parseFloat(data['TDS amount']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction);
-      const ExRateGain = data['Ex rate Gain'] !== null ? parseFloat(data['Ex rate Gain']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction);
-      const ExRateLoss = data['Ex rate Loss'] !== null ? parseFloat(data['Ex rate Loss']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction);
-      const BankCharges = data['Bank charges'] !== null ? parseFloat(data['Bank charges']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction);
-      const Payment = data['Payment'] !== null ? parseFloat(data['Payment']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction);
+      const mergedICYAmount = `${data['Amount (ICY)'] !== null ? parseFloat(data['Amount (ICY)']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      const mergedCCYAmount = `${data['Amount (CCY)'] !== null ? parseFloat(data['Amount (CCY)']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      const TDSamount = ` ${data['TDS Amount'] !== null ? parseFloat(data['TDS Amount']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      const ExRateGain = ` ${data['Ex Rate Gain'] !== null ? parseFloat(data['Ex Rate Gain']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      const ExRateLoss = ` ${data['Ex Rate Loss'] !== null ? parseFloat(data['Ex Rate Loss']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      const BankCharges = ` ${data['Bank Charges'] !== null ? parseFloat(data['Bank Charges']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+
 
       // Filter out properties you don't want to include in the Excel sheet
       const filteredData = Object.keys(data)
@@ -575,11 +576,10 @@ export class ReportReceiptVoucherComponent implements OnInit {
       // Update the 'Amount (ICY)' property in the filtered data object with the merged amount
       filteredData['Amount (ICY)'] = mergedICYAmount;
       filteredData['Amount (CCY)'] = mergedCCYAmount;
-      filteredData['TDS amount'] = TDSamount;
-      filteredData['Ex rate Gain'] = ExRateGain;
-      filteredData['Ex rate Loss'] = ExRateLoss;
-      filteredData['Bank charges'] = BankCharges;
-      filteredData['Payment'] = Payment;
+      filteredData['TDS Amount'] = TDSamount;
+      filteredData['Ex Rate Gain'] = ExRateGain;
+      filteredData['Ex Rate Loss'] = ExRateLoss;
+      filteredData['Bank Charges'] = BankCharges;
 
 
       // Add the filtered data to the worksheet

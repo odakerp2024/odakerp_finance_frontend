@@ -307,7 +307,7 @@ export class ReportPurchaseVoucherComponent implements OnInit {
   setPage(page: number) {
     if (page < 1 || page > this.pager.totalPages) return;
 
-    this.pager = this.ps.getPager(this.reportList.length, page);
+    this.pager = this.ps.getPager(this.reportList.length, page,12);
     this.pagedItems = this.reportList.slice(this.pager.startIndex, this.pager.endIndex + 1);
   }
 
@@ -420,8 +420,8 @@ export class ReportPurchaseVoucherComponent implements OnInit {
       data.Date = formattedDate;
       const defalutvalue = 0;
       // Merge the symbol and amount into a single string with fixed decimal places
-      const mergedICYAmount = `${data.Symbol} ${data['Amount (ICY)'] !== null ? parseFloat(data['Amount (ICY)']).toFixed(2) : '0.00'}`;
-      const mergedCCYAmount = `${data.Symbol} ${data['Amount (CCY)'] !== null ? parseFloat(data['Amount (CCY)']).toFixed(2) : '0.00'}`;
+      const mergedICYAmount = ` ${data['Amount (ICY)'] !== null ? parseFloat(data['Amount (ICY)']).toFixed(2) : '0.00'}`;
+      const mergedCCYAmount = ` ${data['Amount (CCY)'] !== null ? parseFloat(data['Amount (CCY)']).toFixed(2) : '0.00'}`;
       const TDSamount = ` ${data['TDS amount'] !== null ? parseFloat(data['TDS amount']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
       const ExRateGain = ` ${data['Ex rate Gain'] !== null ? parseFloat(data['Ex rate Gain']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
       const ExRateLoss = ` ${data['Ex rate Loss'] !== null ? parseFloat(data['Ex rate Loss']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
@@ -458,6 +458,7 @@ export class ReportPurchaseVoucherComponent implements OnInit {
         if (columnIndex !== -1) {
           const cell = row.getCell(columnIndex + 1);
           cell.font = { color: { argb: '8B0000' }, bold: true, }; // Red color
+          cell.alignment = { horizontal: 'right' }; // Align to right
         }
       });
 
