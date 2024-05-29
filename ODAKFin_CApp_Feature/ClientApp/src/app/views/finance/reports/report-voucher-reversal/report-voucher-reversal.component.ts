@@ -42,7 +42,11 @@ export class ReportVoucherReversalComponent implements OnInit  {
     { peroidId: 'week', peroidName: 'CURRENT WEEK' },
     { peroidId: 'month', peroidName: 'CURRENT MONTH' },
     { peroidId: 'year', peroidName: 'CURRENT FINANCIAL YEAR' },
-    { peroidId: 'custom', peroidName: 'CUSTOM' }
+    { peroidId: 'custom', peroidName: 'CUSTOM' },
+    { peroidId: 'previoustoday', peroidName: 'PREVIOUS DAY' },
+    { peroidId: 'previousweek', peroidName: 'PREVIOUS WEEK' },
+    { peroidId: 'previousmonth', peroidName: 'PREVIOUS MONTH' },
+    { peroidId: 'previousyear', peroidName: 'PREVIOUS FINANCIAL YEAR' }
   ];
   selectedOption: string;
   campaignOne = new FormGroup({
@@ -62,7 +66,7 @@ export class ReportVoucherReversalComponent implements OnInit  {
     private ps: PaginationService,
     private dataService: DataService,
     private reportService: ReportDashboardService,
-    public excelService : ExcelService
+    public excelService: ExcelService
   ) { }
 
   ngOnInit(): void {
@@ -77,35 +81,67 @@ export class ReportVoucherReversalComponent implements OnInit  {
   onOptionChange(selectedOption: string) {
     this.selectedOption = '';
     switch (selectedOption) {
+
       case 'today':
         this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
         this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
         break;
+
       case 'week':
         this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay()), "yyyy-MM-dd"));
         this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() + (6 - this.currentDate.getDay())), "yyyy-MM-dd"));
         break;
+
       case 'month':
         const startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd")
         const endDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd")
         this.reportFilter.controls.FromDate.setValue(startDate);
         this.reportFilter.controls.ToDate.setValue(endDate);
-
-
         break;
-        case 'year':
-          const currentYear = this.currentDate.getFullYear();
-          const startYear = this.currentDate.getMonth() >= 3 ? currentYear : currentYear - 1;
-          const endYear = startYear + 1;
-          this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(new Date(startYear, 3, 1), "yyyy-MM-dd"));
-          this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(new Date(endYear, 2, 31), "yyyy-MM-dd"));
-          
-          break;
+
+      case 'year':
+        const currentYear = this.currentDate.getFullYear();
+        const startYear = this.currentDate.getMonth() >= 3 ? currentYear : currentYear - 1;
+        const endYear = startYear + 1;
+        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(new Date(startYear, 3, 1), "yyyy-MM-dd"));
+        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(new Date(endYear, 2, 31), "yyyy-MM-dd"));
+        break;
+
+      case 'previoustoday':
+        const previousDay = new Date(this.currentDate);
+        previousDay.setDate(previousDay.getDate() - 1);
+        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(previousDay, "yyyy-MM-dd"));
+        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(previousDay, "yyyy-MM-dd"));
+        break;
+
+      case 'previousweek':
+        const previousWeekStartDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay() - 7);
+        const previousWeekEndDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay() - 1);
+        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(previousWeekStartDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(previousWeekEndDate, "yyyy-MM-dd"));
+        break;
+
+      case 'previousmonth':
+        const previousMonthStartDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() - 1, 1);
+        const previousMonthEndDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 0);
+        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(previousMonthStartDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(previousMonthEndDate, "yyyy-MM-dd"));
+        break;
+
+      case 'previousyear':
+        const previousYear = this.currentDate.getFullYear() - 1;
+        const previousYearStartDate = new Date(previousYear, 3, 1);
+        const previousYearEndDate = new Date(previousYear + 1, 2, 31);
+        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(previousYearStartDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(previousYearEndDate, "yyyy-MM-dd"));
+        break;
+
       case 'custom':
         this.selectedOption = 'custom';
         this.startDate = this.reportFilter.controls.FromDate.value;
         this.endDate = this.reportFilter.controls.ToDate.value;
         break;
+
       default:
         this.selectedOption = '';
         break;
@@ -207,7 +243,7 @@ export class ReportVoucherReversalComponent implements OnInit  {
   setPage(page: number) {
     if (page < 1 || page > this.pager.totalPages) return;
 
-    this.pager = this.ps.getPager(this.reportList.length, page);
+    this.pager = this.ps.getPager(this.reportList.length, page, 12);
     this.pagedItems = this.reportList.slice(this.pager.startIndex, this.pager.endIndex + 1);
   }
 
@@ -244,41 +280,41 @@ export class ReportVoucherReversalComponent implements OnInit  {
     const worksheet = workbook.addWorksheet('Report');
 
     // Add title and subtitle rows
-    const titleRow = worksheet.addRow(['', '', '', '', '', 'NAVIO SHIPPING PRIVATE LIMITED', '']);
-    titleRow.getCell(6).font = { size: 15, bold: true };
-    titleRow.getCell(6).alignment = { horizontal: 'center' };
+    const titleRow = worksheet.addRow(['', '', 'NAVIO SHIPPING PRIVATE LIMITED', '']);
+    titleRow.getCell(3).font = { size: 15, bold: true };
+    titleRow.getCell(3).alignment = { horizontal: 'center' };
 
     // Calculate the length of the title string
     const titleLength = 'NAVIO SHIPPING PRIVATE LIMITED'.length;
 
     // Iterate through each column to adjust the width based on the title length
     worksheet.columns.forEach((column) => {
-      if (column.number === 6) {
+      if (column.number === 3) {
         column.width = titleLength + 2;
       }
     });
 
     // Merge cells for the title
-    worksheet.mergeCells(`F${titleRow.number}:G${titleRow.number}`);
+    worksheet.mergeCells(`C${titleRow.number}:D${titleRow.number}`);
 
     // Add subtitle row
-    const subtitleRow = worksheet.addRow(['', '', '', '', '', 'Voucher Reversal', '']);
-    subtitleRow.getCell(6).font = { size: 14 };
-    subtitleRow.getCell(6).alignment = { horizontal: 'center' };
+    const subtitleRow = worksheet.addRow(['', '',  'Voucher Reversal', '']);
+    subtitleRow.getCell(3).font = { size: 14 };
+    subtitleRow.getCell(3).alignment = { horizontal: 'center' };
 
     // Merge cells for the subtitle
-    worksheet.mergeCells(`F${subtitleRow.number}:G${subtitleRow.number}`);
+    worksheet.mergeCells(`C${subtitleRow.number}:D${subtitleRow.number}`);
 
     // Add "FROM Date" and "TO Date" to the worksheet
-    const dateRow = worksheet.addRow(['', '', '', '', '', `FROM ${this.startDate} - TO ${this.endDate}`]);
+    const dateRow = worksheet.addRow(['', '',  `FROM ${this.startDate} - TO ${this.endDate}`]);
     dateRow.eachCell((cell) => {
       cell.alignment = { horizontal: 'center' };
     });
-    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
-    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
+    dateRow.getCell(3).numFmt = 'dd-MM-yyyy';
+    dateRow.getCell(3).numFmt = 'dd-MM-yyyy';
 
     // Merge cells for "FROM Date" and "TO Date"
-    worksheet.mergeCells(`F${dateRow.number}:G${dateRow.number}`);
+    worksheet.mergeCells(`C${dateRow.number}:D${dateRow.number}`);
 
 
     const header = Object.keys(this.reportForExcelList[0]);
@@ -327,6 +363,7 @@ export class ReportVoucherReversalComponent implements OnInit  {
         if (columnIndex !== -1) {
           const cell = row.getCell(columnIndex + 1);
           cell.font = { color: { argb: '8B0000' }, bold: true, }; // Red color
+          cell.alignment = { horizontal: 'right' };
         }
       });
 
@@ -465,6 +502,7 @@ export class ReportVoucherReversalComponent implements OnInit  {
         if (columnIndex !== -1) {
           const cell = row.getCell(columnIndex + 1);
           cell.font = { color: { argb: '8B0000' }, bold: true, }; // Red color
+          cell.alignment = { horizontal: 'right' };
         }
       });
 

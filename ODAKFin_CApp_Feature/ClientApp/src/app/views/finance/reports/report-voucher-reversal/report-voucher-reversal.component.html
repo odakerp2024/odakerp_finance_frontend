@@ -7,10 +7,10 @@
                 <div class="col-10">
                     <div class="row pb-3">
 
-                <div class="col-3">
+                <div class="col-2">
 
                     <label class=" fontstyles">PEROID</label>
-                    <ng-select class="searchdropdown custom" formControlName="Peroid"
+                    <ng-select class="searchdropdown custom dropdown-size" formControlName="Peroid"
                         (ngModelChange)="onOptionChange($event);" [clearable]="false">
                         <ng-option [value]="''" disabled>--SELECT PEROID--</ng-option>
                         <ng-container *ngFor="let peroid of PeroidList">
@@ -23,34 +23,33 @@
                 </div>
 
                 <div class="col-2" *ngIf="selectedOption === 'custom'">
-                    <div class="form-group bmd-form-group w-100">
-                        <label class=" mb-3">FROM</label>
-                        <div class="input-group">
-                            <mat-form-field class="tillDate mat_date_picker" appearance="outline">
-                                <input matInput (click)="FromDate.open()" readonly autocomplete="off"
-                                    [min]="reportFilter.get('FromDate').value" [matDatepicker]="FromDate"
-                                    id="FromDate" [placeholder]="entityDateFormat" formControlName="FromDate">
-                                <mat-datepicker-toggle matSuffix [for]="FromDate"></mat-datepicker-toggle>
-                                <mat-datepicker #FromDate></mat-datepicker>
-                            </mat-form-field>
-                        </div>
+                    <label class="fontstyles mb-3">FROM</label>
+                    <div class="input-group">
+                        <mat-form-field class="tillDate mat_date_picker" appearance="outline">
+                            <input matInput (click)="FromDate.open()" readonly autocomplete="off"
+                                (onchange)="formatchange(true)" [matDatepicker]="FromDate" id="FromDate"
+                                [placeholder]="entityDateFormat" formControlName="FromDate">
+                            <mat-datepicker-toggle matSuffix [for]="FromDate"></mat-datepicker-toggle>
+                            <mat-datepicker #FromDate></mat-datepicker>
+                        </mat-form-field>
                     </div>
                 </div>
 
                 <div class="col-2" *ngIf="selectedOption === 'custom'">
-                    <label class=" mb-3">TO</label>
+                    <label class="fontstyles mb-3">TO</label>
                     <div class="input-group">
                         <mat-form-field class="tillDate mat_date_picker" appearance="outline">
                             <input matInput (click)="ToDate.open()" readonly autocomplete="off"
-                                [min]="reportFilter.get('ToDate').value" [matDatepicker]="ToDate" id="ToDate"
-                                [placeholder]="entityDateFormat" formControlName="ToDate">
+                                formControlName="ToDate" [matDatepicker]="ToDate" id="ToDate"
+                                [min]="reportFilter.get('FromDate').value" [placeholder]="entityDateFormat"
+                                (ngModelChange)="formatchange(false)">
                             <mat-datepicker-toggle matSuffix [for]="ToDate"></mat-datepicker-toggle>
                             <mat-datepicker #ToDate></mat-datepicker>
                         </mat-form-field>
                     </div>
                 </div>
 
-                <div class="col-3">
+                <div class="col-2">
                     <label class=" fontstyles">DIVISION</label>
                     <ng-select class="searchdropdown custom" formControlName="DivisionId"
                         (ngModelChange)="getOfficeList($event);" [clearable]="false">
@@ -63,7 +62,7 @@
                     </ng-select>
                 </div>
 
-                <div class="col-3">
+                <div class="col-2">
                     <label class=" fontstyles">OFFICE</label>
                     <ng-select class="searchdropdown" formControlName="OfficeId"
                         (ngModelChange)="getDivisionBasedOffice($event, reportFilter.value.Division)"
@@ -77,7 +76,7 @@
                     </ng-select>
                 </div>
 
-                <div class="col-3">
+                <div class="col-2">
                     <label class="fontstyles">VOUCHER TYPE</label>
                     <ng-select class="searchdropdown" formControlName="VoucherType" [clearable]="false" name="CategoryId"
                     id="CategoryId" >
@@ -95,7 +94,7 @@
             </div>
 
 
-            <div class="col-2" style="padding-top: 30px;">
+            <div class="col-2" style="padding-top: 23px;">
                 <div class="text-center">
                     <button type="button" class="btn btn-primary text-white  col-auto"
                         (click)="getVoucherReversalReportList()">
@@ -117,29 +116,33 @@
         <div class="col-md-12 mt-2">
             <div class="card m-b-30">
                 <div class="card-body cpad enqview">
-                    <div class="col-sm-12 justify-content-end text-center ">
-                        <h3 class="title">NAVIO SHIPPING PRIVATE LIMITED</h3>
-                        <h2 class="subtitle">Voucher  Reversals</h2>                       
-                        <p>FROM {{ startDate | date: commonDataService.convertToLowerCaseDay(entityDateFormat) }} -
-                           TO {{ endDate | date:commonDataService.convertToLowerCaseDay(entityDateFormat) }}
-                        </p>
-    
-                    </div>
-                    <div class="col-sm-12 text-right d-flex justify-content-end">
-                        <div style="font-weight: 600; padding-top: 14px;">Export as : </div>
-                        <div>
-                            <img style="cursor: pointer;" width="38px" height="38px"
-                                class="exportAs mx-1 align-baseline"
-                                src="../../../../../assets/images/csv_color.png" (click)="downloadAsCSV()"
-                                alt="logo">
-                            <img style="cursor: pointer;" width="38px" height="38px"
-                                class="exportAs mx-1 align-baseline"
-                                src="../../../../../assets/images/xlsx_color.png" (click)="downloadAsExcel()"
-                                alt="logo">
+
+                    <div class="row">
+                        <div class="col-10 justify-content-end text-center ">
+                            <h6 class="title">NAVIO SHIPPING PRIVATE LIMITED</h6>
+                            <h6 class="subtitle">Voucher Reversals</h6>
+                            <p>FROM {{ startDate | date: commonDataService.convertToLowerCaseDay(entityDateFormat) }} -
+                                TO {{ endDate | date:commonDataService.convertToLowerCaseDay(entityDateFormat) }}
+                            </p>
                         </div>
+
+                        <div class="col-2 text-right ">
+                            <div style="font-weight: 600;padding-top: 67px;padding-right: 10px;">Export as :
+                                <img style="cursor: pointer;" width="38px" height="38px"
+                                    class="exportAs mx-1 align-baseline"
+                                    src="../../../../../assets/images/csv_color.png" (click)="downloadAsCSV()"
+                                    alt="logo">
+                                <img style="cursor: pointer;" width="38px" height="38px"
+                                    class="exportAs mx-1 align-baseline"
+                                    src="../../../../../assets/images/xlsx_color.png" (click)="downloadAsExcel()"
+                                    alt="logo">
+                            </div>
+                        </div>
+
                     </div>
 
-                    <div class="col-sm-12 ">
+
+                    <div class="col-12 ">
                         <table class="table table-responsive table-bordered w-100 dataTable no-footer">
                             <thead>
                                 <tr>
