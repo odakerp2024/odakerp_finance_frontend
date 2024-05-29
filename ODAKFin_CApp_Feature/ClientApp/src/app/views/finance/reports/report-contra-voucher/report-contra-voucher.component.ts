@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Globals } from 'src/app/globals';
 import { PaginationService } from 'src/app/pagination.service';
@@ -404,9 +404,10 @@ export class ReportContraVoucherComponent implements OnInit  {
       const date = data.Date
       const formattedDate = date.split('T')[0];
       data.Date = formattedDate;
-
+      const defalutvalue = 0;
       // Merge the symbol and amount into a single string with fixed decimal places
-      const mergedICYAmount = `${data.Symbol} ${parseFloat(data['Amount']).toFixed(this.entityFraction)}`;
+     // const mergedICYAmount = `${data.Symbol} ${parseFloat(data['Amount']).toFixed(this.entityFraction)}`;
+const mergedICYAmount = `${data['Amount'] !== null ? parseFloat(data['Amount']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
 
       // Filter out properties you don't want to include in the Excel sheet
       const filteredData = Object.keys(data)
@@ -553,9 +554,11 @@ export class ReportContraVoucherComponent implements OnInit  {
        const date = data.Date
        const formattedDate = date.split('T')[0];
        data.Date = formattedDate;
- 
+       const defalutvalue = 0;
        // Merge the symbol and amount into a single string with fixed decimal places
-       const mergedICYAmount = `${data.Symbol} ${parseFloat(data['Amount']).toFixed(this.entityFraction)}`;
+       // const mergedICYAmount = `${data.Symbol} ${parseFloat(data['Amount']).toFixed(this.entityFraction)}`;
+        const mergedICYAmount = data['Amount'] !== null ? parseFloat(data['Amount']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction);
+
       
        // Filter out properties you don't want to include in the Excel sheet
        const filteredData = Object.keys(data)
@@ -578,6 +581,7 @@ export class ReportContraVoucherComponent implements OnInit  {
       if (columnIndex !== -1) {
           const cell = row.getCell(columnIndex + 1);
           cell.font = { color: { argb: '8B0000' }, bold: true,}; // Red color
+           cell.alignment = { horizontal: 'right' }; // Align to right
       }
   });
  
