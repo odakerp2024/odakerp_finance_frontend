@@ -275,7 +275,7 @@ export class ReportAdjustmentVoucherComponent implements OnInit {
   setPage(page: number) {
     if (page < 1 || page > this.pager.totalPages) return;
 
-    this.pager = this.ps.getPager(this.reportList.length, page);
+    this.pager = this.ps.getPager(this.reportList.length, page, 12);
     this.pagedItems = this.reportList.slice(this.pager.startIndex, this.pager.endIndex + 1);
   }
 
