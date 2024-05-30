@@ -648,10 +648,9 @@
                                                                                 <label class="str"> Pin Code </label>
                                                                                 <input type="text" name="pinCode"
                                                                                     formControlName="PinCode"
-                                                                                    id="txtPinCode" class="form-control"
-                                                                                    maxlength="10">
+                                                                                    id="txtPinCode" class="form-control">
                                                                                     <div *ngIf="fg.get('PinCode').invalid && fg.get('CountryID').value == 103" class="text-danger">
-                                                                                        <span style='color:red;'>*</span> <span>Invalid pin code number.</span>
+                                                                                        <span style='color:red;'>*</span> <span>Pin Code should be six.</span>
                                                                                     </div>
                                                                             </div>
                                                                         </div>
