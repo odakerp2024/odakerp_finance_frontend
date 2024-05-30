@@ -164,13 +164,14 @@
                                             [value]="receipt.PendingAmount"  Style="max-width:70px" type="text">
                                     </td>
                                     <td>
+                                     <!-- [ngClass]=" isUpdateMode ? 'block-set-off-input' : ''" -->
                                         <input onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
                                         min="0" numbersOnly
                                         appDynamicDecimal
                                         [ngClass]=" isUpdateMode ? 'block-set-off-input' : ''"
-                                        [ngClass]="getIsChecked(i, 'Receipts') ? '' : 'disable-input'"
+                                         [ngClass]="getIsChecked(i, 'Receipts') ? '' : 'disable-input'"
                                             [readonly]="isUpdateMode"  Style="max-width:60px"
-                                            (change)="setOffChangeEvent($event,i,'Receipts');"
+                                            (ngModelChange)="setOffChangeEvent($event,i,'Receipts');"
                                             class="text-center setOff" formControlName="AdjustedAmount"
                                             [value]="receipt.AdjustedAmount" min="1" type="number">
                                     </td>
@@ -239,12 +240,13 @@
                                             [value]="invoice.PendingAmount"  Style="max-width:50px" type="text">
                                     </td>
                                     <td>
+                                     <!-- [ngClass]=" isUpdateMode  ? 'block-set-off-input' : ''" -->
                                         <input onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
                                         min="0" numbersOnly
                                         appDynamicDecimal
+                                        [ngClass]=" isUpdateMode  ? 'block-set-off-input' : ''"
+                                            [ngClass]="getIsChecked(i, 'Invoices') ? '' : 'disable-input'"
                                         [readonly]="isUpdateMode" Style="max-width:70px"
-                                        [ngClass]="getIsChecked(i, 'Receipts') ? '' : 'disable-input'"
-                                            [ngClass]=" isUpdateMode ? 'block-set-off-input' : ''"
                                             (ngModelChange)="setOffChangeEvent($event,i,'Invoices');"
                                             class="text-center setOff" formControlName="AdjustedAmount"
                                             [value]="invoice.AdjustedAmount" min="1" type="number" Style="max-width:90px">

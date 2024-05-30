@@ -328,7 +328,6 @@ export class InvoicesArDetailsComponent implements OnInit {
         }
         this.invoiceForm.patchValue({ receiptInfo: this.receiptList });
         this.newReceiptList = this.receiptList;
-   
       
         if (result.data.Table1.length > 0) {
           
@@ -369,7 +368,21 @@ export class InvoicesArDetailsComponent implements OnInit {
     items2.clear();
   }
 
-
+getIsChecked(i, type){
+    
+    if (type == 'Receipts') {
+    if (i !== undefined){
+    return this.ReceiptInfo.value[i].IsSelect == false || this.ReceiptInfo.value[i].IsSelect == null ? false : true;
+    }
+    return false;
+  }
+  else if (type == 'Invoices') {
+    if (i !== undefined){
+      return this.OpenInvoiceInfo.value[i].IsSelect == false || this.OpenInvoiceInfo.value[i].IsSelect == null ? false : true;
+      }
+      return false;
+  }
+}
   
    setOffChangeEvent(data, index, type) {
     
@@ -442,21 +455,6 @@ export class InvoicesArDetailsComponent implements OnInit {
     }
   }
 
-  getIsChecked(i, type){
-    debugger
-    if (type == 'Receipts') {
-    if (i !== undefined){
-    return this.ReceiptInfo.value[i].IsSelect == false || this.ReceiptInfo.value[i].IsSelect == null ? false : true;
-    }
-    return false;
-  }
-  else if (type == 'Invoices') {
-    if (i !== undefined){
-      return this.OpenInvoiceInfo.value[i].IsSelect == false || this.OpenInvoiceInfo.value[i].IsSelect == null ? false : true;
-      }
-      return false;
-  }
-}
 
   // fileSelected(event) {
   //   if (event.target.files.length > 0 && this.FileList.length < 5) {
@@ -608,7 +606,6 @@ private downloadFile = (data: HttpResponse<Blob>) => {
           this.ViewPage();
           return;
         }
-
         await this.createPayload(status);
 
         let service = `${this.globals.APIURL}/OutStandingInvoiceAR/SaveOutStandingInvoiceAR`;
