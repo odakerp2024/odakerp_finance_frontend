@@ -58,7 +58,7 @@ export class ReportDashboardService {
 
   // Account Receivable Balance Summary Services 
     
-  getBalanceSummaryOverallList(FormValue: any): Observable<any> {
+  getBalanceSummaryList(FormValue: any): Observable<any> {
     FormValue.Amount = FormValue.Amount == '' ? 0 : FormValue.Amount;
     return this.http.post<any>(this.globals.APIURL + '/Reports/AccountReceivableList', FormValue);
   }

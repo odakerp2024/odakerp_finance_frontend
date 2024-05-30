@@ -61,9 +61,15 @@ export class ReportArLeveloneComponent implements OnInit {
   startDate = '';
   endDate = '';
   type = 'overall';
-  totalcustomer: number = 0;
-  totalinvoice: number = 0;
-  totalbalance: number = 0;
+  totalcustomer : number = 0;
+  totalinvoice  : number = 0;
+  totalbalance  : number = 0;
+  totalcreditamount  : number = 0;
+  totalbalanceicy    : number = 0;
+  totalnetbalance    : number = 0;
+  totalbalanceccy    : number = 0;
+  subtype       : number;
+  
 
   constructor(
     private commonDataService: CommonService,
@@ -88,14 +94,16 @@ export class ReportArLeveloneComponent implements OnInit {
   async goBack() {
     if (this.type === 'customerinvoicewise') {
       this.type = 'customerwise';
-      await this.showCustomerWise(); 
+      await this.showCustomerWise(this.subtype); 
     } else if (this.type === 'customerwise') {
-      this.type = 'overall';    
-      await this.getBalanceSummaryOverallList();
+      this.type = 'overall';
+      await this.createReportForm();    
+      await this.getOverallList();
     }
   }
 
-  async showCustomerWise() {
+  async showCustomerWise(subTypeId:number) {
+    this.subtype = subTypeId;
     this.pagedItems = [];
     this.type = 'customerwise';
     await this.createReportForm();
@@ -183,15 +191,19 @@ export class ReportArLeveloneComponent implements OnInit {
       this.reportFilter = this.fb.group({
         DivisionId: [0],
         OfficeId: [0],
+        Type:[0],
+        SubTypeId: [0],
         FromDate: [this.startDate],
         ToDate: [this.endDate],
         Peroid: [''],
       });
-    } else {
+    } else if( this.type == 'customerwise'){
       this.reportFilter = this.fb.group({
         DivisionId: [0],
         OfficeId: [0],
         Customer: [0], 
+        Type:[1],
+        SubTypeId: [this.subtype],
         FromDate: [this.startDate],
         ToDate: [this.endDate],
         Peroid: [''],
@@ -200,9 +212,11 @@ export class ReportArLeveloneComponent implements OnInit {
   
     this.onOptionChange('month');
     if(this.type == 'overall'){
-      await this.getBalanceSummaryOverallList();
+      await this.getOverallList();
     }
-   
+    else if(this.type == 'customerwise'){
+      await this.getCustomerWiseList();
+    }
   }
   
 
@@ -248,11 +262,11 @@ export class ReportArLeveloneComponent implements OnInit {
     })
   }
 
-  getBalanceSummaryOverallList() {
+  getOverallList() {
     this.startDate = this.reportFilter.controls.FromDate.value;
     this.endDate = this.reportFilter.controls.ToDate.value;
 
-    this.reportService.getBalanceSummaryOverallList(this.reportFilter.value).subscribe(result => {
+    this.reportService.getBalanceSummaryList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
       if (result['data'].Table.length > 0) {
         this.reportList = result['data'].Table;
@@ -271,6 +285,31 @@ export class ReportArLeveloneComponent implements OnInit {
     })
   }
 
+  getCustomerWiseList() {
+    this.startDate = this.reportFilter.controls.FromDate.value;
+    this.endDate = this.reportFilter.controls.ToDate.value;
+    this.reportService.getBalanceSummaryList(this.reportFilter.value).subscribe(result => {
+      this.reportList = [];
+      this.pagedItems =[];
+      if (result['data'].Table.length > 0) {
+        this.reportList = result['data'].Table;
+        this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
+        this.setPage(1);
+        this.totalcreditamount = this.calculateTotalCreditAmount(this.reportList);
+        this.totalbalanceicy = this.calculateTotalInvoiceCurrency(this.reportList);
+        this.totalnetbalance = this.calculateTotalNetBalance(this.reportList);
+        this.totalbalanceccy = this.calculateTotalCompanyCurrency(this.reportList);
+      } else {
+        this.pager = {};
+        this.pagedItems = [];
+       this.totalcreditamount  = 0;
+       this.totalbalanceicy   = 0;
+       this.totalnetbalance    = 0;
+       this.totalbalanceccy    = 0;
+      }
+    })
+  }
+
   calculateTotalCustomers(items: any[]): number {
     return items.reduce((sum, item) => sum + item.CustomerCount, 0);
   }
@@ -282,6 +321,23 @@ export class ReportArLeveloneComponent implements OnInit {
   calculateTotalBalance(items: any[]): number {
     return items.reduce((sum, item) => sum + item.DueAmount, 0);
   }
+
+  calculateTotalCreditAmount(items: any[]): number {
+    return items.reduce((sum, item) => sum + item.CreditAmount, 0);
+  }
+
+  calculateTotalInvoiceCurrency(items: any[]): number {
+    return items.reduce((sum, item) => sum + item.BalanceICY, 0);
+  }
+
+  calculateTotalNetBalance(items: any[]): number {
+    return items.reduce((sum, item) => sum + item.BalanceICY1, 0);
+  }
+
+  calculateTotalCompanyCurrency(items: any[]): number {
+    return items.reduce((sum, item) => sum + item.BalanceCCY, 0);
+  }
+  
 
 
   setPage(page: number) {
@@ -295,19 +351,47 @@ export class ReportArLeveloneComponent implements OnInit {
     this.pagesort(property, this.pagedItems);
   }
 
+  async search(){
+    debugger
+    if(this.type  == 'overall'){
+      await this.getOverallList();
+    }
+    else if(this.type  == 'customerwise'){
+      await this.getCustomerWiseList();
+    }
+  }
+
   clear() {
     this.startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd");
     this.endDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd");
-
-    this.reportFilter.reset({
-      DivisionId: 0,
-      OfficeId: 0,
-      FromDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
-      ToDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd"),
-    });
+    if(this.type  == 'overall'){
+      this.reportFilter.reset({
+        DivisionId: 0,
+        OfficeId: 0,
+        Type: 0,
+        SubTypeId: 0,
+        FromDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
+        ToDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd"),
+      });
+    }else if(this.type == 'customerwise'){
+      this.reportFilter.reset({
+        DivisionId: 0,
+        OfficeId: 0,
+        Customer: 0,
+        Type: 1,
+        SubTypeId: this.subtype,
+        FromDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
+        ToDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd"),
+      });
+    }
     this.officeList = [];
     this.reportFilter.controls.Peroid.setValue('month');
-    this.getBalanceSummaryOverallList();
+    if(this.type  == 'overall'){
+      this.getOverallList();
+    }
+    else if(this.type == 'customerwise'){
+      this.getCustomerWiseList();
+    }
   }
 
 
