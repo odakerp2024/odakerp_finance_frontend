@@ -737,12 +737,19 @@ export class FinanceMasterComponent implements OnInit {
     if (this.workFlowUpdateForm.valid) {
       this.workflowSubmitted = false;
       console.log(this.workFlowUpdateForm.value)
+      var temp;
+      if(statuscode == '0'){
+        temp = 'reject';
+      }
+      else{
+        temp = 'approve';
+      }
       let payload = {
         "wfnumber": this.workFlowUpdateForm.value.workflowNo,
         "step_id": +this.workFlowUpdateForm.value.currentStep,
         "remarks": this.workFlowUpdateForm.value.remarks,
         "statuscode": statuscode,
-        "statustext": this.workFlowUpdateForm.value.status,
+        "statustext": temp,
         "approvaluser": { "usertype": "string", "userid": this.userName }
       }
       console.log(this.workFlowUpdateForm.value, 'payload', payload)
