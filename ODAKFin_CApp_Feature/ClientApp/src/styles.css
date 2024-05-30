@@ -1216,19 +1216,22 @@ nav ul.maindash>li {
 
 
 .badge-cancel {
-  color: #fff !important;
-  background-color: #f44336 !important;
+  color: #f44336 !important;
+  font-weight: 800;
+  background-color: #fff !important;
   text-align: center;
 }
 
 .badge-confirm {
-  color: #fff !important;
-  background-color: #395626 !important;
+  color: #395626 !important;
+  font-weight: 800;
+  background-color: #fff !important;
   text-align: center;
 }
 
 .badge-draft {
-  color: #ffffff !important;
-  background-color: #2f4685 !important;
+  color:#2f4685 !important;
+  font-weight: 800;
+  background-color: #fff !important;
   text-align: center;
 }
