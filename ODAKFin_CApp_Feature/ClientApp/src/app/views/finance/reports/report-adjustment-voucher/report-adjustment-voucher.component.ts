@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup,  FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Globals } from 'src/app/globals';
 import { PaginationService } from 'src/app/pagination.service';
@@ -386,9 +386,9 @@ export class ReportAdjustmentVoucherComponent implements OnInit {
 
      const defaultvalue = 0;
       // Merge the symbol and amount into a single string with fixed decimal places
-      const mergedICYAmount = `${data.Symbol} ${data['Amount'] !== null ? parseFloat(data['Amount']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction)}`;
-      const mergedCCYAmount = `${data.Symbol} ${data['Amount (CCY)'] !== null ? parseFloat(data['Amount (CCY)']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction)}`;
-      const Exrate = ` ${data['Ex rate'] !== null ? parseFloat(data['Ex rate']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction)}`;
+      const mergedICYAmount = ` ${data['Amount'] !== null ? parseFloat(data['Amount']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction)}`;
+      const mergedCCYAmount = `${data['Amount (CCY)'] !== null ? parseFloat(data['Amount (CCY)']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction)}`;
+      const Exrate = ` ${data['Ex Rate'] !== null ? parseFloat(data['Ex Rate']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction)}`;
 
       // Filter out properties you don't want to include in the Excel sheet
       const filteredData = Object.keys(data)
@@ -401,18 +401,19 @@ export class ReportAdjustmentVoucherComponent implements OnInit {
       // Update the 'Amount (ICY)' property in the filtered data object with the merged amount
       filteredData['Amount'] = mergedICYAmount;
       filteredData['Amount (CCY)'] = mergedCCYAmount;
-      filteredData['Ex rate'] = Exrate;
+      filteredData['Ex Rate'] = Exrate;
 
       // Add the filtered data to the worksheet
  const row = worksheet.addRow(Object.values(filteredData));
 
  // Set text color for customer, receipt, and amount columns
- const columnsToColor = ['Voucher', 'Account Name', 'Amount', 'Amount (CCY)'];
+ const columnsToColor = ['Voucher', 'Account', 'Amount', 'Amount (CCY)'];
  columnsToColor.forEach(columnName => {
      const columnIndex = Object.keys(filteredData).indexOf(columnName);
      if (columnIndex !== -1) {
          const cell = row.getCell(columnIndex + 1);
          cell.font = { color: { argb: '8B0000' }, bold: true,}; // Red color
+          cell.alignment = { horizontal: 'right' };
      }
  });
 
@@ -538,9 +539,9 @@ export class ReportAdjustmentVoucherComponent implements OnInit {
       data.Date = formattedDate;
       const defaultvalue =0 ; 
       // Merge the symbol and amount into a single string with fixed decimal places
-      const mergedICYAmount = `${data.Symbol} ${data['Amount'] !== null ? parseFloat(data['Amount']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction)}`;
-      const mergedCCYAmount = `${data.Symbol} ${data['Amount (CCY)'] !== null ? parseFloat(data['Amount (CCY)']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction)}`;
-      const Exrate = ` ${data['Ex rate'] !== null ? parseFloat(data['Ex rate']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction)}`;
+      const mergedICYAmount = `${data['Amount'] !== null ? parseFloat(data['Amount']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction)}`;
+      const mergedCCYAmount = `${data['Amount (CCY)'] !== null ? parseFloat(data['Amount (CCY)']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction)}`;
+      const Exrate = ` ${data['Ex Rate'] !== null ? parseFloat(data['Ex Rate']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction)}`;
      
       // Filter out properties you don't want to include in the Excel sheet
       const filteredData = Object.keys(data)
@@ -553,18 +554,19 @@ export class ReportAdjustmentVoucherComponent implements OnInit {
       // Update the 'Amount' property in the filtered data object with the merged amount
       filteredData['Amount'] = mergedICYAmount;
       filteredData['Amount (CCY)'] = mergedCCYAmount;
-      filteredData['Ex rate'] = Exrate;
+      filteredData['Ex Rate'] = Exrate;
 
       // Add the filtered data to the worksheet
  const row = worksheet.addRow(Object.values(filteredData));
 
  // Set text color for customer, receipt, and amount columns
- const columnsToColor = ['Voucher', 'Account Name', 'Amount', 'Amount (CCY)'];
+ const columnsToColor = ['Voucher', 'Account', 'Amount', 'Amount (CCY)'];
  columnsToColor.forEach(columnName => {
      const columnIndex = Object.keys(filteredData).indexOf(columnName);
      if (columnIndex !== -1) {
          const cell = row.getCell(columnIndex + 1);
          cell.font = { color: { argb: '8B0000' }, bold: true,}; // Red color
+         cell.alignment = { horizontal: 'right' }; // Align to right
      }
  });
 
