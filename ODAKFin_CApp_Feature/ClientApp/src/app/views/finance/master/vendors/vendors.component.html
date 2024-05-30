@@ -650,10 +650,9 @@
                                                                                     formControlName="PinCode"
                                                                                     id="txtPinCode" class="form-control"
                                                                                     maxlength="10">
-                                                                                <div *ngIf="formSubmit && checkError('fg','PinCode','pattern')"
-                                                                                    class="text-danger">
-                                                                                    Invalid pin code number.
-                                                                                </div>
+                                                                                    <div *ngIf="fg.get('PinCode').invalid && fg.get('CountryID').value == 103" class="text-danger">
+                                                                                        <span style='color:red;'>*</span> <span>Invalid pin code number.</span>
+                                                                                    </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
