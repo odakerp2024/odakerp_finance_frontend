@@ -110,7 +110,7 @@
                     </div>
                 </div>
              
-                <div class="col-6">
+              <div class="col-6">
                     <div class="col-12 p-0">
                         <h6 class="mt-2 font-weight-bold">Receipts & Credits</h6>
                     </div>
@@ -145,7 +145,8 @@
                                 <tr *ngFor="let receipt of invoiceForm.get('receiptInfo').controls; let i = index"
                                     [formGroupName]="i">
                                     <td> <input class="text-center border-0 voucher-column" formControlName="VoucherNumber" readonly
-                                            [value]="receipt.VoucherNumber"  Style="max-width:120px" type="text">
+                                              Style="max-width:120px" 
+                                              [value]="receipt.VoucherNumber" type="text">
                                     </td>
                                     <td>
                                         <input class="text-center border-0" formControlName="VoucherDate" readonly
@@ -173,10 +174,10 @@
                                             [readonly]="isUpdateMode"  Style="max-width:60px"
                                             (ngModelChange)="setOffChangeEvent($event,i,'Receipts');"
                                             class="text-center setOff" formControlName="AdjustedAmount"
-                                            [value]="receipt.AdjustedAmount" min="1" type="number">
+                                            [value]="receipt.AdjustedAmount" min="1" type="number" Style="max-width:90px">
                                     </td>
                                     <td>
-                                        <input (change)="onSelectEvent(i,'Receipts')"  Style="max-width:50px" formControlName="IsSelect"
+                                        <input (change)="onSelectEvent(i,'Receipts')"  Style="max-width:70px" formControlName="IsSelect"
                                             type="checkbox" />
                                     </td>
                             </ng-container>
