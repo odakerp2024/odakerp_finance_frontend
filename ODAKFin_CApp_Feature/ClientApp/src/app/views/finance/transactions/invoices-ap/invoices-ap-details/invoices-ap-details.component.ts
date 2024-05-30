@@ -428,6 +428,21 @@ export class InvoicesApDetailsComponent implements OnInit {
       else { this.invoiceForm.controls['TotalCreditAmount'].setValue(AdjustedAmountInvoice); }
     }
   }
+    getIsChecked(i, type){
+    debugger
+    if (type == 'Receipts') {
+    if (i !== undefined){
+    return this.ReceiptInfo.value[i].IsSelect == false || this.ReceiptInfo.value[i].IsSelect == null ? false : true;
+    }
+    return false;
+  }
+  else if (type == 'Invoices') {
+    if (i !== undefined){
+      return this.OpenInvoiceInfo.value[i].IsSelect == false || this.OpenInvoiceInfo.value[i].IsSelect == null ? false : true;
+      }
+      return false;
+  }
+}
 
   // fileSelected(event) {
   //   if (event.target.files.length > 0 && this.FileList.length < 5) {

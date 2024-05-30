@@ -168,6 +168,7 @@
                                         min="0" numbersOnly
                                         appDynamicDecimal
                                         [ngClass]=" isUpdateMode ? 'block-set-off-input' : ''"
+                                        [ngClass]="getIsChecked(i, 'Receipts') ? '' : 'disable-input'"
                                             [readonly]="isUpdateMode"  Style="max-width:60px"
                                             (change)="setOffChangeEvent($event,i,'Receipts');"
                                             class="text-center setOff" formControlName="AdjustedAmount"
@@ -242,6 +243,7 @@
                                         min="0" numbersOnly
                                         appDynamicDecimal
                                         [readonly]="isUpdateMode" Style="max-width:70px"
+                                        [ngClass]="getIsChecked(i, 'Receipts') ? '' : 'disable-input'"
                                             [ngClass]=" isUpdateMode ? 'block-set-off-input' : ''"
                                             (ngModelChange)="setOffChangeEvent($event,i,'Invoices');"
                                             class="text-center setOff" formControlName="AdjustedAmount"
