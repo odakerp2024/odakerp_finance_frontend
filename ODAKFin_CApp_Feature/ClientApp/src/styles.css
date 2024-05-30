@@ -1218,20 +1218,17 @@ nav ul.maindash>li {
 .badge-cancel {
   color: #f44336 !important;
   font-weight: 800;
-  background-color: #fff !important;
   text-align: center;
 }
 
 .badge-confirm {
   color: #395626 !important;
   font-weight: 800;
-  background-color: #fff !important;
   text-align: center;
 }
 
 .badge-draft {
   color:#2f4685 !important;
   font-weight: 800;
-  background-color: #fff !important;
   text-align: center;
 }
