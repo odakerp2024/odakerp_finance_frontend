@@ -68,7 +68,11 @@ export class ReportArLeveloneComponent implements OnInit {
   totalbalanceicy    : number = 0;
   totalnetbalance    : number = 0;
   totalbalanceccy    : number = 0;
+  totalinvoicewiseamount : number = 0;
+  totalinvoicewisebalance : number = 0;
+  totalinvoicewiseccy : number = 0;
   subtype       : number;
+  subtypecustomerId : number;
   
 
   constructor(
@@ -94,7 +98,8 @@ export class ReportArLeveloneComponent implements OnInit {
   async goBack() {
     if (this.type === 'customerinvoicewise') {
       this.type = 'customerwise';
-      await this.showCustomerWise(this.subtype); 
+      await this.createReportForm();
+      await this.showCustomerWise(0); 
     } else if (this.type === 'customerwise') {
       this.type = 'overall';
       await this.createReportForm();    
@@ -107,12 +112,15 @@ export class ReportArLeveloneComponent implements OnInit {
     this.pagedItems = [];
     this.type = 'customerwise';
     await this.createReportForm();
+    await this.getCustomerWiseList();
   }
 
-  async showCustomerInvoiceWise() {
+  async showCustomerInvoiceWise(subtypecustomerId:number) {
+    this.subtypecustomerId = subtypecustomerId;
     this.pagedItems = []; 
     this.type = 'customerinvoicewise';
     await this.createReportForm();
+    await this.getInvoiceWiseList();
   }
 
   onOptionChange(selectedOption: string) {
@@ -209,6 +217,18 @@ export class ReportArLeveloneComponent implements OnInit {
         Peroid: [''],
       });
     }
+      else {
+        this.reportFilter = this.fb.group({
+          DivisionId: [0],
+          OfficeId: [0],
+          Customer: [0], 
+          Type:[2],
+          SubTypeId: [this.subtypecustomerId],
+          FromDate: [this.startDate],
+          ToDate: [this.endDate],
+          Peroid: [''],
+        });
+    }
   
     this.onOptionChange('month');
     if(this.type == 'overall'){
@@ -216,6 +236,9 @@ export class ReportArLeveloneComponent implements OnInit {
     }
     else if(this.type == 'customerwise'){
       await this.getCustomerWiseList();
+    }
+    else{
+      await this.getInvoiceWiseList();
     }
   }
   
@@ -310,6 +333,35 @@ export class ReportArLeveloneComponent implements OnInit {
     })
   }
 
+  
+  getInvoiceWiseList() {
+    this.startDate = this.reportFilter.controls.FromDate.value;
+    this.endDate = this.reportFilter.controls.ToDate.value;
+    this.reportService.getBalanceSummaryList(this.reportFilter.value).subscribe(result => {
+      this.reportList = [];
+      this.pagedItems =[];
+      if (result['data'].Table.length > 0) {
+        this.reportList = result['data'].Table;
+        this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
+        this.setPage(1);
+        this.totalinvoicewiseamount = this.calculateTotalInvoicewiseCurrency(this.reportList);
+        this.totalinvoicewisebalance = this.calculateTotalInvoicewiseNetBalance(this.reportList);
+        this.totalinvoicewiseccy = this.calculateTotalInvoicewiseCompanyCurrency(this.reportList);
+      
+      } else {
+        this.pager = {};
+        this.pagedItems = [];
+        this.totalinvoicewiseamount  = 0;
+        this.totalinvoicewisebalance = 0;
+        this.totalinvoicewiseccy  = 0;
+      }
+    })
+  }
+
+  getallcategorylist(){
+
+  }
+
   calculateTotalCustomers(items: any[]): number {
     return items.reduce((sum, item) => sum + item.CustomerCount, 0);
   }
@@ -337,6 +389,17 @@ export class ReportArLeveloneComponent implements OnInit {
   calculateTotalCompanyCurrency(items: any[]): number {
     return items.reduce((sum, item) => sum + item.BalanceCCY, 0);
   }
+  calculateTotalInvoicewiseCurrency(items: any[]): number {
+    return items.reduce((sum, item) => sum + item.InvoiceAmountCCY, 0);
+  }
+
+  calculateTotalInvoicewiseNetBalance(items: any[]): number {
+    return items.reduce((sum, item) => sum + item.DueAmount, 0);
+  }
+
+  calculateTotalInvoicewiseCompanyCurrency(items: any[]): number {
+    return items.reduce((sum, item) => sum + item.DueAmountCCY, 0);
+  }
   
 
 
@@ -358,6 +421,8 @@ export class ReportArLeveloneComponent implements OnInit {
     }
     else if(this.type  == 'customerwise'){
       await this.getCustomerWiseList();
+    }else{
+      await this.getInvoiceWiseList();
     }
   }
 
@@ -383,6 +448,16 @@ export class ReportArLeveloneComponent implements OnInit {
         FromDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
         ToDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd"),
       });
+    }else{
+      this.reportFilter.reset({
+        DivisionId: 0,
+        OfficeId: 0,
+        Customer: 0,
+        Type: 2,
+        SubTypeId: this.subtypecustomerId,
+        FromDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
+        ToDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd"),
+      });
     }
     this.officeList = [];
     this.reportFilter.controls.Peroid.setValue('month');
@@ -391,6 +466,8 @@ export class ReportArLeveloneComponent implements OnInit {
     }
     else if(this.type == 'customerwise'){
       this.getCustomerWiseList();
+    }else{
+      this.getInvoiceWiseList();
     }
   }
 
