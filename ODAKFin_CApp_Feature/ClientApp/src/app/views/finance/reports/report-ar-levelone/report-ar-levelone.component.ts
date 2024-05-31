@@ -352,7 +352,7 @@ export class ReportArLeveloneComponent implements OnInit {
   }
 
   async search(){
-    debugger
+ 
     if(this.type  == 'overall'){
       await this.getOverallList();
     }
