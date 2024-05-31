@@ -89,7 +89,7 @@ export class BankAccountComponent implements OnInit {
   allOffice: boolean;
   perOne: boolean;
   Current_Tab: string = '';
-
+  companyCurrencyId: any;
   selectedCheckboxes: any[] = [];
   bankId = 0;
   // allSelected=false;
@@ -174,7 +174,6 @@ export class BankAccountComponent implements OnInit {
 
 
   checkPermission(value) {
-    debugger
     if (value == 'tabCheque' && this.isChequeTab == true) {
       this.Current_Tab = 'tabCheque'
     } else if (value == 'tabStatement' && this.isStatement == true) {
@@ -197,7 +196,6 @@ export class BankAccountComponent implements OnInit {
       SubfunctionID: value
     }
     this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
       if (route == 'Cheque Management') {
 
         if (data.length > 0) {
@@ -280,7 +278,6 @@ export class BankAccountComponent implements OnInit {
       SubfunctionID: value
     }
     this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
       if (route == 'Cheque Management') {
 
         if (data.length > 0) {
@@ -372,7 +369,6 @@ export class BankAccountComponent implements OnInit {
   }
 
   divisionSelectOne(event: any) {
-    debugger
     this.allValues = false
     this.allOffice = false
     if (this.allSelected.selected) {
@@ -388,7 +384,6 @@ export class BankAccountComponent implements OnInit {
   }
 
   divisionSelectAll() {
-    debugger
     if (this.allSelected.selected) {
       this.allValues = true
       this.FinancialForm.controls.DivisionIds.patchValue([...this.divisionList.map(item => item.ID), 0]);
@@ -452,7 +447,7 @@ export class BankAccountComponent implements OnInit {
     $('#ddlOffice').prop('disabled', true);
     $('#ddlCountry').prop('disabled', true);
   }
-
+ 
   createStatementForm() {
     this.statementForm = this.fb.group({
       BankStatementID: [0],
@@ -467,7 +462,18 @@ export class BankAccountComponent implements OnInit {
   }
 
   clearStatementForm() {
-    this.statementForm.reset();
+    this.statementForm.reset(
+      this.statementForm = this.fb.group({
+        BankStatementID: 0,
+        BankID: this.editbankId,
+        // ID: [0],
+        FieldsName: 0,
+        OrderNo: 0,
+        DisplayName: '',
+        TemplateId: 0,
+        EffectiveDate: ''
+      })
+    );
   }
 
   OnClickAddStatement(statementForm) {
@@ -498,7 +504,7 @@ export class BankAccountComponent implements OnInit {
       return;
     } else { // ! add mode
       this.StatementData.push(this.statementForm.value);
-      this.clearStatementForm();
+    this.clearStatementForm();
     }
 
   }
@@ -696,15 +702,16 @@ export class BankAccountComponent implements OnInit {
   }
 
   updateAttachment(newDoc) {
+
     this.basicAttachmentDetails.BankAttachmentsID = newDoc.BankAttachmentsID;
     this.basicAttachmentDetails.BankID = newDoc.BankID;
     this.basicAttachmentDetails.DateOfStart = newDoc.DateOfStart;
     this.basicAttachmentDetails.DocumentName = newDoc.DocumentName;
     this.basicAttachmentDetails.FilePath = newDoc.FilePath;
    this.basicAttachmentDetails.UniqueFilePath = newDoc.UniqueFilePath;
-    this.basicAttachmentDetails.SlNo = newDoc.SlNo;
+    this.basicAttachmentDetails.SlNo = newDoc.SlNo;   
     this.documentListInfo.push(this.basicAttachmentDetails);
-    this.onSubmit();
+    // this.onSubmit();
   }
 
   onBack() {
@@ -940,7 +947,7 @@ export class BankAccountComponent implements OnInit {
       BankName: '',
       BankAcctNo: '',
       GLCodeID: null,
-      Currency: '',
+      Currency: [''],
       IfscCode: '',
       BankAddress: '',
       Ibancode: '',
@@ -969,7 +976,6 @@ export class BankAccountComponent implements OnInit {
   getBankaccountDetails(id) {
     let temp = { "BankId": id };
     this.service.getBankaccountDetails(temp).subscribe(async response => {
-      debugger
       const divisionData = response['data'].Table[0]['DivisionIds'];
 
       const newDivisionId = JSON.parse(divisionData);
@@ -1163,15 +1169,23 @@ export class BankAccountComponent implements OnInit {
     //console.log(this.Statement)
   }
 
-
+ 
   OnBindDropdownCurrency() {
+    return new Promise((resolve, rejects) => {
     this.CurrencyLook = { "currencyId": 0, "countryId": 0 };
     // console.log(this.CurrencyLook);
 
     this.service.getCurrencyLists(this.CurrencyLook).subscribe(data => {
       this.AccTypecurrency = data['data'];
       // console.log(this.AccTypecurrency)
+      const entityInfo: any = this.commonDataService.getLocalStorageEntityConfigurable();
+       let currencyCode = entityInfo.Currency.split('-');
+         let info = this.AccTypecurrency.find(y => y.CurrencyCode == currencyCode[0].trim());
+         this.companyCurrencyId = info.CurrencyID;
+         this.FinancialForm.controls['Currency'].setValue(this.companyCurrencyId)
+      resolve(true)
 
+      });
     });
   }
   OnBindDropdownLedger() {
@@ -1277,7 +1291,7 @@ export class BankAccountComponent implements OnInit {
     return arr.filter((currentValue, currentIndex) =>
       arr.indexOf(currentValue) !== currentIndex);
   }
-
+ 
   getCountryList() {
     let service = `${this.globals.APIURL}/Organization/GetCountryList`;
     this.dataService.post(service, {}).subscribe((result: any) => {
@@ -1289,7 +1303,6 @@ export class BankAccountComponent implements OnInit {
     });
   }
   uploadDocument(event) {
-    debugger
     if (event) {
 
       this.selectedFile = event.file.target.files[0];
@@ -1319,7 +1332,7 @@ debugger
   deleteDocument(deleteData) {
     const index = this.documentListInfo.findIndex((element) => element.BankAttachmentsID == deleteData.BankAttachmentsID);
     this.documentListInfo.splice(index, 1)
-    this.onSubmit();
+    // this.onSubmit();
   }
 
   // pass the data to document component
@@ -1455,7 +1468,7 @@ debugger
   getDivision(isSelect = false) {
     this.commonDataService.getDivision({}).subscribe((result: any) => {
       this.divisionList = [];
-      debugger
+
       if (result.data.Table.length > 0) {
         this.divisionList = result.data.Table.filter(item => item.Active);
 
@@ -1491,7 +1504,8 @@ debugger
   }
 
   setBank(value, ledgerId = 0) {
-    debugger
+
+    
     if (value == 3) {
       this.FinancialForm.patchValue({
         IsBank: true,
@@ -1524,7 +1538,7 @@ debugger
 
 
   getLedgerMappingParentAccountList(value) {
-    debugger
+
     const payload = {
       ModuleType: value
     }

@@ -160,7 +160,7 @@
                             <div class="col-md-7 col-sm-7 col-lg-7 col-xl-7"> -->
                                     <input [ngClass]="isUpdate ? 'disable-input' : ''" type="text" name="bankName"
                                         formControlName="BankName" autocomplete="off" id="txtBankAcctNo"
-                                        class="form-control" maxlength="20">
+                                        class="form-control" maxlength="50">
                                 </div>
                             </div>
                         </div>
@@ -209,11 +209,13 @@
                                 <div class="w-100 mr-2 ml-2">
                                     <label class="str">Currency</label>
                                     <select formControlName="Currency" id="ddlOffice" class="form-control my-select">
-                                        <option disabled [value]="null">-- Select Currency --</option>
+                                        <option disabled [value]="''">-- Select Currency --</option>
                                         <option *ngFor="let gRow  of AccTypecurrency" [value]="gRow.CurrencyID">
-                                            {{gRow.CurrencyName}}
+                                            {{gRow.CurrencyCode | uppercase }}
                                         </option>
                                     </select>
+
+                                    
 
                                 </div>
                             </div>
@@ -859,20 +861,20 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
+                                <!-- <div class="row" >                                   
                                     <div class="col-md-12 alrt">
                                         <button type="submit" *ngIf="isCreate" (click)="onSubmit()"
                                             class="btn btn-primary btn-raised btn-default cntbtn mb-0">Save</button>
                                         <!-- [disabled]="!isUpdateEnable" -->
-                                        <button *ngIf="isUpdate" (click)="onSubmit()" type="submit"
+                                        <!-- <button *ngIf="isUpdate" (click)="onSubmit()" type="submit"
                                             class="btn btn-primary btn-raised btn-default cntbtn mb-0">Update</button>
 
                                         <button type="button" (click)="reset()"
                                             class="btn btn-danger btn-raised cntbtn mb-0">Cancel</button>
                                     </div>
-                                    <!-- <input type="hidden" id="RegId" [ngModelOptions]="{standalone: true}"
-                                        [(ngModel)]="RegId" name="RegId" /> -->
-                                </div>
+                                    <input type="hidden" id="RegId" [ngModelOptions]="{standalone: true}"
+                                        [(ngModel)]="RegId" name="RegId" />
+                                </div>  -->
                             </div>
 
 
@@ -987,8 +989,7 @@
                                                                         <tr>
                                                                             <td>
                                                                                 <input type="hidden" id="HDIDv"
-                                                                                    name="id" formControlName="ID"
-                                                                                    class="form-control" />
+                                                                                    name="id"  class="form-control" />
                                                                             </td>
                                                                             <td>
                                                                                 <select name="templateId"
@@ -1137,7 +1138,7 @@
                                     <div class="col-12">
                                         <div class="card m-b-30">
                                             <div class="card-body">
-                                                <app-documents [documentList]="documentInfo"
+                                                <app-documents [documentList]="documentListInfo"
                                                     (saveDocumentEvent)="uploadDocument($event)"
                                                     (deleteDocumentEvent)="deleteDocument($event)"></app-documents>
                                             </div>
@@ -1159,11 +1160,26 @@
                             </div>
 
                         </div>
-
+                        </div>
+                        <!-- <div class="divide"></div> -->
                     <!-- </div> -->
+                    <div class="row" *ngIf="Current_Tab == 'tabCheque' || Current_Tab == 'tabAttachment'">
+                                    
+                        <div class="col-md-12 alrt">
+                            <button type="submit" *ngIf="isCreate" (click)="onSubmit()"
+                                class="btn btn-primary btn-raised btn-default cntbtn mb-0">Save</button>
+                            <!-- [disabled]="!isUpdateEnable" -->
+                            <button *ngIf="isUpdate" (click)="onSubmit()" type="submit"
+                                class="btn btn-primary btn-raised btn-default cntbtn mb-0">Update</button>
 
+                            <button type="button" (click)="reset()"
+                                class="btn btn-danger btn-raised cntbtn mb-0">Cancel</button>
+                        </div>
+                        <input type="hidden" id="RegId" [ngModelOptions]="{standalone: true}"
+                            [(ngModel)]="RegId" name="RegId" />
+                    </div>  
 
-                </div>
+                <!-- </div> -->
 
                 <div class="divide"></div>
 
