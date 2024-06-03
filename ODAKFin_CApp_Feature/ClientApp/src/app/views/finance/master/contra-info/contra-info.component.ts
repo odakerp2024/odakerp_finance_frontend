@@ -1254,7 +1254,7 @@ private downloadFile = (data: HttpResponse<Blob>) => {
               (curr) => curr.CurrencyCode == entityCurrencyCode
             );
             if (entityDetails) {
-              this.entityCurrencyId = entityDetails.CurrencyID;
+              this.entityCurrencyId = entityDetails.ID;
               this.entityCurrencyName = entityDetails.CurrencyName;
             }
             // * set entity currency value as default for AMOUNT PAID and BANK CHARGES
