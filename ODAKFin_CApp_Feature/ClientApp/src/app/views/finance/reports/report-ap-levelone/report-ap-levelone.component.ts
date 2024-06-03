@@ -1,7 +1,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Globals } from 'src/app/globals';
 import { PaginationService } from 'src/app/pagination.service';
@@ -40,6 +40,14 @@ export class ReportApLeveloneComponent implements OnInit {
     { TypeId: 1, TypeName: 'Bill' },
     { TypeId: 2, TypeName: 'On Account' }
   ];
+  totalVendors : Number = 0;
+  totalinvoice : Number = 0;
+  totalbalance : Number = 0;
+  totalcreditamount : Number = 0;
+  totalbalanceicy : Number = 0;
+  totalnetbalance : Number = 0;
+  totalbalanceccy : Number = 0;
+  
   PeroidList = [
     { peroidId: 'today', peroidName: 'CURRENT DAY' },
     { peroidId: 'week', peroidName: 'CURRENT WEEK' },
@@ -51,21 +59,14 @@ export class ReportApLeveloneComponent implements OnInit {
     { peroidId: 'previousmonth', peroidName: 'PREVIOUS MONTH' },
     { peroidId: 'previousyear', peroidName: 'PREVIOUS FINANCIAL YEAR' }
   ];
-  Overalllist = [
-    { Id: '1', SubCategory: 'Local Vendor' },
-  ];
-  vendorwiselist = [
-    { Id: '1', Vendor: 'Vendor A' },
-  ]
-  vendorinvoicewiselist = [
-    { Id: '1', PurchaseInvoice : 'Invoice A' },
-  ]
+ 
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
   entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   currentDate = new Date();
   selectedOption: string;
   type = 'Overall-list';
-
+  subtype       : number;
+  invoicevendortype  : number;
   campaignOne = new FormGroup({
     start: new FormControl(new Date(year, month, 13)),
     end: new FormControl(new Date(year, month, 16)),
@@ -90,7 +91,6 @@ export class ReportApLeveloneComponent implements OnInit {
     this.createReportForm();
     this.onOptionChange('month');
     this.getDivisionList();
-    this.getVoucherList();
     this.getVendorList();
     this.reportFilter.controls.Peroid.setValue('month');
   }
@@ -172,43 +172,99 @@ export class ReportApLeveloneComponent implements OnInit {
       ToDate: [this.endDate],
       DivisionId: [0],
       OfficeId: [0],
+      Type:[0],
+        SubTypeId: [0],
       Peroid: [''],
     });
-  }else{
+  }else if( this.type == 'Vendor-wise'){
     this.reportFilter = this.fb.group({
       FromDate: [this.startDate],
       ToDate: [this.endDate],
       DivisionId: [0],
       OfficeId: [0],
-      VendorId: [0],
+      SubTypeId: [this.subtype],
+       Type:[1], 
+      Peroid: [''],
+    });
+  }else if( this.type == 'Vendor-Invoice-wise'){
+    debugger
+    this.reportFilter = this.fb.group({
+      FromDate: [this.startDate],
+      ToDate: [this.endDate],
+      DivisionId: [0],
+      OfficeId: [0],
+      SubTypeId: [this.invoicevendortype],
+       Type:[2], 
       Peroid: [''],
     });
   }
+  
     this.onOptionChange('month');
-    await this.getPaymentVoucherReportList();
+    if(this.type == 'Overall-list'){
+      await this.getAccountPayableOverallList();
+    }
+    else if(this.type == 'Vendor-wise'){
+      await this.getAccountPayableVendorList();
+    }
+    else if(this.type == 'Vendor-Invoice-wise'){
+      await this.getAccountPayableInvoiceVendorList();
+    }
+  
   }
   
-  async showVendor(){
+  
+  async showVendor(subTypeId:number){
+    debugger
+   this.subtype = subTypeId;
     this.pagedItems = [];
     this.type = 'Vendor-wise';
     await this.createReportForm();
+    this.reportFilter.controls.Peroid.setValue('month');
+    await this.getAccountPayableVendorList();
+   
 
   }
 
-  async showVendorinvoicewise(){
+  async showVendorinvoicewise(subTypeId:number){
+    debugger
+    this.invoicevendortype = subTypeId;
     this.pagedItems = [];
     this.type = 'Vendor-Invoice-wise';
     await this.createReportForm();
-
+    this.reportFilter.controls.Peroid.setValue('month');
+    await this.getAccountPayableInvoiceVendorList();
   }
 
-  async Cancel(){
+  async Cancel() {
     debugger
-     this.pagedItems = [];
-    this.type = 'Overall-list';
-    await this.createReportForm();
+    if (this.type === 'Vendor-Invoice-wise') {
+      this.type = 'Vendor-wise';
+      await this.createReportForm();
+      await this.showVendorinvoicewise(0); 
+    } else if (this.type === 'Vendor-wise') {
+      this.type = 'Overall-list';
+      await this.createReportForm();    
+      await this.getAccountPayableOverallList();
+    }
   }
 
+  // async goBack() {
+  //   debugger
+  //   // if (this.type === 'Vendor-Invoice-wise') {
+  //     if(this.type = 'Vendor-wise'){;
+  //     await this.createReportForm();
+  //     await this.showVendor(0); 
+  //   } else if (this.type === 'Vendor-wise') {
+  //     this.type = 'Overall-list';
+  //     await this.createReportForm();    
+  //     await this.getAccountPayableOverallList();
+  //   }
+  //   else if (this.type === 'Vendor-Invoice-wise') {
+  //     this.type = 'Overall-list';
+  //     await this.createReportForm();    
+  //     await this.getAccountPayableInvoiceVendorList();
+  //   }
+  // }
   getDivisionList() {
     var service = `${this.globals.APIURL}/Division/GetOrganizationDivisionList`; var payload: any = {}
     this.dataService.post(service, payload).subscribe((result: any) => {
@@ -249,21 +305,6 @@ export class ReportApLeveloneComponent implements OnInit {
     })
   }
 
-  // getVendorBranch(vendorId) {
-  //   const vendorDetails = this.vendorList.find((vendor) => vendor.VendorID == vendorId);
-  //   this.reportFilter.controls['VendorBranch'].setValue('');
-  //   if (vendorDetails) {
-  //     this.vendorBranch = this.vendorList.filter(vendor => { return vendor.VendorName === vendorDetails.VendorName });
-  //     if (this.vendorBranch.length) {
-  //       const selectedBranch = this.vendorBranch[0].BranchCode;
-  //       this.reportFilter.value.vendorBranch = this.vendorBranch[0].VendorBranchID
-  //       this.reportFilter.controls['VendorBranch'].setValue(this.vendorBranch[0].VendorBranchID);
-  //     }
-  //     // this.branches = this.vendorBranch.length
-  //     // this.newOne = this.vendorBranch[0].BranchCode;
-  //   }
-  // }
-
 
   removeDuplicatesVendorId(arr, key) {
     const uniqueMap = new Map();
@@ -274,22 +315,6 @@ export class ReportApLeveloneComponent implements OnInit {
       }
     });
     return Array.from(uniqueMap.values());
-  }
-
-  getVoucherList() {
-    return new Promise((resolve, rejects) => {
-
-
-      let service = `${this.globals.APIURL}/ReceiptVoucher/GetReceiptVoucherDropDownList`
-      this.dataService.post(service, { CustomerId: 0 }).subscribe((result: any) => {
-        this.paymentModeList = result.data.Table4;
-
-        resolve(true)
-      }, error => {
-        console.error(error);
-        resolve(true)
-      });
-    })
   }
 
   getDivisionBasedOffice(officeId: number, divisoinId: any) {
@@ -307,30 +332,137 @@ export class ReportApLeveloneComponent implements OnInit {
       });
     }
   }
+  
+  async search(){
+ debugger
+    if(this.type  == 'Overall-list'){
+      await this.getAccountPayableOverallList();
+    }
+    else if(this.type  == 'Vendor-wise'){
+      await this.getAccountPayableVendorList();
+    }
+    else if(this.type  == 'Vendor-Invoice-wise'){
+      await this.getAccountPayableInvoiceVendorList();
+    }
+  }
 
-  getPaymentVoucherReportList() {
+  getAccountPayableOverallList() {
+    debugger
     this.startDate = this.reportFilter.controls.FromDate.value;
     this.endDate = this.reportFilter.controls.ToDate.value;
 
-    this.reportService.getPaymentVoucherReportList(this.reportFilter.value).subscribe(result => {
+    this.reportService.getAccountPayableList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
-
+debugger
       if (result['data'].Table.length > 0) {
         this.reportList = result['data'].Table;
-        this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
-        this.setPage(1)
+        // this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
+        this.setPage(1);
+        this.totalVendors = this.calculateTotalVendors(this.reportList);
+        this.totalinvoice = this.calculateTotalInvoices(this.reportList);
+        this.totalbalance = this.calculateTotalBalance(this.reportList);
       } else {
-        this.pager = {};
-        this.pagedItems = [];
+        // this.pager = {};
+        // this.pagedItems = [];
+        this.totalVendors = 0;
+        this.totalinvoice = 0;
+        this.totalbalance = 0;
       }
     })
+    this.pager = {};
+    this.pagedItems = [];
   }
 
+getAccountPayableVendorList() {
+    debugger
+    this.startDate = this.reportFilter.controls.FromDate.value;
+    this.endDate = this.reportFilter.controls.ToDate.value;
+
+    this.reportService.getAccountPayableList(this.reportFilter.value).subscribe(result => {
+      this.reportList = [];
+      this.pagedItems =[];
+      if (result['data'].Table.length > 0) {
+        this.reportList = result['data'].Table;
+        // this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
+        this.setPage(1);
+         this.totalcreditamount = this.calculateTotalCreditAmount(this.reportList);
+        this.totalbalanceicy = this.calculateTotalInvoiceCurrency(this.reportList);
+        this.totalnetbalance = this.calculateTotalNetBalance(this.reportList);
+        this.totalbalanceccy = this.calculateTotalCompanyCurrency(this.reportList);
+      } else {
+        // this.pager = {};
+        // this.pagedItems = [];
+       this.totalcreditamount  = 0;
+       this.totalbalanceicy   = 0;
+       this.totalnetbalance    = 0;
+       this.totalbalanceccy    = 0;
+      }
+    })
+    this.pager = {};
+    this.pagedItems = [];
+  }
+
+  getAccountPayableInvoiceVendorList() {
+    debugger
+    this.startDate = this.reportFilter.controls.FromDate.value;
+    this.endDate = this.reportFilter.controls.ToDate.value;
+
+    this.reportService.getAccountPayableList(this.reportFilter.value).subscribe(result => {
+      this.reportList = [];
+      this.pagedItems =[];
+      if (result['data'].Table1.length > 0) {
+        this.reportList = result['data'].Table1;
+        // this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
+        this.setPage(1);
+        //  this.totalcreditamount = this.calculateTotalCreditAmount(this.reportList);
+        // this.totalbalanceicy = this.calculateTotalInvoiceCurrency(this.reportList);
+        // this.totalnetbalance = this.calculateTotalNetBalance(this.reportList);
+        // this.totalbalanceccy = this.calculateTotalCompanyCurrency(this.reportList);
+      } else {
+        // this.pager = {};
+        // this.pagedItems = [];
+      //  this.totalcreditamount  = 0;
+      //  this.totalbalanceicy   = 0;
+      //  this.totalnetbalance    = 0;
+      //  this.totalbalanceccy    = 0;
+      }
+    })
+    this.pager = {};
+    this.pagedItems = [];
+  }
+
+
+  calculateTotalVendors(items: any[]): number {
+    return items.reduce((sum, item) => sum + item.VendorCount, 0);
+  }
+
+  calculateTotalInvoices(items: any[]): number {
+    return items.reduce((sum, item) => sum + item.InvoiceNumberCount, 0);
+  }
+
+  calculateTotalBalance(items: any[]): number {
+    return items.reduce((sum, item) => sum + item.DueAmount, 0);
+  }
+   calculateTotalCreditAmount(items: any[]): number {
+    return items.reduce((sum, item) => sum + item.CreditAmount, 0);
+  }
+
+  calculateTotalInvoiceCurrency(items: any[]): number {
+    return items.reduce((sum, item) => sum + item.BalanceICY, 0);
+  }
+
+  calculateTotalNetBalance(items: any[]): number {
+    return items.reduce((sum, item) => sum + item.BalanceICY1, 0);
+  }
+
+  calculateTotalCompanyCurrency(items: any[]): number {
+    return items.reduce((sum, item) => sum + item.BalanceCCY, 0);
+  }
 
   setPage(page: number) {
     if (page < 1 || page > this.pager.totalPages) return;
 
-    this.pager = this.ps.getPager(this.reportList.length, page);
+    this.pager = this.ps.getPager(this.reportList.length, page, 12);
     this.pagedItems = this.reportList.slice(this.pager.startIndex, this.pager.endIndex + 1);
   }
 
@@ -341,19 +473,49 @@ export class ReportApLeveloneComponent implements OnInit {
   clear() {
     this.startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd");
     this.endDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd");
+     if(this.type  == 'Overall-list'){
     this.reportFilter.reset({
       FromDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
       ToDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd"),
       DivisionId: 0,
       OfficeId: 0,
+      Type: 0,
+        SubTypeId: 0,
       VendorId: 0,
       
     });
+    }
+    else if(this.type == 'Vendor-wise'){
+      this.reportFilter.reset({
+        DivisionId: 0,
+        OfficeId: 0,
+        Customer: 0,
+        Type: [1],
+        SubTypeId: [this.subtype],
+        FromDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
+        ToDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd"),
+      });
+    }else if(this.type == 'Vendor-Invoice-wise'){
+      this.reportFilter.reset({
+        DivisionId: 0,
+        OfficeId: 0,
+        Customer: 0,
+        Type: [1],
+        SubTypeId: [this.invoicevendortype],
+        FromDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
+        ToDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd"),
+      });
+    }
     this.officeList = [];
     this.reportFilter.controls.Peroid.setValue('month');
-    this.getPaymentVoucherReportList();
+    if(this.type  == 'Overall-list'){
+      this.getAccountPayableOverallList();
+    }
+    else if(this.type == 'Vendor-wise'){
+      this.getAccountPayableVendorList();
+    }
   }
-
+  
 
   // async downloadAsExcel() {
   //   if (this.reportForExcelList.length === 0) {

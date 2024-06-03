@@ -1,7 +1,7 @@
 <div class="container-fluid">
     
     <form [formGroup]="reportFilter">
-        <div class="card mt-2 p-3">
+        <div class="card mt-0 p-3">
             <div class="col-12 mt-auto" *ngIf="type != 'Overall-list'">
                 <div class="float-right">
         
@@ -15,10 +15,10 @@
             <div class="col-10">
             <div class="row pb-3">
 
-                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                <div class="col-2">
 
                     <label class=" fontstyles">PEROID</label>
-                    <ng-select class="searchdropdown custom" formControlName="Peroid"
+                    <ng-select class="searchdropdown custom dropdown-size" formControlName="Peroid"
                         (ngModelChange)="onOptionChange($event);" [clearable]="false">
                         <ng-option [value]="''" disabled>-- SELECT --</ng-option>
                         <ng-container *ngFor="let peroid of PeroidList">
@@ -28,9 +28,8 @@
                         </ng-container>
                     </ng-select>
                 </div>
-                    <div class="col-3" *ngIf="selectedOption === 'custom'">
-                        <div class="form-group bmd-form-group w-100">
-                            <label class=" mb-3">From</label>
+                    <div class="col-2" *ngIf="selectedOption === 'custom'">
+                         <label class="fontstyles mb-3">FROM</label>
                             <div class="input-group">
                                 <mat-form-field class="tillDate mat_date_picker" appearance="outline">
                                     <input matInput (click)="FromDate.open()" readonly autocomplete="off" (onchange)="formatchange(true)"
@@ -41,11 +40,9 @@
                                 </mat-form-field>
                             </div>
                         </div>
-                    </div>
+                    <div class="col-2" *ngIf="selectedOption === 'custom'">
 
-                    <div class="col-3" *ngIf="selectedOption === 'custom'">
-
-                        <label class=" mb-3">To</label>
+                         <label class="fontstyles mb-3">TO</label>
                         <div class="input-group">
                             <mat-form-field class="tillDate mat_date_picker" appearance="outline">
                                 <input matInput (click)="ToDate.open()" readonly autocomplete="off" formControlName="ToDate"
@@ -58,7 +55,7 @@
                     </div>
                       
               
-                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                <div class="col-2">
                     <label class=" fontstyles">DIVISION</label>
                     <ng-select class="searchdropdown custom" formControlName="DivisionId"
                         (ngModelChange)="getOfficeList($event);" [clearable]="false">
@@ -71,7 +68,7 @@
                     </ng-select>
                 </div>
 
-                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                <div class="col-2">
                     <label class=" fontstyles">OFFICE</label>
                     <ng-select class="searchdropdown" formControlName="OfficeId"
                         (ngModelChange)="getDivisionBasedOffice($event, reportFilter.value.Division);getBankList()"
@@ -87,7 +84,7 @@
            
 
 
-                <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4"  *ngIf="type != 'Overall-list'">
+                <div class="col-2"  *ngIf="type != 'Overall-list'">
                     <label class=" fontstyles">VENDOR</label>
                     <ng-select class="searchdropdown" formControlName="VendorId" [clearable]="false" name="CategoryId"
                     id="CategoryId" (change)="getVendorBranch($event)">
@@ -106,7 +103,7 @@
             <div class="col-2" style="padding-top: 42px;">
                     <div class="text-center">
                         <button type="button" class="btn btn-primary text-white col-auto"
-                            (click)="getPaymentVoucherReportList()">
+                            (click)="search()">
                             SEARCH
                         </button>
                     </div>
@@ -182,12 +179,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let data of Overalllist">
-                                    
-                                    <td class="hyperTextColor"  (click)="showVendor()">{{data.SubCategory}}</td>
-                                    <td>{{data.Type}}</td>
-                                    <td class="hyperTextColor">{{data.VendorName}}</td>
-                                    <td>{{data.Branch}}</td>
+                                <tr *ngFor="let data of pagedItems">
+                                  
+                                    <td class="hyperTextColor"type="vendor-wise" ><a (click)="showVendor(data.Id)">{{data.Payees}}</a></td>
+                                    <td>{{data.VendorCount}}</td>
+                                    <td >{{data.InvoiceNumberCount}}</td>
+                                    <td class="hyperTextColor text-right">{{data.DueAmount | dynamicDecimal: entityFraction}}</td>
                                     
                                 </tr>
 
@@ -204,16 +201,16 @@
                                         <span style="font-size: medium;">Grand Total : </span>
                                     </td>
                                     <td 
-                                    class="text-center" colspan="1">8
-                                        {{selectedInvoiceTotal}}
+                                    class="text-center" colspan="1">
+                                        {{totalVendors}}
                                     </td>
                                     <td 
-                                    class="text-center" colspan="1">6
-                                        {{selectedInvoiceTotal}}
+                                    class="text-center" colspan="1">
+                                        {{totalinvoice}}
                                     </td>
                                     <td 
-                                    class="text-right" colspan="1">XXX
-                                        {{selectedInvoiceTotal}}
+                                    class="text-right" colspan="1">
+                                        {{totalbalance| dynamicDecimal: entityFraction}}
                                     </td>
                                 </tr>
                             </tfoot>
@@ -264,16 +261,16 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let data of vendorwiselist">
+                                <tr *ngFor="let data of pagedItems">
                                 
-                                    <td class="hyperTextColor">{{data.Payment}}</td>
-                                    <td class="hyperTextColor"  (click)="showVendorinvoicewise()">{{data.Vendor}}</td>
-                                    <td class="hyperTextColor">{{data.VendorName}}</td>
-                                    <td>{{data.Branch}}</td>
-                                    <td>{{data.PaymentMode}}</td>
-                                    <td>{{data.BankName}}</td>
-                                    <td>{{data.ReferenceNo}}</td>
-                                    <td>{{data.Currency}}</td>
+                                    <td class="hyperTextColor">{{data.Payees}}</td>
+                                    <td class="hyperTextColor"  (click)="showVendorinvoicewise(data.VendorID)">{{data.VendorName}}</td>
+                                    <td class="hyperTextColor">{{data.CreditDays}}</td>
+                                    <td>{{data.CreditAmount  | dynamicDecimal: entityFraction}}</td>
+                                    <td>{{data.BalanceICY  | dynamicDecimal: entityFraction}}</td>
+                                    <td>{{data.debit}}</td>
+                                    <td>{{data.BalanceICY1  | dynamicDecimal: entityFraction}}</td>
+                                    <td>{{data.BalanceCCY  | dynamicDecimal: entityFraction}}</td>
                                 
                                 </tr>
 
@@ -286,13 +283,17 @@
                                 <tr class="footer-position-sticky" style=" padding: 7px !important;
                                 background-image: linear-gradient(#3A5BA0, #273773) !important;
                                 color: #fff !important;">
-                                    <td colspan="7" class="text-left">
+                                    <td colspan="1" class="text-left">
                                         <span style="font-size: medium;">Grand Total : </span>
                                     </td>
-                                    <td 
-                                    class="text-right" colspan="1">XXX
-                                        {{selectedInvoiceTotal}}
-                                    </td>
+                                    <td class="text-right" colspan="1">{{selectedInvoiceTotal}}</td>
+                                    <td class="text-right" colspan="1">{{selectedInvoiceTotal}}</td>
+                                    <td class="text-right" colspan="1">{{selectedInvoiceTotal}}</td>
+                                    <td class="text-center" colspan="1">XXX{{selectedInvoiceTotal}}</td>
+                                    <td class="text-right" colspan="1">{{selectedInvoiceTotal}}</td>
+                                    <td class="text-center" colspan="1">XXX{{selectedInvoiceTotal}}</td>
+                                    <td class="text-center" colspan="1">XXX{{selectedInvoiceTotal}}</td>
+
                                 </tr>
                             </tfoot>
                         </table>
@@ -347,7 +348,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let data of vendorinvoicewiselist">
+                                <tr *ngFor="let data of pagedItems">
                                     
                                     <td class="hyperTextColor">{{data.Payment}}</td>
                                     <td>{{data.Type}}</td>
@@ -360,9 +361,9 @@
                                     <td>{{data.Invoice}}</td>
                                 </tr>
 
-                                <!-- <tr *ngIf="pagedItems.length ==0">
+                                <tr *ngIf="pagedItems.length ==0">
                                     <td class="text-center" colspan="10">No records found</td>
-                                </tr> -->
+                                </tr>
 
                             </tbody>
                             <tfoot>
@@ -381,7 +382,7 @@
                         </table>
                     </div>
 
-                    <!-- <div class="row page mr-3" align="right">
+                    <div class="row page mr-3" align="right">
                         <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10 && pager.totalItems > 10"
                             class="pagination">
                             <li [ngClass]="{disabled:pager.currentPage === 1}">
@@ -407,7 +408,7 @@
                                 <a (click)="setPage(pager.totalPages)">Last</a>
                             </li>
                         </ul>
-                    </div> -->
+                    </div>
                 </div>
             </div>
         </div>
