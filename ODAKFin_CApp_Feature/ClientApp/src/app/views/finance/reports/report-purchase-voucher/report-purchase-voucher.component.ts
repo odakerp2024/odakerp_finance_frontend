@@ -163,7 +163,8 @@ export class ReportPurchaseVoucherComponent implements OnInit {
       DivisionId: [0],
       OfficeId: [0],
       VendorId: [0],
-      VendorBranch: [0],
+     
+      BranchId: [0],
       Amount: [''],
       Type: [0],
       InvoiceNo: [''],
@@ -171,6 +172,7 @@ export class ReportPurchaseVoucherComponent implements OnInit {
       VendorInvoice: [''],
       Peroid: [''],
     });
+    
     this.onOptionChange('month');
     await this.getPurchaseVoucherReportList();
   }
@@ -215,21 +217,34 @@ export class ReportPurchaseVoucherComponent implements OnInit {
       });
     })
   }
-
   getVendorBranch(vendorId) {
     const vendorDetails = this.vendorList.find((vendor) => vendor.VendorID == vendorId);
-    this.reportFilter.controls['VendorBranch'].setValue('');
+    this.reportFilter.controls['BranchId'].setValue('');
     if (vendorDetails) {
-      this.vendorBranch = this.vendorList.filter(vendor => { return vendor.VendorName == vendorDetails.VendorName });
-      if (this.vendorBranch.length > 0) {
-        this.reportFilter.controls['VendorBranch'].setValue(0);
-        if (this.vendorBranch.length == 1) {
-          this.reportFilter.value.vendorBranch = this.vendorBranch[0].VendorBranchID
-          this.reportFilter.controls['VendorBranch'].setValue(this.vendorBranch[0].VendorBranchID);
-        }
+      this.vendorBranch = this.vendorList.filter(vendor => { return vendor.VendorName === vendorDetails.VendorName });
+      if (this.vendorBranch.length) {
+        const selectedBranch = this.vendorBranch[0].BranchCode;
+        this.reportFilter.value.vendorBranch = this.vendorBranch[0].VendorBranchID
+        this.getVendorTan(selectedBranch);
+        this.reportFilter.controls['BranchId'].setValue(this.vendorBranch[0].VendorBranchID);
       }
+      // this.branches = this.vendorBranch.length
+      // this.newOne = this.vendorBranch[0].BranchCode;
     }
   }
+  getVendorTan(vendorBranch) {
+    debugger
+    const vendorTanDetails = this.vendorList.filter(vendor => { return vendor.BranchCode == vendorBranch }); // ! need to vendorTanDetails is present
+    if (vendorTanDetails.length == 0) {
+      return;
+    }
+    const payload = {
+      VendorID: vendorTanDetails[0].VendorID,
+      VendorBranchID: vendorTanDetails[0].VendorBranchID
+    }
+  }
+
+
 
   removeDuplicatesVendorId(arr, key) {
     const uniqueMap = new Map();
@@ -264,6 +279,8 @@ export class ReportPurchaseVoucherComponent implements OnInit {
   getVoucherTypeList() {
     this.commonDataService.getVoucherTypeList().subscribe(data => {
       this.TypeList = data["data"].Table;
+       this.TypeList = this.TypeList.filter(x => x.Seqvalue == "Expense" );
+      
     });
   }
 
@@ -272,7 +289,7 @@ export class ReportPurchaseVoucherComponent implements OnInit {
     this.startDate = this.reportFilter.controls.FromDate.value;
     this.endDate = this.reportFilter.controls.ToDate.value;
 
-    this.reportService.getPaymentVoucherReportList(this.reportFilter.value).subscribe(result => {
+    this.reportService.getPurchaseVoucherReportList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
 
       if (result['data'].Table.length > 0) {
@@ -290,7 +307,7 @@ export class ReportPurchaseVoucherComponent implements OnInit {
   setPage(page: number) {
     if (page < 1 || page > this.pager.totalPages) return;
 
-    this.pager = this.ps.getPager(this.reportList.length, page);
+    this.pager = this.ps.getPager(this.reportList.length, page,12);
     this.pagedItems = this.reportList.slice(this.pager.startIndex, this.pager.endIndex + 1);
   }
 
@@ -403,8 +420,8 @@ export class ReportPurchaseVoucherComponent implements OnInit {
       data.Date = formattedDate;
       const defalutvalue = 0;
       // Merge the symbol and amount into a single string with fixed decimal places
-      const mergedICYAmount = `${data.Symbol} ${data['Amount (ICY)'] !== null ? parseFloat(data['Amount (ICY)']).toFixed(2) : '0.00'}`;
-      const mergedCCYAmount = `${data.Symbol} ${data['Amount (CCY)'] !== null ? parseFloat(data['Amount (CCY)']).toFixed(2) : '0.00'}`;
+      const mergedICYAmount = ` ${data['Amount (ICY)'] !== null ? parseFloat(data['Amount (ICY)']).toFixed(2) : '0.00'}`;
+      const mergedCCYAmount = ` ${data['Amount (CCY)'] !== null ? parseFloat(data['Amount (CCY)']).toFixed(2) : '0.00'}`;
       const TDSamount = ` ${data['TDS amount'] !== null ? parseFloat(data['TDS amount']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
       const ExRateGain = ` ${data['Ex rate Gain'] !== null ? parseFloat(data['Ex rate Gain']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
       const ExRateLoss = ` ${data['Ex rate Loss'] !== null ? parseFloat(data['Ex rate Loss']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
@@ -441,6 +458,7 @@ export class ReportPurchaseVoucherComponent implements OnInit {
         if (columnIndex !== -1) {
           const cell = row.getCell(columnIndex + 1);
           cell.font = { color: { argb: '8B0000' }, bold: true, }; // Red color
+          cell.alignment = { horizontal: 'right' }; // Align to right
         }
       });
 

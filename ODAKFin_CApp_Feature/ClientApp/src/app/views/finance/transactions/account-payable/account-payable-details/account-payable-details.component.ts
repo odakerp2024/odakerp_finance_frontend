@@ -17,6 +17,7 @@ import { takeUntil, map } from 'rxjs/operators';
 })
 export class AccountPayableDetailsComponent  implements OnInit {
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat')
+  entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   accountPayableId: any;
   divisionList: any[];
   officeList: any[];
@@ -143,12 +144,12 @@ export class AccountPayableDetailsComponent  implements OnInit {
           PurchaseInvoice: info.PurchaseInvoice,
           PurchaseInvoiceDate: this.datePipe.transform(new Date(info.PurchaseInvoiceDate), "yyyy-MM-dd") ,
           InvoiceCurrency: info.InvoiceCurrency,
-          Exchange: info.Exchange,
+          Exchange:parseFloat(info.Exchange).toFixed(this.entityFraction),
           DebitorCredit: info.DebitorCredit,
-          InvoiceAmountICY: info.InvoiceAmountICY,
-          InvoiceAmountCCY: info.InvoiceAmountCCY,
-          DueAmountICY: info.DueAmountICY,
-          DueAmountCCY: info.DueAmountCCY,
+          InvoiceAmountICY: parseFloat(info.InvoiceAmountICY).toFixed(this.entityFraction),
+          InvoiceAmountCCY: parseFloat(info.InvoiceAmountCCY).toFixed(this.entityFraction),
+          DueAmountICY: parseFloat(info.DueAmountICY).toFixed(this.entityFraction),
+          DueAmountCCY: parseFloat(info.DueAmountCCY).toFixed(this.entityFraction),
           ModifiedBy: info.ModifiedBy,
           OBReference: info.OBReference,
           OBDate: this.datePipe.transform(info.OBDate, 'dd-MM-yyyy'),

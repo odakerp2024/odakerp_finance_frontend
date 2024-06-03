@@ -27,6 +27,8 @@ export class AdjustmentVoucherComponent implements OnInit {
   accountName: any = [];
   debitCreditList: any = [];
   statusList: any[];
+  AccountList: any[];
+  groupedCoaTypeList: { [key: string]: any[] };
 
   constructor(
     private router: Router,
@@ -42,9 +44,10 @@ export class AdjustmentVoucherComponent implements OnInit {
   ngOnInit(): void {
     this.createAdjustment();
     this.getAdjustmentList();
-    this.ChartAccountList();
+   // this.ChartAccountList();
     this.getDrCr();
     this.getDropDownList();
+    this.getParentAccountList();
   }
 
   createAdjustment() {
@@ -152,14 +155,41 @@ export class AdjustmentVoucherComponent implements OnInit {
     this.pagedItems = this.adjustmentList.slice(this.pager.startIndex, this.pager.endIndex + 1);
   }
 
-  ChartAccountList() {
-    let payLoad = { ID: 0, ChartOfAccountsId: 0, AcctCode: '', AccountName: '', AccountType: 0, MainGroup: 0, ParentAccountID: 0, IsActive: true, Status: '' }
-    this.chartAccountService.getChartaccountList(payLoad).subscribe(async data => {
-      this.accountName = [];
+  // ChartAccountList() {
+  //   let payLoad = { ID: 0, ChartOfAccountsId: 0, AcctCode: '', AccountName: '', AccountType: 0, MainGroup: 0, ParentAccountID: 0, IsActive: true, Status: '' }
+  //   this.chartAccountService.getChartaccountList(payLoad).subscribe(async data => {
+  //     this.accountName = [];
+  //     if (data["data"].length > 0) {
+  //       this.accountName = data["data"];
+  //     }
+  //   })
+  // }
+
+  
+
+  getParentAccountList() {
+    
+    this.commonDataService.getChartaccountsFilter().subscribe(async data => {
+      this.AccountList = [];
       if (data["data"].length > 0) {
-        this.accountName = data["data"];
+        data["data"].forEach(e => e.AccountName = e.AccountName.toUpperCase());
+        this.AccountList = data["data"];
+        this.groupedCoaTypeList = this.groupDataByCEOGroupId(this.AccountList);
       }
-    })
+    });
+  }
+ groupDataByCEOGroupId(data: any[]): { [key: string]: any[] } {
+    const groupedData: { [key: string]: any[] } = {};
+
+    for (const item of data) {
+      const groupId = item.GroupName.toUpperCase();
+      if (!groupedData[groupId]) {
+        groupedData[groupId] = [];
+      }
+      groupedData[groupId].push(item);
+    }
+
+    return groupedData;
   }
 
   getDrCr() {

@@ -1570,23 +1570,6 @@ export class VendorsComponent implements OnInit {
     }
   }
 
-  Pincode(event) {
-    const reg = /^[1-9]{1}[0-9]{2}\\s{0,1}[0-9]{3}$/;
-    const input = String.fromCharCode(event.charCode);
-
-    if (!reg.test(input)) {
-      return false;
-    }
-    return true;
-  }
-
-  // patternValidation(pattern, input) {
-  //   if (!pattern.test(input)) {
-  //     return false;
-  //   }
-  //   return true;
-  // }
-
   special(event): boolean {
     const patt = /^([0-9])$/;
     const result = patt.test(event.key);
@@ -1993,8 +1976,9 @@ export class VendorsComponent implements OnInit {
         //   validation += '<span style=\'color:red;\'>*</span> <span>Please enter valid pincode number</span></br>';
         // }
 
-        if (this.fg.value.PinCode && this.fg.get('PinCode').invalid) {
-          validation += '<span style=\'color:red;\'>*</span> <span>Please Enter A Valid Pin Code</span></br>';
+        const pinCodeControl = this.fg.get('PinCode');
+        if (pinCodeControl.invalid && this.fg.get('CountryID').value === 103) {
+          validation += '<span style=\'color:red;\'>*</span> <span>Please enter a valid Pin Code</span></br>';
         }
 
         if (this.fg.value.emailid && this.fg.get('emailid').invalid) {
@@ -2082,7 +2066,7 @@ export class VendorsComponent implements OnInit {
       }
 
       if (!this.fg.value.LegalName && this.gstCategoryInput.legalName) {
-        validation += '<span style=\'color:red;\'>*</span> <span>Please Enter Legal Trade/ Name </span></br>'
+        validation += '<span style=\'color:red;\'>*</span> <span>Please Enter Legal Name </span></br>'
       }
 
       if (!this.fg.value.CompanyStatus && this.gstCategoryInput.companyStatus) {

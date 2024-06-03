@@ -648,12 +648,10 @@
                                                                                 <label class="str"> Pin Code </label>
                                                                                 <input type="text" name="pinCode"
                                                                                     formControlName="PinCode"
-                                                                                    id="txtPinCode" class="form-control"
-                                                                                    maxlength="10">
-                                                                                <div *ngIf="formSubmit && checkError('fg','PinCode','pattern')"
-                                                                                    class="text-danger">
-                                                                                    Invalid pin code number.
-                                                                                </div>
+                                                                                    id="txtPinCode" class="form-control">
+                                                                                    <div *ngIf="fg.get('PinCode').invalid && fg.get('CountryID').value == 103" class="text-danger">
+                                                                                        <span style='color:red;'>*</span> <span>Pin Code should be six.</span>
+                                                                                    </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -1445,8 +1443,7 @@
                                                                         <div class="row">
                                                                             <div class="col-md-12">
                                                                                 <label
-                                                                                    [ngClass]="{'str' :gstCategoryInput.legalName}">Legal
-                                                                                    Trade / Name</label>
+                                                                                    [ngClass]="{'str' :gstCategoryInput.legalName}">Legal Name</label>
                                                                                 <input type="text" name="LegalName"
                                                                                     formControlName="LegalName"
                                                                                     autocomplete="off" id="txtLegalName"

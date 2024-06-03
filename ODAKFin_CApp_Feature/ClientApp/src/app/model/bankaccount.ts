@@ -22,6 +22,7 @@ export class Currency {
     CurrencyID = 0;
     CurrencyName = '';
     CountryID: "";
+    CurrencyCode: "";
    
 }
 export class CurrencySearch {

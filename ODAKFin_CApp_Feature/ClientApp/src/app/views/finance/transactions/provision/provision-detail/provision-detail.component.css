@@ -3,3 +3,10 @@
     font-weight: bold !important;
     font-size: large !important;
 }
+
+::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items .ng-optgroup {
+    color: black !important;
+    text-transform: uppercase !important;
+    font-weight: bold !important;
+    background-color: #d6d9db !important;
+}

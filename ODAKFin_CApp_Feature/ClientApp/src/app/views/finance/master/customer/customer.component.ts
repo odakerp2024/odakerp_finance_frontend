@@ -986,16 +986,6 @@ export class CustomerComponent implements OnInit {
     return nameMask;
   }
 
-  Pincode(event) {
-
-    let reg = /^[0-9-\s]*$/;
-    let input = event.target.value + String.fromCharCode(event.charCode);
-
-    if (!reg.test(input)) {
-      event.preventDefault();
-    }
-  }
-
   createForm() {
     if (this.fg.value.CustomerID != null && this.fg.value.CustomerBranchID != null) {
       this.FormMode = "E";
@@ -1323,8 +1313,8 @@ export class CustomerComponent implements OnInit {
       if (this.fg.value.primaryTelephone.length != 12 && this.fg.value.primaryTelephone != '') {
         validation += "<span style='color:red;'>*</span> <span>Please enter valid Telephone number</span></br>"
       }
-
-      if (this.fg.get('PinCode').invalid) {
+      const pinCodeControl = this.fg.get('PinCode');
+      if (pinCodeControl.invalid && this.fg.get('CountryID').value === 103) {
         validation += '<span style=\'color:red;\'>*</span> <span>Please enter a valid Pin Code</span></br>';
       }
     }
@@ -1463,7 +1453,7 @@ export class CustomerComponent implements OnInit {
       }
 
       if (this.fg.value.LegalTradeName == "") {
-        validation += "<span style='color:red;'>*</span> <span>Please enter Legal Trade Name</span></br>"
+        validation += "<span style='color:red;'>*</span> <span>Please enter Legal Name</span></br>"
       }
 
       if (this.gstCategoryName != "Overseas")

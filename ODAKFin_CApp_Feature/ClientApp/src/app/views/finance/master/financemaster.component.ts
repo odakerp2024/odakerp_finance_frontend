@@ -72,6 +72,13 @@ export class FinanceMasterComponent implements OnInit {
   customername: string = "0";
   status: string = "pending";
 
+  wfnumberH: string = "0";
+  eventnumberH: string = "0";
+  fromdateH: string = "0";
+  tilldateH: string = "0";
+  event_valueH: string = "0";
+  customernameH: string = "0";
+
   cusBID: string='';
   eventName: string='';
   redirectURL: string='';
@@ -479,10 +486,32 @@ export class FinanceMasterComponent implements OnInit {
   }
 
   wfSearch(){
-    this.wfnumber = $('#ddlwfnumber').val() ? $('#ddlwfnumber').val().toString() : "0";
-    this.event_value = $('#ddlwfdetails').val() ? $('#ddlwfdetails').val().toString() : "0";
+    
+    if($('#ddlwfnumber').val() == "" || $('#ddlwfnumber').val() == null){
+      this.wfnumber = "0";
+    }
+    else{
+      this.wfnumber = $('#ddlwfnumber').val().toString();
+    }
+    //this.wfnumber = $('#ddlwfnumber').val() ? $('#ddlwfnumber').val().toString() : "0";
+    
+    if($('#ddlwfdetails').val() == "" || $('#ddlwfdetails').val() == null){
+      this.event_value = "0";
+    }
+    else{
+      this.event_value = $('#ddlwfdetails').val().toString();
+    }
+    //this.event_value = $('#ddlwfdetails').val() ? $('#ddlwfdetails').val().toString() : "0";
+    
     this.eventnumber = $('#ddlwfeventName').val() ? $('#ddlwfeventName').val().toString() : "0";
-    this.customername = $('#ddlCustomerName').val() ? $('#ddlCustomerName').val().toString() : "0";
+    
+    if($('#ddlCustomerName').val() == "" || $('#ddlCustomerName').val() == null){
+      this.customername = "0";
+    }
+    else{
+      this.customername = $('#ddlCustomerName').val().toString();
+    }
+    //this.customername = $('#ddlCustomerName').val() ? $('#ddlCustomerName').val().toString() : "0";
     this.fromdate = $('#ddlfromDate').val() ? $('#ddlfromDate').val().toString() : "0";
     this.tilldate = $('#ddltillDate').val() ? $('#ddltillDate').val().toString() : "0";
     
@@ -491,19 +520,47 @@ export class FinanceMasterComponent implements OnInit {
   }
 
   wfSearchHistory(){
-    this.wfnumber = $('#ddlwfnumberH').val() ? $('#ddlwfnumberH').val().toString() : "0";
-    this.event_value = $('#ddlwfdetailsH').val() ? $('#ddlwfdetailsH').val().toString() : "0";
-    this.eventnumber = $('#ddlwfeventNameH').val() ? $('#ddlwfeventNameH').val().toString() : "0";
-    this.customername = $('#ddlCustomerNameH').val() ? $('#ddlCustomerNameH').val().toString() : "0";
-    this.fromdate = $('#ddlfromDateH').val() ? $('#ddlfromDateH').val().toString() : "0";
-    this.tilldate = $('#ddltillDateH').val() ? $('#ddltillDateH').val().toString() : "0";
-    this.status = $('#ddlwfStatusH').val() ? $('#ddlwfStatusH').val().toString() : "0";
+    if($('#ddlwfnumberH').val() == "" || $('#ddlwfnumberH').val() == null){
+      this.wfnumberH = "0";
+    }
+    else{
+      this.wfnumberH = $('#ddlwfnumberH').val().toString();
+    }
+    //this.wfnumberH = $('#ddlwfnumberH').val() ? $('#ddlwfnumberH').val().toString() : "0";
+
+    if($('#ddlwfdetailsH').val() == "" || $('#ddlwfdetailsH').val() == null){
+      this.event_valueH = "0";
+    }
+    else{
+      this.event_valueH = $('#ddlwfdetailsH').val().toString();
+    }
+    //this.event_valueH = $('#ddlwfdetailsH').val() ? $('#ddlwfdetailsH').val().toString() : "0";
+    this.eventnumberH = $('#ddlwfeventNameH').val() ? $('#ddlwfeventNameH').val().toString() : "0";
+
+    if($('#ddlCustomerNameH').val() == "" || $('#ddlCustomerNameH').val() == null){
+      this.customernameH = "0";
+    }
+    else{
+      this.customernameH = $('#ddlCustomerNameH').val().toString();
+    }
+    //this.customernameH = $('#ddlCustomerNameH').val() ? $('#ddlCustomerNameH').val().toString() : "0";
+    this.fromdateH = $('#ddlfromDateH').val() ? $('#ddlfromDateH').val().toString() : "0";
+    this.tilldateH = $('#ddltillDateH').val() ? $('#ddltillDateH').val().toString() : "0";
+    alert($('#ddlwfStatusH').val());
+    if($('#ddlwfStatusH').val() == 0 || $('#ddlwfStatusH').val() == null){
+      this.status = "approve";
+    }
+    else{
+      this.status = $('#ddlwfStatusH').val().toString();
+    }
+    //this.status = $('#ddlwfStatusH').val() ? $('#ddlwfStatusH').val().toString() : "approve";
+    alert(this.status);
     this.getWorkflowInboxHistory();
   }
 
   wfClear(){
-    $('#ddlwfnumber').val(0).trigger("change");
-    $('#ddlwfdetails').val(0).trigger("change");
+    $('#ddlwfnumber').val('').trigger("change");
+    $('#ddlwfdetails').val('').trigger("change");
     $('#ddlwfeventName').val(0).trigger("change");
     $('#ddlCustomerName').val('').trigger("change");
     $('#ddlfromDate').val('').trigger("change");
@@ -520,19 +577,19 @@ export class FinanceMasterComponent implements OnInit {
   }
 
   wfClearHistory(){
-    $('#ddlwfnumberH').val(0).trigger("change");
-    $('#ddlwfdetailsH').val(0).trigger("change");
+    $('#ddlwfnumberH').val('').trigger("change");
+    $('#ddlwfdetailsH').val('').trigger("change");
     $('#ddlwfeventNameH').val(0).trigger("change");
     $('#ddlCustomerNameH').val('').trigger("change");
     $('#ddlfromDateH').val('').trigger("change");
     $('#ddltillDateH').val('').trigger("change");
     $('#ddlwfStatusH').val(0).trigger("change");
-    this.wfnumber = "0";
-    this.event_value = "0";
-    this.eventnumber = "0";
-    this.customername = "0";
-    this.fromdate = "0";
-    this.tilldate = "0";
+    this.wfnumberH = "0";
+    this.event_valueH = "0";
+    this.eventnumberH = "0";
+    this.customernameH = "0";
+    this.fromdateH = "0";
+    this.tilldateH = "0";
     this.status = "approve";
 
     this.getWorkflowInboxHistory();
@@ -578,12 +635,12 @@ export class FinanceMasterComponent implements OnInit {
     let payload = {
       //userEmail: "anuja@odaksolutions.com",
       userEmail: this.userName,
-      wfnumber: this.wfnumber,
-      eventnumber: this.eventnumber,
-      fromdate: this.fromdate,
-      tilldate: this.tilldate,
-      event_value: this.event_value,
-      customername: this.customername,
+      wfnumber: this.wfnumberH,
+      eventnumber: this.eventnumberH,
+      fromdate: this.fromdateH,
+      tilldate: this.tilldateH,
+      event_value: this.event_valueH,
+      customername: this.customernameH,
       status: this.status,
     }
 
@@ -697,13 +754,20 @@ export class FinanceMasterComponent implements OnInit {
   updateWorkflowStatus(statuscode: string) {
     if (this.workFlowUpdateForm.valid) {
       this.workflowSubmitted = false;
-      console.log(this.workFlowUpdateForm.value)
+      console.log(this.workFlowUpdateForm.value);
+      var temp;
+      if(statuscode == '0'){
+        temp = 'reject';
+      }
+      else{
+        temp = 'approve';
+      }
       let payload = {
         "wfnumber": this.workFlowUpdateForm.value.workflowNo,
         "step_id": +this.workFlowUpdateForm.value.currentStep,
         "remarks": this.workFlowUpdateForm.value.remarks,
         "statuscode": statuscode,
-        "statustext": this.workFlowUpdateForm.value.status,
+        "statustext": temp,
         "approvaluser": { "usertype": "string", "userid": this.userName }
       }
       console.log(this.workFlowUpdateForm.value, 'payload', payload)
@@ -1080,59 +1144,68 @@ export class FinanceMasterComponent implements OnInit {
       SubfunctionID = 567;
     }
     else if (routePage == 'provision') {
-      //SubfunctionID = 533;
       this.router.navigate(['/views/provision/provision-view']);
     } 
     else if (routePage == 'trailBalance') {
-      //SubfunctionID = 533;
       this.router.navigate(['/views/finance/reports/levelone']);
     } 
 
     else if (routePage == 'DayBook') {
-    
-      //SubfunctionID = 533;
       this.router.navigate(['/views/reports/report-day-book']);
     } 
     
     else if (routePage == 'recieptVoucher') {
-      //SubfunctionID = 533;
       this.router.navigate(['/views/reports/report-receipt-voucher']);
     } 
 
     else if (routePage == 'PaymentVoucher') {
-      //SubfunctionID = 533;
       this.router.navigate(['/views/reports/report-payment-voucher']);
     } 
 
     else if (routePage == 'ContraVoucher') {
-      //SubfunctionID = 533;
       this.router.navigate(['/views/reports/report-contra-voucher']);
     } 
 
     else if (routePage == 'JournalVoucher') {
-      //SubfunctionID = 533;
       this.router.navigate(['/views/reports/report-journal-voucher']);
     }
 
     else if (routePage == 'AdjustmentVoucher') {
-      //SubfunctionID = 533;
       this.router.navigate(['/views/reports/report-adjustment-voucher']);
     }
 
     else if (routePage == 'VoucherReversals') {
-      //SubfunctionID = 533;
       this.router.navigate(['/views/reports/report-voucher-reversal']);
     }
     else if (routePage == 'SalesVoucher') {
-  
-      //SubfunctionID = 533;
       this.router.navigate(['/views/reports/report-sales-voucher']);
     }
-    // else if (routePage == 'PurchaseVoucher') {
-  
-    //   //SubfunctionID = 533;
-    //   this.router.navigate(['/views/reports/report-purchase-voucher']);
-    // }
+
+    else if (routePage == 'PurchaseVoucher') {
+      this.router.navigate(['/views/reports/report-purchase-voucher']);
+    }
+
+    else if (routePage == 'ARBalanceSummary') {
+      this.router.navigate(['/views/reports/report-ar-levelone']);
+    } 
+
+    else if (routePage == 'ARAgingSummary') {
+      this.router.navigate(['/views/reports/report-ar-leveltwo']);
+    } 
+
+    else if (routePage == 'ARSalesSummary') {
+      this.router.navigate(['/views/reports/report-ar-levelthree']);
+    } 
+
+    else if (routePage == 'APBalanceSummary') {
+      this.router.navigate(['/views/reports/report-ap-levelone']);
+    } 
+
+    else if (routePage == 'APAgingSummary') {
+      this.router.navigate(['/views/reports/report-ap-leveltwo']);
+    } 
+
+
     
     
     const userID = localStorage.getItem("UserID");

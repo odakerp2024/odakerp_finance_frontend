@@ -15,6 +15,11 @@ import { ReportAdjustmentVoucherComponent } from './report-adjustment-voucher/re
 import { ReportJournalVoucherComponent } from './report-journal-voucher/report-journal-voucher.component';
 import { ReportDayBookComponent } from './report-day-book/report-day-book.component';
 import { ReportPurchaseVoucherComponent } from './report-purchase-voucher/report-purchase-voucher.component';
+import { ReportArLeveloneComponent } from './report-ar-levelone/report-ar-levelone.component';
+import { ReportArLeveltwoComponent } from './report-ar-leveltwo/report-ar-leveltwo.component';
+import { ReportArLevelthreeComponent } from './report-ar-levelthree/report-ar-levelthree.component';
+import { ReportApLeveloneComponent } from './report-ap-levelone/report-ap-levelone.component';
+import { ReportApLeveltwoComponent } from './report-ap-leveltwo/report-ap-leveltwo.component';
 
 
 @NgModule({
@@ -27,7 +32,12 @@ import { ReportPurchaseVoucherComponent } from './report-purchase-voucher/report
     ReportAdjustmentVoucherComponent,
     ReportJournalVoucherComponent,
     ReportDayBookComponent,
-    ReportPurchaseVoucherComponent
+    ReportPurchaseVoucherComponent,
+    ReportArLeveloneComponent,
+    ReportArLeveltwoComponent,
+    ReportArLevelthreeComponent,
+    ReportApLeveloneComponent,
+    ReportApLeveltwoComponent
   ],
   imports: [
     CommonModule,

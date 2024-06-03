@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Globals } from 'src/app/globals';
 import { PaginationService } from 'src/app/pagination.service';
@@ -49,7 +49,6 @@ export class ReportJournalVoucherComponent implements OnInit {
     { peroidId: 'previousyear', peroidName: 'PREVIOUS FINANCIAL YEAR' }
   ];
   selectedOption: string;
-  bankList: any;
   pagesort: any = new GridSort().sort;
   campaignOne = new FormGroup({
     start: new FormControl(new Date(year, month, 13)),
@@ -58,6 +57,9 @@ export class ReportJournalVoucherComponent implements OnInit {
   startDate = '';
   endDate = '';
   currentDate = new Date();
+  AccountList: any[];
+  groupedCoaTypeList: { [key: string]: any[] }
+
 
   constructor(
     private commonDataService: CommonService,
@@ -73,11 +75,10 @@ export class ReportJournalVoucherComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // this.getCustomerList();
+    this.getParentAccountList();
     this.createReportForm();
     this.onOptionChange('month');
     this.getDivisionList();
-    this.getBankList();
     this.getVoucherList();
     this.reportFilter.controls.Peroid.setValue('month');
   }
@@ -206,22 +207,31 @@ export class ReportJournalVoucherComponent implements OnInit {
     })
   }
 
-  getBankList() {
-    let payload = {
-      OfficeId: 0,
-      DivisionId: 0,
-    };
+  getParentAccountList() {
+    
+    this.commonDataService.getChartaccountsFilter().subscribe(async data => {
+      this.AccountList = [];
+      if (data["data"].length > 0) {
+        data["data"].forEach(e => e.AccountName = e.AccountName.toUpperCase());
+        this.AccountList = data["data"];
+        this.groupedCoaTypeList = this.groupDataByCEOGroupId(this.AccountList);
+      }
+    });
+}
 
-    this.commonDataService
-      .getBankByOfficeId(payload)
-      .subscribe((result: any) => {
-        if (result.message == "Success") {
-          this.bankList = result["data"].Table;
+ groupDataByCEOGroupId(data: any[]): { [key: string]: any[] } {
+    const groupedData: { [key: string]: any[] } = {};
 
-        }
-      });
+    for (const item of data) {
+      const groupId = item.GroupName.toUpperCase();
+      if (!groupedData[groupId]) {
+        groupedData[groupId] = [];
+      }
+      groupedData[groupId].push(item);
+    }
+
+    return groupedData;
   }
-
 
 
   getDivisionBasedOffice(officeId: number, divisoinId: any) {
@@ -261,7 +271,7 @@ export class ReportJournalVoucherComponent implements OnInit {
   setPage(page: number) {
     if (page < 1 || page > this.pager.totalPages) return;
 
-    this.pager = this.ps.getPager(this.reportList.length, page);
+    this.pager = this.ps.getPager(this.reportList.length, page, 12);
     this.pagedItems = this.reportList.slice(this.pager.startIndex, this.pager.endIndex + 1);
   }
 
@@ -371,9 +381,9 @@ export class ReportJournalVoucherComponent implements OnInit {
       data.Date = formattedDate;
       const defaultvalue = 0;
       // Merge the symbol and amount into a single string with fixed decimal places
-      const mergedICYAmount = `${data.Symbol} ${data['Amount'] !== null ? parseFloat(data['Amount']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction)}`;
-      const mergedCCYAmount = `${data.Symbol} ${data['Amount (CCY)'] !== null ? parseFloat(data['Amount (CCY)']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction)}`;
-      const Exrate = ` ${data['Ex rate'] !== null ? parseFloat(data['Ex rate']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction)}`;
+      const mergedICYAmount = `${data['Amount'] !== null ? parseFloat(data['Amount']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction)}`;
+      const mergedCCYAmount = `${data['Amount (CCY)'] !== null ? parseFloat(data['Amount (CCY)']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction)}`;
+      const Exrate = ` ${data['Ex Rate'] !== null ? parseFloat(data['Ex Rate']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction)}`;
 
       // Filter out properties you don't want to include in the Excel sheet
       const filteredData = Object.keys(data)
@@ -386,19 +396,21 @@ export class ReportJournalVoucherComponent implements OnInit {
       // Update the 'Amount (ICY)' property in the filtered data object with the merged amount
       filteredData['Amount'] = mergedICYAmount;
       filteredData['Amount (CCY)'] = mergedCCYAmount;
-      filteredData['Ex rate'] =Exrate;
+      filteredData['Ex Rate'] =Exrate;
 
 
       // Add the filtered data to the worksheet
       const row = worksheet.addRow(Object.values(filteredData));
 
       // Set text color for customer, receipt, and amount columns
-      const columnsToColor = ['Voucher', 'Account Name', 'Amount (CCY)', 'Amount'];
+      const columnsToColor = ['Voucher', 'Account', 'Amount (CCY)', 'Amount'];
       columnsToColor.forEach(columnName => {
         const columnIndex = Object.keys(filteredData).indexOf(columnName);
         if (columnIndex !== -1) {
           const cell = row.getCell(columnIndex + 1);
           cell.font = { color: { argb: '8B0000' }, bold: true, }; // Red color
+          cell.alignment = { horizontal: 'right' }; // Align to right
+
         }
       });
 
@@ -526,9 +538,9 @@ export class ReportJournalVoucherComponent implements OnInit {
 
       const defaultvalue = 0;
       // Merge the symbol and amount into a single string with fixed decimal places
-      const mergedICYAmount = `${data.Symbol} ${data['Amount'] !== null ? parseFloat(data['Amount']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction)}`;
-      const mergedCCYAmount = `${data.Symbol} ${data['Amount (CCY)'] !== null ? parseFloat(data['Amount (CCY)']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction)}`;
-      const Exrate = ` ${data['Ex rate'] !== null ? parseFloat(data['Ex rate']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction)}`;
+      const mergedICYAmount = data['Amount'] !== null ? parseFloat(data['Amount']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction);
+      const mergedCCYAmount = data['Amount (CCY)'] !== null ? parseFloat(data['Amount (CCY)']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction);
+      const Exrate = data['Ex Rate'] !== null ? parseFloat(data['Ex Rate']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction);
 
       // Filter out properties you don't want to include in the Excel sheet
       const filteredData = Object.keys(data)
@@ -541,19 +553,20 @@ export class ReportJournalVoucherComponent implements OnInit {
       // Update the 'Amount (ICY)' property in the filtered data object with the merged amount
       filteredData['Amount'] = mergedICYAmount;
       filteredData['Amount (CCY)'] = mergedCCYAmount;
-      filteredData['Ex rate'] =Exrate;
+      filteredData['Ex Rate'] =Exrate;
 
 
       // Add the filtered data to the worksheet
       const row = worksheet.addRow(Object.values(filteredData));
 
       // Set text color for customer, receipt, and amount columns
-      const columnsToColor = ['Voucher', 'Account Name', 'Amount (CCY)', 'Amount'];
+      const columnsToColor = ['Voucher', 'Account', 'Amount (CCY)', 'Amount'];
       columnsToColor.forEach(columnName => {
         const columnIndex = Object.keys(filteredData).indexOf(columnName);
         if (columnIndex !== -1) {
           const cell = row.getCell(columnIndex + 1);
           cell.font = { color: { argb: '8B0000' }, bold: true, }; // Red color
+          cell.alignment = { horizontal: 'right' }; // Align to right
         }
       });
 

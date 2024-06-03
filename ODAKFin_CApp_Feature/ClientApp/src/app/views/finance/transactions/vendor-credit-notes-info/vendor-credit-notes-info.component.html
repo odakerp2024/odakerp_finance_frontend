@@ -282,12 +282,19 @@
                             <tbody>
                                 <tr>
                                     <td>
-                                        <select formControlName="AccountId" class="form-control my-select">
+                                        <!-- <select formControlName="AccountId" class="form-control my-select">
                                             <option disabled value="0">--SELECT ACCOUNT--</option>
                                             <option *ngFor="let name of accountName" [value]="name.ChartOfAccountsId">
                                                 {{name.AccountName | uppercase}}
                                             </option>
-                                        </select>
+                                        </select> -->
+                                           <ng-select class="searchdropdown" [clearable]="false" [appendTo]="'body'"
+                                            [items]="AccountList" bindLabel="AccountName" bindValue="ChartOfAccountsId"
+                                            groupBy="GroupName" formControlName="AccountId">
+                                            <ng-template ng-optgroup let-item="item">
+                                                {{item.GroupName | uppercase}}
+                                            </ng-template>
+                                        </ng-select>
                                     </td>
                                     <td> <input min="1" formControlName="Rate"
                                             (ngModelChange)="rateQuantityChangeEvent($event)" class="form-control"
@@ -425,7 +432,10 @@
                                 <tbody class="text-center" *ngIf="FileList.length > 0">
                                     <tr *ngFor="let data of FileList;let i = index">
                                         <td>{{i + 1}}</td>
-                                        <td id="documentFileName">{{data.FileName}}</td>
+                                        <!-- <td id="documentFileName">{{data.FileName}}</td> -->
+                                        <td  class="text-center" id="documentFileName"><button [disabled]="isUpdateMode"
+                                            class="btn btn-success bmd-btn-fab enqbtn"
+                                            (click)="download(data.UniqueFilePath)">{{data.FileName}}</button></td>
                                         <td class="text-center">
                                             <button [disabled]="isUpdateMode" type="submit"
                                                 class="btn btn-danger bmd-btn-fab"

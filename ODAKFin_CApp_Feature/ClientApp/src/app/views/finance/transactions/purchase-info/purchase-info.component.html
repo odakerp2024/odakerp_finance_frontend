@@ -290,20 +290,13 @@
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <!-- <select formControlName="AccountId" class="form-control my-select">
-                                                <option disabled value="0">--SELECT ACCOUNT--</option>
-                                                <option *ngFor="let name of accountName"
-                                                    [value]="name.ChartOfAccountsId">
-                                                    {{name.AccountName | uppercase}}
-                                                </option>
-                                            </select> -->
-
-                                            <ng-select class="searchdropdown"  [clearable]="false"  [appendTo]="'body'" formControlName="AccountId" name="Status" >
-                                                <ng-option [value]="0" [disabled]="true">--SELECT ACCOUNT--</ng-option>
-                                                <ng-option *ngFor="let name of accountName" [value]="name.ChartOfAccountsId">
-                                                    {{name.AccountName | uppercase}}
-                                                </ng-option>
-                                            </ng-select>
+                                            <ng-select class="searchdropdown" [clearable]="false" [appendTo]="'body'"
+                                            [items]="AccountList" bindLabel="AccountName" bindValue="ChartOfAccountsId"
+                                            groupBy="GroupName" formControlName="AccountId">
+                                            <ng-template ng-optgroup let-item="item">
+                                                {{item.GroupName | uppercase}}
+                                            </ng-template>
+                                        </ng-select>
                                         </td>
                                         <td>
                                             <!-- <input (ngModelChange)="totalAmountCalculation($event)"
