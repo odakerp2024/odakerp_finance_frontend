@@ -5,10 +5,10 @@
                 <div class="col-10">
                     <div class="row pb-3">
 
-                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                        <div class="col-2">
 
                             <label class=" fontstyles">PEROID</label>
-                            <ng-select class="searchdropdown custom" formControlName="Peroid"
+                            <ng-select class="searchdropdown custom dropdown-size" formControlName="Peroid"
                                 (ngModelChange)="onOptionChange($event);" [clearable]="false">
                                 <ng-option [value]="''" disabled>-- SELECT --</ng-option>
                                 <ng-container *ngFor="let peroid of PeroidList">
@@ -20,24 +20,21 @@
 
                         </div>
 
-                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4" *ngIf="selectedOption === 'custom'">
-                            <div class="form-group bmd-form-group w-100">
-                                <label class="mb-3">From</label>
-                                <div class="input-group">
-                                    <mat-form-field class="tillDate mat_date_picker" appearance="outline">
-                                        <input matInput (click)="FromDate.open()" readonly autocomplete="off"
-                                            (onchange)="formatchange(true)" [matDatepicker]="FromDate" id="FromDate"
-                                            [placeholder]="entityDateFormat" formControlName="FromDate">
-                                        <mat-datepicker-toggle matSuffix [for]="FromDate"></mat-datepicker-toggle>
-                                        <mat-datepicker #FromDate></mat-datepicker>
-                                    </mat-form-field>
-                                </div>
+                        <div class="col-2" *ngIf="selectedOption === 'custom'">
+                            <label class="fontstyles mb-3">FROM</label>
+                            <div class="input-group">
+                                <mat-form-field class="tillDate mat_date_picker" appearance="outline">
+                                    <input matInput (click)="FromDate.open()" readonly autocomplete="off"
+                                        (onchange)="formatchange(true)" [matDatepicker]="FromDate" id="FromDate"
+                                        [placeholder]="entityDateFormat" formControlName="FromDate">
+                                    <mat-datepicker-toggle matSuffix [for]="FromDate"></mat-datepicker-toggle>
+                                    <mat-datepicker #FromDate></mat-datepicker>
+                                </mat-form-field>
                             </div>
                         </div>
 
-                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4" *ngIf="selectedOption === 'custom'">
-
-                            <label class="mb-3">To</label>
+                        <div class="col-2" *ngIf="selectedOption === 'custom'">
+                            <label class="fontstyles mb-3">TO</label>
                             <div class="input-group">
                                 <mat-form-field class="tillDate mat_date_picker" appearance="outline">
                                     <input matInput (click)="ToDate.open()" readonly autocomplete="off"
@@ -50,7 +47,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                        <div class="col-2">
                             <label class=" fontstyles">DIVISION</label>
                             <ng-select class="searchdropdown custom" formControlName="DivisionId"
                                 (ngModelChange)="getOfficeList($event);" [clearable]="false">
@@ -63,7 +60,7 @@
                             </ng-select>
                         </div>
 
-                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                        <div class="col-2">
                             <label class=" fontstyles ">OFFICE</label>
                             <ng-select class="searchdropdown" formControlName="OfficeId" name="active" id="active"
                                 [clearable]="false" name="CategoryId" id="CategoryId">
@@ -76,9 +73,9 @@
                             </ng-select>
                         </div>
 
-                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4"  *ngIf="type != 'overall'">
+                        <div class="col-2"  *ngIf="type != 'overall'">
                             <label class=" fontstyles">CUSTOMER</label>
-                            <ng-select class="searchdropdown" formControlName="Customer" [clearable]="false"
+                            <ng-select class="searchdropdown" formControlName="CustomerId" [clearable]="false"
                                 name="CategoryId" id="CategoryId">
                                 <ng-option [value]="0" disabled>-- SELECT --</ng-option>
                                 <ng-container *ngFor="let customer of customerList">
@@ -245,7 +242,10 @@
                             <tbody>
                                 <tr *ngFor="let data of pagedItems">
                                     <td>{{data.Payees}}</td>
-                                    <td class="hyperTextColor" type="customerinvoicewise"><a (click)="showCustomerInvoiceWise(data.CustomerID)">{{data.CustomerName}}</a></td>
+                                    <td class="hyperTextColor" [title]="data.CustomerName">
+                                    <a (click)="showCustomerInvoiceWise(data.CustomerID)">
+                                        {{ (data.CustomerName && data.CustomerName.length > 20) ? data.CustomerName.slice(0, 20) + '-' : data.CustomerName }}
+                                    </a></td>    
                                     <td>{{data.CityName}}</td>
                                     <td>{{data.SalesPIC}}</td>
                                     <td>{{data.CreditDays}}</td>
@@ -266,7 +266,7 @@
                                   <td colspan="1" class="text-left">
                                     <span style="font-size: medium;">Grand Total : </span>
                                   </td>
-                                  <td colspan="1" >ALL</td>
+                                  <td colspan="1"(click)="getallcategorylist()">ALL</td>
                                   <td colspan="1" ></td>
                                   <td colspan="1" ></td>
                                   <td colspan="1" ></td>
@@ -342,7 +342,7 @@
                                   </td>
                                   <td colspan="1" ></td>
                                   <td colspan="1" ></td>
-                                  <td colspan="1" >ALL</td>
+                                  <td colspan="1"(click)="getallcustomerlist()" >ALL</td>
                                   <td colspan="1" ></td>
                                   <td colspan="1" class="text-right">{{totalinvoicewiseamount | dynamicDecimal: entityFraction}}</td>
                                   <td colspan="1" class="text-right">{{totalinvoicewisebalance | dynamicDecimal: entityFraction}}</td>

@@ -203,13 +203,14 @@ export class ReportArLeveloneComponent implements OnInit {
         SubTypeId: [0],
         FromDate: [this.startDate],
         ToDate: [this.endDate],
+        CustomerId : [0],
         Peroid: [''],
       });
     } else if( this.type == 'customerwise'){
       this.reportFilter = this.fb.group({
         DivisionId: [0],
         OfficeId: [0],
-        Customer: [0], 
+        CustomerId: [0], 
         Type:[1],
         SubTypeId: [this.subtype],
         FromDate: [this.startDate],
@@ -221,7 +222,7 @@ export class ReportArLeveloneComponent implements OnInit {
         this.reportFilter = this.fb.group({
           DivisionId: [0],
           OfficeId: [0],
-          Customer: [0], 
+          CustomerId: [0], 
           Type:[2],
           SubTypeId: [this.subtypecustomerId],
           FromDate: [this.startDate],
@@ -229,7 +230,7 @@ export class ReportArLeveloneComponent implements OnInit {
           Peroid: [''],
         });
     }
-  
+    this.reportFilter.controls.Peroid.setValue('month');
     this.onOptionChange('month');
     if(this.type == 'overall'){
       await this.getOverallList();
@@ -358,8 +359,12 @@ export class ReportArLeveloneComponent implements OnInit {
     })
   }
 
-  getallcategorylist(){
+  async getallcategorylist(){
+    await this.showCustomerWise(0);
+  }
 
+  async getallcustomerlist(){
+   await this.showCustomerInvoiceWise(0);
   }
 
   calculateTotalCustomers(items: any[]): number {
@@ -433,6 +438,7 @@ export class ReportArLeveloneComponent implements OnInit {
       this.reportFilter.reset({
         DivisionId: 0,
         OfficeId: 0,
+        CustomerId:0,
         Type: 0,
         SubTypeId: 0,
         FromDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
@@ -442,7 +448,7 @@ export class ReportArLeveloneComponent implements OnInit {
       this.reportFilter.reset({
         DivisionId: 0,
         OfficeId: 0,
-        Customer: 0,
+        CustomerId: 0,
         Type: 1,
         SubTypeId: this.subtype,
         FromDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
@@ -452,7 +458,7 @@ export class ReportArLeveloneComponent implements OnInit {
       this.reportFilter.reset({
         DivisionId: 0,
         OfficeId: 0,
-        Customer: 0,
+        CustomerId: 0,
         Type: 2,
         SubTypeId: this.subtypecustomerId,
         FromDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
