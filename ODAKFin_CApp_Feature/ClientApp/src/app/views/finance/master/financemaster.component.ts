@@ -528,7 +528,7 @@ export class FinanceMasterComponent implements OnInit {
     //this.customernameH = $('#ddlCustomerNameH').val() ? $('#ddlCustomerNameH').val().toString() : "0";
     this.fromdateH = $('#ddlfromDateH').val() ? $('#ddlfromDateH').val().toString() : "0";
     this.tilldateH = $('#ddltillDateH').val() ? $('#ddltillDateH').val().toString() : "0";
-    alert($('#ddlwfStatusH').val());
+    // alert($('#ddlwfStatusH').val());
     if($('#ddlwfStatusH').val() == 0 || $('#ddlwfStatusH').val() == null){
       this.status = "approve";
     }
@@ -536,7 +536,7 @@ export class FinanceMasterComponent implements OnInit {
       this.status = $('#ddlwfStatusH').val().toString();
     }
     //this.status = $('#ddlwfStatusH').val() ? $('#ddlwfStatusH').val().toString() : "approve";
-    alert(this.status);
+    // alert(this.status);
     this.getWorkflowInboxHistory();
   }
 
