@@ -794,6 +794,7 @@ export class CustomerComponent implements OnInit {
       this.fg.controls.Category.setValue(JSON.parse(response['data'].Table[0]['CategoryId']));
       this.fg.controls.ShortName.setValue(response['data'].Table[0]['ShortName']);
       this.fg.controls.URL.setValue(response['data'].Table[0]['URL']);
+      this.fg.controls.IecCode.setValue(response['data'].Table[0]['IecCode']);
       this.fg.controls.IsActive.setValue(response['data'].Table[0]['IsActive'] ? 'true' : 'false');
       this.CreatedOn = this.datePipe.transform(response['data'].Table[0]['CreatedDate'], this.datePipe.transform(new Date(), "dd-MM-yyyy"));
       this.CreatedBy = localStorage.getItem('UserName')
@@ -1012,6 +1013,7 @@ export class CustomerComponent implements OnInit {
       IsActive: 'true',
       ShortName: '',
       URL: '',
+      IecCode: '',
       onboardstatus: '1',
       //Status: '',
       primaryTelephone: ['', [Validators.pattern(this.telephonePattern), Validators.minLength(12), Validators.maxLength(16)]],
@@ -1091,6 +1093,7 @@ export class CustomerComponent implements OnInit {
     this.basicCustomerDetail.IsActive = this.fg.value.IsActive === 'true' ? 1 : 0;
     this.basicCustomerDetail.ShortName = this.fg.value.ShortName;
     this.basicCustomerDetail.URL = this.fg.value.URL;
+    this.basicCustomerDetail.IecCode = this.fg.value.IecCode;
     this.basicCustomerDetail.UpdatedBy = this.LoginUserId;
 
 
@@ -1616,6 +1619,7 @@ debugger
   }
 
   submitApproval(){
+    debugger
     //alert("approval");
 
     let eventData: any = {}
@@ -1785,6 +1789,7 @@ debugger
         IsActive: this.fg.value.IsActive,
         ShortName: this.fg.value.ShortName,
         URL: this.fg.value.URL,
+        IecCode: this.fg.value.IecCode,
         //Status: '',
 
         //Status: '', 
