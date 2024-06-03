@@ -56,6 +56,16 @@ export class ReportDashboardService {
     return this.http.post<any>(this.globals.APIURL + '/Reports/PurchaseVoucherList', FormValue);
   }
 
+  // Account Receivable Balance Summary Services 
+    
+  getBalanceSummaryList(FormValue: any): Observable<any> {
+    FormValue.Amount = FormValue.Amount == '' ? 0 : FormValue.Amount;
+    return this.http.post<any>(this.globals.APIURL + '/Reports/AccountReceivableList', FormValue);
+  }
+
+
+
+
   // Account Receivable Sales Summary Services 
 
   getSalesPersonDropdowns(payload: any): Observable<any[]> {
