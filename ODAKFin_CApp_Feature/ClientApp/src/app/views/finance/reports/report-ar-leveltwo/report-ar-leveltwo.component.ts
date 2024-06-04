@@ -44,12 +44,6 @@ const year = today.getFullYear();
       { peroidId: 'previousmonth', peroidName: 'PREVIOUS MONTH' },
       { peroidId: 'previousyear', peroidName: 'PREVIOUS FINANCIAL YEAR' }
     ];
-    categorylist = [
-      { Id: '1', SubCategory: 'Category-A' },
-    ];
-    list = [
-      { Id: '1', Customer: 'Customer-A' },
-    ]
     entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
     entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
     currentDate = new Date();
