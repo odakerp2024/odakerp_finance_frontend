@@ -1806,7 +1806,8 @@ export class PaymentVoucherDetailsComponent implements OnInit {
             PurchaseInvoiceId: invoice.PurchaseInvoiceId,
             InvoiceAmountCCY: invoice.InvoiceAmountCCY,
             DueAmountCCY: invoice.DueAmountCCY,
-            ExchangeRate: invoice.ExchangeRate
+            ExchangeRate: invoice.ExchangeRate,
+            IsOpening: invoice.IsOpening
           };
 
           // const exchangeRate = this.exchangePairDetails.length ? +this.exchangePairDetails[0].Rate : 0
