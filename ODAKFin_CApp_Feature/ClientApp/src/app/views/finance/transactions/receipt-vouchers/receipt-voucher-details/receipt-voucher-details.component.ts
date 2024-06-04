@@ -273,7 +273,8 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
       IsSelect: [false],
       InvoiceAmountCCY: [''],
       DueAmountCCY: [''],
-      ExchangeRate: [0]
+      ExchangeRate: [0],
+      IsOpening: [false]
     })
     // Set the updated value back to paymentDetailsArray
     add.push(paymentGroup);
@@ -1327,7 +1328,7 @@ private downloadFile = (data: HttpResponse<Blob>) => {
 
   createPaymentDetailsPayload(info, exchangeRate = 0) {
     
-
+    
     this.paymentDetailsTableList = [];
     for (let data of info) {
       // const exchangeRate = this.ExchangeRatePairList.length ? +this.ExchangeRatePairList[0].Rate : 0
@@ -1352,7 +1353,8 @@ private downloadFile = (data: HttpResponse<Blob>) => {
         TDS: data.TDS ? data.TDS : 0,
         Payment: data.Payment ? +data.Payment : 0,
         IsSelect: data.IsSelect ? data.IsSelect : false,
-        ExchangeRate: data.ExchangeRate
+        ExchangeRate: data.ExchangeRate,
+        IsOpening: data.IsOpening
       }
 
       // invoceObj.InvoiceAmountCCY =  invoceObj.InvoiceAmount * (this.ExchangeRatePairList.length ? +this.ExchangeRatePairList[0].Rate : 0);
