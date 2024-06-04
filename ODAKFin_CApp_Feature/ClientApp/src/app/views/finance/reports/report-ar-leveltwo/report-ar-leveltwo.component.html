@@ -53,7 +53,7 @@
 
                         <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                             <label class=" fontstyles">DIVISION</label>
-                            <ng-select class="searchdropdown custom" formControlName="Division"
+                            <ng-select class="searchdropdown custom" formControlName="DivisionId"
                                 (ngModelChange)="getOfficeList($event);" [clearable]="false">
                                 <ng-option [value]="0" disabled>-- SELECT --</ng-option>
                                 <ng-container *ngFor="let division of divisionList">
@@ -66,7 +66,7 @@
 
                         <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                             <label class=" fontstyles ">OFFICE</label>
-                            <ng-select class="searchdropdown" formControlName="Office" name="active" id="active"
+                            <ng-select class="searchdropdown" formControlName="OfficeId" name="active" id="active"
                                 [clearable]="false" name="CategoryId" id="CategoryId">
                                 <ng-option [value]="0" disabled>-- SELECT --</ng-option>
                                 <ng-container class="field-responsive" *ngFor="let office of officeList">
@@ -96,7 +96,7 @@
                 <div class="col-2" style="padding-top: 15px;">
                     <div class="text-center">
                         <button type="button" class="btn btn-primary text-white col-auto"
-                            (click)="getReceiptReportList()">
+                            (click)="getOverallList()">
                             SEARCH
                         </button>
                     </div>
@@ -152,57 +152,60 @@
                                 <tr>
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('SubCategory')" style="width: 177.575px;">Sub Category</th>
+                                        (click)="sort('Payees')" style="width: 177.575px;">Sub Category</th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('numberofcustomer')" style="width: 177.575px;">0-15 DAYS </th>
+                                        (click)="sort('ZeroToFifteenDaysCount')" style="width: 177.575px;">0-15 DAYS </th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('numberofinvoices')" style="width: 177.575px;">16-30 DAYS</th>
+                                        (click)="sort('SixteenToThirtyDaysCount')" style="width: 177.575px;">16-30 DAYS</th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('balance')" style="width: 177.575px;">31-45 DAYS</th>
+                                        (click)="sort('ThirtyOneToFourtyFiveDaysCount')" style="width: 177.575px;">31-45 DAYS</th>
                                     
                                         <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('numberofcustomer')" style="width: 177.575px;">45-60 DAYS</th>
+                                        (click)="sort('FourtyFiveSixtyDaysCount')" style="width: 177.575px;">45-60 DAYS</th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('numberofinvoices')" style="width: 177.575px;">>60 DAYS</th>
+                                        (click)="sort('MoreThanSixtyDaysCount')" style="width: 177.575px;">>60 DAYS</th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('balance')" style="width: 177.575px;">Balance  (Company Currency)</th>
+                                        (click)="sort('DueAmount')" style="width: 177.575px;">Balance  (Company Currency)</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let data of categorylist" >
-                                    <td class="hyperTextColor" type="customerwise"><a (click)="showCustomerWise(data)">{{data.SubCategory}}</a></td>
-                                    <td>{{data.numberofcustomer}}</td>
-                                    <td>{{data.numberofinvoices}}</td>
-                                    <td>{{data.balance}}</td>
+                                <tr *ngFor="let data of pagedItems" >
+                                    <td class="hyperTextColor" type="customerwise"><a (click)="showCustomerWise(data.Id)" >{{data.Payees}}</a></td>
+                                    <td>{{data.ZeroToFifteenDaysCount}}</td>
+                                    <td>{{data.SixteenToThirtyDaysCount}}</td>
+                                    <td>{{data.ThirtyOneToFourtyFiveDaysCount}}</td>
+                                    <td>{{data.FourtyFiveSixtyDaysCount}}</td>
+                                    <td>{{data.MoreThanSixtyDaysCount}}</td>
+                                    <td class="text-right hyperTextColor">{{data.DueAmount | dynamicDecimal: entityFraction}}</td>
                                 </tr>
 
-                                <!-- <tr *ngIf="pagedItems.length == 0">
+                                <tr *ngIf="pagedItems.length == 0">
                                     <td class="text-center" colspan="10">No records found</td>
-                                </tr> -->
+                                </tr>
 
                             </tbody>
-                            <tfoot class="table-footer"  *ngFor="let data of categorylist">
+                            <tfoot class="table-footer"  *ngIf="pagedItems.length > 0">
                                 <tr class="footer-position-sticky">
                                   <td colspan="1" class="text-left">
-                                    <span style="font-size: medium;">Grand Total : {{data.GrandTotal}}</span>
+                                    <span style="font-size: medium;">Grand Total : </span>
                                   </td>
-                                  <td colspan="1" >{{data.totalcustomer}}</td>
-                                  <td colspan="1" >{{data.totalinvoice}}</td>
-                                  <td colspan="1" >{{data.totalcustomer}}</td>
-                                  <td colspan="1" >{{data.totalinvoice}}</td>
-                                  <td colspan="1" >{{data.totalcustomer}}</td>
-                                  <td class="text-right" colspan="1">XXX{{data.totalbalance}}</td>
+                                  <td>{{ZeroToFifteenDaysTotal}}</td>
+                                  <td>{{SixteenToThirtyDaysTotal}}</td>
+                                  <td>{{ThirtyOneToFourtyFiveDaysTotal}}</td>
+                                  <td>{{FourtyFiveSixtyDaysTotal}}</td>
+                                  <td>{{MoreThanSixtyDaysTotal}}</td>
+                                  <td class="text-right">{{DueAmountTotal | dynamicDecimal: entityFraction }}</td>
                                 </tr>
                               </tfoot>
                         </table>
@@ -390,7 +393,7 @@
                         </table>
                     </div>
 
-                    <!-- <div class="row page mr-3" align="right">
+                    <div class="row page mr-3" align="right">
                         <ul *ngIf="pager && pager.totalItems > 10" class="pagination">
                             <li [ngClass]="{disabled:pager.currentPage === 1}">
                                 <a (click)="setPage(1)">First</a>
@@ -415,7 +418,7 @@
                                 <a (click)="setPage(pager.totalPages)">Last</a>
                             </li>
                         </ul>
-                    </div> -->
+                    </div> 
                 </div>
             </div>
         </div>
