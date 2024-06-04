@@ -66,7 +66,10 @@ const year = today.getFullYear();
     MoreThanSixtyDaysTotal = 0;
     DueAmountTotal = 0;
     CreditAmountTotal = 0;
-    BalanceICYTotal =0;
+    BalanceICYTotal = 0;
+    AgingTotal = 0;
+    InvoiceCCYTotal = 0;
+    DueAmountCCYTotal = 0;
   
     constructor(
       private commonDataService: CommonService,
@@ -114,7 +117,7 @@ const year = today.getFullYear();
       this.pagedItems = []; 
       this.type = 'customerinvoicewise';
       await this.createReportForm();
-      // await this.getInvoiceWiseList();
+      await this.getInvoiceWiseList();
     }
   
 
@@ -235,7 +238,7 @@ const year = today.getFullYear();
          await this.getCustomerWiseList();
       }
       else{
-        // await this.getInvoiceWiseList();
+         await this.getInvoiceWiseList();
       }
     }
     
@@ -307,7 +310,7 @@ const year = today.getFullYear();
     }
   
   
-    getCustomerWiseList() {
+    getInvoiceWiseList() {
       this.startDate = this.reportFilter.controls.FromDate.value;
       this.endDate = this.reportFilter.controls.ToDate.value;
   
@@ -332,6 +335,31 @@ const year = today.getFullYear();
         }
       })
     }
+
+      
+    getCustomerWiseList() {
+      this.startDate = this.reportFilter.controls.FromDate.value;
+      this.endDate = this.reportFilter.controls.ToDate.value;
+  
+      this.reportService.getAgingSummaryList(this.reportFilter.value).subscribe(result => {
+        this.reportList = [];
+        if (result['data'].Table.length > 0) {
+          this.reportList = result['data'].Table;
+          this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
+          this.setPage(1);
+          this.calculateTotalDays(this.reportList);
+        } else {
+          this.pager = {};
+          this.pagedItems = [];
+          this.DueAmountTotal = 0;
+          this.AgingTotal = 0;
+          this.InvoiceCCYTotal = 0;
+          this.DueAmountCCYTotal = 0;
+       
+        }
+      })
+    }
+  
   
     calculateTotalDays(reportList: any[]): void {
       let zeroToFifteenDaysTotal = 0;
@@ -342,6 +370,9 @@ const year = today.getFullYear();
       let dueAmountTotal = 0;
       let creditAmountTotal = 0;
       let amountICYTotal = 0;
+      let agingTotal = 0;
+      let invoiceCCYTotal = 0;
+      let dueAmountCCYTotal = 0;
     
       if(this.type == "overall"){
         reportList.forEach(item => {
@@ -380,6 +411,18 @@ const year = today.getFullYear();
         this.DueAmountTotal = dueAmountTotal;
         this.BalanceICYTotal = amountICYTotal;
       }
+      else{
+        reportList.forEach(item => {
+        agingTotal += item.Aging;  
+        invoiceCCYTotal += item.InvoiceAmountCCY;  
+        dueAmountTotal += item.DueAmount;
+        dueAmountCCYTotal += item.DueAmountCCY;
+      }); 
+      this.AgingTotal = agingTotal;
+      this.InvoiceCCYTotal = invoiceCCYTotal;
+      this.DueAmountTotal = dueAmountTotal;
+      this.DueAmountCCYTotal = dueAmountCCYTotal;
+    }
 
     }
 
@@ -405,7 +448,7 @@ const year = today.getFullYear();
     else if(this.type  == 'customerwise'){
       await this.getCustomerWiseList();
     }else{
-     // await this.getInvoiceWiseList();
+      await this.getInvoiceWiseList();
     }
   }
 
@@ -451,7 +494,7 @@ const year = today.getFullYear();
       else if(this.type == 'customerwise'){
         this.getCustomerWiseList();
       }else{
-       // this.getInvoiceWiseList();
+        this.getInvoiceWiseList();
       }
     }
   
