@@ -79,7 +79,7 @@
 
                         <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4"  *ngIf="type != 'overall'">
                             <label class=" fontstyles">CUSTOMER</label>
-                            <ng-select class="searchdropdown" formControlName="Customer" [clearable]="false"
+                            <ng-select class="searchdropdown" formControlName="CustomerId" [clearable]="false"
                                 name="CategoryId" id="CategoryId">
                                 <ng-option [value]="0" disabled>-- SELECT --</ng-option>
                                 <ng-container *ngFor="let customer of customerList">
@@ -96,7 +96,7 @@
                 <div class="col-2" style="padding-top: 15px;">
                     <div class="text-center">
                         <button type="button" class="btn btn-primary text-white col-auto"
-                            (click)="getOverallList()">
+                            (click)="search()">
                             SEARCH
                         </button>
                     </div>
@@ -217,93 +217,97 @@
                                 <tr>
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('SubCategory')" style="width: 177.575px;">Sub Category</th>
+                                        (click)="sort('Payees')" style="width: 177.575px;">Sub Category</th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('Customer')" style="width: 177.575px;">Customer</th>
+                                        (click)="sort('CustomerName')" style="width: 177.575px;">Customer</th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('branch')" style="width: 177.575px;">Branch</th>
+                                        (click)="sort('CityName')" style="width: 177.575px;">Branch</th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('salesperson')" style="width: 177.575px;">Sales Person</th>
+                                        (click)="sort('SalesPIC')" style="width: 177.575px;">Sales Person</th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('creditdays')" style="width: 177.575px;">Credit Days</th>
+                                        (click)="sort('CreditDays')" style="width: 177.575px;">Credit Days</th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('creditamount')" style="width: 177.575px;">Credit Amount</th>
+                                        (click)="sort('CreditAmount')" style="width: 177.575px;">Credit Amount</th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('balanceinvoice')" style="width: 177.575px;"> 0-15 DAYS</th>
+                                        (click)="sort('ZeroToFifteenDaysCount')" style="width: 177.575px;"> 0-15 DAYS</th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('credit')" style="width: 177.575px;">16-30 DAYS </th>
+                                        (click)="sort('SixteenToThirtyDaysCount')" style="width: 177.575px;">16-30 DAYS </th>
 
                                         <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('balanceinvoice')" style="width: 177.575px;"> 31-45 DAYS </th>
+                                        (click)="sort('ThirtyOneToFourtyFiveDaysCount')" style="width: 177.575px;"> 31-45 DAYS </th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('credit')" style="width: 177.575px;">45-60 DAYS </th>    
+                                        (click)="sort('FourtyFiveSixtyDaysCount')" style="width: 177.575px;">45-60 DAYS </th>    
      
                                      <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('credit')" style="width: 177.575px;">>60 DAYS </th>     
+                                        (click)="sort('MoreThanSixtyDaysCount')" style="width: 177.575px;">>60 DAYS </th>     
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('balance')" style="width: 177.575px;">Balance(Company Currency) </th>
+                                        (click)="sort('BalanceCCY')" style="width: 177.575px;">Balance(Company Currency) </th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('netbalance')" style="width: 177.575px;"> Balance (Invoice Currency)</th> 
+                                        (click)="sort('BalanceICY')" style="width: 177.575px;"> Balance (Invoice Currency)</th> 
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let data of list">
-                                    <td>{{data.SubCategory}}</td>
-                                    <td class="hyperTextColor" type="customerinvoicewise"><a (click)="showCustomerInvoiceWise(data)">{{data.Customer}}</a></td>
-                                    <td>{{data.branch}}</td>
-                                    <td>{{data.salesperson}}</td>
-                                    <td>{{data.creditdays}}</td>
-                                    <td>{{data.creditamount}}</td>
-                                    <td>{{data.balanceinvoice}}</td>
-                                    <td>{{data.credit}}</td>
-                                    <td>{{data.netbalance}}</td>
-                                    <td>{{data.balance}}</td>
+                                <tr *ngFor="let data of pagedItems">
+                                    <td>{{data.Payees}}</td>
+                                    <td class="hyperTextColor" [title]="data.CustomerName">
+                                        <a (click)="showCustomerInvoiceWise(data.CustomerID)">{{ (data.CustomerName && data.CustomerName.length > 20) ? data.CustomerName.slice(0, 20) + '-' : data.CustomerName }}
+                                    </a></td> 
+                                    <td>{{data.CityName}}</td>
+                                    <td>{{data.SalesPIC}}</td>
+                                    <td>{{data.CreditDays}}</td>
+                                    <td class="text-right hyperTextColor">{{data.CreditAmount | dynamicDecimal: entityFraction}}</td>
+                                    <td>{{data.ZeroToFifteenDaysCount}}</td>
+                                    <td>{{data.SixteenToThirtyDaysCount}}</td>
+                                    <td>{{data.ThirtyOneToFourtyFiveDaysCount}}</td>
+                                    <td>{{data.FourtyFiveSixtyDaysCount}}</td>
+                                    <td>{{data.MoreThanSixtyDaysCount}}</td>
+                                    <td class="text-right hyperTextColor">{{data.BalanceCCY | dynamicDecimal: entityFraction }}</td>
+                                    <td class="text-right hyperTextColor">{{data.BalanceICY | dynamicDecimal: entityFraction}}</td>
+                                </tr>
+                                
+                                <tr *ngIf="pagedItems.length == 0">
+                                    <td class="text-center" colspan="10">No records found</td>
                                 </tr>
 
-                                <!-- <tr *ngIf="pagedItems.length == 0">
-                                    <td class="text-center" colspan="10">No records found</td>
-                                </tr> -->
-
                             </tbody>
-                            <tfoot class="table-footer"  *ngFor="let data of list">
+                            <tfoot class="table-footer"  *ngIf="pagedItems.length > 0">
                                 <tr class="footer-position-sticky">
                                   <td colspan="1" class="text-left">
-                                    <span style="font-size: medium;">Grand Total : {{data.GrandTotal}}</span>
-                                  </td>
-                                  <td colspan="1" >{{data.totalcustomer}}</td>
-                                  <td colspan="1" >{{data.totalinvoice}}</td>
-                                  <td colspan="1" >{{data.totalcustomer}}</td>
-                                  <td colspan="1" >{{data.totalinvoice}}</td>
-                                  <td colspan="1" >{{data.totalcustomer}}</td>
-                                  <td colspan="1" >{{data.totalinvoice}}</td>
-                                  <td colspan="1" >{{data.totalinvoice}}</td>
-                                  <td colspan="1" >{{data.totalinvoice}}</td>
-                                  <td colspan="1" >{{data.totalinvoice}}</td>
-                                  <td colspan="1" >{{data.totalinvoice}}</td>
-                                  <td colspan="1" >{{data.totalinvoice}}</td>
-                                  <td class="text-right" colspan="1">XXX{{data.totalbalance}}</td>
+                                    <span style="font-size: medium;">Grand Total : </span></td>
+                                  <td></td>
+                                  <td></td>
+                                  <td></td>
+                                  <td></td>
+                                  <td class="text-right">{{CreditAmountTotal | dynamicDecimal: entityFraction}}</td>
+                                  <td>{{ZeroToFifteenDaysTotal}}</td>
+                                  <td>{{SixteenToThirtyDaysTotal}}</td>
+                                  <td>{{ThirtyOneToFourtyFiveDaysTotal}}</td>
+                                  <td>{{FourtyFiveSixtyDaysTotal}}</td>
+                                  <td>{{MoreThanSixtyDaysTotal}}</td>
+                                  <td class="text-right">{{ DueAmountTotal | dynamicDecimal: entityFraction }}</td>
+                                  <td class="text-right">{{BalanceICYTotal | dynamicDecimal: entityFraction }}</td>
                                 </tr>
                               </tfoot>
                         </table>

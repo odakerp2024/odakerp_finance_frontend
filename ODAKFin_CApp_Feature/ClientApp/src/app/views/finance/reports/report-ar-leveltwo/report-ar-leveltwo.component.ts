@@ -71,8 +71,8 @@ const year = today.getFullYear();
     FourtyFiveSixtyDaysTotal = 0;
     MoreThanSixtyDaysTotal = 0;
     DueAmountTotal = 0;
-
-
+    CreditAmountTotal = 0;
+    BalanceICYTotal =0;
   
     constructor(
       private commonDataService: CommonService,
@@ -112,7 +112,7 @@ const year = today.getFullYear();
       this.pagedItems = [];
       this.type = 'customerwise';
       await this.createReportForm();
-      // await this.getCustomerWiseList();
+      await this.getCustomerWiseList();
     }
   
     async showCustomerInvoiceWise(subtypecustomerId:number) {
@@ -202,6 +202,7 @@ const year = today.getFullYear();
           DivisionId: [0],
           OfficeId: [0],
           Type:[0],
+          CustomerId: [0],
           SubTypeId: [0],
           FromDate: [this.startDate],
           ToDate: [this.endDate],
@@ -237,7 +238,7 @@ const year = today.getFullYear();
         await this.getOverallList();
       }
       else if(this.type == 'customerwise'){
-        // await this.getCustomerWiseList();
+         await this.getCustomerWiseList();
       }
       else{
         // await this.getInvoiceWiseList();
@@ -312,6 +313,32 @@ const year = today.getFullYear();
     }
   
   
+    getCustomerWiseList() {
+      this.startDate = this.reportFilter.controls.FromDate.value;
+      this.endDate = this.reportFilter.controls.ToDate.value;
+  
+      this.reportService.getAgingSummaryList(this.reportFilter.value).subscribe(result => {
+        this.reportList = [];
+        if (result['data'].Table.length > 0) {
+          this.reportList = result['data'].Table;
+          this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
+          this.setPage(1);
+          this.calculateTotalDays(this.reportList);
+        } else {
+          this.pager = {};
+          this.pagedItems = [];
+          this.CreditAmountTotal = 0;
+          this.ZeroToFifteenDaysTotal = 0;
+          this.SixteenToThirtyDaysTotal = 0;
+          this.ThirtyOneToFourtyFiveDaysTotal = 0;
+          this.FourtyFiveSixtyDaysTotal = 0;
+          this.MoreThanSixtyDaysTotal = 0;
+          this.DueAmountTotal = 0;
+          this.BalanceICYTotal = 0;
+        }
+      })
+    }
+  
     calculateTotalDays(reportList: any[]): void {
       let zeroToFifteenDaysTotal = 0;
       let sixteenToThirtyDaysTotal = 0;
@@ -319,22 +346,47 @@ const year = today.getFullYear();
       let fortyFiveToSixtyDaysTotal = 0;
       let moreThanSixtyDaysTotal = 0;
       let dueAmountTotal = 0;
+      let creditAmountTotal = 0;
+      let amountICYTotal = 0;
     
-      reportList.forEach(item => {
-        zeroToFifteenDaysTotal += item.ZeroToFifteenDaysCount;
-        sixteenToThirtyDaysTotal += item.SixteenToThirtyDaysCount;
-        thirtyOneToFortyFiveDaysTotal += item.ThirtyOneToFourtyFiveDaysCount;
-        fortyFiveToSixtyDaysTotal += item.FourtyFiveSixtyDaysCount;  
-        moreThanSixtyDaysTotal += item.MoreThanSixtyDaysCount;  
-        dueAmountTotal += item.DueAmount;
-      });
-    
-      this.ZeroToFifteenDaysTotal = zeroToFifteenDaysTotal;
-      this.SixteenToThirtyDaysTotal = sixteenToThirtyDaysTotal;
-      this.ThirtyOneToFourtyFiveDaysTotal = thirtyOneToFortyFiveDaysTotal;
-      this.FourtyFiveSixtyDaysTotal = fortyFiveToSixtyDaysTotal;
-      this.MoreThanSixtyDaysTotal = moreThanSixtyDaysTotal;
-      this.DueAmountTotal = dueAmountTotal;
+      if(this.type == "overall"){
+        reportList.forEach(item => {
+          zeroToFifteenDaysTotal += item.ZeroToFifteenDaysCount;
+          sixteenToThirtyDaysTotal += item.SixteenToThirtyDaysCount;
+          thirtyOneToFortyFiveDaysTotal += item.ThirtyOneToFourtyFiveDaysCount;
+          fortyFiveToSixtyDaysTotal += item.FourtyFiveSixtyDaysCount;  
+          moreThanSixtyDaysTotal += item.MoreThanSixtyDaysCount;  
+          dueAmountTotal += item.DueAmount;
+        });
+      
+        this.ZeroToFifteenDaysTotal = zeroToFifteenDaysTotal;
+        this.SixteenToThirtyDaysTotal = sixteenToThirtyDaysTotal;
+        this.ThirtyOneToFourtyFiveDaysTotal = thirtyOneToFortyFiveDaysTotal;
+        this.FourtyFiveSixtyDaysTotal = fortyFiveToSixtyDaysTotal;
+        this.MoreThanSixtyDaysTotal = moreThanSixtyDaysTotal;
+        this.DueAmountTotal = dueAmountTotal;
+      }
+      else if(this.type =="customerwise"){
+          reportList.forEach(item => {
+          creditAmountTotal += item.CreditAmount;
+          zeroToFifteenDaysTotal += item.ZeroToFifteenDaysCount;
+          sixteenToThirtyDaysTotal += item.SixteenToThirtyDaysCount;
+          thirtyOneToFortyFiveDaysTotal += item.ThirtyOneToFourtyFiveDaysCount;
+          fortyFiveToSixtyDaysTotal += item.FourtyFiveSixtyDaysCount;  
+          moreThanSixtyDaysTotal += item.MoreThanSixtyDaysCount;  
+          dueAmountTotal += item.BalanceCCY;
+          amountICYTotal += item.BalanceICY;
+        }); 
+        this.CreditAmountTotal = creditAmountTotal;
+        this.ZeroToFifteenDaysTotal = zeroToFifteenDaysTotal;
+        this.SixteenToThirtyDaysTotal = sixteenToThirtyDaysTotal;
+        this.ThirtyOneToFourtyFiveDaysTotal = thirtyOneToFortyFiveDaysTotal;
+        this.FourtyFiveSixtyDaysTotal = fortyFiveToSixtyDaysTotal;
+        this.MoreThanSixtyDaysTotal = moreThanSixtyDaysTotal;
+        this.DueAmountTotal = dueAmountTotal;
+        this.BalanceICYTotal = amountICYTotal;
+      }
+
     }
 
 
@@ -349,6 +401,20 @@ const year = today.getFullYear();
       this.pagesort(property, this.pagedItems);
     }
   
+
+    
+  async search(){
+ 
+    if(this.type  == 'overall'){
+      await this.getOverallList();
+    }
+    else if(this.type  == 'customerwise'){
+      await this.getCustomerWiseList();
+    }else{
+     // await this.getInvoiceWiseList();
+    }
+  }
+
     clear() {
       this.startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd");
       this.endDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd");
@@ -389,7 +455,7 @@ const year = today.getFullYear();
         this.getOverallList();
       }
       else if(this.type == 'customerwise'){
-       // this.getCustomerWiseList();
+        this.getCustomerWiseList();
       }else{
        // this.getInvoiceWiseList();
       }
