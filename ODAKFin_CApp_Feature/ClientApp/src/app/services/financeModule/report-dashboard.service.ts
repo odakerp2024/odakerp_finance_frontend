@@ -29,9 +29,14 @@ export class ReportDashboardService {
     FormValue.Amount = FormValue.Amount == '' ? 0 : FormValue.Amount;
     return this.http.post<any>(this.globals.APIURL + '/Reports/PaymentVoucherList', FormValue);
   }
+
   getAccountPayableList(FormValue: any): Observable<any> {
     FormValue.Amount = FormValue.Amount == '' ? 0 : FormValue.Amount;
     return this.http.post<any>(this.globals.APIURL + '/Reports/AccountPayableList', FormValue);
+  }
+  getAPAgingList(FormValue: any): Observable<any> {
+    debugger
+    return this.http.post<any[]>(this.globals.APIURL + '/Reports/APAgingSummaryList', FormValue);
   }
  
   getVoucherReversalReportList(FormValue: any): Observable<any> {

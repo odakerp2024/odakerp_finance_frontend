@@ -1,7 +1,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Globals } from 'src/app/globals';
 import { PaginationService } from 'src/app/pagination.service';
@@ -53,28 +53,35 @@ export class ReportApLeveltwoComponent implements OnInit {
     { peroidId: 'previousmonth', peroidName: 'PREVIOUS MONTH' },
     { peroidId: 'previousyear', peroidName: 'PREVIOUS FINANCIAL YEAR' }
   ];
-  Overalllist = [
-    { Id: '1', SubCategory: 'Local Vendor' },
-  ];
-  vendorwiselist = [
-    { Id: '1', Vendor: 'Vendor A' },
-  ]
-  vendorinvoicewiselist = [
-    { Id: '1', PurchaseInvoice : 'Invoice A' },
-  ]
+ 
+
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
   entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   currentDate = new Date();
   selectedOption: string;
   type = 'Overall-list';
-
+subtype       : number;
+subtypevendorId: number;
   campaignOne = new FormGroup({
     start: new FormControl(new Date(year, month, 13)),
     end: new FormControl(new Date(year, month, 16)),
   });
-
+  totalBalancecc : number;
   startDate = '';
   endDate = '';
+ 
+  ZeroToFifteenDaysTotal : number;
+  SixteenToThirtyDaysTotal : number;
+  ThirtyOneToFourtyFiveDaysTotal : number;
+  FourtyFiveSixtyDaysTotal : number;
+  MoreThanSixtyDaysTotal : number;
+  DueAmountTotal : number;
+  BalanceICYTotal : number;
+  CreditAmountTotal : number;
+  AgingTotal : number;
+  InvoiceCCYTotal : number ;
+  DueAmountCCYTotal : number
+
 
   constructor(
     private commonDataService: CommonService,
@@ -92,7 +99,7 @@ export class ReportApLeveltwoComponent implements OnInit {
     this.createReportForm();
     this.onOptionChange('month');
     this.getDivisionList();
-    this.getVoucherList();
+    // this.getVoucherList();
     this.getVendorList();
     this.reportFilter.controls.Peroid.setValue('month');
   }
@@ -172,43 +179,78 @@ export class ReportApLeveltwoComponent implements OnInit {
     this.reportFilter = this.fb.group({
       FromDate: [this.startDate],
       ToDate: [this.endDate],
+      VendorID: [0],
       DivisionId: [0],
       OfficeId: [0],
+       Type:[0],
+        SubTypeId: [0],
       Peroid: [''],
     });
-  }else{
+  }else if( this.type == 'Vendor-wise'){
     this.reportFilter = this.fb.group({
       FromDate: [this.startDate],
       ToDate: [this.endDate],
       DivisionId: [0],
       OfficeId: [0],
-      VendorId: [0],
+      VendorID: [0],
+       Type:[1],
+        SubTypeId: [this.subtype],
       Peroid: [''],
     });
-  }
+  } else {
+        this.reportFilter = this.fb.group({
+          DivisionId: [0],
+          OfficeId: [0],
+          VendorID: [0],
+          Type:[2],
+          SubTypeId: [this.subtypevendorId],
+          FromDate: [this.startDate],
+          ToDate: [this.endDate],
+          Peroid: [''],
+        });
+    }
+
     this.onOptionChange('month');
-    await this.getPaymentVoucherReportList();
+     if(this.type == 'Overall-list'){
+      await this.getAPAgingOverallList();
+    }
+    else if(this.type == 'Vendor-wise'){
+      await this.getAPAgingVendorList();
+    }else{
+      await this.getAPAgingInvoiceList();
+    }
   }
   
-  async showVendor(){
+  async showVendor(SubTypeId:number){
+  this.subtype = SubTypeId;
     this.pagedItems = [];
     this.type = 'Vendor-wise';
     await this.createReportForm();
+       this.reportFilter.controls.Peroid.setValue('month');
+        await this.getAPAgingVendorList();
 
   }
 
-  async showVendorinvoicewise(){
+  async showVendorinvoicewise(subtypevendorId: number){
+   this.subtypevendorId = subtypevendorId;
     this.pagedItems = [];
     this.type = 'Vendor-Invoice-wise';
     await this.createReportForm();
+    this.reportFilter.controls.Peroid.setValue('month');
+    await this.getAPAgingInvoiceList();
 
   }
 
-  async Cancel(){
-    debugger
-     this.pagedItems = [];
-    this.type = 'Overall-list';
-    await this.createReportForm();
+  async Cancel() {
+    if (this.type === 'Vendor-Invoice-wise') {
+      this.type = 'Vendor-wise';
+      await this.createReportForm();
+      await this.showVendor(0); 
+    } else if (this.type === 'Vendor-wise') {
+      this.type = 'Overall-list';
+      await this.createReportForm();    
+      await this.getAPAgingOverallList();
+    }
   }
 
   getDivisionList() {
@@ -251,22 +293,6 @@ export class ReportApLeveltwoComponent implements OnInit {
     })
   }
 
-  // getVendorBranch(vendorId) {
-  //   const vendorDetails = this.vendorList.find((vendor) => vendor.VendorID == vendorId);
-  //   this.reportFilter.controls['VendorBranch'].setValue('');
-  //   if (vendorDetails) {
-  //     this.vendorBranch = this.vendorList.filter(vendor => { return vendor.VendorName === vendorDetails.VendorName });
-  //     if (this.vendorBranch.length) {
-  //       const selectedBranch = this.vendorBranch[0].BranchCode;
-  //       this.reportFilter.value.vendorBranch = this.vendorBranch[0].VendorBranchID
-  //       this.reportFilter.controls['VendorBranch'].setValue(this.vendorBranch[0].VendorBranchID);
-  //     }
-  //     // this.branches = this.vendorBranch.length
-  //     // this.newOne = this.vendorBranch[0].BranchCode;
-  //   }
-  // }
-
-
   removeDuplicatesVendorId(arr, key) {
     const uniqueMap = new Map();
     arr.forEach((item) => {
@@ -278,21 +304,6 @@ export class ReportApLeveltwoComponent implements OnInit {
     return Array.from(uniqueMap.values());
   }
 
-  getVoucherList() {
-    return new Promise((resolve, rejects) => {
-
-
-      let service = `${this.globals.APIURL}/ReceiptVoucher/GetReceiptVoucherDropDownList`
-      this.dataService.post(service, { CustomerId: 0 }).subscribe((result: any) => {
-        this.paymentModeList = result.data.Table4;
-
-        resolve(true)
-      }, error => {
-        console.error(error);
-        resolve(true)
-      });
-    })
-  }
 
   getDivisionBasedOffice(officeId: number, divisoinId: any) {
     if (officeId && divisoinId) {
@@ -309,25 +320,168 @@ export class ReportApLeveltwoComponent implements OnInit {
       });
     }
   }
+   async search(){
+    if(this.type  == 'Overall-list'){
+      await this.getAPAgingOverallList();
+    }else if(this.type  == 'Vendor-wise'){
+      await this.getAPAgingVendorList();
+    }else{
+      await this.getAPAgingInvoiceList();
+    }
+  }
+  
 
-  getPaymentVoucherReportList() {
+  getAPAgingOverallList() {
     this.startDate = this.reportFilter.controls.FromDate.value;
     this.endDate = this.reportFilter.controls.ToDate.value;
 
-    this.reportService.getPaymentVoucherReportList(this.reportFilter.value).subscribe(result => {
+    this.reportService.getAPAgingList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
+      this.pagedItems =[];
+      if (result['data'].Table.length > 0) {
+        this.reportList = result['data'].Table;
+        // this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
+        this.setPage(1);
+        this.calculateTotalDays(this.reportList);
+      }
+      else {     
+      this.pager = {};
+      this.pagedItems = [];
+      this.ZeroToFifteenDaysTotal = 0;
+      this.SixteenToThirtyDaysTotal = 0;
+      this.ThirtyOneToFourtyFiveDaysTotal = 0;
+      this.FourtyFiveSixtyDaysTotal = 0;
+      this.MoreThanSixtyDaysTotal = 0;
+      this.DueAmountTotal = 0;
+      }
+        error => {
+        console.log(error);
+        }
+    })
+  }
 
+getAPAgingVendorList() {
+    this.startDate = this.reportFilter.controls.FromDate.value;
+    this.endDate = this.reportFilter.controls.ToDate.value;
+    this.reportService.getAPAgingList(this.reportFilter.value).subscribe(result => {
+      this.reportList = [];
+      this.pagedItems =[];
       if (result['data'].Table.length > 0) {
         this.reportList = result['data'].Table;
         this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
-        this.setPage(1)
+        this.setPage(1);
+        this.calculateTotalDays(this.reportList);
+        
       } else {
         this.pager = {};
         this.pagedItems = [];
+        this.ZeroToFifteenDaysTotal = 0;
+        this.SixteenToThirtyDaysTotal = 0;
+        this.ThirtyOneToFourtyFiveDaysTotal = 0;
+        this.FourtyFiveSixtyDaysTotal = 0;
+        this.MoreThanSixtyDaysTotal = 0;
+        this.DueAmountTotal = 0;
+        this.BalanceICYTotal = 0;
+        this.CreditAmountTotal = 0;
+      
       }
     })
   }
 
+ getAPAgingInvoiceList() {
+    this.startDate = this.reportFilter.controls.FromDate.value;
+    this.endDate = this.reportFilter.controls.ToDate.value;
+    this.reportService.getAPAgingList(this.reportFilter.value).subscribe(result => {
+      this.reportList = [];
+      this.pagedItems =[];
+      if (result['data'].Table.length > 0) {
+        this.reportList = result['data'].Table;
+        this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
+        this.setPage(1);
+        this.calculateTotalDays(this.reportList);
+      
+      } else {
+        this.pager = {};
+        this.pagedItems = [];
+        this.ZeroToFifteenDaysTotal = 0;
+        this.SixteenToThirtyDaysTotal = 0;
+        this.ThirtyOneToFourtyFiveDaysTotal = 0;
+        this.FourtyFiveSixtyDaysTotal = 0;
+        this.MoreThanSixtyDaysTotal = 0;
+        this.DueAmountTotal = 0;
+        this.BalanceICYTotal = 0;
+        this.CreditAmountTotal = 0;
+        this.AgingTotal = 0;
+        this.InvoiceCCYTotal = 0;
+        this.DueAmountCCYTotal = 0;
+      }
+    })
+  }
+
+  calculateTotalDays(reportList: any[]): void {
+    let zeroToFifteenDaysTotal = 0;
+    let sixteenToThirtyDaysTotal = 0;
+    let thirtyOneToFortyFiveDaysTotal = 0;
+    let fortyFiveToSixtyDaysTotal = 0;
+    let moreThanSixtyDaysTotal = 0;
+    let dueAmountTotal = 0;
+    let creditAmountTotal = 0;
+    let amountICYTotal = 0;
+    let agingTotal = 0;
+    let invoiceCCYTotal = 0;
+    let dueAmountCCYTotal = 0;
+  
+    if(this.type == "Overall-list"){
+      reportList.forEach(item => {
+        zeroToFifteenDaysTotal += item.Count_0_15;
+        sixteenToThirtyDaysTotal += item.Count_16_30;
+        thirtyOneToFortyFiveDaysTotal += item.Count_31_45;
+        fortyFiveToSixtyDaysTotal += item.Count_46_60;  
+        moreThanSixtyDaysTotal += item.Count_60_plus;  
+        dueAmountTotal += item.DueAmount;
+      });
+    
+      this.ZeroToFifteenDaysTotal = zeroToFifteenDaysTotal;
+      this.SixteenToThirtyDaysTotal = sixteenToThirtyDaysTotal;
+      this.ThirtyOneToFourtyFiveDaysTotal = thirtyOneToFortyFiveDaysTotal;
+      this.FourtyFiveSixtyDaysTotal = fortyFiveToSixtyDaysTotal;
+      this.MoreThanSixtyDaysTotal = moreThanSixtyDaysTotal;
+      this.DueAmountTotal = dueAmountTotal;
+    }
+    else if(this.type =="Vendor-wise"){
+        reportList.forEach(item => {
+        creditAmountTotal += item.CreditAmount;
+        zeroToFifteenDaysTotal += item.Count_0_15;
+        sixteenToThirtyDaysTotal += item.Count_16_30;
+        thirtyOneToFortyFiveDaysTotal += item.Count_31_45;
+        fortyFiveToSixtyDaysTotal += item.Count_46_60;  
+        moreThanSixtyDaysTotal += item.Count_60_plus;  
+        dueAmountTotal += item.BalanceCCY;
+        amountICYTotal += item.BalanceICY;
+      }); 
+      this.CreditAmountTotal = creditAmountTotal;
+      this.ZeroToFifteenDaysTotal = zeroToFifteenDaysTotal;
+      this.SixteenToThirtyDaysTotal = sixteenToThirtyDaysTotal;
+      this.ThirtyOneToFourtyFiveDaysTotal = thirtyOneToFortyFiveDaysTotal;
+      this.FourtyFiveSixtyDaysTotal = fortyFiveToSixtyDaysTotal;
+      this.MoreThanSixtyDaysTotal = moreThanSixtyDaysTotal;
+      this.DueAmountTotal = dueAmountTotal;
+      this.BalanceICYTotal = amountICYTotal;
+    }
+    else{
+      reportList.forEach(item => {
+      agingTotal += item.Aging;  
+      invoiceCCYTotal += item.InvoiceAmountCCY;  
+      dueAmountTotal += item.DueAmount;
+      dueAmountCCYTotal += item.DueAmountCCY;
+    }); 
+    this.AgingTotal = agingTotal;
+    this.InvoiceCCYTotal = invoiceCCYTotal;
+    this.DueAmountTotal = dueAmountTotal;
+    this.DueAmountCCYTotal = dueAmountCCYTotal;
+  }
+
+  }   
 
   setPage(page: number) {
     if (page < 1 || page > this.pager.totalPages) return;
@@ -343,17 +497,47 @@ export class ReportApLeveltwoComponent implements OnInit {
   clear() {
     this.startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd");
     this.endDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd");
+    if(this.type  == 'Overall-list'){
     this.reportFilter.reset({
       FromDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
       ToDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd"),
       DivisionId: 0,
       OfficeId: 0,
-      VendorId: 0,
+      Type: 0,
+        SubTypeId: 0,
+        VendorID: 0,
       
     });
+    }else if(this.type == 'vendor-wise'){
+      this.reportFilter.reset({
+        DivisionId: 0,
+        OfficeId: 0,
+        Type: 1,
+        VendorID: 0,
+        SubTypeId: this.subtype,
+        FromDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
+        ToDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd"),
+      });
+    }else{
+      this.reportFilter.reset({
+        DivisionId: 0,
+        OfficeId: 0,
+        VendorID: 0,
+        Type: 2,
+        SubTypeId: this.subtypevendorId,
+        FromDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
+        ToDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd"),
+      });
+    }
     this.officeList = [];
     this.reportFilter.controls.Peroid.setValue('month');
-    this.getPaymentVoucherReportList();
+    if(this.type  == 'Overall-list'){
+      this.getAPAgingOverallList();
+    }else if(this.type == 'Vendor-wise'){
+      this.getAPAgingVendorList();
+    }else{
+      this.getAPAgingInvoiceList();
+    }
   }
 
 
