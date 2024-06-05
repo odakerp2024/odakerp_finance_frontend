@@ -47,6 +47,8 @@ export class ReportApLeveloneComponent implements OnInit {
   totalbalanceicy : Number = 0;
   totalnetbalance : Number = 0;
   totalbalanceccy : Number = 0;
+  totalinvoiceamount   = 0;
+  
   
   PeroidList = [
     { peroidId: 'today', peroidName: 'CURRENT DAY' },
@@ -240,7 +242,7 @@ export class ReportApLeveloneComponent implements OnInit {
     if (this.type === 'Vendor-Invoice-wise') {
       this.type = 'Vendor-wise';
       await this.createReportForm();
-      await this.showVendorinvoicewise(0); 
+      await this.showVendor(0); 
     } else if (this.type === 'Vendor-wise') {
       this.type = 'Overall-list';
       await this.createReportForm();    
@@ -248,23 +250,7 @@ export class ReportApLeveloneComponent implements OnInit {
     }
   }
 
-  // async goBack() {
-  //   debugger
-  //   // if (this.type === 'Vendor-Invoice-wise') {
-  //     if(this.type = 'Vendor-wise'){;
-  //     await this.createReportForm();
-  //     await this.showVendor(0); 
-  //   } else if (this.type === 'Vendor-wise') {
-  //     this.type = 'Overall-list';
-  //     await this.createReportForm();    
-  //     await this.getAccountPayableOverallList();
-  //   }
-  //   else if (this.type === 'Vendor-Invoice-wise') {
-  //     this.type = 'Overall-list';
-  //     await this.createReportForm();    
-  //     await this.getAccountPayableInvoiceVendorList();
-  //   }
-  // }
+
   getDivisionList() {
     var service = `${this.globals.APIURL}/Division/GetOrganizationDivisionList`; var payload: any = {}
     this.dataService.post(service, payload).subscribe((result: any) => {
@@ -347,13 +333,11 @@ export class ReportApLeveloneComponent implements OnInit {
   }
 
   getAccountPayableOverallList() {
-    debugger
     this.startDate = this.reportFilter.controls.FromDate.value;
     this.endDate = this.reportFilter.controls.ToDate.value;
 
     this.reportService.getAccountPayableList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
-debugger
       if (result['data'].Table.length > 0) {
         this.reportList = result['data'].Table;
         // this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
@@ -410,21 +394,21 @@ getAccountPayableVendorList() {
     this.reportService.getAccountPayableList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
       this.pagedItems =[];
-      if (result['data'].Table1.length > 0) {
-        this.reportList = result['data'].Table1;
+      if (result['data'].Table.length > 0) {
+        this.reportList = result['data'].Table;
         // this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
         this.setPage(1);
-        //  this.totalcreditamount = this.calculateTotalCreditAmount(this.reportList);
-        // this.totalbalanceicy = this.calculateTotalInvoiceCurrency(this.reportList);
-        // this.totalnetbalance = this.calculateTotalNetBalance(this.reportList);
-        // this.totalbalanceccy = this.calculateTotalCompanyCurrency(this.reportList);
+        
+        this.totalinvoiceamount = this.calculateTotalInvoiceAmount(this.reportList);
+        this.totalbalanceicy = this.calculateTotalBalanceicy(this.reportList);
+        this.totalbalanceccy = this.calculateTotalBalanceccy(this.reportList);
       } else {
-        // this.pager = {};
-        // this.pagedItems = [];
-      //  this.totalcreditamount  = 0;
-      //  this.totalbalanceicy   = 0;
-      //  this.totalnetbalance    = 0;
-      //  this.totalbalanceccy    = 0;
+        this.pager = {};
+        this.pagedItems = [];
+        
+       this.totalinvoiceamount   = 0;
+       this.totalbalanceicy    = 0;
+       this.totalbalanceccy    = 0;
       }
     })
     this.pager = {};
@@ -457,6 +441,15 @@ getAccountPayableVendorList() {
 
   calculateTotalCompanyCurrency(items: any[]): number {
     return items.reduce((sum, item) => sum + item.BalanceCCY, 0);
+  }
+  calculateTotalInvoiceAmount(items: any[]): number{
+    return items.reduce((sum, item) => sum + item.InvoiceAmountCCY, 0);
+  }
+  calculateTotalBalanceicy(items: any[]): number{
+    return items.reduce((sum, item) => sum + item.DueAmount, 0);
+  }
+  calculateTotalBalanceccy(items: any[]): number{
+    return items.reduce((sum, item) => sum + item.DueAmountCCY, 0);
   }
 
   setPage(page: number) {
