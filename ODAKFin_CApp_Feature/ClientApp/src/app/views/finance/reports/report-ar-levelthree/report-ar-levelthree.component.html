@@ -4,10 +4,10 @@
             <div class="row">
                 <div class="col-10">
                     <div class="row pb-3">
-                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                        <div class="col-2">
 
                             <label class=" fontstyles">PEROID</label>
-                            <ng-select class="searchdropdown custom" formControlName="Peroid"
+                            <ng-select class="searchdropdown custom dropdown-size" formControlName="Peroid"
                                 (ngModelChange)="onOptionChange($event);" [clearable]="false">
                                 <ng-option [value]="''" disabled>-- SELECT --</ng-option>
                                 <ng-container *ngFor="let peroid of PeroidList">
@@ -19,7 +19,7 @@
 
                         </div>
 
-                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4" *ngIf="selectedOption === 'custom'">
+                        <div class="col-2" *ngIf="selectedOption === 'custom'">
                             <div class="form-group bmd-form-group w-100">
                                 <label class="mb-3">From</label>
                                 <div class="input-group">
@@ -34,7 +34,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4" *ngIf="selectedOption === 'custom'">
+                        <div class="col-2" *ngIf="selectedOption === 'custom'">
 
                             <label class="mb-3">To</label>
                             <div class="input-group">
@@ -49,7 +49,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                        <div class="col-2">
                             <label class=" fontstyles">DIVISION</label>
                             <ng-select class="searchdropdown custom" formControlName="Division"
                                 (ngModelChange)="getOfficeList($event);" [clearable]="false">
@@ -62,7 +62,7 @@
                             </ng-select>
                         </div>
 
-                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                        <div class="col-2">
                             <label class=" fontstyles ">OFFICE</label>
                             <ng-select class="searchdropdown" formControlName="Office" name="active" id="active"
                                 [clearable]="false" name="CategoryId" id="CategoryId">
@@ -75,7 +75,7 @@
                             </ng-select>
                         </div>
 
-                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4" *ngIf="type == 'customerwise'">
+                        <div class="col-2" *ngIf="type == 'customerwise'">
                             <label class=" fontstyles">CUSTOMER</label>
                             <ng-select class="searchdropdown" formControlName="Customer" [clearable]="false"
                                 name="CategoryId" id="CategoryId">
@@ -88,7 +88,7 @@
                                 </ng-container>
                             </ng-select>
                         </div>
-                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4" *ngIf="type == 'customerwise'">
+                        <div class="col-2" *ngIf="type == 'customerwise'">
                             <label class=" fontstyles">SALES PERSON</label>
                             <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'SalesPersonId'">
                                 <ng-option [value]="0" disabled>--SELECT SALES PERSON--</ng-option>
@@ -100,59 +100,55 @@
                     </div>
                 </div>
                 <div class="col-2" style="padding-top: 15px;">
-                    <div class="text-center">
-                        <button type="button" class="btn btn-primary text-white col-auto"
-                            (click)="getReceiptReportList()">
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="btn btn-primary text-white col-auto mr-3" (click)="getReceiptReportList()">
                             SEARCH
                         </button>
-                    </div>
-                    <div class="text-center">
-                        <button type="button" (click)="clear()"
-                            class="btn btn-warning text-white mb-0 col-auto clear-btn">
+                        <button type="button" class="btn btn-warning text-white mb-0 col-auto clear-btn" (click)="clear()">
                             CLEAR
                         </button>
                     </div>
-                </div>
+                </div>                
             </div>
         </div>
     </form>
 
     <div class="row">
-        <div class="col-md-12 mt-2">
+        <div class="col-md-12 mt-1">
             <div class="card m-b-30">
                 <div class="card-body cpad enqview">
 
-                    <div class="col-sm-12 justify-content-end text-center ">
-                        <h3 class="title">NAVIO SHIPPING PRIVATE LIMITED</h3>
-                        <h2 class="subtitle" *ngIf="type == 'overall'">Receivable Sales Summary</h2>
-                        <h2 class="subtitle" *ngIf="type == 'customerwise'">Receivable Sales Summary - Customer Wise
-                        </h2>
-                        <h2 class="subtitle" *ngIf="type == 'customerinvoicewise'">Receivable Sales Summary - Customer
-                            Invoice Wise</h2>
-
-
-                        <p>FROM {{ startDate | date: commonDataService.convertToLowerCaseDay(entityDateFormat) }} -
-                            TO {{ endDate | date:commonDataService.convertToLowerCaseDay(entityDateFormat) }}
-                        </p>
-
-                    </div>
-
-                    <button type="button" class="btn btn-success bmd-btn-edit text-white float-right mr-5 mt-5"
+                    <button type="button" class="btn btn-success bmd-btn-edit text-white float-right mr-5 mt-2"
                         style="position: absolute; top: 0; right: 0;" *ngIf="type != 'overall'" (click)="goBack()"><i
                             class="material-icons editicon">reply</i>
                     </button>
-
-                    <div class="col-sm-12 text-right d-flex justify-content-end">
-                        <div style="font-weight: 600; padding-top: 14px;">Export as : </div>
-                        <div>
-                            <img style="cursor: pointer;" width="38px" height="38px"
-                                class="exportAs mx-1 align-baseline" src="../../../../../assets/images/csv_color.png"
-                                (click)="downloadAsCSV()" alt="logo">
-                            <img style="cursor: pointer;" width="38px" height="38px"
-                                class="exportAs mx-1 align-baseline" src="../../../../../assets/images/xlsx_color.png"
-                                (click)="downloadAsExcel()" alt="logo">
+                    
+                    <div class="row">
+                        <div class="col-10 justify-content-end text-center ">
+                            <h6 class="title">NAVIO SHIPPING PRIVATE LIMITED</h6>
+                            <h6 class="subtitle" *ngIf="type == 'overall'">Receivable Sales Summary</h6>
+                            <h6 class="subtitle" *ngIf="type == 'customerwise'">Receivable Sales Summary - Customer Wise</h6>
+                            <h6 class="subtitle" *ngIf="type == 'customerinvoicewise'">Receivable Sales Summary - Customer Invoice Wise</h6>
+                            <p>FROM {{ startDate | date: commonDataService.convertToLowerCaseDay(entityDateFormat) }} -
+                                TO {{ endDate | date:commonDataService.convertToLowerCaseDay(entityDateFormat) }}
+                            </p>
                         </div>
+
+                        <div class="col-2 text-right ">
+                            <div style="font-weight: 600;padding-top: 67px;padding-right: 10px;">Export as :
+                                <img style="cursor: pointer;" width="38px" height="38px"
+                                    class="exportAs mx-1 align-baseline"
+                                    src="../../../../../assets/images/csv_color.png" (click)="downloadAsCSV()"
+                                    alt="logo">
+                                <img style="cursor: pointer;" width="38px" height="38px"
+                                    class="exportAs mx-1 align-baseline"
+                                    src="../../../../../assets/images/xlsx_color.png" (click)="downloadAsExcel()"
+                                    alt="logo">
+                            </div>
+                        </div>
+
                     </div>
+
 
                     <div class="col-12" *ngIf="type == 'overall'">
                         <table class="table table-responsive table-bordered w-100 dataTable no-footer">
@@ -193,7 +189,7 @@
                             <tfoot class="table-footer" *ngFor="let data of categorylist">
                                 <tr class="footer-position-sticky">
                                     <td colspan="1" class="text-left">
-                                        <span style="font-size: medium;">Grand Total : {{data.GrandTotal}}</span>
+                                        <span style="font-size: 12px;">Grand Total : {{data.GrandTotal}}</span>
                                     </td>
                                     <td colspan="1">{{data.totalcustomer}}</td>
                                     <td colspan="1">{{data.totalinvoice}}</td>
@@ -269,7 +265,7 @@
                             <tfoot class="table-footer" *ngFor="let data of categorylist">
                                 <tr class="footer-position-sticky">
                                     <td colspan="1" class="text-left">
-                                        <span style="font-size: medium;">Grand Total : {{data.GrandTotal}}</span>
+                                        <span style="font-size: 12px;">Grand Total : {{data.GrandTotal}}</span>
                                     </td>
                                     <td colspan="1">{{data.totalcustomer}}</td>
                                     <td colspan="1">{{data.totalinvoice}}</td>
@@ -346,7 +342,7 @@
                             <tfoot class="table-footer" *ngFor="let data of categorylist">
                                 <tr class="footer-position-sticky">
                                     <td colspan="1" class="text-left">
-                                        <span style="font-size: medium;">Grand Total : {{data.GrandTotal}}</span>
+                                        <span style="font-size: 12px;">Grand Total : {{data.GrandTotal}}</span>
                                     </td>
                                     <td colspan="1">{{data.totalcustomer}}</td>
                                     <td colspan="1">{{data.totalinvoice}}</td>
