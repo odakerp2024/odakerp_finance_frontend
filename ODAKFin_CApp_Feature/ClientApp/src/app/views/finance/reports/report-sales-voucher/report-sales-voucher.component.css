@@ -24,12 +24,28 @@
   }
   
   .title {
-    font-size: 1.2rem !important
+    font-size: 0.9rem !important;
+    margin: 5px !important;
   }
   
   .subtitle {
-    font-size: 1.1rem !important
+    font-size: 0.8rem !important;
+    margin: 5px !important;
+    margin-bottom: 10px !important;
   }
+  .card .card-body{
+    padding: 0.25rem !important; 
+}
+
+.card .card-body .cpad {
+    padding: 20px !important; 
+}
+
+.card .card-body .enqview {
+    text-align: center !important;
+}
+
+
   
   .clear-btn {
     width: 96px;
@@ -87,6 +103,18 @@
    
   }
   
+    
+  @media (min-width: 800px) and (max-width: 1000px) {
+    
+    .table>tbody>tr>td {
+      /* text-align: left !important; */
+      padding: 7px !important;
+      font-size: 7px !important;
+    }
+    .table thead th{
+      font-size: 10px !important;
+  }
+  }
   
   @media (min-width: 700px) and (max-width: 1399px) {
     
@@ -98,3 +126,16 @@
    
   }
   
+  .ng-select.searchdropdown .ng-select-container {
+    height: 24px !important;
+    border-radius: 0 !important;
+    min-height: 15px !important;
+}
+
+label.maxlabel{
+  font-size: 12px !important;
+}
+
+.form-control{
+  height: 26px !important;
+}

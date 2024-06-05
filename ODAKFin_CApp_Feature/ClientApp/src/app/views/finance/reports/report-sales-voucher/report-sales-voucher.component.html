@@ -4,11 +4,11 @@
         <div class="card mt-0 p-3">
             <div class="row">
                 <div class="col-10">
-                    <div class="row pb-3">
+                    <div class="row pb-1">
 
                         <div class="col-2">
 
-                            <label class=" fontstyles">PEROID</label>
+                            <label class=" maxlabel">PEROID</label>
                             <ng-select class="searchdropdown custom dropdown-size" formControlName="Peroid"
                                 (ngModelChange)="onOptionChange($event);" [clearable]="false">
                                 <ng-option [value]="''" disabled>-- SELECT --</ng-option>
@@ -22,7 +22,7 @@
                         </div>
 
                         <div class="col-2" *ngIf="selectedOption === 'custom'">
-                            <label class="fontstyles mb-3">FROM</label>
+                            <label class="maxlabel mb-3">FROM</label>
                             <div class="input-group">
                                 <mat-form-field class="tillDate mat_date_picker" appearance="outline">
                                     <input matInput (click)="FromDate.open()" readonly autocomplete="off"
@@ -35,7 +35,7 @@
                         </div>
         
                         <div class="col-2" *ngIf="selectedOption === 'custom'">
-                            <label class="fontstyles mb-3">TO</label>
+                            <label class="maxlabel mb-3">TO</label>
                             <div class="input-group">
                                 <mat-form-field class="tillDate mat_date_picker" appearance="outline">
                                     <input matInput (click)="ToDate.open()" readonly autocomplete="off"
@@ -49,7 +49,7 @@
                         </div>
 
                         <div class="col-2">
-                            <label class=" fontstyles">DIVISION</label>
+                            <label class=" maxlabel">DIVISION</label>
                             <ng-select class="searchdropdown custom" formControlName="DivisionId"
                                 (ngModelChange)="getOfficeList($event);" [clearable]="false">
                                 <ng-option [value]="0" disabled>-- SELECT --</ng-option>
@@ -62,7 +62,7 @@
                         </div>
 
                         <div class="col-2">
-                            <label class=" fontstyles">OFFICE</label>
+                            <label class=" maxlabel">OFFICE</label>
                             <ng-select class="searchdropdown" formControlName="OfficeId"
                                 (ngModelChange)="getDivisionBasedOffice($event, reportFilter.value.Division)"
                                 [clearable]="false" name="CategoryId" id="CategoryId">
@@ -76,7 +76,7 @@
                         </div>
 
                         <div class="col-2">
-                            <label class=" fontstyles">CUSTOMER</label>
+                            <label class=" maxlabel">CUSTOMER</label>
                             <ng-select class="searchdropdown" formControlName="CustomerId" [clearable]="false"
                                 name="CustomerId" id="CustomerId" (change)="isShowBranch = true;selectedCustomerBranch($event)">
                                 <ng-option [value]="0" disabled>-- SELECT --</ng-option>
@@ -91,7 +91,7 @@
                     </div>    
                          <div class ="row">
                             <div class="col-2">
-                                <label class="fontstyles">CUSTOMER BRANCH</label>
+                                <label class="maxlabel">CUSTOMER BRANCH</label>
                                 <ng-select class="searchdropdown custom" [formControlName]="'BranchId'"
                                   [clearable]="false" >
                                  <ng-option [value]="0" disabled>-- SELECT --</ng-option>
@@ -102,13 +102,13 @@
                             </div>
     
                             <div class="col-2">
-                                <label class=" fontstyles">AMOUNT</label>
+                                <label class=" maxlabel">AMOUNT</label>
                                 <input formControlName="Amount"
                                    appDynamicDecimal min="0" numbersOnly
                                     class="form-control" name="Amount">
                             </div>
                             <div class="col-2">
-                                <label class=" fontstyles">TYPE</label>
+                                <label class=" maxlabel">TYPE</label>
                                 <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'Type'"
                                     name="active" id="active">
                                     <ng-option [value]="0" disabled>-- SELECT --</ng-option>
@@ -119,14 +119,14 @@
                             </div>
     
                             <div class="col-2">
-                                <label class=" fontstyles">INVOICE NO</label>
+                                <label class=" maxlabel">INVOICE NO</label>
                                 <input formControlName="InvoiceNo"
                                     onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly
                                     class="form-control" name="Invoiceno">
                             </div>
     
                             <div class="col-2">
-                                <label class=" fontstyles">INVOICE TYPE</label>
+                                <label class=" maxlabel">INVOICE TYPE</label>
                                 <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'InvoiceType'"
                                     name="active" id="active">
                                     <ng-option [value]="0" disabled>-- SELECT --</ng-option>
@@ -162,26 +162,25 @@
     </form>
 
     <div class="row">
-        <div class="col-md-12 mt-2">
+        <div class="col-md-12 mt-1">
             <div class="card m-b-30">
                 <div class="card-body cpad enqview">
-
                     <div class="row">
                         <div class="col-10 justify-content-end text-center ">
                             <h6 class="title">NAVIO SHIPPING PRIVATE LIMITED</h6>
                             <h6 class="subtitle">Sales Voucher</h6>
-                            <p>FROM {{ startDate | date: commonDataService.convertToLowerCaseDay(entityDateFormat) }} -
+                            <h6  class="subtitle">FROM {{ startDate | date: commonDataService.convertToLowerCaseDay(entityDateFormat) }} -
                                 TO {{ endDate | date:commonDataService.convertToLowerCaseDay(entityDateFormat) }}
-                            </p>
+                            </h6>
                         </div>
 
                         <div class="col-2 text-right ">
-                            <div style="font-weight: 600;padding-top: 67px;padding-right: 10px;">Export as :
-                                <img style="cursor: pointer;" width="38px" height="38px"
+                            <div style="font-weight: 600;padding-top:18px;padding-right: 10px;">
+                                <img style="cursor: pointer;" width="36px" height="36px"
                                     class="exportAs mx-1 align-baseline"
                                     src="../../../../../assets/images/csv_color.png" (click)="downloadAsCSV()"
                                     alt="logo">
-                                <img style="cursor: pointer;" width="38px" height="38px"
+                                <img style="cursor: pointer;" width="36px" height="36px"
                                     class="exportAs mx-1 align-baseline"
                                     src="../../../../../assets/images/xlsx_color.png" (click)="downloadAsExcel()"
                                     alt="logo">
@@ -241,12 +240,14 @@
                                     <td class="hyperTextColor"><a>{{data.Invoice_no == '' ? '-' :
                                             data.Invoice_no}}</a></td>
                                     <td>{{data.Invoice_type}}</td>
-                                    <td class="hyperTextColor">{{data.CustomerName}}</td>
+                                    <td class="hyperTextColor" [title]="data.CustomerName">
+                                        <a (click)="showCustomerInvoiceWise(data.CustomerID)">{{ (data.CustomerName && data.CustomerName.length > 20) ? data.CustomerName.slice(0, 20) + '-' : data.CustomerName }}
+                                    </a></td> 
                                     <td>{{data.CityName}}</td>
                                     <td>{{data.CurrencyCode}}</td>
                                     <td class="text-right hyperTextColor">{{ data.Symbol + ' ' + (data.InvoiceAmountICY | dynamicDecimal: entityFraction) }}</td>
                                     <td class="text-right hyperTextColor">{{ data.Symbol + ' ' + (data.InvoiceAmountCCY | dynamicDecimal: entityFraction) }}</td>
-                                    <td class="text-right hyperTextColor">{{data.invoice_Tax}}</td>
+                                    <td class="text-right hyperTextColor">{{data.invoice_Tax | dynamicDecimal: entityFraction}}</td>
                                     <td  [ngClass]="data.Status == 'Paid' ? ' badge-confirm' : data.Status == 'Due' ? 'badge-cancel' : ' badge-draft'">
                                         {{data.Status}}</td>
                           

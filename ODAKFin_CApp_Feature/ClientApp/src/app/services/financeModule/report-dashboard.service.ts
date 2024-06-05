@@ -30,6 +30,15 @@ export class ReportDashboardService {
     return this.http.post<any>(this.globals.APIURL + '/Reports/PaymentVoucherList', FormValue);
   }
 
+  getAccountPayableList(FormValue: any): Observable<any> {
+    FormValue.Amount = FormValue.Amount == '' ? 0 : FormValue.Amount;
+    return this.http.post<any>(this.globals.APIURL + '/Reports/AccountPayableList', FormValue);
+  }
+  getAPAgingList(FormValue: any): Observable<any> {
+    debugger
+    return this.http.post<any[]>(this.globals.APIURL + '/Reports/APAgingSummaryList', FormValue);
+  }
+ 
   getVoucherReversalReportList(FormValue: any): Observable<any> {
     FormValue.Amount = FormValue.Amount == '' ? 0 : FormValue.Amount;
     return this.http.post<any>(this.globals.APIURL + '/Reports/VoucherReversalList/', FormValue);
@@ -54,6 +63,19 @@ export class ReportDashboardService {
   getPurchaseVoucherReportList(FormValue: any): Observable<any> {
     FormValue.Amount = FormValue.Amount == '' ? 0 : FormValue.Amount;
     return this.http.post<any>(this.globals.APIURL + '/Reports/PurchaseVoucherList', FormValue);
+  }
+
+  // Account Receivable Balance Summary Services 
+    
+  getBalanceSummaryList(FormValue: any): Observable<any> {
+    return this.http.post<any>(this.globals.APIURL + '/Reports/AccountReceivableList', FormValue);
+  }
+
+
+   // Account Receivable Aging Summary Services 
+    
+   getAgingSummaryList(FormValue: any): Observable<any> {
+    return this.http.post<any>(this.globals.APIURL + '/Reports/AccountReceivableAgingList', FormValue);
   }
 
   // Account Receivable Sales Summary Services 
