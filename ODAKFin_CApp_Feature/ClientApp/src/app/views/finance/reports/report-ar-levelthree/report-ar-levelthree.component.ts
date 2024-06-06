@@ -68,6 +68,8 @@ export class ReportArLevelthreeComponent implements OnInit {
   totalbalanceinvoice : number = 0;
   totalnetbalance : number = 0;
   totalbalanceamountcc : number = 0;
+  totalamounticy  : number = 0;
+  totalamountccy : number = 0;
 
   constructor(
     private commonDataService: CommonService,
@@ -115,7 +117,7 @@ export class ReportArLevelthreeComponent implements OnInit {
     this.pagedItems = []; 
     this.type = 'customerinvoicewise';
     await this.createReportForm();
-    //await this.getInvoiceWiseList();
+    await this.getInvoiceWiseList();
   }
 
 
@@ -239,7 +241,7 @@ export class ReportArLevelthreeComponent implements OnInit {
      await this.getCustomerWiseList();
     }
     else{
-      //await this.getInvoiceWiseList();
+      await this.getInvoiceWiseList();
     }
   }
 
@@ -337,6 +339,26 @@ export class ReportArLevelthreeComponent implements OnInit {
     })
   }
 
+  getInvoiceWiseList() {
+    this.startDate = this.reportFilter.controls.FromDate.value;
+    this.endDate = this.reportFilter.controls.ToDate.value;
+
+    this.reportService.getSalesSummaryList(this.reportFilter.value).subscribe(result => {
+      this.reportList = [];
+      if (result['data'].Table.length > 0) {
+        this.reportList = result['data'].Table;
+        this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
+        this.setPage(1);
+        this.calculateTotalDays(this.reportList);
+      } else {
+        this.pager = {};
+        this.pagedItems = [];
+        this. totalamounticy  = 0;
+        this. totalamountccy = 0;
+      }
+    })
+  }
+
   calculateTotalDays(reportList: any[]): void {
     if(this.type == "overall"){
       reportList.forEach(item => {
@@ -355,19 +377,12 @@ export class ReportArLevelthreeComponent implements OnInit {
   
        }); 
      }
-  //   else{
-  //     reportList.forEach(item => {
-  //     agingTotal += item.Aging;  
-  //     invoiceCCYTotal += item.InvoiceAmountCCY;  
-  //     dueAmountTotal += item.DueAmount;
-  //     dueAmountCCYTotal += item.DueAmountCCY;
-  //   }); 
-  //   this.AgingTotal = agingTotal;
-  //   this.InvoiceCCYTotal = invoiceCCYTotal;
-  //   this.DueAmountTotal = dueAmountTotal;
-  //   this.DueAmountCCYTotal = dueAmountCCYTotal;
-  // }
-
+    else{
+      reportList.forEach(item => {
+       this. totalamounticy  += item.BalanceAmountInvoiceCurrency
+       this. totalamountccy   += item.BalanceAmountCompanyCurrency
+    }); 
+   }
   }
 
   setPage(page: number) {
@@ -390,7 +405,7 @@ export class ReportArLevelthreeComponent implements OnInit {
     else if(this.type  == 'customerwise'){
       await this.getCustomerWiseList();
     }else{
-     // await this.getInvoiceWiseList();
+      await this.getInvoiceWiseList();
     }
   }
 
@@ -436,7 +451,7 @@ export class ReportArLevelthreeComponent implements OnInit {
       else if(this.type == 'customerwise'){
         this.getCustomerWiseList();
       }else{
-       // this.getInvoiceWiseList();
+       this.getInvoiceWiseList();
       }
     }
   
