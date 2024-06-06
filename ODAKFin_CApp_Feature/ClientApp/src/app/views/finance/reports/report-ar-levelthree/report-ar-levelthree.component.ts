@@ -65,6 +65,11 @@ export class ReportArLevelthreeComponent implements OnInit {
   startDate = '';
   endDate = '';
   type = 'overall';
+  subtype       : number;
+  subtypecustomerId : number;
+  totalcustomer : number = 0;
+  totalinvoice  : number = 0;
+  totalbalance  : number = 0;
 
   constructor(
     private commonDataService: CommonService,
@@ -114,63 +119,63 @@ export class ReportArLevelthreeComponent implements OnInit {
     switch (selectedOption) {
 
       case 'today':
-        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
-        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
         break;
 
       case 'week':
-        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay()), "yyyy-MM-dd"));
-        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() + (6 - this.currentDate.getDay())), "yyyy-MM-dd"));
+        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay()), "yyyy-MM-dd"));
+        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() + (6 - this.currentDate.getDay())), "yyyy-MM-dd"));
         break;
 
       case 'month':
         const startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd")
         const endDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd")
-        this.reportFilter.controls.StartDate.setValue(startDate);
-        this.reportFilter.controls.EndDate.setValue(endDate);
+        this.reportFilter.controls.FromDate.setValue(startDate);
+        this.reportFilter.controls.ToDate.setValue(endDate);
         break;
 
       case 'year':
         const currentYear = this.currentDate.getFullYear();
         const startYear = this.currentDate.getMonth() >= 3 ? currentYear : currentYear - 1;
         const endYear = startYear + 1;
-        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(new Date(startYear, 3, 1), "yyyy-MM-dd"));
-        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(new Date(endYear, 2, 31), "yyyy-MM-dd"));
+        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(new Date(startYear, 3, 1), "yyyy-MM-dd"));
+        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(new Date(endYear, 2, 31), "yyyy-MM-dd"));
         break;
 
       case 'previoustoday':
         const previousDay = new Date(this.currentDate);
         previousDay.setDate(previousDay.getDate() - 1);
-        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(previousDay, "yyyy-MM-dd"));
-        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(previousDay, "yyyy-MM-dd"));
+        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(previousDay, "yyyy-MM-dd"));
+        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(previousDay, "yyyy-MM-dd"));
         break;
 
       case 'previousweek':
         const previousWeekStartDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay() - 7);
         const previousWeekEndDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay() - 1);
-        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(previousWeekStartDate, "yyyy-MM-dd"));
-        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(previousWeekEndDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(previousWeekStartDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(previousWeekEndDate, "yyyy-MM-dd"));
         break;
 
       case 'previousmonth':
         const previousMonthStartDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() - 1, 1);
         const previousMonthEndDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 0);
-        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(previousMonthStartDate, "yyyy-MM-dd"));
-        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(previousMonthEndDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(previousMonthStartDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(previousMonthEndDate, "yyyy-MM-dd"));
         break;
 
       case 'previousyear':
         const previousYear = this.currentDate.getFullYear() - 1;
         const previousYearStartDate = new Date(previousYear, 3, 1);
         const previousYearEndDate = new Date(previousYear + 1, 2, 31);
-        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(previousYearStartDate, "yyyy-MM-dd"));
-        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(previousYearEndDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(previousYearStartDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(previousYearEndDate, "yyyy-MM-dd"));
         break;
 
       case 'custom':
         this.selectedOption = 'custom';
-        this.startDate = this.reportFilter.controls.StartDate.value;
-        this.endDate = this.reportFilter.controls.EndDate.value;
+        this.startDate = this.reportFilter.controls.FromDate.value;
+        this.endDate = this.reportFilter.controls.ToDate.value;
         break;
 
       default:
@@ -180,31 +185,55 @@ export class ReportArLevelthreeComponent implements OnInit {
   }
 
 
+
   async createReportForm() {
-    if (this.type != 'customerwise') {
+    if (this.type == 'overall') {
       this.reportFilter = this.fb.group({
-        Division: [0],
-        Office: [0],
-        StartDate: [this.startDate],
-        EndDate: [this.endDate],
+        DivisionId: [0],
+        OfficeId: [0],
+        Type:[0],
+        SubTypeId: [0],
+        FromDate: [this.startDate],
+        ToDate: [this.endDate],
+        CustomerId : [0],
         Peroid: [''],
       });
-    } else {
+    } else if( this.type == 'customerwise'){
       this.reportFilter = this.fb.group({
-        Division: [0],
-        Office: [0],
-        Customer: [0],
-        SalesPersonId: [0],
-        StartDate: [this.startDate],
-        EndDate: [this.endDate],
+        DivisionId: [0],
+        OfficeId: [0],
+        CustomerId: [0], 
+        Type:[1],
+        SubTypeId: [this.subtype],
+        FromDate: [this.startDate],
+        ToDate: [this.endDate],
         Peroid: [''],
       });
     }
-
+      else {
+        this.reportFilter = this.fb.group({
+          DivisionId: [0],
+          OfficeId: [0],
+          CustomerId: [0], 
+          Type:[2],
+          SubTypeId: [this.subtypecustomerId],
+          FromDate: [this.startDate],
+          ToDate: [this.endDate],
+          Peroid: [''],
+        });
+    }
+    this.reportFilter.controls.Peroid.setValue('month');
     this.onOptionChange('month');
-    await this.getReceiptReportList();
+    if(this.type == 'overall'){
+      await this.getOverallList();
+    }
+    else if(this.type == 'customerwise'){
+   //   await this.getCustomerWiseList();
+    }
+    else{
+      //await this.getInvoiceWiseList();
+    }
   }
-
 
   getDivisionList() {
     var service = `${this.globals.APIURL}/Division/GetOrganizationDivisionList`; var payload: any = {}
@@ -257,25 +286,70 @@ export class ReportArLevelthreeComponent implements OnInit {
     })
   }
 
-  getReceiptReportList() {
-    this.startDate = this.reportFilter.controls.StartDate.value;
-    this.endDate = this.reportFilter.controls.EndDate.value;
+  getOverallList() {
+    this.startDate = this.reportFilter.controls.FromDate.value;
+    this.endDate = this.reportFilter.controls.ToDate.value;
 
-    this.reportService.GetReceiptVoucherReportList(this.reportFilter.value).subscribe(result => {
+    this.reportService.getSalesSummaryList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
-
-
       if (result['data'].Table.length > 0) {
         this.reportList = result['data'].Table;
         this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
-        this.setPage(1)
+        this.setPage(1);
+        this.calculateTotalDays(this.reportList);
       } else {
         this.pager = {};
         this.pagedItems = [];
+        this.totalcustomer  = 0;
+        this.totalinvoice   = 0;
+        this.totalbalance   = 0;
       }
     })
   }
 
+  calculateTotalDays(reportList: any[]): void {
+    if(this.type == "overall"){
+      reportList.forEach(item => {
+        this.totalcustomer += item.NoofCustomer;
+        this.totalinvoice += item.NoofInvoices;
+        this.totalbalance += item.BalanceCompanyCurrency;
+      });
+    
+    }
+  //   else if(this.type =="customerwise"){
+  //       reportList.forEach(item => {
+  //       creditAmountTotal += item.CreditAmount;
+  //       zeroToFifteenDaysTotal += item.ZeroToFifteenDaysCount;
+  //       sixteenToThirtyDaysTotal += item.SixteenToThirtyDaysCount;
+  //       thirtyOneToFortyFiveDaysTotal += item.ThirtyOneToFourtyFiveDaysCount;
+  //       fortyFiveToSixtyDaysTotal += item.FourtyFiveSixtyDaysCount;  
+  //       moreThanSixtyDaysTotal += item.MoreThanSixtyDaysCount;  
+  //       dueAmountTotal += item.BalanceCCY;
+  //       amountICYTotal += item.BalanceICY;
+  //     }); 
+  //     this.CreditAmountTotal = creditAmountTotal;
+  //     this.ZeroToFifteenDaysTotal = zeroToFifteenDaysTotal;
+  //     this.SixteenToThirtyDaysTotal = sixteenToThirtyDaysTotal;
+  //     this.ThirtyOneToFourtyFiveDaysTotal = thirtyOneToFortyFiveDaysTotal;
+  //     this.FourtyFiveSixtyDaysTotal = fortyFiveToSixtyDaysTotal;
+  //     this.MoreThanSixtyDaysTotal = moreThanSixtyDaysTotal;
+  //     this.DueAmountTotal = dueAmountTotal;
+  //     this.BalanceICYTotal = amountICYTotal;
+  //   }
+  //   else{
+  //     reportList.forEach(item => {
+  //     agingTotal += item.Aging;  
+  //     invoiceCCYTotal += item.InvoiceAmountCCY;  
+  //     dueAmountTotal += item.DueAmount;
+  //     dueAmountCCYTotal += item.DueAmountCCY;
+  //   }); 
+  //   this.AgingTotal = agingTotal;
+  //   this.InvoiceCCYTotal = invoiceCCYTotal;
+  //   this.DueAmountTotal = dueAmountTotal;
+  //   this.DueAmountCCYTotal = dueAmountCCYTotal;
+  // }
+
+  }
 
   setPage(page: number) {
     if (page < 1 || page > this.pager.totalPages) return;
@@ -288,20 +362,65 @@ export class ReportArLevelthreeComponent implements OnInit {
     this.pagesort(property, this.pagedItems);
   }
 
-  clear() {
-    this.startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd");
-    this.endDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd");
-
-    this.reportFilter.reset({
-      Division: 0,
-      Office: 0,
-      StartDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
-      EndDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd"),
-    });
-    this.officeList = [];
-    this.reportFilter.controls.Peroid.setValue('month');
-    this.getReceiptReportList();
+     
+  async search(){
+ 
+    if(this.type  == 'overall'){
+      await this.getOverallList();
+    }
+    else if(this.type  == 'customerwise'){
+      //await this.getCustomerWiseList();
+    }else{
+     // await this.getInvoiceWiseList();
+    }
   }
+
+    clear() {
+      this.startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd");
+      this.endDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd");
+      if(this.type  == 'overall'){
+        this.reportFilter.reset({
+          DivisionId: 0,
+          OfficeId: 0,
+          CustomerId:0,
+          Type: 0,
+          SubTypeId: 0,
+          FromDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
+          ToDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd"),
+        });
+      }else if(this.type == 'customerwise'){
+        this.reportFilter.reset({
+          DivisionId: 0,
+          OfficeId: 0,
+          CustomerId: 0,
+          Type: 1,
+          SubTypeId: this.subtype,
+          FromDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
+          ToDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd"),
+        });
+      }else{
+        this.reportFilter.reset({
+          DivisionId: 0,
+          OfficeId: 0,
+          CustomerId: 0,
+          Type: 2,
+          SubTypeId: this.subtypecustomerId,
+          FromDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
+          ToDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd"),
+        });
+      }
+      this.officeList = [];
+      this.reportFilter.controls.Peroid.setValue('month');
+      if(this.type  == 'overall'){
+        this.getOverallList();
+      }
+      else if(this.type == 'customerwise'){
+       // this.getCustomerWiseList();
+      }else{
+       // this.getInvoiceWiseList();
+      }
+    }
+  
 
 
   async downloadAsExcel() {

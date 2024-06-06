@@ -19,39 +19,36 @@
 
                         </div>
 
-                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4" *ngIf="selectedOption === 'custom'">
-                            <div class="form-group bmd-form-group w-100">
-                                <label class="mb-3">From</label>
-                                <div class="input-group">
-                                    <mat-form-field class="tillDate mat_date_picker" appearance="outline">
-                                        <input matInput (click)="StartDate.open()" readonly autocomplete="off"
-                                            (onchange)="formatchange(true)" [matDatepicker]="StartDate" id="StartDate"
-                                            [placeholder]="entityDateFormat" formControlName="StartDate">
-                                        <mat-datepicker-toggle matSuffix [for]="StartDate"></mat-datepicker-toggle>
-                                        <mat-datepicker #StartDate></mat-datepicker>
-                                    </mat-form-field>
-                                </div>
+                        <div class="col-2" *ngIf="selectedOption === 'custom'">
+                            <label class="fontstyles mb-3">FROM</label>
+                            <div class="input-group">
+                                <mat-form-field class="tillDate mat_date_picker" appearance="outline">
+                                    <input matInput (click)="FromDate.open()" readonly autocomplete="off"
+                                        (onchange)="formatchange(true)" [matDatepicker]="FromDate" id="FromDate"
+                                        [placeholder]="entityDateFormat" formControlName="FromDate">
+                                    <mat-datepicker-toggle matSuffix [for]="FromDate"></mat-datepicker-toggle>
+                                    <mat-datepicker #FromDate></mat-datepicker>
+                                </mat-form-field>
                             </div>
                         </div>
 
-                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4" *ngIf="selectedOption === 'custom'">
-
-                            <label class="mb-3">To</label>
+                        <div class="col-2" *ngIf="selectedOption === 'custom'">
+                            <label class="fontstyles mb-3">TO</label>
                             <div class="input-group">
                                 <mat-form-field class="tillDate mat_date_picker" appearance="outline">
-                                    <input matInput (click)="EndDate.open()" readonly autocomplete="off"
-                                        formControlName="EndDate" [matDatepicker]="EndDate" id="EndDate"
-                                        [min]="reportFilter.get('StartDate').value" [placeholder]="entityDateFormat"
+                                    <input matInput (click)="ToDate.open()" readonly autocomplete="off"
+                                        formControlName="ToDate" [matDatepicker]="ToDate" id="ToDate"
+                                        [min]="reportFilter.get('FromDate').value" [placeholder]="entityDateFormat"
                                         (ngModelChange)="formatchange(false)">
-                                    <mat-datepicker-toggle matSuffix [for]="EndDate"></mat-datepicker-toggle>
-                                    <mat-datepicker #EndDate></mat-datepicker>
+                                    <mat-datepicker-toggle matSuffix [for]="ToDate"></mat-datepicker-toggle>
+                                    <mat-datepicker #ToDate></mat-datepicker>
                                 </mat-form-field>
                             </div>
                         </div>
 
                         <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                             <label class=" fontstyles">DIVISION</label>
-                            <ng-select class="searchdropdown custom" formControlName="Division"
+                            <ng-select class="searchdropdown custom" formControlName="DivisionId"
                                 (ngModelChange)="getOfficeList($event);" [clearable]="false">
                                 <ng-option [value]="0" disabled>-- SELECT --</ng-option>
                                 <ng-container *ngFor="let division of divisionList">
@@ -64,7 +61,7 @@
 
                         <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                             <label class=" fontstyles ">OFFICE</label>
-                            <ng-select class="searchdropdown" formControlName="Office" name="active" id="active"
+                            <ng-select class="searchdropdown" formControlName="OfficeId" name="active" id="active"
                                 [clearable]="false" name="CategoryId" id="CategoryId">
                                 <ng-option [value]="0" disabled>-- SELECT --</ng-option>
                                 <ng-container class="field-responsive" *ngFor="let office of officeList">
@@ -77,7 +74,7 @@
 
                         <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4" *ngIf="type == 'customerwise'">
                             <label class=" fontstyles">CUSTOMER</label>
-                            <ng-select class="searchdropdown" formControlName="Customer" [clearable]="false"
+                            <ng-select class="searchdropdown" formControlName="CustomerId" [clearable]="false"
                                 name="CategoryId" id="CategoryId">
                                 <ng-option [value]="0" disabled>-- SELECT --</ng-option>
                                 <ng-container *ngFor="let customer of customerList">
@@ -102,7 +99,7 @@
                 <div class="col-2" style="padding-top: 15px;">
                     <div class="text-center">
                         <button type="button" class="btn btn-primary text-white col-auto"
-                            (click)="getReceiptReportList()">
+                            (click)="search()">
                             SEARCH
                         </button>
                     </div>
@@ -160,44 +157,44 @@
                                 <tr>
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('Salesperson')" style="width: 177.575px;">Sales Person</th>
+                                        (click)="sort('SalesPerson')" style="width: 177.575px;">Sales Person</th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('numberofcustomer')" style="width: 177.575px;">No of Customer</th>
+                                        (click)="sort('NoofCustomer')" style="width: 177.575px;">No of Customer</th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('numberofinvoices')" style="width: 177.575px;">No of Invoices</th>
+                                        (click)="sort('NoofInvoices')" style="width: 177.575px;">No of Invoices</th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('balance')" style="width: 177.575px;">Balance (Company Currency)
+                                        (click)="sort('BalanceCompanyCurrency')" style="width: 177.575px;">Balance (Company Currency)
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let data of categorylist">
+                                <tr *ngFor="let data of pagedItems">
                                     <td class="hyperTextColor" type="customerwise"><a
-                                            (click)="showCustomerWise(data)">{{data.Salesperson}}</a></td>
-                                    <td>{{data.numberofcustomer}}</td>
-                                    <td>{{data.numberofinvoices}}</td>
-                                    <td class="text-right hyperTextColor">{{data.balance}}</td>
+                                            (click)="showCustomerWise(data)">{{data.SalesPerson}}</a></td>
+                                    <td>{{data.NoofCustomer}}</td>
+                                    <td>{{data.NoofInvoices}}</td>
+                                    <td class="text-right hyperTextColor">{{data.BalanceCompanyCurrency}}</td>
                                 </tr>
 
-                                <!-- <tr *ngIf="pagedItems.length == 0">
+                                <tr *ngIf="pagedItems.length == 0">
                                     <td class="text-center" colspan="10">No records found</td>
-                                </tr> -->
+                                </tr>
 
                             </tbody>
-                            <tfoot class="table-footer" *ngFor="let data of categorylist">
+                            <tfoot class="table-footer"  *ngIf="pagedItems.length > 0">
                                 <tr class="footer-position-sticky">
-                                    <td colspan="1" class="text-left">
-                                        <span style="font-size: medium;">Grand Total : {{data.GrandTotal}}</span>
-                                    </td>
-                                    <td colspan="1">{{data.totalcustomer}}</td>
-                                    <td colspan="1">{{data.totalinvoice}}</td>
-                                    <td class="text-right" colspan="1">XXX{{data.totalbalance}}</td>
+                                  <td colspan="1" class="text-left">
+                                    <span style="font-size: medium;">Grand Total : </span>
+                                  </td>
+                                  <td colspan="1" >{{totalcustomer}}</td>
+                                  <td colspan="1" >{{totalinvoice}}</td>
+                                  <td class="text-right" colspan="1">{{totalbalance | dynamicDecimal: entityFraction }}</td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -360,7 +357,7 @@
                         </table>
                     </div>
 
-                    <!-- <div class="row page mr-3" align="right">
+                    <div class="row page mr-3" align="right">
                         <ul *ngIf="pager && pager.totalItems > 10" class="pagination">
                             <li [ngClass]="{disabled:pager.currentPage === 1}">
                                 <a (click)="setPage(1)">First</a>
@@ -385,7 +382,7 @@
                                 <a (click)="setPage(pager.totalPages)">Last</a>
                             </li>
                         </ul>
-                    </div> -->
+                    </div>
                 </div>
             </div>
         </div>
