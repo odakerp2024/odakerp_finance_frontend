@@ -12,6 +12,7 @@ import Swal from 'sweetalert2';
 import { Workbook } from 'exceljs';
 import { saveAs } from 'file-saver';
 import { GridSort } from 'src/app/model/common';
+import { error } from 'console';
 
 
 const today = new Date();
@@ -170,7 +171,7 @@ export class ReportSalesVoucherComponent implements OnInit {
       ToDate: [this.endDate],
       Amount: [''],
       Type: [0],
-      InvoiceNo: [],
+      InvoiceNo: [ ''],
       InvoiceType: [0],
       Peroid: [''],
     });
@@ -260,21 +261,22 @@ export class ReportSalesVoucherComponent implements OnInit {
       if (result['data'].Table.length > 0) {
         this.reportList = result['data'].Table;
         this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
-        // console.log(this.reportList.length, 'reportlist')
-        // console.log(this.reportForExcelList.length, 'exportlist')
         this.setPage(1)
       } else {
         this.pager = {};
         this.pagedItems = [];
       }
-    })
+    }), error => {
+      console.error(error);
+    };
   }
+ 
 
-
+//List Based on Income
   getVoucherTypeList() {
    this.commonDataService.getVoucherTypeList().subscribe(data => {
       this.TypeList = data["data"].Table;
-      this.TypeList = this.TypeList.filter(x => x.Seqvalue == "INCOME" );
+      this.TypeList = this.TypeList.filter(x => x.seqName == "INCOME" );
     });
   }
 
@@ -302,7 +304,7 @@ export class ReportSalesVoucherComponent implements OnInit {
       ToDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd"),
       Amount: '',
       Type: 0,
-      InvoiceNo: 0,
+      InvoiceNo: '',
       InvoiceType: 0
     });
     this.bankList = [];

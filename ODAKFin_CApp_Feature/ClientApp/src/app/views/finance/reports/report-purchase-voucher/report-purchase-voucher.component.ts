@@ -233,7 +233,6 @@ export class ReportPurchaseVoucherComponent implements OnInit {
     }
   }
   getVendorTan(vendorBranch) {
-    debugger
     const vendorTanDetails = this.vendorList.filter(vendor => { return vendor.BranchCode == vendorBranch }); // ! need to vendorTanDetails is present
     if (vendorTanDetails.length == 0) {
       return;
@@ -275,11 +274,11 @@ export class ReportPurchaseVoucherComponent implements OnInit {
     }
   }
 
-
+//List Based on Expense
   getVoucherTypeList() {
     this.commonDataService.getVoucherTypeList().subscribe(data => {
       this.TypeList = data["data"].Table;
-       this.TypeList = this.TypeList.filter(x => x.Seqvalue == "Expense" );
+       this.TypeList = this.TypeList.filter(x => x.seqName == "Expense" );
       
     });
   }
