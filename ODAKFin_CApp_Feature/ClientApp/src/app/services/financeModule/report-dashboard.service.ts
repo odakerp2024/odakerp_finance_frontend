@@ -83,4 +83,9 @@ export class ReportDashboardService {
   getSalesPersonDropdowns(payload: any): Observable<any[]> {
     return this.http.post<any[]>(this.globals.APIURL + '/CreditApplication/CreditApplicationDropdownList', payload)
   }
+
+  getSalesSummaryList(FormValue: any): Observable<any> {
+    return this.http.post<any>(this.globals.APIURL + '/Reports/AccountReceivableSalesList', FormValue);
+  }
+
 }
