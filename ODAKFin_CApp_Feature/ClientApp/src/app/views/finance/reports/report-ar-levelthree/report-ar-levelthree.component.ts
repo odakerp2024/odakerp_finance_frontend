@@ -46,12 +46,6 @@ export class ReportArLevelthreeComponent implements OnInit {
     { peroidId: 'previousmonth', peroidName: 'PREVIOUS MONTH' },
     { peroidId: 'previousyear', peroidName: 'PREVIOUS FINANCIAL YEAR' }
   ];
-  categorylist = [
-    { Id: '1', Salesperson: 'SalesPerson-A' },
-  ];
-  list = [
-    { Id: '1', Customer: 'Customer-A' },
-  ]
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
   entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   currentDate = new Date();
@@ -70,6 +64,10 @@ export class ReportArLevelthreeComponent implements OnInit {
   totalcustomer : number = 0;
   totalinvoice  : number = 0;
   totalbalance  : number = 0;
+  totalcreditamount  : number = 0;
+  totalbalanceinvoice : number = 0;
+  totalnetbalance : number = 0;
+  totalbalanceamountcc : number = 0;
 
   constructor(
     private commonDataService: CommonService,
@@ -95,24 +93,31 @@ export class ReportArLevelthreeComponent implements OnInit {
   async goBack() {
     if (this.type === 'customerinvoicewise') {
       this.type = 'customerwise';
-      await this.showCustomerWise();
+      await this.createReportForm();
+      await this.showCustomerWise(0); 
     } else if (this.type === 'customerwise') {
       this.type = 'overall';
-      await this.getCustomerList(0);
+      await this.createReportForm();    
+      await this.getOverallList();
     }
   }
 
-  async showCustomerWise() {
+    async showCustomerWise(subTypeId:number) {
+    this.subtype = subTypeId;
     this.pagedItems = [];
     this.type = 'customerwise';
     await this.createReportForm();
+    await this.getCustomerWiseList();
   }
 
-  async showCustomerInvoiceWise() {
-    this.pagedItems = [];
+    async showCustomerInvoiceWise(subtypecustomerId:number) {
+    this.subtypecustomerId = subtypecustomerId;
+    this.pagedItems = []; 
     this.type = 'customerinvoicewise';
     await this.createReportForm();
+    //await this.getInvoiceWiseList();
   }
+
 
   onOptionChange(selectedOption: string) {
     this.selectedOption = '';
@@ -196,6 +201,7 @@ export class ReportArLevelthreeComponent implements OnInit {
         FromDate: [this.startDate],
         ToDate: [this.endDate],
         CustomerId : [0],
+        SalesPersonId:[0],
         Peroid: [''],
       });
     } else if( this.type == 'customerwise'){
@@ -203,6 +209,7 @@ export class ReportArLevelthreeComponent implements OnInit {
         DivisionId: [0],
         OfficeId: [0],
         CustomerId: [0], 
+        SalesPersonId:[0],
         Type:[1],
         SubTypeId: [this.subtype],
         FromDate: [this.startDate],
@@ -215,6 +222,7 @@ export class ReportArLevelthreeComponent implements OnInit {
           DivisionId: [0],
           OfficeId: [0],
           CustomerId: [0], 
+          SalesPersonId:[0],
           Type:[2],
           SubTypeId: [this.subtypecustomerId],
           FromDate: [this.startDate],
@@ -228,7 +236,7 @@ export class ReportArLevelthreeComponent implements OnInit {
       await this.getOverallList();
     }
     else if(this.type == 'customerwise'){
-   //   await this.getCustomerWiseList();
+     await this.getCustomerWiseList();
     }
     else{
       //await this.getInvoiceWiseList();
@@ -307,6 +315,28 @@ export class ReportArLevelthreeComponent implements OnInit {
     })
   }
 
+  getCustomerWiseList() {
+    this.startDate = this.reportFilter.controls.FromDate.value;
+    this.endDate = this.reportFilter.controls.ToDate.value;
+
+    this.reportService.getSalesSummaryList(this.reportFilter.value).subscribe(result => {
+      this.reportList = [];
+      if (result['data'].Table.length > 0) {
+        this.reportList = result['data'].Table;
+        this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
+        this.setPage(1);
+        this.calculateTotalDays(this.reportList);
+      } else {
+        this.pager = {};
+        this.pagedItems = [];
+       this. totalcreditamount  = 0;
+       this. totalbalanceinvoice  = 0;
+       this. totalnetbalance  = 0;
+       this. totalbalanceamountcc  = 0;
+      }
+    })
+  }
+
   calculateTotalDays(reportList: any[]): void {
     if(this.type == "overall"){
       reportList.forEach(item => {
@@ -316,26 +346,15 @@ export class ReportArLevelthreeComponent implements OnInit {
       });
     
     }
-  //   else if(this.type =="customerwise"){
-  //       reportList.forEach(item => {
-  //       creditAmountTotal += item.CreditAmount;
-  //       zeroToFifteenDaysTotal += item.ZeroToFifteenDaysCount;
-  //       sixteenToThirtyDaysTotal += item.SixteenToThirtyDaysCount;
-  //       thirtyOneToFortyFiveDaysTotal += item.ThirtyOneToFourtyFiveDaysCount;
-  //       fortyFiveToSixtyDaysTotal += item.FourtyFiveSixtyDaysCount;  
-  //       moreThanSixtyDaysTotal += item.MoreThanSixtyDaysCount;  
-  //       dueAmountTotal += item.BalanceCCY;
-  //       amountICYTotal += item.BalanceICY;
-  //     }); 
-  //     this.CreditAmountTotal = creditAmountTotal;
-  //     this.ZeroToFifteenDaysTotal = zeroToFifteenDaysTotal;
-  //     this.SixteenToThirtyDaysTotal = sixteenToThirtyDaysTotal;
-  //     this.ThirtyOneToFourtyFiveDaysTotal = thirtyOneToFortyFiveDaysTotal;
-  //     this.FourtyFiveSixtyDaysTotal = fortyFiveToSixtyDaysTotal;
-  //     this.MoreThanSixtyDaysTotal = moreThanSixtyDaysTotal;
-  //     this.DueAmountTotal = dueAmountTotal;
-  //     this.BalanceICYTotal = amountICYTotal;
-  //   }
+   else if(this.type =="customerwise"){
+       reportList.forEach(item => {
+       this. totalcreditamount += item.CreditAmount;
+       this. totalbalanceinvoice += item.BalanceInvoiceCurrency;
+       this. totalnetbalance += item.NetBalanceInvoiceCurrency;
+       this. totalbalanceamountcc += item.BalanceAmountCompanyCurrency;
+  
+       }); 
+     }
   //   else{
   //     reportList.forEach(item => {
   //     agingTotal += item.Aging;  
@@ -369,7 +388,7 @@ export class ReportArLevelthreeComponent implements OnInit {
       await this.getOverallList();
     }
     else if(this.type  == 'customerwise'){
-      //await this.getCustomerWiseList();
+      await this.getCustomerWiseList();
     }else{
      // await this.getInvoiceWiseList();
     }
@@ -415,7 +434,7 @@ export class ReportArLevelthreeComponent implements OnInit {
         this.getOverallList();
       }
       else if(this.type == 'customerwise'){
-       // this.getCustomerWiseList();
+        this.getCustomerWiseList();
       }else{
        // this.getInvoiceWiseList();
       }

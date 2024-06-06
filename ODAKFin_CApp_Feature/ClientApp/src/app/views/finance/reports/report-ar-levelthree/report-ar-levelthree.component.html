@@ -176,10 +176,10 @@
                             <tbody>
                                 <tr *ngFor="let data of pagedItems">
                                     <td class="hyperTextColor" type="customerwise"><a
-                                            (click)="showCustomerWise(data)">{{data.SalesPerson}}</a></td>
+                                            (click)="showCustomerWise(data.SalesId)">{{data.SalesPerson}}</a></td>
                                     <td>{{data.NoofCustomer}}</td>
                                     <td>{{data.NoofInvoices}}</td>
-                                    <td class="text-right hyperTextColor">{{data.BalanceCompanyCurrency}}</td>
+                                    <td class="text-right hyperTextColor">{{data.BalanceCompanyCurrency | dynamicDecimal: entityFraction }}</td>
                                 </tr>
 
                                 <tr *ngIf="pagedItems.length == 0">
@@ -245,37 +245,38 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let data of list">
-                                    <td>{{data.salesperson}}</td>
-                                    <td class="hyperTextColor" type="customerinvoicewise"><a
-                                            (click)="showCustomerInvoiceWise(data)">{{data.Customer}}</a></td>
-                                    <td>{{data.branch}}</td>
-                                    <td>{{data.creditdays}}</td>
-                                    <td class="text-right hyperTextColor">{{data.creditamount}}</td>
-                                    <td class="text-right hyperTextColor">{{data.balanceinvoice}}</td>
+                                <tr *ngFor="let data of pagedItems">
+                                    <td>{{data.SalesPerson}}</td>
+                                    <td class="hyperTextColor" [title]="data.Customer">
+                                        <a (click)="showCustomerInvoiceWise(data.CustomerID)">
+                                            {{ (data.Customer && data.Customer.length > 20) ? data.Customer.slice(0, 20) + '-' : data.Customer }}</a></td> 
+                                    <td>{{data.Branch}}</td>
+                                    <td>{{data.CreditDays}}</td>
+                                    <td class="text-right hyperTextColor">{{data.CreditAmount}}</td>
+                                    <td class="text-right hyperTextColor">{{data.BalanceInvoiceCurrency | dynamicDecimal: entityFraction }}</td>
                                     <td>{{data.credit}}</td>
-                                    <td class="text-right hyperTextColor">{{data.netbalance}}</td>
-                                    <td class="text-right hyperTextColor">{{data.balance}}</td>
+                                    <td class="text-right hyperTextColor">{{data.NetBalanceInvoiceCurrency | dynamicDecimal: entityFraction }}</td>
+                                    <td class="text-right hyperTextColor">{{data.BalanceAmountCompanyCurrency | dynamicDecimal: entityFraction }}</td>
                                 </tr>
 
-                                <!-- <tr *ngIf="pagedItems.length == 0">
+                                <tr *ngIf="pagedItems.length == 0">
                                     <td class="text-center" colspan="10">No records found</td>
-                                </tr> -->
+                                </tr>
 
                             </tbody>
-                            <tfoot class="table-footer" *ngFor="let data of categorylist">
+                            <tfoot class="table-footer"  *ngIf="pagedItems.length > 0">
                                 <tr class="footer-position-sticky">
                                     <td colspan="1" class="text-left">
-                                        <span style="font-size: medium;">Grand Total : {{data.GrandTotal}}</span>
+                                        <span style="font-size: medium;">Grand Total : </span>
                                     </td>
-                                    <td colspan="1">{{data.totalcustomer}}</td>
-                                    <td colspan="1">{{data.totalinvoice}}</td>
-                                    <td colspan="1">{{data.totalcustomer}}</td>
-                                    <td colspan="1">{{data.totalinvoice}}</td>
-                                    <td colspan="1">{{data.totalcustomer}}</td>
-                                    <td colspan="1">{{data.totalinvoice}}</td>
-                                    <td colspan="1">{{data.totalinvoice}}</td>
-                                    <td class="text-right" colspan="1">XXX{{data.totalbalance}}</td>
+                                    <td colspan="1"></td>
+                                    <td colspan="1"></td>
+                                    <td colspan="1"></td>
+                                    <td colspan="1" class="text-right">{{totalcreditamount | dynamicDecimal: entityFraction}}</td>
+                                    <td colspan="1" class="text-right">{{totalbalanceinvoice | dynamicDecimal: entityFraction}}</td>
+                                    <td colspan="1"></td>
+                                    <td colspan="1" class="text-right">{{totalnetbalance | dynamicDecimal: entityFraction}}</td>
+                                    <td class="text-right" colspan="1">{{totalbalanceamountcc | dynamicDecimal: entityFraction}}</td>
                                 </tr>
                             </tfoot>
                         </table>
