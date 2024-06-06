@@ -260,7 +260,6 @@ export class ReportSalesVoucherComponent implements OnInit {
 
       if (result['data'].Table.length > 0) {
         this.reportList = result['data'].Table;
-        this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
         this.setPage(1)
       } else {
         this.pager = {};
@@ -315,7 +314,7 @@ export class ReportSalesVoucherComponent implements OnInit {
 
 
   async downloadAsExcel() {
-    if (this.reportForExcelList.length === 0) {
+    if (this.pagedItems.length === 0) {
       Swal.fire('No record found');
       return;
     }
@@ -363,7 +362,7 @@ export class ReportSalesVoucherComponent implements OnInit {
 
 
     // Define header row and style it with yellow background, bold, and centered text
-    const header = Object.keys(this.reportForExcelList[0]).filter(key => key !== 'Symbol');
+    const header = Object.keys(this.pagedItems[0]).filter(key => key !== 'Symbol');
     const headerRow = worksheet.addRow(header);
 
 
@@ -389,7 +388,7 @@ export class ReportSalesVoucherComponent implements OnInit {
     });
 
     // Add data rows with concatenated symbol and amount
-    this.reportForExcelList.forEach((data) => {
+    this.pagedItems.forEach((data) => {
 
       //To Remove Time from date field data
       const date = data.Date
@@ -472,7 +471,7 @@ export class ReportSalesVoucherComponent implements OnInit {
 
 
   async downloadAsCSV() {
-    if (this.reportForExcelList.length === 0) {
+    if (this.pagedItems.length === 0) {
       Swal.fire('No record found');
       return;
     }
@@ -520,7 +519,7 @@ export class ReportSalesVoucherComponent implements OnInit {
 
 
     // Define header row and style it with yellow background, bold, and centered text
-    const header = Object.keys(this.reportForExcelList[0]).filter(key => key !== 'Symbol');
+    const header = Object.keys(this.pagedItems[0]).filter(key => key !== 'Symbol');
     const headerRow = worksheet.addRow(header);
 
 
@@ -546,7 +545,7 @@ export class ReportSalesVoucherComponent implements OnInit {
     });
 
     // Add data rows with concatenated symbol and amount
-    this.reportForExcelList.forEach((data) => {
+    this.pagedItems.forEach((data) => {
 
       //To Remove Time from date field data
       const date = data.Date
