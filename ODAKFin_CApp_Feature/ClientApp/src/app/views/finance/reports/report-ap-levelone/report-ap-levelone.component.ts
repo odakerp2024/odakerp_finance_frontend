@@ -355,169 +355,169 @@ export class ReportApLeveloneComponent implements OnInit {
   }
 
 
-  // async downloadAsExcel() {
-  //   if (this.reportForExcelList.length === 0) {
-  //     Swal.fire('No record found');
-  //     return;
-  //   }
+  async downloadAsExcel() {
+    if (this.reportForExcelList.length === 0) {
+      Swal.fire('No record found');
+      return;
+    }
 
-  //   // Create a new workbook and worksheet
-  //   const workbook = new Workbook();
-  //   const worksheet = workbook.addWorksheet('Report');
+    // Create a new workbook and worksheet
+    const workbook = new Workbook();
+    const worksheet = workbook.addWorksheet('Report');
 
-  //   // Add title and subtitle rows
-  //   const titleRow = worksheet.addRow(['', '', '', '', '', 'NAVIO SHIPPING PRIVATE LIMITED', '']);
-  //   titleRow.getCell(6).font = { size: 15, bold: true };
-  //   titleRow.getCell(6).alignment = { horizontal: 'center' };
+    // Add title and subtitle rows
+    const titleRow = worksheet.addRow(['', '', '', '', '', 'NAVIO SHIPPING PRIVATE LIMITED', '']);
+    titleRow.getCell(6).font = { size: 15, bold: true };
+    titleRow.getCell(6).alignment = { horizontal: 'center' };
 
-  //   // Calculate the length of the title string
-  //   const titleLength = 'NAVIO SHIPPING PRIVATE LIMITED'.length;
+    // Calculate the length of the title string
+    const titleLength = 'NAVIO SHIPPING PRIVATE LIMITED'.length;
 
-  //   // Iterate through each column to adjust the width based on the title length
-  //   worksheet.columns.forEach((column) => {
-  //     if (column.number === 6) {
-  //       column.width = titleLength + 2;
-  //     }
-  //   });
+    // Iterate through each column to adjust the width based on the title length
+    worksheet.columns.forEach((column) => {
+      if (column.number === 6) {
+        column.width = titleLength + 2;
+      }
+    });
 
-  //   // Merge cells for the title
-  //   worksheet.mergeCells(`F${titleRow.number}:G${titleRow.number}`);
+    // Merge cells for the title
+    worksheet.mergeCells(`F${titleRow.number}:G${titleRow.number}`);
 
-  //   // Add subtitle row
-  //   const subtitleRow = worksheet.addRow(['', '', '', '', '', 'Payment Voucher', '']);
-  //   subtitleRow.getCell(6).font = { size: 14 };
-  //   subtitleRow.getCell(6).alignment = { horizontal: 'center' };
+    // Add subtitle row
+    const subtitleRow = worksheet.addRow(['', '', '', '', '', 'Payment Voucher', '']);
+    subtitleRow.getCell(6).font = { size: 14 };
+    subtitleRow.getCell(6).alignment = { horizontal: 'center' };
 
-  //   // Merge cells for the subtitle
-  //   worksheet.mergeCells(`F${subtitleRow.number}:G${subtitleRow.number}`);
+    // Merge cells for the subtitle
+    worksheet.mergeCells(`F${subtitleRow.number}:G${subtitleRow.number}`);
 
-  //   // Add "FROM Date" and "TO Date" to the worksheet
-  //   const dateRow = worksheet.addRow(['', '', '', '', '', `FROM ${this.startDate} - TO ${this.endDate}`]);
-  //   dateRow.eachCell((cell) => {
-  //     cell.alignment = { horizontal: 'center' };
-  //   });
-  //   dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
-  //   dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
+    // Add "FROM Date" and "TO Date" to the worksheet
+    const dateRow = worksheet.addRow(['', '', '', '', '', `FROM ${this.startDate} - TO ${this.endDate}`]);
+    dateRow.eachCell((cell) => {
+      cell.alignment = { horizontal: 'center' };
+    });
+    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
+    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
 
-  //   // Merge cells for "FROM Date" and "TO Date"
-  //   worksheet.mergeCells(`F${dateRow.number}:G${dateRow.number}`);
-
-
-  //   // Define header row and style it with yellow background, bold, and centered text
-  //   const header = Object.keys(this.reportForExcelList[0]).filter(key => key !== 'Symbol');
-  //   const headerRow = worksheet.addRow(header);
+    // Merge cells for "FROM Date" and "TO Date"
+    worksheet.mergeCells(`F${dateRow.number}:G${dateRow.number}`);
 
 
-  //   headerRow.eachCell((cell) => {
-  //     cell.fill = {
-  //       type: 'pattern',
-  //       pattern: 'solid',
-  //       fgColor: { argb: '8A9A5B' },
-  //     };
-  //     cell.font = {
-  //       bold: true,
-  //       color: { argb: 'FFFFF7' }
-  //     };
-  //     cell.alignment = {
-  //       horizontal: 'center',
-  //     };
-  //     cell.border = {
-  //       top: { style: 'thin' },
-  //       left: { style: 'thin' },
-  //       bottom: { style: 'thin' },
-  //       right: { style: 'thin' },
-  //     };
-  //   });
-
-  //   // Add data rows with concatenated symbol and amount
-  //   this.reportForExcelList.forEach((data) => {
-
-  //     //To Remove Time from date field data
-  //     const date = data.Date
-  //     const formattedDate = date.split('T')[0];
-  //     data.Date = formattedDate;
-  //     const defalutvalue=0;
-  //     // Merge the symbol and amount into a single string with fixed decimal places
-  //     const mergedICYAmount = `${data.Symbol} ${data['Amount (ICY)'] !== null ? parseFloat(data['Amount (ICY)']).toFixed(2) : '0.00'}`;
-  //     const mergedCCYAmount = `${data.Symbol} ${data['Amount (CCY)'] !== null ? parseFloat(data['Amount (CCY)']).toFixed(2) : '0.00'}`;
-  //     const TDSamount = ` ${data['TDS amount'] !== null ? parseFloat(data['TDS amount']).toFixed(this.entityFraction) :  (defalutvalue).toFixed(this.entityFraction)}`;
-  //     const ExRateGain = ` ${data['Ex rate Gain'] !== null ? parseFloat(data['Ex rate Gain']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-  //     const ExRateLoss = ` ${data['Ex rate Loss'] !== null ? parseFloat(data['Ex rate Loss']).toFixed(this.entityFraction) :  (defalutvalue).toFixed(this.entityFraction)}`;
-  //     const BankCharges = ` ${data['Bank charges'] !== null ? parseFloat(data['Bank charges']).toFixed(this.entityFraction) :  (defalutvalue).toFixed(this.entityFraction)}`;
-  //     const Payment = ` ${data['Payments'] !== null ? parseFloat(data['Payments']).toFixed(this.entityFraction) :  (defalutvalue).toFixed(this.entityFraction)}`;
+    // Define header row and style it with yellow background, bold, and centered text
+    const header = Object.keys(this.reportForExcelList[0]).filter(key => key !== 'Symbol');
+    const headerRow = worksheet.addRow(header);
 
 
+    headerRow.eachCell((cell) => {
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: '8A9A5B' },
+      };
+      cell.font = {
+        bold: true,
+        color: { argb: 'FFFFF7' }
+      };
+      cell.alignment = {
+        horizontal: 'center',
+      };
+      cell.border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' },
+      };
+    });
 
-  //     // Filter out properties you don't want to include in the Excel sheet
-  //     const filteredData = Object.keys(data)
-  //       .filter(key => key !== 'Symbol')
-  //       .reduce((obj, key) => {
-  //         obj[key] = data[key];
-  //         return obj;
-  //       }, {});
+    // Add data rows with concatenated symbol and amount
+    this.reportForExcelList.forEach((data) => {
 
-  //     // Update the 'Amount (ICY)' property in the filtered data object with the merged amount
-  //     filteredData['Amount (ICY)'] = mergedICYAmount;
-  //     filteredData['Amount (CCY)'] = mergedCCYAmount;
-  //     filteredData['TDS amount']   =TDSamount;
-  //     filteredData['Ex rate Gain'] = ExRateGain;
-  //     filteredData['Ex rate Loss'] = ExRateLoss;
-  //     filteredData['Bank charges']  =BankCharges;
-  //     filteredData['Payments']  =Payment;
+      //To Remove Time from date field data
+      const date = data.Date
+      const formattedDate = date.split('T')[0];
+      data.Date = formattedDate;
+      const defalutvalue=0;
+      // Merge the symbol and amount into a single string with fixed decimal places
+      const mergedICYAmount = `${data.Symbol} ${data['Amount (ICY)'] !== null ? parseFloat(data['Amount (ICY)']).toFixed(2) : '0.00'}`;
+      const mergedCCYAmount = `${data.Symbol} ${data['Amount (CCY)'] !== null ? parseFloat(data['Amount (CCY)']).toFixed(2) : '0.00'}`;
+      const TDSamount = ` ${data['TDS amount'] !== null ? parseFloat(data['TDS amount']).toFixed(this.entityFraction) :  (defalutvalue).toFixed(this.entityFraction)}`;
+      const ExRateGain = ` ${data['Ex rate Gain'] !== null ? parseFloat(data['Ex rate Gain']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      const ExRateLoss = ` ${data['Ex rate Loss'] !== null ? parseFloat(data['Ex rate Loss']).toFixed(this.entityFraction) :  (defalutvalue).toFixed(this.entityFraction)}`;
+      const BankCharges = ` ${data['Bank charges'] !== null ? parseFloat(data['Bank charges']).toFixed(this.entityFraction) :  (defalutvalue).toFixed(this.entityFraction)}`;
+      const Payment = ` ${data['Payments'] !== null ? parseFloat(data['Payments']).toFixed(this.entityFraction) :  (defalutvalue).toFixed(this.entityFraction)}`;
 
 
-  //     // Add the filtered data to the worksheet
-  //     const row = worksheet.addRow(Object.values(filteredData));
 
-  //     // Set text color for customer, receipt, and amount columns
-  //     const columnsToColor = ['Vendor', 'Payment', 'Amount (CCY)', 'Amount (ICY)'];
-  //     columnsToColor.forEach(columnName => {
-  //       const columnIndex = Object.keys(filteredData).indexOf(columnName);
-  //       if (columnIndex !== -1) {
-  //         const cell = row.getCell(columnIndex + 1);
-  //         cell.font = { color: { argb: '8B0000' }, bold: true, }; // Red color
-  //       }
-  //     });
+      // Filter out properties you don't want to include in the Excel sheet
+      const filteredData = Object.keys(data)
+        .filter(key => key !== 'Symbol')
+        .reduce((obj, key) => {
+          obj[key] = data[key];
+          return obj;
+        }, {});
 
-  //   });
+      // Update the 'Amount (ICY)' property in the filtered data object with the merged amount
+      filteredData['Amount (ICY)'] = mergedICYAmount;
+      filteredData['Amount (CCY)'] = mergedCCYAmount;
+      filteredData['TDS amount']   =TDSamount;
+      filteredData['Ex rate Gain'] = ExRateGain;
+      filteredData['Ex rate Loss'] = ExRateLoss;
+      filteredData['Bank charges']  =BankCharges;
+      filteredData['Payments']  =Payment;
 
-  //   // Adjust column widths to fit content
-  //   worksheet.columns.forEach((column) => {
-  //     let maxLength = 0;
-  //     column.eachCell({ includeEmpty: true }, (cell) => {
-  //       const cellLength = cell.value ? cell.value.toString().length : 0;
-  //       if (cellLength > maxLength) {
-  //         maxLength = cellLength;
-  //       }
-  //     });
-  //     column.width = maxLength + 2;
-  //   });
 
-  //   // Style the footer row with yellow background, bold, and centered text
-  //   const footerRow = worksheet.addRow(['End of Report']);
-  //   footerRow.eachCell((cell) => {
-  //     cell.fill = {
-  //       type: 'pattern',
-  //       pattern: 'solid',
-  //       fgColor: { argb: '8A9A5B' },
-  //     };
-  //     cell.font = {
-  //       bold: true,
-  //       color: { argb: 'FFFFF7' }
-  //     };
-  //     cell.alignment = {
-  //       horizontal: 'center',
-  //     };
-  //   });
+      // Add the filtered data to the worksheet
+      const row = worksheet.addRow(Object.values(filteredData));
 
-  //   // Merge footer cells if needed
-  //   worksheet.mergeCells(`A${footerRow.number}:${String.fromCharCode(65 + header.length - 1)}${footerRow.number}`);
+      // Set text color for customer, receipt, and amount columns
+      const columnsToColor = ['Vendor', 'Payment', 'Amount (CCY)', 'Amount (ICY)'];
+      columnsToColor.forEach(columnName => {
+        const columnIndex = Object.keys(filteredData).indexOf(columnName);
+        if (columnIndex !== -1) {
+          const cell = row.getCell(columnIndex + 1);
+          cell.font = { color: { argb: '8B0000' }, bold: true, }; // Red color
+        }
+      });
 
-  //   // Write to Excel and save
-  //   const buffer = await workbook.xlsx.writeBuffer();
-  //   const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-  //   saveAs(blob, 'Report-PaymentVoucher.xlsx');
-  // }
+    });
+
+    // Adjust column widths to fit content
+    worksheet.columns.forEach((column) => {
+      let maxLength = 0;
+      column.eachCell({ includeEmpty: true }, (cell) => {
+        const cellLength = cell.value ? cell.value.toString().length : 0;
+        if (cellLength > maxLength) {
+          maxLength = cellLength;
+        }
+      });
+      column.width = maxLength + 2;
+    });
+
+    // Style the footer row with yellow background, bold, and centered text
+    const footerRow = worksheet.addRow(['End of Report']);
+    footerRow.eachCell((cell) => {
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: '8A9A5B' },
+      };
+      cell.font = {
+        bold: true,
+        color: { argb: 'FFFFF7' }
+      };
+      cell.alignment = {
+        horizontal: 'center',
+      };
+    });
+
+    // Merge footer cells if needed
+    worksheet.mergeCells(`A${footerRow.number}:${String.fromCharCode(65 + header.length - 1)}${footerRow.number}`);
+
+    // Write to Excel and save
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    saveAs(blob, 'Report-PaymentVoucher.xlsx');
+  }
 
 
 
