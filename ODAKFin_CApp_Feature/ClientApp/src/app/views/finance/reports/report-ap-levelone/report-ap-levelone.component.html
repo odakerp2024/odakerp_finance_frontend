@@ -180,19 +180,20 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="let data of pagedItems">
-                                  
-                                    <td class="hyperTextColor"type="vendor-wise" ><a (click)="showVendor(data.Id)">{{data.Payees}}</a></td>
-                                    <td>{{data.VendorCount}}</td>
-                                    <td >{{data.InvoiceNumberCount}}</td>
-                                    <td class="hyperTextColor text-right">{{data.DueAmount | dynamicDecimal: entityFraction}}</td>
-                                    
+                                    <td class="hyperTextColor" type="vendor-wise">
+                                        <a (click)="showVendor(data.Id)">{{ data['Sub Category'] }}</a>
+                                    </td>
+                                    <td>{{ data['No of Vendors (Open)'] }}</td>
+                                    <td>{{ data['No of Invoices (Open)'] }}</td>
+                                    <td class="hyperTextColor text-right">
+                                        {{ data['Balance (Company Currency)'] | dynamicDecimal: entityFraction }}
+                                    </td>
                                 </tr>
-
-                                <!-- <tr *ngIf="pagedItems.length ==0">
+                                <tr *ngIf="pagedItems.length === 0">
                                     <td class="text-center" colspan="10">No records found</td>
-                                </tr> -->
-
+                                </tr>
                             </tbody>
+                            
                             <tfoot>
                                 <tr class="footer-position-sticky" style=" padding: 7px !important;
                                 background-image: linear-gradient(#3A5BA0, #273773) !important;
@@ -262,23 +263,22 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="let data of pagedItems">
-                                
-                                    <td class="hyperTextColor">{{data.Payees}}</td>
-                                    <td class="hyperTextColor"  (click)="showVendorinvoicewise(data.VendorID)">{{data.VendorName}}</td>
-                                    <td class="hyperTextColor">{{data.CreditDays}}</td>
-                                    <td>{{data.CreditAmount  | dynamicDecimal: entityFraction}}</td>
-                                    <td>{{data.BalanceICY  | dynamicDecimal: entityFraction}}</td>
-                                    <td>{{data.debit}}</td>
-                                    <td>{{data.BalanceICY1  | dynamicDecimal: entityFraction}}</td>
-                                    <td>{{data.BalanceCCY  | dynamicDecimal: entityFraction}}</td>
-                                
+                                    <td class="hyperTextColor">{{ data['Sub Category'] }}</td>
+                                    <td class="hyperTextColor" [title]="data.Vendor">
+                                        <a (click)="showVendorinvoicewise(data.VendorID)">{{ (data.Vendor && data.Vendor.length > 20) ? data.Vendor.slice(0, 20) + '-' : data.Vendor }}
+                                    </a></td>
+                                    <td class="hyperTextColor">{{ data['Credit Days'] }}</td>
+                                    <td>{{ data['Credit Amount'] | dynamicDecimal: entityFraction }}</td>
+                                    <td>{{ data['Balance (Invoice Currency)'] | dynamicDecimal: entityFraction }}</td>
+                                    <td>{{ data.debit }}</td>
+                                    <td>{{ data['Net Balance (Invoice currency)'] | dynamicDecimal: entityFraction }}</td>
+                                    <td>{{ data['Balance (Company Currency)'] | dynamicDecimal: entityFraction }}</td>
                                 </tr>
-
-                                <!-- <tr *ngIf="pagedItems.length ==0">
+                                <tr *ngIf="pagedItems.length === 0">
                                     <td class="text-center" colspan="10">No records found</td>
-                                </tr> -->
-
+                                </tr>
                             </tbody>
+                            
                             <tfoot>
                                 <tr class="footer-position-sticky" style=" padding: 7px !important;
                                 background-image: linear-gradient(#3A5BA0, #273773) !important;
@@ -350,21 +350,18 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="let data of pagedItems">
-                                    
-                                    <td class="hyperTextColor">{{data.VendorName}}</td>
-                                    <td>{{data.CityName}}</td>
-                                    <td >{{data.InvoiceDate | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td>
-                                    <td class="hyperTextColor" >{{data.PurchaseInvoice}}</td>
-                                    <td class="hyperTextColor text-right">{{data.InvoiceAmountCCY}}</td>
-                                    <td >{{data.BLType}}</td>
-                                    <td class="hyperTextColor text-right">{{data.DueAmount}}</td>
-                                    <td class="hyperTextColor text-right">{{data.DueAmountCCY}}</td>
+                                    <td class="hyperTextColor">{{ data.Vendor }}</td>
+                                    <td>{{ data.Branch }}</td>
+                                    <td>{{ data['Date'] | date: commonDataService.convertToLowerCaseDay(entityDateFormat) }}</td>
+                                    <td class="hyperTextColor">{{ data['Vendor Invoice #'] }}</td>
+                                    <td class="hyperTextColor text-right">{{ data['Purchase Invoice Amount'] }}</td>
+                                    <td>{{ data['Transaction Type'] }}</td>
+                                    <td class="hyperTextColor text-right">{{ data['Balance (Invoice currency)'] }}</td>
+                                    <td class="hyperTextColor text-right">{{ data['Balance (Company Currency)'] }}</td>
                                 </tr>
-
-                                <tr *ngIf="pagedItems.length ==0">
+                                <tr *ngIf="pagedItems.length === 0">
                                     <td class="text-center" colspan="10">No records found</td>
                                 </tr>
-
                             </tbody>
                             <tfoot>
                                 <tr class="footer-position-sticky" style=" padding: 7px !important;
@@ -373,7 +370,7 @@
                                     <td colspan="1" class="text-left">
                                         <span style="font-size: medium;">Grand Total : </span>
                                     </td>
-                                    <td class="text-right" colspan="1"></td>
+                                    <td class="text-right" colspan="1"></td>    
                                     <td class="text-right" colspan="1"></td>
                                     <td class="text-right" colspan="1"></td>
                                     <td class="text-center" colspan="1">{{totalcreditamount}}</td>
