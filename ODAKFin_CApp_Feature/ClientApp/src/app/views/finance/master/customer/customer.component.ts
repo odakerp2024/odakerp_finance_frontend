@@ -127,6 +127,7 @@ export class CustomerComponent implements OnInit {
   isKYClength: boolean = false;
 
   disableSave = true;
+  disableMail = true;
 
   workflowParamsNo:any=[];
   workFlowObj!:workflowEventObj;
@@ -136,6 +137,8 @@ export class CustomerComponent implements OnInit {
   userName: string='';
   userDiv: string='';
   userOff: string='';
+  userDivID = 0;
+  userOffID = 0;
 
   onBoardStatus: any;
 
@@ -593,7 +596,9 @@ export class CustomerComponent implements OnInit {
       next:(res)=>{
         console.log('getUserDtls', { res })
         this.userDiv = res[0].DivisionName
+        this.userDivID = res[0].DivisionID
         this.userOff = res[0].OfficeName
+        this.userOffID = res[0].OfficeID
         this.userName = res[0].UserName
       },
       error:(e)=>{
@@ -831,6 +836,7 @@ export class CustomerComponent implements OnInit {
     //KYC Documents
     if (response['data'].Table3.length > 0) {
       this.documentPayloadInfo = response['data'].Table3;
+      this.disableMail = false;
     if (response['data'].Table4.length > 0) {
       if(this.onBoardStatus != 2){
         this.disableSave = false;
@@ -1599,6 +1605,23 @@ debugger
           }
         });
     }
+  }
+
+  sendMail(){
+    var userid = localStorage.getItem("UserID");
+    let payload = {
+      CusID: this.cusBID,
+      UserID: userid,
+      userDivID: this.userDivID,
+      userOffID: 0,
+      //userOffID: this.userOffID,
+    }
+    this.workflow.CustomerMailTrigger(payload).subscribe({
+      next:(res) => {
+        console.log('mailSend', { res });
+        Swal.fire("Mail Sent Successfully");
+      }
+    });
   }
 
   getWFParams(){
