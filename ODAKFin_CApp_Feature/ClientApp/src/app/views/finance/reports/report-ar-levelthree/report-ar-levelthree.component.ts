@@ -363,25 +363,25 @@ export class ReportArLevelthreeComponent implements OnInit {
   calculateTotalDays(reportList: any[]): void {
     if(this.type == "overall"){
       reportList.forEach(item => {
-        this.totalcustomer += item.NoofCustomer;
-        this.totalinvoice += item.NoofInvoices;
-        this.totalbalance += item.BalanceCompanyCurrency;
+        this.totalcustomer += item['No of Customer'];
+        this.totalinvoice += item['No of Invoices'];
+        this.totalbalance += item['Balance (Company Currency)'];
       });
     
     }
    else if(this.type =="customerwise"){
        reportList.forEach(item => {
-       this. totalcreditamount += item.CreditAmount;
-       this. totalbalanceinvoice += item.BalanceInvoiceCurrency;
-       this. totalnetbalance += item.NetBalanceInvoiceCurrency;
-       this. totalbalanceamountcc += item.BalanceAmountCompanyCurrency;
+       this. totalcreditamount += item['Credit Amount'];
+       this. totalbalanceinvoice += item['Balance (Invoice Currency)'];
+       this. totalnetbalance += item['Net Balance (Invoice Currency)'];
+       this. totalbalanceamountcc += item['Balance (Company Currency)'];
   
        }); 
      }
     else{
       reportList.forEach(item => {
-       this. totalamounticy  += item.BalanceAmountInvoiceCurrency
-       this. totalamountccy   += item.BalanceAmountCompanyCurrency
+       this. totalamounticy  += item['Balance (Invoice Currency)'];
+       this. totalamountccy   += item['Balance (Company Currency)']
     }); 
    }
   }
@@ -492,11 +492,11 @@ export class ReportArLevelthreeComponent implements OnInit {
       switch (reportType) {
         case 'overall':
           titleHeader = 'Receivable Balance Summary - Overall';
-          excludeKeys = ['Id'];
+          excludeKeys = ['SalesId'];
           break;
         case 'customerwise':
           titleHeader = 'Receivable Balance Summary - Customer Wise';
-          excludeKeys = ['CustomerID', 'InvoiceDate'];
+          excludeKeys = ['CustomerID', 'InvoiceDate', 'SalesId'];
           break;
         case 'customerinvoicewise':
           titleHeader = 'Receivable Balance Summary - Invoice Wise';
@@ -549,9 +549,9 @@ export class ReportArLevelthreeComponent implements OnInit {
       });
     
       const columnColorMapping = {
-        overall: ['Sub Category', 'Balance (Company Currency)'],
-        customerwise: ['Customer', 'Credit Amount', 'Balance (Invoice Currency)', 'Net Balance (Invoice currency)', 'Balance (Company Currency)'],
-        customerinvoicewise: ['Invoice  #', 'Transaction Type', 'Invoice Amount', 'Balance (Invoice currency)', 'Balance (Company Currency)']
+        overall: ['Sales Person', 'Balance (Company Currency)'],
+        customerwise: ['Customer', 'Credit Amount', 'Balance (Invoice Currency)', 'Net Balance (Invoice Currency)', 'Balance (Company Currency)'],
+        customerinvoicewise: ['Invoice #', 'Transaction Type', 'Balance (Invoice Currency)', 'Balance (Company Currency)']
       };
       const columnsToColor = columnColorMapping[reportType];
     
@@ -569,8 +569,7 @@ export class ReportArLevelthreeComponent implements OnInit {
                 return obj;
               }, {});
     
-            filteredData['Invoice Amount'] = `${data['Invoice Amount'] !== null ? parseFloat(data['Invoice Amount']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
-            filteredData['Balance (Invoice currency)'] = `${data['Balance (Invoice currency)'] !== null ? parseFloat(data['Balance (Invoice currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
+            filteredData['Balance (Invoice Currency)'] = `${data['Balance (Invoice Currency)'] !== null ? parseFloat(data['Balance (Invoice Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
             filteredData['Balance (Company Currency)'] = `${data['Balance (Company Currency)'] !== null ? parseFloat(data['Balance (Company Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
             break;
     
@@ -596,7 +595,7 @@ export class ReportArLevelthreeComponent implements OnInit {
     
             filteredData['Credit Amount'] = `${data['Credit Amount'] !== null ? parseFloat(data['Credit Amount']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
             filteredData['Balance (Invoice Currency)'] = `${data['Balance (Invoice Currency)'] !== null ? parseFloat(data['Balance (Invoice Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
-            filteredData['Net Balance (Invoice currency)'] = `${data['Net Balance (Invoice currency)'] !== null ? parseFloat(data['Net Balance (Invoice currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
+            filteredData['Net Balance (Invoice Currency)'] = `${data['Net Balance (Invoice Currency)'] !== null ? parseFloat(data['Net Balance (Invoice Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
             filteredData['Balance (Company Currency)'] = `${data['Balance (Company Currency)'] !== null ? parseFloat(data['Balance (Company Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
             break;
         }
