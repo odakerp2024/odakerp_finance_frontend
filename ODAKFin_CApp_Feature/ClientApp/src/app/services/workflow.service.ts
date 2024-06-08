@@ -56,4 +56,12 @@ export class WorkflowService {
       return this.http.post<any>(`${this.APIURL}/User/CreditAppConfirmUpdate/`, payload);
     }
 
+    CustomerMailTrigger(payload:any):Observable<any> {
+      return this.http.post<any>(`${this.APIURL}/EmailNotifications/CustomerNotificationEmailSend/`, payload);
+    }
+
+    CreditAppNewMailTrigger(payload:any):Observable<any> {
+      return this.http.post<any>(`${this.APIURL}/EmailNotifications/CreditAppNewMailSend/`, payload);
+    }
+
 }
