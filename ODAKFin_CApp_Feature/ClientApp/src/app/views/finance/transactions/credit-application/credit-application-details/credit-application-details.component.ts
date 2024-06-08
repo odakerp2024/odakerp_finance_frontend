@@ -229,8 +229,13 @@ export class CreditApplicationDetailsComponent implements OnInit {
       }
     });
 
+    var userid = localStorage.getItem("UserID");
     let callbackPayload = {
       "CreditId": this.creditId,
+      "UserID": userid,
+      "userDivID": this.userDivID,
+      "userOffID": 0,
+      //userOffID: this.userOffID,
       "status": 0,
     }
 
@@ -273,7 +278,6 @@ export class CreditApplicationDetailsComponent implements OnInit {
               allowOutsideClick: false,
           }).then((result) => {
             if(result.isConfirmed){
-              alert('mailSend');
               this.sendMail();
             }
             else{
