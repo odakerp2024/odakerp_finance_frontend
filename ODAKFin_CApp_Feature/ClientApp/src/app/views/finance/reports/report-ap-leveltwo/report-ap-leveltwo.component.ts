@@ -586,7 +586,7 @@ getAPAgingVendorList() {
         break;
       case 'Vendor-Invoice-wise':
         titleHeader = 'Payable Balance Summary - Invoice Wise';
-        excludeKeys = [];
+        excludeKeys = ['Age (Days)', 'Aging Slab'];
         break;
       default:
         titleHeader = 'Payable Balance Summary';
