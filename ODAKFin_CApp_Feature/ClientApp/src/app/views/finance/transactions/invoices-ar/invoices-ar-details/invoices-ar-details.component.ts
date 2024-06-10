@@ -215,8 +215,8 @@ export class InvoicesArDetailsComponent implements OnInit {
           IsFinal: tableInfo.IsFinal,
           IsDelete: tableInfo.IsDelete ? tableInfo.IsDelete : 0,
           CreatedBy: tableInfo.CreatedBy,
-          // receiptInfo: result['data'].Table1,
-          // openInvoiceInfo: result['data'].Table2
+          receiptInfo: result['data'].Table1,
+          openInvoiceInfo: result['data'].Table2
         });
         debugger
         this.receiptList = result['data'].Table1;
