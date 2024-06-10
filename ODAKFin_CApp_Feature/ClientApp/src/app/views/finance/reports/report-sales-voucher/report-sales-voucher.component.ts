@@ -413,7 +413,8 @@ export class ReportSalesVoucherComponent implements OnInit {
       filteredData['Invoice Amount (ICY)'] = mergedICYAmount;
       filteredData['Invoice Amount (CCY)'] = mergedCCYAmount;
       filteredData['Total Tax'] = invoicetax;
-
+      filteredData['Job Number'] = data['Job Number'] == null ? '-NA-' : data['Job Number'];
+      
       // Add the filtered data to the worksheet
       const row = worksheet.addRow(Object.values(filteredData));
 
@@ -564,11 +565,11 @@ export class ReportSalesVoucherComponent implements OnInit {
           obj[key] = data[key];
           return obj;
         }, {});
-
       // Update the 'Amount (ICY)' property in the filtered data object with the merged amount
       filteredData['Invoice Amount (ICY)'] = mergedICYAmount;
       filteredData['Invoice Amount (CCY)'] = mergedCCYAmount;
       filteredData['Total Tax'] = invoicetax;
+      filteredData['Job Number'] = data['Job Number'] == null ? '-NA-' : data['Job Number'];
 
 
       // Add the filtered data to the worksheet
