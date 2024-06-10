@@ -200,12 +200,10 @@ export class InvoicesArDetailsComponent implements OnInit {
         this.ModifiedBy = tableInfo.UpdatedByName;
         this.CreatedBy = tableInfo.CreatedByName;
 
-        for (let data of result['data'].Table1) {
-          this.addReceiptInfo();
+        for (let data of result['data'].Table1) {this.addReceiptInfo();
         }
 
-        for (let data of result['data'].Table2) {
-          this.addOpenInvoiceInfo();
+        for (let data of result['data'].Table2) {this.addOpenInvoiceInfo();
         }
 
         this.invoiceForm.patchValue({
@@ -437,7 +435,6 @@ debugger
 
 
   onSelectEvent(index: number, type: string) {
-    debugger
     if (type == 'Receipts') {
       const controlAtIndex = this.ReceiptInfo.at(index);
       if (controlAtIndex.value.IsSelect == true) { controlAtIndex.patchValue({ IsAdjusted: 'YES' }); }
@@ -556,7 +553,6 @@ private downloadFile = (data: HttpResponse<Blob>) => {
   }
 
   async saveInfo(status, isDelete = false) {
-    debugger
     var validation = "";
     if (this.invoiceForm.value.StatusId == "" || this.invoiceForm.value.StatusId == 0) {
       validation += "<span style='color:red;'>*</span> <span>Please select Status.</span></br>"
