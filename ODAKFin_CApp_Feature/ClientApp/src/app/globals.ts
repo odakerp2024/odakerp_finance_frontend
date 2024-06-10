@@ -8,7 +8,6 @@ export class Globals {
 
     // UAT
     APIURL: string = 'https://odakfnuat.odaksolutions.in/api';
-    //  APIURL: string = 'https://localhost:44301/api';
     MASTER_API_URL: string = 'https://odakfnuat.odaksolutions.in/api';
     SaApi: string = "https://odaksauat.odaksolutions.in/api";
     APIURLFF: string = 'https://odaksauat.odaksolutions.in/ffddev/api';
