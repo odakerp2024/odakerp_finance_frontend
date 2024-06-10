@@ -81,8 +81,7 @@ export class ReportArLeveloneComponent implements OnInit {
     private ps: PaginationService,
     private dataService: DataService,
     private reportService: ReportDashboardService,
-    public excelService: ExcelService,
-    private exportService :ReportExportService
+    public excelService: ExcelService
   ) { }
 
   ngOnInit(): void {
