@@ -110,156 +110,126 @@
                     </div>
                 </div>
              
-              <div class="col-6">
+                <div class="col-6">
                     <div class="col-12 p-0">
                         <h6 class="mt-2 font-weight-bold">Receipts & Credits</h6>
                     </div>
                     <table
-                        [ngStyle]="{'height':invoiceForm.get('receiptInfo').controls.length > 10 ? '451px' : 'auto' }"
+                        [ngStyle]="{'height': invoiceForm.get('receiptInfo').controls.length > 10 ? '451px' : 'auto'}"
                         class="table table-responsive table-bordered w-100 table-striped mt-3 border-0 overflow-auto text-center fixTableHead">
                         <thead>
-                            <tr role="row"  >
-                                <th id="th1" tabindex="0">
-                                    Voucher #
-                                </th>
-                                <th id="th2">
-                                    Date
-                                </th>
-                                <th id="th3">
-                                    Amount
-                                </th>
+                            <tr role="row">
+                                <th id="th1" tabindex="0">Voucher #</th>
+                                <th id="th2">Date</th>
+                                <th id="th3">Amount</th>
                                 <th id="th4" scope="col">Adjusted</th>
-                                <th id="th5">
-                                    Open Amount
-                                </th>
-                                <th id="th5">
-                                    Set-Off
-                                </th>
-                                <th id="th5">
-                                    Select
-                                </th>
+                                <th id="th5">Open Amount</th>
+                                <th id="th5">Set-Off</th>
+                                <th id="th5">Select</th>
                             </tr>
                         </thead>
                         <tbody formArrayName="receiptInfo">
-                            <ng-container *ngIf="receiptList?.length != 0; else noRecord2">
-                                <tr *ngFor="let receipt of invoiceForm.get('receiptInfo').controls; let i = index"
-                                    [formGroupName]="i">
-                                    <td> <input class="text-center border-0 voucher-column" formControlName="VoucherNumber" readonly
-                                              Style="max-width:120px" 
-                                              [value]="receipt.VoucherNumber" type="text">
+                            <ng-container *ngIf="receiptList?.length; else noRecord2">
+                                <tr *ngFor="let receipt of invoiceForm.get('receiptInfo').controls; let i = index" [formGroupName]="i">
+                                    <td>
+                                        <input class="text-center border-0 voucher-column" formControlName="VoucherNumber" readonly
+                                            style="max-width:120px" type="text">
                                     </td>
                                     <td>
                                         <input class="text-center border-0" formControlName="VoucherDate" readonly
-                                            [value]="receipt.VoucherDate"  Style="max-width:70px" type="text">
+                                            style="max-width:70px" type="text">
                                     </td>
                                     <td>
                                         <input class="text-center border-0 Voucher-amount" formControlName="VoucherAmount" readonly
-                                            [value]="receipt.VoucherAmount"  Style="max-width:50px" type="text">
-                                    </td>   
+                                            style="max-width:50px" type="text">
+                                    </td>
                                     <td>
                                         <input class="text-center border-0" formControlName="IsAdjusted" readonly
-                                            [value]="receipt.IsAdjusted"  Style="max-width:40px" type="text">
+                                            style="max-width:40px" type="text">
                                     </td>
                                     <td>
                                         <input class="text-center border-0 Voucher-amount" formControlName="PendingAmount" readonly
-                                            [value]="receipt.PendingAmount"  Style="max-width:70px" type="text">
+                                            style="max-width:70px" type="text">
                                     </td>
                                     <td>
-                                     <!-- [ngClass]=" isUpdateMode ? 'block-set-off-input' : ''" -->
                                         <input onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
-                                        min="0" numbersOnly
-                                        appDynamicDecimal
-                                        [ngClass]=" isUpdateMode ? 'block-set-off-input' : ''"
-                                         [ngClass]="getIsChecked(i, 'Receipts') ? '' : 'disable-input'"
-                                            [readonly]="isUpdateMode"  Style="max-width:60px"
-                                            (ngModelChange)="setOffChangeEvent($event,i,'Receipts');"
-                                            class="text-center setOff" formControlName="AdjustedAmount"
-                                            [value]="receipt.AdjustedAmount" min="1" type="number" Style="max-width:90px">
+                                            min="0" numbersOnly appDynamicDecimal
+                                            [ngClass]="getIsChecked(i, 'Receipts') ? '' : 'disable-input'"
+                                            [readonly]="isUpdateMode" style="max-width:60px"
+                                            (ngModelChange)="setOffChangeEvent($event, i, 'Receipts');"
+                                            class="text-center setOff" formControlName="AdjustedAmount" type="number"
+                                            style="max-width:90px">
                                     </td>
                                     <td>
-                                        <input (change)="onSelectEvent(i,'Receipts')"  Style="max-width:70px" formControlName="IsSelect"
+                                        <input (change)="onSelectEvent(i, 'Receipts')" style="max-width:70px" formControlName="IsSelect"
                                             type="checkbox" />
                                     </td>
+                                </tr>
                             </ng-container>
                         </tbody>
                     </table>
                 </div>
-
+                
                 <div class="col-6">
                     <div class="col-12 p-0">
-                        <h6 class="mt-2 font-weight-bold">Open invoices</h6>
+                        <h6 class="mt-2 font-weight-bold">Open Invoices</h6>
                     </div>
-                    <table 
-                        [ngStyle]="{'height':invoiceForm.get('openInvoiceInfo').controls.length > 10 ? '450px' : 'auto' }"
-                        class="table table-responsive table-bordered w-100 table-striped mt-3 border-0 overflow-auto  text-center fixTableHead">
-                        
+                    <table
+                        [ngStyle]="{'height': invoiceForm.get('openInvoiceInfo').controls.length > 10 ? '450px' : 'auto'}"
+                        class="table table-responsive table-bordered w-100 table-striped mt-3 border-0 overflow-auto text-center fixTableHead">
                         <thead>
-                            <tr role="row" >
-                                <th id="th1" tabindex="0">
-                                    Voucher #
-                                </th>
-                                <th id="th2">
-                                    Date
-                                </th>
-                                <th id="th3">
-                                    Amount
-                                </th>
+                            <tr role="row">
+                                <th id="th1" tabindex="0">Voucher #</th>
+                                <th id="th2">Date</th>
+                                <th id="th3">Amount</th>
                                 <th id="th4" scope="col">Adjusted</th>
-                                <th id="th5">
-                                    Open Amount
-                                </th>
-                                <th id="th5">
-                                    Set-Off
-                                </th>
-                                <th id="th5">
-                                    Select
-                                </th>
+                                <th id="th5">Open Amount</th>
+                                <th id="th5">Set-Off</th>
+                                <th id="th5">Select</th>
                             </tr>
                         </thead>
                         <tbody formArrayName="openInvoiceInfo">
-                            <ng-container *ngIf="openInvoiceList?.length != 0; else noRecord2">
-                                <tr *ngFor="let invoice of invoiceForm.get('openInvoiceInfo').controls; let i = index"
-                                    [formGroupName]="i"   >
-                                    <td> <input class="text-center border-0 voucher-column" formControlName="InvoiceNumber" readonly
-                                        Style="max-width:90px"
-                                            [value]="invoice.InvoiceNumber" type="text">
+                            <ng-container *ngIf="openInvoiceList?.length; else noRecord2">
+                                <tr *ngFor="let invoice of invoiceForm.get('openInvoiceInfo').controls; let i = index" [formGroupName]="i">
+                                    <td>
+                                        <input class="text-center border-0 voucher-column" formControlName="InvoiceNumber" readonly
+                                            style="max-width:90px" type="text">
                                     </td>
                                     <td>
                                         <input class="text-center border-0" formControlName="InvoiceDate" readonly
-                                            [value]="invoice.InvoiceDate"   Style="max-width:70px" type="text">
+                                            style="max-width:70px" type="text">
                                     </td>
                                     <td>
                                         <input class="text-center border-0 Voucher-amount" formControlName="InvoiceAmount" readonly
-                                            [value]="invoice.InvoiceAmount"  Style="max-width:60px" type="text">
+                                            style="max-width:60px" type="text">
                                     </td>
                                     <td>
                                         <input class="text-center border-0" formControlName="IsAdjusted" readonly
-                                            [value]="invoice.IsAdjusted" Style="max-width:50px" type="text">
+                                            style="max-width:50px" type="text">
                                     </td>
                                     <td>
                                         <input class="text-center border-0 Voucher-amount" formControlName="PendingAmount" readonly
-                                            [value]="invoice.PendingAmount"  Style="max-width:50px" type="text">
+                                            style="max-width:50px" type="text">
                                     </td>
                                     <td>
-                                     <!-- [ngClass]=" isUpdateMode  ? 'block-set-off-input' : ''" -->
                                         <input onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
-                                        min="0" numbersOnly
-                                        appDynamicDecimal
-                                        [ngClass]=" isUpdateMode  ? 'block-set-off-input' : ''"
+                                            min="0" numbersOnly appDynamicDecimal
                                             [ngClass]="getIsChecked(i, 'Invoices') ? '' : 'disable-input'"
-                                        [readonly]="isUpdateMode" Style="max-width:70px"
-                                            (ngModelChange)="setOffChangeEvent($event,i,'Invoices');"
-                                            class="text-center setOff" formControlName="AdjustedAmount"
-                                            [value]="invoice.AdjustedAmount" min="1" type="number" Style="max-width:90px">
+                                            [readonly]="isUpdateMode" style="max-width:70px"
+                                            (ngModelChange)="setOffChangeEvent($event, i, 'Invoices');"
+                                            class="text-center setOff" formControlName="AdjustedAmount" type="number"
+                                            style="max-width:90px">
                                     </td>
                                     <td>
-                                        <input (change)="onSelectEvent(i,'Invoices')" Style="max-width:70px" formControlName="IsSelect"
+                                        <input (change)="onSelectEvent(i, 'Invoices')" style="max-width:70px" formControlName="IsSelect"
                                             type="checkbox" />
                                     </td>
+                                </tr>
                             </ng-container>
                         </tbody>
                     </table>
                 </div>
+                
 
                 <ng-template #noRecord2>
                     <tr>

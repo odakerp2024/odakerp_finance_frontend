@@ -187,20 +187,27 @@ export class InvoicesArDetailsComponent implements OnInit {
   }
 
   getInvoiceInfo() {
-    var service = `${this.globals.APIURL}/OutStandingInvoiceAR/GetOutStandingInvoiceARById`;
+    const service = `${this.globals.APIURL}/OutStandingInvoiceAR/GetOutStandingInvoiceARById`;
     this.dataService.post(service, { OutStandingInvoiceId: this.invoiceARId }).subscribe(async (result: any) => {
       this.FileList = [];
       this.receiptList = [];
       this.openInvoiceList = [];
+      
       if (result.message == 'Success' && result['data'].Table.length > 0) {
         let tableInfo = result['data'].Table[0];
         this.ModifiedOn = tableInfo.UpdatedDate;
         this.CreatedOn = tableInfo.CreatedDate;
         this.ModifiedBy = tableInfo.UpdatedByName;
         this.CreatedBy = tableInfo.CreatedByName;
-        for (let data of result['data'].Table1) { this.addReceiptInfo(); data.VoucherDate = this.datePipe.transform(data.VoucherDate, 'y-MM-dd') }
-        for (let data of result['data'].Table2) { this.addOpenInvoiceInfo(); data.InvoiceDate = this.datePipe.transform(data.InvoiceDate, 'y-MM-dd') }
-        if (tableInfo.IsFinal) this.IsFinal = true;
+
+        for (let data of result['data'].Table1) {
+          this.addReceiptInfo();
+        }
+
+        for (let data of result['data'].Table2) {
+          this.addOpenInvoiceInfo();
+        }
+
         this.invoiceForm.patchValue({
           OutStandingInvoiceId: tableInfo.OutStandingInvoiceId,
           ReferenceNo: tableInfo.ReferenceNo,
@@ -215,19 +222,29 @@ export class InvoicesArDetailsComponent implements OnInit {
           IsFinal: tableInfo.IsFinal,
           IsDelete: tableInfo.IsDelete ? tableInfo.IsDelete : 0,
           CreatedBy: tableInfo.CreatedBy,
-          receiptInfo: result['data'].Table1,
-          openInvoiceInfo: result['data'].Table2
         });
-        debugger
-        this.receiptList = result['data'].Table1;
-        this.openInvoiceList = result['data'].Table2;
+
+        this.receiptList = result['data'].Table1.map(data => {
+          data.VoucherDate = this.datePipe.transform(data.VoucherDate, 'y-MM-dd');
+          return data;
+        });
+
+        this.openInvoiceList = result['data'].Table2.map(data => {
+          data.InvoiceDate = this.datePipe.transform(data.InvoiceDate, 'y-MM-dd');
+          return data;
+        });
+
+        this.invoiceForm.setControl('receiptInfo', this.fb.array(this.receiptList.map(receipt => this.fb.group(receipt))));
+        this.invoiceForm.setControl('openInvoiceInfo', this.fb.array(this.openInvoiceList.map(invoice => this.fb.group(invoice))));
+
         this.TotalDebitAmount = tableInfo.TotalDebitAmount.toFixed(this.entityFraction);
         this.TotalCreditAmount = tableInfo.TotalCreditAmount.toFixed(this.entityFraction);
         if (result['data'].Table3.length > 0) this.FileList = result['data'].Table3;
       }
-    }, error => { console.error(error) });
+    }, error => {
+      console.error(error);
+    });
   }
-
   createInvoiceForm() {
     this.invoiceForm = this.fb.group({
       OutStandingInvoiceId: [this.invoiceARId],
@@ -374,20 +391,18 @@ debugger
     items2.clear();
   }
 
-getIsChecked(i, type){
-    
-    if (type == 'Receipts') {
-    if (i !== undefined){
-    return this.ReceiptInfo.value[i].IsSelect == false || this.ReceiptInfo.value[i].IsSelect == null ? false : true;
+  getIsChecked(i, type) {
+    if (i === undefined) return false;
+
+    if (type === 'Receipts') {
+        const receipt = this.ReceiptInfo.value[i];
+        return receipt?.IsSelect ?? false;
+    } else if (type === 'Invoices') {
+        const invoice = this.OpenInvoiceInfo.value[i];
+        return invoice?.IsSelect ?? false;
     }
+
     return false;
-  }
-  else if (type == 'Invoices') {
-    if (i !== undefined){
-      return this.OpenInvoiceInfo.value[i].IsSelect == false || this.OpenInvoiceInfo.value[i].IsSelect == null ? false : true;
-      }
-      return false;
-  }
 }
   
    setOffChangeEvent(data, index, type) {
@@ -422,6 +437,7 @@ getIsChecked(i, type){
 
 
   onSelectEvent(index: number, type: string) {
+    debugger
     if (type == 'Receipts') {
       const controlAtIndex = this.ReceiptInfo.at(index);
       if (controlAtIndex.value.IsSelect == true) { controlAtIndex.patchValue({ IsAdjusted: 'YES' }); }
@@ -436,7 +452,7 @@ getIsChecked(i, type){
     }
   }
 
-  calculateCreditDebitAmount(type: string) {
+  calculateCreditDebitAmount(type: string) { 
     if (type == 'Receipts') {
       var AdjustedAmountReceipt = 0;
       if (this.invoiceForm.value.receiptInfo.length > 0) {
@@ -540,6 +556,7 @@ private downloadFile = (data: HttpResponse<Blob>) => {
   }
 
   async saveInfo(status, isDelete = false) {
+    debugger
     var validation = "";
     if (this.invoiceForm.value.StatusId == "" || this.invoiceForm.value.StatusId == 0) {
       validation += "<span style='color:red;'>*</span> <span>Please select Status.</span></br>"
