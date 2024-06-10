@@ -70,6 +70,13 @@ tr:hover {
   label.maxlabel {
     font-size: 12px !important;
   }
+  .ng-select.searchdropdown-dropdown-size ::ng-deep .ng-select-container{
+    height: 26px !important;
+    border-radius: 0 !important;
+    min-height: 15px !important;
+    font-size: 10px !important;
+  }
+  
 }
 
 
@@ -84,6 +91,13 @@ tr:hover {
   label.maxlabel {
     font-size: 12px !important;
   }
+  .ng-select.searchdropdown-dropdown-size ::ng-deep .ng-select-container{
+    height: 26px !important;
+    border-radius: 0 !important;
+    min-height: 15px !important;
+    font-size: 10px !important;
+  }
+  
 }
 
 @media (min-width: 1498px) and (max-width: 1600px) {
@@ -96,6 +110,13 @@ tr:hover {
   label.maxlabel {
     font-size: 12px !important;
   }
+  .ng-select.searchdropdown-dropdown-size ::ng-deep .ng-select-container {
+    height: 26px !important;
+    border-radius: 0 !important;
+    min-height: 15px !important;
+    font-size: 10px !important;
+  }
+  
 }
 
 
@@ -109,6 +130,14 @@ tr:hover {
   label.maxlabel {
     font-size: 12px !important;
   }
+
+  .ng-select.searchdropdown-dropdown-size ::ng-deep .ng-select-container {
+    height: 26px !important;
+    border-radius: 0 !important;
+    min-height: 15px !important;
+    font-size: 10px !important;
+  }
+  
 }
 
 
@@ -126,6 +155,14 @@ tr:hover {
   label.maxlabel {
     font-size: 12px !important;
   }
+
+  .ng-select.searchdropdown-dropdown-size ::ng-deep .ng-select-container {
+    height: 26px !important;
+    border-radius: 0 !important;
+    min-height: 15px !important;
+    font-size: 10px !important;
+  }
+  
 }
 
 @media (min-width: 700px) and (max-width: 1399px) {
@@ -142,6 +179,14 @@ tr:hover {
   label.maxlabel {
     font-size: 10px !important;
   }
+
+  .ng-select.searchdropdown-dropdown-size ::ng-deep .ng-select-container {
+    height: 26px !important;
+    border-radius: 0 !important;
+    min-height: 15px !important;
+    font-size: 8px !important;
+  }
+  
 }
 
 
@@ -160,18 +205,23 @@ tr:hover {
     font-size: 9px !important;
   }
 
+  .ng-select.searchdropdown-dropdown-size ::ng-deep .ng-select-container {
+    height: 26px !important;
+    border-radius: 0 !important;
+    min-height: 15px !important;
+    font-size: 8px !important;
+  }
+  
 }
 
-.ng-select.searchdropdown.ng-select-container {
-  height: 24px !important;
+
+.ng-select.searchdropdown-dropdown-size ::ng-deep .ng-select-container {
+  height: 26px !important;
   border-radius: 0 !important;
   min-height: 15px !important;
-  font-size: 8px !important;
+  font-size: 9px ;
 } 
 
-.ng-select.searchdropdown{
-  font-size : 10px !important;
-}
  .form-control {
   height: 26px !important;
 }
