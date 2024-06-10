@@ -591,7 +591,7 @@ getAccountPayableVendorList() {
       };
       cell.font = {
         bold: true,
-        color: { argb: 'FFFFF7' },
+        color: { argb: 'FFFFF7' }
       };
       cell.alignment = {
         horizontal: 'center',

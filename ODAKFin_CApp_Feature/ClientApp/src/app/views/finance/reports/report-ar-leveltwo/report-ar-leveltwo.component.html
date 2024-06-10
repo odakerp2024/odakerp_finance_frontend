@@ -136,10 +136,10 @@
                         <div>
                             <img style="cursor: pointer;" width="38px" height="38px"
                                 class="exportAs mx-1 align-baseline" src="../../../../../assets/images/csv_color.png"
-                                (click)="downloadAsCSV()" alt="logo">
+                                (click)="export()" alt="logo">
                             <img style="cursor: pointer;" width="38px" height="38px"
                                 class="exportAs mx-1 align-baseline" src="../../../../../assets/images/xlsx_color.png"
-                                (click)="downloadAsExcel()" alt="logo">
+                                (click)="export()" alt="logo">
                         </div>
                     </div>
 
@@ -177,21 +177,23 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let data of pagedItems" >
-                                    <td class="hyperTextColor" type="customerwise"><a (click)="showCustomerWise(data.Id)" >{{data.Payees}}</a></td>
-                                    <td>{{data.ZeroToFifteenDaysCount}}</td>
-                                    <td>{{data.SixteenToThirtyDaysCount}}</td>
-                                    <td>{{data.ThirtyOneToFourtyFiveDaysCount}}</td>
-                                    <td>{{data.FourtyFiveSixtyDaysCount}}</td>
-                                    <td>{{data.MoreThanSixtyDaysCount}}</td>
-                                    <td class="text-right hyperTextColor">{{data.DueAmount | dynamicDecimal: entityFraction}}</td>
+                                <tr *ngFor="let data of pagedItems">
+                                  <td class="hyperTextColor" type="customerwise">
+                                    <a (click)="showCustomerWise(data.Id)">{{ data['Sub Category'] }}</a>
+                                  </td>
+                                  <td>{{ data['0-15 DAYS'] }}</td>
+                                  <td>{{ data['16-30 DAYS'] }}</td>
+                                  <td>{{ data['31-45 DAYS'] }}</td>
+                                  <td>{{ data['45-60 DAYS'] }}</td>
+                                  <td>{{ data['>60 DAYS'] }}</td>
+                                  <td class="text-right hyperTextColor">{{ data['Balance (Company Currency)'] | dynamicDecimal: entityFraction }}</td>
                                 </tr>
-
-                                <tr *ngIf="pagedItems.length == 0">
-                                    <td class="text-center" colspan="10">No records found</td>
+                              
+                                <tr *ngIf="pagedItems.length === 0">
+                                  <td class="text-center" colspan="10">No records found</td>
                                 </tr>
-
-                            </tbody>
+                              </tbody>
+                              
                             <tfoot class="table-footer"  *ngIf="pagedItems.length > 0">
                                 <tr class="footer-position-sticky">
                                   <td colspan="1" class="text-left">
@@ -267,28 +269,30 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="let data of pagedItems">
-                                    <td>{{data.Payees}}</td>
-                                    <td class="hyperTextColor" [title]="data.CustomerName">
-                                        <a (click)="showCustomerInvoiceWise(data.CustomerID)">{{ (data.CustomerName && data.CustomerName.length > 20) ? data.CustomerName.slice(0, 20) + '-' : data.CustomerName }}
-                                    </a></td> 
-                                    <td>{{data.CityName}}</td>
-                                    <td>{{data.SalesPIC}}</td>
-                                    <td>{{data.CreditDays}}</td>
-                                    <td class="text-right hyperTextColor">{{data.CreditAmount | dynamicDecimal: entityFraction}}</td>
-                                    <td>{{data.ZeroToFifteenDaysCount}}</td>
-                                    <td>{{data.SixteenToThirtyDaysCount}}</td>
-                                    <td>{{data.ThirtyOneToFourtyFiveDaysCount}}</td>
-                                    <td>{{data.FourtyFiveSixtyDaysCount}}</td>
-                                    <td>{{data.MoreThanSixtyDaysCount}}</td>
-                                    <td class="text-right hyperTextColor">{{data.BalanceCCY | dynamicDecimal: entityFraction }}</td>
-                                    <td class="text-right hyperTextColor">{{data.BalanceICY | dynamicDecimal: entityFraction}}</td>
+                                  <td>{{ data['Sub Category'] }}</td>
+                                  <td class="hyperTextColor" [title]="data.Customer">
+                                    <a (click)="showCustomerInvoiceWise(data.CustomerID)">
+                                      {{ (data.Customer && data.Customer.length > 20) ? data.Customer.slice(0, 20) + '-' : data.Customer }}
+                                    </a>
+                                  </td>
+                                  <td>{{ data.Branch }}</td>
+                                  <td>{{ data['Sales Person'] }}</td>
+                                  <td>{{ data['Credit Days'] }}</td>
+                                  <td class="text-right hyperTextColor">{{ data['Credit Amount'] | dynamicDecimal: entityFraction }}</td>
+                                  <td>{{ data['0-15 DAYS'] }}</td>
+                                  <td>{{ data['16-30 DAYS'] }}</td>
+                                  <td>{{ data['31-45 DAYS'] }}</td>
+                                  <td>{{ data['45-60 DAYS'] }}</td>
+                                  <td>{{ data['>60 DAYS'] }}</td>
+                                  <td class="text-right hyperTextColor">{{ data['Balance (Company Currency)'] | dynamicDecimal: entityFraction }}</td>
+                                  <td class="text-right hyperTextColor">{{ data['Balance (Invoice currency)'] | dynamicDecimal: entityFraction }}</td>
                                 </tr>
-                                
-                                <tr *ngIf="pagedItems.length == 0">
-                                    <td class="text-center" colspan="10">No records found</td>
+                              
+                                <tr *ngIf="pagedItems.length === 0">
+                                  <td class="text-center" colspan="13">No records found</td>
                                 </tr>
-
-                            </tbody>
+                              </tbody>
+                              
                             <tfoot class="table-footer"  *ngIf="pagedItems.length > 0">
                                 <tr class="footer-position-sticky">
                                   <td colspan="1" class="text-left">
@@ -358,23 +362,23 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="let data of pagedItems">
-                                    <td ><a>{{data.CustomerName}}</a></td>
-                                    <td>{{data.CityName}}</td>
-                                    <td>{{data.InvoiceDate| date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td>
-                                    <td class="hyperTextColor">{{data.InvoiceNumber}}</td>
-                                    <td class="hyperTextColor">{{data.BLType}}</td>
-                                    <td class="text-right hyperTextColor">{{data.InvoiceAmountCCY | dynamicDecimal: entityFraction}}</td>
-                                    <td>{{data.Aging}}</td>
-                                    <td>{{data.AgingSlab}}</td>
-                                    <td class="text-right hyperTextColor">{{data.DueAmount | dynamicDecimal: entityFraction}}</td>
-                                    <td class="text-right hyperTextColor">{{data.DueAmountCCY | dynamicDecimal: entityFraction}}</td>
+                                  <td><a>{{ data.Customer }}</a></td>
+                                  <td>{{ data.Branch }}</td>
+                                  <td>{{ data['Date'] | date: commonDataService.convertToLowerCaseDay(entityDateFormat) }}</td>
+                                  <td class="hyperTextColor">{{ data['Invoice #'] }}</td>
+                                  <td class="hyperTextColor">{{ data['Transaction Type'] }}</td>
+                                  <td class="text-right hyperTextColor">{{ data['Invoice Amount'] | dynamicDecimal: entityFraction }}</td>
+                                  <td>{{ data['Age (Days)'] }}</td>
+                                  <td>{{ data['Aging Slab'] }}</td>
+                                  <td class="text-right hyperTextColor">{{ data['Balance (Invoice currency)'] | dynamicDecimal: entityFraction }}</td>
+                                  <td class="text-right hyperTextColor">{{ data['Balance (Company Currency)'] | dynamicDecimal: entityFraction }}</td>
                                 </tr>
-
-                                <tr *ngIf="pagedItems.length == 0">
-                                    <td class="text-center" colspan="10">No records found</td>
+                              
+                                <tr *ngIf="pagedItems.length === 0">
+                                  <td class="text-center" colspan="10">No records found</td>
                                 </tr>
-
-                            </tbody>
+                              </tbody>
+                              
                             <tfoot class="table-footer"   *ngIf="pagedItems.length > 0">
                                 <tr class="footer-position-sticky">
                                   <td colspan="1" class="text-left">
