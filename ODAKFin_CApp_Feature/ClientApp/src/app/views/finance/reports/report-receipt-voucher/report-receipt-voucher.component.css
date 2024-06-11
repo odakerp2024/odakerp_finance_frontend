@@ -1,5 +1,4 @@
 .table>tbody>tr>td {
-  /* text-align: left !important; */
   padding: 12px !important;
   font-size: 13px !important;
 }
@@ -24,15 +23,30 @@ tr:hover {
 }
 
 .title {
-  font-size: 1.2rem !important
+  font-size: 0.8rem !important;
+  margin: 1px !important;
 }
 
 .subtitle {
-  font-size: 1.1rem !important
+  font-size: 0.7rem !important;
+  margin: 1px !important;
+  margin-bottom: 1px !important;
+}
+
+.card .card-body {
+  padding: 0.25rem !important;
+}
+
+.card .card-body .cpad {
+  padding: 20px !important;
+}
+
+.card .card-body .enqview {
+  text-align: center !important;
 }
 
 .clear-btn {
-  width: 96px;
+  width: 80px !important;
 }
 
 @media (min-width: 1000px) and (max-width: 1800px) {
@@ -45,10 +59,20 @@ tr:hover {
 
 @media (min-width: 1701px) and (max-width: 1820px) {
   
+
   .table>tbody>tr>td {
-    /* text-align: left !important; */
     padding: 13px !important;
     font-size: 13px !important;
+  }
+
+  label.maxlabel {
+    font-size: 12px !important;
+  }
+  .ng-select.searchdropdown-dropdown-size ::ng-deep .ng-select-container{
+    height: 26px !important;
+    border-radius: 0 !important;
+    min-height: 15px !important;
+    font-size: 10px !important;
   }
  
 }
@@ -56,11 +80,20 @@ tr:hover {
 
 
 @media (min-width: 1601px) and (max-width: 1700px) {
-  
+
   .table>tbody>tr>td {
-    /* text-align: left !important; */
     padding: 11px !important;
     font-size: 11px !important;
+  }
+
+  label.maxlabel {
+    font-size: 12px !important;
+  }
+  .ng-select.searchdropdown-dropdown-size ::ng-deep .ng-select-container{
+    height: 26px !important;
+    border-radius: 0 !important;
+    min-height: 15px !important;
+    font-size: 10px !important;
   }
  
 }
@@ -68,8 +101,17 @@ tr:hover {
 @media (min-width: 1498px) and (max-width: 1600px) {
   
   .table>tbody>tr>td {
-    /* text-align: left !important; */
-    padding: 10px !important;
+    padding: 9px !important;
+    font-size: 9px !important;
+  }
+
+  label.maxlabel {
+    font-size: 12px !important;
+  }
+  .ng-select.searchdropdown-dropdown-size ::ng-deep .ng-select-container {
+    height: 26px !important;
+    border-radius: 0 !important;
+    min-height: 15px !important;
     font-size: 10px !important;
   }
  
@@ -79,28 +121,116 @@ tr:hover {
 @media (min-width: 1400px) and (max-width: 1498px) {
   
   .table>tbody>tr>td {
-    /* text-align: left !important; */
-    padding: 9px !important;
-    font-size: 9px !important;
+    padding: 8px !important;
+    font-size: 8px !important;
   }
- 
+
+  label.maxlabel {
+    font-size: 12px !important;
+  }
+
+  .ng-select.searchdropdown-dropdown-size ::ng-deep .ng-select-container {
+    height: 26px !important;
+    border-radius: 0 !important;
+    min-height: 15px !important;
+    font-size: 10px !important;
+  }
 }
 
+@media (min-width: 800px) and (max-width: 1000px) {
+
+  .table>tbody>tr>td {
+    padding: 7px !important;
+    font-size: 7px !important;
+  }
+
+  .table thead th {
+    font-size: 10px !important;
+  }
+
+  label.maxlabel {
+    font-size: 12px !important;
+  }
+
+  .ng-select.searchdropdown-dropdown-size ::ng-deep .ng-select-container {
+    height: 26px !important;
+    border-radius: 0 !important;
+    min-height: 15px !important;
+    font-size: 10px !important;
+  }
+  
+}
 
 @media (min-width: 700px) and (max-width: 1399px) {
   
+
   .table>tbody>tr>td {
-    /* text-align: left !important; */
-    padding: 8px !important;
+    padding: 10px !important;
+    font-size: 10px !important;
+  }
+
+  .table thead th {
+    font-size: 9px !important;
+  }
+
+  label.maxlabel {
+    font-size: 10px !important;
+  }
+
+  .ng-select.searchdropdown-dropdown-size ::ng-deep .ng-select-container {
+    height: 26px !important;
+    border-radius: 0 !important;
+    min-height: 15px !important;
     font-size: 8px !important;
   }
  
 }
 
 
+@media (min-width: 857px) and (max-width: 1200px) {
+
+  .table>tbody>tr>td {
+    padding: 7px !important;
+    font-size: 7px !important;
+  }
+
+  .table thead th {
+    font-size: 8px !important;
+  }
+
+  label.maxlabel {
+    font-size: 8px !important;
+  }
+
+  .ng-select.searchdropdown-dropdown-size ::ng-deep .ng-select-container {
+    height: 26px !important;
+    border-radius: 0 !important;
+    min-height: 15px !important;
+    font-size: 8px !important;
+  }
+  
+}
 
 
+.ng-select.searchdropdown-dropdown-size ::ng-deep .ng-select-container {
+  height: 26px !important;
+  border-radius: 0 !important;
+  min-height: 15px !important;
+  font-size: 9px ;
+} 
 
+ .form-control {
+  height: 26px !important;
+}
+
+table.dataTable{
+  margin-top: 0px !important;
+}
+
+
+.card-body{
+  padding: 0.2rem !important;
+}
 
 
 

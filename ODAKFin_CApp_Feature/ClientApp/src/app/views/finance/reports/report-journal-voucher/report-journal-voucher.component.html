@@ -4,12 +4,12 @@
 
             <div class="row">
                 <div class="col-10">
-                    <div class="row pb-3">
+                    <div class="row pb-1">
 
                         <div class="col-2">
 
-                            <label class=" fontstyles">PEROID</label>
-                            <ng-select class="searchdropdown custom dropdown-size" formControlName="Peroid"
+                            <label class=" maxlabel">PEROID</label>
+                            <ng-select class="searchdropdown-dropdown-size" formControlName="Peroid"
                                 (ngModelChange)="onOptionChange($event);" [clearable]="false">
                                 <ng-option [value]="''" disabled>-- SELECT --</ng-option>
                                 <ng-container *ngFor="let peroid of PeroidList">
@@ -21,20 +21,20 @@
 
                         </div>
                         <div class="col-2" *ngIf="selectedOption === 'custom'">
-                             <label class="fontstyles mb-3">FROM</label>
-                                <div class="input-group">
-                                    <mat-form-field class="tillDate mat_date_picker" appearance="outline">
-                                        <input matInput (click)="FromDate.open()" readonly autocomplete="off"
-                                            (onchange)="formatchange(true)" [matDatepicker]="FromDate" id="FromDate"
-                                            [placeholder]="entityDateFormat" formControlName="FromDate">
-                                        <mat-datepicker-toggle matSuffix [for]="FromDate"></mat-datepicker-toggle>
-                                        <mat-datepicker #FromDate></mat-datepicker>
-                                    </mat-form-field>
-                                </div>
+                            <label class="maxlabel mb-3">FROM</label>
+                            <div class="input-group">
+                                <mat-form-field class="tillDate mat_date_picker" appearance="outline">
+                                    <input matInput (click)="FromDate.open()" readonly autocomplete="off"
+                                        (onchange)="formatchange(true)" [matDatepicker]="FromDate" id="FromDate"
+                                        [placeholder]="entityDateFormat" formControlName="FromDate">
+                                    <mat-datepicker-toggle matSuffix [for]="FromDate"></mat-datepicker-toggle>
+                                    <mat-datepicker #FromDate></mat-datepicker>
+                                </mat-form-field>
                             </div>
+                        </div>
 
                         <div class="col-2" *ngIf="selectedOption === 'custom'">
-                            <label class="fontstyles mb-3">TO</label>
+                            <label class="maxlabel mb-3">TO</label>
                             <div class="input-group">
                                 <mat-form-field class="tillDate mat_date_picker" appearance="outline">
                                     <input matInput (click)="ToDate.open()" readonly autocomplete="off"
@@ -48,8 +48,8 @@
                         </div>
 
                         <div class="col-2">
-                            <label class=" fontstyles">DIVISION</label>
-                            <ng-select class="searchdropdown custom" formControlName="DivisionId"
+                            <label class=" maxlabel">DIVISION</label>
+                            <ng-select class="searchdropdown-dropdown-size" formControlName="DivisionId"
                                 (ngModelChange)="getOfficeList($event);" [clearable]="false">
                                 <ng-option [value]="0" disabled>-- SELECT --</ng-option>
                                 <ng-container *ngFor="let division of divisionList">
@@ -61,8 +61,8 @@
                         </div>
 
                         <div class="col-2">
-                            <label class=" fontstyles">OFFICE</label>
-                            <ng-select class="searchdropdown" formControlName="OfficeId"
+                            <label class=" maxlabel">OFFICE</label>
+                            <ng-select class="searchdropdown-dropdown-size" formControlName="OfficeId"
                                 (ngModelChange)="getDivisionBasedOffice($event, reportFilter.value.Division)"
                                 [clearable]="false" name="CategoryId" id="CategoryId">
                                 <ng-option [value]="0" disabled>-- SELECT --</ng-option>
@@ -76,21 +76,22 @@
 
 
                         <div class="col-2">
-                            <label class="fontstyles">ACCOUNT</label>
-                            <ng-select class="searchdropdown" [clearable]="false" [appendTo]="'body'"
-                            [items]="AccountList" bindLabel="AccountName" bindValue="ChartOfAccountsId"
-                            groupBy="GroupName" formControlName="AccountId">
-                            <ng-template ng-optgroup let-item="item">
-                                {{item.GroupName | uppercase}}
-                            </ng-template>
-                        </ng-select>
+                            <label class="maxlabel">ACCOUNT</label>
+                            <ng-select class="searchdropdown-dropdown-size" [clearable]="false" [appendTo]="'body'"
+                                [items]="AccountList" bindLabel="AccountName" bindValue="ChartOfAccountsId"
+                                groupBy="GroupName" formControlName="AccountId">
+                                <ng-template ng-optgroup let-item="item">
+                                    <span [title]="item.GroupName | uppercase">{{ item.GroupName | uppercase }}</span>
+                                </ng-template>
+                                <ng-template ng-option-tmp let-item="item">
+                                    <span [title]="item.AccountName">{{ item.AccountName }}</span>
+                                </ng-template>
+                            </ng-select>
                         </div>
-</div>
 
- <div class="row">
                         <div class="col-2">
                             <div class="form-group">
-                                <label class=" fontstyles">AMOUNT</label>
+                                <label class=" maxlabel">AMOUNT</label>
                                 <input
                                     onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
                                     min="0" numbersOnly appDynamicDecimal
@@ -99,7 +100,7 @@
                         </div>
                         <div class="col-2">
                             <div class="form-group">
-                                <label class=" fontstyles">VOUCHER#</label>
+                                <label class=" maxlabel">VOUCHER#</label>
                                 <input
                                     onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
                                     min="0" numbersOnly appDynamicDecimal
@@ -109,51 +110,49 @@
                     </div>
                 </div>
 
-                <div class="col-2" style="padding-top: 23px;">
-                    <div class="text-center">
-                        <button type="button" class="btn btn-primary text-white  col-auto"
-                            (click)="getJournalReportList()">
+                <div class="col-2">
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="btn btn-primary text-white mx-1 btn-sm-custom" (click)="getJournalReportList()">
                             SEARCH
                         </button>
-                    </div>
-                    <div class="text-center">
-                        <button type="button" (click)="clear()"
-                            class="btn btn-warning text-white  mb-0 col-auto clear-btn">
+                        <button type="button" class="btn btn-warning text-white mx-1 btn-sm-custom" (click)="clear()">
                             CLEAR
                         </button>
                     </div>
                 </div>
-
 
             </div>
         </div>
     </form>
 
     <div class="row">
-        <div class="col-md-12 mt-2">
+        <div class="col-md-12 mt-1">
             <div class="card m-b-30">
                 <div class="card-body cpad enqview">
                     <div class="row">
-                    <div class="col-10 justify-content-end text-center ">
-                        <h6 class="title">NAVIO SHIPPING PRIVATE LIMITED</h6>
-                        <h6 class="subtitle">Journal Voucher</h6>
-                        <p>FROM {{ startDate | date: commonDataService.convertToLowerCaseDay(entityDateFormat) }} -
-                            TO {{ endDate | date:commonDataService.convertToLowerCaseDay(entityDateFormat) }}
-                        </p>
+                        <div class="col-10 justify-content-end text-center ">
+                            <h6 class="title">NAVIO SHIPPING PRIVATE LIMITED</h6>
+                            <h6 class="subtitle">Journal Voucher</h6>
+                            <h6 class="subtitle">FROM {{ startDate | date:
+                                commonDataService.convertToLowerCaseDay(entityDateFormat) }} -
+                                TO {{ endDate | date:commonDataService.convertToLowerCaseDay(entityDateFormat) }}
+                            </h6>
 
-                    </div>
-                    <div class="col-2 text-right">
-                        <div style="font-weight: 600;padding-top: 67px;padding-right: 10px;">Export as :
-                      
-                            <img style="cursor: pointer;" width="38px" height="38px"
-                                class="exportAs mx-1 align-baseline" src="../../../../../assets/images/csv_color.png"
-                                (click)="downloadAsCSV()" alt="logo">
-                            <img style="cursor: pointer;" width="38px" height="38px"
-                                class="exportAs mx-1 align-baseline" src="../../../../../assets/images/xlsx_color.png"
-                                (click)="downloadAsExcel()" alt="logo">
+                        </div>
+                        <div class="col-2 text-right">
+                            <div style="font-weight: 600;padding-top: 18px;padding-right: 10px;">
+
+                                <img style="cursor: pointer;" width="36px" height="36px"
+                                    class="exportAs mx-1 align-baseline"
+                                    src="../../../../../assets/images/csv_color.png" (click)="downloadAsCSV()"
+                                    alt="logo">
+                                <img style="cursor: pointer;" width="36px" height="36px"
+                                    class="exportAs mx-1 align-baseline"
+                                    src="../../../../../assets/images/xlsx_color.png" (click)="downloadAsExcel()"
+                                    alt="logo">
+                            </div>
                         </div>
                     </div>
-                </div>
 
                     <div class="col-12 ">
                         <table class="table table-responsive  table-bordered w-100 dataTable no-footer">
@@ -172,19 +171,20 @@
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('Invoice_type')"style="width: 177.575px;">Effect(Dr/Cr)</th>
+                                        (click)="sort('Invoice_type')" style="width: 177.575px;">Effect(Dr/Cr)</th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('Amount')"style="width: 177.575px;">Amount</th>
+                                        (click)="sort('Amount')" style="width: 177.575px;">Amount</th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('CurrencyCode')"style="width: 177.575px;">Currency</th>
+                                        (click)="sort('CurrencyCode')" style="width: 177.575px;">Currency</th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('CompanyCurrencyAmount')"style="width: 177.575px;">Amount (CCY)</th>
+                                        (click)="sort('CompanyCurrencyAmount')" style="width: 177.575px;">Amount (CCY)
+                                    </th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
@@ -200,10 +200,13 @@
                                     <td class="hyperTextColor">{{data.JournalNumber}}</td>
                                     <td class="hyperTextColor">{{data.AccountName }}</td>
                                     <td>{{data.Invoice_type}}</td>
-                                    <td class=" text-right hyperTextColor">{{ data.Symbol + ' ' + (data.Amount | dynamicDecimal: entityFraction) }}</td>
+                                    <td class=" text-right hyperTextColor">{{ data.Symbol + ' ' + (data.Amount |
+                                        dynamicDecimal: entityFraction) }}</td>
                                     <td>{{data.CurrencyCode}}</td>
-                                    <td class=" text-right hyperTextColor">{{ data.Symbol + ' ' + (data.CompanyCurrencyAmount | dynamicDecimal: entityFraction) }}</td>
-                                    <td  [ngClass]="data.StatusName == 'Confirmed' ? ' badge-confirm' : data.StatusName == 'Cancelled' ? 'badge-cancel' : 'badge-draft'">
+                                    <td class=" text-right hyperTextColor">{{ data.Symbol + ' ' +
+                                        (data.CompanyCurrencyAmount | dynamicDecimal: entityFraction) }}</td>
+                                    <td
+                                        [ngClass]="data.StatusName == 'Confirmed' ? ' badge-confirm' : data.StatusName == 'Cancelled' ? 'badge-cancel' : 'badge-draft'">
                                         {{data.StatusName}}</td>
                                 </tr>
 
@@ -241,7 +244,7 @@
                                 <a (click)="setPage(pager.totalPages)">Last</a>
                             </li>
                         </ul>
-                    </div> 
+                    </div>
                 </div>
             </div>
         </div>
