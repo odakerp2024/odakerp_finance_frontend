@@ -362,7 +362,10 @@ export class ReportSalesVoucherComponent implements OnInit {
 
 
     // Define header row and style it with yellow background, bold, and centered text
-    const header = Object.keys(this.pagedItems[0]).filter(key => key !== 'BLTpes');
+    const keysToRemove = ['Symbol', 'BLTpes'];
+
+    const header = Object.keys(this.pagedItems[0])
+        .filter(key => !keysToRemove.includes(key));
     const headerRow = worksheet.addRow(header);
 
 
@@ -404,12 +407,16 @@ export class ReportSalesVoucherComponent implements OnInit {
       const igst = `${data['IGST'] !== null ? parseFloat(data['IGST']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
 
       // Filter out properties you don't want to include in the Excel sheet
+      
+    
+      const keysToRemove = ['Symbol', 'BLTpes'];
+
       const filteredData = Object.keys(data)
-        .filter(key => key !== 'BLTpes')
-        .reduce((obj, key) => {
-          obj[key] = data[key];
-          return obj;
-        }, {});
+          .filter(key => !keysToRemove.includes(key))
+          .reduce((obj, key) => {
+              obj[key] = data[key];
+              return obj;
+          }, {});
 
       const  defalutJobValue = '-NA-'
       // Update the 'Amount (ICY)' property in the filtered data object with the merged amount
@@ -526,7 +533,11 @@ export class ReportSalesVoucherComponent implements OnInit {
 
 
     // Define header row and style it with yellow background, bold, and centered text
-    const header = Object.keys(this.pagedItems[0]).filter(key => key !== 'BLTpes');
+    const keysToRemove = ['Symbol', 'BLTpes'];
+
+    const header = Object.keys(this.pagedItems[0])
+        .filter(key => !keysToRemove.includes(key));
+    
     const headerRow = worksheet.addRow(header);
 
 
@@ -568,12 +579,15 @@ export class ReportSalesVoucherComponent implements OnInit {
       const igst = `${data['IGST'] !== null ? parseFloat(data['IGST']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
       // Filter out properties you don't want to include in the Excel sheet
 
+      const keysToRemove = ['Symbol', 'BLTpes'];
+
       const filteredData = Object.keys(data)
-        .filter(key => key !== 'BLTpes')
-        .reduce((obj, key) => {
-          obj[key] = data[key];
-          return obj;
-        }, {});
+          .filter(key => !keysToRemove.includes(key))
+          .reduce((obj, key) => {
+              obj[key] = data[key];
+              return obj;
+          }, {});
+      
     
         const  defalutJobValue = '-NA-'
         // Update the 'Amount (ICY)' property in the filtered data object with the merged amount
