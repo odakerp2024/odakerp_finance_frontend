@@ -71,10 +71,8 @@ export class InvoicesArDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.createInvoiceForm();
-    this.getNumberRange();
-    this.getStatus();
-    this.getCustomerList();
     this.route.params.subscribe(res => {
+      debugger
       if (res.id) {
         this.isUpdate = true;
         this.isUpdateMode = true;
@@ -84,6 +82,10 @@ export class InvoicesArDetailsComponent implements OnInit {
         this.invoiceForm.disable();
       }
     })
+    
+    this.getNumberRange();
+    this.getStatus();
+    this.getCustomerList();
   }
 
   updateValue(){
@@ -185,20 +187,25 @@ export class InvoicesArDetailsComponent implements OnInit {
   }
 
   getInvoiceInfo() {
-    var service = `${this.globals.APIURL}/OutStandingInvoiceAR/GetOutStandingInvoiceARById`;
+    const service = `${this.globals.APIURL}/OutStandingInvoiceAR/GetOutStandingInvoiceARById`;
     this.dataService.post(service, { OutStandingInvoiceId: this.invoiceARId }).subscribe(async (result: any) => {
       this.FileList = [];
       this.receiptList = [];
       this.openInvoiceList = [];
+      
       if (result.message == 'Success' && result['data'].Table.length > 0) {
         let tableInfo = result['data'].Table[0];
         this.ModifiedOn = tableInfo.UpdatedDate;
         this.CreatedOn = tableInfo.CreatedDate;
         this.ModifiedBy = tableInfo.UpdatedByName;
         this.CreatedBy = tableInfo.CreatedByName;
-        for (let data of result['data'].Table1) { this.addReceiptInfo(); data.VoucherDate = this.datePipe.transform(data.VoucherDate, 'y-MM-dd') }
-        for (let data of result['data'].Table2) { this.addOpenInvoiceInfo(); data.InvoiceDate = this.datePipe.transform(data.InvoiceDate, 'y-MM-dd') }
-        if (tableInfo.IsFinal) this.IsFinal = true;
+
+        for (let data of result['data'].Table1) {this.addReceiptInfo();
+        }
+
+        for (let data of result['data'].Table2) {this.addOpenInvoiceInfo();
+        }
+
         this.invoiceForm.patchValue({
           OutStandingInvoiceId: tableInfo.OutStandingInvoiceId,
           ReferenceNo: tableInfo.ReferenceNo,
@@ -213,18 +220,29 @@ export class InvoicesArDetailsComponent implements OnInit {
           IsFinal: tableInfo.IsFinal,
           IsDelete: tableInfo.IsDelete ? tableInfo.IsDelete : 0,
           CreatedBy: tableInfo.CreatedBy,
-          receiptInfo: result['data'].Table1,
-          openInvoiceInfo: result['data'].Table2
         });
-        this.receiptList = result['data'].Table1;
-        this.openInvoiceList = result['data'].Table1;
+
+        this.receiptList = result['data'].Table1.map(data => {
+          data.VoucherDate = this.datePipe.transform(data.VoucherDate, 'y-MM-dd');
+          return data;
+        });
+
+        this.openInvoiceList = result['data'].Table2.map(data => {
+          data.InvoiceDate = this.datePipe.transform(data.InvoiceDate, 'y-MM-dd');
+          return data;
+        });
+
+        this.invoiceForm.setControl('receiptInfo', this.fb.array(this.receiptList.map(receipt => this.fb.group(receipt))));
+        this.invoiceForm.setControl('openInvoiceInfo', this.fb.array(this.openInvoiceList.map(invoice => this.fb.group(invoice))));
+
         this.TotalDebitAmount = tableInfo.TotalDebitAmount.toFixed(this.entityFraction);
         this.TotalCreditAmount = tableInfo.TotalCreditAmount.toFixed(this.entityFraction);
         if (result['data'].Table3.length > 0) this.FileList = result['data'].Table3;
       }
-    }, error => { console.error(error) });
+    }, error => {
+      console.error(error);
+    });
   }
-
   createInvoiceForm() {
     this.invoiceForm = this.fb.group({
       OutStandingInvoiceId: [this.invoiceARId],
@@ -299,12 +317,13 @@ export class InvoicesArDetailsComponent implements OnInit {
   }
 
   partyEvent(event) {
+    debugger
     var service = `${this.globals.APIURL}/OutStandingInvoiceAR/OutStandingInvoiceARDropDown`;
     this.dataService.post(service, { CustomerId: event }).subscribe((result: any) => {
       this.receiptList = [];
       this.openInvoiceList = [];
       this.clearFormArray();
-
+debugger
       if (result.message == "Success" && result.data.Table.length >= 0) {
         for (let data of result.data.Table) {
           this.addReceiptInfo();
@@ -326,9 +345,9 @@ export class InvoicesArDetailsComponent implements OnInit {
        
 
         }
+        debugger
         this.invoiceForm.patchValue({ receiptInfo: this.receiptList });
-        this.newReceiptList = this.receiptList;
-   
+        // this.newReceiptList = this.receiptList;
       
         if (result.data.Table1.length > 0) {
           
@@ -348,8 +367,9 @@ export class InvoicesArDetailsComponent implements OnInit {
             });
           }
         }
+        debugger
         this.invoiceForm.patchValue({ openInvoiceInfo: this.openInvoiceList });
-        this.newInvoiceList = this.openInvoiceList;
+        // this.newInvoiceList = this.openInvoiceList;
       }
     }, error => { });
   }
@@ -369,26 +389,38 @@ export class InvoicesArDetailsComponent implements OnInit {
     items2.clear();
   }
 
+  getIsChecked(i, type) {
+    if (i === undefined) return false;
 
+    if (type === 'Receipts') {
+        const receipt = this.ReceiptInfo.value[i];
+        return receipt?.IsSelect ?? false;
+    } else if (type === 'Invoices') {
+        const invoice = this.OpenInvoiceInfo.value[i];
+        return invoice?.IsSelect ?? false;
+    }
+
+    return false;
+}
   
    setOffChangeEvent(data, index, type) {
-    
+    debugger
      if (type == 'Receipts') {
       const controlAtIndex = this.ReceiptInfo.at(index);
-       const pendingAmount = this.newReceiptList.at(index).PendingAmount - controlAtIndex.value.AdjustedAmount;
+       const pendingAmount = this.receiptList.at(index).VoucherAmount - controlAtIndex.value.AdjustedAmount;
        if (pendingAmount >= 0) {
         controlAtIndex.patchValue({ PendingAmount: pendingAmount.toFixed(this.entityFraction) });
       }
      else {
        Swal.fire('Your amount has exceeded the limit!');
-        controlAtIndex.patchValue({ PendingAmount: controlAtIndex.value.PendingAmount });
+        controlAtIndex.patchValue({ PendingAmount: controlAtIndex.value.VoucherAmount });
         controlAtIndex.patchValue({ AdjustedAmount: 0 });
      }
       this.calculateCreditDebitAmount(type);
    }
     else if (type == 'Invoices') {
       const controlAtIndex = this.OpenInvoiceInfo.at(index);
-      const pendingAmount = this.newInvoiceList.at(index).InvoiceAmount - controlAtIndex.value.AdjustedAmount;
+      const pendingAmount = this.openInvoiceList.at(index).InvoiceAmount - controlAtIndex.value.AdjustedAmount;
       if (pendingAmount >= 0) {
         controlAtIndex.patchValue({ PendingAmount: pendingAmount.toFixed(this.entityFraction) });
       }  
@@ -417,7 +449,7 @@ export class InvoicesArDetailsComponent implements OnInit {
     }
   }
 
-  calculateCreditDebitAmount(type: string) {
+  calculateCreditDebitAmount(type: string) { 
     if (type == 'Receipts') {
       var AdjustedAmountReceipt = 0;
       if (this.invoiceForm.value.receiptInfo.length > 0) {
@@ -442,21 +474,6 @@ export class InvoicesArDetailsComponent implements OnInit {
     }
   }
 
-  getIsChecked(i, type){
-    debugger
-    if (type == 'Receipts') {
-    if (i !== undefined){
-    return this.ReceiptInfo.value[i].IsSelect == false || this.ReceiptInfo.value[i].IsSelect == null ? false : true;
-    }
-    return false;
-  }
-  else if (type == 'Invoices') {
-    if (i !== undefined){
-      return this.OpenInvoiceInfo.value[i].IsSelect == false || this.OpenInvoiceInfo.value[i].IsSelect == null ? false : true;
-      }
-      return false;
-  }
-}
 
   // fileSelected(event) {
   //   if (event.target.files.length > 0 && this.FileList.length < 5) {
@@ -608,9 +625,8 @@ private downloadFile = (data: HttpResponse<Blob>) => {
           this.ViewPage();
           return;
         }
-
         await this.createPayload(status);
-
+debugger
         let service = `${this.globals.APIURL}/OutStandingInvoiceAR/SaveOutStandingInvoiceAR`;
         this.dataService.post(service, this.payload).subscribe((result: any) => {
           if (result.message == "Success") {
@@ -650,6 +666,7 @@ private downloadFile = (data: HttpResponse<Blob>) => {
   }
   editinvoiceAR(id: number) {
     this.router.navigate(['/views/transactions/invoices_AR_view/invoices_AR_Details', { id: id, isUpdate: true }]);
+    
   }
   
   ViewPage(){
