@@ -403,7 +403,7 @@ export class ReportJournalVoucherComponent implements OnInit {
       const row = worksheet.addRow(Object.values(filteredData));
 
       // Set text color for customer, receipt, and amount columns
-      const columnsToColor = ['Voucher', 'Account', 'Amount (CCY)', 'Amount'];
+      const columnsToColor = ['Voucher', 'Account', 'Amount (CCY)', 'Amount','Ex Rate'];
       columnsToColor.forEach(columnName => {
         const columnIndex = Object.keys(filteredData).indexOf(columnName);
         if (columnIndex !== -1) {
@@ -560,7 +560,7 @@ export class ReportJournalVoucherComponent implements OnInit {
       const row = worksheet.addRow(Object.values(filteredData));
 
       // Set text color for customer, receipt, and amount columns
-      const columnsToColor = ['Voucher', 'Account', 'Amount (CCY)', 'Amount'];
+      const columnsToColor = ['Voucher', 'Account', 'Amount (CCY)', 'Amount','Ex Rate'];
       columnsToColor.forEach(columnName => {
         const columnIndex = Object.keys(filteredData).indexOf(columnName);
         if (columnIndex !== -1) {

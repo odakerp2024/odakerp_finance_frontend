@@ -422,7 +422,7 @@ export class ReportReceiptVoucherComponent implements OnInit {
       const row = worksheet.addRow(Object.values(filteredData));
 
       // Set text color for customer, receipt, and amount columns
-      const columnsToColor = ['Customer', 'Receipt', 'Amount (CCY)', 'Amount (ICY)'];
+      const columnsToColor = ['Customer', 'Receipt', 'Amount (CCY)', 'Amount (ICY)','TDS Amount', 'Ex Rate Gain','Ex Rate Loss','Bank Charges'];
       columnsToColor.forEach(columnName => {
         const columnIndex = Object.keys(filteredData).indexOf(columnName);
         if (columnIndex !== -1) {
@@ -586,7 +586,7 @@ export class ReportReceiptVoucherComponent implements OnInit {
       const row = worksheet.addRow(Object.values(filteredData));
 
       // Set text color for customer, receipt, and amount columns
-      const columnsToColor = ['Customer', 'Receipt', 'Amount (CCY)', 'Amount (ICY)'];
+      const columnsToColor = ['Customer', 'Receipt', 'Amount (CCY)', 'Amount (ICY)' , 'TDS Amount', 'Ex Rate Gain','Ex Rate Loss','Bank Charges'];
       columnsToColor.forEach(columnName => {
         const columnIndex = Object.keys(filteredData).indexOf(columnName);
         if (columnIndex !== -1) {
