@@ -30,6 +30,9 @@ export class TrialbalancetwoComponent implements OnInit {
   currentDate: Date = new Date();
   data: any[];
   TemplateUploadURL = this.globals.TemplateUploadURL;
+  totalDebitAmount = 0;
+  totalCreditAmount = 0;
+  totalAmount = 0;   
 
   @ViewChild('table') table: ElementRef;
 
@@ -115,26 +118,31 @@ export class TrialbalancetwoComponent implements OnInit {
   }
 
   getbyidBalancelist() {
-    var service = `
-    https://odakfnqa.odaksolutions.in/api/Reports/GetLedgerDataById
-    `;
-    var payload = {
-      "AccountId": 784,
-      "Date": "2024-04-30",
-      "DivisionId": 1,
-    "OfficeId" : 2
+    const service = `https://odakfnqa.odaksolutions.in/api/Reports/GetLedgerDataById`;
+    const payload = {
+        "AccountId": 784,
+        "Date": "2024-04-30",
+        "DivisionId": 1,
+        "OfficeId": 2
     };
 
     this.dataService.post(service, payload).subscribe((result: any) => {
         this.balanceList = [];
         if (result.message == 'Success' && result.data.Table.length > 0) {
             this.balanceList = result.data.Table;
-            // this.setPage(1);
+            this.calculateTotals();
         }
     }, error => {
         console.error("Error occurred:", error); 
     });
 }
+
+calculateTotals() {
+    this.totalDebitAmount = this.balanceList.reduce((sum, item) => sum + (item.Debit || 0), 0);
+    this.totalCreditAmount = this.balanceList.reduce((sum, item) => sum + (item.Credit || 0), 0);
+    this.totalAmount = this.balanceList.reduce((sum, item) => sum + (item.Amount || 0), 0);
+}
+
 
 createBalanceFilterForm() {
   this.filterForm = this.fb.group({

@@ -1,7 +1,11 @@
-<div class="card p-4">
+<div class="container-fluid">
     <form [formGroup]="filterForm">
+        <div class="card mt-0 p-3">
 
         <div class="row">
+            <div class="col-10">
+                <div class="row pb-1">
+                    
             <div class="col-md-2">
                 <label class="str mb-2">Date</label>
                 <mat-form-field class="tillDate mat_date_picker" appearance="outline">
@@ -38,94 +42,127 @@
                     </ng-container>
                 </ng-select>
             </div>
-            <div class="col-md-2 searchbtn alrt text-left mb-3 mt-4">
-                <button style="padding: 2px 0px !important;width: 40%;font-size: 14px !important;margin-top:4px;"
-                    class="btn btn-raised btn-danger mb-0" (click)="createFilterForm();trailbalanceList();">
-                    Clear
-                </button>
 
+                </div>
             </div>
 
 
-            <div class="col-md-2"></div>
-
-
-            <div class="col-md-2" style="margin-top: 39px;">
-                Download a
-                <!-- <a href="{{this.TemplateUploadURL}}/assets/Uploads/Asset Template.xlsx" (click)="downloadExcel()">Sample File</a> -->
-                <a href="javascript:;" (click)="downloadExcel()">Sample File</a>
-
+            <div class="col-2" style="padding-top: 23px;">
+                <div class="text-center">
+                    <button type="button" (click)="createFilterForm();trailbalanceList();"
+                        class="btn btn-warning text-white mb-0 col-auto clear-btn">
+                        CLEAR
+                    </button>
+                </div>
             </div>
 
-            <!-- <button (click)="downloadExcel()">downloadExcel</button> -->
-
-
+            </div>
 
         </div>
     </form>
 
-    <div class="col-md-12 mt-3"></div>
-
 
     <div class="row">
-        <div class="col-md-4"></div>
+        <div class="col-md-12 mt-2">
+            <div class="card m-b-30">
+                <div class="card-body cpad enqview">
+       
+               <div class="row">
+                <div class="col-10 justify-content-end text-center ">
+                   <h6 class="title">ODAK SOLUTIONS PRIVATE LIMITED</h6>
+                   <h6 class="subtitle">Trail Balance</h6>
+                   <p class="subtitle">Basis: Accrual</p>
+                   <p class="subtitle">As of {{ selectedDate ? selectedDate : currentDate | date:'mediumDate' }}</p>
+       
+               </div>
+        
+                <div class="col-2 text-right ">
+                    <div style="font-weight: 600;padding-top: 18px;padding-right: 10px;">
+                        <img style="cursor: pointer;" width="36px" height="36px"
+                        class="exportAs mx-1 align-baseline"
+                        src="../../../../../assets/images/csv_color.png" (click)="downloadExcel()"
+                        alt="logo">
+                        <img style="cursor: pointer;" width="36px" height="36px"
+                        class="exportAs mx-1 align-baseline"
+                        src="../../../../../assets/images/xlsx_color.png" (click)="downloadExcel()"
+                        alt="logo">
+                    </div>
+                </div>
+       
+               </div>
+               
+               </div>
+        
+        
+                <div class="col-12">
+                    <table id="datatable-buttons" #table class="table table-responsive table-bordered w-100 dataTable no-footer"
+                        role="grid" aria-describedby="datatable-buttons_info">
+                        <thead>
+                            <tr role="row">
+                                <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                                    colspan="1" aria-label="Date: activate to sort column ascending"
+                                                    (click)="sort('Date')" style="width: 177.575px;">Account  </th>
+                                <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                                    colspan="1" aria-label="Name: activate to sort column ascending"
+                                                    (click)="sort('Receipt')" style="width: 177.575px;">Account Code</th>
+                                <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                                    colspan="1" aria-label="Name: activate to sort column ascending"
+                                                    (click)="sort('Type')" style="width: 177.575px;">Net Credit</th>
+                                <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                                    colspan="1" aria-label="Name: activate to sort column ascending"
+                                                    (click)="sort('CustomerName')" style="width: 177.575px;">Net Debit</th>
+                            </tr>
+            
+                        </thead>
+            
+                        <tbody>
+                            <ng-container *ngIf="pagedItems.length > 0; else noRecord">
+                                <ng-container *ngFor="let group of pagedItems">
+                                    <!-- Group header row with blue background -->
+                                    <tr>
+                                        <td colspan="9" style=" font-weight: bold;">
+                                            {{ group.GroupName | uppercase }}
+                                        </td>
+                                    </tr>
+                                    <!-- Rows for items within the group -->
+                                    <tr *ngFor="let balance of group.items; let i = index">
+                                        <td (click)="editBalance(balance.ChartOfAccountsId)" style="color: #0366d6; cursor: pointer;">
+                                            {{ balance.GrandParentAccountName }} - {{ balance.ParentAccountName }} - {{ balance.ChildAccountName }}
+                                        </td>
+                                        <td>{{ balance.ChartOfAccountsId }}</td>
+                                        <td *ngIf="balance.ChildTransaction_Type === 'Credit'">{{ balance.ChildNet_Balance | dynamicDecimal: entityFraction }}</td>
+                                        <td *ngIf="balance.ChildTransaction_Type !== 'Credit'">0</td>
+                                        <td *ngIf="balance.ChildTransaction_Type === 'Debit'">{{ balance.ChildNet_Balance | dynamicDecimal: entityFraction }}</td>
+                                        <td *ngIf="balance.ChildTransaction_Type !== 'Debit'">0</td>
+                                    </tr>
+                                </ng-container>
+                            </ng-container>
+                            <ng-template #noRecord>
+                                <tr *ngIf="pagedItems.length === 0">
+                                    <td class="text-center" colspan="9" style="height: 100px;">No Records Found</td>
+                                </tr>
+                            </ng-template>
+                        </tbody>
+                        
+                        <tfoot>
+                            <tr class="footer-position-sticky" style=" padding: 7px !important;
+                            background-image: linear-gradient(#3A5BA0, #273773) !important;
+                            color: #fff !important;">
+                                <td colspan="1" class="text-left">
+                                    <span style="font-size: medium;">Grand Total : </span>
+                                </td>
+                              
+                                <td class="text-right" colspan="1"></td>
+                                <td class="text-right" colspan="1">{{totalcreditamount | dynamicDecimal: entityFraction}}</td>
+                                <td class="text-right" colspan="1">{{totaldebitamount | dynamicDecimal: entityFraction}}</td>
 
-        <div class="col-md-4 txts">
-            <h3>ODAK SOLUTIONS PRIVATE LIMITED</h3>
-            <h2>Trail Balance</h2>
-            <p>Basis: Accrual</p>
-            <p>As of {{ selectedDate ? selectedDate : currentDate | date:'mediumDate' }}</p>
-
-        </div>
-
-        <div class="col-md-4"></div>
-
-    </div>
-
-    <div class="col-md-12 mt-3"></div>
-
-    <div class="col-sm-12 scrtbl">
-        <table id="datatable-buttons" #table class="table table-striped table-bordered w-100 dataTable no-footer"
-            role="grid" aria-describedby="datatable-buttons_info">
-            <thead>
-                <tr role="row">
-                    <th>Account</th>
-                    <th>Account Code</th>
-                    <th>Net Credit</th>
-                    <th>Net Debit</th>
-                </tr>
-                <tr>
-                    <th colspan="4">Assets</th>
-
-                </tr>
-
-            </thead>
-            <tbody>
-                <ng-container *ngIf="pagedItems.length > 0 else noRecord">
-                    <!-- <tr *ngFor="let balance of balancelist"> --> 
-                <tr *ngFor="let balance of pagedItems; let i = index">
-                    <td (click)="editBalance(balance.ChartOfAccountsId)" style="color: #0366d6;cursor: pointer;">{{
-                        balance.GrandParentAccountName }} - {{ balance.ParentAccountName }} - {{
-                        balance.ChildAccountName }}</td>
-                    <td>{{ balance.ChartOfAccountsId }}</td>
-                    <td *ngIf="balance.ChildTransaction_Type === 'Credit'">{{ balance.ChildNet_Balance }}</td>
-                    <td *ngIf="balance.ChildTransaction_Type !== 'Credit'">null</td>
-                    <td *ngIf="balance.ChildTransaction_Type === 'Debit'">{{ balance.ChildNet_Balance }}</td>
-                    <td *ngIf="balance.ChildTransaction_Type !== 'Debit'">null</td>
-                </tr>
-            </ng-container>
-            <ng-template #noRecord>
-                <tr  *ngIf="pagedItems.length == 0">
-                    <td class="text-center" colspan="9" style="height: 100px;">No Records Found</td>
-                </tr>
-            </ng-template>
-            </tbody>
-
-        </table>
-
-    </div>
-
-    <div style=" width: 100%;justify-content: end;" class="row page">
+                            </tr>
+                        </tfoot>
+            
+                    </table>
+            
+                </div>
+    <!-- <div class="row page mr-3" align="right">
         <ul *ngIf="pager.totalItems > 10 && pager.totalItems > 10"
             class="pagination">
             <li [ngClass]="{disabled:pager.currentPage === 1}">
@@ -151,8 +188,10 @@
                 <a (click)="setPage(pager.totalPages)">Last</a>
             </li>
         </ul>
-    </div>
+    </div> -->
 
-
+                </div>
+            </div>
+        </div>
 </div>
 

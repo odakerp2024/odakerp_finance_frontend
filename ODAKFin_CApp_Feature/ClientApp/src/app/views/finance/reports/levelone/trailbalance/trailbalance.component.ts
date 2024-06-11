@@ -12,6 +12,8 @@ import { ContraVoucherService } from 'src/app/services/contra-voucher.service';
 // import { CommonService } from 'src/app/services/common.service';
 import * as XLSX from 'xlsx';
 import { HttpClient } from '@angular/common/http';
+import { Workbook } from 'exceljs';
+import { saveAs } from 'file-saver';
 
 
 
@@ -38,7 +40,11 @@ export class TrailbalanceComponent implements OnInit {
   bankListDetails: any = [];
   TemplateUploadURL = this.globals.TemplateUploadURL;
   dataList: any;
-
+  totalcreditamount  = 0;
+  totaldebitamount   = 0;
+  entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
+  entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
+  
   @ViewChild('table') table: ElementRef;
 
   constructor(public ps: PaginationService,
@@ -118,21 +124,56 @@ export class TrailbalanceComponent implements OnInit {
         "OfficeId": 0,
         "Date": ""
     };
+debugger
+this.dataService.post(service, payload).subscribe((result: any) => {
+  this.balanceList = [];
+  if (result.message === 'Success' && result.data.Table.length > 0) {
+      // Group the items by group name
+      const groupedItems = result.data.Table.reduce((groups: any, item: any) => {
+          const group = item.GroupName;
+          if (!groups[group]) {
+              groups[group] = [];
+          }
+          groups[group].push(item);
+          return groups;
+      }, {});
 
-    this.dataService.post(service, payload).subscribe((result: any) => {
-        this.balanceList = [];
-        if (result.message == 'Success' && result.data.Table.length > 0) {
-            this.balanceList = result.data.Table;
-            this.setPage(1);
-        }else{
-          this.pager = {};
-          this.balanceList = []
-          this.pagedItems = [];
-        }
-    }, error => {
-        console.error("Error occurred:", error); 
-        
-    });
+      this.balanceList = Object.keys(groupedItems).map(group => ({
+          GroupName: group,
+          items: groupedItems[group]
+      }));
+
+      // Assign grouped list to pagedItems
+      this.pagedItems = this.balanceList;
+      this.setPage(1);
+      this.totalcreditamount = this.calculateTotalCreditAmount(this.pagedItems);
+      this.totaldebitamount = this.calculateTotalDebitAmount(this.pagedItems);
+  } else {
+    this.totalcreditamount  = 0;
+    this.totaldebitamount   = 0;
+      this.pager = {};
+      this.balanceList = [];
+      this.pagedItems = [];
+  }
+}, error => {
+  console.error("Error occurred:", error);
+});
+}
+
+calculateTotalCreditAmount(items: any[]): number {
+  return items.reduce((sum, group) => {
+      return sum + group.items.reduce((groupSum, item) => {
+          return groupSum + (item.ChildTransaction_Type === 'Credit' ? item.ChildNet_Balance : 0);
+      }, 0);
+  }, 0);
+}
+
+calculateTotalDebitAmount(items: any[]): number {
+  return items.reduce((sum, group) => {
+      return sum + group.items.reduce((groupSum, item) => {
+          return groupSum + (item.ChildTransaction_Type === 'Debit' ? item.ChildNet_Balance : 0);
+      }, 0);
+  }, 0);
 }
 
 createFilterForm(){
@@ -163,7 +204,8 @@ editBalance(id: number) {
    
   }, err => {
     console.log('error:', err.message);
-  });
+});
+ 
 }
 
 onDivisionChange(value: any) {
@@ -177,10 +219,27 @@ onDivisionChange(value: any) {
     "Date": ""
   };
 
+  
   this.dataService.post(service, payload).subscribe((result: any) => {
     this.balanceList = [];
     if (result.message == 'Success' && result.data.Table.length > 0) {
-      this.balanceList = result.data.Table;
+     // Group the items by group name
+      const groupedItems = result.data.Table.reduce((groups: any, item: any) => {
+          const group = item.GroupName;
+          if (!groups[group]) {
+              groups[group] = [];
+          }
+          groups[group].push(item);
+          return groups;
+      }, {});
+
+      this.balanceList = Object.keys(groupedItems).map(group => ({
+          GroupName: group,
+          items: groupedItems[group]
+      }));
+
+      // Assign grouped list to pagedItems
+      this.pagedItems = this.balanceList;
       this.setPage(1);
     }else{
       this.pager = {};
@@ -191,6 +250,7 @@ onDivisionChange(value: any) {
     console.error("Error occurred:", error); // Log the error for debugging
   });
 }
+
 
 onOfficeChange(values: any) {
 
@@ -205,7 +265,23 @@ onOfficeChange(values: any) {
   this.dataService.post(service, payload).subscribe((result: any) => {
     this.balanceList = [];
     if (result.message == 'Success' && result.data.Table.length > 0) {
-      this.balanceList = result.data.Table;
+      // Group the items by group name
+      const groupedItems = result.data.Table.reduce((groups: any, item: any) => {
+          const group = item.GroupName;
+          if (!groups[group]) {
+              groups[group] = [];
+          }
+          groups[group].push(item);
+          return groups;
+      }, {});
+
+      this.balanceList = Object.keys(groupedItems).map(group => ({
+          GroupName: group,
+          items: groupedItems[group]
+      }));
+
+      // Assign grouped list to pagedItems
+      this.pagedItems = this.balanceList;
       this.setPage(1);
     }else{
       this.pager = {};
@@ -215,6 +291,7 @@ onOfficeChange(values: any) {
   }, error => {
     console.error("Error occurred:", error); 
   });
+
 
 }
 
@@ -232,8 +309,24 @@ BasedOnDate(selectedDate: any) {
   this.dataService.post(service, payload).subscribe((result: any) => {
     this.balanceList = [];
     if (result.message == 'Success' && result.data.Table.length > 0) {
-      this.balanceList = result.data.Table;
-      this.setPage(1);
+       // Group the items by group name
+       const groupedItems = result.data.Table.reduce((groups: any, item: any) => {
+        const group = item.GroupName;
+        if (!groups[group]) {
+            groups[group] = [];
+        }
+        groups[group].push(item);
+        return groups;
+    }, {});
+
+    this.balanceList = Object.keys(groupedItems).map(group => ({
+        GroupName: group,
+        items: groupedItems[group]
+    }));
+
+    // Assign grouped list to pagedItems
+    this.pagedItems = this.balanceList;
+    this.setPage(1);
     }else{
       this.pager = {};
       this.balanceList = []
@@ -274,40 +367,139 @@ debugger
 }
 
 
-downloadExcel() {
-  if (!this.table) {
-      console.error('Table element not found.');
-      return;
+// downloadExcel() {
+//   if (!this.table) {
+//       console.error('Table element not found.');
+//       return;
+//   }
+
+//   // Convert the table to a worksheet
+//   const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(this.table.nativeElement);
+
+//   // Get the range of the header row
+//   const headerRange = XLSX.utils.decode_range(ws['!ref']);
+//   for (let col = headerRange.s.c; col <= headerRange.e.c; col++) {
+//       const cellAddress = XLSX.utils.encode_cell({ r: headerRange.s.r, c: col });
+
+//       // Apply styling to each cell in the header row
+//       if (!ws[cellAddress]) {
+//           ws[cellAddress] = {};
+//       }
+//       ws[cellAddress].s = {
+//           font: { bold: true }, // Make the header text bold
+//           fill: { fgColor: { rgb: "D3D3D3" } } // Set the background color of the header row to light gray
+//       };
+//   }
+
+//   // Create a new workbook
+//   const wb: XLSX.WorkBook = XLSX.utils.book_new();
+
+//   // Add the worksheet to the workbook
+//   XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+//   // Write the workbook to a file
+//   XLSX.writeFile(wb, 'table_data.xlsx');
+// }
+async downloadExcel() {
+  if (!this.pagedItems || this.pagedItems.length === 0) {
+    Swal.fire('No record found');
+    return;
   }
 
-  // Convert the table to a worksheet
-  const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(this.table.nativeElement);
+  const workbook = new Workbook();
+  const worksheet = workbook.addWorksheet('Report');
 
-  // Get the range of the header row
-  const headerRange = XLSX.utils.decode_range(ws['!ref']);
-  for (let col = headerRange.s.c; col <= headerRange.e.c; col++) {
-      const cellAddress = XLSX.utils.encode_cell({ r: headerRange.s.r, c: col });
+  // Add title and subtitle rows
+  const titleRow = worksheet.addRow(['', '', 'ODAK SOLUTIONS PRIVATE LIMITED', '', '', '']);
+  titleRow.getCell(3).font = { size: 15, bold: true };
+  titleRow.getCell(3).alignment = { horizontal: 'center' };
+  const subtitleRow = worksheet.addRow(['', '', 'Trail Balance', '', '', '']);
+  subtitleRow.getCell(3).font = { size: 15, bold: true };
+  subtitleRow.getCell(3).alignment = { horizontal: 'center' };
 
-      // Apply styling to each cell in the header row
-      if (!ws[cellAddress]) {
-          ws[cellAddress] = {};
+  // Add date row
+  const currentDate = new Date();
+  worksheet.addRow(['', '', `As of ${currentDate.toDateString()}`, '', '', '']);
+
+  // Define header row
+  const headers = ['Account', 'Account Code', 'Net Credit', 'Net Debit'];
+  const headerRow = worksheet.addRow(headers);
+
+  // Style the header row
+  headerRow.eachCell((cell) => {
+    cell.fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: '8A9A5B' },
+    };
+    cell.font = {
+      bold: true,
+      color: { argb: 'FFFFF7' }
+    };
+    cell.alignment = {
+      horizontal: 'center',
+    };
+    cell.border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+  });
+
+  // Add data rows
+  this.pagedItems.forEach(group => {
+    // Add group header row
+    worksheet.addRow([group.GroupName.toUpperCase(), '', '', '']);
+    group.items.forEach(balance => {
+      const rowData = [
+        `${balance.GrandParentAccountName} - ${balance.ParentAccountName} - ${balance.ChildAccountName}`,
+        balance.ChartOfAccountsId,
+        balance.ChildTransaction_Type === 'Credit' ? balance.ChildNet_Balance : 0,
+        balance.ChildTransaction_Type === 'Debit' ? balance.ChildNet_Balance : 0
+      ];
+      worksheet.addRow(rowData);
+      
+    });
+  });
+
+
+
+  // Adjust column widths
+  worksheet.columns.forEach(column => {
+    let maxLength = 0;
+    column.eachCell({ includeEmpty: true }, cell => {
+      const columnLength = cell.value ? cell.value.toString().length : 0;
+      if (columnLength > maxLength) {
+        maxLength = columnLength;
       }
-      ws[cellAddress].s = {
-          font: { bold: true }, // Make the header text bold
-          fill: { fgColor: { rgb: "D3D3D3" } } // Set the background color of the header row to light gray
-      };
-  }
+    });
+    column.width = maxLength + 2;
+  });
+ // Style the footer row with yellow background, bold, and centered text
+ const footerRow = worksheet.addRow(['End of Report']);
+ footerRow.eachCell((cell) => {
+   cell.fill = {
+     type: 'pattern',
+     pattern: 'solid',
+     fgColor: { argb: '8A9A5B' },
+   };
+   cell.font = {
+     bold: true,
+     color: { argb: 'FFFFF7' }
+   };
+   cell.alignment = {
+     horizontal: 'center',
+   };
+ });
 
-  // Create a new workbook
-  const wb: XLSX.WorkBook = XLSX.utils.book_new();
-
-  // Add the worksheet to the workbook
-  XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-
-  // Write the workbook to a file
-  XLSX.writeFile(wb, 'table_data.xlsx');
+ // Merge footer cells if needed
+ worksheet.mergeCells(`A${footerRow.number}:${String.fromCharCode(65 + headers.length - 1)}${footerRow.number}`);
+  // Write to Excel and save
+  const buffer = await workbook.xlsx.writeBuffer();
+  const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+  saveAs(blob, 'Report-TrailBalance.xlsx');
 }
-
 
 
 
