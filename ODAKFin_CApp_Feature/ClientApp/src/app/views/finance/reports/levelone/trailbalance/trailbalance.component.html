@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <form [formGroup]="filterForm">
         <div class="card mt-0 p-3">
-
+           
         <div class="row">
             <div class="col-10">
                 <div class="row pb-1">
@@ -102,9 +102,9 @@
                                 <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                                     colspan="1" aria-label="Date: activate to sort column ascending"
                                                     (click)="sort('Date')" style="width: 177.575px;">Account  </th>
-                                <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                <!-- <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                                     colspan="1" aria-label="Name: activate to sort column ascending"
-                                                    (click)="sort('Receipt')" style="width: 177.575px;">Account Code</th>
+                                                    (click)="sort('Receipt')" style="width: 177.575px;">Account Code</th> -->
                                 <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                                     colspan="1" aria-label="Name: activate to sort column ascending"
                                                     (click)="sort('Type')" style="width: 177.575px;">Net Credit</th>
@@ -129,12 +129,18 @@
                                         <td (click)="editBalance(balance.ChartOfAccountsId)" style="color: #0366d6; cursor: pointer;">
                                             {{ balance.GrandParentAccountName }} - {{ balance.ParentAccountName }} - {{ balance.ChildAccountName }}
                                         </td>
-                                        <td>{{ balance.ChartOfAccountsId }}</td>
-                                        <td *ngIf="balance.ChildTransaction_Type === 'Credit'">{{ balance.ChildNet_Balance | dynamicDecimal: entityFraction }}</td>
-                                        <td *ngIf="balance.ChildTransaction_Type !== 'Credit'">0</td>
-                                        <td *ngIf="balance.ChildTransaction_Type === 'Debit'">{{ balance.ChildNet_Balance | dynamicDecimal: entityFraction }}</td>
-                                        <td *ngIf="balance.ChildTransaction_Type !== 'Debit'">0</td>
+                                        <td class="hyperTextColor text-right" *ngIf="balance.ChildTransaction_Type === 'Credit'">
+                                            {{ balance.ChildNet_Balance | dynamicDecimal: entityFraction | entityThousands }}
+                                        </td>
+                                        <td class="hyperTextColor text-right" *ngIf="balance.ChildTransaction_Type !== 'Credit'">0</td>
+                                        <td class="hyperTextColor text-right" *ngIf="balance.ChildTransaction_Type === 'Debit'">
+                                            {{ balance.ChildNet_Balance | dynamicDecimal: entityFraction | entityThousands }}
+                                        </td>
+                                        <td class="hyperTextColor text-right" *ngIf="balance.ChildTransaction_Type !== 'Debit'">0</td>
                                     </tr>
+                                    
+                                    
+                                    
                                 </ng-container>
                             </ng-container>
                             <ng-template #noRecord>
@@ -152,9 +158,8 @@
                                     <span style="font-size: medium;">Grand Total : </span>
                                 </td>
                               
-                                <td class="text-right" colspan="1"></td>
-                                <td class="text-right" colspan="1">{{totalcreditamount | dynamicDecimal: entityFraction}}</td>
-                                <td class="text-right" colspan="1">{{totaldebitamount | dynamicDecimal: entityFraction}}</td>
+                                <td class="text-right" colspan="1">{{totalcreditamount | dynamicDecimal: entityFraction | number:'1.' + entityFraction + '-' + entityFraction }}</td>
+                                <td class="text-right" colspan="1">{{totaldebitamount | dynamicDecimal: entityFraction | number:'1.' + entityFraction + '-' + entityFraction }}</td>
 
                             </tr>
                         </tfoot>

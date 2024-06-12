@@ -55,6 +55,9 @@ export class TrialbalancetwoComponent implements OnInit {
       // this.setPage(1);
     });
   }
+  Cancel(){
+    this.router.navigate(['/views/finance/reports/levelone', {  }])
+  }
 
   fetchData(id: number): void {
     debugger;

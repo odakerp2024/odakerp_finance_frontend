@@ -17,6 +17,7 @@ import { saveAs } from 'file-saver';
 
 
 
+
 @Component({
   selector: 'app-trailbalance',
   templateUrl: './trailbalance.component.html',
@@ -44,6 +45,7 @@ export class TrailbalanceComponent implements OnInit {
   totaldebitamount   = 0;
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
   entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
+  entityThousands = Number(this.commonDataService.getLocalStorageEntityConfigurable('CurrenecyFormat'));
   
   @ViewChild('table') table: ElementRef;
 
@@ -159,6 +161,8 @@ this.dataService.post(service, payload).subscribe((result: any) => {
   console.error("Error occurred:", error);
 });
 }
+
+
 
 calculateTotalCreditAmount(items: any[]): number {
   return items.reduce((sum, group) => {
@@ -367,39 +371,7 @@ debugger
 }
 
 
-// downloadExcel() {
-//   if (!this.table) {
-//       console.error('Table element not found.');
-//       return;
-//   }
 
-//   // Convert the table to a worksheet
-//   const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(this.table.nativeElement);
-
-//   // Get the range of the header row
-//   const headerRange = XLSX.utils.decode_range(ws['!ref']);
-//   for (let col = headerRange.s.c; col <= headerRange.e.c; col++) {
-//       const cellAddress = XLSX.utils.encode_cell({ r: headerRange.s.r, c: col });
-
-//       // Apply styling to each cell in the header row
-//       if (!ws[cellAddress]) {
-//           ws[cellAddress] = {};
-//       }
-//       ws[cellAddress].s = {
-//           font: { bold: true }, // Make the header text bold
-//           fill: { fgColor: { rgb: "D3D3D3" } } // Set the background color of the header row to light gray
-//       };
-//   }
-
-//   // Create a new workbook
-//   const wb: XLSX.WorkBook = XLSX.utils.book_new();
-
-//   // Add the worksheet to the workbook
-//   XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-
-//   // Write the workbook to a file
-//   XLSX.writeFile(wb, 'table_data.xlsx');
-// }
 async downloadExcel() {
   if (!this.pagedItems || this.pagedItems.length === 0) {
     Swal.fire('No record found');
