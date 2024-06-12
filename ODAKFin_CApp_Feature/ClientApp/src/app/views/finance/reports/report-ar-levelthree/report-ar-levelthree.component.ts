@@ -1,4 +1,5 @@
 
+
 import { Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -46,12 +47,6 @@ export class ReportArLevelthreeComponent implements OnInit {
     { peroidId: 'previousmonth', peroidName: 'PREVIOUS MONTH' },
     { peroidId: 'previousyear', peroidName: 'PREVIOUS FINANCIAL YEAR' }
   ];
-  categorylist = [
-    { Id: '1', Salesperson: 'SalesPerson-A' },
-  ];
-  list = [
-    { Id: '1', Customer: 'Customer-A' },
-  ]
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
   entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   currentDate = new Date();
@@ -65,6 +60,17 @@ export class ReportArLevelthreeComponent implements OnInit {
   startDate = '';
   endDate = '';
   type = 'overall';
+  subtype       : number;
+  subtypecustomerId : number;
+  totalcustomer : number = 0;
+  totalinvoice  : number = 0;
+  totalbalance  : number = 0;
+  totalcreditamount  : number = 0;
+  totalbalanceinvoice : number = 0;
+  totalnetbalance : number = 0;
+  totalbalanceamountcc : number = 0;
+  totalamounticy  : number = 0;
+  totalamountccy : number = 0;
 
   constructor(
     private commonDataService: CommonService,
@@ -90,87 +96,94 @@ export class ReportArLevelthreeComponent implements OnInit {
   async goBack() {
     if (this.type === 'customerinvoicewise') {
       this.type = 'customerwise';
-      await this.showCustomerWise();
+      await this.createReportForm();
+      await this.showCustomerWise(0); 
     } else if (this.type === 'customerwise') {
       this.type = 'overall';
-      await this.getCustomerList(0);
+      await this.createReportForm();    
+      await this.getOverallList();
     }
   }
 
-  async showCustomerWise() {
+    async showCustomerWise(subTypeId:number) {
+    this.subtype = subTypeId;
     this.pagedItems = [];
     this.type = 'customerwise';
     await this.createReportForm();
+    await this.getCustomerWiseList();
   }
 
-  async showCustomerInvoiceWise() {
-    this.pagedItems = [];
+    async showCustomerInvoiceWise(subtypecustomerId:number) {
+    this.subtypecustomerId = subtypecustomerId;
+    this.pagedItems = []; 
     this.type = 'customerinvoicewise';
     await this.createReportForm();
+    await this.getInvoiceWiseList();
   }
+
 
   onOptionChange(selectedOption: string) {
     this.selectedOption = '';
     switch (selectedOption) {
 
       case 'today':
-        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
-        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
         break;
 
       case 'week':
-        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay()), "yyyy-MM-dd"));
-        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() + (6 - this.currentDate.getDay())), "yyyy-MM-dd"));
+        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay()), "yyyy-MM-dd"));
+        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() + (6 - this.currentDate.getDay())), "yyyy-MM-dd"));
         break;
 
       case 'month':
         const startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd")
         const endDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd")
-        this.reportFilter.controls.StartDate.setValue(startDate);
-        this.reportFilter.controls.EndDate.setValue(endDate);
+        this.reportFilter.controls.FromDate.setValue(startDate);
+        this.reportFilter.controls.ToDate.setValue(endDate);
         break;
 
       case 'year':
         const currentYear = this.currentDate.getFullYear();
         const startYear = this.currentDate.getMonth() >= 3 ? currentYear : currentYear - 1;
         const endYear = startYear + 1;
-        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(new Date(startYear, 3, 1), "yyyy-MM-dd"));
-        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(new Date(endYear, 2, 31), "yyyy-MM-dd"));
+        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(new Date(startYear, 3, 1), "yyyy-MM-dd"));
+        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(new Date(endYear, 2, 31), "yyyy-MM-dd"));
         break;
 
       case 'previoustoday':
         const previousDay = new Date(this.currentDate);
         previousDay.setDate(previousDay.getDate() - 1);
-        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(previousDay, "yyyy-MM-dd"));
-        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(previousDay, "yyyy-MM-dd"));
+        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(previousDay, "yyyy-MM-dd"));
+        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(previousDay, "yyyy-MM-dd"));
         break;
 
       case 'previousweek':
         const previousWeekStartDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay() - 7);
         const previousWeekEndDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay() - 1);
-        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(previousWeekStartDate, "yyyy-MM-dd"));
-        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(previousWeekEndDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(previousWeekStartDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(previousWeekEndDate, "yyyy-MM-dd"));
         break;
 
       case 'previousmonth':
         const previousMonthStartDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() - 1, 1);
         const previousMonthEndDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 0);
-        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(previousMonthStartDate, "yyyy-MM-dd"));
-        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(previousMonthEndDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(previousMonthStartDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(previousMonthEndDate, "yyyy-MM-dd"));
         break;
 
       case 'previousyear':
         const previousYear = this.currentDate.getFullYear() - 1;
         const previousYearStartDate = new Date(previousYear, 3, 1);
         const previousYearEndDate = new Date(previousYear + 1, 2, 31);
-        this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(previousYearStartDate, "yyyy-MM-dd"));
-        this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(previousYearEndDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(previousYearStartDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(previousYearEndDate, "yyyy-MM-dd"));
         break;
 
       case 'custom':
         this.selectedOption = 'custom';
-        this.startDate = this.reportFilter.controls.StartDate.value;
-        this.endDate = this.reportFilter.controls.EndDate.value;
+        this.startDate = this.reportFilter.controls.FromDate.value;
+        this.endDate = this.reportFilter.controls.ToDate.value;
         break;
 
       default:
@@ -180,31 +193,58 @@ export class ReportArLevelthreeComponent implements OnInit {
   }
 
 
+
   async createReportForm() {
-    if (this.type != 'customerwise') {
+    if (this.type == 'overall') {
       this.reportFilter = this.fb.group({
-        Division: [0],
-        Office: [0],
-        StartDate: [this.startDate],
-        EndDate: [this.endDate],
+        DivisionId: [0],
+        OfficeId: [0],
+        Type:[0],
+        SubTypeId: [0],
+        FromDate: [this.startDate],
+        ToDate: [this.endDate],
+        CustomerId : [0],
+        SalesPersonId:[0],
         Peroid: [''],
       });
-    } else {
+    } else if( this.type == 'customerwise'){
       this.reportFilter = this.fb.group({
-        Division: [0],
-        Office: [0],
-        Customer: [0],
-        SalesPersonId: [0],
-        StartDate: [this.startDate],
-        EndDate: [this.endDate],
+        DivisionId: [0],
+        OfficeId: [0],
+        CustomerId: [0], 
+        SalesPersonId:[0],
+        Type:[1],
+        SubTypeId: [this.subtype],
+        FromDate: [this.startDate],
+        ToDate: [this.endDate],
         Peroid: [''],
       });
     }
-
+      else {
+        this.reportFilter = this.fb.group({
+          DivisionId: [0],
+          OfficeId: [0],
+          CustomerId: [0], 
+          SalesPersonId:[0],
+          Type:[2],
+          SubTypeId: [this.subtypecustomerId],
+          FromDate: [this.startDate],
+          ToDate: [this.endDate],
+          Peroid: [''],
+        });
+    }
+    this.reportFilter.controls.Peroid.setValue('month');
     this.onOptionChange('month');
-    await this.getReceiptReportList();
+    if(this.type == 'overall'){
+      await this.getOverallList();
+    }
+    else if(this.type == 'customerwise'){
+     await this.getCustomerWiseList();
+    }
+    else{
+      await this.getInvoiceWiseList();
+    }
   }
-
 
   getDivisionList() {
     var service = `${this.globals.APIURL}/Division/GetOrganizationDivisionList`; var payload: any = {}
@@ -257,25 +297,94 @@ export class ReportArLevelthreeComponent implements OnInit {
     })
   }
 
-  getReceiptReportList() {
-    this.startDate = this.reportFilter.controls.StartDate.value;
-    this.endDate = this.reportFilter.controls.EndDate.value;
+  getOverallList() {
+    this.startDate = this.reportFilter.controls.FromDate.value;
+    this.endDate = this.reportFilter.controls.ToDate.value;
 
-    this.reportService.GetReceiptVoucherReportList(this.reportFilter.value).subscribe(result => {
+    this.reportService.getSalesSummaryList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
-
-
       if (result['data'].Table.length > 0) {
         this.reportList = result['data'].Table;
         this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
-        this.setPage(1)
+        this.setPage(1);
+        this.calculateTotalDays(this.reportList);
       } else {
         this.pager = {};
         this.pagedItems = [];
+        this.totalcustomer  = 0;
+        this.totalinvoice   = 0;
+        this.totalbalance   = 0;
       }
     })
   }
 
+  getCustomerWiseList() {
+    this.startDate = this.reportFilter.controls.FromDate.value;
+    this.endDate = this.reportFilter.controls.ToDate.value;
+
+    this.reportService.getSalesSummaryList(this.reportFilter.value).subscribe(result => {
+      this.reportList = [];
+      if (result['data'].Table.length > 0) {
+        this.reportList = result['data'].Table;
+        this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
+        this.setPage(1);
+        this.calculateTotalDays(this.reportList);
+      } else {
+        this.pager = {};
+        this.pagedItems = [];
+       this. totalcreditamount  = 0;
+       this. totalbalanceinvoice  = 0;
+       this. totalnetbalance  = 0;
+       this. totalbalanceamountcc  = 0;
+      }
+    })
+  }
+
+  getInvoiceWiseList() {
+    this.startDate = this.reportFilter.controls.FromDate.value;
+    this.endDate = this.reportFilter.controls.ToDate.value;
+
+    this.reportService.getSalesSummaryList(this.reportFilter.value).subscribe(result => {
+      this.reportList = [];
+      if (result['data'].Table.length > 0) {
+        this.reportList = result['data'].Table;
+        this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
+        this.setPage(1);
+        this.calculateTotalDays(this.reportList);
+      } else {
+        this.pager = {};
+        this.pagedItems = [];
+        this. totalamounticy  = 0;
+        this. totalamountccy = 0;
+      }
+    })
+  }
+
+  calculateTotalDays(reportList: any[]): void {
+    if(this.type == "overall"){
+      reportList.forEach(item => {
+        this.totalcustomer += item['No of Customer'];
+        this.totalinvoice += item['No of Invoices'];
+        this.totalbalance += item['Balance (Company Currency)'];
+      });
+    
+    }
+   else if(this.type =="customerwise"){
+       reportList.forEach(item => {
+       this. totalcreditamount += item['Credit Amount'];
+       this. totalbalanceinvoice += item['Balance (Invoice Currency)'];
+       this. totalnetbalance += item['Net Balance (Invoice Currency)'];
+       this. totalbalanceamountcc += item['Balance (Company Currency)'];
+  
+       }); 
+     }
+    else{
+      reportList.forEach(item => {
+       this. totalamounticy  += item['Balance (Invoice Currency)'];
+       this. totalamountccy   += item['Balance (Company Currency)']
+    }); 
+   }
+  }
 
   setPage(page: number) {
     if (page < 1 || page > this.pager.totalPages) return;
@@ -288,347 +397,255 @@ export class ReportArLevelthreeComponent implements OnInit {
     this.pagesort(property, this.pagedItems);
   }
 
-  clear() {
-    this.startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd");
-    this.endDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd");
-
-    this.reportFilter.reset({
-      Division: 0,
-      Office: 0,
-      StartDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
-      EndDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd"),
-    });
-    this.officeList = [];
-    this.reportFilter.controls.Peroid.setValue('month');
-    this.getReceiptReportList();
-  }
-
-
-  async downloadAsExcel() {
-    if (this.reportForExcelList.length === 0) {
-      Swal.fire('No record found');
-      return;
+     
+  async search(){
+ 
+    if(this.type  == 'overall'){
+      await this.getOverallList();
     }
-
-    // Create a new workbook and worksheet
-    const workbook = new Workbook();
-    const worksheet = workbook.addWorksheet('Report');
-
-    // Add title and subtitle rows
-    const titleRow = worksheet.addRow(['', '', '', '', '', 'NAVIO SHIPPING PRIVATE LIMITED', '']);
-    titleRow.getCell(6).font = { size: 15, bold: true };
-    titleRow.getCell(6).alignment = { horizontal: 'center' };
-
-    // Calculate the length of the title string
-    const titleLength = 'NAVIO SHIPPING PRIVATE LIMITED'.length;
-
-    // Iterate through each column to adjust the width based on the title length
-    worksheet.columns.forEach((column) => {
-      if (column.number === 6) {
-        column.width = titleLength + 2;
-      }
-    });
-
-    // Merge cells for the title
-    worksheet.mergeCells(`F${titleRow.number}:G${titleRow.number}`);
-
-    // Add subtitle row
-    const subtitleRow = worksheet.addRow(['', '', '', '', '', 'Receivable Sales Summary', '']);
-    subtitleRow.getCell(6).font = { size: 14 };
-    subtitleRow.getCell(6).alignment = { horizontal: 'center' };
-
-    // Merge cells for the subtitle
-    worksheet.mergeCells(`F${subtitleRow.number}:G${subtitleRow.number}`);
-
-    // Add "FROM Date" and "TO Date" to the worksheet
-    const dateRow = worksheet.addRow(['', '', '', '', '', `FROM ${this.startDate} - TO ${this.endDate}`]);
-    dateRow.eachCell((cell) => {
-      cell.alignment = { horizontal: 'center' };
-    });
-    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
-    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
-
-    // Merge cells for "FROM Date" and "TO Date"
-    worksheet.mergeCells(`F${dateRow.number}:G${dateRow.number}`);
-
-
-    // Define header row and style it with yellow background, bold, and centered text
-    const header = Object.keys(this.reportForExcelList[0]).filter(key => key !== 'Symbol');
-    const headerRow = worksheet.addRow(header);
-
-
-    headerRow.eachCell((cell) => {
-      cell.fill = {
-        type: 'pattern',
-        pattern: 'solid',
-        fgColor: { argb: '8A9A5B' },
-      };
-      cell.font = {
-        bold: true,
-        color: { argb: 'FFFFF7' }
-      };
-      cell.alignment = {
-        horizontal: 'center',
-      };
-      cell.border = {
-        top: { style: 'thin' },
-        left: { style: 'thin' },
-        bottom: { style: 'thin' },
-        right: { style: 'thin' },
-      };
-    });
-
-    // Add data rows with concatenated symbol and amount
-    this.reportForExcelList.forEach((data) => {
-
-      //To Remove Time from date field data
-      const date = data.Date
-      const formattedDate = date.split('T')[0];
-      data.Date = formattedDate;
-
-      const defalutvalue = 0;
-      // Merge the symbol and amount into a single string with fixed decimal places
-      const mergedICYAmount = `${data.Symbol} ${data['Amount (ICY)'] !== null ? parseFloat(data['Amount (ICY)']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const mergedCCYAmount = `${data.Symbol} ${data['Amount (CCY)'] !== null ? parseFloat(data['Amount (CCY)']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const TDSamount = ` ${data['TDS amount'] !== null ? parseFloat(data['TDS amount']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const ExRateGain = ` ${data['Ex rate Gain'] !== null ? parseFloat(data['Ex rate Gain']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const ExRateLoss = ` ${data['Ex rate Loss'] !== null ? parseFloat(data['Ex rate Loss']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const BankCharges = ` ${data['Bank charges'] !== null ? parseFloat(data['Bank charges']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const Payment = ` ${data['Payment'] !== null ? parseFloat(data['Payment']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-
-
-      // Filter out properties you don't want to include in the Excel sheet
-      const filteredData = Object.keys(data)
-        .filter(key => key !== 'Symbol')
-        .reduce((obj, key) => {
-          obj[key] = data[key];
-          return obj;
-        }, {});
-
-      // Update the 'Amount (ICY)' property in the filtered data object with the merged amount
-      filteredData['Amount (ICY)'] = mergedICYAmount;
-      filteredData['Amount (CCY)'] = mergedCCYAmount;
-      filteredData['TDS amount'] = TDSamount;
-      filteredData['Ex rate Gain'] = ExRateGain;
-      filteredData['Ex rate Loss'] = ExRateLoss;
-      filteredData['Bank charges'] = BankCharges;
-      filteredData['Payment'] = Payment;
-
-
-      // Add the filtered data to the worksheet
-      const row = worksheet.addRow(Object.values(filteredData));
-
-      // Set text color for customer, receipt, and amount columns
-      const columnsToColor = ['Customer', 'Receipt', 'Amount (CCY)', 'Amount (ICY)'];
-      columnsToColor.forEach(columnName => {
-        const columnIndex = Object.keys(filteredData).indexOf(columnName);
-        if (columnIndex !== -1) {
-          const cell = row.getCell(columnIndex + 1);
-          cell.font = { color: { argb: '8B0000' }, bold: true, }; // Red color
-        }
-      });
-
-    });
-
-    // Adjust column widths to fit content
-    worksheet.columns.forEach((column) => {
-      let maxLength = 0;
-      column.eachCell({ includeEmpty: true }, (cell) => {
-        const cellLength = cell.value ? cell.value.toString().length : 0;
-        if (cellLength > maxLength) {
-          maxLength = cellLength;
-        }
-      });
-      column.width = maxLength + 2;
-    });
-
-    // Style the footer row with yellow background, bold, and centered text
-    const footerRow = worksheet.addRow(['End of Report']);
-    footerRow.eachCell((cell) => {
-      cell.fill = {
-        type: 'pattern',
-        pattern: 'solid',
-        fgColor: { argb: '8A9A5B' },
-      };
-      cell.font = {
-        bold: true,
-        color: { argb: 'FFFFF7' }
-      };
-      cell.alignment = {
-        horizontal: 'center',
-      };
-    });
-
-    // Merge footer cells if needed
-    worksheet.mergeCells(`A${footerRow.number}:${String.fromCharCode(65 + header.length - 1)}${footerRow.number}`);
-
-    // Write to Excel and save
-    const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    saveAs(blob, 'Report-ReceivableSalesSummary.xlsx');
-  }
-
-
-
-  async downloadAsCSV() {
-    if (this.reportForExcelList.length === 0) {
-      Swal.fire('No record found');
-      return;
+    else if(this.type  == 'customerwise'){
+      await this.getCustomerWiseList();
+    }else{
+      await this.getInvoiceWiseList();
     }
-
-    // Create a new workbook and worksheet
-    const workbook = new Workbook();
-    const worksheet = workbook.addWorksheet('Report');
-
-    // Add title and subtitle rows
-    const titleRow = worksheet.addRow(['', '', '', '', '', 'NAVIO SHIPPING PRIVATE LIMITED', '']);
-    titleRow.getCell(6).font = { size: 15, bold: true };
-    titleRow.getCell(6).alignment = { horizontal: 'center' };
-
-    // Calculate the length of the title string
-    const titleLength = 'NAVIO SHIPPING PRIVATE LIMITED'.length;
-
-    // Iterate through each column to adjust the width based on the title length
-    worksheet.columns.forEach((column) => {
-      if (column.number === 6) {
-        column.width = titleLength + 2;
-      }
-    });
-
-    // Merge cells for the title
-    worksheet.mergeCells(`F${titleRow.number}:G${titleRow.number}`);
-
-    // Add subtitle row
-    const subtitleRow = worksheet.addRow(['', '', '', '', '', 'Receivable Sales Summary', '']);
-    subtitleRow.getCell(6).font = { size: 14 };
-    subtitleRow.getCell(6).alignment = { horizontal: 'center' };
-
-    // Merge cells for the subtitle
-    worksheet.mergeCells(`F${subtitleRow.number}:G${subtitleRow.number}`);
-
-    // Add "FROM Date" and "TO Date" to the worksheet
-    const dateRow = worksheet.addRow(['', '', '', '', '', `FROM ${this.startDate} - TO ${this.endDate}`]);
-    dateRow.eachCell((cell) => {
-      cell.alignment = { horizontal: 'center' };
-    });
-    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
-    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
-
-    // Merge cells for "FROM Date" and "TO Date"
-    worksheet.mergeCells(`F${dateRow.number}:G${dateRow.number}`);
-
-
-    // Define header row and style it with yellow background, bold, and centered text
-    const header = Object.keys(this.reportForExcelList[0]).filter(key => key !== 'Symbol');
-    const headerRow = worksheet.addRow(header);
-
-
-    headerRow.eachCell((cell) => {
-      cell.fill = {
-        type: 'pattern',
-        pattern: 'solid',
-        fgColor: { argb: '8A9A5B' },
-      };
-      cell.font = {
-        bold: true,
-        color: { argb: 'FFFFF7' }
-      };
-      cell.alignment = {
-        horizontal: 'center',
-      };
-      cell.border = {
-        top: { style: 'thin' },
-        left: { style: 'thin' },
-        bottom: { style: 'thin' },
-        right: { style: 'thin' },
-      };
-    });
-
-    // Add data rows with concatenated symbol and amount
-    this.reportForExcelList.forEach((data) => {
-
-      //To Remove Time from date field data
-      const date = data.Date
-      const formattedDate = date.split('T')[0];
-      data.Date = formattedDate;
-      const defalutvalue = 0;
-      // Merge the symbol and amount into a single string with fixed decimal places
-      const mergedICYAmount = `${data.Symbol} ${data['Amount (ICY)'] !== null ? parseFloat(data['Amount (ICY)']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const mergedCCYAmount = `${data.Symbol} ${data['Amount (CCY)'] !== null ? parseFloat(data['Amount (CCY)']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const TDSamount = ` ${data['TDS amount'] !== null ? parseFloat(data['TDS amount']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const ExRateGain = ` ${data['Ex rate Gain'] !== null ? parseFloat(data['Ex rate Gain']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const ExRateLoss = ` ${data['Ex rate Loss'] !== null ? parseFloat(data['Ex rate Loss']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const BankCharges = ` ${data['Bank charges'] !== null ? parseFloat(data['Bank charges']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const Payment = ` ${data['Payment'] !== null ? parseFloat(data['Payment']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-
-      // Filter out properties you don't want to include in the Excel sheet
-      const filteredData = Object.keys(data)
-        .filter(key => key !== 'Symbol')
-        .reduce((obj, key) => {
-          obj[key] = data[key];
-          return obj;
-        }, {});
-
-      // Update the 'Amount (ICY)' property in the filtered data object with the merged amount
-      filteredData['Amount (ICY)'] = mergedICYAmount;
-      filteredData['Amount (CCY)'] = mergedCCYAmount;
-      filteredData['TDS amount'] = TDSamount;
-      filteredData['Ex rate Gain'] = ExRateGain;
-      filteredData['Ex rate Loss'] = ExRateLoss;
-      filteredData['Bank charges'] = BankCharges;
-      filteredData['Payment'] = Payment;
-
-
-      // Add the filtered data to the worksheet
-      const row = worksheet.addRow(Object.values(filteredData));
-
-      // Set text color for customer, receipt, and amount columns
-      const columnsToColor = ['Customer', 'Receipt', 'Amount (CCY)', 'Amount (ICY)'];
-      columnsToColor.forEach(columnName => {
-        const columnIndex = Object.keys(filteredData).indexOf(columnName);
-        if (columnIndex !== -1) {
-          const cell = row.getCell(columnIndex + 1);
-          cell.font = { color: { argb: '8B0000' }, bold: true, }; // Red color
-        }
-      });
-
-    });
-
-    // Adjust column widths to fit content
-    worksheet.columns.forEach((column) => {
-      let maxLength = 0;
-      column.eachCell({ includeEmpty: true }, (cell) => {
-        const cellLength = cell.value ? cell.value.toString().length : 0;
-        if (cellLength > maxLength) {
-          maxLength = cellLength;
-        }
-      });
-      column.width = maxLength + 2;
-    });
-
-    // Style the footer row with yellow background, bold, and centered text
-    const footerRow = worksheet.addRow(['End of Report']);
-    footerRow.eachCell((cell) => {
-      cell.fill = {
-        type: 'pattern',
-        pattern: 'solid',
-        fgColor: { argb: '8A9A5B' },
-      };
-      cell.font = {
-        bold: true,
-        color: { argb: 'FFFFF7' }
-      };
-      cell.alignment = {
-        horizontal: 'center',
-      };
-    });
-
-    // Merge footer cells if needed
-    worksheet.mergeCells(`A${footerRow.number}:${String.fromCharCode(65 + header.length - 1)}${footerRow.number}`);
-
-    // Write to Excel and save
-    const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    saveAs(blob, 'Report-ReceivableSalesSummary.xlsx');
   }
-}
+
+    clear() {
+      this.startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd");
+      this.endDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd");
+      if(this.type  == 'overall'){
+        this.reportFilter.reset({
+          DivisionId: 0,
+          OfficeId: 0,
+          CustomerId:0,
+          Type: 0,
+          SubTypeId: 0,
+          FromDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
+          ToDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd"),
+        });
+      }else if(this.type == 'customerwise'){
+        this.reportFilter.reset({
+          DivisionId: 0,
+          OfficeId: 0,
+          CustomerId: 0,
+          Type: 1,
+          SubTypeId: this.subtype,
+          FromDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
+          ToDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd"),
+        });
+      }else{
+        this.reportFilter.reset({
+          DivisionId: 0,
+          OfficeId: 0,
+          CustomerId: 0,
+          Type: 2,
+          SubTypeId: this.subtypecustomerId,
+          FromDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
+          ToDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd"),
+        });
+      }
+      this.officeList = [];
+      this.reportFilter.controls.Peroid.setValue('month');
+      if(this.type  == 'overall'){
+        this.getOverallList();
+      }
+      else if(this.type == 'customerwise'){
+        this.getCustomerWiseList();
+      }else{
+       this.getInvoiceWiseList();
+      }
+    }
+  
+    export(){
+      debugger
+      if(this.type =="overall")
+      {
+        this.downloadAsExcel(this.reportList, this.startDate, this.endDate, 'overall');
+      }
+     else if(this.type =="customerwise")
+      {
+        this.downloadAsExcel(this.reportList, this.startDate, this.endDate, 'customerwise');
+      }
+    else
+      {
+        this.downloadAsExcel(this.reportList, this.startDate, this.endDate, 'customerinvoicewise');
+      }
+    } 
+    
+    async downloadAsExcel(
+      reportList: any[],
+      startDate: string,
+      endDate: string,
+      reportType: 'overall' | 'customerwise' | 'customerinvoicewise'
+    ) {
+      if (reportList.length === 0) {
+        Swal.fire('No record found');
+        return;
+      }
+    
+      const workbook = new Workbook();
+      const worksheet = workbook.addWorksheet('Report');
+    
+      let titleHeader: string;
+      let excludeKeys: string[];
+    
+      switch (reportType) {
+        case 'overall':
+          titleHeader = 'Receivable Balance Summary - Overall';
+          excludeKeys = ['SalesId'];
+          break;
+        case 'customerwise':
+          titleHeader = 'Receivable Balance Summary - Customer Wise';
+          excludeKeys = ['CustomerID', 'InvoiceDate', 'SalesId'];
+          break;
+        case 'customerinvoicewise':
+          titleHeader = 'Receivable Balance Summary - Invoice Wise';
+          excludeKeys = [];
+          break;
+        default:
+          titleHeader = 'Receivable Balance Summary';
+          excludeKeys = [];
+          break;
+      }
+    
+      const header = Object.keys(reportList[0]).filter((key) => !excludeKeys.includes(key));
+    
+      const titleRow = worksheet.addRow(['', '', '', 'NAVIO SHIPPING PRIVATE LIMITED','', '', '']);
+      titleRow.getCell(4).font = { size: 15, bold: true };
+      titleRow.getCell(4).alignment = { horizontal: 'center' };
+      worksheet.mergeCells(`D${titleRow.number}:E${titleRow.number}`);
+    
+      const subtitleRow = worksheet.addRow(['', '', '', titleHeader,'', '', '']);
+      subtitleRow.getCell(4).font = { size: 14 };
+      subtitleRow.getCell(4).alignment = { horizontal: 'center' };
+      worksheet.mergeCells(`D${subtitleRow.number}:E${subtitleRow.number}`);
+    
+      const dateRow = worksheet.addRow(['', '', '',  `FROM ${startDate} - TO ${endDate}`,'', '', '']);
+      dateRow.eachCell((cell) => {
+        cell.alignment = { horizontal: 'center' };
+      });
+      worksheet.mergeCells(`D${dateRow.number}:E${dateRow.number}`);
+    
+      const headerRow = worksheet.addRow(header);
+      headerRow.eachCell((cell) => {
+        cell.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: '8A9A5B' },
+        };
+        cell.font = {
+          bold: true,
+          color: { argb: 'FFFFF7' },
+        };
+        cell.alignment = {
+          horizontal: 'center',
+        };
+        cell.border = {
+          top: { style: 'thin' },
+          left: { style: 'thin' },
+          bottom: { style: 'thin' },
+          right: { style: 'thin' },
+        };
+      });
+    
+      const columnColorMapping = {
+        overall: ['Sales Person', 'Balance (Company Currency)'],
+        customerwise: ['Customer', 'Credit Amount', 'Balance (Invoice Currency)', 'Net Balance (Invoice Currency)', 'Balance (Company Currency)'],
+        customerinvoicewise: ['Invoice #', 'Transaction Type', 'Balance (Invoice Currency)', 'Balance (Company Currency)']
+      };
+      const columnsToColor = columnColorMapping[reportType];
+    
+      reportList.forEach((data) => {
+        let filteredData: { [key: string]: any } = {};
+        const defaultValue = 0;
+    
+        switch (reportType) {
+          case 'customerinvoicewise':
+            data.Date = data.Date.split('T')[0];
+            filteredData = Object.keys(data)
+              .filter((key) => !excludeKeys.includes(key))
+              .reduce((obj, key) => {
+                obj[key] = data[key];
+                return obj;
+              }, {});
+    
+            filteredData['Balance (Invoice Currency)'] = `${data['Balance (Invoice Currency)'] !== null ? parseFloat(data['Balance (Invoice Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
+            filteredData['Balance (Company Currency)'] = `${data['Balance (Company Currency)'] !== null ? parseFloat(data['Balance (Company Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
+            break;
+    
+          case 'overall':
+            filteredData = Object.keys(data)
+              .filter((key) => !excludeKeys.includes(key))
+              .reduce((obj, key) => {
+                obj[key] = data[key];
+                return obj;
+              }, {});
+    
+            filteredData['Balance (Company Currency)'] = `${data['Balance (Company Currency)'] !== null ? parseFloat(data['Balance (Company Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
+            break;
+    
+          case 'customerwise':
+          default:
+            filteredData = Object.keys(data)
+              .filter((key) => !excludeKeys.includes(key))
+              .reduce((obj, key) => {
+                obj[key] = data[key];
+                return obj;
+              }, {});
+    
+            filteredData['Credit Amount'] = `${data['Credit Amount'] !== null ? parseFloat(data['Credit Amount']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
+            filteredData['Balance (Invoice Currency)'] = `${data['Balance (Invoice Currency)'] !== null ? parseFloat(data['Balance (Invoice Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
+            filteredData['Net Balance (Invoice Currency)'] = `${data['Net Balance (Invoice Currency)'] !== null ? parseFloat(data['Net Balance (Invoice Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
+            filteredData['Balance (Company Currency)'] = `${data['Balance (Company Currency)'] !== null ? parseFloat(data['Balance (Company Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
+            break;
+        }
+    
+        const row = worksheet.addRow(Object.values(filteredData));
+    
+        columnsToColor.forEach((columnName) => {
+          const columnIndex = header.indexOf(columnName);
+          if (columnIndex !== -1) {
+            const cell = row.getCell(columnIndex + 1);
+            cell.font = { color: { argb: '8B0000' }, bold: true };
+            cell.alignment = { horizontal: 'right' };
+          }
+        });
+      });
+    
+      worksheet.columns.forEach((column) => {
+        let maxLength = 0;
+        column.eachCell({ includeEmpty: true }, (cell) => {
+          const cellLength = cell.value ? cell.value.toString().length : 0;
+          if (cellLength > maxLength) {
+            maxLength = cellLength;
+          }
+        });
+        column.width = maxLength + 2;
+      });
+    
+      const footerRow = worksheet.addRow(['End of Report']);
+      footerRow.eachCell((cell) => {
+        cell.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: '8A9A5B' },
+        };
+        cell.font = {
+          bold: true,
+          color: { argb: 'FFFFF7' },
+        };
+        cell.alignment = {
+          horizontal: 'center',
+        };
+      });
+      worksheet.mergeCells(`A${footerRow.number}:${String.fromCharCode(65 + header.length - 1)}${footerRow.number}`);
+    
+      const buffer = await workbook.xlsx.writeBuffer();
+      const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      saveAs(blob, `ReceivableSalesSummary-${reportType}.xlsx`);
+    }
+    
+    
+  }
+  
+

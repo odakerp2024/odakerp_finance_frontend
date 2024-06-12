@@ -4,11 +4,11 @@
 
             <div class="row">
                 <div class="col-10">
-                    <div class="row pb-3">
+                    <div class="row pb-1">
 
                         <div class="col-2">
-                            <label class=" fontstyles">PEROID</label>
-                            <ng-select class="searchdropdown custom dropdown-size" formControlName="Peroid"
+                            <label class=" maxlabel">PEROID</label>
+                            <ng-select class="searchdropdown-dropdown-size" formControlName="Peroid"
                                 (ngModelChange)="onOptionChange($event);" [clearable]="false">
                                 <ng-option [value]="''" disabled>-- SELECT --</ng-option>
                                 <ng-container *ngFor="let peroid of PeroidList">
@@ -20,7 +20,7 @@
                         </div>
 
                         <div class="col-2" *ngIf="selectedOption === 'custom'">
-                            <label class="fontstyles mb-3">FROM</label>
+                            <label class="maxlabel mb-3">FROM</label>
                             <div class="input-group">
                                 <mat-form-field class="tillDate mat_date_picker" appearance="outline">
                                     <input matInput (click)="StartDate.open()" readonly autocomplete="off"
@@ -33,7 +33,7 @@
                         </div>
 
                         <div class="col-2" *ngIf="selectedOption === 'custom'">
-                            <label class="fontstyles mb-3">TO</label>
+                            <label class="maxlabel mb-3">TO</label>
                             <div class="input-group">
                                 <mat-form-field class="tillDate mat_date_picker" appearance="outline">
                                     <input matInput (click)="EndDate.open()" readonly autocomplete="off"
@@ -47,8 +47,8 @@
                         </div>
 
                         <div class="col-2">
-                            <label class=" fontstyles">DIVISION</label>
-                            <ng-select class="searchdropdown custom" formControlName="Division"
+                            <label class=" maxlabel">DIVISION</label>
+                            <ng-select class="searchdropdown-dropdown-size" formControlName="Division"
                                 (ngModelChange)="getOfficeList($event);" [clearable]="false">
                                 <ng-option [value]="0" disabled>-- SELECT --</ng-option>
                                 <ng-container *ngFor="let division of divisionList">
@@ -60,8 +60,8 @@
                         </div>
 
                         <div class="col-2">
-                            <label class=" fontstyles ">OFFICE</label>
-                            <ng-select class="searchdropdown" formControlName="Office" name="active" id="active"
+                            <label class=" maxlabel ">OFFICE</label>
+                            <ng-select class="searchdropdown-dropdown-size" formControlName="Office" name="active" id="active"
                                 (ngModelChange)="getDivisionBasedOffice($event, reportFilter.value.Division)"
                                 [clearable]="false" name="CategoryId" id="CategoryId">
                                 <ng-option [value]="0" disabled>-- SELECT --</ng-option>
@@ -74,8 +74,8 @@
                         </div>
 
                         <div class="col-2">
-                            <label class=" fontstyles">CUSTOMER</label>
-                            <ng-select class="searchdropdown" formControlName="Customer" [clearable]="false"
+                            <label class=" maxlabel">CUSTOMER</label>
+                            <ng-select class="searchdropdown-dropdown-size" formControlName="Customer" [clearable]="false"
                                 name="CategoryId" id="CategoryId"
                                 (change)="isShowBranch = true;selectedCustomerBranch($event)">
                                 <ng-option [value]="0" disabled>-- SELECT --</ng-option>
@@ -87,13 +87,13 @@
                                 </ng-container>
                             </ng-select>
                         </div>
-                    </div>
+                   
 
-                    <div class="row">
+                  
 
                         <div class="col-2">
-                            <label class="fontstyles">CUSTOMER BRANCH</label>
-                            <ng-select class="searchdropdown custom" [formControlName]="'Branch'" [clearable]="false">
+                            <label class="maxlabel">CUSTOMER BRANCH</label>
+                            <ng-select class="searchdropdown-dropdown-size" [formControlName]="'Branch'" [clearable]="false">
                                 <ng-option [value]="0" disabled>-- SELECT --</ng-option>
                                 <ng-option *ngFor="let branch of branchList" [value]="branch.CustomerBranchID">
                                     {{ branch.CityName | uppercase }}
@@ -102,14 +102,14 @@
                         </div>
 
                         <div class="col-2">
-                            <label class=" fontstyles">AMOUNT</label>
+                            <label class=" maxlabel">AMOUNT</label>
                             <input formControlName="Amount" name="active" id="active" appDynamicDecimal min="0"
                                 numbersOnly class="form-control field-responsive" name="Amount">
                         </div>
 
                         <div class="col-2">
-                            <label class=" fontstyles">TYPE</label>
-                            <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'Type'">
+                            <label class=" maxlabel">TYPE</label>
+                            <ng-select class="searchdropdown-dropdown-size" [clearable]="false" [formControlName]="'Type'">
                                 <ng-option [value]="0" disabled>-- SELECT --</ng-option>
                                 <ng-option *ngFor="let TypeItem of TypeList" [value]="TypeItem.TypeId">
                                     {{ TypeItem.TypeName | uppercase }}
@@ -118,8 +118,8 @@
                         </div>
 
                         <div class="col-2">
-                            <label class=" fontstyles">PAYMENT MODE</label>
-                            <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'PaymentMode'">
+                            <label class=" maxlabel">PAYMENT MODE</label>
+                            <ng-select class="searchdropdown-dropdown-size" [clearable]="false" [formControlName]="'PaymentMode'">
                                 <ng-option [value]="0" disabled>-- SELECT --</ng-option>
                                 <ng-option *ngFor="let paymentMode of paymentModeList" [value]="paymentMode.ID">
                                     {{ paymentMode.PaymentType | uppercase }}
@@ -128,8 +128,8 @@
                         </div>
 
                         <div class="col-2">
-                            <label class="fontstyles">DEPOSIT TO</label>
-                            <ng-select class="searchdropdown field-responsive" [clearable]="false"
+                            <label class="maxlabel">DEPOSIT TO</label>
+                            <ng-select class="searchdropdown-dropdown-size field-responsive" [clearable]="false"
                                 [formControlName]="'DepositTo'" name="active" id="active">
                                 <ng-option [value]="0" disabled>-- SELECT --</ng-option>
                                 <ng-option *ngFor="let Deposit of bankList" [value]="Deposit.BankID">
@@ -138,17 +138,12 @@
                                 </ng-option>
                             </ng-select>
                         </div>
-
-
                     </div>
                 </div>
 
-
-
-
-                <div class="col-2" style="padding-top: 23px;">
+                <div class="col-2">
                     <div class="text-center">
-                        <button type="button" class="btn btn-primary text-white col-auto"
+                        <button type="button" class="btn btn-primary text-white col-auto btn-sm-custom"
                             (click)="getReceiptReportList()">
                             SEARCH
                         </button>
@@ -156,7 +151,7 @@
 
                     <div class="text-center">
                         <button type="button" (click)="clear()"
-                            class="btn btn-warning text-white mb-0 col-auto clear-btn">
+                            class="btn btn-warning text-white mb-0 col-auto clear-btn btn-sm-custom">
                             CLEAR
                         </button>
                     </div>
@@ -170,7 +165,7 @@
     </form>
 
     <div class="row">
-        <div class="col-md-12 mt-2">
+        <div class="col-md-12 mt-1">
             <div class="card m-b-30">
                 <div class="card-body cpad enqview">
 
@@ -178,18 +173,18 @@
                         <div class="col-10 justify-content-end text-center ">
                             <h6 class="title">NAVIO SHIPPING PRIVATE LIMITED</h6>
                             <h6 class="subtitle">Receipt Voucher</h6>
-                            <p>FROM {{ startDate | date: commonDataService.convertToLowerCaseDay(entityDateFormat) }} -
+                            <h6 class="subtitle">FROM {{ startDate | date: commonDataService.convertToLowerCaseDay(entityDateFormat) }} -
                                 TO {{ endDate | date:commonDataService.convertToLowerCaseDay(entityDateFormat) }}
-                            </p>
+                            </h6>
                         </div>
 
                         <div class="col-2 text-right ">
-                            <div style="font-weight: 600;padding-top: 67px;padding-right: 10px;">Export as :
-                                <img style="cursor: pointer;" width="38px" height="38px"
+                            <div style="font-weight: 600;padding-top: 18px;padding-right: 10px;">
+                                <img style="cursor: pointer;" width="36px" height="36px"
                                     class="exportAs mx-1 align-baseline"
                                     src="../../../../../assets/images/csv_color.png" (click)="downloadAsCSV()"
                                     alt="logo">
-                                <img style="cursor: pointer;" width="38px" height="38px"
+                                <img style="cursor: pointer;" width="36px" height="36px"
                                     class="exportAs mx-1 align-baseline"
                                     src="../../../../../assets/images/xlsx_color.png" (click)="downloadAsExcel()"
                                     alt="logo">
@@ -197,19 +192,6 @@
                         </div>
 
                     </div>
-
-                    <!-- <div class="col-sm-12 justify-content-end text-center ">
-                        <h6 class="title">NAVIO SHIPPING PRIVATE LIMITED</h6>
-                        <h6 class="subtitle">Receipt Voucher</h6>
-                        <p>FROM {{ startDate | date: commonDataService.convertToLowerCaseDay(entityDateFormat) }} -
-                            TO {{ endDate | date:commonDataService.convertToLowerCaseDay(entityDateFormat) }}
-                        </p>
-
-                    </div> -->
-
-                    <!-- <div class="col-sm-12 text-right d-flex justify-content-end">
-                       
-                    </div> -->
 
                     <div class="col-12">
                         <table class="table table-responsive table-bordered w-100 dataTable no-footer">
@@ -266,7 +248,9 @@
                                     <td class="hyperTextColor"><a>{{data.Receipt == '' ? '-' :
                                             data.Receipt}}</a></td>
                                     <td>{{data.Type}}</td>
-                                    <td class="hyperTextColor">{{data.CustomerName}}</td>
+                                    <td class="hyperTextColor" [title]="data['CustomerName']">
+                                        {{ (data['CustomerName'] && data['CustomerName'].length > 20) ? data['CustomerName'].slice(0, 20) + '-' : data['CustomerName'] }}
+                                    </td>
                                     <td>{{data.Branch}}</td>
                                     <td>{{data.PaymentMode}}</td>
                                     <td>{{data.BankName}}</td>

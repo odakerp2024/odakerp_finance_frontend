@@ -292,7 +292,7 @@ export class ReportAdjustmentVoucherComponent implements OnInit {
     this.reportFilter.reset({
       DivisionId: 0,
       OfficeId: 0,
-      AccountId: [''],
+      AccountId: 0,
       FormData: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
       ToDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd"),
       Amount: '',
@@ -407,7 +407,7 @@ export class ReportAdjustmentVoucherComponent implements OnInit {
  const row = worksheet.addRow(Object.values(filteredData));
 
  // Set text color for customer, receipt, and amount columns
- const columnsToColor = ['Voucher', 'Account', 'Amount', 'Amount (CCY)'];
+ const columnsToColor = ['Voucher', 'Account', 'Amount', 'Amount (CCY)', 'Ex Rate'];
  columnsToColor.forEach(columnName => {
      const columnIndex = Object.keys(filteredData).indexOf(columnName);
      if (columnIndex !== -1) {
@@ -560,7 +560,7 @@ export class ReportAdjustmentVoucherComponent implements OnInit {
  const row = worksheet.addRow(Object.values(filteredData));
 
  // Set text color for customer, receipt, and amount columns
- const columnsToColor = ['Voucher', 'Account', 'Amount', 'Amount (CCY)'];
+ const columnsToColor = ['Voucher', 'Account', 'Amount', 'Amount (CCY)', 'Ex Rate'];
  columnsToColor.forEach(columnName => {
      const columnIndex = Object.keys(filteredData).indexOf(columnName);
      if (columnIndex !== -1) {

@@ -140,6 +140,14 @@ body {
   font-size: 11px !important;
 }
 
+.ng-select.searchdropdown-dropdown-size {
+  border: 0px;
+  min-height: 0px;
+  border-radius: 0;
+  font-size: 10px;
+}
+
+
 /* select with search <ng-select> end */
 /*start  common style for mat-date-picker  */
 
@@ -1234,4 +1242,13 @@ nav ul.maindash>li {
   font-weight: 800;
   background-color: #fff !important;
   text-align: center;
+}
+
+/* reports search & clear button */
+
+.btn-sm-custom {
+  padding: 0.25rem 0.5rem   !important; 
+  font-size: 0.875rem   !important; 
+  line-height: 1.5  !important;
+  border-radius: 0.2rem !important; 
 }

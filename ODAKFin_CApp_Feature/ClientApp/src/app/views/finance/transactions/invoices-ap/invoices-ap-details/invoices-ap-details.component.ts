@@ -177,11 +177,11 @@ export class InvoicesApDetailsComponent implements OnInit {
       }
     }, err => {
       console.log('errr----->', err.message);
-    });
+    }); 
   }
 
   getInvoiceInfo() {
-    var service = `${this.globals.APIURL}/OutStandingInvoiceAP/GetOutStandingInvoiceAPById`;
+    const service = `${this.globals.APIURL}/OutStandingInvoiceAP/GetOutStandingInvoiceAPById`;
     this.dataService.post(service, { OutStandingInvoiceId: this.invoiceAPId }).subscribe(async (result: any) => {
       this.FileList = [];
       this.receiptList = [];
@@ -192,8 +192,14 @@ export class InvoicesApDetailsComponent implements OnInit {
         this.CreatedOn = tableInfo.CreatedDate;
         this.ModifiedBy = tableInfo.UpdatedByName;
         this.CreatedBy = tableInfo.CreatedByName;
-        for (let data of result['data'].Table1) { this.addReceiptInfo(); data.VoucherDate = this.datePipe.transform(data.VoucherDate, 'y-MM-dd') }
-        for (let data of result['data'].Table2) { this.addOpenInvoiceInfo(); data.InvoiceDate = this.datePipe.transform(data.InvoiceDate, 'y-MM-dd') }
+        for (let data of result['data'].Table1) { 
+        this.addReceiptInfo(); 
+       // data.VoucherDate = this.datePipe.transform(data.VoucherDate, 'y-MM-dd')
+        }
+        for (let data of result['data'].Table2) {
+        this.addOpenInvoiceInfo(); 
+        // data.InvoiceDate = this.datePipe.transform(data.InvoiceDate, 'y-MM-dd')
+        }
         if (tableInfo.IsFinal) this.IsFinal = true;
         this.invoiceForm.patchValue({
           OutStandingInvoiceId: tableInfo.OutStandingInvoiceId,
@@ -209,16 +215,27 @@ export class InvoicesApDetailsComponent implements OnInit {
           IsFinal: tableInfo.IsFinal,
           IsDelete: tableInfo.IsDelete ? tableInfo.IsDelete : 0,
           CreatedBy: tableInfo.CreatedBy,
-          receiptInfo: result['data'].Table1,
-          openInvoiceInfo: result['data'].Table2
         });
-        this.receiptList = result['data'].Table1;
-        this.openInvoiceList = result['data'].Table1;
+
+        this.receiptList = result['data'].Table1.map(data => {
+          data.VoucherDate = this.datePipe.transform(data.VoucherDate, 'y-MM-dd');
+          return data;
+        });
+
+        this.openInvoiceList = result['data'].Table2.map(data => {
+          data.InvoiceDate = this.datePipe.transform(data.InvoiceDate, 'y-MM-dd');
+          return data;
+        });
+
+        this.invoiceForm.setControl('receiptInfo', this.fb.array(this.receiptList.map(receipt => this.fb.group(receipt))));
+        this.invoiceForm.setControl('openInvoiceInfo', this.fb.array(this.openInvoiceList.map(invoice => this.fb.group(invoice))));
+
         this.TotalDebitAmount = tableInfo.TotalDebitAmount.toFixed(this.entityFraction);
         this.TotalCreditAmount = tableInfo.TotalCreditAmount.toFixed(this.entityFraction);
         if (result['data'].Table3.length > 0) this.FileList = result['data'].Table3;
       }
-    }, error => { console.error(error) });
+    }, error => { 
+    console.error(error) });
   }
 
   createInvoiceForm() {
@@ -428,20 +445,18 @@ export class InvoicesApDetailsComponent implements OnInit {
       else { this.invoiceForm.controls['TotalCreditAmount'].setValue(AdjustedAmountInvoice); }
     }
   }
-    getIsChecked(i, type){
-    debugger
-    if (type == 'Receipts') {
-    if (i !== undefined){
-    return this.ReceiptInfo.value[i].IsSelect == false || this.ReceiptInfo.value[i].IsSelect == null ? false : true;
+  getIsChecked(i, type) {
+    if (i === undefined) return false;
+
+    if (type === 'Receipts') {
+        const receipt = this.ReceiptInfo.value[i];
+        return receipt?.IsSelect ?? false;
+    } else if (type === 'Invoices') {
+        const invoice = this.OpenInvoiceInfo.value[i];
+        return invoice?.IsSelect ?? false;
     }
+
     return false;
-  }
-  else if (type == 'Invoices') {
-    if (i !== undefined){
-      return this.OpenInvoiceInfo.value[i].IsSelect == false || this.OpenInvoiceInfo.value[i].IsSelect == null ? false : true;
-      }
-      return false;
-  }
 }
 
   // fileSelected(event) {
