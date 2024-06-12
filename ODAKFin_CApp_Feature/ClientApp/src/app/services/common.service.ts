@@ -267,6 +267,14 @@ export class CommonService {
     getVoucherTypeList(){
         return this.http.post<any[]>(this.globals.APIURL + '/Common/GetSalesBLType', {});
     }
+
+    getTypeDropdown(payload = {}): Observable<any[]> {
+        return this.http.post<any[]>(this.globals.APIURL + '/Common/GetTypeDayBook', payload);
+    }
+
+    getCategoryDropdown(payload = {}): Observable<any[]> {
+        return this.http.post<any[]>(this.globals.APIURL + '/Common/GetCategoryDayBook', payload);
+    }
 }
 
 

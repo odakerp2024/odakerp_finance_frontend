@@ -24,7 +24,7 @@ tr:hover {
 
 .title {
     font-size: 0.8rem !important;
-    margin: 2px !important;
+    margin: 0px !important;
   }
   
   .subtitle {
@@ -194,24 +194,24 @@ tr:hover {
     }
   
     .table thead th {
-      font-size: 9px !important;
+      font-size: 8px !important;
     }
   
     label.maxlabel {
-      font-size: 8px !important;
+      font-size: 7px !important;
     }
   
     .ng-select.searchdropdown-dropdown-size ::ng-deep .ng-select-container {
-      height: 26px !important;
+      height: 25px !important;
       border-radius: 0 !important;
       min-height: 15px !important;
-      font-size: 8px !important;
+      font-size: 7px !important;
     }
     
   }
   
   .ng-select.searchdropdown-dropdown-size ::ng-deep .ng-select-container {
-    height: 26px !important;
+    height: 26px ;
     border-radius: 0 !important;
     min-height: 15px !important;
     font-size: 9px ;
