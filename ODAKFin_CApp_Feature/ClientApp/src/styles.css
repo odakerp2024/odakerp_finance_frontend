@@ -1243,3 +1243,12 @@ nav ul.maindash>li {
   background-color: #fff !important;
   text-align: center;
 }
+
+/* reports search & clear button */
+
+.btn-sm-custom {
+  padding: 0.25rem 0.5rem   !important; 
+  font-size: 0.875rem   !important; 
+  line-height: 1.5  !important;
+  border-radius: 0.2rem !important; 
+}

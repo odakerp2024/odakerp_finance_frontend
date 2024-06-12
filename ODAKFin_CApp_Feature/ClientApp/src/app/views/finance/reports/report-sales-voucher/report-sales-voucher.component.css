@@ -24,13 +24,13 @@ tr:hover {
 
 .title {
   font-size: 0.8rem !important;
-  margin: 3px !important;
+  margin: 1px !important;
 }
 
 .subtitle {
   font-size: 0.7rem !important;
-  margin: 3px !important;
-  margin-bottom: 3px !important;
+  margin: 1px !important;
+  margin-bottom: 1px !important;
 }
 
 .card .card-body {
@@ -48,7 +48,7 @@ tr:hover {
 
 
 .clear-btn {
-  width: 96px;
+  width: 80px !important;
 }
 
 .red {
@@ -193,16 +193,16 @@ tr:hover {
 @media (min-width: 857px) and (max-width: 1200px) {
 
   .table>tbody>tr>td {
-    padding: 8px !important;
-    font-size: 8px !important;
+    padding: 7px !important;
+    font-size: 7px !important;
   }
 
   .table thead th {
-    font-size: 9px !important;
+    font-size: 8px !important;
   }
 
   label.maxlabel {
-    font-size: 9px !important;
+    font-size: 7px !important;
   }
 
   .ng-select.searchdropdown-dropdown-size ::ng-deep .ng-select-container {
@@ -224,4 +224,12 @@ tr:hover {
 
  .form-control {
   height: 26px !important;
+}
+
+table.dataTable{
+  margin-top: 0px !important;
+}
+
+.card-body{
+  padding: 0.2rem !important;
 }

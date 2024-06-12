@@ -324,45 +324,48 @@ export class ReportSalesVoucherComponent implements OnInit {
     const worksheet = workbook.addWorksheet('Report');
 
     // Add title and subtitle rows
-    const titleRow = worksheet.addRow(['', '', '', '', '', 'NAVIO SHIPPING PRIVATE LIMITED', '']);
-    titleRow.getCell(6).font = { size: 15, bold: true };
-    titleRow.getCell(6).alignment = { horizontal: 'center' };
+    const titleRow = worksheet.addRow(['', '', '',  'NAVIO SHIPPING PRIVATE LIMITED', '']);
+    titleRow.getCell(4).font = { size: 15, bold: true };
+    titleRow.getCell(4).alignment = { horizontal: 'center' };
 
     // Calculate the length of the title string
     const titleLength = 'NAVIO SHIPPING PRIVATE LIMITED'.length;
 
     // Iterate through each column to adjust the width based on the title length
     worksheet.columns.forEach((column) => {
-      if (column.number === 6) {
+      if (column.number === 4) {
         column.width = titleLength + 2;
       }
     });
 
     // Merge cells for the title
-    worksheet.mergeCells(`F${titleRow.number}:G${titleRow.number}`);
+    worksheet.mergeCells(`D${titleRow.number}:E${titleRow.number}`);
 
     // Add subtitle row
-    const subtitleRow = worksheet.addRow(['', '', '', '', '', 'Sales Voucher', '']);
-    subtitleRow.getCell(6).font = { size: 14 };
-    subtitleRow.getCell(6).alignment = { horizontal: 'center' };
+    const subtitleRow = worksheet.addRow(['', '', '',  'Sales Voucher', '']);
+    subtitleRow.getCell(4).font = { size: 14 };
+    subtitleRow.getCell(4).alignment = { horizontal: 'center' };
 
     // Merge cells for the subtitle
-    worksheet.mergeCells(`F${subtitleRow.number}:G${subtitleRow.number}`);
+    worksheet.mergeCells(`D${subtitleRow.number}:E${subtitleRow.number}`);
 
     // Add "FROM Date" and "TO Date" to the worksheet
-    const dateRow = worksheet.addRow(['', '', '', '', '', `FROM ${this.startDate} - TO ${this.endDate}`]);
+    const dateRow = worksheet.addRow(['', '', '', `FROM ${this.startDate} - TO ${this.endDate}`]);
     dateRow.eachCell((cell) => {
       cell.alignment = { horizontal: 'center' };
     });
-    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
-    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
+    dateRow.getCell(4).numFmt = 'dd-MM-yyyy';
+    dateRow.getCell(4).numFmt = 'dd-MM-yyyy';
 
     // Merge cells for "FROM Date" and "TO Date"
-    worksheet.mergeCells(`F${dateRow.number}:G${dateRow.number}`);
+    worksheet.mergeCells(`D${dateRow.number}:E${dateRow.number}`);
 
 
     // Define header row and style it with yellow background, bold, and centered text
-    const header = Object.keys(this.pagedItems[0]).filter(key => key !== 'Symbol');
+    const keysToRemove = ['Symbol', 'BLTpes'];
+
+    const header = Object.keys(this.pagedItems[0])
+        .filter(key => !keysToRemove.includes(key));
     const headerRow = worksheet.addRow(header);
 
 
@@ -399,27 +402,37 @@ export class ReportSalesVoucherComponent implements OnInit {
       const mergedICYAmount = `${data['Invoice Amount (ICY)']  !== null ? parseFloat(data['Invoice Amount (ICY)'] ).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
       const mergedCCYAmount = `${data['Invoice Amount (CCY)'] !== null  ? parseFloat(data['Invoice Amount (CCY)']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
       const invoicetax = `${data['Total Tax'] !== null ? parseFloat(data['Total Tax']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-
+      const sgst = `${data['SGST'] !== null ? parseFloat(data['SGST']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      const cgst = `${data['CGST'] !== null ? parseFloat(data['CGST']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      const igst = `${data['IGST'] !== null ? parseFloat(data['IGST']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
 
       // Filter out properties you don't want to include in the Excel sheet
-      const filteredData = Object.keys(data)
-        .filter(key => key !== 'Symbol')
-        .reduce((obj, key) => {
-          obj[key] = data[key];
-          return obj;
-        }, {});
+      
+    
+      const keysToRemove = ['Symbol', 'BLTpes'];
 
+      const filteredData = Object.keys(data)
+          .filter(key => !keysToRemove.includes(key))
+          .reduce((obj, key) => {
+              obj[key] = data[key];
+              return obj;
+          }, {});
+
+      const  defalutJobValue = '-NA-'
       // Update the 'Amount (ICY)' property in the filtered data object with the merged amount
       filteredData['Invoice Amount (ICY)'] = mergedICYAmount;
       filteredData['Invoice Amount (CCY)'] = mergedCCYAmount;
       filteredData['Total Tax'] = invoicetax;
-      filteredData['Job Number'] = data['Job Number'] == null ? '-NA-' : data['Job Number'];
+      filteredData['SGST'] = sgst;
+      filteredData['CGST'] = cgst;
+      filteredData['IGST'] = igst;
+      filteredData['Job #'] = data['Job #'] == null ? defalutJobValue : data['Job #'];
       
       // Add the filtered data to the worksheet
       const row = worksheet.addRow(Object.values(filteredData));
 
       // Set text color for customer, receipt, and amount columns
-      const columnsToColor = ['Invoice', 'Customer Name', 'Invoice Amount (ICY)', 'Invoice Amount (CCY)','Total Tax'];
+      const columnsToColor = ['Invoice', 'Customer Name', 'Invoice Amount (ICY)', 'Invoice Amount (CCY)','Total Tax','SGST','CGST','IGST'];
       columnsToColor.forEach(columnName => {
         const columnIndex = Object.keys(filteredData).indexOf(columnName);
         if (columnIndex !== -1) {
@@ -520,7 +533,11 @@ export class ReportSalesVoucherComponent implements OnInit {
 
 
     // Define header row and style it with yellow background, bold, and centered text
-    const header = Object.keys(this.pagedItems[0]).filter(key => key !== 'Symbol');
+    const keysToRemove = ['Symbol', 'BLTpes'];
+
+    const header = Object.keys(this.pagedItems[0])
+        .filter(key => !keysToRemove.includes(key));
+    
     const headerRow = worksheet.addRow(header);
 
 
@@ -557,26 +574,37 @@ export class ReportSalesVoucherComponent implements OnInit {
       const mergedICYAmount = `${data['Invoice Amount (ICY)']  !== null ? parseFloat(data['Invoice Amount (ICY)'] ).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
       const mergedCCYAmount = `${data['Invoice Amount (CCY)'] !== null  ? parseFloat(data['Invoice Amount (CCY)']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
       const invoicetax = `${data['Total Tax'] !== null ? parseFloat(data['Total Tax']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-
+      const sgst = `${data['SGST'] !== null ? parseFloat(data['SGST']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      const cgst = `${data['CGST'] !== null ? parseFloat(data['CGST']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      const igst = `${data['IGST'] !== null ? parseFloat(data['IGST']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
       // Filter out properties you don't want to include in the Excel sheet
+
+      const keysToRemove = ['Symbol', 'BLTpes'];
+
       const filteredData = Object.keys(data)
-        .filter(key => key !== 'Symbol')
-        .reduce((obj, key) => {
-          obj[key] = data[key];
-          return obj;
-        }, {});
-      // Update the 'Amount (ICY)' property in the filtered data object with the merged amount
+          .filter(key => !keysToRemove.includes(key))
+          .reduce((obj, key) => {
+              obj[key] = data[key];
+              return obj;
+          }, {});
+      
+    
+        const  defalutJobValue = '-NA-'
+        // Update the 'Amount (ICY)' property in the filtered data object with the merged amount
       filteredData['Invoice Amount (ICY)'] = mergedICYAmount;
       filteredData['Invoice Amount (CCY)'] = mergedCCYAmount;
       filteredData['Total Tax'] = invoicetax;
-      filteredData['Job Number'] = data['Job Number'] == null ? '-NA-' : data['Job Number'];
+      filteredData['SGST'] = sgst;
+      filteredData['CGST'] = cgst;
+      filteredData['IGST'] = igst;
+      filteredData['Job #'] = data['Job #'] == null ? defalutJobValue : data['Job #'];
 
 
       // Add the filtered data to the worksheet
       const row = worksheet.addRow(Object.values(filteredData));
 
       // Set text color for customer, receipt, and amount columns
-      const columnsToColor =['Invoice', 'Customer Name', 'Invoice Amount (ICY)', 'Invoice Amount (CCY)','Total Tax']
+      const columnsToColor = ['Invoice', 'Customer Name', 'Invoice Amount (ICY)', 'Invoice Amount (CCY)','Total Tax','SGST','CGST','IGST'];
       columnsToColor.forEach(columnName => {
         const columnIndex = Object.keys(filteredData).indexOf(columnName);
         if (columnIndex !== -1) {

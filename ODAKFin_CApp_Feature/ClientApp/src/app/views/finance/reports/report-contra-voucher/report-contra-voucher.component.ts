@@ -79,7 +79,6 @@ export class ReportContraVoucherComponent implements OnInit  {
   ) { }
 
   ngOnInit(): void {
-    // this.getCustomerList();
     this.createReportForm();
     this.onOptionChange('month');
     this.getDivisionList();
@@ -91,63 +90,61 @@ export class ReportContraVoucherComponent implements OnInit  {
   onOptionChange(selectedOption: string) {
     this.selectedOption = '';
     switch (selectedOption) {
+
       case 'today':
         this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
         this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
         break;
+
       case 'week':
         this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay()), "yyyy-MM-dd"));
         this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() + (6 - this.currentDate.getDay())), "yyyy-MM-dd"));
         break;
+
       case 'month':
         const startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd")
         const endDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd")
-
         this.reportFilter.controls.FromDate.setValue(startDate);
         this.reportFilter.controls.ToDate.setValue(endDate);
-
-
         break;
+
       case 'year':
-        // this.reportFilter.controls.StartDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), 3, 1), "yyyy-MM-dd"));
-        // this.reportFilter.controls.EndDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), 2, 31), "yyyy-MM-dd"));
-        
         const currentYear = this.currentDate.getFullYear();
         const startYear = this.currentDate.getMonth() >= 3 ? currentYear : currentYear - 1;
         const endYear = startYear + 1;
-      
         this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(new Date(startYear, 3, 1), "yyyy-MM-dd"));
         this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(new Date(endYear, 2, 31), "yyyy-MM-dd"));
-        
         break;
-        case 'previoustoday':
-          const previousDay = new Date(this.currentDate);
-          previousDay.setDate(previousDay.getDate() - 1);
-          this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(previousDay, "yyyy-MM-dd"));
-          this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(previousDay, "yyyy-MM-dd"));
-          break;
-  
-        case 'previousweek':
-          const previousWeekStartDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay() - 7);
-          const previousWeekEndDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay() - 1);
-          this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(previousWeekStartDate, "yyyy-MM-dd"));
-          this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(previousWeekEndDate, "yyyy-MM-dd"));
-          break;
-  
-        case 'previousmonth':
-          const previousMonthStartDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() - 1, 1);
-          const previousMonthEndDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 0);
-          this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(previousMonthStartDate, "yyyy-MM-dd"));
-          this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(previousMonthEndDate, "yyyy-MM-dd"));
-          break;
-  
-        case 'previousyear':
-          const previousYear = this.currentDate.getFullYear() - 1;
-          const previousYearStartDate = new Date(previousYear, 3, 1);
-          const previousYearEndDate = new Date(previousYear + 1, 2, 31);
-          this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(previousYearStartDate, "yyyy-MM-dd"));
-          this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(previousYearEndDate, "yyyy-MM-dd"));
-          break;
+
+      case 'previoustoday':
+        const previousDay = new Date(this.currentDate);
+        previousDay.setDate(previousDay.getDate() - 1);
+        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(previousDay, "yyyy-MM-dd"));
+        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(previousDay, "yyyy-MM-dd"));
+        break;
+
+      case 'previousweek':
+        const previousWeekStartDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay() - 7);
+        const previousWeekEndDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay() - 1);
+        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(previousWeekStartDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(previousWeekEndDate, "yyyy-MM-dd"));
+        break;
+
+      case 'previousmonth':
+        const previousMonthStartDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() - 1, 1);
+        const previousMonthEndDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 0);
+        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(previousMonthStartDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(previousMonthEndDate, "yyyy-MM-dd"));
+        break;
+
+      case 'previousyear':
+        const previousYear = this.currentDate.getFullYear() - 1;
+        const previousYearStartDate = new Date(previousYear, 3, 1);
+        const previousYearEndDate = new Date(previousYear + 1, 2, 31);
+        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(previousYearStartDate, "yyyy-MM-dd"));
+        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(previousYearEndDate, "yyyy-MM-dd"));
+        break;
+
       case 'custom':
         this.selectedOption = 'custom';
         this.startDate = this.reportFilter.controls.FromDate.value;
@@ -159,6 +156,7 @@ export class ReportContraVoucherComponent implements OnInit  {
         break;
     }
   }
+
  
   async createReportForm() {
     this.reportFilter = this.fb.group({
@@ -206,7 +204,6 @@ export class ReportContraVoucherComponent implements OnInit  {
       let service = `${this.globals.APIURL}/ReceiptVoucher/GetReceiptVoucherDropDownList`
       this.dataService.post(service, { CustomerId: 0 }).subscribe((result: any) => {
         this.customerList = result.data.Table2;
-        // this.paymentModeList = result.data.Table4;
        
         resolve(true)
       }, error => {
@@ -226,7 +223,6 @@ export class ReportContraVoucherComponent implements OnInit  {
       .getBankByOfficeId(payload)
       .subscribe((result: any) => {
         if (result.message == "Success") {
-          // console.log(result['data'].Table)
           this.bankList = result["data"].Table;
           this.fromAccount = this.bankList;
         }
@@ -252,7 +248,7 @@ export class ReportContraVoucherComponent implements OnInit  {
       }
       this.dataService.post(service, payload).subscribe((result: any) => {
         if (result.message = "Success") {
-          // this.bankList = result.data.Table;
+         
         }
       }, error => {
         console.error(error);
@@ -291,15 +287,15 @@ export class ReportContraVoucherComponent implements OnInit  {
   }
   
   clear() {
-
+   debugger
     this.startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd");
     this.endDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd");
 
     this.reportFilter.reset({
       DivisionId: 0,
       OfficeId: 0,
-      FromAccount: [''],
-      ToAccount: [''],
+      FromAccount: 0,
+      ToAccount: 0,
       FormData:  this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
       ToDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd"),
       Amount: '',
@@ -309,23 +305,7 @@ export class ReportContraVoucherComponent implements OnInit  {
     this.getContraReportList();
   }
 
-  // downloadAsCSV() {
-  //   this.excelService.exportToCSV(this.reportList,'Report-ReceiptVoucher')
-  //   if(this.reportForExcelList.length > 0){
-  //     this.excelService.exportToCSV(this.reportForExcelList,'Report-ReceiptVoucher')
-  //   } else {
-  //     Swal.fire('no record found');
-  //   }
-  // }
-  
-  // downloadAsExcel() {
-  //   this.excelService.exportToCSV(this.reportList,'Report-ReceiptVoucher')
-  //   if(this.reportForExcelList.length > 0){
-  //     this.excelService.exportAsExcelFile(this.reportForExcelList,'Report-ReceiptVoucher')
-  //   } else {
-  //     Swal.fire('no record found');
-  //   }
-  // }
+
   async downloadAsExcel() {
     if (this.reportForExcelList.length === 0) {
       Swal.fire('No record found');
@@ -405,9 +385,8 @@ export class ReportContraVoucherComponent implements OnInit  {
       const formattedDate = date.split('T')[0];
       data.Date = formattedDate;
       const defalutvalue = 0;
-      // Merge the symbol and amount into a single string with fixed decimal places
-     // const mergedICYAmount = `${data.Symbol} ${parseFloat(data['Amount']).toFixed(this.entityFraction)}`;
-const mergedICYAmount = `${data['Amount'] !== null ? parseFloat(data['Amount']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      
+       const mergedICYAmount = `${data['Amount'] !== null ? parseFloat(data['Amount']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
 
       // Filter out properties you don't want to include in the Excel sheet
       const filteredData = Object.keys(data)
@@ -421,15 +400,16 @@ const mergedICYAmount = `${data['Amount'] !== null ? parseFloat(data['Amount']).
       filteredData['Amount'] = mergedICYAmount;
 
       // Add the filtered data to the worksheet
- const row = worksheet.addRow(Object.values(filteredData));
+      const row = worksheet.addRow(Object.values(filteredData));
 
- // Set text color for customer, receipt, and amount columns
- const columnsToColor = ['Contra Voucher', 'Amount'];
- columnsToColor.forEach(columnName => {
+     // Set text color for customer, receipt, and amount columns
+     const columnsToColor = ['Contra Voucher', 'Amount'];
+     columnsToColor.forEach(columnName => {
      const columnIndex = Object.keys(filteredData).indexOf(columnName);
      if (columnIndex !== -1) {
          const cell = row.getCell(columnIndex + 1);
-         cell.font = { color: { argb: '8B0000' }, bold: true,}; // Red color
+         cell.font = { color: { argb: '8B0000' }, bold: true,}; 
+         cell.alignment = { horizontal: 'right' };
      }
  });
 
@@ -520,7 +500,7 @@ const mergedICYAmount = `${data['Amount'] !== null ? parseFloat(data['Amount']).
     dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
 
     // Merge cells for "FROM Date" and "TO Date"
-    worksheet.mergeCells(`F${dateRow.number}:G${dateRow.number}`);
+    worksheet.mergeCells(`F${dateRow.number}:G${dateRow.number}`);  
 
 
     // Define header row and style it with yellow background, bold, and centered text
@@ -555,9 +535,8 @@ const mergedICYAmount = `${data['Amount'] !== null ? parseFloat(data['Amount']).
        const formattedDate = date.split('T')[0];
        data.Date = formattedDate;
        const defalutvalue = 0;
-       // Merge the symbol and amount into a single string with fixed decimal places
-       // const mergedICYAmount = `${data.Symbol} ${parseFloat(data['Amount']).toFixed(this.entityFraction)}`;
-        const mergedICYAmount = data['Amount'] !== null ? parseFloat(data['Amount']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction);
+      
+       const mergedICYAmount = data['Amount'] !== null ? parseFloat(data['Amount']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction);
 
       
        // Filter out properties you don't want to include in the Excel sheet
@@ -572,16 +551,16 @@ const mergedICYAmount = `${data['Amount'] !== null ? parseFloat(data['Amount']).
        filteredData['Amount'] = mergedICYAmount;
 
        // Add the filtered data to the worksheet
-  const row = worksheet.addRow(Object.values(filteredData));
+       const row = worksheet.addRow(Object.values(filteredData));
  
-  // Set text color for customer, receipt, and amount columns
-  const columnsToColor = ['Contra Voucher', 'Amount'];
-  columnsToColor.forEach(columnName => {
+      // Set text color for customer, receipt, and amount columns
+      const columnsToColor = ['Contra Voucher', 'Amount'];
+      columnsToColor.forEach(columnName => {
       const columnIndex = Object.keys(filteredData).indexOf(columnName);
       if (columnIndex !== -1) {
           const cell = row.getCell(columnIndex + 1);
           cell.font = { color: { argb: '8B0000' }, bold: true,}; // Red color
-           cell.alignment = { horizontal: 'right' }; // Align to right
+          cell.alignment = { horizontal: 'right' }; // Align to right
       }
   });
  

@@ -3,10 +3,10 @@
         <div class="card mt-0 p-3">
             <div class="row">
                 <div class="col-10">
-                    <div class="row pb-3">
-                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
-                            <label class=" fontstyles">PEROID</label>
-                            <ng-select class="searchdropdown custom" formControlName="Peroid"
+                    <div class="row pb-1">
+                        <div class="col-2">
+                            <label class=" maxlabel">PEROID</label>
+                            <ng-select class="searchdropdown-dropdown-size" formControlName="Peroid"
                                 (ngModelChange)="onOptionChange($event);" [clearable]="false">
                                 <ng-option [value]="''" disabled>-- SELECT --</ng-option>
                                 <ng-container *ngFor="let peroid of PeroidList">
@@ -16,36 +16,36 @@
                                 </ng-container>
                             </ng-select>
                         </div>
-                        <div class="col-4" *ngIf="selectedOption === 'custom'">
+                        <div class="col-2" *ngIf="selectedOption === 'custom'">
                             <div class="form-group bmd-form-group w-100">
                                 <label class="mb-3">From</label>
                                 <div class="input-group">
                                     <mat-form-field class="tillDate mat_date_picker" appearance="outline">
-                                        <input matInput (click)="StartDate.open()" readonly autocomplete="off"
-                                            (onchange)="formatchange(true)" [matDatepicker]="StartDate" id="StartDate"
-                                            [placeholder]="entityDateFormat" formControlName="StartDate">
-                                        <mat-datepicker-toggle matSuffix [for]="StartDate"></mat-datepicker-toggle>
-                                        <mat-datepicker #StartDate></mat-datepicker>
+                                        <input matInput (click)="FromDate.open()" readonly autocomplete="off"
+                                            (onchange)="formatchange(true)" [matDatepicker]="FromDate" id="FromDate"
+                                            [placeholder]="entityDateFormat" formControlName="FromDate">
+                                        <mat-datepicker-toggle matSuffix [for]="FromDate"></mat-datepicker-toggle>
+                                        <mat-datepicker #FromDate></mat-datepicker>
                                     </mat-form-field>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-4" *ngIf="selectedOption === 'custom'">
+                        <div class="col-2" *ngIf="selectedOption === 'custom'">
                             <label class="mb-3">To</label>
                             <div class="input-group">
                                 <mat-form-field class="tillDate mat_date_picker" appearance="outline">
-                                    <input matInput (click)="EndDate.open()" readonly autocomplete="off"
-                                        formControlName="EndDate" [matDatepicker]="EndDate" id="EndDate"
-                                        [min]="reportFilter.get('StartDate').value" [placeholder]="entityDateFormat"
+                                    <input matInput (click)="ToDate.open()" readonly autocomplete="off"
+                                        formControlName="ToDate" [matDatepicker]="ToDate" id="ToDate"
+                                        [min]="reportFilter.get('FromDate').value" [placeholder]="entityDateFormat"
                                         (ngModelChange)="formatchange(false)">
-                                    <mat-datepicker-toggle matSuffix [for]="EndDate"></mat-datepicker-toggle>
-                                    <mat-datepicker #EndDate></mat-datepicker>
+                                    <mat-datepicker-toggle matSuffix [for]="ToDate"></mat-datepicker-toggle>
+                                    <mat-datepicker #ToDate></mat-datepicker>
                                 </mat-form-field>
                             </div>
                         </div>
-                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
-                            <label class=" fontstyles">DIVISION</label>
-                            <ng-select class="searchdropdown custom" formControlName="Division"
+                        <div class="col-2">
+                            <label class=" maxlabel">DIVISION</label>
+                            <ng-select class="searchdropdown-dropdown-size" formControlName="DivisionId"
                                 (ngModelChange)="getOfficeList($event);" [clearable]="false">
                                 <ng-option [value]="0" disabled>-- SELECT --</ng-option>
                                 <ng-container *ngFor="let division of divisionList">
@@ -56,9 +56,9 @@
                             </ng-select>
                         </div>
 
-                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
-                            <label class=" fontstyles ">OFFICE</label>
-                            <ng-select class="searchdropdown" formControlName="Office" name="active" id="active"
+                        <div class="col-2">
+                            <label class=" maxlabel ">OFFICE</label>
+                            <ng-select class="searchdropdown-dropdown-size" formControlName="OfficeId" name="active" id="active"
                                 (ngModelChange)="getDivisionBasedOffice($event, reportFilter.value.Division)"
                                 [clearable]="false" name="CategoryId" id="CategoryId">
                                 <ng-option [value]="0" disabled>-- SELECT --</ng-option>
@@ -71,38 +71,37 @@
                         </div>
 
 
-                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4 mt-2">
-                            <label class="fontstyles">TRANSACTION TYPE</label>
-                            <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'TransactionType'">
-                                <ng-option [value]="0" disabled>-- SELECT --</ng-option>
-                                <ng-option *ngFor="let Type of VoucherTypeList" [value]="Type.TypeId">
-                                    {{Type.TypeName | uppercase}}
-                                </ng-option>
+                        <div class="col-2">
+                            <label class="maxlabel">TRANSACTION TYPE</label>
+                            <ng-select class="searchdropdown-dropdown-size" formControlName="Type" [clearable]="false" name="CategoryId"
+                            id="CategoryId" >
+                                <ng-option [value]="''" [disabled]="true">--SELECT VOUCHER TYPE--</ng-option>
+                                <ng-container *ngFor="let data of TypeList">
+                                    <ng-option [value]="data.LedgerTransactionTypeName">
+                                        <span class="textwrap"> {{data.LedgerTransactionTypeName | uppercase}}
+                                        </span>
+                                    </ng-option>
+                                </ng-container>
                             </ng-select>
                         </div>
 
-                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4 mt-2">
-                            <label class=" fontstyles">DOC CATEGORY</label>
-                            <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'docCategory'">
+                        <div class="col-2">
+                            <label class=" maxlabel">DOC CATEGORY</label>
+                            <ng-select class="searchdropdown-dropdown-size" [clearable]="false" [formControlName]="'Category'">
                                 <ng-option [value]="0" disabled>-- SELECT --</ng-option>
-                                <ng-option *ngFor="let paymentMode of categoryList" [value]="paymentMode.ID">
-                                    {{ paymentMode.PaymentType | uppercase }}
+                                <ng-option *ngFor="let paymentMode of CategoryList" [value]="paymentMode.LedgerDocumentCategoryId">
+                                    {{ paymentMode.DocumentCategoryName | uppercase }}
                                 </ng-option>
                             </ng-select>
                         </div>
                     </div>
                 </div>
-                <div class="col-2" style="padding-top: 45px;">
-                    <div class="text-center">
-                        <button type="button" class="btn btn-primary text-white col-auto"
-                            (click)="getReceiptReportList()">
+                <div class="col-2">
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="btn btn-primary text-white mx-1 btn-sm-custom" (click)="getdaybookList()">
                             SEARCH
                         </button>
-                    </div>
-
-                    <div class="text-center">
-                        <button type="button" (click)="clear()"
-                            class="btn btn-warning text-white mb-0 col-auto clear-btn">
+                        <button type="button" class="btn btn-warning text-white mx-1 btn-sm-custom" (click)="clear()">
                             CLEAR
                         </button>
                     </div>
@@ -116,31 +115,30 @@
             <div class="card m-b-30">
                 <div class="card-body cpad enqview">
 
-                    <div class="col-sm-12 justify-content-end text-center ">
-                        <h3 class="title">NAVIO SHIPPING PRIVATE LIMITED</h3>
-                        <h2 class="subtitle">DAY BOOK</h2>
+                    <div class="row">
+                        <div class="col-10 justify-content-end text-center ">
+                            <h6 class="title">NAVIO SHIPPING PRIVATE LIMITED</h6>
+                            <h6 class="subtitle">Day Book</h6>
+                            <h6 class="subtitle">FROM {{ startDate | date: commonDataService.convertToLowerCaseDay(entityDateFormat) }} -
+                                TO {{ endDate | date:commonDataService.convertToLowerCaseDay(entityDateFormat) }}
+                            </h6>
+                        </div>
+                        <div class="col-2 text-right">
+                            <div style="font-weight: 600;padding-top: 9px;padding-right: 10px;">
 
-
-                        <p>Report Date : {{ startDate | date: commonDataService.convertToLowerCaseDay(entityDateFormat)
-                            }}
-                            <!-- -  TO {{ endDate | date:commonDataService.convertToLowerCaseDay(entityDateFormat) }} -->
-                        </p>
-
-                    </div>
-
-                    <div class="col-sm-12 text-right d-flex justify-content-end">
-                        <div style="font-weight: 600; padding-top: 14px;">Export as : </div>
-                        <div>
-                            <img style="cursor: pointer;" width="38px" height="38px"
-                                class="exportAs mx-1 align-baseline" src="../../../../../assets/images/csv_color.png"
-                                (click)="downloadAsCSV()" alt="logo">
-                            <img style="cursor: pointer;" width="38px" height="38px"
-                                class="exportAs mx-1 align-baseline" src="../../../../../assets/images/xlsx_color.png"
-                                (click)="downloadAsExcel()" alt="logo">
+                                <img style="cursor: pointer;" width="36px" height="36px"
+                                    class="exportAs mx-1 align-baseline"
+                                    src="../../../../../assets/images/csv_color.png" (click)="downloadAsCSV()"
+                                    alt="logo">
+                                <img style="cursor: pointer;" width="36px" height="36px"
+                                    class="exportAs mx-1 align-baseline"
+                                    src="../../../../../assets/images/xlsx_color.png" (click)="downloadAsExcel()"
+                                    alt="logo">
+                            </div>
                         </div>
                     </div>
 
-                    <div class="col-sm-12 ">
+                    <div class="col-12 ">
                         <table class="table table-responsive table-bordered w-100 dataTable no-footer">
                             <thead>
                                 <tr>
@@ -175,9 +173,6 @@
                                         colspan="1" aria-label="Name: activate to sort column ascending"
                                         style="width: 177.575px;">Credit</th>
 
-                                    <!-- <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="1" aria-label="Name: activate to sort column ascending"
-                                        style="width: 177.575px;">Currency</th> -->
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
@@ -186,30 +181,28 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="let data of pagedItems">
-                                    <td>{{data.Date | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}
+                                    <td>{{data.Trans_Date | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}
                                     </td>
-                                    <td>{{data.account}}</td>
-                                    <td class="hyperTextColor"><a>{{data.transactiondetails}}</a></td>
-                                    <td>{{data.transactionType}}</td>
-                                    <td class="hyperTextColor">{{data.CustomerName}}</td>
-                                    <td>{{data.transaction}}</td>
-                                    <td>{{data.reference}}</td>
-                                    <td>{{data.debit}}</td>
-                                    <td>{{data.credit}}</td>
-                                    <!-- <td>{{data.Currency}}</td> -->
-                                    <td class="text-right hyperTextColor">{{ data.Symbol + ' ' + (data.Amount |
-                                        dynamicDecimal: entityFraction) }}</td>
+                                    <td>{{data.Account}}</td>
+                                    <td class="hyperTextColor"[title]="data.Trans_Details">
+                                      {{ (data['Trans_Details'] && data['Trans_Details'].length > 20) ? data['Trans_Details'].slice(0, 20) + '-' : data['Trans_Details'] }}</td>
+                                    <td>{{data.Trans_Type}}</td>
+                                    <td class="hyperTextColor">{{data.Trans_Number}}</td>
+                                    <td>{{data.Trans_Ref_Details}}</td>
+                                    <td class="text-right hyperTextColor">{{data.Debit  | dynamicDecimal: entityFraction}}</td>
+                                    <td class="text-right hyperTextColor">{{data.Credit | dynamicDecimal: entityFraction}}</td>
+                                    <td class="text-right hyperTextColor">{{  data.Amount | dynamicDecimal: entityFraction }}</td>
                                 </tr>
 
-                                <!-- <tr *ngIf="pagedItems.length == 0">
+                                <tr *ngIf="pagedItems.length == 0">
                                     <td class="text-center" colspan="10">No records found</td>
-                                </tr> -->
+                                </tr>
 
                             </tbody>
                         </table>
                     </div>
 
-                    <!-- <div class="row page mr-3" align="right">
+                    <div class="row page mr-3" align="right">
                         <ul *ngIf="pager && pager.totalItems > 10" class="pagination">
                             <li [ngClass]="{disabled:pager.currentPage === 1}">
                                 <a (click)="setPage(1)">First</a>
@@ -234,7 +227,7 @@
                                 <a (click)="setPage(pager.totalPages)">Last</a>
                             </li>
                         </ul>
-                    </div> -->
+                    </div>
                 </div>
             </div>
         </div>
