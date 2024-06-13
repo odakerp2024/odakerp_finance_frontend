@@ -87,6 +87,17 @@
                                 </ng-container>
                             </ng-select>
                         </div>
+
+                        <div class="col-2">
+                            <label class="str">Aging Group</label>
+                            <ng-select class="searchdropdown" [clearable]="false"  formControlName="Aging" >
+                                <ng-option [value]="0" [disabled]="true">--SELECT AGING GROUP--</ng-option>
+                                <ng-option *ngFor="let aging of agingGroupDropdown" [value]="aging.AgingId">
+                                    {{aging.AgingGroupName | uppercase}}
+                                </ng-option>
+                              </ng-select>
+                        </div>
+
                     </div>
                 </div>
 

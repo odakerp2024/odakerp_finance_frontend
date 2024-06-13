@@ -33,6 +33,7 @@ const year = today.getFullYear();
     pager: any = {};// pager object  
     pagedItems: any[];// paged items
     customerList: any[];
+    agingGroupDropdown : any[];
     PeroidList = [
       { peroidId: 'today', peroidName: 'CURRENT DAY' },
       { peroidId: 'week', peroidName: 'CURRENT WEEK' },
@@ -88,6 +89,7 @@ const year = today.getFullYear();
       this.onOptionChange('month');
       this.getDivisionList();
       this.getCustomerList(0);
+      this.getAgingDropdown();
       this.reportFilter.controls.Peroid.setValue('month');
     }
 
@@ -285,6 +287,19 @@ const year = today.getFullYear();
       })
     }
   
+    
+    getAgingDropdown() {
+    this.reportService.getAgingDropdown({}).subscribe((result: any) => {
+      if (result.message == 'Success') {
+        this.agingGroupDropdown = [];
+        if (result["data"].Table.length > 0) {
+          this.agingGroupDropdown = result.data.Table;
+        }
+      }
+    }),error =>{
+      console.error(error);
+    }
+  }
     getOverallList() {
       this.startDate = this.reportFilter.controls.FromDate.value;
       this.endDate = this.reportFilter.controls.ToDate.value;
