@@ -765,7 +765,8 @@ export class FinanceMasterComponent implements OnInit {
       let payload = {
         "wfnumber": this.workFlowUpdateForm.value.workflowNo,
         "step_id": +this.workFlowUpdateForm.value.currentStep,
-        "remarks": this.workFlowUpdateForm.value.remarks,
+        //"remarks": this.workFlowUpdateForm.value.remarks,
+        "remarks": $('#ddlRemarks').val(),
         "statuscode": statuscode,
         "statustext": temp,
         "approvaluser": { "usertype": "string", "userid": this.userName }
