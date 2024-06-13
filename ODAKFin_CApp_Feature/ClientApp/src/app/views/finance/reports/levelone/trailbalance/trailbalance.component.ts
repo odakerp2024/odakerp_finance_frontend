@@ -116,7 +116,7 @@ export class TrailbalanceComponent implements OnInit {
 
   
   trailbalanceList() {
-    debugger;
+   
     var service = `
     https://odakfnqa.odaksolutions.in/api/Reports/GetTrailBalanceList
     `;
@@ -126,7 +126,7 @@ export class TrailbalanceComponent implements OnInit {
         "OfficeId": 0,
         "Date": ""
     };
-debugger
+
 this.dataService.post(service, payload).subscribe((result: any) => {
   this.balanceList = [];
   if (result.message === 'Success' && result.data.Table.length > 0) {
@@ -385,9 +385,11 @@ async downloadExcel() {
   const titleRow = worksheet.addRow(['', '', 'ODAK SOLUTIONS PRIVATE LIMITED', '', '', '']);
   titleRow.getCell(3).font = { size: 15, bold: true };
   titleRow.getCell(3).alignment = { horizontal: 'center' };
+  worksheet.mergeCells(`C${titleRow.number}:D${titleRow.number}`);
   const subtitleRow = worksheet.addRow(['', '', 'Trail Balance', '', '', '']);
   subtitleRow.getCell(3).font = { size: 15, bold: true };
   subtitleRow.getCell(3).alignment = { horizontal: 'center' };
+  worksheet.mergeCells(`C${subtitleRow.number}:D${subtitleRow.number}`);
 
   // Add date row
   const currentDate = new Date();

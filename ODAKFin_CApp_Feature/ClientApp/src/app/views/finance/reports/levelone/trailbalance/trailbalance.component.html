@@ -117,36 +117,44 @@
             
                         <tbody>
                             <ng-container *ngIf="pagedItems.length > 0; else noRecord">
-                                <ng-container *ngFor="let group of pagedItems">
-                                    <!-- Group header row with blue background -->
-                                    <tr>
-                                        <td colspan="9" style=" font-weight: bold;">
-                                            {{ group.GroupName | uppercase }}
-                                        </td>
-                                    </tr>
-                                    <!-- Rows for items within the group -->
-                                    <tr *ngFor="let balance of group.items; let i = index">
-                                        <td (click)="editBalance(balance.ChartOfAccountsId)" style="color: #0366d6; cursor: pointer;">
-                                            {{ balance.GrandParentAccountName }} - {{ balance.ParentAccountName }} - {{ balance.ChildAccountName }}
-                                        </td>
-                                        <td class="hyperTextColor text-right"  *ngIf="balance.ChildTransaction_Type === 'Credit'">
-                                            {{ balance.ChildNet_Balance | dynamicDecimal:entityFraction | number:'1.' + entityFraction + '-' + entityFraction }}
-                                          </td>
-                                        <td class="hyperTextColor text-right" *ngIf="balance.ChildTransaction_Type !== 'Credit'">0</td>
-                                        <td class="hyperTextColor text-right" *ngIf="balance.ChildTransaction_Type === 'Debit'">
-                                            {{ balance.ChildNet_Balance | dynamicDecimal:entityFraction | number:'1.' + entityFraction + '-' + entityFraction  }}
-                                        </td>
-                                        <td class="hyperTextColor text-right" *ngIf="balance.ChildTransaction_Type !== 'Debit'">0</td>
-                                    </tr>
-                        
-                                </ng-container>
+                              <ng-container *ngFor="let group of pagedItems">
+                                <!-- Group header row with blue background -->
+                                <tr>
+                                  <td colspan="9" style="font-weight: bold;">
+                                    {{ group.GroupName | uppercase }}
+                                  </td>
+                                </tr>
+                                <!-- Rows for items within the group -->
+                                <tr *ngFor="let balance of group.items; let i = index">
+                                  <td (click)="editBalance(balance.ChartOfAccountsId)" style="color: #0366d6; cursor: pointer;">
+                                    <ng-container *ngIf="i === 0 || balance.GrandParentAccountName !== group.items[i - 1].GrandParentAccountName">
+                                      <strong>{{ balance.GrandParentAccountName }}</strong> -
+                                    </ng-container>
+                                    <ng-container class="ml-10" *ngIf="i === 0 || balance.ParentAccountName !== group.items[i - 1].ParentAccountName">
+                                      <strong>{{ balance.ParentAccountName }}</strong> -
+                                    </ng-container>
+                                    <span class="child-account">
+                                      {{ balance.ChildAccountName }}
+                                    </span>
+                                  </td>
+                                  <td class="hyperTextColor text-right" *ngIf="balance.ChildTransaction_Type === 'Credit'">
+                                    {{ balance.ChildNet_Balance | dynamicDecimal }}
+                                  </td>
+                                  <td class="hyperTextColor text-right" *ngIf="balance.ChildTransaction_Type !== 'Credit'">0</td>
+                                  <td class="hyperTextColor text-right" *ngIf="balance.ChildTransaction_Type === 'Debit'">
+                                    {{ balance.ChildNet_Balance | dynamicDecimal }}
+                                  </td>
+                                  <td class="hyperTextColor text-right" *ngIf="balance.ChildTransaction_Type !== 'Debit'">0</td>
+                                </tr>
+                              </ng-container>
                             </ng-container>
                             <ng-template #noRecord>
-                                <tr *ngIf="pagedItems.length === 0">
-                                    <td class="text-center" colspan="9" style="height: 100px;">No Records Found</td>
-                                </tr>
+                              <tr *ngIf="pagedItems.length === 0">
+                                <td class="text-center" colspan="9" style="height: 100px;">No Records Found</td>
+                              </tr>
                             </ng-template>
-                        </tbody>
+                          </tbody>
+                          
                         
                         <tfoot>
                             <tr class="footer-position-sticky" style=" padding: 7px !important;
@@ -156,8 +164,8 @@
                                     <span style="font-size: medium;">Grand Total : </span>
                                 </td>
                               
-                                <td class="text-right" colspan="1">{{totalcreditamount | dynamicDecimal: entityFraction | number:'1.' + entityFraction + '-' + entityFraction }}</td>
-                                <td class="text-right" colspan="1">{{totaldebitamount | dynamicDecimal: entityFraction | number:'1.' + entityFraction + '-' + entityFraction }}</td>
+                                <td class="text-right" colspan="1">{{totalcreditamount | dynamicDecimal }}</td>
+                                <td class="text-right" colspan="1">{{totaldebitamount | dynamicDecimal }}</td>
 
                             </tr>
                         </tfoot>
