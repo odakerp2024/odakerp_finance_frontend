@@ -34,10 +34,11 @@ export class Globals {
     // LANDINGURL: string = 'https://navioindia.freighteiz.com'
 
     // PROD
-     APIURL: string = 'https://fn-navioindia.freighteiz.com/api';
+    APIURL: string = 'https://fn-navioindia.freighteiz.com/api';
     MASTER_API_URL: string = 'https://fn-navioindia.freighteiz.com/api';
     SaApi: string = "https://sa-navioindia.freighteiz.com/api";
     APIURLFF: string = 'https://sa-navioindia.freighteiz.com/ffddev/api';
+    FFAPI: string = 'https://ff-navioindia.freighteiz.com/ffddev/api';
     APIURLLA: string = 'https://la-navioindia.freighteiz.com/api';
     TemplateUploadURL: string = 'https://fn-navioindia.freighteiz.com';
     LANDINGURL: string = 'https://navioindia.freighteiz.com/'
