@@ -162,8 +162,8 @@ export class CreditApplicationDetailsComponent implements OnInit {
     this.getWFParams();
     this.getUserDtls();
 
-    this.redirectURL = window.location.href
-    console.log('redirectURL', this.redirectURL, window.location)
+    // this.redirectURL = window.location.href
+    // console.log('redirectURL', this.redirectURL, window.location)
 
   }
 
@@ -203,6 +203,9 @@ export class CreditApplicationDetailsComponent implements OnInit {
 
   submitApproval() {
 
+    this.redirectURL = window.location.href
+    console.log('redirectURL', this.redirectURL, window.location)
+    
     let eventData: any = {}
     let checkOutstand = 'Fail'
 
