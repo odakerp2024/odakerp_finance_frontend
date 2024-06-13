@@ -308,7 +308,189 @@ export class ReportReceiptVoucherComponent implements OnInit {
   }
 
 
-  async downloadAsExcel() {
+  async downloadAsCSV() {
+    if (this.reportForExcelList.length === 0) {
+      Swal.fire('No record found');
+      return;
+    }
+
+    // Create a new workbook and worksheet
+    const workbook = new Workbook();
+    const worksheet = workbook.addWorksheet('Report');
+
+    // Add title and subtitle rows
+    const titleRow = worksheet.addRow(['', '', '', '', '', 'NAVIO SHIPPING PRIVATE LIMITED', '']);
+    titleRow.getCell(6).font = { size: 15, bold: true };
+    titleRow.getCell(6).alignment = { horizontal: 'center' };
+
+    // Calculate the length of the title string
+    const titleLength = 'NAVIO SHIPPING PRIVATE LIMITED'.length;
+
+    // Iterate through each column to adjust the width based on the title length
+    worksheet.columns.forEach((column) => {
+      if (column.number === 6) {
+        column.width = titleLength + 2;
+      }
+    });
+
+    // Merge cells for the title
+    worksheet.mergeCells(`F${titleRow.number}:G${titleRow.number}`);
+
+    // Add subtitle row
+    const subtitleRow = worksheet.addRow(['', '', '', '', '', 'Receipt Voucher', '']);
+    subtitleRow.getCell(6).font = { size: 14 };
+    subtitleRow.getCell(6).alignment = { horizontal: 'center' };
+
+    // Merge cells for the subtitle
+    worksheet.mergeCells(`F${subtitleRow.number}:G${subtitleRow.number}`);
+
+    // Add "FROM Date" and "TO Date" to the worksheet
+    const dateRow = worksheet.addRow(['', '', '', '', '', `FROM ${this.startDate} - TO ${this.endDate}`]);
+    dateRow.eachCell((cell) => {
+      cell.alignment = { horizontal: 'center' };
+    });
+    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
+    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
+
+    // Merge cells for "FROM Date" and "TO Date"
+    worksheet.mergeCells(`F${dateRow.number}:G${dateRow.number}`);
+
+
+    // Define header row and style it with yellow background, bold, and centered text
+    const header = Object.keys(this.reportForExcelList[0]).filter(key => key !== 'Symbol');
+    const headerRow = worksheet.addRow(header);
+
+
+    headerRow.eachCell((cell) => {
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: '8A9A5B' },
+      };
+      cell.font = {
+        bold: true,
+        color: { argb: 'FFFFF7' }
+      };
+      cell.alignment = {
+        horizontal: 'center',
+      };
+      cell.border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' },
+      };
+    });
+
+    // Add data rows with concatenated symbol and amount
+    this.reportForExcelList.forEach((data) => {
+
+      //To Remove Time from date field data
+      const date = data.Date
+      const formattedDate = date.split('T')[0];
+      data.Date = formattedDate;
+      const defalutvalue = 0;
+      // Merge the symbol and amount into a single string with fixed decimal places
+      const mergedICYAmount = `${data['Amount (ICY)'] !== null ? parseFloat(data['Amount (ICY)']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      const mergedCCYAmount = `${data['Amount (CCY)'] !== null ? parseFloat(data['Amount (CCY)']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      const TDSamount = ` ${data['TDS Amount'] !== null ? parseFloat(data['TDS Amount']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      const ExRateGain = ` ${data['Ex Rate Gain'] !== null ? parseFloat(data['Ex Rate Gain']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      const ExRateLoss = ` ${data['Ex Rate Loss'] !== null ? parseFloat(data['Ex Rate Loss']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      const BankCharges = ` ${data['Bank Charges'] !== null ? parseFloat(data['Bank Charges']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+
+
+      // Filter out properties you don't want to include in the Excel sheet
+      const filteredData = Object.keys(data)
+        .filter(key => key !== 'Symbol')
+        .reduce((obj, key) => {
+          obj[key] = data[key];
+          return obj;
+        }, {});
+
+      // Update the 'Amount (ICY)' property in the filtered data object with the merged amount
+      filteredData['Amount (ICY)'] = mergedICYAmount;
+      filteredData['Amount (CCY)'] = mergedCCYAmount;
+      filteredData['TDS Amount'] = TDSamount;
+      filteredData['Ex Rate Gain'] = ExRateGain;
+      filteredData['Ex Rate Loss'] = ExRateLoss;
+      filteredData['Bank Charges'] = BankCharges;
+
+
+      // Add the filtered data to the worksheet
+      const row = worksheet.addRow(Object.values(filteredData));
+
+      // Set text color for specific columns and align them
+      const columnsToColorRight = ['Customer', 'Receipt #', 'Amount (CCY)', 'Amount (ICY)' , 'TDS Amount', 'Ex Rate Gain','Ex Rate Loss','Bank Charges'];
+      const columnsToAlignLeft = ['Customer', 'Receipt #']; 
+      const columnsToAlignRight = [ 'Amount (CCY)', 'Amount (ICY)' , 'TDS Amount', 'Ex Rate Gain','Ex Rate Loss','Bank Charges'];
+
+      columnsToColorRight.forEach(columnName => {
+        const columnIndex = Object.keys(filteredData).indexOf(columnName);
+        if (columnIndex !== -1) {
+          const cell = row.getCell(columnIndex + 1);
+          cell.font = { color: { argb: '8B0000' }, bold: true }; // Red color
+        }
+      });
+
+      columnsToAlignLeft.forEach(columnName => {
+        const columnIndex = Object.keys(filteredData).indexOf(columnName);
+        if (columnIndex !== -1) {
+          const cell = row.getCell(columnIndex + 1);
+          cell.alignment = { horizontal: 'left' };
+        }
+      });
+
+      columnsToAlignRight.forEach(columnName => {
+        const columnIndex = Object.keys(filteredData).indexOf(columnName);
+        if (columnIndex !== -1) {
+          const cell = row.getCell(columnIndex + 1);
+          cell.alignment = { horizontal: 'right' };
+        }
+      });
+
+    });
+
+    // Adjust column widths to fit content
+    worksheet.columns.forEach((column) => {
+      let maxLength = 0;
+      column.eachCell({ includeEmpty: true }, (cell) => {
+        const cellLength = cell.value ? cell.value.toString().length : 0;
+        if (cellLength > maxLength) {
+          maxLength = cellLength;
+        }
+      });
+      column.width = maxLength + 2;
+    });
+
+    // Style the footer row with yellow background, bold, and centered text
+    const footerRow = worksheet.addRow(['End of Report']);
+    footerRow.eachCell((cell) => {
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: '8A9A5B' },
+      };
+      cell.font = {
+        bold: true,
+        color: { argb: 'FFFFF7' }
+      };
+      cell.alignment = {
+        horizontal: 'center',
+      };
+    });
+
+    // Merge footer cells if needed
+    worksheet.mergeCells(`A${footerRow.number}:${String.fromCharCode(65 + header.length - 1)}${footerRow.number}`);
+
+    // Write to Excel and save
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    saveAs(blob, 'Report-ReceiptVoucher.xlsx');
+  }
+
+
+
+ async downloadAsExcel() {
     if (this.reportForExcelList.length === 0) {
       Swal.fire('No record found');
       return;
@@ -421,182 +603,37 @@ export class ReportReceiptVoucherComponent implements OnInit {
       // Add the filtered data to the worksheet
       const row = worksheet.addRow(Object.values(filteredData));
 
-      // Set text color for customer, receipt, and amount columns
-      const columnsToColor = ['Customer', 'Receipt', 'Amount (CCY)', 'Amount (ICY)','TDS Amount', 'Ex Rate Gain','Ex Rate Loss','Bank Charges'];
-      columnsToColor.forEach(columnName => {
-        const columnIndex = Object.keys(filteredData).indexOf(columnName);
-        if (columnIndex !== -1) {
-          const cell = row.getCell(columnIndex + 1);
-          cell.font = { color: { argb: '8B0000' }, bold: true, }; // Red color
-          cell.alignment = { horizontal: 'right' };
-        }
-      });
-
-    });
-
-    // Adjust column widths to fit content
-    worksheet.columns.forEach((column) => {
-      let maxLength = 0;
-      column.eachCell({ includeEmpty: true }, (cell) => {
-        const cellLength = cell.value ? cell.value.toString().length : 0;
-        if (cellLength > maxLength) {
-          maxLength = cellLength;
-        }
-      });
-      column.width = maxLength + 2;
-    });
-
-    // Style the footer row with yellow background, bold, and centered text
-    const footerRow = worksheet.addRow(['End of Report']);
-    footerRow.eachCell((cell) => {
-      cell.fill = {
-        type: 'pattern',
-        pattern: 'solid',
-        fgColor: { argb: '8A9A5B' },
-      };
-      cell.font = {
-        bold: true,
-        color: { argb: 'FFFFF7' }
-      };
-      cell.alignment = {
-        horizontal: 'center',
-      };
-    });
-
-    // Merge footer cells if needed
-    worksheet.mergeCells(`A${footerRow.number}:${String.fromCharCode(65 + header.length - 1)}${footerRow.number}`);
-
-    // Write to Excel and save
-    const buffer = await workbook.xlsx.writeBuffer();
-    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    saveAs(blob, 'Report-ReceiptVoucher.xlsx');
-  }
-
-
-
-  async downloadAsCSV() {
-    if (this.reportForExcelList.length === 0) {
-      Swal.fire('No record found');
-      return;
-    }
-
-    // Create a new workbook and worksheet
-    const workbook = new Workbook();
-    const worksheet = workbook.addWorksheet('Report');
-
-    // Add title and subtitle rows
-    const titleRow = worksheet.addRow(['', '', '', '', '', 'NAVIO SHIPPING PRIVATE LIMITED', '']);
-    titleRow.getCell(6).font = { size: 15, bold: true };
-    titleRow.getCell(6).alignment = { horizontal: 'center' };
-
-    // Calculate the length of the title string
-    const titleLength = 'NAVIO SHIPPING PRIVATE LIMITED'.length;
-
-    // Iterate through each column to adjust the width based on the title length
-    worksheet.columns.forEach((column) => {
-      if (column.number === 6) {
-        column.width = titleLength + 2;
-      }
-    });
-
-    // Merge cells for the title
-    worksheet.mergeCells(`F${titleRow.number}:G${titleRow.number}`);
-
-    // Add subtitle row
-    const subtitleRow = worksheet.addRow(['', '', '', '', '', 'Receipt Voucher', '']);
-    subtitleRow.getCell(6).font = { size: 14 };
-    subtitleRow.getCell(6).alignment = { horizontal: 'center' };
-
-    // Merge cells for the subtitle
-    worksheet.mergeCells(`F${subtitleRow.number}:G${subtitleRow.number}`);
-
-    // Add "FROM Date" and "TO Date" to the worksheet
-    const dateRow = worksheet.addRow(['', '', '', '', '', `FROM ${this.startDate} - TO ${this.endDate}`]);
-    dateRow.eachCell((cell) => {
-      cell.alignment = { horizontal: 'center' };
-    });
-    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
-    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
-
-    // Merge cells for "FROM Date" and "TO Date"
-    worksheet.mergeCells(`F${dateRow.number}:G${dateRow.number}`);
-
-
-    // Define header row and style it with yellow background, bold, and centered text
-    const header = Object.keys(this.reportForExcelList[0]).filter(key => key !== 'Symbol');
-    const headerRow = worksheet.addRow(header);
-
-
-    headerRow.eachCell((cell) => {
-      cell.fill = {
-        type: 'pattern',
-        pattern: 'solid',
-        fgColor: { argb: '8A9A5B' },
-      };
-      cell.font = {
-        bold: true,
-        color: { argb: 'FFFFF7' }
-      };
-      cell.alignment = {
-        horizontal: 'center',
-      };
-      cell.border = {
-        top: { style: 'thin' },
-        left: { style: 'thin' },
-        bottom: { style: 'thin' },
-        right: { style: 'thin' },
-      };
-    });
-
-    // Add data rows with concatenated symbol and amount
-    this.reportForExcelList.forEach((data) => {
-
-      //To Remove Time from date field data
-      const date = data.Date
-      const formattedDate = date.split('T')[0];
-      data.Date = formattedDate;
-      const defalutvalue = 0;
-      // Merge the symbol and amount into a single string with fixed decimal places
-      const mergedICYAmount = `${data['Amount (ICY)'] !== null ? parseFloat(data['Amount (ICY)']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const mergedCCYAmount = `${data['Amount (CCY)'] !== null ? parseFloat(data['Amount (CCY)']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const TDSamount = ` ${data['TDS Amount'] !== null ? parseFloat(data['TDS Amount']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const ExRateGain = ` ${data['Ex Rate Gain'] !== null ? parseFloat(data['Ex Rate Gain']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const ExRateLoss = ` ${data['Ex Rate Loss'] !== null ? parseFloat(data['Ex Rate Loss']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const BankCharges = ` ${data['Bank Charges'] !== null ? parseFloat(data['Bank Charges']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-
-
-      // Filter out properties you don't want to include in the Excel sheet
-      const filteredData = Object.keys(data)
-        .filter(key => key !== 'Symbol')
-        .reduce((obj, key) => {
-          obj[key] = data[key];
-          return obj;
-        }, {});
-
-      // Update the 'Amount (ICY)' property in the filtered data object with the merged amount
-      filteredData['Amount (ICY)'] = mergedICYAmount;
-      filteredData['Amount (CCY)'] = mergedCCYAmount;
-      filteredData['TDS Amount'] = TDSamount;
-      filteredData['Ex Rate Gain'] = ExRateGain;
-      filteredData['Ex Rate Loss'] = ExRateLoss;
-      filteredData['Bank Charges'] = BankCharges;
-
-
-      // Add the filtered data to the worksheet
-      const row = worksheet.addRow(Object.values(filteredData));
-
-      // Set text color for customer, receipt, and amount columns
-      const columnsToColor = ['Customer', 'Receipt', 'Amount (CCY)', 'Amount (ICY)' , 'TDS Amount', 'Ex Rate Gain','Ex Rate Loss','Bank Charges'];
-      columnsToColor.forEach(columnName => {
-        const columnIndex = Object.keys(filteredData).indexOf(columnName);
-        if (columnIndex !== -1) {
-          const cell = row.getCell(columnIndex + 1);
-          cell.font = { color: { argb: '8B0000' }, bold: true, }; // Red color
-          cell.alignment = { horizontal: 'right' }; // Align to right
-        }
-      });
-
-    });
+       // Set text color for specific columns and align them
+       const columnsToColorRight = ['Customer', 'Receipt #', 'Amount (CCY)', 'Amount (ICY)' , 'TDS Amount', 'Ex Rate Gain','Ex Rate Loss','Bank Charges'];
+       const columnsToAlignLeft = ['Customer', 'Receipt #']; 
+       const columnsToAlignRight = [ 'Amount (CCY)', 'Amount (ICY)' , 'TDS Amount', 'Ex Rate Gain','Ex Rate Loss','Bank Charges'];
+ 
+       columnsToColorRight.forEach(columnName => {
+         const columnIndex = Object.keys(filteredData).indexOf(columnName);
+         if (columnIndex !== -1) {
+           const cell = row.getCell(columnIndex + 1);
+           cell.font = { color: { argb: '8B0000' }, bold: true }; // Red color
+         }
+       });
+ 
+       columnsToAlignLeft.forEach(columnName => {
+         const columnIndex = Object.keys(filteredData).indexOf(columnName);
+         if (columnIndex !== -1) {
+           const cell = row.getCell(columnIndex + 1);
+           cell.alignment = { horizontal: 'left' };
+         }
+       });
+ 
+       columnsToAlignRight.forEach(columnName => {
+         const columnIndex = Object.keys(filteredData).indexOf(columnName);
+         if (columnIndex !== -1) {
+           const cell = row.getCell(columnIndex + 1);
+           cell.alignment = { horizontal: 'right' };
+         }
+       });
+ 
+     });
+ 
 
     // Adjust column widths to fit content
     worksheet.columns.forEach((column) => {
