@@ -34,6 +34,10 @@ export class ExpensesService {
   GetExpensesList(FormValue: any): Observable<any> {
     return this.http.post<any>(this.globals.APIURL + '/OpeningBalanceExpenses/GetExpensesList', FormValue);
   }
+
+  uploadTransJournal(payload: any): Observable<any[]>{
+    return this.http.post<any[]>(this.globals.FFAPI + '/Accounts/AddOpeningBalanceOthers', payload);
+  }
 }
 
 
