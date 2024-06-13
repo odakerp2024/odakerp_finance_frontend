@@ -34,5 +34,9 @@ export class OpeningBalancesIncomeService {
   GetIncomeList(FormValue: any): Observable<any> {
     return this.http.post<any>(this.globals.APIURL + '/OpeningBalanceIncome/GetIncomeList', FormValue);
   }
+
+  uploadTransJournal(payload: any): Observable<any[]>{
+    return this.http.post<any[]>(this.globals.FFAPI + '/Accounts/AddOpeningBalanceOthers', payload);
+  }
 }
 

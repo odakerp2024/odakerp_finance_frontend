@@ -34,6 +34,10 @@ export class OpeningBalancesAssetService {
   GetAssetList(FormValue: any): Observable<any> {
     return this.http.post<any>(this.globals.APIURL + '/OpeningBalanceAsset/GetAssetList', FormValue);
   }
+
+  uploadTransJournal(payload: any): Observable<any[]>{
+    return this.http.post<any[]>(this.globals.FFAPI + '/Accounts/AddOpeningBalanceOthers', payload);
+  }
 }
 
 
