@@ -129,18 +129,16 @@
                                         <td (click)="editBalance(balance.ChartOfAccountsId)" style="color: #0366d6; cursor: pointer;">
                                             {{ balance.GrandParentAccountName }} - {{ balance.ParentAccountName }} - {{ balance.ChildAccountName }}
                                         </td>
-                                        <td class="hyperTextColor text-right" *ngIf="balance.ChildTransaction_Type === 'Credit'">
-                                            {{ balance.ChildNet_Balance | dynamicDecimal: entityFraction | entityThousands }}
-                                        </td>
+                                        <td class="hyperTextColor text-right"  *ngIf="balance.ChildTransaction_Type === 'Credit'">
+                                            {{ balance.ChildNet_Balance | dynamicDecimal:entityFraction | number:'1.' + entityFraction + '-' + entityFraction }}
+                                          </td>
                                         <td class="hyperTextColor text-right" *ngIf="balance.ChildTransaction_Type !== 'Credit'">0</td>
                                         <td class="hyperTextColor text-right" *ngIf="balance.ChildTransaction_Type === 'Debit'">
-                                            {{ balance.ChildNet_Balance | dynamicDecimal: entityFraction | entityThousands }}
+                                            {{ balance.ChildNet_Balance | dynamicDecimal:entityFraction | number:'1.' + entityFraction + '-' + entityFraction  }}
                                         </td>
                                         <td class="hyperTextColor text-right" *ngIf="balance.ChildTransaction_Type !== 'Debit'">0</td>
                                     </tr>
-                                    
-                                    
-                                    
+                        
                                 </ng-container>
                             </ng-container>
                             <ng-template #noRecord>

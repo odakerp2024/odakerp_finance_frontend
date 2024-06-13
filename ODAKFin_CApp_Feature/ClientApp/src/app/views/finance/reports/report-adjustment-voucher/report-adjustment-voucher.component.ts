@@ -404,20 +404,40 @@ export class ReportAdjustmentVoucherComponent implements OnInit {
       filteredData['Ex Rate'] = Exrate;
 
       // Add the filtered data to the worksheet
- const row = worksheet.addRow(Object.values(filteredData));
+       const row = worksheet.addRow(Object.values(filteredData));
 
- // Set text color for customer, receipt, and amount columns
- const columnsToColor = ['Voucher', 'Account', 'Amount', 'Amount (CCY)', 'Ex Rate'];
- columnsToColor.forEach(columnName => {
-     const columnIndex = Object.keys(filteredData).indexOf(columnName);
-     if (columnIndex !== -1) {
+
+
+     // Set text color for specific columns and align them
+     const columnsToColorRight =  ['Voucher #', 'Account', 'Amount (CCY)', 'Amount','Ex Rate'];
+     const columnsToAlignLeft  =  ['Voucher #', 'Account']; // Specify columns to align left
+     const columnsToAlignRight =  ['Amount (CCY)', 'Amount','Ex Rate']; // Specify columns to align right
+
+     columnsToColorRight.forEach(columnName => {
+       const columnIndex = Object.keys(filteredData).indexOf(columnName);
+       if (columnIndex !== -1) {
          const cell = row.getCell(columnIndex + 1);
-         cell.font = { color: { argb: '8B0000' }, bold: true,}; // Red color
-          cell.alignment = { horizontal: 'right' };
-     }
- });
+         cell.font = { color: { argb: '8B0000' }, bold: true }; // Red color
+       }
+     });
 
-    });
+     columnsToAlignLeft.forEach(columnName => {
+       const columnIndex = Object.keys(filteredData).indexOf(columnName);
+       if (columnIndex !== -1) {
+         const cell = row.getCell(columnIndex + 1);
+         cell.alignment = { horizontal: 'left' };
+       }
+     });
+
+     columnsToAlignRight.forEach(columnName => {
+       const columnIndex = Object.keys(filteredData).indexOf(columnName);
+       if (columnIndex !== -1) {
+         const cell = row.getCell(columnIndex + 1);
+         cell.alignment = { horizontal: 'right' };
+       }
+     });
+
+   });
 
     // Adjust column widths to fit content
     worksheet.columns.forEach((column) => {
@@ -557,20 +577,38 @@ export class ReportAdjustmentVoucherComponent implements OnInit {
       filteredData['Ex Rate'] = Exrate;
 
       // Add the filtered data to the worksheet
- const row = worksheet.addRow(Object.values(filteredData));
+       const row = worksheet.addRow(Object.values(filteredData));
 
- // Set text color for customer, receipt, and amount columns
- const columnsToColor = ['Voucher', 'Account', 'Amount', 'Amount (CCY)', 'Ex Rate'];
- columnsToColor.forEach(columnName => {
-     const columnIndex = Object.keys(filteredData).indexOf(columnName);
-     if (columnIndex !== -1) {
-         const cell = row.getCell(columnIndex + 1);
-         cell.font = { color: { argb: '8B0000' }, bold: true,}; // Red color
-         cell.alignment = { horizontal: 'right' }; // Align to right
-     }
- });
-
-    });
+          // Set text color for specific columns and align them
+          const columnsToColorRight =  ['Voucher #', 'Account', 'Amount (CCY)', 'Amount','Ex Rate'];
+          const columnsToAlignLeft  =  ['Voucher #', 'Account']; // Specify columns to align left
+          const columnsToAlignRight =  ['Amount (CCY)', 'Amount','Ex Rate']; // Specify columns to align right
+     
+          columnsToColorRight.forEach(columnName => {
+            const columnIndex = Object.keys(filteredData).indexOf(columnName);
+            if (columnIndex !== -1) {
+              const cell = row.getCell(columnIndex + 1);
+              cell.font = { color: { argb: '8B0000' }, bold: true }; // Red color
+            }
+          });
+     
+          columnsToAlignLeft.forEach(columnName => {
+            const columnIndex = Object.keys(filteredData).indexOf(columnName);
+            if (columnIndex !== -1) {
+              const cell = row.getCell(columnIndex + 1);
+              cell.alignment = { horizontal: 'left' };
+            }
+          });
+     
+          columnsToAlignRight.forEach(columnName => {
+            const columnIndex = Object.keys(filteredData).indexOf(columnName);
+            if (columnIndex !== -1) {
+              const cell = row.getCell(columnIndex + 1);
+              cell.alignment = { horizontal: 'right' };
+            }
+          });
+     
+        });
 
     // Adjust column widths to fit content
     worksheet.columns.forEach((column) => {
