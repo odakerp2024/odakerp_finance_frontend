@@ -356,18 +356,37 @@ export class ReportVoucherReversalComponent implements OnInit  {
       // Add the filtered data to the worksheet
       const row = worksheet.addRow(Object.values(data));
 
-      // Set text color for customer, receipt, and amount columns
-      const columnsToColor = ['Voucher Reversal'];
-      columnsToColor.forEach(columnName => {
-        const columnIndex = Object.keys(data).indexOf(columnName);
-        if (columnIndex !== -1) {
-          const cell = row.getCell(columnIndex + 1);
-          cell.font = { color: { argb: '8B0000' }, bold: true, }; // Red color
-          cell.alignment = { horizontal: 'right' };
-        }
-      });
+   
+    // Set text color for specific columns and align them
+    const columnsToColorRight =  ['Voucher Reversal'];
+    const columnsToAlignLeft  = ['Voucher Reversal'];
+    const columnsToAlignRight =  [ ]; // Specify columns to align right
 
+    columnsToColorRight.forEach(columnName => {
+      const columnIndex = Object.keys(data).indexOf(columnName);
+      if (columnIndex !== -1) {
+        const cell = row.getCell(columnIndex + 1);
+        cell.font = { color: { argb: '8B0000' }, bold: true }; // Red color
+      }
     });
+
+    columnsToAlignLeft.forEach(columnName => {
+      const columnIndex = Object.keys(data).indexOf(columnName);
+      if (columnIndex !== -1) {
+        const cell = row.getCell(columnIndex + 1);
+        cell.alignment = { horizontal: 'left' };
+      }
+    });
+
+    columnsToAlignRight.forEach(columnName => {
+      const columnIndex = Object.keys(data).indexOf(columnName);
+      if (columnIndex !== -1) {
+        const cell = row.getCell(columnIndex + 1);
+        cell.alignment = { horizontal: 'right' };
+      }
+    });
+
+  });
 
     // Adjust column widths to fit content
     worksheet.columns.forEach((column) => {
@@ -495,18 +514,36 @@ export class ReportVoucherReversalComponent implements OnInit  {
       // Add the filtered data to the worksheet
       const row = worksheet.addRow(Object.values(data));
 
-      // Set text color for customer, receipt, and amount columns
-      const columnsToColor = ['Voucher Reversal'];
-      columnsToColor.forEach(columnName => {
-        const columnIndex = Object.keys(data).indexOf(columnName);
-        if (columnIndex !== -1) {
-          const cell = row.getCell(columnIndex + 1);
-          cell.font = { color: { argb: '8B0000' }, bold: true, }; // Red color
-          cell.alignment = { horizontal: 'right' };
-        }
-      });
-
-    });
+     // Set text color for specific columns and align them
+     const columnsToColorRight =  ['Voucher Reversal'];
+     const columnsToAlignLeft  = ['Voucher Reversal'];
+     const columnsToAlignRight =  [ ]; // Specify columns to align right
+ 
+     columnsToColorRight.forEach(columnName => {
+       const columnIndex = Object.keys(data).indexOf(columnName);
+       if (columnIndex !== -1) {
+         const cell = row.getCell(columnIndex + 1);
+         cell.font = { color: { argb: '8B0000' }, bold: true }; // Red color
+       }
+     });
+ 
+     columnsToAlignLeft.forEach(columnName => {
+       const columnIndex = Object.keys(data).indexOf(columnName);
+       if (columnIndex !== -1) {
+         const cell = row.getCell(columnIndex + 1);
+         cell.alignment = { horizontal: 'left' };
+       }
+     });
+ 
+     columnsToAlignRight.forEach(columnName => {
+       const columnIndex = Object.keys(data).indexOf(columnName);
+       if (columnIndex !== -1) {
+         const cell = row.getCell(columnIndex + 1);
+         cell.alignment = { horizontal: 'right' };
+       }
+     });
+ 
+   });
 
     // Adjust column widths to fit content
     worksheet.columns.forEach((column) => {

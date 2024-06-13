@@ -402,18 +402,36 @@ export class ReportContraVoucherComponent implements OnInit  {
       // Add the filtered data to the worksheet
       const row = worksheet.addRow(Object.values(filteredData));
 
-     // Set text color for customer, receipt, and amount columns
-     const columnsToColor = ['Contra Voucher', 'Amount'];
-     columnsToColor.forEach(columnName => {
-     const columnIndex = Object.keys(filteredData).indexOf(columnName);
-     if (columnIndex !== -1) {
-         const cell = row.getCell(columnIndex + 1);
-         cell.font = { color: { argb: '8B0000' }, bold: true,}; 
-         cell.alignment = { horizontal: 'right' };
-     }
- });
-
-    });
+       // Set text color for specific columns and align them
+       const columnsToColorRight =  ['Contra Voucher #', 'Amount'];
+       const columnsToAlignLeft  =  ['Contra Voucher #']; // Specify columns to align left
+       const columnsToAlignRight =  ['Amount']; // Specify columns to align right
+  
+       columnsToColorRight.forEach(columnName => {
+         const columnIndex = Object.keys(filteredData).indexOf(columnName);
+         if (columnIndex !== -1) {
+           const cell = row.getCell(columnIndex + 1);
+           cell.font = { color: { argb: '8B0000' }, bold: true }; // Red color
+         }
+       });
+  
+       columnsToAlignLeft.forEach(columnName => {
+         const columnIndex = Object.keys(filteredData).indexOf(columnName);
+         if (columnIndex !== -1) {
+           const cell = row.getCell(columnIndex + 1);
+           cell.alignment = { horizontal: 'left' };
+         }
+       });
+  
+       columnsToAlignRight.forEach(columnName => {
+         const columnIndex = Object.keys(filteredData).indexOf(columnName);
+         if (columnIndex !== -1) {
+           const cell = row.getCell(columnIndex + 1);
+           cell.alignment = { horizontal: 'right' };
+         }
+       });
+  
+     });
 
 
     // Adjust column widths to fit content
@@ -552,19 +570,38 @@ export class ReportContraVoucherComponent implements OnInit  {
 
        // Add the filtered data to the worksheet
        const row = worksheet.addRow(Object.values(filteredData));
- 
-      // Set text color for customer, receipt, and amount columns
-      const columnsToColor = ['Contra Voucher', 'Amount'];
-      columnsToColor.forEach(columnName => {
-      const columnIndex = Object.keys(filteredData).indexOf(columnName);
-      if (columnIndex !== -1) {
-          const cell = row.getCell(columnIndex + 1);
-          cell.font = { color: { argb: '8B0000' }, bold: true,}; // Red color
-          cell.alignment = { horizontal: 'right' }; // Align to right
-      }
-  });
- 
+
+     // Set text color for specific columns and align them
+     const columnsToColorRight =  ['Contra Voucher #', 'Amount'];
+     const columnsToAlignLeft  =  ['Contra Voucher #']; // Specify columns to align left
+     const columnsToAlignRight =  ['Amount']; // Specify columns to align right
+
+     columnsToColorRight.forEach(columnName => {
+       const columnIndex = Object.keys(filteredData).indexOf(columnName);
+       if (columnIndex !== -1) {
+         const cell = row.getCell(columnIndex + 1);
+         cell.font = { color: { argb: '8B0000' }, bold: true }; // Red color
+       }
      });
+
+     columnsToAlignLeft.forEach(columnName => {
+       const columnIndex = Object.keys(filteredData).indexOf(columnName);
+       if (columnIndex !== -1) {
+         const cell = row.getCell(columnIndex + 1);
+         cell.alignment = { horizontal: 'left' };
+       }
+     });
+
+     columnsToAlignRight.forEach(columnName => {
+       const columnIndex = Object.keys(filteredData).indexOf(columnName);
+       if (columnIndex !== -1) {
+         const cell = row.getCell(columnIndex + 1);
+         cell.alignment = { horizontal: 'right' };
+       }
+     });
+
+   });
+
  
     // Adjust column widths to fit content
     worksheet.columns.forEach((column) => {

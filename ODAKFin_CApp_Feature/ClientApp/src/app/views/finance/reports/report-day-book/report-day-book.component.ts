@@ -272,6 +272,7 @@ export class ReportDayBookComponent implements OnInit {
   }
 
 
+
   async downloadAsExcel() {
     if (this.reportForExcelList.length === 0) {
       Swal.fire('No record found');
@@ -353,9 +354,11 @@ export class ReportDayBookComponent implements OnInit {
       const formattedDate = date.split('T')[0];
       data.Date = formattedDate;
 
+      const defalutvalue = 0;
       // Merge the symbol and amount into a single string with fixed decimal places
-      const mergedICYAmount = `${data.Symbol} ${data['Amount (ICY)'] !== null ? parseFloat(data['Amount (ICY)']).toFixed(2) : '0.00'}`;
-      const mergedCCYAmount = `${data.Symbol} ${data['Amount (CCY)'] !== null ? parseFloat(data['Amount (CCY)']).toFixed(2) : '0.00'}`;
+      const debit = `${data['Debit'] !== null ? parseFloat(data['Debit']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      const credit = `${data['Credit'] !== null ? parseFloat(data['Credit']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      const amount = ` ${data['Amount'] !== null ? parseFloat(data['Amount']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
 
       // Filter out properties you don't want to include in the Excel sheet
       const filteredData = Object.keys(data)
@@ -366,20 +369,39 @@ export class ReportDayBookComponent implements OnInit {
         }, {});
 
       // Update the 'Amount (ICY)' property in the filtered data object with the merged amount
-      filteredData['Amount (ICY)'] = mergedICYAmount;
-      filteredData['Amount (CCY)'] = mergedCCYAmount;
-
+      filteredData['Debit'] = debit;
+      filteredData['Credit'] = credit;
+      filteredData['Amount'] = amount;
 
       // Add the filtered data to the worksheet
       const row = worksheet.addRow(Object.values(filteredData));
 
-      // Set text color for customer, receipt, and amount columns
-      const columnsToColor = ['Customer', 'Receipt', 'Amount (CCY)', 'Amount (ICY)'];
-      columnsToColor.forEach(columnName => {
+      // Set text color for specific columns and align them
+      const columnsToColorRight = ['Transaction Details', 'Transaction #', 'Debit', 'Credit', 'Amount'];
+      const columnsToAlignLeft = ['Transaction Details', 'Transaction #']; // Specify columns to align left
+      const columnsToAlignRight = ['Debit', 'Credit', 'Amount']; // Specify columns to align right
+
+      columnsToColorRight.forEach(columnName => {
         const columnIndex = Object.keys(filteredData).indexOf(columnName);
         if (columnIndex !== -1) {
           const cell = row.getCell(columnIndex + 1);
-          cell.font = { color: { argb: '8B0000' }, bold: true, }; // Red color
+          cell.font = { color: { argb: '8B0000' }, bold: true }; // Red color
+        }
+      });
+
+      columnsToAlignLeft.forEach(columnName => {
+        const columnIndex = Object.keys(filteredData).indexOf(columnName);
+        if (columnIndex !== -1) {
+          const cell = row.getCell(columnIndex + 1);
+          cell.alignment = { horizontal: 'left' };
+        }
+      });
+
+      columnsToAlignRight.forEach(columnName => {
+        const columnIndex = Object.keys(filteredData).indexOf(columnName);
+        if (columnIndex !== -1) {
+          const cell = row.getCell(columnIndex + 1);
+          cell.alignment = { horizontal: 'right' };
         }
       });
 
@@ -507,9 +529,11 @@ export class ReportDayBookComponent implements OnInit {
       const formattedDate = date.split('T')[0];
       data.Date = formattedDate;
 
+      const defalutvalue = 0;
       // Merge the symbol and amount into a single string with fixed decimal places
-      const mergedICYAmount = `${data.Symbol} ${data['Amount (ICY)'] !== null ? parseFloat(data['Amount (ICY)']).toFixed(2) : '0.00'}`;
-      const mergedCCYAmount = `${data.Symbol} ${data['Amount (CCY)'] !== null ? parseFloat(data['Amount (CCY)']).toFixed(2) : '0.00'}`;
+      const debit = `${data['Debit'] !== null ? parseFloat(data['Debit']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      const credit = `${data['Credit'] !== null ? parseFloat(data['Credit']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      const amount = ` ${data['Amount'] !== null ? parseFloat(data['Amount']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
 
       // Filter out properties you don't want to include in the Excel sheet
       const filteredData = Object.keys(data)
@@ -520,20 +544,39 @@ export class ReportDayBookComponent implements OnInit {
         }, {});
 
       // Update the 'Amount (ICY)' property in the filtered data object with the merged amount
-      filteredData['Amount (ICY)'] = mergedICYAmount;
-      filteredData['Amount (CCY)'] = mergedCCYAmount;
-
+      filteredData['Debit'] = debit;
+      filteredData['Credit'] = credit;
+      filteredData['Amount'] = amount;
 
       // Add the filtered data to the worksheet
       const row = worksheet.addRow(Object.values(filteredData));
 
-      // Set text color for customer, receipt, and amount columns
-      const columnsToColor = ['Customer', 'Receipt', 'Amount (CCY)', 'Amount (ICY)'];
-      columnsToColor.forEach(columnName => {
+      // Set text color for specific columns and align them
+      const columnsToColorRight = ['Transaction Details', 'Transaction #', 'Debit', 'Credit', 'Amount'];
+      const columnsToAlignLeft = ['Transaction Details', 'Transaction #']; // Specify columns to align left
+      const columnsToAlignRight = ['Debit', 'Credit', 'Amount']; // Specify columns to align right
+
+      columnsToColorRight.forEach(columnName => {
         const columnIndex = Object.keys(filteredData).indexOf(columnName);
         if (columnIndex !== -1) {
           const cell = row.getCell(columnIndex + 1);
-          cell.font = { color: { argb: '8B0000' }, bold: true, }; // Red color
+          cell.font = { color: { argb: '8B0000' }, bold: true }; // Red color
+        }
+      });
+
+      columnsToAlignLeft.forEach(columnName => {
+        const columnIndex = Object.keys(filteredData).indexOf(columnName);
+        if (columnIndex !== -1) {
+          const cell = row.getCell(columnIndex + 1);
+          cell.alignment = { horizontal: 'left' };
+        }
+      });
+
+      columnsToAlignRight.forEach(columnName => {
+        const columnIndex = Object.keys(filteredData).indexOf(columnName);
+        if (columnIndex !== -1) {
+          const cell = row.getCell(columnIndex + 1);
+          cell.alignment = { horizontal: 'right' };
         }
       });
 
