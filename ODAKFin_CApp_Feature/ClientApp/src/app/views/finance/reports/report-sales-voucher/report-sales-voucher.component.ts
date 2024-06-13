@@ -256,8 +256,6 @@ export class ReportSalesVoucherComponent implements OnInit {
 
     this.reportService.getSalesVoucherReportList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
-
-
       if (result['data'].Table.length > 0) {
         this.reportList = result['data'].Table;
         this.setPage(1)
@@ -391,7 +389,7 @@ export class ReportSalesVoucherComponent implements OnInit {
     });
 
     // Add data rows with concatenated symbol and amount
-    this.pagedItems.forEach((data) => {
+      this.reportList.forEach((data) => {
 
       //To Remove Time from date field data
       const date = data.Date
@@ -427,22 +425,41 @@ export class ReportSalesVoucherComponent implements OnInit {
       filteredData['CGST'] = cgst;
       filteredData['IGST'] = igst;
       filteredData['Job #'] = data['Job #'] == null ? defalutJobValue : data['Job #'];
+      filteredData['GST #'] = data['GST #'] == null ? defalutJobValue : data['GST #'];
       
       // Add the filtered data to the worksheet
       const row = worksheet.addRow(Object.values(filteredData));
 
-      // Set text color for customer, receipt, and amount columns
-      const columnsToColor = ['Invoice', 'Customer Name', 'Invoice Amount (ICY)', 'Invoice Amount (CCY)','Total Tax','SGST','CGST','IGST'];
-      columnsToColor.forEach(columnName => {
-        const columnIndex = Object.keys(filteredData).indexOf(columnName);
-        if (columnIndex !== -1) {
-          const cell = row.getCell(columnIndex + 1);
-          cell.font = { color: { argb: '8B0000' }, bold: true, }; // Red color
-          cell.alignment = { horizontal: 'right' }; // Align to right
-        }
-      });
-
-    });
+          // Set text color for specific columns and align them
+          const columnsToColorRight = ['Invoice', 'Customer Name', 'Invoice Amount (ICY)', 'Invoice Amount (CCY)','Total Tax','SGST','CGST','IGST'];
+          const columnsToAlignLeft =  ['Invoice', 'Customer Name',]; 
+          const columnsToAlignRight = [ 'Invoice Amount (ICY)', 'Invoice Amount (CCY)','Total Tax','SGST','CGST','IGST'];
+    
+          columnsToColorRight.forEach(columnName => {
+            const columnIndex = Object.keys(filteredData).indexOf(columnName);
+            if (columnIndex !== -1) {
+              const cell = row.getCell(columnIndex + 1);
+              cell.font = { color: { argb: '8B0000' }, bold: true }; // Red color
+            }
+          });
+    
+          columnsToAlignLeft.forEach(columnName => {
+            const columnIndex = Object.keys(filteredData).indexOf(columnName);
+            if (columnIndex !== -1) {
+              const cell = row.getCell(columnIndex + 1);
+              cell.alignment = { horizontal: 'left' };
+            }
+          });
+    
+          columnsToAlignRight.forEach(columnName => {
+            const columnIndex = Object.keys(filteredData).indexOf(columnName);
+            if (columnIndex !== -1) {
+              const cell = row.getCell(columnIndex + 1);
+              cell.alignment = { horizontal: 'right' };
+            }
+          });
+    
+        });
 
     // Adjust column widths to fit content
     worksheet.columns.forEach((column) => {
@@ -563,7 +580,7 @@ export class ReportSalesVoucherComponent implements OnInit {
     });
 
     // Add data rows with concatenated symbol and amount
-    this.pagedItems.forEach((data) => {
+    this.reportList.forEach((data) => {
 
       //To Remove Time from date field data
       const date = data.Date
@@ -577,6 +594,7 @@ export class ReportSalesVoucherComponent implements OnInit {
       const sgst = `${data['SGST'] !== null ? parseFloat(data['SGST']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
       const cgst = `${data['CGST'] !== null ? parseFloat(data['CGST']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
       const igst = `${data['IGST'] !== null ? parseFloat(data['IGST']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+    
       // Filter out properties you don't want to include in the Excel sheet
 
       const keysToRemove = ['Symbol', 'BLTpes'];
@@ -589,7 +607,7 @@ export class ReportSalesVoucherComponent implements OnInit {
           }, {});
       
     
-        const  defalutJobValue = '-NA-'
+       const  defalutJobValue = '-NA-'
         // Update the 'Amount (ICY)' property in the filtered data object with the merged amount
       filteredData['Invoice Amount (ICY)'] = mergedICYAmount;
       filteredData['Invoice Amount (CCY)'] = mergedCCYAmount;
@@ -598,19 +616,38 @@ export class ReportSalesVoucherComponent implements OnInit {
       filteredData['CGST'] = cgst;
       filteredData['IGST'] = igst;
       filteredData['Job #'] = data['Job #'] == null ? defalutJobValue : data['Job #'];
+      filteredData['GST #'] = data['GST #'] == null ? defalutJobValue : data['GST #'];
 
 
       // Add the filtered data to the worksheet
       const row = worksheet.addRow(Object.values(filteredData));
 
-      // Set text color for customer, receipt, and amount columns
-      const columnsToColor = ['Invoice', 'Customer Name', 'Invoice Amount (ICY)', 'Invoice Amount (CCY)','Total Tax','SGST','CGST','IGST'];
-      columnsToColor.forEach(columnName => {
+      // Set text color for specific columns and align them
+      const columnsToColorRight = ['Invoice', 'Customer Name', 'Invoice Amount (ICY)', 'Invoice Amount (CCY)','Total Tax','SGST','CGST','IGST'];
+      const columnsToAlignLeft =  ['Invoice', 'Customer Name',]; 
+      const columnsToAlignRight = [ 'Invoice Amount (ICY)', 'Invoice Amount (CCY)','Total Tax','SGST','CGST','IGST'];
+
+      columnsToColorRight.forEach(columnName => {
         const columnIndex = Object.keys(filteredData).indexOf(columnName);
         if (columnIndex !== -1) {
           const cell = row.getCell(columnIndex + 1);
-          cell.font = { color: { argb: '8B0000' }, bold: true, }; // Red color
-          cell.alignment = { horizontal: 'right' }; // Align to right
+          cell.font = { color: { argb: '8B0000' }, bold: true }; // Red color
+        }
+      });
+
+      columnsToAlignLeft.forEach(columnName => {
+        const columnIndex = Object.keys(filteredData).indexOf(columnName);
+        if (columnIndex !== -1) {
+          const cell = row.getCell(columnIndex + 1);
+          cell.alignment = { horizontal: 'left' };
+        }
+      });
+
+      columnsToAlignRight.forEach(columnName => {
+        const columnIndex = Object.keys(filteredData).indexOf(columnName);
+        if (columnIndex !== -1) {
+          const cell = row.getCell(columnIndex + 1);
+          cell.alignment = { horizontal: 'right' };
         }
       });
 
