@@ -176,7 +176,7 @@ export class ReportDayBookComponent implements OnInit {
   }
 
   getOfficeList(id: number) {
-    this.reportFilter.controls.Office.setValue(0);
+    this.reportFilter.controls.OfficeId.setValue(0);
     this.commonDataService.getOfficeByDivisionId({ DivisionId: id }).subscribe(result => {
       this.officeList = [];
       if (result['data'].Table.length > 0) {
