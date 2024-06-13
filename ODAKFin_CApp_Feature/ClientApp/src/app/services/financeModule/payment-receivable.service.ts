@@ -33,8 +33,7 @@ export class PaymentReceivableService {
 
   upload(FormValue) {
     return this.http.post<any[]>(this.globals.APIURL + '/AccountsReceivable/UploadAccountsExcelFile',FormValue,  this.createAuthHeader());
-  }
-debugger
+  } 
   uploadTransJournal(payload: any): Observable<any[]>{
     return this.http.post<any[]>(this.globals.FFAPI + '/Accounts/AddOpeningBalance', payload);
   }

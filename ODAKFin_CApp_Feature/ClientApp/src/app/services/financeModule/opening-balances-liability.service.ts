@@ -34,6 +34,10 @@ export class OpeningBalancesLiabilityService {
   GetLiabilityist(FormValue: any): Observable<any> {
     return this.http.post<any>(this.globals.APIURL + '/OpeningBalanceLiability/GetLiabilityList', FormValue);
   }
+  
+  uploadTransJournal(payload: any): Observable<any[]>{
+    return this.http.post<any[]>(this.globals.FFAPI + '/Accounts/AddOpeningBalanceOthers', payload);
+  }
 }
 
 

@@ -34,5 +34,9 @@ export class AccountPayableService {
   GetAccountPayableList(FormValue: any): Observable<any> {
     return this.http.post<any>(this.globals.APIURL + '/AccountsPayable/GetAccountPayableList', FormValue);
   }
+
+  uploadTransJournal(payload: any): Observable<any[]>{
+    return this.http.post<any[]>(this.globals.FFAPI + '/Accounts/AddOpeningBalance', payload);
+  }
 }
 

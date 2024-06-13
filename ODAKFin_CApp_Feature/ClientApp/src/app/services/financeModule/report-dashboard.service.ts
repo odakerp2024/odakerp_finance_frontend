@@ -82,6 +82,10 @@ export class ReportDashboardService {
     return this.http.post<any>(this.globals.APIURL + '/Reports/AccountReceivableAgingList', FormValue);
   }
 
+  getAgingDropdown(payload = {}): Observable<any[]> {
+    return this.http.post<any[]>(this.globals.APIURL + '/Reports/GetAgingSummaryDropDownList', payload);
+  }
+
   // Account Receivable Sales Summary Services 
 
   getSalesPersonDropdowns(payload: any): Observable<any[]> {
