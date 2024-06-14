@@ -263,7 +263,6 @@ getOfficeLists(id: number) {
 
 
 async downloadExcel() {
-  debugger
   if (!this.balanceList || this.balanceList.length === 0) {
     Swal.fire('No record found');
     return;
@@ -292,7 +291,7 @@ async downloadExcel() {
  
 
   // Define header row
-  const headers = ['Trans_Date', 'Trans_Account_Name', 'Trans_Details', 'Transaction_Type', 'Trans_Type', 'Trans_Ref_Details', 'Debit', 'Credit', 'Amount'];
+  const headers = ['Trans_Date', 'Trans_Account_Name', 'Trans_Details', 'Transaction_Type', 'Trans_Type', 'Trans_Ref_Details',  'Credit', 'Debit', 'Amount'];
   const headerRow = worksheet.addRow(headers);
 
   // Style the header row
@@ -317,71 +316,52 @@ async downloadExcel() {
     };
   });
 
-  
- 
-    // Add group header row
-  //     const rowData = [
-  //       group.Trans_Date ,
-  //       group.Trans_Account_Name,
-  //       group.Trans_Details,
-  //       group.Transaction_Type,
-  //       group.Trans_Type,
-  //       group.Trans_Ref_Details,
-  //       group.ChildTransaction_Type === 'Credit' ? group.Credit : 0,
-  //       group.ChildTransaction_Type === 'Debit' ? group.Debit : 0,
-  //       group.Amount
-  //     ];
-  //     worksheet.addRow(rowData);
-  // });
+
 
   this.balanceList.forEach(group => {
+    // Format the date
+    const date = group.Trans_Date;
+    const formattedDate = date.split('T')[0];
+    group.Trans_Date = formattedDate;
+
+    // Create row data
     const rowData = [
-            group.Trans_Date ,
-            group.Trans_Account_Name,
-            group.Trans_Details,
-            group.Transaction_Type,
-            group.Trans_Type,
-            group.Trans_Ref_Details,
-            group.ChildTransaction_Type === 'Credit' ? group.Credit : 0,
-            group.ChildTransaction_Type === 'Debit' ? group.Debit : 0,
-            group.Amount
-          ];
-          worksheet.addRow(rowData);
-        });
-       
-  //   const date = group.Trans_Date
-  //   const formattedDate = date.split('T')[0];
-  //   group.Trans_Date = formattedDate;
-
-  //   const defalutvalue=0;
-  //   // Merge the symbol and amount into a single string with fixed decimal places
-  //   const mergeddebit = group['Debit'] !== null ? parseFloat(group['Debit']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction);
-  //   const mergedcredit = group['Credit'] !== null ? parseFloat(group['Credit']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction);
-  //   const amount = group['Amount'] !== null ? parseFloat(group['Amount']).toFixed(this.entityFraction) :  (defalutvalue).toFixed(this.entityFraction);
+        group.Trans_Date,
+        group.Trans_Account_Name,
+        group.Trans_Details,
+        group.Transaction_Type,
+        group.Trans_Type,
+        group.Trans_Ref_Details,
+        group.Credit,
+        group.Debit,
+        group.Amount
+    ];
     
-  //   // Filter out properties you don't want to include in the Excel sheet
-  //   const filteredData = Object.keys(group)
-      
-  //   filteredData['Debit'] = mergeddebit;
-  //   filteredData['Credit'] = mergedcredit;
-  //   filteredData['Amount'] = amount;
-   
+    // Add row to worksheet
+    const row = worksheet.addRow(rowData);
 
-  //   // // Add the filtered data to the worksheet
-  //   const row = worksheet.addRow(Object.values(filteredData ));
+    // Set text color for specific columns
+    const columnsToColor = ['Debit', 'Credit', 'Amount'];
+    columnsToColor.forEach(columnName => {
+        const columnIndex = Object.keys(group).indexOf(columnName);
+        if (columnIndex !== -1) {
+            const cell = row.getCell(columnIndex + 1);
+            cell.font = { color: { argb: '8B0000' }, bold: true }; // Red color
+        }
+    });
+});
 
-  //   // Set text color for customer, receipt, and amount columns
-  //   const columnsToColor = [ 'Account_Name', 'Debit', 'Credit', 'Amount'];
-  //   columnsToColor.forEach(columnName => {
-  //     const columnIndex = Object.keys(group).indexOf(columnName);
-  //     if (columnIndex !== -1) {
-  //       const cell = row.getCell(columnIndex + 1);
-  //       cell.font = { color: { argb: '8B0000' }, bold: true, }; // Red color
-  //     }
-  //   });
-  
-
-  // });
+// Adjust column widths
+worksheet.columns.forEach(column => {
+    let maxLength = 0;
+    column.eachCell({ includeEmpty: true }, cell => {
+        const columnLength = cell.value ? cell.value.toString().length : 0;
+        if (columnLength > maxLength) {
+            maxLength = columnLength;
+        }
+    });
+    column.width = maxLength + 2;
+});
 
   // Adjust column widths
   worksheet.columns.forEach(column => {

@@ -127,58 +127,67 @@ export class TrailbalanceComponent implements OnInit {
         "Date": ""
     };
 
-this.dataService.post(service, payload).subscribe((result: any) => {
-  this.balanceList = [];
-  if (result.message === 'Success' && result.data.Table.length > 0) {
-      // Group the items by group name
-      const groupedItems = result.data.Table.reduce((groups: any, item: any) => {
+    this.dataService.post(service, payload).subscribe((result: any) => {
+      this.balanceList = [];
+      if (result.message === 'Success' && result.data.Table.length > 0) {
+        // Group the items by group name
+        const groupedItems = result.data.Table.reduce((groups: any, item: any) => {
           const group = item.GroupName;
           if (!groups[group]) {
-              groups[group] = [];
+            groups[group] = [];
           }
           groups[group].push(item);
           return groups;
-      }, {});
-
-      this.balanceList = Object.keys(groupedItems).map(group => ({
-          GroupName: group,
-          items: groupedItems[group]
-      }));
-
-      // Assign grouped list to pagedItems
-      this.pagedItems = this.balanceList;
-      this.setPage(1);
-      this.totalcreditamount = this.calculateTotalCreditAmount(this.pagedItems);
-      this.totaldebitamount = this.calculateTotalDebitAmount(this.pagedItems);
-  } else {
-    this.totalcreditamount  = 0;
-    this.totaldebitamount   = 0;
-      this.pager = {};
-      this.balanceList = [];
-      this.pagedItems = [];
+        }, {});
+    
+        this.balanceList = Object.keys(groupedItems).map(group => {
+          // Calculate total credit and debit for the group
+          const totalCredit = this.calculateGroupTotal(groupedItems[group], 'Credit');
+          const totalDebit = this.calculateGroupTotal(groupedItems[group], 'Debit');
+    
+          return {
+            GroupName: group,
+            items: groupedItems[group],
+            totalCredit: totalCredit,
+            totalDebit: totalDebit
+          };
+        });
+    
+        // Assign grouped list to pagedItems
+        this.pagedItems = this.balanceList;
+        this.setPage(1);
+        this.totalcreditamount = this.calculateTotalCreditAmount(this.pagedItems);
+        this.totaldebitamount = this.calculateTotalDebitAmount(this.pagedItems);
+      } else {
+        this.totalcreditamount = 0;
+        this.totaldebitamount = 0;
+        this.pager = {};
+        this.balanceList = [];
+        this.pagedItems = [];
+      }
+    }, error => {
+      console.error("Error occurred:", error);
+    });
   }
-}, error => {
-  console.error("Error occurred:", error);
-});
-}
-
-
-
-calculateTotalCreditAmount(items: any[]): number {
-  return items.reduce((sum, group) => {
-      return sum + group.items.reduce((groupSum, item) => {
-          return groupSum + (item.ChildTransaction_Type === 'Credit' ? item.ChildNet_Balance : 0);
+    // Helper function to calculate the total credit or debit for a particular group
+    calculateGroupTotal(groupItems: any[], type: string): number {
+      return groupItems.reduce((sum, item) => {
+        return sum + (item.ChildTransaction_Type === type ? item.ChildNet_Balance : 0);
       }, 0);
-  }, 0);
-}
-
-calculateTotalDebitAmount(items: any[]): number {
-  return items.reduce((sum, group) => {
-      return sum + group.items.reduce((groupSum, item) => {
-          return groupSum + (item.ChildTransaction_Type === 'Debit' ? item.ChildNet_Balance : 0);
+    }
+    
+    calculateTotalCreditAmount(items: any[]): number {
+      return items.reduce((sum, group) => {
+        return sum + group.totalCredit;
       }, 0);
-  }, 0);
-}
+    }
+    
+    calculateTotalDebitAmount(items: any[]): number {
+      return items.reduce((sum, group) => {
+        return sum + group.totalDebit;
+      }, 0);
+    }
+  
 
 createFilterForm(){
   this.filterForm = this.fb.group({
@@ -398,7 +407,6 @@ async downloadExcel() {
   // Define header row
   const headers = ['Account', 'Account Code', 'Net Credit', 'Net Debit'];
   const headerRow = worksheet.addRow(headers);
-
   // Style the header row
   headerRow.eachCell((cell) => {
     cell.fill = {

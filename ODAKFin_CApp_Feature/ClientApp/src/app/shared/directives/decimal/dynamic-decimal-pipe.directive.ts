@@ -65,7 +65,6 @@
 //     return formattedInteger + decimalPart;
 //   }
 // }
-
 import { Pipe, PipeTransform } from '@angular/core';
 import { CommonService } from 'src/app/services/common.service';
 
@@ -114,15 +113,15 @@ export class DynamicDecimalPipeDirective implements PipeTransform {
     let integerPart = parts[0];
     let decimalPart = parts.length > 1 ? '.' + parts[1] : '';
 
-    let lastThree = integerPart.slice(-3);
-    let otherNumbers = integerPart.slice(0, -3);
+    // Format integer part according to Indian numbering system
+    const lastThree = integerPart.slice(-3);
+    const otherNumbers = integerPart.slice(0, -3);
 
-    if (otherNumbers !== '') {
-      lastThree = ',' + lastThree;
-    }
+    const formattedInteger = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + ',' + lastThree;
 
-    let formattedInteger = otherNumbers.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + lastThree;
+    // Remove leading comma if it exists
+    const finalFormattedInteger = formattedInteger.startsWith(',') ? formattedInteger.slice(1) : formattedInteger;
 
-    return formattedInteger + decimalPart;
+    return finalFormattedInteger + decimalPart;
   }
 }
