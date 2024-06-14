@@ -90,7 +90,7 @@
 
                         <div class="col-2">
                             <label class="str">Aging Group</label>
-                            <ng-select class="searchdropdown" [clearable]="false"  formControlName="Aging" >
+                            <ng-select class="searchdropdown" [clearable]="false"  formControlName="AgingTypeId" >
                                 <ng-option [value]="0" [disabled]="true">--SELECT AGING GROUP--</ng-option>
                                 <ng-option *ngFor="let aging of agingGroupDropdown" [value]="aging.AgingId">
                                     {{aging.AgingGroupName | uppercase}}
@@ -153,7 +153,7 @@
                                 (click)="export()" alt="logo">
                         </div>
                     </div>
-
+<!-- 
                     <div class="col-12" *ngIf="type == 'overall'">
                         <table class="table table-responsive table-bordered w-100 dataTable no-footer">
                             <thead>
@@ -219,7 +219,45 @@
                                 </tr>
                               </tfoot>
                         </table>
+                    </div> -->
+
+                    
+                    <div class="col-12" *ngIf="type == 'overall'">
+                        <table class="table table-responsive table-bordered w-100 dataTable no-footer">
+                            <thead>
+                                <tr>
+                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"
+                                        (click)="sort('Payees')" style="width: 177.575px;"
+                                        *ngFor="let header of headers">{{ header }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let row of data">
+                                    <td *ngFor="let header of headers; let i = index" [class.text-right]="header === 'Balance (Company Currency)'">
+                                      <a *ngIf="header === 'Balance (Company Currency)'" class="hyperlink-style">{{ row[header] }}</a>
+                                      <span *ngIf="header !== 'Balance (Company Currency)'">{{ row[header] }}</span>
+                                    </td>
+                                  </tr>
+                                <tr *ngIf="data.length === 0">
+                                    <td class="text-center" colspan="10">No records found</td>
+                                </tr>
+                            </tbody>
+                            <!-- <tfoot class="table-footer" *ngIf="data.length > 0">
+                                <tr class="footer-position-sticky">
+                                    <td colspan="1" class="text-left">
+                                        <span style="font-size: medium;">Grand Total : </span>
+                                    </td>
+                                    <td>{{ calculateTotalDays('0-10 DAYS') }}</td>
+                                    <td>{{ calculateTotalDays('15-20 DAYS') }}</td>
+                                    <td>{{ calculateTotalDays('30-40 DAYS') }}</td>
+                                    <td>{{ calculateTotalDays('60-90 DAYS') }}</td>
+                                    <td>{{ calculateTotalDays('Balance (Company Currency)') }}</td>
+                                </tr>
+                            </tfoot> -->
+                        </table>
                     </div>
+                    
 
                     <div class="col-12"  *ngIf="type == 'customerwise'">
                         <table class="table table-responsive table-bordered w-100 dataTable no-footer">
