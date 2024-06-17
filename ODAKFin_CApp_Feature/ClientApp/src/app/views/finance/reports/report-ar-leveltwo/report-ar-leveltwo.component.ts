@@ -71,6 +71,8 @@ const year = today.getFullYear();
     AgingTotal = 0;
     InvoiceCCYTotal = 0;
     DueAmountCCYTotal = 0;
+    headers: string[] = [];
+    data: any[] = [];
   
     constructor(
       private commonDataService: CommonService,
@@ -206,6 +208,7 @@ const year = today.getFullYear();
           FromDate: [this.startDate],
           ToDate: [this.endDate],
           Peroid: [''],
+          AgingTypeId:[2]
         });
       } else if( this.type == 'customerwise'){
         this.reportFilter = this.fb.group({
@@ -300,30 +303,61 @@ const year = today.getFullYear();
       console.error(error);
     }
   }
+    // getOverallList() {
+    //   this.startDate = this.reportFilter.controls.FromDate.value;
+    //   this.endDate = this.reportFilter.controls.ToDate.value;
+  
+    //   this.reportService.getAgingSummaryList(this.reportFilter.value).subscribe(result => {
+    //     this.reportList = [];
+    //     if (result['data'].Table.length > 0) {
+    //       this.reportList = result['data'].Table;
+    //       this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
+    //       this.setPage(1);
+    //       this.calculateTotalDays(this.reportList);
+    //     } else {
+    //       this.pager = {};
+    //       this.pagedItems = [];
+    //       this.ZeroToFifteenDaysTotal = 0;
+    //       this.SixteenToThirtyDaysTotal = 0;
+    //       this.ThirtyOneToFourtyFiveDaysTotal = 0;
+    //       this.FourtyFiveSixtyDaysTotal = 0;
+    //       this.MoreThanSixtyDaysTotal = 0;
+    //       this.DueAmountTotal = 0;
+    //     }
+    //   })
+    // }
+
+    //Dynamic Overall List 
     getOverallList() {
       this.startDate = this.reportFilter.controls.FromDate.value;
       this.endDate = this.reportFilter.controls.ToDate.value;
   
       this.reportService.getAgingSummaryList(this.reportFilter.value).subscribe(result => {
-        this.reportList = [];
-        if (result['data'].Table.length > 0) {
-          this.reportList = result['data'].Table;
-          this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
-          this.setPage(1);
-          this.calculateTotalDays(this.reportList);
-        } else {
-          this.pager = {};
-          this.pagedItems = [];
-          this.ZeroToFifteenDaysTotal = 0;
-          this.SixteenToThirtyDaysTotal = 0;
-          this.ThirtyOneToFourtyFiveDaysTotal = 0;
-          this.FourtyFiveSixtyDaysTotal = 0;
-          this.MoreThanSixtyDaysTotal = 0;
-          this.DueAmountTotal = 0;
-        }
-      })
+        if (result.message === "Success" && result.data && result.data.Table) {
+          let tableData = result.data.Table;
+  
+          if (tableData.length > 0) {
+            let headers = Object.keys(tableData[0]); // Assuming Table[0] has headers
+            this.headers = headers.filter(header => header !== 'Id'); // Remove 'Id' from headers if needed
+  
+            // Extract 'Balance (Company Currency)' field and format it
+            this.data = tableData.map(row => ({
+              ...row,
+              'Balance (Company Currency)': Number(row['Balance (Company Currency)']).toFixed(this.entityFraction)
+            }));
+            this.setPage(1);
+            this.calculateTotalDays(this.reportList);
+          } else {
+            this.headers = [];
+            this.data = [];
+            this.pager = {};
+            this.pagedItems = [];
+          }
+        }console.error();
+      });
     }
   
+
   
     getInvoiceWiseList() {
       this.startDate = this.reportFilter.controls.FromDate.value;
@@ -391,19 +425,10 @@ const year = today.getFullYear();
     
       if(this.type == "overall"){
         reportList.forEach(item => {
-          zeroToFifteenDaysTotal += item['0-15 DAYS'];
-          sixteenToThirtyDaysTotal += item['16-30 DAYS'];
-          thirtyOneToFortyFiveDaysTotal += item['31-45 DAYS'];
-          fortyFiveToSixtyDaysTotal += item['45-60 DAYS'];  
-          moreThanSixtyDaysTotal += item['>60 DAYS'];  
+ 
           dueAmountTotal += item['Balance (Company Currency)'];
         });
-      
-        this.ZeroToFifteenDaysTotal = zeroToFifteenDaysTotal;
-        this.SixteenToThirtyDaysTotal = sixteenToThirtyDaysTotal;
-        this.ThirtyOneToFourtyFiveDaysTotal = thirtyOneToFortyFiveDaysTotal;
-        this.FourtyFiveSixtyDaysTotal = fortyFiveToSixtyDaysTotal;
-        this.MoreThanSixtyDaysTotal = moreThanSixtyDaysTotal;
+
         this.DueAmountTotal = dueAmountTotal;
       }
       else if(this.type =="customerwise"){
