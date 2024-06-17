@@ -59,6 +59,12 @@ table.dataTable{
 .clear-btn {
   width: 96px;
 }
+.child-account {
+  margin-left: 35px ;
+}
+
+
+
 
 @media (min-width: 1000px) and (max-width: 1800px) {
   .field-responsive#active {
