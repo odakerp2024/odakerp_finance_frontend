@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Globals } from 'src/app/globals';
 import { data } from 'jquery';
 import { PaginationService } from 'src/app/pagination.service';
 import { CommonService } from 'src/app/services/common.service';
@@ -35,6 +36,8 @@ export class FinanceMasterComponent implements OnInit {
   isRequest: boolean = false;
   isProgress: boolean = false;
   isPayments: boolean = false;
+  Token: string;
+  payloadupdatepermission: { userId: any; };
 
   private wfAllItems = [];
   private wfItems = [];
@@ -84,9 +87,10 @@ export class FinanceMasterComponent implements OnInit {
     private titleService: Title, private workflow: WorkflowService, public ps: PaginationService,
     private router: Router,private fb: FormBuilder,
     private route: ActivatedRoute,
-    private LService: CommonService
-  ) {
-
+    private commonDataService: CommonService,
+    private LService: LoginService,
+    private globals: Globals,
+  ) { 
     this.workFlowUpdateForm = fb.group({
       userEmail: "",
       workflowNo: "",
@@ -98,7 +102,7 @@ export class FinanceMasterComponent implements OnInit {
 
     this.getUserDtls();
     //this.getWorkflowInbox();
-   }
+  }
 
   getPermissionListForCreate(value, route) {
 
@@ -391,7 +395,21 @@ export class FinanceMasterComponent implements OnInit {
       } else {
         this.selectedTabName = 'Masters'
       }
-    });
+    })
+
+    if (localStorage.getItem("TokenID") == null || localStorage.getItem("TokenID") == 'undefined') {
+
+      this.route.queryParams.subscribe(params => {
+        if(params['TokenID']){
+          localStorage.setItem("TokenID", params['TokenID']);
+        } else {
+          Swal.fire('Please Contact Administrator');
+        }
+      });
+
+      this.setEntityConfigurable();
+    }
+    this.BindTokenValues();
   }
 
   getUserDtls(){
@@ -806,6 +824,98 @@ export class FinanceMasterComponent implements OnInit {
     this.Pager = this.ps.getPager(this.wfAllItems.length, page);
     this.PagedItems = this.wfAllItems.slice(this.Pager.startIndex, this.Pager.endIndex + 1)
   }
+
+  BindTokenValues() {
+
+    localStorage.setItem('OrgId', "1")
+
+    if (localStorage.getItem("TokenID") != null) {
+      const payload = {
+        ID: localStorage.getItem("TokenID")
+      }
+      this.commonDataService.SendToken(payload).subscribe(data => {
+        var TokenID = data[0].ID.toString();
+        var Token = data[0].access_token;
+        // this.UserID = data[0].UserID;
+        localStorage.setItem("UserID", data[0].UserID.toString());
+
+        if (this.Token != 'null') {
+          this.GeneratePermission(localStorage.getItem("UserID"));
+        }
+        else {
+          //window.location.href = "https://localhost:44323/views/sessionexpired?Tokenid=" + TokenID;
+          window.location.href = this.globals.APIURLLA + "/views/sessionexpired?ajdysghjadsbkyfgHVUFKDYKUYGVSDCHBKYGuyfkjyhbvjdygiuagsidukuYGUKFYSDKUFyguydgfakhdfhg=" + TokenID;
+          localStorage.removeItem('TokenID');
+          localStorage.removeItem('UserID');
+        }
+      });
+    }
+    else {
+      window.location.href = 'https://navioindia.freighteiz.com/login';
+    }
+  }
+
+  GeneratePermission(userid: any) {
+    let payload3 = {
+      "isdata": "G",
+      "ref_RoleId": "",
+      "UserId": userid,
+      "Created_by": 0
+    }
+    console.log("GeneratePayload", payload3);
+    this.LService.GenerateUserPermissionObject(payload3).subscribe(res => {
+      if (res.statuscode == 200 && res.message == "Success") {
+        this.GeneratePermissionupdate(userid);
+      }
+
+    }, err => {
+      Swal.fire(err.message);
+    });
+  }
+
+  GeneratePermissionupdate(userid: any) {
+    this.payloadupdatepermission = {
+      "userId": userid
+    }
+    this.LService.getUserPermissionUpdateList(this.payloadupdatepermission).subscribe((res: any) => {
+
+      if (res.message == "Success") {
+        this.GeneratePermissionCombined(parseInt(userid));
+      }
+      // else {
+      //     Swal.fire(res.message);
+      // }
+    }, err => {
+      Swal.fire(err.message);
+    });
+  }
+
+  GeneratePermissionCombined(userid: any) {
+
+    let numberValue = Number(localStorage.getItem("UserId"));
+
+    let payload2 = {
+      "userId": userid
+    }
+
+    console.log("payloadcombined", payload2)
+    this.LService.getUserPermissionCombinedList(payload2).subscribe((res: any) => {
+    }, err => {
+      Swal.fire(err.message);
+    });
+  }
+
+  setEntityConfigurable() {
+    this.commonDataService.getEntityConfigurableDetails({}).subscribe((result: any) => {
+      if (result.message === 'Success') {
+        const entityConfigurable = result.data.Table[0];
+        localStorage.setItem('EntityConfigurable', JSON.stringify(entityConfigurable))
+      }
+    }, err => {
+      Swal.fire("Invalid Credentials");
+    });
+  }
+
 
   setPageWFH(page: number) {
     

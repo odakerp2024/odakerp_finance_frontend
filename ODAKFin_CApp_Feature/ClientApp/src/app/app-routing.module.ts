@@ -25,7 +25,7 @@ import { StatemasterviewComponent } from './views/masters/commonmaster/statemast
 import { ContypemasterComponent } from './views/masters/commonmaster/contypemaster/contypemaster.component';
 import { ContypemasterviewComponent } from './views/masters/commonmaster/contypemaster/contypemasterview/contypemasterview.component';
 
-import { LoginComponent } from './login/login.component';
+// import { LoginComponent } from './login/login.component';
 import { AuthenticationGuard } from './authentication.guard';
 import { PopupComponent } from './popup/popup.component';
 import { ViewsComponent } from './views/views.component';
@@ -211,15 +211,27 @@ import { ReportContraVoucherComponent } from './views/finance/reports/report-con
 import { ReportVoucherReversalComponent } from './views/finance/reports/report-voucher-reversal/report-voucher-reversal.component';
 const routes: Routes = [
 
-    { path: '', redirectTo: "/login", pathMatch: 'full' },
-    { path: 'login', component: LoginComponent },
+    // { path: '', redirectTo: "/login", pathMatch: 'full' },
+    // { path: 'login', component: LoginComponent },
+
+    // { path: '', redirectTo: "/views", pathMatch: 'full' },
+    // { path: 'views', component: ViewsComponent, canActivate: [AuthenticationGuard] },
+
+    { path: '', redirectTo: 'views/finance/financemaster', pathMatch: 'full' },
+    { path: 'finance/financemaster', component: FinanceMasterComponent },
+
+    // { path: '', redirectTo: "/dashboard", pathMatch: 'full' },
+    // { path: 'dashboard', component: DashboardComponent },
+    // { path: 'dashboard/:Token/:TokenID', component: DashboardComponent },
 
 
     {
-        path: 'views', component: ViewsComponent, canActivate: [AuthenticationGuard],
+        // path: 'views', component: ViewsComponent, canActivate: [AuthenticationGuard],
+        path: 'views', component: ViewsComponent,
 
         children: [
             { path: 'dashboard', component: DashboardComponent },
+            { path: 'dashboard/:Token/:TokenID', component: DashboardComponent },
             { path: 'administration/administration', component: AdministrationComponent },
             { path: 'administration/systemmaster', component: SystemmasterComponent },
             { path: 'administration/orgstruct', component: OrgstructComponent },

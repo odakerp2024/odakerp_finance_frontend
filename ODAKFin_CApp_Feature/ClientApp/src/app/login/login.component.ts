@@ -38,6 +38,8 @@ export class LoginComponent implements OnInit {
         this.titleService.setTitle(this.title);
         this.createForm();
         localStorage.setItem('SeesionUser', this.user)
+        this.setEntityConfigurable();
+        // this.router.navigate(['/views/dashboard' ]);
     }
 
     createForm() {
@@ -70,12 +72,12 @@ export class LoginComponent implements OnInit {
             debugger
             if (!data.error) {
                 const Token = "odakla@2023";
-                this.setEntityConfigurable();
+                // this.setEntityConfigurable();
                 localStorage.setItem("UserID", data.data.logindetails.UserId);
                 localStorage.setItem("UserName", data.data.logindetails.User_Idv);
                 localStorage.setItem('OrgId', '1'); // need to get from login in feature for diff org
                 this.GeneratePermission(data.data.logindetails.UserId);
-                this.router.navigate(['/views/dashboard']);
+                this.router.navigate(['/views/finance/financemaster',{tabName : 'transactions'}],);
             } else {
                 Swal.fire("Invalid Credentials");
             }
