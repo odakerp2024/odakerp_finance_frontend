@@ -107,3 +107,14 @@ tr:hover {
   .table-footer td {
     border-top: 2px solid #dee2e6;
   }
+
+  .text-right {
+    text-align: right;
+  }
+  
+  .hyperlink-style {
+    color: rgb(19, 108, 243) !important;
+    text-decoration: underline  !important;
+    cursor: pointer !important;
+  }
+  

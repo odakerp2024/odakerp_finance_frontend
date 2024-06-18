@@ -100,7 +100,7 @@
 
 
 
-            <div class="col-12">
+            <div class="col-10" style="margin-left: auto; margin-right: auto;">
                 <table id="datatable-buttons" #table class="table table-responsive table-bordered w-100 dataTable no-footer" role="grid"
                     aria-describedby="datatable-buttons_info">
                     <thead>
@@ -140,9 +140,9 @@
                             <td>{{balance.Transaction_Type}}</td>
                             <td>{{balance.Trans_Type}}</td>
                             <td>{{balance.Trans_Ref_Details}}</td>
-                            <td>{{balance.Debit}}</td>
-                            <td>{{balance.Credit}}</td>
-                            <td>{{balance.Amount}}</td>
+                            <td class=" hyperTextColor text-right">{{balance.Debit  | dynamicDecimal}}</td>
+                            <td class="hyperTextColor text-right">{{balance.Credit  | dynamicDecimal}}</td>
+                            <td class="hyperTextColor text-right">{{balance.Amount  | dynamicDecimal}}</td>
                         </tr>
                     </tbody>
                     <tfoot>
@@ -155,9 +155,9 @@
                             <td class="text-center" colspan="1"></td>
                             <td class="text-right" colspan="1"></td>
                             <td class="text-right" colspan="1"></td>
-                            <td class="text-center" colspan="1">{{totalDebitAmount}}</td>
-                            <td class="text-center" colspan="1">{{totalCreditAmount}}</td>
-                            <td class="text-right" colspan="1">{{totalAmount}}</td>
+                            <td class="text-center" colspan="1">{{totalDebitAmount | dynamicDecimal }}</td>
+                            <td class="text-center" colspan="1">{{totalCreditAmount | dynamicDecimal}}</td>
+                            <td class="text-center" colspan="1">{{totalAmount | dynamicDecimal }}</td>
                         </tr>
                     </tfoot>
                 </table>
