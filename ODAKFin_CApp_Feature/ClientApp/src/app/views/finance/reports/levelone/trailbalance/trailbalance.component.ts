@@ -114,23 +114,19 @@ export class TrailbalanceComponent implements OnInit {
     }, error => { });
   }
 
-  
+    
   trailbalanceList() {
-   
-    var service = `
-    https://odakfnqa.odaksolutions.in/api/Reports/GetTrailBalanceList
-    `;
-  
-    var payload = {
-        "DivisionId": 1,
-        "OfficeId": 0,
-        "Date": ""
+    const service = `https://odakfnqa.odaksolutions.in/api/Reports/GetTrailBalanceList`;
+    const payload = {
+      "DivisionId": 1,
+      "OfficeId": 0,
+      "Date": ""
     };
-
+  
     this.dataService.post(service, payload).subscribe((result: any) => {
       this.balanceList = [];
       if (result.message === 'Success' && result.data.Table.length > 0) {
-        // Group the items by group name
+        // Group the items by GroupName
         const groupedItems = result.data.Table.reduce((groups: any, item: any) => {
           const group = item.GroupName;
           if (!groups[group]) {
@@ -139,20 +135,47 @@ export class TrailbalanceComponent implements OnInit {
           groups[group].push(item);
           return groups;
         }, {});
-    
+  
+        // Process each group to calculate parent totals and group totals
         this.balanceList = Object.keys(groupedItems).map(group => {
+          const items = groupedItems[group];
+  
+          // Group items by ParentAccountName within the group
+          const parentGroupedItems = items.reduce((parents: any, item: any) => {
+            const parent = item.ParentAccountName;
+            if (!parents[parent]) {
+              parents[parent] = [];
+            }
+            parents[parent].push(item);
+            return parents;
+          }, {});
+  
+          // Calculate totals for each parent account within the group
+          const parentTotals = Object.keys(parentGroupedItems).map(parentName => {
+            const parentItems = parentGroupedItems[parentName];
+            const totalCredit = this.calculateParentTotal(parentItems, 'Credit');
+            const totalDebit = this.calculateParentTotal(parentItems, 'Debit');
+  
+            return {
+              ParentAccountName: parentName,
+              items: parentItems,
+              totalCredit: totalCredit,
+              totalDebit: totalDebit
+            };
+          });
+  
           // Calculate total credit and debit for the group
-          const totalCredit = this.calculateGroupTotal(groupedItems[group], 'Credit');
-          const totalDebit = this.calculateGroupTotal(groupedItems[group], 'Debit');
-    
+          const totalCredit = this.calculateGroupTotal(items, 'Credit');
+          const totalDebit = this.calculateGroupTotal(items, 'Debit');
+  
           return {
             GroupName: group,
-            items: groupedItems[group],
+            parentTotals: parentTotals,
             totalCredit: totalCredit,
             totalDebit: totalDebit
           };
         });
-    
+  
         // Assign grouped list to pagedItems
         this.pagedItems = this.balanceList;
         this.setPage(1);
@@ -169,24 +192,34 @@ export class TrailbalanceComponent implements OnInit {
       console.error("Error occurred:", error);
     });
   }
-    // Helper function to calculate the total credit or debit for a particular group
-    calculateGroupTotal(groupItems: any[], type: string): number {
-      return groupItems.reduce((sum, item) => {
-        return sum + (item.ChildTransaction_Type === type ? item.ChildNet_Balance : 0);
-      }, 0);
-    }
-    
-    calculateTotalCreditAmount(items: any[]): number {
-      return items.reduce((sum, group) => {
-        return sum + group.totalCredit;
-      }, 0);
-    }
-    
-    calculateTotalDebitAmount(items: any[]): number {
-      return items.reduce((sum, group) => {
-        return sum + group.totalDebit;
-      }, 0);
-    }
+  
+  // Helper function to calculate the total credit or debit for a particular group
+  calculateGroupTotal(groupItems: any[], type: string): number {
+    return groupItems.reduce((sum, item) => {
+      return sum + (item.ChildTransaction_Type === type ? item.ChildNet_Balance : 0);
+    }, 0);
+  }
+  
+  // Helper function to calculate the total credit or debit for parent accounts
+  calculateParentTotal(parentItems: any[], type: string): number {
+    return parentItems.reduce((sum, item) => {
+      return sum + (item.ChildTransaction_Type === type ? item.ChildNet_Balance : 0);
+    }, 0);
+  }
+  
+  // Helper function to calculate the total credit amount for all groups
+  calculateTotalCreditAmount(items: any[]): number {
+    return items.reduce((sum, group) => {
+      return sum + group.totalCredit;
+    }, 0);
+  }
+  
+  // Helper function to calculate the total debit amount for all groups
+  calculateTotalDebitAmount(items: any[]): number {
+    return items.reduce((sum, group) => {
+      return sum + group.totalDebit;
+    }, 0);
+  }
   
 
 createFilterForm(){
@@ -199,7 +232,6 @@ createFilterForm(){
 
 
 editBalance(id: number) {
-  debugger
   var service = `
   https://odakfnqa.odaksolutions.in/api/Reports/GetLedgerDataById
   `;
@@ -222,7 +254,6 @@ editBalance(id: number) {
 }
 
 onDivisionChange(value: any) {
-  debugger
   var selectedDivisionId = value;
   var service = `https://odakfnqa.odaksolutions.in/api/Reports/GetTrailBalanceList`;
 
@@ -309,7 +340,6 @@ onOfficeChange(values: any) {
 }
 
 BasedOnDate(selectedDate: any) {
-  debugger
 
   var service = `https://odakfnqa.odaksolutions.in/api/Reports/GetTrailBalanceList`;
 
