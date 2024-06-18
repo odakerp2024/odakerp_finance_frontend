@@ -549,14 +549,14 @@
                             </thead>
                             <tbody formArrayName="paymentDetailsArray">
                                 <ng-container *ngIf="paymentDetailsTableList.length; else noRecord">
-                                    <tr *ngFor="let journal of receiptForm.get('paymentDetailsArray').controls; let i = index"
+                                    <tr *ngFor="let journal of receiptForm.get('paymentDetailsArray').controls; let i = index"  
                                         [formGroupName]="i" [ngClass]="getIsChecked(i) ? 'checked-row' : ''">
-                                        <td>{{i + 1}}</td>
-                                        <td> <input class="text-center border-0 invoice-date-text-box"
+                                        <td id = tabledata >{{i + 1}}</td>
+                                        <td> <input class="text-center border-0 invoice-date-text-box"  id = tabledata
                                                 formControlName="InvoiceNo" readonly [value]="journal.InvoiceNumber"
                                                 type="text">
                                         </td>
-                                        <td> <input class="text-center border-0 invoice-date-text-box"
+                                        <td> <input class="text-center border-0 invoice-date-text-box"  id = tabledata
                                                 formControlName="InvoiceDate" readonly
                                                 [value]="journal.InvoiceDate | date:'DD-MM-YYYY'" type="text">
                                         </td>
@@ -565,43 +565,43 @@
                                             [value]="journal.InvoiceDate | date:'DD-MM-YYYY'">
                                         </td> -->
                                         <td>
-                                            <input class="text-center border-0 invoice-date-text-box"
+                                            <input class="text-center border-0 invoice-date-text-box-currency" id = tabledata
                                                 formControlName="CurrencyCode" readonly [value]="journal.Currency"
                                                 type="text">
                                         </td>
                                         <td>
                                             <input class="text-center border-0" formControlName="InvoiceAmount" readonly
-                                                [value]="journal.InvoiceAmount" type="text">
+                                                [value]="journal.InvoiceAmount" type="text"  id = tabledata>
                                         </td>
                                         <td>
                                             <input class="text-center border-0" formControlName="DueAmount" readonly
-                                                [value]="journal.DueAmount" type="text">
+                                                [value]="journal.DueAmount" type="text"  id = tabledata>
                                         </td>
                                         <td>
                                             <input class="text-center border-0" formControlName="InvoiceAmountCCY"
-                                                readonly [value]="journal.Currency" type="text">
+                                                readonly [value]="journal.Currency" type="text"  id = tabledata>
                                         </td>
                                         <td>
                                             <input class="text-center border-0" formControlName="DueAmountCCY"
-                                             readonly [value]="journal.DueAmountCCY" type="text">
+                                             readonly [value]="journal.DueAmountCCY" type="text"  id = tabledata>
                                         </td>
                                         <td>
                                             <input min="1" numbersOnly appDynamicDecimal onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
-                                                [ngClass]=" !isShowTDSColumn || !isEditMode || !getIsChecked(i) ? 'disable-input' : ''"
+                                                [ngClass]=" !isShowTDSColumn || !isEditMode || !getIsChecked(i) ? 'disable-input' : ''"  id = tabledata
                                                 class="text-center border-0" formControlName="TDS" [value]="journal.TDS"
                                                 (change)="getDueAmount( i,'tds'); onSelectEvent();summaryAmountCalculation()">
 
                                         </td>
                                         <td>
                                             <input min="1" onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47' appDynamicDecimal  numbersOnly 
-                                                [ngClass]="[ !isEditMode || !getIsChecked(i) ? 'disable-input' : '',]"
+                                                [ngClass]="[ !isEditMode || !getIsChecked(i) ? 'disable-input' : '',]"  id = tabledata
                                                 (change)="getDueAmount(i,'Payment');onSelectEvent();summaryAmountCalculation()"
                                                 class="text-center payment-textbox" [value]="journal.Payment"
                                                 formControlName="Payment">
                                         </td>
                                         <td>
                                             <input (change)=" setInitalPaymentAmount(i);onSelectEvent();summaryAmountCalculation()"
-                                                formControlName="IsSelect" type="checkbox"
+                                                formControlName="IsSelect" type="checkbox"  id = tabledata
                                                 [ngClass]=" !isEditMode ? 'disable-input--nostyle' : ''" />
                                         </td>
                                     </tr>
