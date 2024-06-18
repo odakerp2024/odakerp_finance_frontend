@@ -73,7 +73,7 @@ export class DashboardComponent implements OnInit {
 }
 
   BindTokenValues() {
-
+    
     if (localStorage.getItem("TokenID") != null) {
       const payload = {
         ID: localStorage.getItem("TokenID")
