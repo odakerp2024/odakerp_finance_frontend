@@ -153,7 +153,7 @@
                                 (click)="export()" alt="logo">
                         </div>
                     </div>
-<!-- 
+                    <!-- 
                     <div class="col-12" *ngIf="type == 'overall'">
                         <table class="table table-responsive table-bordered w-100 dataTable no-footer">
                             <thead>
@@ -221,40 +221,46 @@
                         </table>
                     </div> -->
 
-                    
+
                     <div class="col-12" *ngIf="type == 'overall'">
                         <table class="table table-responsive table-bordered w-100 dataTable no-footer">
                             <thead>
                                 <tr>
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('Payees')" style="width: 177.575px;"
+                                        (click)="sort('header')" style="width: 177.575px;"
                                         *ngFor="let header of headers">{{ header }}</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let row of data">
-                                    <td *ngFor="let header of headers; let i = index" [class.text-right]="header === 'Balance (Company Currency)'">
-                                      <a *ngIf="header === 'Balance (Company Currency)'" class="hyperlink-style">{{ row[header] }}</a>
-                                      <span *ngIf="header !== 'Balance (Company Currency)'">{{ row[header] }}</span>
+                                <tr *ngFor="let row of pagedItems">
+                                    <td *ngFor="let header of headers; let i = index"
+                                        [class.text-right]="header === 'Balance (Company Currency)'"
+                                        (click)="header === 'Sub Category' ? showCustomerWise(row['Id']) : null">
+                                        <a *ngIf="header === 'Sub Category'" class="hyperlink-style">{{ row[header] }}</a>
+                                        <ng-container *ngIf="header === 'Balance (Company Currency)'">
+                                          <a class="hyperlink-style" (click)="showBalanceDetails(row)">{{ row[header] | dynamicDecimal: entityFraction }}</a>
+                                        </ng-container>
+                                        <span *ngIf="header !== 'Sub Category' && header !== 'Balance (Company Currency)'">{{ row[header] }}</span>
                                     </td>
                                   </tr>
-                                <tr *ngIf="data.length === 0">
+                                <tr *ngIf="pagedItems.length === 0">
                                     <td class="text-center" colspan="10">No records found</td>
                                 </tr>
                             </tbody>
-                            <!-- <tfoot class="table-footer" *ngIf="data.length > 0">
+                            <!-- Table footer -->
+                            <tfoot class="table-footer" *ngIf="pagedItems.length > 0">
                                 <tr class="footer-position-sticky">
-                                    <td colspan="1" class="text-left">
+                                    <td class="text-left">
                                         <span style="font-size: medium;">Grand Total : </span>
                                     </td>
-                                    <td>{{ calculateTotalDays('0-10 DAYS') }}</td>
-                                    <td>{{ calculateTotalDays('15-20 DAYS') }}</td>
-                                    <td>{{ calculateTotalDays('30-40 DAYS') }}</td>
-                                    <td>{{ calculateTotalDays('60-90 DAYS') }}</td>
-                                    <td>{{ calculateTotalDays('Balance (Company Currency)') }}</td>
+                                    <ng-container *ngFor="let header of calculateDynamicHeaders(); let last = last">
+                                        <td *ngIf="!last">{{ calculateTotals(header) }}</td>
+                                        <td class="text-right" *ngIf="last">{{ calculateTotals(header) | dynamicDecimal:
+                                            entityFraction }}</td>
+                                    </ng-container>
                                 </tr>
-                            </tfoot> -->
+                            </tfoot>
                         </table>
                     </div>
                     
@@ -472,7 +478,7 @@
                                 <a (click)="setPage(pager.totalPages)">Last</a>
                             </li>
                         </ul>
-                    </div> 
+                    </div>
                 </div>
             </div>
         </div>
