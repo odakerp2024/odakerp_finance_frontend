@@ -416,7 +416,7 @@ export class ReportSalesVoucherComponent implements OnInit {
               return obj;
           }, {});
 
-      const  defalutJobValue = '-NA-'
+      const  defalutJobValue = 'NA'
       // Update the 'Amount (ICY)' property in the filtered data object with the merged amount
       filteredData['Invoice Amount (ICY)'] = mergedICYAmount;
       filteredData['Invoice Amount (CCY)'] = mergedCCYAmount;
@@ -426,6 +426,8 @@ export class ReportSalesVoucherComponent implements OnInit {
       filteredData['IGST'] = igst;
       filteredData['Job #'] = data['Job #'] == null ? defalutJobValue : data['Job #'];
       filteredData['GST #'] = data['GST #'] == null ? defalutJobValue : data['GST #'];
+      filteredData['Container'] = data['Container'] == null ? defalutJobValue : data['Container'];
+      filteredData['BL #'] = data['BL #'] == null ? defalutJobValue : data['BL #'];
       
       // Add the filtered data to the worksheet
       const row = worksheet.addRow(Object.values(filteredData));
@@ -607,7 +609,7 @@ export class ReportSalesVoucherComponent implements OnInit {
           }, {});
       
     
-       const  defalutJobValue = '-NA-'
+       const  defalutJobValue = 'NA'
         // Update the 'Amount (ICY)' property in the filtered data object with the merged amount
       filteredData['Invoice Amount (ICY)'] = mergedICYAmount;
       filteredData['Invoice Amount (CCY)'] = mergedCCYAmount;
@@ -617,6 +619,8 @@ export class ReportSalesVoucherComponent implements OnInit {
       filteredData['IGST'] = igst;
       filteredData['Job #'] = data['Job #'] == null ? defalutJobValue : data['Job #'];
       filteredData['GST #'] = data['GST #'] == null ? defalutJobValue : data['GST #'];
+      filteredData['Container'] = data['Container'] == null ? defalutJobValue : data['Container'];
+      filteredData['BL #'] = data['BL #'] == null ? defalutJobValue : data['BL #'];
 
 
       // Add the filtered data to the worksheet
