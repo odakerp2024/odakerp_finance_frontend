@@ -406,50 +406,12 @@ BasedOnDate(selectedDate: any) {
         return groups;
     }, {});
 
-   // this.balanceList = Object.keys(groupedItems).map(group => ({
-    //    GroupName: group,
-     //   items: groupedItems[group]
-   // }));
+   this.balanceList = Object.keys(groupedItems).map(group => ({
+       GroupName: group,
+       items: groupedItems[group]
+   }));
 
-// Process each group to calculate parent totals and group totals
-        this.balanceList = Object.keys(groupedItems).map(group => {
-          const items = groupedItems[group];
-  
-          // Group items by ParentAccountName within the group
-          const parentGroupedItems = items.reduce((parents: any, item: any) => {
-            const parent = item.ParentAccountName;
-            if (!parents[parent]) {
-              parents[parent] = [];
-            }
-            parents[parent].push(item);
-            return parents;
-          }, {});
-  
-          // Calculate totals for each parent account within the group
-          const parentTotals = Object.keys(parentGroupedItems).map(parentName => {
-            const parentItems = parentGroupedItems[parentName];
-            const totalCredit = this.calculateParentTotal(parentItems, 'Credit');
-            const totalDebit = this.calculateParentTotal(parentItems, 'Debit');
-  
-            return {
-              ParentAccountName: parentName,
-              items: parentItems,
-              totalCredit: totalCredit,
-              totalDebit: totalDebit
-            };
-          });
-  
-          // Calculate total credit and debit for the group
-          const totalCredit = this.calculateGroupTotal(items, 'Credit');
-          const totalDebit = this.calculateGroupTotal(items, 'Debit');
-  
-          return {
-            GroupName: group,
-            parentTotals: parentTotals,
-            totalCredit: totalCredit,
-            totalDebit: totalDebit
-          };
-        });
+
   
 
     // Assign grouped list to pagedItems
@@ -501,6 +463,7 @@ debugger
 
 
 async downloadExcel() {
+  debugger
   if (!this.pagedItems || this.pagedItems.length === 0) {
     Swal.fire('No record found');
     return;
@@ -510,21 +473,21 @@ async downloadExcel() {
   const worksheet = workbook.addWorksheet('Report');
 
   // Add title and subtitle rows
-  const titleRow = worksheet.addRow(['', '', 'ODAK SOLUTIONS PRIVATE LIMITED', '', '', '']);
-  titleRow.getCell(3).font = { size: 15, bold: true };
-  titleRow.getCell(3).alignment = { horizontal: 'center' };
-  worksheet.mergeCells(`C${titleRow.number}:D${titleRow.number}`);
-  const subtitleRow = worksheet.addRow(['', '', 'Trail Balance', '', '', '']);
-  subtitleRow.getCell(3).font = { size: 15, bold: true };
-  subtitleRow.getCell(3).alignment = { horizontal: 'center' };
-  worksheet.mergeCells(`C${subtitleRow.number}:D${subtitleRow.number}`);
+  const titleRow = worksheet.addRow(['', 'ODAK SOLUTIONS PRIVATE LIMITED', '', '', '']);
+  titleRow.getCell(2).font = { size: 15, bold: true };
+  titleRow.getCell(2).alignment = { horizontal: 'center' };
+  worksheet.mergeCells(`B${titleRow.number}:B${titleRow.number}`);
+  const subtitleRow = worksheet.addRow(['', 'Trail Balance', '', '', '']);
+  subtitleRow.getCell(2).font = { size: 15, bold: true };
+  subtitleRow.getCell(2).alignment = { horizontal: 'center' };
+  worksheet.mergeCells(`B${subtitleRow.number}:B${subtitleRow.number}`);
 
   // Add date row
   const currentDate = new Date();
-  worksheet.addRow(['', '', `As of ${currentDate.toDateString()}`, '', '', '']);
+  worksheet.addRow(['', `As of ${currentDate.toDateString()}`, '', '', '']);
 
   // Define header row
-  const headers = ['Account', 'Account Code', 'Net Credit', 'Net Debit'];
+  const headers = ['Account', 'Net Credit', 'Net Debit'];
   const headerRow = worksheet.addRow(headers);
   // Style the header row
   headerRow.eachCell((cell) => {
@@ -548,22 +511,31 @@ async downloadExcel() {
     };
   });
 
-  // Add data rows
   this.pagedItems.forEach(group => {
     // Add group header row
     worksheet.addRow([group.GroupName.toUpperCase(), '', '', '']);
-    group.items.forEach(balance => {
-      const rowData = [
-        `${balance.GrandParentAccountName} - ${balance.ParentAccountName} - ${balance.ChildAccountName}`,
-        balance.ChartOfAccountsId,
-        balance.ChildTransaction_Type === 'Credit' ? balance.ChildNet_Balance : 0,
-        balance.ChildTransaction_Type === 'Debit' ? balance.ChildNet_Balance : 0
-      ];
-      worksheet.addRow(rowData);
-      
+    group.parentTotals.forEach(parent => {
+      parent.items.forEach(balance => {
+        const rowData = [
+          `${balance.GrandParentAccountName} - ${balance.ParentAccountName} - ${balance.ChildAccountName}`,
+          balance.ChildTransaction_Type === 'Credit' ? balance.ChildNet_Balance : 0,
+          balance.ChildTransaction_Type === 'Debit' ? balance.ChildNet_Balance : 0
+        ];
+       const row =  worksheet.addRow(rowData);
+
+
+         // Set text color for specific columns
+    const columnsToColor = ['ChildNet_Balance', 'ChildNet_Balance'];
+    columnsToColor.forEach(columnName => {
+        const columnIndex = Object.keys(group).indexOf(columnName);
+        if (columnIndex !== -1) {
+            const cell = row.getCell(columnIndex + 1);
+            cell.font = { color: { argb: '8B0000' }, bold: true }; 
+        }
+      });
     });
   });
-
+  });
 
 
   // Adjust column widths
