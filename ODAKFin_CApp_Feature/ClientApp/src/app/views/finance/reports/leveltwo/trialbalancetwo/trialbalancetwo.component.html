@@ -132,8 +132,10 @@
                             <th colspan="7"></th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr *ngFor="let balance of balanceList">
+                    <tbody >
+                        <ng-container *ngIf="dataList.length > 0; else noRecord">
+                            <ng-container *ngFor="let balance of dataList ">
+                        <tr >
                             <td>{{balance.Trans_Date | date: commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td>
                             <td>{{balance.Trans_Account_Name}}</td>
                             <td>{{balance.Trans_Details}}</td>
@@ -144,8 +146,14 @@
                             <td class="hyperTextColor text-right">{{balance.Credit  | dynamicDecimal}}</td>
                             <td class="hyperTextColor text-right">{{balance.Amount  | dynamicDecimal}}</td>
                         </tr>
-                    </tbody>
-                    <tfoot>
+                            </ng-container>
+                        </ng-container>
+                          <tr *ngIf="dataList.length == 0">
+                            <td class="text-center" colspan="10">No records found</td>
+                        </tr>
+                        </tbody>
+
+                    <tfoot class="table-footer"   *ngIf="dataList.length > 0">
                         <tr class="footer-position-sticky" style="padding: 7px !important; background-image: linear-gradient(#3A5BA0, #273773) !important; color: #fff !important;">
                             <td colspan="1" class="text-left">
                                 <span style="font-size: medium;">Grand Total : </span>
@@ -159,12 +167,14 @@
                             <td class="text-center" colspan="1">{{totalCreditAmount | dynamicDecimal}}</td>
                             <td class="text-center" colspan="1">{{totalAmount | dynamicDecimal }}</td>
                         </tr>
+
+                        
                     </tfoot>
                 </table>
             </div>
             
 
-            <div  class="row page mr-3" align="right">
+            <!-- <div  class="row page mr-3" align="right">
         <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10 && pager.totalItems > 10" class="pagination">
             <li [ngClass]="{disabled:pager.currentPage === 1}">
                 <a (click)="setPage(1)">First</a>
@@ -189,7 +199,7 @@
                 <a (click)="setPage(pager.totalPages)">Last</a>
             </li>
         </ul>
-            </div>
+            </div> -->
                 </div>
             </div>
         </div>

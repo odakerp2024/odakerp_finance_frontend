@@ -32,9 +32,9 @@ export class TrialbalancetwoComponent implements OnInit {
   currentDate: Date = new Date();
   data: any[];
   TemplateUploadURL = this.globals.TemplateUploadURL;
-  totalDebitAmount = 0;
-  totalCreditAmount = 0;
-  totalAmount = 0;   
+  totalDebitAmount : any;
+  totalCreditAmount : any;
+  totalAmount : any; 
   entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   entityThousands = Number(this.commonDataService.getLocalStorageEntityConfigurable('CurrenecyFormat'));
 
@@ -50,7 +50,7 @@ export class TrialbalancetwoComponent implements OnInit {
   ngOnInit(): void {
     this.getDivisionList();
     this.getOfficeList();
-    this. getbyidBalancelist();
+    // this. getbyidBalancelist();
     this.createBalanceFilterForm();
 
     this.route.paramMap.subscribe(params => {
@@ -63,31 +63,6 @@ export class TrialbalancetwoComponent implements OnInit {
     this.router.navigate(['/views/finance/reports/levelone', {  }])
   }
 
-  fetchData(id: number): void {
-    debugger;
-    const service = 'https://odakfnqa.odaksolutions.in/api/Reports/GetLedgerDataById';
-  
-    const payload = {
-      "AccountId": id,
-      "Date": "",
-      "DivisionId": "",
-      "OfficeId": ""
-    };
-
-    this.dataService.post(service, payload).subscribe((response: any) => {
-      console.log('Response Data:', response); 
-
-      if (response.data.Table.length > 0) {
-        this.dataList = response.data.Table; 
-        console.log('Data List:', this.dataList); 
-        this.setPage(1);
-      } else {
-        console.error('Error: Invalid response format');
-      }
-    }, err => {
-      console.error('Error:', err);
-    });
-}
 
   onDateChange(event: any): void {
     this.selectedDate = this.datePipe.transform(event.value, 'yyyy-MM-dd');
@@ -124,32 +99,59 @@ export class TrialbalancetwoComponent implements OnInit {
     }, error => { });
   }
 
-  getbyidBalancelist() {
-    const service = `https://odakfnqa.odaksolutions.in/api/Reports/GetLedgerDataById`;
+  fetchData(id: number): void {
+    const service = 'https://odakfnqa.odaksolutions.in/api/Reports/GetLedgerDataById';
+  
     const payload = {
-        "AccountId": 784,
-        "Date": "2024-04-30",
-        "DivisionId": 1,
-        "OfficeId": 2
+      "AccountId": id,
+      "Date": "",
+      "DivisionId": "",
+      "OfficeId": ""
     };
 
-    this.dataService.post(service, payload).subscribe((result: any) => {
-        this.balanceList = [];
-        if (result.message == 'Success' && result.data.Table.length > 0) {
-            this.balanceList = result.data.Table;
-            this.calculateTotals();
-        }
-    }, error => {
-        console.error("Error occurred:", error); 
+    this.dataService.post(service, payload).subscribe((response: any) => {
+      if (response.data && Array.isArray(response.data.Table) && response.data.Table.length > 0) {
+        this.dataList = response.data.Table; 
+        this.setPage(1);
+         this.totalDebitAmount = this.dataList.reduce((sum, item) => sum + (parseFloat(item.Debit) || 0), 0);
+        this.totalCreditAmount = this.dataList.reduce((sum, item) => sum + (parseFloat(item.Credit) || 0), 0);
+        this.totalAmount = this.dataList.reduce((sum, item) => sum + (parseFloat(item.Amount) || 0), 0);
+       
+        
+      } else {
+        this.totalDebitAmount = 0;
+        this.totalCreditAmount = 0;
+        this.totalAmount = 0;
+        this.pager = {};
+        this.dataList = [];
+        // console.error('Error: Invalid response format');
+      }
+    }, err => {
+      console.error('Error:', err);
     });
 }
+ 
+// getbyidBalancelist() {
+//   debugger
+//     const service = `https://odakfnqa.odaksolutions.in/api/Reports/GetLedgerDataById`;
+//     const payload = {
+//       "AccountId": id,
+//       "Date": "",
+//       "DivisionId": "",
+//       "OfficeId": ""
+//     };
 
-calculateTotals() {
-  debugger
-  this.totalDebitAmount = this.balanceList.reduce((sum, item) => sum + (item.Debit || 0), 0);
-  this.totalCreditAmount = this.balanceList.reduce((sum, item) => sum + (item.Credit || 0), 0);
-  this.totalAmount = this.balanceList.reduce((sum, item) => sum + (item.Amount || 0), 0);
-}
+//     this.dataService.post(service, payload).subscribe((result: any) => {
+//         if (result.message == 'Success' && result.data && Array.isArray(result.data.Table) && result.data.Table.length > 0) {
+//             this.dataList = result.data.Table;
+//             this.calculateTotals();
+//         } else {
+//             console.error('Error: Invalid response format or no data found');
+//         }
+//     }, error => {
+//         console.error("Error occurred:", error); 
+//     });
+// }
 
 
 createBalanceFilterForm() {
@@ -263,7 +265,7 @@ getOfficeLists(id: number) {
 
 
 async downloadExcel() {
-  if (!this.balanceList || this.balanceList.length === 0) {
+  if (!this.dataList || this.dataList.length === 0) {
     Swal.fire('No record found');
     return;
   }
@@ -317,8 +319,7 @@ async downloadExcel() {
   });
 
 
-
-  this.balanceList.forEach(group => {
+  this.dataList.forEach(group => {
     // Format the date
     const date = group.Trans_Date;
     const formattedDate = date.split('T')[0];
@@ -351,17 +352,6 @@ async downloadExcel() {
     });
 });
 
-// Adjust column widths
-worksheet.columns.forEach(column => {
-    let maxLength = 0;
-    column.eachCell({ includeEmpty: true }, cell => {
-        const columnLength = cell.value ? cell.value.toString().length : 0;
-        if (columnLength > maxLength) {
-            maxLength = columnLength;
-        }
-    });
-    column.width = maxLength + 2;
-});
 
   // Adjust column widths
   worksheet.columns.forEach(column => {
