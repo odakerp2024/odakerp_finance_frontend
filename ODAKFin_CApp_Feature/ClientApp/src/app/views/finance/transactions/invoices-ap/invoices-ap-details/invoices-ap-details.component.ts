@@ -39,8 +39,8 @@ export class InvoicesApDetailsComponent implements OnInit {
   autoGenerateCodeList: any = [];
   invoiceAPId: number = 0;
   private ngUnsubscribe = new Subject<void>();
-  TotalDebitAmount: any;
-  TotalCreditAmount: any;
+  TotalDebitAmount: any = 0;
+  TotalCreditAmount: any = 0;
   payload: any;
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
   entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
