@@ -330,9 +330,9 @@ export class InvoicesApDetailsComponent implements OnInit {
             VoucherId: 0,
             VoucherNumber: data.Voucher,
             VoucherDate: this.datePipe.transform(new Date(data.Date), 'dd-MM-y'),
-            VoucherAmount: Number(data.Amount),
+            VoucherAmount: Number(data.Amount).toFixed(this.entityFraction) ,
             IsAdjusted: 'NO',
-            PendingAmount: data.OpenAmount ? data.OpenAmount : Number(data.Amount),
+            PendingAmount: data.OpenAmount ? data.OpenAmount.toFixed(this.entityFraction) : Number(data.Amount).toFixed(this.entityFraction) ,
             AdjustedAmount: '',
             IsSelect: 0
           });
@@ -348,9 +348,9 @@ export class InvoicesApDetailsComponent implements OnInit {
               InvoiceId: 0,
               InvoiceNumber: data.Voucher,
               InvoiceDate: this.datePipe.transform(new Date(data.Date), 'dd-MM-y'),
-              InvoiceAmount: Number(data.Amount),
+              InvoiceAmount: Number(data.Amount).toFixed(this.entityFraction) ,
               IsAdjusted: 'NO',
-              PendingAmount: data.OpenAmount ? data.OpenAmount : Number(data.Amount),
+              PendingAmount: data.OpenAmount ? data.OpenAmount.toFixed(this.entityFraction)  : Number(data.Amount).toFixed(this.entityFraction) ,
               AdjustedAmount: '',
               IsSelect: 0
             });
