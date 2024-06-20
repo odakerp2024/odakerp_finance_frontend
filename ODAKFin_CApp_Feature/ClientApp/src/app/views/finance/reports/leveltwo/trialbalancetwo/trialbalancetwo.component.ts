@@ -10,6 +10,7 @@ import { CommonService } from 'src/app/services/common.service';
 import { Workbook } from 'exceljs';
 import { saveAs } from 'file-saver';
 import Swal from 'sweetalert2';
+import { ReportDashboardService } from 'src/app/services/financeModule/report-dashboard.service';
 
 @Component({
   selector: 'app-trialbalancetwo',
@@ -45,6 +46,7 @@ export class TrialbalancetwoComponent implements OnInit {
     private datePipe: DatePipe, private fb: FormBuilder, 
     private route: ActivatedRoute,
     private router: Router,
+    private reportService: ReportDashboardService,
     private commonDataService: CommonService, ) { }
 
   ngOnInit(): void {
@@ -100,16 +102,14 @@ export class TrialbalancetwoComponent implements OnInit {
   }
 
   fetchData(id: number): void {
-    const service = 'https://odakfnqa.odaksolutions.in/api/Reports/GetLedgerDataById';
-  
+
     const payload = {
       "AccountId": id,
       "Date": "",
       "DivisionId": "",
       "OfficeId": ""
     };
-
-    this.dataService.post(service, payload).subscribe((response: any) => {
+    this.reportService.GetLedgerDataById(payload).subscribe(response => {
       if (response.data && Array.isArray(response.data.Table) && response.data.Table.length > 0) {
         this.dataList = response.data.Table; 
         this.setPage(1);
@@ -163,17 +163,14 @@ createBalanceFilterForm() {
 }
 
 BasedOnDate(selectedDate: any ) {
-   
-  const service = 'https://odakfnqa.odaksolutions.in/api/Reports/GetLedgerDataById';
-  
+
   const payload = {
     "AccountId": "",
     "Date": selectedDate,
     "DivisionId": "",
     "OfficeId": ""
   };
-
-  this.dataService.post(service, payload).subscribe((response: any) => {
+  this.reportService.GetLedgerDataById(payload).subscribe(response => {
     this.dataList = [];
     console.log('Response Data:', response); 
 
@@ -189,18 +186,14 @@ BasedOnDate(selectedDate: any ) {
 }
 
 onDivisionChange( divisionId: any, id: number): void {
-  debugger;
  
-  const service = 'https://odakfnqa.odaksolutions.in/api/Reports/GetLedgerDataById';
-  
   const payload = {
     "AccountId": id,
     "Date": "",
     "DivisionId": divisionId,
     "OfficeId": ""
   };
-
-  this.dataService.post(service, payload).subscribe((response: any) => {
+  this.reportService.GetLedgerDataById(payload).subscribe(response => {
     this.dataList = [];
     console.log('Response Data:', response); 
 
@@ -216,17 +209,14 @@ onDivisionChange( divisionId: any, id: number): void {
 }
 
 onOfficeChange( OfficeId: any, id: number): void {
-  debugger;
-  const service = 'https://odakfnqa.odaksolutions.in/api/Reports/GetLedgerDataById';
-  
+
   const payload = {
     "AccountId": id,
     "Date": "",
     "DivisionId": "",
     "OfficeId": OfficeId
   };
-
-  this.dataService.post(service, payload).subscribe((response: any) => {
+  this.reportService.GetLedgerDataById(payload).subscribe(response => {
     this.dataList = [];
     console.log('Response Data:', response);
 
