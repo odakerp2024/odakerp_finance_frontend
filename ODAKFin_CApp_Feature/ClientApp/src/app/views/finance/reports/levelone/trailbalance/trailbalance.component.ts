@@ -14,6 +14,7 @@ import * as XLSX from 'xlsx';
 import { HttpClient } from '@angular/common/http';
 import { Workbook } from 'exceljs';
 import { saveAs } from 'file-saver';
+import { ReportDashboardService } from 'src/app/services/financeModule/report-dashboard.service';
 
 
 
@@ -55,6 +56,7 @@ export class TrailbalanceComponent implements OnInit {
     private dataService: DataService,
     private commonDataService: CommonService, 
     private contraVoucherService: ContraVoucherService,
+    private reportService: ReportDashboardService,
     private http: HttpClient) { 
       this.createFilterForm();
     }
@@ -116,14 +118,13 @@ export class TrailbalanceComponent implements OnInit {
 
     
   trailbalanceList() {
-    const service = `https://odakfnqa.odaksolutions.in/api/Reports/GetTrailBalanceList`;
+
     const payload = {
-      "DivisionId": 1,
-      "OfficeId": 0,
+      "DivisionId": "",
+      "OfficeId": "",
       "Date": ""
     };
-  
-    this.dataService.post(service, payload).subscribe((result: any) => {
+    this.reportService.GetTrailBalanceList(payload).subscribe(result => {
       this.balanceList = [];
       if (result.message === 'Success' && result.data.Table.length > 0) {
         // Group the items by GroupName
@@ -232,9 +233,6 @@ createFilterForm(){
 
 
 editBalance(id: number) {
-  var service = `
-  https://odakfnqa.odaksolutions.in/api/Reports/GetLedgerDataById
-  `;
   
   const payload = {
     "AccountId": id,
@@ -242,8 +240,7 @@ editBalance(id: number) {
     "DivisionId": "",
 	"OfficeId" : ""
   };
- 
-  this.dataService.post(service, payload).subscribe(data => {
+  this.reportService.GetTrailBalanceList(payload).subscribe(data => {
     this.router.navigate(['/views/finance/reports/leveltwo', { id: id }])
    
   }, err => {
@@ -254,16 +251,13 @@ editBalance(id: number) {
 
 onDivisionChange(value: any) {
   var selectedDivisionId = value;
-  var service = `https://odakfnqa.odaksolutions.in/api/Reports/GetTrailBalanceList`;
-
   var payload = {
     "DivisionId": value,
     "OfficeId": 0,
     "Date": ""
   };
 
-  
-  this.dataService.post(service, payload).subscribe((result: any) => {
+  this.reportService.GetTrailBalanceList(payload).subscribe(result => {
     this.balanceList = [];
     if (result.message == 'Success' && result.data.Table.length > 0) {
      // Group the items by group name
@@ -342,15 +336,12 @@ onDivisionChange(value: any) {
 
 onOfficeChange(values: any) {
 
-  var service = `https://odakfnqa.odaksolutions.in/api/Reports/GetTrailBalanceList`;
-
   var payload = {
     "DivisionId": "",
     "OfficeId": values,
     "Date": ""
   };
-
-  this.dataService.post(service, payload).subscribe((result: any) => {
+  this.reportService.GetTrailBalanceList(payload).subscribe(result => {
     this.balanceList = [];
     if (result.message == 'Success' && result.data.Table.length > 0) {
       // Group the items by group name
@@ -385,15 +376,12 @@ onOfficeChange(values: any) {
 
 BasedOnDate(selectedDate: any) {
 
-  var service = `https://odakfnqa.odaksolutions.in/api/Reports/GetTrailBalanceList`;
-
   var payload = {
     "DivisionId": "",
     "OfficeId": "",
     "Date": selectedDate
   };
-
-  this.dataService.post(service, payload).subscribe((result: any) => {
+  this.reportService.GetTrailBalanceList(payload).subscribe(result => {
     this.balanceList = [];
     if (result.message == 'Success' && result.data.Table.length > 0) {
        // Group the items by group name

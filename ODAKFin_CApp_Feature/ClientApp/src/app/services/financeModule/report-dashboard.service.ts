@@ -95,5 +95,11 @@ export class ReportDashboardService {
   getSalesSummaryList(FormValue: any): Observable<any> {
     return this.http.post<any>(this.globals.APIURL + '/Reports/AccountReceivableSalesList', FormValue);
   }
-
+  GetLedgerDataById(FormValue: any): Observable<any> {
+    return this.http.post<any>(this.globals.APIURL + '/Reports/GetLedgerDataById', FormValue);
+  }
+  GetTrailBalanceList(FormValue: any): Observable<any> {
+    return this.http.post<any>(this.globals.APIURL + '/Reports/GetTrailBalanceList', FormValue);
+  }
+ 
 }
