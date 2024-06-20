@@ -216,7 +216,7 @@ export class ReportArLeveltwoComponent implements OnInit {
         OfficeId: [0],
         CustomerId: [0],
         Type: [1],
-        AgingTypeId: [0],
+        AgingTypeId: [1],
         SubTypeId: [this.subtype],
         FromDate: [this.startDate],
         ToDate: [this.endDate],
@@ -391,23 +391,32 @@ export class ReportArLeveltwoComponent implements OnInit {
 
     this.reportService.getAgingSummaryList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
-      if (result['data'].Table.length > 0) {
+      if (result.message == "Success" && result.data && result.data.Table) {
         this.reportList = result['data'].Table;
-        this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
-        this.setPage(1);
-        this.calculateTotalDays(this.reportList);
-      } else {
-        this.pager = {};
-        this.pagedItems = [];
-        this.DueAmountTotal = 0;
-        this.AgingTotal = 0;
-        this.InvoiceCCYTotal = 0;
-        this.DueAmountCCYTotal = 0;
+        let tableData = result.data.Table;
+       
+        if (tableData.length > 0) {
+          let headers = Object.keys(tableData[0]); // Assuming Table[0] has headers
+          this.headers = headers.filter(header => header !== 'CustomerID'); 
 
-      }
-    })
+          // Extract 'Balance (Company Currency)' field and format it
+          this.pagedItems = tableData.map(row => ({
+            ...row,
+            'Balance (Company Currency)': Number(row['Balance (Company Currency)']).toFixed(this.entityFraction),
+            'Balance (Invoice currency)': Number(row['Balance (Invoice currency)']).toFixed(this.entityFraction),
+            'Credit Amount': Number(row['Credit Amount']).toFixed(this.entityFraction)
+          }));          
+          this.setPage(1);
+        } else {
+          this.headers = [];
+          this.pager = {};
+          this.pagedItems = [];
+        }
+      } console.error();
+    });
   }
 
+  
 
   calculateTotalDays(reportList: any[]): void {
     let zeroToFifteenDaysTotal = 0;
@@ -465,7 +474,7 @@ export class ReportArLeveltwoComponent implements OnInit {
 
   }
 
-  //Dynamic Grand Total Calution Methods
+  //Dynamic Grand Total Calution Methods overall
   calculateDynamicHeaders(): string[] {
     let excludedColumns: string[] = ['Sub Category', 'Id']; // Define columns to be excluded
 
@@ -477,11 +486,43 @@ export class ReportArLeveltwoComponent implements OnInit {
     return [];
   }
 
+
   calculateTotals(header: string): number {
     // Calculate total for the specified header
     return this.pagedItems.reduce((acc, item) => acc + parseFloat(item[header] || 0), 0);
   }
 
+  calculateHeadersCustomerwise(): string[] {
+    let excludedColumns: string[] = [ 'CustomerID']; // Define columns to be excluded
+
+    if (this.pagedItems.length > 0) {
+      return Object.keys(this.pagedItems[0])
+        .filter(key => !excludedColumns.includes(key));
+    }
+
+    return [];
+  }
+  
+  isNumeric(value: any): boolean {
+    return !isNaN(parseFloat(value)) && isFinite(value);
+  }
+  
+  customerTotals(header: string): any {
+    // Calculate total for the specified header
+    const total = this.pagedItems.reduce((acc, item) => {
+      const value = parseFloat(item[header]);
+      return isNaN(value) ? acc : acc + value;
+    }, 0);
+    // Convert 0 to empty string
+    return total == 0 ? '' : total;
+  }
+  
+  
+  calculateCustomerTotals(header: string): any {
+    const total = this.customerTotals(header);
+    return this.isNumeric(total) ? total : '';
+  }
+  
 
   setPage(page: number) {
     if (page < 1 || page > this.pager.totalPages) return;
