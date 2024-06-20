@@ -323,7 +323,8 @@ async downloadExcel() {
     // Format the date
     const date = group.Trans_Date;
     const formattedDate = date.split('T')[0];
-    group.Trans_Date = formattedDate;
+    group.Trans_Date = this.datePipe.transform(formattedDate, 'dd-MM-yyyy');
+   
 
     // Create row data
     const rowData = [
