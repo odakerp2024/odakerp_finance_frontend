@@ -293,7 +293,7 @@
                                     onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
                                     min="0" numbersOnly
                                     (ngModelChange)="amountChange($event); CurrentExRate();summaryAmountCalculation()"
-                                    appDynamicDecimal class="form-control my-select amount w-200 m-0"
+                                    appDynamicDecimal class="form-control amount w-200 m-0"
                                     formControlName="AmountReceived" />
                             </div>
                         </div>
@@ -600,7 +600,7 @@
                                                 formControlName="Payment">
                                         </td>
                                         <td>
-                                            <input (change)=" setInitalPaymentAmount(i);onSelectEvent();summaryAmountCalculation()"
+                                            <input (change)="setInitalPaymentAmount(i);onSelectEvent();summaryAmountCalculation()"
                                                 formControlName="IsSelect" type="checkbox"  id = tabledata
                                                 [ngClass]=" !isEditMode ? 'disable-input--nostyle' : ''" />
                                         </td>
