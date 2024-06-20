@@ -538,28 +538,28 @@
                                 <ng-container *ngIf="paymentDetailsTableList.length; else noRecord">
                                     <tr *ngFor="let due of paymentDetailsTableList;let i = index"
                                         [ngClass]="getIsChecked(i) ? 'checked-row' : ''">
-                                        <td class="text-center">{{ i + 1 }}</td>
-                                        <td class="text-center">{{due.InvoiceNumber}}</td>
+                                        <td class="text-center" id = tabledata >{{ i + 1 }}</td>
+                                        <td class="text-center" id = tabledata >{{due.InvoiceNumber}}</td>
                                         <!-- <td>{{due.date | date: commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td> -->
-                                        <td class="text-center">{{due.BillDate |
+                                        <td class="text-center" id = tabledata >{{due.BillDate |
                                             date:commonDataService.convertToLowerCaseDay(entityDateFormat) }}</td>
 
-                                        <td class="text-center">{{due.Currency}}</td>
-                                        <td class="text-center">{{due.BillAmount }}</td>
-                                        <td class="text-center">
+                                        <td class="text-center" id = tabledata >{{due.Currency}}</td>
+                                        <td class="text-center" id = tabledata >{{due.BillAmount }}</td>
+                                        <td class="text-center" id = tabledata >
                                             {{due.DueAmount}}
                                             <!-- <input class="w-100" [ngClass]="isEditDueBill ? '' : 'disable-input'"
                                                 type="number" [(ngModel)]="due.DueAmount"
                                                 [ngModelOptions]="{standalone: true}"> -->
                                         </td>
-                                        <td class="text-center">{{due.InvoiceAmountCCY }}</td>
+                                        <td class="text-center" id = tabledata >{{due.InvoiceAmountCCY }}</td>
                                         <!-- <td class="text-center">{{due.BillAmountLocal }}</td> -->
-                                        <td class="text-center">
+                                        <td class="text-center" id = tabledata >
                                             {{due.DueAmountCCY}}
                                         </td>
 
                                         <!-- <td class="text-center">{{due.DueAmountLocal}}</td> -->
-                                        <td class="text-center">
+                                        <td class="text-center" id = tabledata >
                                             <!-- <input class="w-100"
                                                 [ngClass]="IsFinal  || !isTds || !isEditMode || !due.IsCheck ? 'disable-input' : ''"
                                                 numbersOnly appDynamicDecimal
@@ -570,7 +570,7 @@
                                         
                                         <td class="text-center">
                                             <!-- {{due.payment}} -->
-                                            <input min="1" class="w-100"
+                                            <input min="1" class="w-100" id = tabledata 
                                                 onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
                                                 (change)="getDueAmount(due.TDS, due.BillAmount,$event.target.value, i, due.DueAmount,'payment');summaryAmountCalculation()"
                                                 numbersOnly appDynamicDecimal [(ngModel)]="due.Payment"
@@ -579,7 +579,7 @@
 
                                         </td>
                                         <td>
-                                            <input
+                                            <input id = tabledata 
                                                 onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
                                                 (click)="OnClickRadio(i, due.InvoiceNumber, due.IsCheck);setInitalPaymentAmount(i, due);calculateFinalTotal();"
                                                 [(ngModel)]="due.IsCheck" [ngModelOptions]="{standalone: true}"

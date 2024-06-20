@@ -42,8 +42,8 @@ export class InvoicesArDetailsComponent implements OnInit {
   receiptList: any = [];
   openInvoiceList: any = [];
   invoiceARId: any = 0;
-  TotalDebitAmount: any;
-  TotalCreditAmount: any;
+  TotalDebitAmount: any = 0;
+  TotalCreditAmount: any = 0;
   FileList: any = [];
   isUpdateMode: boolean = false;
   isUpdateMode1: boolean = false;
@@ -71,8 +71,10 @@ export class InvoicesArDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.createInvoiceForm();
+      this.getNumberRange();
+    this.getStatus();
+    this.getCustomerList();
     this.route.params.subscribe(res => {
-      debugger
       if (res.id) {
         this.isUpdate = true;
         this.isUpdateMode = true;
@@ -82,10 +84,6 @@ export class InvoicesArDetailsComponent implements OnInit {
         this.invoiceForm.disable();
       }
     })
-    
-    this.getNumberRange();
-    this.getStatus();
-    this.getCustomerList();
   }
 
   updateValue(){
@@ -317,13 +315,12 @@ export class InvoicesArDetailsComponent implements OnInit {
   }
 
   partyEvent(event) {
-    debugger
     var service = `${this.globals.APIURL}/OutStandingInvoiceAR/OutStandingInvoiceARDropDown`;
     this.dataService.post(service, { CustomerId: event }).subscribe((result: any) => {
       this.receiptList = [];
       this.openInvoiceList = [];
       this.clearFormArray();
-debugger
+
       if (result.message == "Success" && result.data.Table.length >= 0) {
         for (let data of result.data.Table) {
           this.addReceiptInfo();
@@ -333,9 +330,9 @@ debugger
             VoucherId: 0,
             VoucherNumber: data.Invoice,
             VoucherDate: this.datePipe.transform(new Date(data.Date), 'dd-MM-y'),
-            VoucherAmount: Number(data.Amount),
+            VoucherAmount: Number(data.Amount ).toFixed(this.entityFraction) ,
             IsAdjusted: 'NO',
-            PendingAmount: data.OpenAmount ? data.OpenAmount : Number(data.Amount),
+            PendingAmount: data.OpenAmount ? data.OpenAmount.toFixed(this.entityFraction) : Number(data.Amount) .toFixed(this.entityFraction),
             //PendingAmount: data.OpenAmount ,
 
             AdjustedAmount: '',
@@ -345,9 +342,8 @@ debugger
        
 
         }
-        debugger
         this.invoiceForm.patchValue({ receiptInfo: this.receiptList });
-        // this.newReceiptList = this.receiptList;
+         this.newReceiptList = this.receiptList;
       
         if (result.data.Table1.length > 0) {
           
@@ -359,17 +355,17 @@ debugger
               InvoiceId: 0,
               InvoiceNumber: data.Invoice,
               InvoiceDate: this.datePipe.transform(new Date(data.Date), 'dd-MM-y'),
-              InvoiceAmount: Number(data.Amount),
+              InvoiceAmount: Number(data.Amount).toFixed(this.entityFraction),
               IsAdjusted: 'NO',
-              PendingAmount: data.OpenAmount ? data.OpenAmount : Number(data.Amount),
+              PendingAmount: data.OpenAmount ? data.OpenAmount.toFixed(this.entityFraction) : Number(data.Amount).toFixed(this.entityFraction),
               AdjustedAmount: '',
               IsSelect: 0
             });
           }
         }
-        debugger
+       
         this.invoiceForm.patchValue({ openInvoiceInfo: this.openInvoiceList });
-        // this.newInvoiceList = this.openInvoiceList;
+         this.newInvoiceList = this.openInvoiceList;
       }
     }, error => { });
   }
@@ -404,29 +400,28 @@ debugger
 }
   
    setOffChangeEvent(data, index, type) {
-    debugger
      if (type == 'Receipts') {
       const controlAtIndex = this.ReceiptInfo.at(index);
-       const pendingAmount = this.receiptList.at(index).VoucherAmount - controlAtIndex.value.AdjustedAmount;
+       const pendingAmount = this.newReceiptList.at(index).PendingAmount - controlAtIndex.value.AdjustedAmount;
        if (pendingAmount >= 0) {
         controlAtIndex.patchValue({ PendingAmount: pendingAmount.toFixed(this.entityFraction) });
       }
      else {
        Swal.fire('Your amount has exceeded the limit!');
-        controlAtIndex.patchValue({ PendingAmount: controlAtIndex.value.VoucherAmount });
+        controlAtIndex.patchValue({ PendingAmount: controlAtIndex.value.PendingAmount });
         controlAtIndex.patchValue({ AdjustedAmount: 0 });
      }
       this.calculateCreditDebitAmount(type);
    }
     else if (type == 'Invoices') {
       const controlAtIndex = this.OpenInvoiceInfo.at(index);
-      const pendingAmount = this.openInvoiceList.at(index).InvoiceAmount - controlAtIndex.value.AdjustedAmount;
+      const pendingAmount = this.newInvoiceList.at(index).PendingAmount - controlAtIndex.value.AdjustedAmount;
       if (pendingAmount >= 0) {
         controlAtIndex.patchValue({ PendingAmount: pendingAmount.toFixed(this.entityFraction) });
       }  
       else {
         Swal.fire('Your amount has exceeded the limit!');
-        controlAtIndex.patchValue({ PendingAmount: controlAtIndex.value.InvoiceAmount });
+        controlAtIndex.patchValue({ PendingAmount: controlAtIndex.value.PendingAmount });
         controlAtIndex.patchValue({ AdjustedAmount: 0 });
       }
       this.calculateCreditDebitAmount(type);
@@ -585,7 +580,7 @@ private downloadFile = (data: HttpResponse<Blob>) => {
     let finalMsg = `Final voucher not possible to edit <br> Do you want proceed?`;
     let closeMsg = `Voucher is not yet finalized <br> Do you want to still exit`;
     let deleteMsg = `Do you want to Delete this Details?`;
-    
+    debugger
     let combinedText: string;
     if (status === 1) {
       combinedText = finalMsg;
@@ -600,7 +595,7 @@ private downloadFile = (data: HttpResponse<Blob>) => {
         if(isDelete && this.isUpdate){
           this.invoiceForm.controls['IsDelete'].setValue(1); 
         }
-
+debugger
     //  Its finaled already and cancelled
        if(status == 2){
           if(this.IsFinal){
@@ -643,7 +638,7 @@ debugger
             if (this.isUpdate && status && !this.IsFinal) {
                this.updateAutoGenerated();
                }
-
+debugger
                if(isDelete && this.isUpdate){
                 this.ViewPage();
               }

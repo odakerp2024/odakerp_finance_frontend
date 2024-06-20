@@ -97,3 +97,138 @@ div.form-group input.form-control.amount {
     background-color: #d6d9db !important;
 }
 
+#tabledata {
+    text-transform: uppercase !important;
+    padding: 9px !important;
+    font-size: 10px !important;
+    
+}
+
+.table thead th {
+    font-size: 10px !important;
+  }
+  
+@media (min-width: 1000px) and (max-width: 1800px) {
+    .field-responsive#active {
+      width: 102% !important;
+      max-width: 105% !important; 
+      overflow: visible !important;
+    }
+  }
+  
+  @media (min-width: 1701px) and (max-width: 1820px) {
+    
+    #tabledata {
+      padding: 10px !important;
+      font-size: 10px !important;
+    }
+
+    .table thead th {
+        font-size: 11px !important;
+      }
+   
+  }
+  
+  
+  
+  @media (min-width: 1601px) and (max-width: 1700px) {
+  
+    #tabledata{
+      padding: 9px !important;
+      font-size: 9px !important;
+    }
+   
+    .table thead th {
+        font-size: 10px !important;
+      }
+  }
+  
+  @media (min-width: 1498px) and (max-width: 1600px) {
+    
+    #tabledata {
+      padding: 9px !important;
+      font-size: 8px !important;
+    }
+  
+    .table thead th {
+        font-size: 8px !important;
+      }
+   
+  }
+  
+  
+  @media (min-width: 1400px) and (max-width: 1498px) {
+    
+    #tabledata {
+      padding: 8px !important;
+      font-size: 8px !important;
+    }
+  
+    .table thead th {
+        font-size: 8px !important;
+      }
+  }
+  
+  @media (min-width: 800px) and (max-width: 1000px) {
+  
+    #tabledata {
+      padding: 7px !important;
+      font-size: 7px !important;
+    }
+  
+    .table thead th {
+      font-size: 8px !important;
+    }
+    
+  }
+  
+  @media (min-width: 700px) and (max-width: 1399px) {
+    
+  
+    #tabledata {
+      padding: 10px !important;
+      font-size: 6px !important;
+    }
+  
+    .table thead th {
+      font-size: 8px !important;
+    }
+  
+  }
+  
+  
+  @media (min-width: 857px) and (max-width: 1200px) {
+  
+    #tabledata{
+      padding: 5px !important;
+      font-size: 6px !important;
+    }
+  
+    .table thead th {
+      font-size: 8px !important;
+    }
+    
+  }
+
+  @media (min-width: 860px) and (max-width: 1045px) {
+  
+    #tabledata{
+      padding: 3px !important;
+      font-size: 5px !important;
+    }
+  
+    .table thead th {
+      font-size: 6px !important;
+    }
+    
+  }
+
+
+  @media (max-width: 1280px) {
+    .table > tbody > tr > td, .table > tfoot > tr > td, .table > thead > tr > td {
+    
+        vertical-align: middle !important;
+        font-size: 16px !important;
+        max-width: 6rem !important;
+    }
+}

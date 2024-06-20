@@ -1476,6 +1476,7 @@ private downloadFile = (data: HttpResponse<Blob>) => {
   setInitalPaymentAmount(checkedIndex) {
     
     const controlAtIndex = this.myArray.at(checkedIndex);
+    controlAtIndex.value.IsSelect = controlAtIndex.value.IsSelect == false ? true : false;
     if (!controlAtIndex.value.Payment && controlAtIndex.value.IsSelect) {
       controlAtIndex.value.Payment = controlAtIndex.value.DueAmount;
       this.getDueAmount(checkedIndex, 'payment');
