@@ -305,29 +305,7 @@ export class ReportArLeveltwoComponent implements OnInit {
       console.error(error);
     }
   }
-  // getOverallList() {
-  //   this.startDate = this.reportFilter.controls.FromDate.value;
-  //   this.endDate = this.reportFilter.controls.ToDate.value;
 
-  //   this.reportService.getAgingSummaryList(this.reportFilter.value).subscribe(result => {
-  //     this.reportList = [];
-  //     if (result['data'].Table.length > 0) {
-  //       this.reportList = result['data'].Table;
-  //       this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
-  //       this.setPage(1);
-  //       this.calculateTotalDays(this.reportList);
-  //     } else {
-  //       this.pager = {};
-  //       this.pagedItems = [];
-  //       this.ZeroToFifteenDaysTotal = 0;
-  //       this.SixteenToThirtyDaysTotal = 0;
-  //       this.ThirtyOneToFourtyFiveDaysTotal = 0;
-  //       this.FourtyFiveSixtyDaysTotal = 0;
-  //       this.MoreThanSixtyDaysTotal = 0;
-  //       this.DueAmountTotal = 0;
-  //     }
-  //   })
-  // }
 
   //Dynamic Overall List 
   getOverallList() {
@@ -384,7 +362,7 @@ export class ReportArLeveltwoComponent implements OnInit {
     })
   }
 
-
+ //Dynamic CustomerWise List 
   getCustomerWiseList() {
     this.startDate = this.reportFilter.controls.FromDate.value;
     this.endDate = this.reportFilter.controls.ToDate.value;
@@ -474,7 +452,7 @@ export class ReportArLeveltwoComponent implements OnInit {
 
   }
 
-  //Dynamic Grand Total Calution Methods overall
+  //Dynamic Grand Total Calculation Methods overall
   calculateDynamicHeaders(): string[] {
     let excludedColumns: string[] = ['Sub Category', 'Id']; // Define columns to be excluded
 
@@ -492,14 +470,15 @@ export class ReportArLeveltwoComponent implements OnInit {
     return this.pagedItems.reduce((acc, item) => acc + parseFloat(item[header] || 0), 0);
   }
 
+ //Dynamic Grand Total Calculation Methods Customer Wise 
   calculateHeadersCustomerwise(): string[] {
-    let excludedColumns: string[] = [ 'CustomerID']; // Define columns to be excluded
-
+    let excludedColumns: string[] = ['CustomerID']; // Define columns to be excluded
+  
     if (this.pagedItems.length > 0) {
       return Object.keys(this.pagedItems[0])
         .filter(key => !excludedColumns.includes(key));
     }
-
+  
     return [];
   }
   
@@ -508,20 +487,29 @@ export class ReportArLeveltwoComponent implements OnInit {
   }
   
   customerTotals(header: string): any {
+    // Check if the header corresponds to numeric fields
+    const isNumeric = this.pagedItems.some(item => !isNaN(parseFloat(item[header])));
+  
+    // If none of the fields are numeric, return an empty string
+    if (!isNumeric) {
+      return '';
+    }
+  
     // Calculate total for the specified header
     const total = this.pagedItems.reduce((acc, item) => {
       const value = parseFloat(item[header]);
       return isNaN(value) ? acc : acc + value;
     }, 0);
-    // Convert 0 to empty string
-    return total == 0 ? '' : total;
-  }
   
+    // Return  total 
+    return total
+  }
   
   calculateCustomerTotals(header: string): any {
     const total = this.customerTotals(header);
     return this.isNumeric(total) ? total : '';
   }
+  
   
 
   setPage(page: number) {
@@ -557,6 +545,7 @@ export class ReportArLeveltwoComponent implements OnInit {
         DivisionId: 0,
         OfficeId: 0,
         CustomerId: 0,
+        AgingTypeId: 0,
         Type: 0,
         SubTypeId: 0,
         FromDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
@@ -567,6 +556,7 @@ export class ReportArLeveltwoComponent implements OnInit {
         DivisionId: 0,
         OfficeId: 0,
         CustomerId: 0,
+        AgingTypeId: 0,
         Type: 1,
         SubTypeId: this.subtype,
         FromDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
@@ -577,6 +567,7 @@ export class ReportArLeveltwoComponent implements OnInit {
         DivisionId: 0,
         OfficeId: 0,
         CustomerId: 0,
+        AgingTypeId: 0,
         Type: 2,
         SubTypeId: this.subtypecustomerId,
         FromDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
