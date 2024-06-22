@@ -435,7 +435,7 @@ export class ReportPaymentVoucherComponent implements OnInit {
       //To Remove Time from date field data
       const date = data.Date
       const formattedDate = date.split('T')[0];
-      data.Date = formattedDate;
+      data.Date =  this.datePipe.transform(formattedDate, "dd-MM-yyyy");
       const defalutvalue=0;
       // Merge the symbol and amount into a single string with fixed decimal places
       const mergedICYAmount = `${data['Amount (ICY)'] !== null ? parseFloat(data['Amount (ICY)']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
@@ -621,7 +621,8 @@ export class ReportPaymentVoucherComponent implements OnInit {
       //To Remove Time from date field data
       const date = data.Date
       const formattedDate = date.split('T')[0];
-      data.Date = formattedDate;
+      data.Date =  this.datePipe.transform(formattedDate, "dd-MM-yyyy");
+
 
       const defalutvalue=0;
       // Merge the symbol and amount into a single string with fixed decimal places

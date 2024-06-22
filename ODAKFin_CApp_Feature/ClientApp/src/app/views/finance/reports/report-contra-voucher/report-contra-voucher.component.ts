@@ -383,7 +383,7 @@ export class ReportContraVoucherComponent implements OnInit  {
       //To Remove Time from date field data
       const date = data.Date
       const formattedDate = date.split('T')[0];
-      data.Date = formattedDate;
+      data.Date =  this.datePipe.transform(formattedDate, "dd-MM-yyyy");
       const defalutvalue = 0;
       
        const mergedICYAmount = `${data['Amount'] !== null ? parseFloat(data['Amount']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
@@ -551,7 +551,8 @@ export class ReportContraVoucherComponent implements OnInit  {
        //To Remove Time from date field data
        const date = data.Date
        const formattedDate = date.split('T')[0];
-       data.Date = formattedDate;
+       data.Date =  this.datePipe.transform(formattedDate, "dd-MM-yyyy");
+      // data.Date = formattedDate;
        const defalutvalue = 0;
       
        const mergedICYAmount = data['Amount'] !== null ? parseFloat(data['Amount']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction);
