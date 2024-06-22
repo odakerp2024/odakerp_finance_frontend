@@ -358,13 +358,13 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     //     this.PurchaseCreateForm.get('TDSMaster').disable();
     //   }
     // });
-    // this.PurchaseCreateForm.get('RCMApplicable').valueChanges.subscribe(value => {
-    //   if (value === '1') { // If RCM is selected as "YES"
-    //     this.PurchaseCreateForm.get('GSTGroup').enable(); // Enable the GSTGroup field
-    //   } else { // If RCM is selected as "NO"
-    //     this.PurchaseCreateForm.get('GSTGroup').disable(); // Disable the GSTGroup field
-    //   }
-    // });
+    this.PurchaseCreateForm.get('RCMApplicable').valueChanges.subscribe(value => {
+      if (value === '1') { // If RCM is selected as "YES"
+        this.PurchaseCreateForm.get('IsRCM').enable(); // Enable the GSTGroup field
+      } else { // If RCM is selected as "NO"
+        this.PurchaseCreateForm.get('IsRCM').disable(); // Disable the GSTGroup field
+      }
+    });
   }
 
   onBookingAgainstChange(value: any) {
@@ -1695,23 +1695,44 @@ private downloadFile = (data: HttpResponse<Blob>) => {
   }
 
 
+  // toggleRCM(value: string) {
+   
+  //   if (value === '1') {
+  //     // this.isRCMChecked = true; // Set isRCMChecked to true if "YES" is selected
+  //     this.PurchaseCreateForm.get('IsRCM').setValue(true); // Check the checkbox
+  //   } else if (value === '0') {
+  //     // this.isRCMChecked = false; // Set isRCMChecked to false if "NO" is selected
+  //     this.PurchaseCreateForm.get('IsRCM').setValue(false); // Uncheck the checkbox
+  //   }
+
+  //   this.PurchaseTableList.forEach(item => {
+  //     if (value === '1') {
+  //       item.IsRCM = true;
+  //     } else {
+  //       item.IsRCM = false;
+  //     }
+  //   })
+   
+  //   this.getFinalCalculation();
+  // }
+
   toggleRCM(value: string) {
-
-    if (value === '1') {
-      // this.isRCMChecked = true; // Set isRCMChecked to true if "YES" is selected
-      this.PurchaseCreateForm.get('IsRCM').setValue(true); // Check the checkbox
-    } else if (value === '0') {
-      // this.isRCMChecked = false; // Set isRCMChecked to false if "NO" is selected
-      this.PurchaseCreateForm.get('IsRCM').setValue(false); // Uncheck the checkbox
-    }
-
+    const isRCMChecked = (value === '1');
+    this.PurchaseCreateForm.get('IsRCM').setValue(isRCMChecked);
+  
+    // Update each item's IsRCM property and recalculate GST
     this.PurchaseTableList.forEach(item => {
-      if (value === '1') {
-        item.IsRCM = true;
-      } else {
-        item.IsRCM = false;
-      }
-    })
+      item.IsRCM = isRCMChecked;
+    
+    });
+  
+    // Recalculate final GST values
+    this.getFinalCalculation();
+  }
+  
+  onRCMChange(item: any, event: any) {
+    const isChecked = event.target.checked;
+    item.IsRCM = isChecked;
 
     this.getFinalCalculation();
   }
@@ -1874,13 +1895,34 @@ private downloadFile = (data: HttpResponse<Blob>) => {
       if (e) {
 
 
+    //old gst calculation
+      //   if (this.isSameState && this.PurchaseCreateForm.controls['IsRCM'].value) {
+      //     let info = e.Amountccr * (e.GSTGroup / 100);
+      //     e.CGST = Math.trunc(info / 2);
+      //     e.SGST = Math.trunc(info / 2);
+      //     e.IGST = 0;
+      //   } else if (!this.isSameState && this.PurchaseCreateForm.controls['IsRCM'].value) {
+      //     let info = e.Amountccr * (e.GSTGroup / 100);
+      //     e.CGST = 0;
+      //     e.SGST = 0;
+      //     e.IGST = info;
+      //   } else {
+      //     e.CGST = 0;
+      //     e.SGST = 0;
+      //     e.IGST = 0;
+      //   }
+      // }
+      // CGST += e.CGST ? e.CGST : 0;
+      // SGST += e.SGST ? e.SGST : 0;
+      // IGST += e.IGST ? e.IGST : 0;
 
-        if (this.isSameState && this.PurchaseCreateForm.controls['IsRCM'].value) {
+   //  new gst calculation
+        if (this.isSameState && !e.IsRCM) {
           let info = e.Amountccr * (e.GSTGroup / 100);
           e.CGST = Math.trunc(info / 2);
           e.SGST = Math.trunc(info / 2);
           e.IGST = 0;
-        } else if (!this.isSameState && this.PurchaseCreateForm.controls['IsRCM'].value) {
+        } else if (!this.isSameState && !e.IsRCM) {
           let info = e.Amountccr * (e.GSTGroup / 100);
           e.CGST = 0;
           e.SGST = 0;
@@ -1894,16 +1936,6 @@ private downloadFile = (data: HttpResponse<Blob>) => {
       CGST += e.CGST ? e.CGST : 0;
       SGST += e.SGST ? e.SGST : 0;
       IGST += e.IGST ? e.IGST : 0;
-
-      //Calculate TDS amount based on TDS rate and update the form controls
-      // if (this.vendorTDS > 0) {
-      //   const tdsRate = (subTotalAmount / 100) * this.vendorTDS;
-      //   this.PurchaseCreateForm.controls['TDSRate'].setValue(tdsRate);
-      // } else {
-      //   const tdsRate = (subTotalAmount / 100) * this.vendorLDC
-      //   this.PurchaseCreateForm.controls['TDSRate'].setValue(tdsRate);
-      // }
-
     });
 
     const vendorGSTcategory = this.PurchaseCreateForm.get('VendorGSTCategory').value;
