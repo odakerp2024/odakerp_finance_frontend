@@ -104,13 +104,14 @@
                        style="width: 177.575px;">Account
                    </th>
                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
-                       aria-label="Name: activate to sort column ascending" (click)="sort('Type')"
-                       style="width: 177.575px;">Net Credit
-                   </th>
-                   <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
                        aria-label="Name: activate to sort column ascending" (click)="sort('CustomerName')"
                        style="width: 177.575px;">Net Debit
                    </th>
+                   <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                       aria-label="Name: activate to sort column ascending" (click)="sort('Type')"
+                       style="width: 177.575px;">Net Credit
+                   </th>
+                   
                  </tr>
                </thead>
              
@@ -137,14 +138,15 @@
                           <td (click)="editBalance(balance.ChartOfAccountsId)" style="color: #0366d6; cursor: pointer;">
                             <span class="child-account">{{ balance.ChildAccountName }}</span>
                           </td>
-                          <td class="hyperTextColor text-right" *ngIf="balance.ChildTransaction_Type === 'Credit'">
-                            {{ balance.ChildNet_Balance | dynamicDecimal }}
-                          </td>
-                          <td class="hyperTextColor text-right" *ngIf="balance.ChildTransaction_Type !== 'Credit'">0</td>
                           <td class="hyperTextColor text-right" *ngIf="balance.ChildTransaction_Type === 'Debit'">
                             {{ balance.ChildNet_Balance | dynamicDecimal }}
                           </td>
                           <td class="hyperTextColor text-right" *ngIf="balance.ChildTransaction_Type !== 'Debit'">0</td>
+                          <td class="hyperTextColor text-right" *ngIf="balance.ChildTransaction_Type === 'Credit'">
+                            {{ balance.ChildNet_Balance | dynamicDecimal }}
+                          </td>
+                          <td class="hyperTextColor text-right" *ngIf="balance.ChildTransaction_Type !== 'Credit'">0</td>
+                          
                         </tr>
                       </ng-container>
                       
@@ -179,8 +181,9 @@
                   <td colspan="1" class="text-left">
                     <span style="font-size: medium;">Grand Total : </span>
                   </td>
-                  <td class="text-center" colspan="1">{{ totalcreditamount | dynamicDecimal }}</td>
                   <td class="text-center" colspan="1">{{ totaldebitamount | dynamicDecimal }}</td>
+                  <td class="text-center" colspan="1">{{ totalcreditamount | dynamicDecimal }}</td>
+                  
                 </tr>
               </tfoot>
              
