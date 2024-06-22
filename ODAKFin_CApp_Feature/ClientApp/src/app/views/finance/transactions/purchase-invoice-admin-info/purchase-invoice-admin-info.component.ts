@@ -486,7 +486,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
             this.FileList = result.data.Table2;
           }
         };
-        this.toggleRCM(info.RCMApplicable);
+       // this.toggleRCM(info.RCMApplicable);
         this.checkSameState();
         this.getFinalCalculation();
         this.PurchaseCreateForm.disable();
