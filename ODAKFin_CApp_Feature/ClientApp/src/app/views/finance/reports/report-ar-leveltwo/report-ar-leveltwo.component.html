@@ -1,4 +1,3 @@
-
 <div class="container-fluid">
     <form [formGroup]="reportFilter">
         <div class="card mt-0 p-3">
@@ -74,7 +73,7 @@
                             </ng-select>
                         </div>
 
-                        <div class="col-2"  *ngIf="type != 'overall'">
+                        <div class="col-2" *ngIf="type != 'overall'">
                             <label class=" fontstyles">CUSTOMER</label>
                             <ng-select class="searchdropdown" formControlName="CustomerId" [clearable]="false"
                                 name="CategoryId" id="CategoryId">
@@ -90,12 +89,12 @@
 
                         <div class="col-2">
                             <label class="str">Aging Group</label>
-                            <ng-select class="searchdropdown" [clearable]="false"  formControlName="AgingTypeId" >
+                            <ng-select class="searchdropdown" [clearable]="false" formControlName="AgingTypeId">
                                 <ng-option [value]="0" [disabled]="true">--SELECT AGING GROUP--</ng-option>
                                 <ng-option *ngFor="let aging of agingGroupDropdown" [value]="aging.AgingId">
                                     {{aging.AgingGroupName | uppercase}}
                                 </ng-option>
-                              </ng-select>
+                            </ng-select>
                         </div>
 
                     </div>
@@ -103,8 +102,7 @@
 
                 <div class="col-2" style="padding-top: 15px;">
                     <div class="text-center">
-                        <button type="button" class="btn btn-primary text-white col-auto"
-                            (click)="search()">
+                        <button type="button" class="btn btn-primary text-white col-auto" (click)="search()">
                             SEARCH
                         </button>
                     </div>
@@ -128,8 +126,10 @@
                     <div class="col-sm-12 justify-content-end text-center ">
                         <h3 class="title">NAVIO SHIPPING PRIVATE LIMITED</h3>
                         <h2 class="subtitle" *ngIf="type == 'overall'">Receivable Aging Summary</h2>
-                        <h2 class="subtitle" *ngIf="type == 'customerwise'">Receivable Aging Summary - Customer Wise</h2>
-                        <h2 class="subtitle" *ngIf="type == 'customerinvoicewise'">Receivable Aging Summary - Customer Invoice Wise</h2>
+                        <h2 class="subtitle" *ngIf="type == 'customerwise'">Receivable Aging Summary - Customer Wise
+                        </h2>
+                        <h2 class="subtitle" *ngIf="type == 'customerinvoicewise'">Receivable Aging Summary - Customer
+                            Invoice Wise</h2>
 
 
                         <p>FROM {{ startDate | date: commonDataService.convertToLowerCaseDay(entityDateFormat) }} -
@@ -138,8 +138,9 @@
 
                     </div>
 
-                    <button type="button" class="btn btn-success bmd-btn-edit text-white float-right mr-5 mt-5" style="position: absolute; top: 0; right: 0;" 
-                    *ngIf="type != 'overall'" (click)="goBack()"><i class="material-icons editicon">reply</i>
+                    <button type="button" class="btn btn-success bmd-btn-edit text-white float-right mr-5 mt-5"
+                        style="position: absolute; top: 0; right: 0;" *ngIf="type != 'overall'" (click)="goBack()"><i
+                            class="material-icons editicon">reply</i>
                     </button>
 
                     <div class="col-sm-12 text-right d-flex justify-content-end">
@@ -153,75 +154,8 @@
                                 (click)="export()" alt="logo">
                         </div>
                     </div>
-                    <!-- 
-                    <div class="col-12" *ngIf="type == 'overall'">
-                        <table class="table table-responsive table-bordered w-100 dataTable no-footer">
-                            <thead>
-                                <tr>
-                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('Payees')" style="width: 177.575px;">Sub Category</th>
 
-                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('ZeroToFifteenDaysCount')" style="width: 177.575px;">0-15 DAYS </th>
-
-                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('SixteenToThirtyDaysCount')" style="width: 177.575px;">16-30 DAYS</th>
-
-                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('ThirtyOneToFourtyFiveDaysCount')" style="width: 177.575px;">31-45 DAYS</th>
-                                    
-                                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('FourtyFiveSixtyDaysCount')" style="width: 177.575px;">45-60 DAYS</th>
-
-                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('MoreThanSixtyDaysCount')" style="width: 177.575px;">>60 DAYS</th>
-
-                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('DueAmount')" style="width: 177.575px;">Balance  (Company Currency)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let data of pagedItems">
-                                  <td class="hyperTextColor" type="customerwise">
-                                    <a (click)="showCustomerWise(data.Id)">{{ data['Sub Category'] }}</a>
-                                  </td>
-                                  <td>{{ data['0-15 DAYS'] }}</td>
-                                  <td>{{ data['16-30 DAYS'] }}</td>
-                                  <td>{{ data['31-45 DAYS'] }}</td>
-                                  <td>{{ data['45-60 DAYS'] }}</td>
-                                  <td>{{ data['>60 DAYS'] }}</td>
-                                  <td class="text-right hyperTextColor">{{ data['Balance (Company Currency)'] | dynamicDecimal: entityFraction }}</td>
-                                </tr>
-                              
-                                <tr *ngIf="pagedItems.length === 0">
-                                  <td class="text-center" colspan="10">No records found</td>
-                                </tr>
-                              </tbody>
-                              
-                            <tfoot class="table-footer"  *ngIf="pagedItems.length > 0">
-                                <tr class="footer-position-sticky">
-                                  <td colspan="1" class="text-left">
-                                    <span style="font-size: medium;">Grand Total : </span>
-                                  </td>
-                                  <td>{{ZeroToFifteenDaysTotal}}</td>
-                                  <td>{{SixteenToThirtyDaysTotal}}</td>
-                                  <td>{{ThirtyOneToFourtyFiveDaysTotal}}</td>
-                                  <td>{{FourtyFiveSixtyDaysTotal}}</td>
-                                  <td>{{MoreThanSixtyDaysTotal}}</td>
-                                  <td class="text-right">{{DueAmountTotal | dynamicDecimal: entityFraction }}</td>
-                                </tr>
-                              </tfoot>
-                        </table>
-                    </div> -->
-
-
+                    <!-- Dynamic Headers By Overall -->
                     <div class="col-12" *ngIf="type == 'overall'">
                         <table class="table table-responsive table-bordered w-100 dataTable no-footer">
                             <thead>
@@ -237,19 +171,23 @@
                                     <td *ngFor="let header of headers; let i = index"
                                         [class.text-right]="header === 'Balance (Company Currency)'"
                                         (click)="header === 'Sub Category' ? showCustomerWise(row['Id']) : null">
-                                        <a *ngIf="header === 'Sub Category'" class="hyperlink-style">{{ row[header] }}</a>
+                                        <a *ngIf="header === 'Sub Category'" class="hyperlink-style">{{ row[header]
+                                            }}</a>
                                         <ng-container *ngIf="header === 'Balance (Company Currency)'">
-                                          <a class="hyperlink-style" (click)="showBalanceDetails(row)">{{ row[header] | dynamicDecimal: entityFraction }}</a>
+                                            <a class="hyperlink-style" (click)="showBalanceDetails(row)">{{ row[header]
+                                                | dynamicDecimal: entityFraction }}</a>
                                         </ng-container>
-                                        <span *ngIf="header !== 'Sub Category' && header !== 'Balance (Company Currency)'">{{ row[header] }}</span>
+                                        <span
+                                            *ngIf="header !== 'Sub Category' && header !== 'Balance (Company Currency)'">{{
+                                            row[header] }}</span>
                                     </td>
-                                  </tr>
-                                <tr *ngIf="pagedItems.length === 0">
+                                </tr>
+                                <tr *ngIf="headers.length === 0">
                                     <td class="text-center" colspan="10">No records found</td>
                                 </tr>
                             </tbody>
                             <!-- Table footer -->
-                            <tfoot class="table-footer" *ngIf="pagedItems.length > 0">
+                            <tfoot class="table-footer" *ngIf="headers.length > 0">
                                 <tr class="footer-position-sticky">
                                     <td class="text-left">
                                         <span style="font-size: medium;">Grand Total : </span>
@@ -263,193 +201,129 @@
                             </tfoot>
                         </table>
                     </div>
-                    
 
-                    <div class="col-12"  *ngIf="type == 'customerwise'">
+                    <!--Dynamic Headers By CustomerWise  -->
+                    <div class="col-12" *ngIf="type == 'customerwise'">
                         <table class="table table-responsive table-bordered w-100 dataTable no-footer">
                             <thead>
                                 <tr>
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('Payees')" style="width: 177.575px;">Sub Category</th>
-
-                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('CustomerName')" style="width: 177.575px;">Customer</th>
-
-                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('CityName')" style="width: 177.575px;">Branch</th>
-
-                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('SalesPIC')" style="width: 177.575px;">Sales Person</th>
-
-                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('CreditDays')" style="width: 177.575px;">Credit Days</th>
-
-                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('CreditAmount')" style="width: 177.575px;">Credit Amount</th>
-
-                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('ZeroToFifteenDaysCount')" style="width: 177.575px;"> 0-15 DAYS</th>
-
-                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('SixteenToThirtyDaysCount')" style="width: 177.575px;">16-30 DAYS </th>
-
-                                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('ThirtyOneToFourtyFiveDaysCount')" style="width: 177.575px;"> 31-45 DAYS </th>
-
-                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('FourtyFiveSixtyDaysCount')" style="width: 177.575px;">45-60 DAYS </th>    
-     
-                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('MoreThanSixtyDaysCount')" style="width: 177.575px;">>60 DAYS </th>     
-
-                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('BalanceCCY')" style="width: 177.575px;">Balance(Company Currency) </th>
-
-                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('BalanceICY')" style="width: 177.575px;"> Balance (Invoice Currency)</th> 
+                                        (click)="sort('header')" style="width: 177.575px;"
+                                        *ngFor="let header of calculateHeadersCustomerwise()">{{ header }}</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let data of pagedItems">
-                                  <td>{{ data['Sub Category'] }}</td>
-                                  <td class="hyperTextColor" [title]="data.Customer">
-                                    <a (click)="showCustomerInvoiceWise(data.CustomerID)">
-                                      {{ (data.Customer && data.Customer.length > 20) ? data.Customer.slice(0, 20) + '-' : data.Customer }}
-                                    </a>
-                                  </td>
-                                  <td>{{ data.Branch }}</td>
-                                  <td>{{ data['Sales Person'] }}</td>
-                                  <td>{{ data['Credit Days'] }}</td>
-                                  <td class="text-right hyperTextColor">{{ data['Credit Amount'] | dynamicDecimal: entityFraction }}</td>
-                                  <td>{{ data['0-15 DAYS'] }}</td>
-                                  <td>{{ data['16-30 DAYS'] }}</td>
-                                  <td>{{ data['31-45 DAYS'] }}</td>
-                                  <td>{{ data['45-60 DAYS'] }}</td>
-                                  <td>{{ data['>60 DAYS'] }}</td>
-                                  <td class="text-right hyperTextColor">{{ data['Balance (Company Currency)'] | dynamicDecimal: entityFraction }}</td>
-                                  <td class="text-right hyperTextColor">{{ data['Balance (Invoice currency)'] | dynamicDecimal: entityFraction }}</td>
+                                <tr *ngFor="let row of pagedItems">
+                                    <td *ngFor="let header of calculateHeadersCustomerwise(); let i = index"
+                                        [class.text-right]="header === 'Balance (Company Currency)' || header === 'Balance (Invoice currency)' || header === 'Credit Amount'"
+                                        (click)="header === 'Customer' ? showCustomerInvoiceWise(row['CustomerID']) : null">
+                                
+                                        <a *ngIf="header === 'Customer'" class="hyperlink-style"
+                                        (click)="showCustomerInvoiceWise(row.CustomerID)"
+                                        [title]="row[header]">
+                                        {{ (row[header] && row[header].length > 20) ? row[header].slice(0, 20) + '-' : row[header] }}
+                                        </a>
+                                
+                                        <ng-container *ngIf="header === 'Balance (Company Currency)' || header === 'Balance (Invoice currency)' || header === 'Credit Amount'">
+                                            <a class="hyperlink-style">{{ row[header] | dynamicDecimal: entityFraction }}</a>
+                                        </ng-container>
+                                
+                                        <span *ngIf="header !== 'Customer' && header !== 'Balance (Company Currency)' && header !== 'Balance (Invoice currency)' && header !== 'Credit Amount'">
+                                            {{ row[header]  }}
+                                        </span>
+                                    </td>
                                 </tr>
-                              
+                                
                                 <tr *ngIf="pagedItems.length === 0">
-                                  <td class="text-center" colspan="13">No records found</td>
+                                    <td class="text-center" [attr.colspan]="calculateHeadersCustomerwise().length">No
+                                        records found</td>
                                 </tr>
-                              </tbody>
-                              
-                            <tfoot class="table-footer"  *ngIf="pagedItems.length > 0">
+                            </tbody>
+
+                            <tfoot class="table-footer" *ngIf="pagedItems.length > 0">
                                 <tr class="footer-position-sticky">
-                                  <td colspan="1" class="text-left">
-                                    <span style="font-size: medium;">Grand Total : </span></td>
-                                  <td></td>
-                                  <td></td>
-                                  <td></td>
-                                  <td></td>
-                                  <td class="text-right">{{CreditAmountTotal | dynamicDecimal: entityFraction}}</td>
-                                  <td>{{ZeroToFifteenDaysTotal}}</td>
-                                  <td>{{SixteenToThirtyDaysTotal}}</td>
-                                  <td>{{ThirtyOneToFourtyFiveDaysTotal}}</td>
-                                  <td>{{FourtyFiveSixtyDaysTotal}}</td>
-                                  <td>{{MoreThanSixtyDaysTotal}}</td>
-                                  <td class="text-right">{{ DueAmountTotal | dynamicDecimal: entityFraction }}</td>
-                                  <td class="text-right">{{BalanceICYTotal | dynamicDecimal: entityFraction }}</td>
+                                    <td class="text-left">
+                                        <span style="font-size: medium;">Grand Total : </span>
+                                    </td>
+                                    <ng-container
+                                        *ngFor="let header of calculateHeadersCustomerwise(); let last = last">
+                                        <td [class.text-right]="header === 'Balance (Company Currency)' || header === 'Balance (Invoice currency)' || header === 'Credit Amount'"
+                                            *ngIf="header !== 'Customer' && isNumeric(customerTotals(header))">
+                                            {{ calculateCustomerTotals(header) | dynamicDecimal: entityFraction }}
+                                        </td>
+                                        <td *ngIf="header !== 'Customer' && !isNumeric(customerTotals(header))">
+                                            <!-- Display empty cell for non-numeric totals -->
+                                        </td>
+                                    </ng-container>
                                 </tr>
-                              </tfoot>
+                            </tfoot>
+
                         </table>
                     </div>
 
-                    <div class="col-12"  *ngIf="type == 'customerinvoicewise'">
+                     <!-- Dynamic Headers By CustomerInvoiceWise -->
+                    <div class="col-12" *ngIf="type == 'customerinvoicewise'">
                         <table class="table table-responsive table-bordered w-100 dataTable no-footer">
                             <thead>
                                 <tr>
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('CustomerName')" style="width: 177.575px;">Customer</th>
-
-                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('CityName')" style="width: 177.575px;">Branch</th>
-
-                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="1" aria-label="Date: activate to sort column ascending"
-                                        (click)="sort('InvoiceDate')" style="width: 177.575px;">Date</th>
-
-                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('InvoiceNumber')" style="width: 177.575px;">Invoice #</th>
-
-                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('BLType')" style="width: 177.575px;">Transaction Type</th>
-
-                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('InvoiceAmountCCY')" style="width: 177.575px;">Invoice Amount</th>
-
-                                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('Aging')" style="width: 177.575px;">Age (Days)</th>
-
-                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('AgingSlab')" style="width: 177.575px;">Aging Slab</th>    
-
-                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('DueAmount')" style="width: 177.575px;">Balance (Invoice Currency)</th>
-
-                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('DueAmountCCY')" style="width: 177.575px;">Balance(Company Currency)
-                                    </th>
+                                        (click)="sort('header')" style="width: 177.575px;"
+                                        *ngFor="let header of calculateHeadersInvoicewise()">{{ header }}</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let data of pagedItems">
-                                  <td><a>{{ data.Customer }}</a></td>
-                                  <td>{{ data.Branch }}</td>
-                                  <td>{{ data['Date'] | date: commonDataService.convertToLowerCaseDay(entityDateFormat) }}</td>
-                                  <td class="hyperTextColor">{{ data['Invoice #'] }}</td>
-                                  <td class="hyperTextColor">{{ data['Transaction Type'] }}</td>
-                                  <td class="text-right hyperTextColor">{{ data['Invoice Amount'] | dynamicDecimal: entityFraction }}</td>
-                                  <td>{{ data['Age (Days)'] }}</td>
-                                  <td>{{ data['Aging Slab'] }}</td>
-                                  <td class="text-right hyperTextColor">{{ data['Balance (Invoice currency)'] | dynamicDecimal: entityFraction }}</td>
-                                  <td class="text-right hyperTextColor">{{ data['Balance (Company Currency)'] | dynamicDecimal: entityFraction }}</td>
+                                <tr *ngFor="let row of pagedItems">
+                                    <td *ngFor="let header of calculateHeadersInvoicewise(); let i = index"
+                                        [class.text-right]="header === 'Balance (Company Currency)' || header === 'Balance (Invoice currency)' || header === 'Invoice Amount'">
+                                
+                                        <ng-container [ngSwitch]="header">
+                                
+                                            <!-- Condition for 'Invoice #' column -->
+                                            <a *ngSwitchCase="'Invoice #'" class="hyperlink-style">{{ row[header] }}</a>
+                                
+                                            <!-- Condition for 'Date' column -->
+                                            <span *ngSwitchCase="'Date'">{{ row[header] | date: commonDataService.convertToLowerCaseDay(entityDateFormat) }}</span>
+                                
+                                            <!-- Condition for amount columns -->
+                                            <a *ngSwitchCase="'Balance (Company Currency)'" class="hyperlink-style">{{ row[header] | dynamicDecimal: entityFraction }}</a>
+                                            <a *ngSwitchCase="'Balance (Invoice currency)'" class="hyperlink-style">{{ row[header] | dynamicDecimal: entityFraction }}</a>
+                                            <a *ngSwitchCase="'Invoice Amount'" class="hyperlink-style">{{ row[header] | dynamicDecimal: entityFraction }}</a>
+                                
+                                            <!-- Default condition for other columns -->
+                                            <span *ngSwitchDefault>{{ row[header] }}</span>
+                                
+                                        </ng-container>
+                                    </td>
                                 </tr>
-                              
+                                
+                                
                                 <tr *ngIf="pagedItems.length === 0">
-                                  <td class="text-center" colspan="10">No records found</td>
+                                    <td class="text-center" [attr.colspan]="calculateHeadersInvoicewise().length">No
+                                        records found</td>
                                 </tr>
-                              </tbody>
-                              
-                            <tfoot class="table-footer"   *ngIf="pagedItems.length > 0">
-                                <tr class="footer-position-sticky">
-                                  <td colspan="1" class="text-left">
-                                    <span style="font-size: medium;">Grand Total : </span>
-                                  </td>
-                                  <td colspan="1" ></td>
-                                  <td colspan="1" ></td>
-                                  <td colspan="1" ></td>
-                                  <td colspan="1" ></td>
-                                  <td colspan="1" class="text-right">{{InvoiceCCYTotal | dynamicDecimal: entityFraction}}</td>
-                                  <td colspan="1" >{{AgingTotal}}
-                                  <td></td> 
-                                  <td colspan="1" class="text-right">{{DueAmountTotal | dynamicDecimal: entityFraction}}</td>
-                                  <td colspan="1" class="text-right">{{DueAmountCCYTotal | dynamicDecimal: entityFraction}}</td>
-                                </tr>
-                              </tfoot>
+                                </tbody>
+
+                                <tfoot class="table-footer" *ngIf="pagedItems.length > 0">
+                                    <tr class="footer-position-sticky">
+                                        <td class="text-left">
+                                            <span style="font-size: medium;">Grand Total : </span>
+                                        </td>
+                                        <ng-container
+                                            *ngFor="let header of calculateHeadersInvoicewise(); let last = last">
+                                            <td [class.text-right]="header === 'Balance (Company Currency)' || header === 'Balance (Invoice currency)' 
+                                            || header === 'Invoice Amount'"
+                                                *ngIf="header !== 'Customer' && isNumeric(InvoiceTotals(header))">
+                                                {{ calculateInvoicewise(header) | dynamicDecimal: entityFraction }}
+                                            </td>
+                                           
+                                            <td *ngIf="header !== 'Customer' && !isNumeric(InvoiceTotals(header))">
+                                                <!-- Display empty cell for non-numeric totals -->
+                                            </td>
+                                        </ng-container>
+                                    </tr>
+                                </tfoot>
                         </table>
                     </div>
 

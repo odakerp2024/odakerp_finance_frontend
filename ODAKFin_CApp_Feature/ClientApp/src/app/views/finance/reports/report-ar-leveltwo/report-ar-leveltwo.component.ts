@@ -216,7 +216,7 @@ export class ReportArLeveltwoComponent implements OnInit {
         OfficeId: [0],
         CustomerId: [0],
         Type: [1],
-        AgingTypeId: [0],
+        AgingTypeId: [1],
         SubTypeId: [this.subtype],
         FromDate: [this.startDate],
         ToDate: [this.endDate],
@@ -228,8 +228,8 @@ export class ReportArLeveltwoComponent implements OnInit {
         DivisionId: [0],
         OfficeId: [0],
         CustomerId: [0],
-        Type: [1],
-        AgingTypeId: [0],
+        Type: [2],
+        AgingTypeId: [1],
         SubTypeId: [this.subtypecustomerId],
         FromDate: [this.startDate],
         ToDate: [this.endDate],
@@ -305,29 +305,7 @@ export class ReportArLeveltwoComponent implements OnInit {
       console.error(error);
     }
   }
-  // getOverallList() {
-  //   this.startDate = this.reportFilter.controls.FromDate.value;
-  //   this.endDate = this.reportFilter.controls.ToDate.value;
 
-  //   this.reportService.getAgingSummaryList(this.reportFilter.value).subscribe(result => {
-  //     this.reportList = [];
-  //     if (result['data'].Table.length > 0) {
-  //       this.reportList = result['data'].Table;
-  //       this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
-  //       this.setPage(1);
-  //       this.calculateTotalDays(this.reportList);
-  //     } else {
-  //       this.pager = {};
-  //       this.pagedItems = [];
-  //       this.ZeroToFifteenDaysTotal = 0;
-  //       this.SixteenToThirtyDaysTotal = 0;
-  //       this.ThirtyOneToFourtyFiveDaysTotal = 0;
-  //       this.FourtyFiveSixtyDaysTotal = 0;
-  //       this.MoreThanSixtyDaysTotal = 0;
-  //       this.DueAmountTotal = 0;
-  //     }
-  //   })
-  // }
 
   //Dynamic Overall List 
   getOverallList() {
@@ -364,108 +342,64 @@ export class ReportArLeveltwoComponent implements OnInit {
 
     this.reportService.getAgingSummaryList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
-      if (result['data'].Table.length > 0) {
+      if (result.message == "Success" && result.data && result.data.Table) {
         this.reportList = result['data'].Table;
-        this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
-        this.setPage(1);
-        this.calculateTotalDays(this.reportList);
-      } else {
-        this.pager = {};
-        this.pagedItems = [];
-        this.CreditAmountTotal = 0;
-        this.ZeroToFifteenDaysTotal = 0;
-        this.SixteenToThirtyDaysTotal = 0;
-        this.ThirtyOneToFourtyFiveDaysTotal = 0;
-        this.FourtyFiveSixtyDaysTotal = 0;
-        this.MoreThanSixtyDaysTotal = 0;
-        this.DueAmountTotal = 0;
-        this.BalanceICYTotal = 0;
-      }
-    })
+        let tableData = result.data.Table;
+       
+        if (tableData.length > 0) {
+          this.headers = Object.keys(tableData[0]); 
+
+          // Extract 'Balance (Company Currency)' field and format it
+          this.pagedItems = tableData.map(row => ({
+            ...row,
+            'Invoice Amount': Number(row['Invoice Amount']).toFixed(this.entityFraction),
+            'Balance (Invoice currency)': Number(row['Balance (Invoice currency)']).toFixed(this.entityFraction),
+            'Balance (Company Currency)': Number(row['Balance (Company Currency)']).toFixed(this.entityFraction)
+          }));          
+          this.setPage(1);
+        } else {
+          this.headers = [];
+          this.pager = {};
+          this.pagedItems = [];
+        }
+      } console.error();
+    });
   }
 
-
+ //Dynamic CustomerWise List 
   getCustomerWiseList() {
     this.startDate = this.reportFilter.controls.FromDate.value;
     this.endDate = this.reportFilter.controls.ToDate.value;
 
     this.reportService.getAgingSummaryList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
-      if (result['data'].Table.length > 0) {
+      if (result.message == "Success" && result.data && result.data.Table) {
         this.reportList = result['data'].Table;
-        this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
-        this.setPage(1);
-        this.calculateTotalDays(this.reportList);
-      } else {
-        this.pager = {};
-        this.pagedItems = [];
-        this.DueAmountTotal = 0;
-        this.AgingTotal = 0;
-        this.InvoiceCCYTotal = 0;
-        this.DueAmountCCYTotal = 0;
+        let tableData = result.data.Table;
+       
+        if (tableData.length > 0) {
+          let headers = Object.keys(tableData[0]); // Assuming Table[0] has headers
+          this.headers = headers.filter(header => header !== 'CustomerID'); 
 
-      }
-    })
+          // Extract 'Balance (Company Currency)' field and format it
+          this.pagedItems = tableData.map(row => ({
+            ...row,
+            'Balance (Company Currency)': Number(row['Balance (Company Currency)']).toFixed(this.entityFraction),
+            'Balance (Invoice currency)': Number(row['Balance (Invoice currency)']).toFixed(this.entityFraction),
+            'Credit Amount': Number(row['Credit Amount']).toFixed(this.entityFraction)
+          }));          
+          this.setPage(1);
+        } else {
+          this.headers = [];
+          this.pager = {};
+          this.pagedItems = [];
+        }
+      } console.error();
+    });
   }
 
-
-  calculateTotalDays(reportList: any[]): void {
-    let zeroToFifteenDaysTotal = 0;
-    let sixteenToThirtyDaysTotal = 0;
-    let thirtyOneToFortyFiveDaysTotal = 0;
-    let fortyFiveToSixtyDaysTotal = 0;
-    let moreThanSixtyDaysTotal = 0;
-    let dueAmountTotal = 0;
-    let creditAmountTotal = 0;
-    let amountICYTotal = 0;
-    let agingTotal = 0;
-    let invoiceCCYTotal = 0;
-    let dueAmountCCYTotal = 0;
-
-    if (this.type == "overall") {
-      reportList.forEach(item => {
-
-        dueAmountTotal += item['Balance (Company Currency)'];
-      });
-
-      this.DueAmountTotal = dueAmountTotal;
-    }
-    else if (this.type == "customerwise") {
-      reportList.forEach(item => {
-        creditAmountTotal += item['Credit Amount'];
-        zeroToFifteenDaysTotal += item['0-15 DAYS'];
-        sixteenToThirtyDaysTotal += item['16-30 DAYS'];
-        thirtyOneToFortyFiveDaysTotal += item['31-45 DAYS'];
-        fortyFiveToSixtyDaysTotal += item['45-60 DAYS'];
-        moreThanSixtyDaysTotal += item['>60 DAYS'];
-        dueAmountTotal += item['Balance (Company Currency)'];
-        amountICYTotal += item['Balance (Invoice currency)'];
-      });
-      this.CreditAmountTotal = creditAmountTotal;
-      this.ZeroToFifteenDaysTotal = zeroToFifteenDaysTotal;
-      this.SixteenToThirtyDaysTotal = sixteenToThirtyDaysTotal;
-      this.ThirtyOneToFourtyFiveDaysTotal = thirtyOneToFortyFiveDaysTotal;
-      this.FourtyFiveSixtyDaysTotal = fortyFiveToSixtyDaysTotal;
-      this.MoreThanSixtyDaysTotal = moreThanSixtyDaysTotal;
-      this.DueAmountTotal = dueAmountTotal;
-      this.BalanceICYTotal = amountICYTotal;
-    }
-    else {
-      reportList.forEach(item => {
-        agingTotal += item['Age (Days)'];
-        invoiceCCYTotal += item['Invoice Amount'];
-        dueAmountTotal += item['Balance (Invoice currency)'];
-        dueAmountCCYTotal += item['Balance (Company Currency)'];
-      });
-      this.AgingTotal = agingTotal;
-      this.InvoiceCCYTotal = invoiceCCYTotal;
-      this.DueAmountTotal = dueAmountTotal;
-      this.DueAmountCCYTotal = dueAmountCCYTotal;
-    }
-
-  }
-
-  //Dynamic Grand Total Calution Methods
+  
+  //Dynamic Grand Total Calculation Methods overall
   calculateDynamicHeaders(): string[] {
     let excludedColumns: string[] = ['Sub Category', 'Id']; // Define columns to be excluded
 
@@ -477,11 +411,91 @@ export class ReportArLeveltwoComponent implements OnInit {
     return [];
   }
 
+
   calculateTotals(header: string): number {
     // Calculate total for the specified header
     return this.pagedItems.reduce((acc, item) => acc + parseFloat(item[header] || 0), 0);
   }
 
+ //Dynamic Grand Total Calculation Methods Customer Wise 
+  calculateHeadersCustomerwise(): string[] {
+    let excludedColumns: string[] = ['CustomerID']; // Define columns to be excluded
+  
+    if (this.pagedItems.length > 0) {
+      return Object.keys(this.pagedItems[0])
+        .filter(key => !excludedColumns.includes(key));
+    }
+  
+    return [];
+  }
+  
+  isNumeric(value: any): boolean {
+    return !isNaN(parseFloat(value)) && isFinite(value);
+  }
+  
+  customerTotals(header: string): any {
+    // Check if the header corresponds to numeric fields
+    const isNumeric = this.pagedItems.some(item => !isNaN(parseFloat(item[header])));
+  
+    // If none of the fields are numeric, return an empty string
+    if (!isNumeric) {
+      return '';
+    }
+  
+    // Calculate total for the specified header
+    const total = this.pagedItems.reduce((acc, item) => {
+      const value = parseFloat(item[header]);
+      return isNaN(value) ? acc : acc + value;
+    }, 0);
+  
+    // Return  total 
+    return total
+  }
+  
+  calculateCustomerTotals(header: string): any {
+    const total = this.customerTotals(header);
+    return this.isNumeric(total) ? total : '';
+  }
+  
+  //Dynamic Header Invoice Wise 
+  calculateHeadersInvoicewise(): string[] {
+    if (this.pagedItems.length > 0) {
+      return Object.keys(this.pagedItems[0]) 
+    }
+    return [];
+  }
+  
+  isDate(value: any): boolean {
+    return !isNaN(Date.parse(value));
+}
+
+InvoiceTotals(header: string): any {
+  const specifiedFields = [
+    "Balance (Invoice currency)",
+    "Balance (Company Currency)",
+    "Invoice Amount",
+    "Age (Days)"
+  ];
+
+  // Check if the header is one of the specified fields
+  if (!specifiedFields.includes(header)) {
+    return ''; // Return empty for non-specified fields
+  }
+
+  // Calculate total for the specified header
+  const total = this.pagedItems.reduce((acc, item) => {
+    const value = parseFloat(item[header]);
+    return isNaN(value) ? acc : acc + value;
+  }, 0);
+
+  return total;
+}
+
+  
+calculateInvoicewise(header: string): any {
+  const total = this.InvoiceTotals(header);
+  return this.isNumeric(total) ? total : '';
+}
 
   setPage(page: number) {
     if (page < 1 || page > this.pager.totalPages) return;
@@ -516,6 +530,7 @@ export class ReportArLeveltwoComponent implements OnInit {
         DivisionId: 0,
         OfficeId: 0,
         CustomerId: 0,
+        AgingTypeId: 0,
         Type: 0,
         SubTypeId: 0,
         FromDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
@@ -526,6 +541,7 @@ export class ReportArLeveltwoComponent implements OnInit {
         DivisionId: 0,
         OfficeId: 0,
         CustomerId: 0,
+        AgingTypeId: 0,
         Type: 1,
         SubTypeId: this.subtype,
         FromDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
@@ -536,6 +552,7 @@ export class ReportArLeveltwoComponent implements OnInit {
         DivisionId: 0,
         OfficeId: 0,
         CustomerId: 0,
+        AgingTypeId: 0,
         Type: 2,
         SubTypeId: this.subtypecustomerId,
         FromDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
