@@ -598,7 +598,7 @@
                                     <td>{{data.Amountccr}}</td>
                                     <td>{{data.TDSName}}</td>
                                     <td>{{data.GSTGroup ? (data.GSTGroup + '%')  : '-' }}</td>
-                                    <td><input class='disable-input' type="checkbox" [checked]="data.IsRCM"></td>
+                                    <td><input class='disable-input'  (change)="onRCMChange(data, $event)" type="checkbox" [checked]="data.IsRCM "></td>
                                     <td>
                                         <input class="vertal checkbox" type="radio" name="AlertCheck" id="RadioCheck"
                                             (click)="OnClickRadio(i)" />
