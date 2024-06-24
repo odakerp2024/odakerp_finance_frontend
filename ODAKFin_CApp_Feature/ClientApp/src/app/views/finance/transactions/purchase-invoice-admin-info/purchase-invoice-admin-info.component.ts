@@ -97,6 +97,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
   fileUrl: string;
   AccountList: any[];
   groupedCoaTypeList: { [key: string]: any[] };
+  tsdDetails: any;
 
   constructor(
     private fb: FormBuilder,
@@ -161,7 +162,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
   }
 
   getParentAccountList() {
-    
+
     this.commonDataService.getChartaccountsFilter().subscribe(async data => {
       this.AccountList = [];
       if (data["data"].length > 0) {
@@ -173,7 +174,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
 
   }
 
- groupDataByCEOGroupId(data: any[]): { [key: string]: any[] } {
+  groupDataByCEOGroupId(data: any[]): { [key: string]: any[] } {
     const groupedData: { [key: string]: any[] } = {};
 
     for (const item of data) {
@@ -234,7 +235,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
 
         if (data[0].SubfunctionID == paylod.SubfunctionID) {
 
-          if (data[0].Delete_Opt != 2) {
+          if (data[0].Update_Opt != 2) {
             Swal.fire('Please Contact Administrator');
           }
           else {
@@ -407,11 +408,11 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
         await this.getVendorDetailsInfo(info.VendorBranch);
 
 
-      //  this.onBookingAgainstChange(info.BookingAgainst == 0 ? 'general' : 'provision');
+        //  this.onBookingAgainstChange(info.BookingAgainst == 0 ? 'general' : 'provision');
         const bookingType = info.BookingAgainst == 0 ? 'general' : 'provision';
-       // console.log('Calling onBookingAgainstChange with:', bookingType);
+        // console.log('Calling onBookingAgainstChange with:', bookingType);
         this.onBookingAgainstChange(bookingType);
-       // console.log('Before Patching', this.PurchaseCreateForm.value)
+        // console.log('Before Patching', this.PurchaseCreateForm.value)
         this.PurchaseCreateForm.patchValue({
           PurchaseInvoiceId: this.PurchaseInvoiceId,
           Division: info.Division,
@@ -486,7 +487,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
             this.FileList = result.data.Table2;
           }
         };
-       // this.toggleRCM(info.RCMApplicable);
+        // this.toggleRCM(info.RCMApplicable);
         this.checkSameState();
         this.getFinalCalculation();
         this.PurchaseCreateForm.disable();
@@ -518,54 +519,54 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       this.commonservice.AttachUpload(this.selectedFile).subscribe(data => {
         if (data) {
 
-      this.FileList.push({
-        Id: 0,
-        PurchaseInvoiceId: this.PurchaseInvoiceId,
-        FileName: event.target.files[0].name,
-        FilePath: event.target.files[0].name,
-        UniqueFilePath: data.FileNamev,
+          this.FileList.push({
+            Id: 0,
+            PurchaseInvoiceId: this.PurchaseInvoiceId,
+            FileName: event.target.files[0].name,
+            FilePath: event.target.files[0].name,
+            UniqueFilePath: data.FileNamev,
 
-      });
+          });
+        }
+      },
+        (error: HttpErrorResponse) => {
+          Swal.fire(error.message, 'error')
+        });
     }
-  },
-    (error: HttpErrorResponse) => {
-      Swal.fire(error.message, 'error')
-    });
-}
     else {
-      Swal.fire('A maximum of five files must be allowed.')  
-    }   
+      Swal.fire('A maximum of five files must be allowed.')
+    }
   }
 
-   /*File Download*/
-download = (fileUrl) => {
-  this.fileUrl = "UploadFolder\\Attachments\\" + fileUrl;
-  this.commonDataService.download(fileUrl).subscribe((event) => {
+  /*File Download*/
+  download = (fileUrl) => {
+    this.fileUrl = "UploadFolder\\Attachments\\" + fileUrl;
+    this.commonDataService.download(fileUrl).subscribe((event) => {
 
-      if (event.type === HttpEventType.UploadProgress){ 
-        
+      if (event.type === HttpEventType.UploadProgress) {
+
       }
-          // this.progress1 = Math.round((100 * event.loaded) / event.total);
+      // this.progress1 = Math.round((100 * event.loaded) / event.total);
 
       else if (event.type === HttpEventType.Response) {
-          // this.message = 'Download success.';
-          this.downloadFile(event);
+        // this.message = 'Download success.';
+        this.downloadFile(event);
       }
-  });
-}
+    });
+  }
 
-private downloadFile = (data: HttpResponse<Blob>) => {
-  const downloadedFile = new Blob([data.body], { type: data.body.type });
-  const a = document.createElement('a');
-  a.setAttribute('style', 'display:none;');
-  document.body.appendChild(a);
-  a.download = this.fileUrl;
-  a.href = URL.createObjectURL(downloadedFile);
-  a.target = '_blank';
-  a.click();
-  document.body.removeChild(a);
-}
- 
+  private downloadFile = (data: HttpResponse<Blob>) => {
+    const downloadedFile = new Blob([data.body], { type: data.body.type });
+    const a = document.createElement('a');
+    a.setAttribute('style', 'display:none;');
+    document.body.appendChild(a);
+    a.download = this.fileUrl;
+    a.href = URL.createObjectURL(downloadedFile);
+    a.target = '_blank';
+    a.click();
+    document.body.removeChild(a);
+  }
+
 
   getDivisionList() {
     var service = `${this.globals.APIURL}/Division/GetOrganizationDivisionList`; var payload: any = {};
@@ -806,17 +807,18 @@ private downloadFile = (data: HttpResponse<Blob>) => {
             }
           }
           if (response['data'].Table5.length > 0) {
-            let info = response['data'].Table5[response['data'].Table5.length - 1];
+            this.tsdDetails = response['data'].Table5[response['data'].Table5.length - 1];
             // this.vendorTDS = info.TDSRate ? info.TDSRate : 0;
             // console.log('vendorTDS', this.vendorTDS)
-            this.vendorLDC = info.Rate ? info.Rate : ''
-            if (info) {
-              this.PurchaseCreateForm.controls['TDSApplicability'].setValue(info.TDSApplicability ? info.TDSApplicability : '');
-              this.PurchaseCreateForm.controls['TDSSection'].setValue(info.TDSSectionId ? info.TDSSectionId : '');
-              this.PurchaseCreateForm.controls['ReasonforNonTDS'].setValue(info.Reason ? info.Reason : '');
+            this.vendorLDC = this.tsdDetails.Rate ? this.tsdDetails.Rate : ''
+            if (this.tsdDetails) {
+              this.PurchaseCreateForm.controls['TDSApplicability'].setValue(this.tsdDetails.TDSApplicability ? this.tsdDetails.TDSApplicability : '');
+              this.PurchaseCreateForm.controls['TDSSection'].setValue(this.tsdDetails.TDSSectionId ? this.tsdDetails.TDSSectionId : '');
+              this.PurchaseCreateForm.controls['ReasonforNonTDS'].setValue(this.tsdDetails.Reason ? this.tsdDetails.Reason : '');
               this.PurchaseCreateForm.controls['LDCRate'].setValue(this.vendorLDC);
               // this.PurchaseCreateForm.controls['TDSRate'].setValue(this.vendorTDS);
             }
+            this.onTDSDateCheck();
           }
           resolve(true);
           // this.TdsPercentageCalculation();
@@ -1292,7 +1294,7 @@ private downloadFile = (data: HttpResponse<Blob>) => {
             }
 
             if (!this.isUpdate && !this.isFinalRecord) {
-          
+
               this.PurchaseInvoiceId = result.data.Id;
               this.isUpdate = true;
               this.isUpdateMode = true;
@@ -1300,7 +1302,7 @@ private downloadFile = (data: HttpResponse<Blob>) => {
               if (this.isUpdate) {
                 this.getPurchaseInvoiceAdminInfo();
               }
-     
+
             }
           }
           if (status == 2) {
@@ -1529,17 +1531,17 @@ private downloadFile = (data: HttpResponse<Blob>) => {
   //   let rate = Number(this.PurchaseCreateForm.value.Rate) || 1;
   //   let qty = Number(this.PurchaseCreateForm.value.Qty) || 1;
   //   let exRate = Number(this.PurchaseCreateForm.value.ExRate) || 1;
-  
+
   //   // Calculate the result
   //   let calculatedValue = rate * qty * exRate;
-  
+
   //   // Apply toFixed with specified decimal places
   //   let formattedValue = calculatedValue.toFixed(this.entityFraction);
-  
+
   //   // Set the value in the form control with rounded output
   //   this.PurchaseCreateForm.controls['Amountccr'].setValue(formattedValue);
   // }
-  
+
 
   taxableChangeEvent(event) {
     if (event == 0) {
@@ -1696,7 +1698,7 @@ private downloadFile = (data: HttpResponse<Blob>) => {
 
 
   // toggleRCM(value: string) {
-   
+
   //   if (value === '1') {
   //     // this.isRCMChecked = true; // Set isRCMChecked to true if "YES" is selected
   //     this.PurchaseCreateForm.get('IsRCM').setValue(true); // Check the checkbox
@@ -1712,24 +1714,24 @@ private downloadFile = (data: HttpResponse<Blob>) => {
   //       item.IsRCM = false;
   //     }
   //   })
-   
+
   //   this.getFinalCalculation();
   // }
 
   toggleRCM(value: string) {
     const isRCMChecked = (value === '1');
     this.PurchaseCreateForm.get('IsRCM').setValue(isRCMChecked);
-  
+
     // Update each item's IsRCM property and recalculate GST
     this.PurchaseTableList.forEach(item => {
       item.IsRCM = isRCMChecked;
-    
+
     });
-  
+
     // Recalculate final GST values
     this.getFinalCalculation();
   }
-  
+
   onRCMChange(item: any, event: any) {
     const isChecked = event.target.checked;
     item.IsRCM = isChecked;
@@ -1762,9 +1764,9 @@ private downloadFile = (data: HttpResponse<Blob>) => {
 
             // let account = this.accountName.find(x => x.ChartOfAccountsId == !info.AccountId ? 0 : info.AccountId);
             // let currency = this.currencyList.find(x => x.ID == !info.CurrencyId ? 0 : info.CurrencyId);
-            let account = this.accountName.find(x => x.ChartOfAccountsId ==   info.AccountId);
-            let currency = this.currencyList.find(x => x.ID ==  info.CurrencyId);
-          
+            let account = this.accountName.find(x => x.ChartOfAccountsId == info.AccountId);
+            let currency = this.currencyList.find(x => x.ID == info.CurrencyId);
+
             let value = {
               Id: info.Id,
               PurchaseInvoiceId: this.PurchaseInvoiceId,
@@ -1802,11 +1804,11 @@ private downloadFile = (data: HttpResponse<Blob>) => {
         if (result.message == 'Success' && result.data.Table1.length > 0) {
           result.data.Table1.forEach(info => {
 
-          //  let account = this.accountName.find(x => x.ChartOfAccountsId == !info.AccountId ? 0 : info.AccountId);
-           // let currency = this.currencyList.find(x => x.ID == !info.CurrencyId ? 0 : info.CurrencyId);
-            
-           let account = this.accountName.find(x => x.ChartOfAccountsId ==   info.AccountId);
-           let currency = this.currencyList.find(x => x.ID ==  info.CurrencyId);
+            //  let account = this.accountName.find(x => x.ChartOfAccountsId == !info.AccountId ? 0 : info.AccountId);
+            // let currency = this.currencyList.find(x => x.ID == !info.CurrencyId ? 0 : info.CurrencyId);
+
+            let account = this.accountName.find(x => x.ChartOfAccountsId == info.AccountId);
+            let currency = this.currencyList.find(x => x.ID == info.CurrencyId);
 
             let value = {
               Id: info.Id,
@@ -1841,6 +1843,17 @@ private downloadFile = (data: HttpResponse<Blob>) => {
     }
   }
 
+  onTDSDateCheck() {
+    debugger
+    if (this.PurchaseCreateForm.value['VIDate'] !== '') {
+      const date1 = this.datePipe.transform(this.PurchaseCreateForm.value['VIDate'], "yyyy-MM-dd");
+      const date2 = this.datePipe.transform(this.tsdDetails.EndDate, "yyyy-MM-dd");
+      if (date1 >= this.datePipe.transform(this.tsdDetails.EndDate, "yyyy-MM-dd")) {
+        Swal.fire('Vendor Invoice date should be less that TDS Date');
+      } 
+    }
+  }
+
   getFinalCalculation() {
     this.checkSameState();
 
@@ -1854,8 +1867,8 @@ private downloadFile = (data: HttpResponse<Blob>) => {
     var subTotalAmount = 0;
     if (this.PurchaseTableList.length > 0) {
       this.PurchaseTableList.forEach(element => {
-        subTotalAmount +=  Number(element.Amountccr) ;
-       
+        subTotalAmount += Number(element.Amountccr);
+
       });
       this.PurchaseCreateForm.controls['SubTotal'].setValue(subTotalAmount);  // Handle the case when subTotalAmount is 0.
     }
@@ -1895,28 +1908,28 @@ private downloadFile = (data: HttpResponse<Blob>) => {
       if (e) {
 
 
-    //old gst calculation
-      //   if (this.isSameState && this.PurchaseCreateForm.controls['IsRCM'].value) {
-      //     let info = e.Amountccr * (e.GSTGroup / 100);
-      //     e.CGST = Math.trunc(info / 2);
-      //     e.SGST = Math.trunc(info / 2);
-      //     e.IGST = 0;
-      //   } else if (!this.isSameState && this.PurchaseCreateForm.controls['IsRCM'].value) {
-      //     let info = e.Amountccr * (e.GSTGroup / 100);
-      //     e.CGST = 0;
-      //     e.SGST = 0;
-      //     e.IGST = info;
-      //   } else {
-      //     e.CGST = 0;
-      //     e.SGST = 0;
-      //     e.IGST = 0;
-      //   }
-      // }
-      // CGST += e.CGST ? e.CGST : 0;
-      // SGST += e.SGST ? e.SGST : 0;
-      // IGST += e.IGST ? e.IGST : 0;
+        //old gst calculation
+        //   if (this.isSameState && this.PurchaseCreateForm.controls['IsRCM'].value) {
+        //     let info = e.Amountccr * (e.GSTGroup / 100);
+        //     e.CGST = Math.trunc(info / 2);
+        //     e.SGST = Math.trunc(info / 2);
+        //     e.IGST = 0;
+        //   } else if (!this.isSameState && this.PurchaseCreateForm.controls['IsRCM'].value) {
+        //     let info = e.Amountccr * (e.GSTGroup / 100);
+        //     e.CGST = 0;
+        //     e.SGST = 0;
+        //     e.IGST = info;
+        //   } else {
+        //     e.CGST = 0;
+        //     e.SGST = 0;
+        //     e.IGST = 0;
+        //   }
+        // }
+        // CGST += e.CGST ? e.CGST : 0;
+        // SGST += e.SGST ? e.SGST : 0;
+        // IGST += e.IGST ? e.IGST : 0;
 
-   //  new gst calculation
+        //  new gst calculation
         if (this.isSameState && !e.IsRCM) {
           let info = e.Amountccr * (e.GSTGroup / 100);
           e.CGST = Math.trunc(info / 2);

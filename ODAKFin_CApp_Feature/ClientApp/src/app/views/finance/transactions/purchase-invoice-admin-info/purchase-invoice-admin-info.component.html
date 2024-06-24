@@ -330,7 +330,7 @@
                         <label class="str mb-2">Vendor Invoice Date</label>
                         <mat-form-field  class="tillDate mat_date_picker"   appearance="outline">
                             <input matInput (click)="VIDate.open()" readonly [max]="maxDate" 
-                                (dateChange)="calculateDueDate($event);"
+                                (dateChange)="calculateDueDate($event);onTDSDateCheck()"
                                 autocomplete="off" [matDatepicker]="VIDate"  id="VIDate" [placeholder]="entityDateFormat" formControlName="VIDate">
                             <mat-datepicker-toggle matSuffix [for]="VIDate"></mat-datepicker-toggle>
                             <mat-datepicker #VIDate></mat-datepicker>
