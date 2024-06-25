@@ -99,6 +99,8 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
   groupedCoaTypeList: { [key: string]: any[] };
   tsdDetails: any;
   canSelectOrderType: boolean = false;
+  accountDisabled: boolean = false;
+
 
   constructor(
     private fb: FormBuilder,
@@ -126,8 +128,8 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     this.GetGSTCategory();
     this.getTDSSection();
     this.getReasonList();
-    this.getPurchaseList(0);
-    this.getInternalOrderList(0);
+    this.getPurchaseList(0,0);
+    this.getInternalOrderList(0,0);
     this.ChartAccountList();
     this.getCurrency();
     this.getNumberRange();
@@ -140,7 +142,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     // this.maxDate = new Date();
     // this.maxDate.setDate( this.maxDate.getDate() + 3 );
 
-
+  
 
     this.route.params.subscribe(param => {
       if (param.id) {
@@ -344,7 +346,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       IsRCM: [false],
       GSTGroup: [0],
       IsDelete: [0],
-
+      IsOrderTypeItem : [0]
 
     });
 
@@ -390,7 +392,6 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     }
   }
   async getPurchaseInvoiceAdminInfo() {
-
     var service = `${this.globals.APIURL}/PurchaseInvoice/GetPurchaseInvoiceById`; var payload = { Id: this.PurchaseInvoiceId };
     this.dataService.post(service, payload).subscribe(async (result: any) => {
       this.PurchaseTableList = [];
@@ -463,9 +464,9 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
         if (info.PurchaseOrder) this.orderType = 'Purchase';
         else if (info.InternalOrder) this.orderType = 'Internal';
         else this.orderType = '';
-        await this.getInternalOrderList(this.PurchaseInvoiceId);
-        await this.getPurchaseList(this.PurchaseInvoiceId);
-        // to get Purchase or Internal order number
+        await this.getInternalOrderList(this.PurchaseInvoiceId , info.VendorId);
+       await this.getPurchaseList(this.PurchaseInvoiceId , info.VendorId);
+      //  to get Purchase or Internal order number
         // if( this.orderType == 'Purchase'){
         //   this.purchaseOrderChangeEvent('Purchase', info.PurchaseOrder);
         // }
@@ -883,10 +884,14 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
   //   });
   // }
 
-  getPurchaseList(ID) {
+  onVendorChange(event: any) {
+    const selectedVendorId = event;
+    this.getPurchaseList(0, selectedVendorId);
+}
 
+  getPurchaseList(ID , VendorId) {
     let service = `${this.globals.APIURL}/PurchaseInvoice/GetPurchaseInvoiceDropDownList`;
-    this.dataService.post(service, { Id: ID }).subscribe((result: any) => {
+    this.dataService.post(service, { Id: ID , VendorId: VendorId}).subscribe((result: any) => {
       this.purchaseList = [];
       if (result.message == 'Success' && result.data.Table1.length > 0) {
         this.purchaseList = result.data.Table1;
@@ -896,9 +901,9 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     });
   }
 
-  getInternalOrderList(ID) {
+  getInternalOrderList(ID ,VendorId) {
     let service = `${this.globals.APIURL}/PurchaseInvoice/GetPurchaseInvoiceDropDownList`;
-    this.dataService.post(service, { Id: ID }).subscribe((result: any) => {
+    this.dataService.post(service, { Id: ID, VendorId: VendorId }).subscribe((result: any) => {
       this.internalOderList = [];
       if (result.message == 'Success' && result.data.Table2.length > 0) {
         this.internalOderList = result.data.Table2;
@@ -1016,7 +1021,8 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
 
       this.PurchaseTableList[this.editSelectedIdex] = editValue;
       this.isEditMode = !this.isEditMode;
-      // this.resetTable();
+
+      this.resetTable();
       this.setPage(1);
       // this.calculateTotalAmount(editValue, 'edit');
     } else {
@@ -1043,10 +1049,12 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
         SGST: 0,
         IsOrderTypeItem: info.IsOrderTypeItem
       });
+    
     }
-
+    this.accountDisabled = this.PurchaseCreateForm.get('IsOrderTypeItem').value == 1;
     this.resetTable();
     this.getFinalCalculation();
+ 
   }
 
   setPage(page: number) {
@@ -1071,6 +1079,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     } else {
       this.PurchaseCreateForm.controls['IsRCM'].setValue(false);
     }
+    this.PurchaseCreateForm.controls['IsOrderTypeItem'].setValue(0);
   }
 
   OnClickRadio(index) {
@@ -1095,20 +1104,30 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       IsOrderTypeItem: info.IsOrderTypeItem
     });
     this.isEditMode = !this.isEditMode;
+    if (this.PurchaseCreateForm.get('IsOrderTypeItem').value == 1) {
+      this.accountDisabled = true;
+    } else {
+      this.PurchaseCreateForm.get('IsOrderTypeItem').setValue(0);
+      this.accountDisabled = false;
+    }
   }
 
   OnClickDeleteValue() {
     if (this.editSelectedIdex >= 0 && this.editSelectedIdex != null) {
-      this.PurchaseTableList.splice(this.editSelectedIdex, 1);
-      this.editSelectedIdex = null;
-      this.setPage(1);
-      this.getFinalCalculation();
-    }
-    else {
+      const selectedItem = this.PurchaseTableList[this.editSelectedIdex];
+      if (selectedItem.IsOrderTypeItem == 1) {
+        Swal.fire('This item cannot be deleted!');
+      } else {
+        this.PurchaseTableList.splice(this.editSelectedIdex, 1);
+        this.editSelectedIdex = null;
+        this.setPage(1);
+        this.getFinalCalculation();
+      }
+    } else {
       Swal.fire('Please select the Item!!');
     }
   }
-
+  
 
   // async getModuleType(call) {
   //   return new Promise((resolve, rejects) => {
