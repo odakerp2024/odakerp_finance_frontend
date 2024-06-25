@@ -98,6 +98,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
   AccountList: any[];
   groupedCoaTypeList: { [key: string]: any[] };
   tsdDetails: any;
+  canSelectOrderType: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -585,6 +586,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       this.officeList = [];
       if (result['data'].Table.length > 0) {
         this.officeList = result['data'].Table;
+        this.updateCanSelectOrderType();
       }
     });
   }
@@ -728,6 +730,10 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     });
   }
 
+
+  private updateCanSelectOrderType() {
+    this.canSelectOrderType = this.officeList.length > 0 && this.vendorBranch.length > 0;
+  }
   getReasonList() {
     this.VendorService.getTDSReason({}).subscribe((response) => {
       this.reasonList = response['data'].Table;
@@ -748,6 +754,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       this.PurchaseCreateForm.controls['VendorBranch'].setValue(singleBranchDetails.VendorBranchID);
       this.getVendorDetailsInfo(singleBranchDetails.VendorBranchID);
       this.checkBranchState(singleBranchDetails);
+      this.updateCanSelectOrderType();
     }
 
   }
@@ -1844,7 +1851,6 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
   }
 
   onTDSDateCheck() {
-    debugger
     if (this.PurchaseCreateForm.value['VIDate'] !== '') {
       const date1 = this.datePipe.transform(this.PurchaseCreateForm.value['VIDate'], "yyyy-MM-dd");
       const date2 = this.datePipe.transform(this.tsdDetails.EndDate, "yyyy-MM-dd");

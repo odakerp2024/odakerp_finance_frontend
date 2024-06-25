@@ -442,7 +442,7 @@
                 <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group">
                         <label class="str">Order Type</label>
-                        <select [disabled]="isUpdateMode" (change)="orderType = $event.target.value;orderChangeEvent()"
+                        <select [disabled]="isUpdateMode || !canSelectOrderType" (change)="orderType = $event.target.value;orderChangeEvent()"
                             class="form-control my-select">
                             <option [selected]="orderType == ''" disabled value="">--SELECT ORDER TYPE--</option>
                             <option [selected]="orderType == 'Purchase'" value="Purchase">PURCHASE ORDER</option>
@@ -528,7 +528,7 @@
                                            <span class="textwrap">{{name.AccountName | uppercase}}</span>
                                           </ng-option>
                                         </ng-select>  -->
-                                        <ng-select class="searchdropdown" [clearable]="false" [appendTo]="'body'"
+                                        <ng-select class="searchdropdown" [clearable]="false" [appendTo]="'body'" 
                                         [items]="AccountList" bindLabel="AccountName" bindValue="ChartOfAccountsId"
                                         groupBy="GroupName" formControlName="AccountId">
                                         <ng-template ng-optgroup let-item="item">
