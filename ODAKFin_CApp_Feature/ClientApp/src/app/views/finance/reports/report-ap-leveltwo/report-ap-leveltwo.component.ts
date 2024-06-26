@@ -321,7 +321,10 @@ async showVendor(SubTypeId:number){
         this.agingGroupDropdown = [];
         if (result["data"].Table.length > 0) {
           this.agingGroupDropdown = result.data.Table;
+
         }
+            this.reportFilter.controls.AgingTypeId.setValue(this.agingGroupDropdown[0].AgingGroupName);
+
       }
     }), error => {
       console.error(error);

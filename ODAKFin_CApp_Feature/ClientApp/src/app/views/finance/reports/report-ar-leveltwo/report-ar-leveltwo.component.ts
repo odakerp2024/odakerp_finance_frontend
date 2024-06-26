@@ -292,19 +292,27 @@ export class ReportArLeveltwoComponent implements OnInit {
     })
   }
 
-
   getAgingDropdown() {
-    this.reportService.getAgingDropdown({}).subscribe((result: any) => {
-      if (result.message == 'Success') {
-        this.agingGroupDropdown = [];
-        if (result["data"].Table.length > 0) {
-          this.agingGroupDropdown = result.data.Table;
-        }
-      }
-    }), error => {
-      console.error(error);
+    debugger
+  
+    const payload = {
+      type : 2,
     }
-  }
+    
+      this.reportService.getAgingDropdown(payload).subscribe((result: any) => {
+        if (result.message == 'Success') {
+          this.agingGroupDropdown = [];
+          if (result["data"].Table.length > 0) {
+            this.agingGroupDropdown = result.data.Table;
+  
+          }
+              this.reportFilter.controls.AgingTypeId.setValue(this.agingGroupDropdown[0].AgingGroupName);
+  
+        }
+      }), error => {
+        console.error(error);
+      }
+    }
 
 
   //Dynamic Overall List 
