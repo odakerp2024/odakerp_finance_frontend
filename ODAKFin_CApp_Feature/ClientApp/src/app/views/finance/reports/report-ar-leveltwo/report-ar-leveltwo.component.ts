@@ -292,9 +292,7 @@ export class ReportArLeveltwoComponent implements OnInit {
     })
   }
 
-  getAgingDropdown() {
-    debugger
-  
+  getAgingDropdown() {  
     const payload = {
       type : 2,
     }

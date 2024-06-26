@@ -310,7 +310,6 @@ async showVendor(SubTypeId:number){
 
 
  getAgingDropdown() {
-  debugger
 
   const payload = {
     type : 1,
@@ -360,7 +359,6 @@ async showVendor(SubTypeId:number){
   
   //Dynamic Overall List 
   getAPAgingOverallList() {
-    debugger
     this.startDate = this.reportFilter.controls.FromDate.value;
     this.endDate = this.reportFilter.controls.ToDate.value;
 
@@ -395,7 +393,6 @@ async showVendor(SubTypeId:number){
   }
 
 getAPAgingVendorList() {
-  debugger
     this.startDate = this.reportFilter.controls.FromDate.value;
     this.endDate = this.reportFilter.controls.ToDate.value;
     this.reportService.getAPAgingList(this.reportFilter.value).subscribe(result => {
@@ -618,7 +615,6 @@ calculateInvoicewise(header: string): any {
 
 
   export(){
-    debugger
     if(this.type =="Overall-list")
     {
       this.downloadAsExcel(this.reportList, this.startDate, this.endDate, 'Overall-list');
@@ -639,7 +635,7 @@ calculateInvoicewise(header: string): any {
     endDate: string,
     reportType: 'Overall-list' | 'Vendor-wise' | 'Vendor-Invoice-wise'
   ) {
-    debugger
+
     if (reportList.length === 0) {
       Swal.fire('No record found');
       return;
