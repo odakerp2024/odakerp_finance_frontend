@@ -1794,7 +1794,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
             let currency = this.currencyList.find(x => x.ID == info.CurrencyId);
 
             let value = {
-              Id: info.Id,
+              Id: 0,
               PurchaseInvoiceId: this.PurchaseInvoiceId,
               AccountId: info.AccountId,
               Rate: info.Rate,
@@ -1837,7 +1837,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
             let currency = this.currencyList.find(x => x.ID == info.CurrencyId);
 
             let value = {
-              Id: info.Id,
+              Id: 0,
               PurchaseInvoiceId: this.PurchaseInvoiceId,
               AccountId: info.AccountId,
               Rate: info.Rate,
