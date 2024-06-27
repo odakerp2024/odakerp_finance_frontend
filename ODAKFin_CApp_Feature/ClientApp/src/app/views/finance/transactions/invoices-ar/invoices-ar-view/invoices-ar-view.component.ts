@@ -17,7 +17,9 @@ export class InvoicesArViewComponent implements OnInit {
 
   pager: any = {};// pager object  
   pagedItems: any = [];// paged items
-  entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat')
+  entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
+  entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
+  entityThousands = Number(this.commonDataService.getLocalStorageEntityConfigurable('CurrenecyFormat'));
  // minDate: string = this.datePipe.transform(new Date(), "yyyy-MM-dd");
   validTillMinDate: string = this.datePipe.transform(new Date(), "yyyy-MM-dd");
   invoiceList: any = [];

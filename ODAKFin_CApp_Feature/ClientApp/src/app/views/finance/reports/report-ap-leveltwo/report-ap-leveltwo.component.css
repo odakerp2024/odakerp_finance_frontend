@@ -95,3 +95,9 @@ tr:hover {
   }
  
 }
+
+.hyperlink-style {
+  color: rgb(19, 108, 243) !important;
+  text-decoration: underline  !important;
+  cursor: pointer !important;
+}

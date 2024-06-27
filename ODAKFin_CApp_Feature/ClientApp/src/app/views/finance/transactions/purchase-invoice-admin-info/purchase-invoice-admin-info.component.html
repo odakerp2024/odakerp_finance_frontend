@@ -238,7 +238,7 @@
                         PurchaseCreateForm.controls['VendorGST'].setValue('');PurchaseCreateForm.controls['TDSApplicability'].setValue('');PurchaseCreateForm.controls['TDSSection'].setValue('');PurchaseCreateForm.controls['TDSRate'].setValue('');
                         PurchaseCreateForm.controls['ReasonforNonTDS'].setValue('');
                         PurchaseCreateForm.controls['LDCRate'].setValue(''); PurchaseCreateForm.controls['DueDate'].setValue('');
-                        PurchaseCreateForm.controls['VIDate'].setValue('')">
+                        PurchaseCreateForm.controls['VIDate'].setValue('')" (change)="onVendorChange($event)">
                             <ng-option [value]="0" disabled>--SELECT VENDOR--</ng-option>
                             <ng-container  *ngFor="let vendor of vendorsList">
                               <ng-option [value]="vendor.VendorID">
@@ -330,7 +330,7 @@
                         <label class="str mb-2">Vendor Invoice Date</label>
                         <mat-form-field  class="tillDate mat_date_picker"   appearance="outline">
                             <input matInput (click)="VIDate.open()" readonly [max]="maxDate" 
-                                (dateChange)="calculateDueDate($event);"
+                                (dateChange)="calculateDueDate($event);onTDSDateCheck()"
                                 autocomplete="off" [matDatepicker]="VIDate"  id="VIDate" [placeholder]="entityDateFormat" formControlName="VIDate">
                             <mat-datepicker-toggle matSuffix [for]="VIDate"></mat-datepicker-toggle>
                             <mat-datepicker #VIDate></mat-datepicker>
@@ -442,7 +442,7 @@
                 <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group">
                         <label class="str">Order Type</label>
-                        <select [disabled]="isUpdateMode" (change)="orderType = $event.target.value;orderChangeEvent()"
+                        <select [disabled]="isUpdateMode || !canSelectOrderType" (change)="orderType = $event.target.value;orderChangeEvent()"
                             class="form-control my-select">
                             <option [selected]="orderType == ''" disabled value="">--SELECT ORDER TYPE--</option>
                             <option [selected]="orderType == 'Purchase'" value="Purchase">PURCHASE ORDER</option>
@@ -528,10 +528,10 @@
                                            <span class="textwrap">{{name.AccountName | uppercase}}</span>
                                           </ng-option>
                                         </ng-select>  -->
-                                        <ng-select class="searchdropdown" [clearable]="false" [appendTo]="'body'"
+                                        <ng-select class="searchdropdown" [clearable]="false" [appendTo]="'body'"    [readonly]="accountDisabled"
                                         [items]="AccountList" bindLabel="AccountName" bindValue="ChartOfAccountsId"
                                         groupBy="GroupName" formControlName="AccountId">
-                                        <ng-template ng-optgroup let-item="item">
+                                        <ng-template ng-optgroup let-item="item"  >
                                             {{item.GroupName | uppercase}}
                                         </ng-template>
                                     </ng-select>
@@ -598,7 +598,7 @@
                                     <td>{{data.Amountccr}}</td>
                                     <td>{{data.TDSName}}</td>
                                     <td>{{data.GSTGroup ? (data.GSTGroup + '%')  : '-' }}</td>
-                                    <td><input class='disable-input' type="checkbox" [checked]="data.IsRCM"></td>
+                                    <td><input class='disable-input'  (change)="onRCMChange(data, $event)" type="checkbox" [checked]="data.IsRCM "></td>
                                     <td>
                                         <input class="vertal checkbox" type="radio" name="AlertCheck" id="RadioCheck"
                                             (click)="OnClickRadio(i)" />

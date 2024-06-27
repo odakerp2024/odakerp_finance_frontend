@@ -142,9 +142,9 @@
                             <td>{{balance.Transaction_Type}}</td>
                             <td>{{balance.Trans_Type}}</td>
                             <td>{{balance.Trans_Ref_Details}}</td>
-                            <td class=" hyperTextColor text-right">{{balance.Debit  | dynamicDecimal}}</td>
-                            <td class="hyperTextColor text-right">{{balance.Credit  | dynamicDecimal}}</td>
-                            <td class="hyperTextColor text-right">{{balance.Amount  | dynamicDecimal}}</td>
+                            <td class=" hyperTextColor text-right">{{balance.Debit  | dynamicentityDecimal}}</td>
+                            <td class="hyperTextColor text-right">{{balance.Credit  | dynamicentityDecimal}}</td>
+                            <td class="hyperTextColor text-right">{{balance.Amount  | dynamicentityDecimal}}</td>
                         </tr>
                             </ng-container>
                         </ng-container>
@@ -163,9 +163,9 @@
                             <td class="text-center" colspan="1"></td>
                             <td class="text-right" colspan="1"></td>
                             <td class="text-right" colspan="1"></td>
-                            <td class="text-center" colspan="1">{{totalDebitAmount | dynamicDecimal }}</td>
-                            <td class="text-center" colspan="1">{{totalCreditAmount | dynamicDecimal}}</td>
-                            <td class="text-center" colspan="1">{{totalAmount | dynamicDecimal }}</td>
+                            <td class="text-center" colspan="1">{{totalDebitAmount | dynamicentityDecimal }}</td>
+                            <td class="text-center" colspan="1">{{totalCreditAmount | dynamicentityDecimal}}</td>
+                            <td class="text-center" colspan="1">{{totalAmount | dynamicentityDecimal }}</td>
                         </tr>
 
                         

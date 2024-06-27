@@ -158,14 +158,13 @@
                                     </td>
                                     <td>
                                         <input onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
-                                        min="0" numbersOnly
-                                        appDynamicDecimal
+                                        min="0" numbersOnly appDynamicDecimal
                                         [ngClass]=" isUpdateMode ? 'block-set-off-input' : ''"
                                         [ngClass]="getIsChecked(i, 'Receipts') ? '' : 'disable-input'"
                                             [readonly]="isUpdateMode" Style="max-width:60px"
-                                            (change)="setOffChangeEvent($event,i,'Receipts');"
+                                            (ngModelChange)="setOffChangeEvent($event,i,'Receipts');"
                                             class="text-center setOff" formControlName="AdjustedAmount"
-                                            [value]="receipt.AdjustedAmount" min="1" type="number" Style="max-width:90px">
+                                             min="1" type="number" Style="max-width:90px">
                                     </td>
                                     <td>
                                         <input (change)="onSelectEvent(i,'Receipts')" Style="max-width:40px" formControlName="IsSelect"
@@ -278,12 +277,12 @@
                             <tr>
                                 <td class="font-weight-bold">Debit</td>
                                 <td>
-                                    {{TotalDebitAmount}}
+                                    {{TotalDebitAmount | dynamicDecimal : entityFraction  }}
                                 </td>
                             </tr>
                             <tr>
                                 <td class="font-weight-bold">Credit</td>
-                                <td>{{TotalCreditAmount}}</td>
+                                <td>{{TotalCreditAmount | dynamicDecimal: entityFraction}}</td>
                             </tr>
                         </tbody>
                     </table>

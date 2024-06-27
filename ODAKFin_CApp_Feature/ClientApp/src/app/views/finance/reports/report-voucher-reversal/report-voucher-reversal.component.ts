@@ -147,7 +147,7 @@ export class ReportVoucherReversalComponent implements OnInit  {
         break;
     }
   }
-  createReportForm() {
+  async createReportForm() {
     this.reportFilter = this.fb.group({
       FromDate: [this.startDate],
       ToDate: [this.endDate],
@@ -156,7 +156,8 @@ export class ReportVoucherReversalComponent implements OnInit  {
       VoucherType: [0], 
       Peroid: ['']
     });
-    this.getVoucherReversalReportList();
+    this.onOptionChange('month');
+    await this.getVoucherReversalReportList();
   }
 
   getDivisionList() {
@@ -214,12 +215,12 @@ export class ReportVoucherReversalComponent implements OnInit  {
   }
 
   getVoucherReversalReportList() {
+    this.startDate = this.reportFilter.controls.FromDate.value;
+      this.endDate = this.reportFilter.controls.ToDate.value;
+
     this.reportService.getVoucherReversalReportList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
 
-      this.startDate = this.reportFilter.controls.FromDate.value;
-      this.endDate = this.reportFilter.controls.ToDate.value;
-      
       if (result['data'].Table.length > 0) {
         this.reportList = result['data'].Table;
         this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
@@ -349,7 +350,7 @@ export class ReportVoucherReversalComponent implements OnInit  {
       const date = data.Date
       const formattedDate = date ? date.split('T')[0] : null;
 
-      data.Date = formattedDate;
+      data.Date =  this.datePipe.transform(formattedDate, "dd-MM-yyyy");
 
 
 
@@ -507,7 +508,7 @@ export class ReportVoucherReversalComponent implements OnInit  {
       const date = data.Date
       const formattedDate = date ? date.split('T')[0] : null;
 
-      data.Date = formattedDate;
+      data.Date =  this.datePipe.transform(formattedDate, "dd-MM-yyyy");
 
 
 

@@ -208,8 +208,8 @@ export class InvoicesApDetailsComponent implements OnInit {
           StatusId: tableInfo.StatusId,
           PartyId: tableInfo.PartyId,
           Remarks: tableInfo.Remarks,
-          TotalDebitAmount: tableInfo.TotalDebitAmount,
-          TotalCreditAmount: tableInfo.TotalCreditAmount,
+          TotalDebitAmount: tableInfo.TotalDebitAmount.toFixed(this.entityFraction),
+          TotalCreditAmount: tableInfo.TotalCreditAmount.toFixed(this.entityFraction),
           TotalVoucherSetOffAmount: tableInfo.TotalVoucherSetOffAmount,
           TotalInvoiceSetOffAmount: tableInfo.TotalInvoiceSetOffAmount,
           IsFinal: tableInfo.IsFinal,
@@ -410,13 +410,19 @@ export class InvoicesApDetailsComponent implements OnInit {
     if (type == 'Receipts') {
       const controlAtIndex = this.ReceiptInfo.at(index);
       if (controlAtIndex.value.IsSelect == true) { controlAtIndex.patchValue({ IsAdjusted: 'YES' }); }
-      else { controlAtIndex.patchValue({ IsAdjusted: 'NO' }); }
+      else { controlAtIndex.patchValue({ IsAdjusted: 'NO',
+       AdjustedAmount: ''
+       }); }
+       this.setOffChangeEvent(controlAtIndex.value, index, type);
       this.calculateCreditDebitAmount(type);
     }
     else if (type == 'Invoices') {
       const controlAtIndex = this.OpenInvoiceInfo.at(index);
       if (controlAtIndex.value.IsSelect == true) { controlAtIndex.patchValue({ IsAdjusted: 'YES' }); }
-      else { controlAtIndex.patchValue({ IsAdjusted: 'NO' }); }
+      else { controlAtIndex.patchValue({ IsAdjusted: 'NO',
+       AdjustedAmount: ''
+       }); }
+         this.setOffChangeEvent(controlAtIndex.value, index, type);
       this.calculateCreditDebitAmount(type);
     }
   }
