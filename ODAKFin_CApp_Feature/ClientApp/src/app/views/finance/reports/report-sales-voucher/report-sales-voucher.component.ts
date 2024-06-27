@@ -256,6 +256,7 @@ export class ReportSalesVoucherComponent implements OnInit {
 
     this.reportService.getSalesVoucherReportList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
+      this.reportForExcelList = [];
       if (result['data'].Table.length > 0) {
         this.reportList = result['data'].Table;
         this.setPage(1)

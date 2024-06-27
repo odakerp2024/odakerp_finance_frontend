@@ -126,6 +126,7 @@ export class TrailbalanceComponent implements OnInit {
     };
     this.reportService.GetTrailBalanceList(payload).subscribe(result => {
       this.balanceList = [];
+      this.pagedItems = [];
       if (result.message === 'Success' && result.data.Table.length > 0) {
         // Group the items by GroupName
         const groupedItems = result.data.Table.reduce((groups: any, item: any) => {

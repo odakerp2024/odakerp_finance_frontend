@@ -394,6 +394,7 @@ export class AgingConfigurationComponent implements OnInit {
   // * table fuction end
 
   getReportDropdown() {
+    debugger
     return new Promise((resolves, rejects) => {
       this.agingService.getDropdownList({})
         .subscribe((result: any) => {
