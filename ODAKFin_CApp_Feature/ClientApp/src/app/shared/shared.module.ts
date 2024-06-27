@@ -9,9 +9,11 @@ import { DynamicDecimalDirective } from './directives/decimal/dynamic-decimal.di
 import { TextOnlyDirective } from './directives/decimal/text-only.directive';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DynamicDecimalPipeDirective } from './directives/decimal/dynamic-decimal-pipe.directive';
+import { DynamicEntityDecimalPipeDirective } from './directives/decimal/dynamic-entitydecimal-pipe.directive';
 
 
-const components = [EMailTableComponent, DocumentsComponent, DynamicDecimalDirective,TextOnlyDirective, DynamicDecimalPipeDirective];
+const components = [EMailTableComponent, DocumentsComponent, DynamicDecimalDirective,TextOnlyDirective, DynamicDecimalPipeDirective, DynamicEntityDecimalPipeDirective
+];
 @NgModule({
   declarations: [
     ...components,

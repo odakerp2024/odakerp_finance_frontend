@@ -1550,9 +1550,8 @@ export class CreditApplicationDetailsComponent implements OnInit {
   }
 
   getCustomerFullDetail(event: any) {
-
     this.updateSalesPerson();
-    if (this.customerBranchList.length > 1) {
+    if (this.customerBranchList.length == 1) {
       var inputRequest = {
         CustomerBranchID: this.customerBranchList[0].CustomerBranchID,
         CustomerID: this.creditApplicationForm.value.CustomerId,
@@ -1579,12 +1578,16 @@ export class CreditApplicationDetailsComponent implements OnInit {
         console.log(response, "aekhfuieashufg");
         //
         const doc = this.customerDetail["data"].Table3;
-        this.creditApplicationForm.value.SalesPersonId =
-          this.customerDetail["data"].Table2[0].SalesId;
+        if(this.customerDetail["data"].Table2.length > 0){
+          this.creditApplicationForm.value.SalesPersonId = this.customerDetail["data"].Table2[0].SalesId;
+        } else {
+          this.creditApplicationForm.value.SalesPersonId = 0;
+        }
         this.patchCustomerData(this.customerDetail);
         // this.documentInfo = this.constructDocumentPayload(doc);
 
       });
+
     this.customerService
       .getCustomerBranchDuplicate(payloads)
       .subscribe((result: any) => {
@@ -1609,7 +1612,7 @@ export class CreditApplicationDetailsComponent implements OnInit {
         this.customerBranchList = result.data.Table3;
         if (result.data.Table3.length > 0) {
           this.creditApplicationForm.controls["CustomerBranchId"].setValue(0);
-          if (this.customerBranchList.length > 0) {
+          if (this.customerBranchList.length === 1) {
             const branchCode = this.customerBranchList[0].CustomerBranchID;
             this.creditApplicationForm.controls["CustomerBranchId"].setValue(
               branchCode
