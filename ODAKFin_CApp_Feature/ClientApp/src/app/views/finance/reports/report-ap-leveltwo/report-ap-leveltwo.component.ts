@@ -38,7 +38,6 @@ export class ReportApLeveltwoComponent implements OnInit {
   agingGroupDropdown: any[];
   paymentModeList: any[];
   vendorBranch: any;
-  pagesort: any = new GridSort().sort;
   PeroidList = [
     { peroidId: 'today', peroidName: 'CURRENT DAY' },
     { peroidId: 'week', peroidName: 'CURRENT WEEK' },
@@ -79,6 +78,7 @@ export class ReportApLeveltwoComponent implements OnInit {
   DueAmountCCYTotal = 0;
   headers: string[] = [];
   data: any[] = [];
+  sortOrder: { [key: string]: 'asc' | 'desc' } = {};
 
   constructor(
     private commonDataService: CommonService,
@@ -90,7 +90,11 @@ export class ReportApLeveltwoComponent implements OnInit {
     private dataService: DataService,
     private reportService: ReportDashboardService,
     public excelService: ExcelService
-  ) { }
+  ) { 
+    this.headers.forEach(header => {
+      this.sortOrder[header] = 'asc';
+    });
+  }
 
   ngOnInit(): void {
     this.createReportForm();
@@ -241,6 +245,7 @@ async showVendor(SubTypeId:number){
     }
     this.reportFilter.controls.Peroid.setValue('month');
     this.onOptionChange('month');
+    this.getAgingDropdown();
      if(this.type == 'Overall-list'){
       await this.getAPAgingOverallList();
     }
@@ -560,9 +565,30 @@ calculateInvoicewise(header: string): any {
     this.pagedItems = this.reportList.slice(this.pager.startIndex, this.pager.endIndex + 1);
   }
 
-  sort(property) {
+
+  sort(property: string): void {
     this.pagesort(property, this.pagedItems);
   }
+
+  pagesort(property: string, items: any[]): void {
+    // Toggle sort order
+    const order = this.sortOrder[property] === 'asc' ? 'desc' : 'asc';
+    this.sortOrder[property] = order;
+
+    // Sort items based on the property and order
+    items.sort((a, b) => {
+      const valueA = a[property];
+      const valueB = b[property];
+      if (valueA < valueB) {
+        return order === 'asc' ? -1 : 1;
+      }
+      if (valueA > valueB) {
+        return order === 'asc' ? 1 : -1;
+      }
+      return 0;
+    });
+  }
+
 
   clear() {
     this.startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd");
@@ -634,177 +660,271 @@ calculateInvoicewise(header: string): any {
     startDate: string,
     endDate: string,
     reportType: 'Overall-list' | 'Vendor-wise' | 'Vendor-Invoice-wise'
-  ) {
-
+) {
     if (reportList.length === 0) {
-      Swal.fire('No record found');
-      return;
+        Swal.fire('No record found');
+        return;
     }
-  
+
     const workbook = new Workbook();
     const worksheet = workbook.addWorksheet('Report');
-  
+
     let titleHeader: string;
     let excludeKeys: string[];
-  
+
+    let columnsToColor: string[] = [];
+    let columnsToAlignLeft: string[] = [];
+    let columnsToAlignRight: string[] = [];
+
     switch (reportType) {
-      case 'Overall-list':
-        titleHeader = 'Payable Balance Summary - Overall';
-        excludeKeys = ['Id'];
-        break;
-      case 'Vendor-wise':
-        titleHeader = 'Payable Balance Summary - Vendor Wise';
-        excludeKeys = ['VendorID', 'InvoiceDate', 'BalanceCCY'];
-        break;
-      case 'Vendor-Invoice-wise':
-        titleHeader = 'Payable Balance Summary - Invoice Wise';
-        excludeKeys = ['Age (Days)', 'Aging Slab'];
-        break;
-      default:
-        titleHeader = 'Payable Balance Summary';
-        excludeKeys = [];
-        break;
+        case 'Overall-list':
+            titleHeader = 'Payable Aging Summary - Overall';
+            excludeKeys = ['Id'];
+            columnsToColor = ['Sub Category', 'Total (Company Currency)'],
+            columnsToAlignLeft = ['Sub Category'];
+            columnsToAlignRight = ['Balance (Company Currency)'];
+            break;
+        case 'Vendor-wise':
+            titleHeader = 'Payable Aging Summary - Vendor Wise';
+            excludeKeys = ['VendorID', 'InvoiceDate', 'BalanceCCY'];
+            columnsToColor = ['Vendor', 'Credit Amount', 'Balance (Company Currency)', 'Balance (Invoice currency)'],
+            columnsToAlignLeft = ['Vendor'];
+            columnsToAlignRight = ['Credit Amount', 'Balance (Invoice currency)', 'Balance (Company Currency)'];
+            break;
+        case 'Vendor-Invoice-wise':
+            titleHeader = 'Payable Aging Summary - Invoice Wise';
+            excludeKeys = [];
+            columnsToColor = ['Vendor Invoice #', 'Transaction Type', 'Invoice Amount', 'Balance (Invoice currency)', 'Balance (Company Currency)']
+            columnsToAlignLeft = ['Vendor Invoice #', 'Transaction Type'];
+            columnsToAlignRight = ['Invoice Amount', 'Balance (Invoice currency)', 'Balance (Company Currency)'];
+            break;
+        default:
+            titleHeader = 'Payable Aging  Summary';
+            excludeKeys = [];
+            break;
     }
-  
+
     const header = Object.keys(reportList[0]).filter((key) => !excludeKeys.includes(key));
-  
-    const titleRow = worksheet.addRow(['', '', '', 'NAVIO SHIPPING PRIVATE LIMITED','', '', '']);
+
+    const titleRow = worksheet.addRow(['', '', '', 'NAVIO SHIPPING PRIVATE LIMITED', '', '', '']);
     titleRow.getCell(4).font = { size: 15, bold: true };
     titleRow.getCell(4).alignment = { horizontal: 'center' };
     worksheet.mergeCells(`D${titleRow.number}:E${titleRow.number}`);
-  
-    const subtitleRow = worksheet.addRow(['', '', '', titleHeader,'', '', '']);
+
+    const subtitleRow = worksheet.addRow(['', '', '', titleHeader, '', '', '']);
     subtitleRow.getCell(4).font = { size: 14 };
     subtitleRow.getCell(4).alignment = { horizontal: 'center' };
     worksheet.mergeCells(`D${subtitleRow.number}:E${subtitleRow.number}`);
-  
-    const dateRow = worksheet.addRow(['', '', '',  `FROM ${startDate} - TO ${endDate}`,'', '', '']);
+
+    const dateRow = worksheet.addRow(['', '', '', `FROM ${startDate} - TO ${endDate}`, '', '', '']);
     dateRow.eachCell((cell) => {
-      cell.alignment = { horizontal: 'center' };
+        cell.alignment = { horizontal: 'center' };
     });
     worksheet.mergeCells(`D${dateRow.number}:E${dateRow.number}`);
-  
+
     const headerRow = worksheet.addRow(header);
     headerRow.eachCell((cell) => {
-      cell.fill = {
-        type: 'pattern',
-        pattern: 'solid',
-        fgColor: { argb: '8A9A5B' },
-      };
-      cell.font = {
-        bold: true,
-        color: { argb: 'FFFFF7' },
-      };
-      cell.alignment = {
-        horizontal: 'center',
-      };
-      cell.border = {
-        top: { style: 'thin' },
-        left: { style: 'thin' },
-        bottom: { style: 'thin' },
-        right: { style: 'thin' },
-      };
+        cell.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: '8A9A5B' },
+        };
+        cell.font = {
+            bold: true,
+            color: { argb: 'FFFFF7' },
+        };
+        cell.alignment = {
+            horizontal: 'center',
+        };
+        cell.border = {
+            top: { style: 'thin' },
+            left: { style: 'thin' },
+            bottom: { style: 'thin' },
+            right: { style: 'thin' },
+        };
     });
-  
-    const columnColorMapping = {
-      'Overall-list': ['Sub Category', 'Total (Company Currency)'],
-      'Vendor-wise': ['Vendor', 'Credit Amount', 'Balance (Company Currency)', 'Balance (Invoice currency)'],
-      'Vendor-Invoice-wise': ['Vendor Invoice #', 'Transaction Type', 'Invoice Amount', 'Balance (Invoice currency)', 'Balance (Company Currency)']
-    };
-    const columnsToColor = columnColorMapping[reportType];
-  
+
+    // Initialize totals
+    let totalCreditAmount = 0;
+    let totalCompanyCurrency = 0;
+    let totaInvoiceCurrency = 0;
+    let totalBalanceInvoiceVendorWise = 0;
+    let totalBalanceCompanyVendorWise = 0;
+    let totalBalanceCompanyCurrency = 0;
+    let totalInvoiceAmount = 0;
+
     reportList.forEach((data) => {
-      let filteredData: { [key: string]: any } = {};
-      const defaultValue = 0;
-  
-      switch (reportType) {
-        case 'Vendor-Invoice-wise':
-          data.Date = data.Date.split('T')[0];
-          filteredData = Object.keys(data)
-            .filter((key) => !excludeKeys.includes(key))
-            .reduce((obj, key) => {
-              obj[key] = data[key];
-              return obj;
-            }, {});
-  
-          filteredData['Invoice Amount'] = `${data['Invoice Amount'] !== null ? parseFloat(data['Invoice Amount']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
-          filteredData['Balance (Invoice currency)'] = `${data['Balance (Invoice currency)'] !== null ? parseFloat(data['Balance (Invoice currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
-          filteredData['Balance (Company Currency)'] = `${data['Balance (Company Currency)'] !== null ? parseFloat(data['Balance (Company Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
-          break;
-  
-        case 'Overall-list':
-          filteredData = Object.keys(data)
-            .filter((key) => !excludeKeys.includes(key))
-            .reduce((obj, key) => {
-              obj[key] = data[key];
-              return obj;
-            }, {});
-  
-          filteredData['Total (Company Currency)'] = `${data['Total (Company Currency)'] !== null ? parseFloat(data['Total (Company Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
-          break;
-  
-        case 'Vendor-wise':
-        default:
-          filteredData = Object.keys(data)
-            .filter((key) => !excludeKeys.includes(key))
-            .reduce((obj, key) => {
-              obj[key] = data[key];
-              return obj;
-            }, {});
-  
-          filteredData['Credit Amount'] = `${data['Credit Amount'] !== null ? parseFloat(data['Credit Amount']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
-          filteredData['Balance (Invoice currency)'] = `${data['Balance (Invoice currency)'] !== null ? parseFloat(data['Balance (Invoice currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
-          filteredData['Balance (Company Currency)'] = `${data['Balance (Company Currency)'] !== null ? parseFloat(data['Balance (Company Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
-       
-          break;
-      }
-  
-      const row = worksheet.addRow(Object.values(filteredData));
-  
-      columnsToColor.forEach((columnName) => {
-        const columnIndex = header.indexOf(columnName);
-        if (columnIndex !== -1) {
-          const cell = row.getCell(columnIndex + 1);
-          cell.font = { color: { argb: '8B0000' }, bold: true };
-          cell.alignment = { horizontal: 'right' };
+        let filteredData: { [key: string]: any } = {};
+        const defaultValue = 0;
+
+        switch (reportType) {
+            case 'Vendor-Invoice-wise':
+                data.Date = data.Date.split('T')[0];
+                filteredData = Object.keys(data)
+                    .filter((key) => !excludeKeys.includes(key))
+                    .reduce((obj, key) => {
+                        obj[key] = data[key];
+                        return obj;
+                    }, {});
+
+                    filteredData['Invoice Amount'] = `${data['Invoice Amount'] !== null ? parseFloat(data['Invoice Amount']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
+                    filteredData['Balance (Invoice currency)'] = `${data['Balance (Invoice currency)'] !== null ? parseFloat(data['Balance (Invoice currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
+                    filteredData['Balance (Company Currency)'] = `${data['Balance (Company Currency)'] !== null ? parseFloat(data['Balance (Company Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
+
+                // Accumulate totals
+                totalInvoiceAmount += parseFloat(data['Invoice Amount']) || 0;
+                totaInvoiceCurrency += parseFloat(data['Balance (Invoice currency)']) || 0;
+                totalBalanceCompanyCurrency += parseFloat(data['Balance (Company Currency)']) || 0;
+                break;
+
+            case 'Overall-list':
+                filteredData = Object.keys(data)
+                    .filter((key) => !excludeKeys.includes(key))
+                    .reduce((obj, key) => {
+                        obj[key] = data[key];
+                        return obj;
+                    }, {});
+
+                    filteredData['Total (Company Currency)'] = `${data['Total (Company Currency)'] !== null ? parseFloat(data['Total (Company Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
+              
+                    totalCompanyCurrency += parseFloat(data['Total (Company Currency)']) || 0;
+                break;
+
+            case 'Vendor-wise':
+                filteredData = Object.keys(data)
+                    .filter((key) => !excludeKeys.includes(key))
+                    .reduce((obj, key) => {
+                        obj[key] = data[key];
+                        return obj;
+                    }, {});
+
+                    filteredData['Credit Amount'] = `${data['Credit Amount'] !== null ? parseFloat(data['Credit Amount']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
+                    filteredData['Balance (Invoice currency)'] = `${data['Balance (Invoice currency)'] !== null ? parseFloat(data['Balance (Invoice currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
+                    filteredData['Balance (Company Currency)'] = `${data['Balance (Company Currency)'] !== null ? parseFloat(data['Balance (Company Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
+                // Accumulate totals
+                totalCreditAmount += parseFloat(data['Credit Amount']) || 0;
+                totalBalanceInvoiceVendorWise += parseFloat(data['Balance (Invoice currency)']) || 0;
+                totalBalanceCompanyVendorWise += parseFloat(data['Balance (Company Currency)']) || 0;
+                break;
         }
-      });
+
+        const row = worksheet.addRow(Object.values(filteredData));
+
+        // Apply color and alignment based on the category
+        columnsToColor.forEach((columnName) => {
+            const columnIndex = header.indexOf(columnName);
+            if (columnIndex !== -1) {
+                const cell = row.getCell(columnIndex + 1);
+                cell.font = { color: { argb: '8B0000' }, bold: true };
+                cell.alignment = { horizontal: 'right' };
+            }
+        });
+
+        columnsToAlignLeft.forEach((columnName) => {
+            const columnIndex = header.indexOf(columnName);
+            if (columnIndex !== -1) {
+                const cell = row.getCell(columnIndex + 1);
+                cell.alignment = { horizontal: 'left' };
+            }
+        });
+
+        columnsToAlignRight.forEach((columnName) => {
+            const columnIndex = header.indexOf(columnName);
+            if (columnIndex !== -1) {
+                const cell = row.getCell(columnIndex + 1);
+                cell.alignment = { horizontal: 'right' };
+            }
+        });
     });
-  
+
     worksheet.columns.forEach((column) => {
-      let maxLength = 0;
-      column.eachCell({ includeEmpty: true }, (cell) => {
-        const cellLength = cell.value ? cell.value.toString().length : 0;
-        if (cellLength > maxLength) {
-          maxLength = cellLength;
+        let maxLength = 0;
+        column.eachCell({ includeEmpty: true }, (cell) => {
+            const cellLength = cell.value ? cell.value.toString().length : 0;
+            if (cellLength > maxLength) {
+                maxLength = cellLength;
+            }
+        });
+        column.width = maxLength + 2;
+    });
+
+    const footerData = ['Grand Total']; // First column with text "Grand Total"
+
+    if (reportType === 'Overall-list') {
+      for (let i = 1; i < header.length; i++) { // Start loop from 1 to skip the first column
+        if (header[i] == 'Total (Company Currency)') {
+          footerData.push(totalCompanyCurrency.toFixed(this.entityFraction));
+        } else {
+          footerData.push('');
         }
-      });
-      column.width = maxLength + 2;
+      }
+    } else if (reportType === 'Vendor-wise') {
+      for (let i = 1; i < header.length; i++) { // Start loop from 1 to skip the first column
+        if (header[i] == 'Credit Amount') {
+          footerData.push(totalCreditAmount.toFixed(this.entityFraction));
+        }  else if (header[i] == 'Balance (Company Currency)') {
+          footerData.push(totalBalanceCompanyVendorWise.toFixed(this.entityFraction));
+        } else if (header[i] == 'Balance (Invoice currency)') {
+          footerData.push(totalBalanceInvoiceVendorWise.toFixed(this.entityFraction));
+        } else {
+          footerData.push('');
+        }
+      }
+    } else if (reportType === 'Vendor-Invoice-wise') {
+      for (let i = 1; i < header.length; i++) { // Start loop from 1 to skip the first column
+        if (header[i] == 'Invoice Amount') {
+          footerData.push(totalInvoiceAmount.toFixed(this.entityFraction));
+        }
+        else if (header[i] == 'Balance (Invoice currency)') {
+          footerData.push(totaInvoiceCurrency.toFixed(this.entityFraction));
+        } else if (header[i] == 'Balance (Company Currency)') {
+          footerData.push(totalBalanceCompanyCurrency.toFixed(this.entityFraction));
+        } else {
+          footerData.push('');
+        }
+      }
+    } else {
+      for (let i = 1; i < header.length; i++) {
+        footerData.push('');
+      }
+    }
+
+    const footerRow = worksheet.addRow(footerData);
+    footerRow.eachCell((cell, colNumber) => {
+        cell.font = { bold: true };
+        cell.alignment = { horizontal: colNumber === 1 ? 'left' : 'right' }; // Align first column to left
+        cell.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: 'FFFF99' }, // Example color, change as needed
+        };
     });
-  
-    const footerRow = worksheet.addRow(['End of Report']);
-    footerRow.eachCell((cell) => {
-      cell.fill = {
-        type: 'pattern',
-        pattern: 'solid',
-        fgColor: { argb: '8A9A5B' },
-      };
-      cell.font = {
-        bold: true,
-        color: { argb: 'FFFFF7' },
-      };
-      cell.alignment = {
-        horizontal: 'center',
-      };
+
+    // Add "End of Report" row
+    const endOfReportRow = worksheet.addRow(['End of Report']);
+    endOfReportRow.eachCell((cell) => {
+        cell.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: '8A9A5B' },
+        };
+        cell.font = {
+            bold: true,
+            color: { argb: 'FFFFF7' },
+        };
+        cell.alignment = {
+            horizontal: 'center',
+        };
     });
-    worksheet.mergeCells(`A${footerRow.number}:${String.fromCharCode(65 + header.length - 1)}${footerRow.number}`);
-  
+    worksheet.mergeCells(`A${endOfReportRow.number}:${String.fromCharCode(65 + header.length - 1)}${endOfReportRow.number}`);
+
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     saveAs(blob, `PayableAgingSummary-${reportType}.xlsx`);
   }
-  
+
 }
+
 
 
 
