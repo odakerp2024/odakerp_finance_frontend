@@ -588,10 +588,10 @@ calculateInvoicewise(header: string): any {
     startDate: string,
     endDate: string,
     reportType: 'overall' | 'customerwise' | 'customerinvoicewise'
-  ) {
+) {
     if (reportList.length === 0) {
-      Swal.fire('No record found');
-      return;
+        Swal.fire('No record found');
+        return;
     }
 
     const workbook = new Workbook();
@@ -600,23 +600,36 @@ calculateInvoicewise(header: string): any {
     let titleHeader: string;
     let excludeKeys: string[];
 
+    let columnsToColor: string[] = [];
+    let columnsToAlignLeft: string[] = [];
+    let columnsToAlignRight: string[] = [];
+
     switch (reportType) {
-      case 'overall':
-        titleHeader = 'Receivable Aging Summary - Overall';
-        excludeKeys = ['Id'];
-        break;
-      case 'customerwise':
-        titleHeader = 'Receivable Aging Summary - Customer Wise';
-        excludeKeys = ['CustomerID', 'InvoiceDate'];
-        break;
-      case 'customerinvoicewise':
-        titleHeader = 'Receivable Aging Summary - Invoice Wise';
-        excludeKeys = [];
-        break;
-      default:
-        titleHeader = 'Receivable Aging Summary';
-        excludeKeys = [];
-        break;
+        case 'overall':
+            titleHeader = 'Receivable Aging Summary - Overall';
+            excludeKeys = ['Id'];
+            columnsToColor = ['Sub Category', 'Balance (Company Currency)'],
+            columnsToAlignLeft = ['Sub Category'];
+            columnsToAlignRight = ['Balance (Company Currency)'];
+            break;
+        case 'customerwise':
+            titleHeader = 'Receivable Aging Summary - Customer Wise';
+            excludeKeys = ['CustomerID', 'InvoiceDate'];
+            columnsToColor = ['Customer', 'Credit Amount', 'Balance (Company Currency)', 'Balance (Invoice currency)']
+            columnsToAlignLeft = ['Customer'];
+            columnsToAlignRight = ['Credit Amount', 'Balance (Invoice Currency)', 'Net Balance (Invoice Currency)', 'Balance (Company Currency)'];
+            break;
+        case 'customerinvoicewise':
+            titleHeader = 'Receivable Aging Summary - Invoice Wise';
+            excludeKeys = [];
+            columnsToColor = ['Invoice #', 'Transaction Type', 'Invoice Amount', 'Balance (Invoice currency)', 'Balance (Company Currency)']
+            columnsToAlignLeft = ['Invoice #', 'Transaction Type'];
+            columnsToAlignRight = ['Invoice Amount', 'Balance (Invoice Currency)', 'Balance (Company Currency)'];
+            break;
+        default:
+            titleHeader = 'Receivable Aging Summary';
+            excludeKeys = [];
+            break;
     }
 
     const header = Object.keys(reportList[0]).filter((key) => !excludeKeys.includes(key));
@@ -633,128 +646,211 @@ calculateInvoicewise(header: string): any {
 
     const dateRow = worksheet.addRow(['', '', '', `FROM ${startDate} - TO ${endDate}`, '', '', '']);
     dateRow.eachCell((cell) => {
-      cell.alignment = { horizontal: 'center' };
+        cell.alignment = { horizontal: 'center' };
     });
     worksheet.mergeCells(`D${dateRow.number}:E${dateRow.number}`);
 
     const headerRow = worksheet.addRow(header);
     headerRow.eachCell((cell) => {
-      cell.fill = {
-        type: 'pattern',
-        pattern: 'solid',
-        fgColor: { argb: '8A9A5B' },
-      };
-      cell.font = {
-        bold: true,
-        color: { argb: 'FFFFF7' },
-      };
-      cell.alignment = {
-        horizontal: 'center',
-      };
-      cell.border = {
-        top: { style: 'thin' },
-        left: { style: 'thin' },
-        bottom: { style: 'thin' },
-        right: { style: 'thin' },
-      };
+        cell.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: '8A9A5B' },
+        };
+        cell.font = {
+            bold: true,
+            color: { argb: 'FFFFF7' },
+        };
+        cell.alignment = {
+            horizontal: 'center',
+        };
+        cell.border = {
+            top: { style: 'thin' },
+            left: { style: 'thin' },
+            bottom: { style: 'thin' },
+            right: { style: 'thin' },
+        };
     });
 
-    const columnColorMapping = {
-      overall: ['Sub Category', 'Balance (Company Currency)'],
-      customerwise: ['Customer', 'Credit Amount', 'Balance (Company Currency)', 'Balance (Invoice currency)'],
-      customerinvoicewise: ['Invoice #', 'Transaction Type', 'Invoice Amount', 'Balance (Invoice currency)', 'Balance (Company Currency)']
-    };
-    const columnsToColor = columnColorMapping[reportType];
+    // Initialize totals
+    let totalCreditAmount = 0;
+    let totalBalanceCompanyCurrency = 0;
+    let totaInvoiceCurrency = 0;
+    let totalBalanceInvoiceCustomerWise = 0;
+    let totalBalanceCustomerWise = 0;
+    let totalBalanceCompanyCustomerWise = 0;
+    let totalinvoiceamount = 0;
 
     reportList.forEach((data) => {
-      let filteredData: { [key: string]: any } = {};
-      const defaultValue = 0;
+        let filteredData: { [key: string]: any } = {};
+        const defaultValue = 0;
 
-      switch (reportType) {
-        case 'customerinvoicewise':
-          data.Date = data.Date.split('T')[0];
-          filteredData = Object.keys(data)
-            .filter((key) => !excludeKeys.includes(key))
-            .reduce((obj, key) => {
-              obj[key] = data[key];
-              return obj;
-            }, {});
+        switch (reportType) {
+            case 'customerinvoicewise':
+                data.Date = data.Date.split('T')[0];
+                filteredData = Object.keys(data)
+                    .filter((key) => !excludeKeys.includes(key))
+                    .reduce((obj, key) => {
+                        obj[key] = data[key];
+                        return obj;
+                    }, {});
 
-          filteredData['Invoice Amount'] = `${data['Invoice Amount'] !== null ? parseFloat(data['Invoice Amount']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
-          filteredData['Balance (Invoice currency)'] = `${data['Balance (Invoice currency)'] !== null ? parseFloat(data['Balance (Invoice currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
-          filteredData['Balance (Company Currency)'] = `${data['Balance (Company Currency)'] !== null ? parseFloat(data['Balance (Company Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
-          break;
+                    filteredData['Invoice Amount'] = `${data['Invoice Amount'] !== null ? parseFloat(data['Invoice Amount']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
+                    filteredData['Balance (Invoice currency)'] = `${data['Balance (Invoice currency)'] !== null ? parseFloat(data['Balance (Invoice currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
+                    filteredData['Balance (Company Currency)'] = `${data['Balance (Company Currency)'] !== null ? parseFloat(data['Balance (Company Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
+                // Accumulate totals
+                totalinvoiceamount += parseFloat(data['Invoice Amount']) || 0;
+                totaInvoiceCurrency += parseFloat(data['Balance (Invoice currency)']) || 0;
+                totalBalanceCompanyCurrency += parseFloat(data['Balance (Company Currency)']) || 0;
+                break;
 
-        case 'overall':
-          filteredData = Object.keys(data)
-            .filter((key) => !excludeKeys.includes(key))
-            .reduce((obj, key) => {
-              obj[key] = data[key];
-              return obj;
-            }, {});
+            case 'overall':
+                filteredData = Object.keys(data)
+                    .filter((key) => !excludeKeys.includes(key))
+                    .reduce((obj, key) => {
+                        obj[key] = data[key];
+                        return obj;
+                    }, {});
 
-          filteredData['Balance (Company Currency)'] = `${data['Balance (Company Currency)'] !== null ? parseFloat(data['Balance (Company Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
-          break;
+                filteredData['Balance (Company Currency)'] = `${data['Balance (Company Currency)'] !== null ? parseFloat(data['Balance (Company Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
+                // Accumulate totals
+                totalBalanceCompanyCurrency += parseFloat(data['Balance (Company Currency)']) || 0;
+                break;
 
-        case 'customerwise':
-        default:
-          filteredData = Object.keys(data)
-            .filter((key) => !excludeKeys.includes(key))
-            .reduce((obj, key) => {
-              obj[key] = data[key];
-              return obj;
-            }, {});
+            case 'customerwise':
+                filteredData = Object.keys(data)
+                    .filter((key) => !excludeKeys.includes(key))
+                    .reduce((obj, key) => {
+                        obj[key] = data[key];
+                        return obj;
+                    }, {});
 
-          filteredData['Credit Amount'] = `${data['Credit Amount'] !== null ? parseFloat(data['Credit Amount']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
-          filteredData['Balance (Company Currency)'] = `${data['Balance (Company Currency)'] !== null ? parseFloat(data['Balance (Company Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
-          filteredData['Balance (Invoice currency)'] = `${data['Balance (Invoice currency)'] !== null ? parseFloat(data['Balance (Invoice currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
-          break;
-      }
-
-      const row = worksheet.addRow(Object.values(filteredData));
-
-      columnsToColor.forEach((columnName) => {
-        const columnIndex = header.indexOf(columnName);
-        if (columnIndex !== -1) {
-          const cell = row.getCell(columnIndex + 1);
-          cell.font = { color: { argb: '8B0000' }, bold: true };
-          cell.alignment = { horizontal: 'right' };
+                    filteredData['Credit Amount'] = `${data['Credit Amount'] !== null ? parseFloat(data['Credit Amount']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
+                    filteredData['Balance (Company Currency)'] = `${data['Balance (Company Currency)'] !== null ? parseFloat(data['Balance (Company Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
+                    filteredData['Balance (Invoice currency)'] = `${data['Balance (Invoice currency)'] !== null ? parseFloat(data['Balance (Invoice currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
+                // Accumulate totals
+                totalCreditAmount += parseFloat(data['Credit Amount']) || 0;
+                totalBalanceInvoiceCustomerWise += parseFloat(data['Balance (Invoice Currency)']) || 0;
+                totalBalanceCustomerWise += parseFloat(data['Balance (Company Currency)']) || 0;
+                totalBalanceCompanyCustomerWise += parseFloat(data['Balance (Invoice currency)']) || 0;
+                break;
         }
-      });
+
+        const row = worksheet.addRow(Object.values(filteredData));
+
+        // Apply color and alignment based on the category
+        columnsToColor.forEach((columnName) => {
+            const columnIndex = header.indexOf(columnName);
+            if (columnIndex !== -1) {
+                const cell = row.getCell(columnIndex + 1);
+                cell.font = { color: { argb: '8B0000' }, bold: true };
+                cell.alignment = { horizontal: 'right' };
+            }
+        });
+
+        columnsToAlignLeft.forEach((columnName) => {
+            const columnIndex = header.indexOf(columnName);
+            if (columnIndex !== -1) {
+                const cell = row.getCell(columnIndex + 1);
+                cell.alignment = { horizontal: 'left' };
+            }
+        });
+
+        columnsToAlignRight.forEach((columnName) => {
+            const columnIndex = header.indexOf(columnName);
+            if (columnIndex !== -1) {
+                const cell = row.getCell(columnIndex + 1);
+                cell.alignment = { horizontal: 'right' };
+            }
+        });
     });
 
     worksheet.columns.forEach((column) => {
-      let maxLength = 0;
-      column.eachCell({ includeEmpty: true }, (cell) => {
-        const cellLength = cell.value ? cell.value.toString().length : 0;
-        if (cellLength > maxLength) {
-          maxLength = cellLength;
-        }
-      });
-      column.width = maxLength + 2;
+        let maxLength = 0;
+        column.eachCell({ includeEmpty: true }, (cell) => {
+            const cellLength = cell.value ? cell.value.toString().length : 0;
+            if (cellLength > maxLength) {
+                maxLength = cellLength;
+            }
+        });
+        column.width = maxLength + 2;
     });
 
-    const footerRow = worksheet.addRow(['End of Report']);
-    footerRow.eachCell((cell) => {
-      cell.fill = {
-        type: 'pattern',
-        pattern: 'solid',
-        fgColor: { argb: '8A9A5B' },
-      };
-      cell.font = {
-        bold: true,
-        color: { argb: 'FFFFF7' },
-      };
-      cell.alignment = {
-        horizontal: 'center',
-      };
+    const footerData = ['Grand Total']; // First column with text "Grand Total"
+
+    if (reportType === 'overall') {
+      for (let i = 1; i < header.length; i++) { // Start loop from 1 to skip the first column
+        if (header[i] == 'Balance (Company Currency)') {
+          footerData.push(totalBalanceCompanyCurrency.toFixed(this.entityFraction));
+        } else {
+          footerData.push('');
+        }
+      }
+    } else if (reportType === 'customerwise') {
+      for (let i = 1; i < header.length; i++) { // Start loop from 1 to skip the first column
+        if (header[i] == 'Credit Amount') {
+          footerData.push(totalCreditAmount.toFixed(this.entityFraction));
+        } else if (header[i] == 'Balance (Invoice Currency)') {
+          footerData.push(totalBalanceInvoiceCustomerWise.toFixed(this.entityFraction));
+        } else if (header[i] == 'Balance (Company Currency)') {
+          footerData.push(totalBalanceCustomerWise.toFixed(this.entityFraction));
+        } else if (header[i] == 'Balance (Invoice currency)') {
+          footerData.push(totalBalanceCompanyCustomerWise.toFixed(this.entityFraction));
+        } else {
+          footerData.push('');
+        }
+      }
+    } else if (reportType === 'customerinvoicewise') {
+      for (let i = 1; i < header.length; i++) { // Start loop from 1 to skip the first column
+          if (header[i] == 'Balance (Invoice currency)') {
+          footerData.push(totaInvoiceCurrency.toFixed(this.entityFraction));
+        } else if (header[i] == 'Balance (Company Currency)') {
+          footerData.push(totalBalanceCompanyCurrency.toFixed(this.entityFraction));
+        } else if (header[i] == 'Invoice Amount') {
+          footerData.push(totaInvoiceCurrency.toFixed(this.entityFraction));
+        } 
+        else {
+          footerData.push('');
+        }
+      }
+    } else {
+      for (let i = 1; i < header.length; i++) {
+        footerData.push('');
+      }
+    }
+
+    const footerRow = worksheet.addRow(footerData);
+    footerRow.eachCell((cell, colNumber) => {
+        cell.font = { bold: true };
+        cell.alignment = { horizontal: colNumber === 1 ? 'left' : 'right' }; // Align first column to left
+        cell.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: 'FFFF99' }, // Example color, change as needed
+        };
     });
-    worksheet.mergeCells(`A${footerRow.number}:${String.fromCharCode(65 + header.length - 1)}${footerRow.number}`);
+
+    // Add "End of Report" row
+    const endOfReportRow = worksheet.addRow(['End of Report']);
+    endOfReportRow.eachCell((cell) => {
+        cell.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: '8A9A5B' },
+        };
+        cell.font = {
+            bold: true,
+            color: { argb: 'FFFFF7' },
+        };
+        cell.alignment = {
+            horizontal: 'center',
+        };
+    });
+    worksheet.mergeCells(`A${endOfReportRow.number}:${String.fromCharCode(65 + header.length - 1)}${endOfReportRow.number}`);
 
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     saveAs(blob, `ReceivableAgingSummary-${reportType}.xlsx`);
-  }
-
+}
 
 }

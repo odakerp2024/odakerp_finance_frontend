@@ -722,7 +722,7 @@ export class ReportArLevelthreeComponent implements OnInit {
           footerData.push('');
         }
       }
-      console.log('Footer Data:', footerData); 
+
       const footerRow = worksheet.addRow(footerData);
       footerRow.eachCell((cell, colNumber) => {
           cell.font = { bold: true };
