@@ -38,7 +38,6 @@ export class ReportApLeveltwoComponent implements OnInit {
   agingGroupDropdown: any[];
   paymentModeList: any[];
   vendorBranch: any;
-  pagesort: any = new GridSort().sort;
   PeroidList = [
     { peroidId: 'today', peroidName: 'CURRENT DAY' },
     { peroidId: 'week', peroidName: 'CURRENT WEEK' },
@@ -79,6 +78,7 @@ export class ReportApLeveltwoComponent implements OnInit {
   DueAmountCCYTotal = 0;
   headers: string[] = [];
   data: any[] = [];
+  sortOrder: { [key: string]: 'asc' | 'desc' } = {};
 
   constructor(
     private commonDataService: CommonService,
@@ -90,7 +90,11 @@ export class ReportApLeveltwoComponent implements OnInit {
     private dataService: DataService,
     private reportService: ReportDashboardService,
     public excelService: ExcelService
-  ) { }
+  ) { 
+    this.headers.forEach(header => {
+      this.sortOrder[header] = 'asc';
+    });
+  }
 
   ngOnInit(): void {
     this.createReportForm();
@@ -241,6 +245,7 @@ async showVendor(SubTypeId:number){
     }
     this.reportFilter.controls.Peroid.setValue('month');
     this.onOptionChange('month');
+    this.getAgingDropdown();
      if(this.type == 'Overall-list'){
       await this.getAPAgingOverallList();
     }
@@ -560,9 +565,30 @@ calculateInvoicewise(header: string): any {
     this.pagedItems = this.reportList.slice(this.pager.startIndex, this.pager.endIndex + 1);
   }
 
-  sort(property) {
+
+  sort(property: string): void {
     this.pagesort(property, this.pagedItems);
   }
+
+  pagesort(property: string, items: any[]): void {
+    // Toggle sort order
+    const order = this.sortOrder[property] === 'asc' ? 'desc' : 'asc';
+    this.sortOrder[property] = order;
+
+    // Sort items based on the property and order
+    items.sort((a, b) => {
+      const valueA = a[property];
+      const valueB = b[property];
+      if (valueA < valueB) {
+        return order === 'asc' ? -1 : 1;
+      }
+      if (valueA > valueB) {
+        return order === 'asc' ? 1 : -1;
+      }
+      return 0;
+    });
+  }
+
 
   clear() {
     this.startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd");

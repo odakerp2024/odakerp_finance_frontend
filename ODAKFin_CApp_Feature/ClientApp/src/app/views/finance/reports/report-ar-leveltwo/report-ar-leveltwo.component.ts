@@ -242,6 +242,7 @@ export class ReportArLeveltwoComponent implements OnInit {
     }
     this.reportFilter.controls.Peroid.setValue('month');
     this.onOptionChange('month');
+    this.getAgingDropdown();
     if (this.type == 'overall') {
       await this.getOverallList();
     }

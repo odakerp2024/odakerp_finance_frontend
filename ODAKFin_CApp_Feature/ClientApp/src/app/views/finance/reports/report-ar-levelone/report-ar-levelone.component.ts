@@ -255,7 +255,7 @@ export class ReportArLeveloneComponent implements OnInit {
   }
 
   getOfficeList(id: number) {
-    this.reportFilter.controls.Office.setValue(0);
+    this.reportFilter.controls.OfficeId.setValue(0);
     this.commonDataService.getOfficeByDivisionId({ DivisionId: id }).subscribe(result => {
       this.officeList = [];
       if (result['data'].Table.length > 0) {
@@ -264,7 +264,7 @@ export class ReportArLeveloneComponent implements OnInit {
 
       if (this.officeList.length == 1) {
         const ID =
-          this.reportFilter.controls.Office.setValue(this.officeList[0].ID);
+          this.reportFilter.controls.OfficeId.setValue(this.officeList[0].ID);
       }
     })
   }

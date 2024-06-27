@@ -202,7 +202,7 @@ export class ReportApLeveloneComponent implements OnInit {
       Peroid: [''],
     });
   }
-  
+  this.reportFilter.controls.Peroid.setValue('month');
     this.onOptionChange('month');
     if(this.type == 'Overall-list'){
       await this.getAccountPayableOverallList();
@@ -344,15 +344,13 @@ export class ReportApLeveloneComponent implements OnInit {
         this.totalinvoice = this.calculateTotalInvoices(this.reportList);
         this.totalbalance = this.calculateTotalBalance(this.reportList);
       } else {
-        // this.pager = {};
-        // this.pagedItems = [];
+        this.pager = {};
+        this.pagedItems = [];
         this.totalVendors = 0;
         this.totalinvoice = 0;
         this.totalbalance = 0;
       }
     })
-    this.pager = {};
-    this.pagedItems = [];
   }
 
 getAccountPayableVendorList() {
