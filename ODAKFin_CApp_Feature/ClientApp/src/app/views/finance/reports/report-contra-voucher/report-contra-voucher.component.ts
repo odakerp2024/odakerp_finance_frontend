@@ -261,7 +261,7 @@ export class ReportContraVoucherComponent implements OnInit  {
     this.endDate = this.reportFilter.controls.ToDate.value;
     this.reportService.GetContraVoucherReportList(this.reportFilter.value).subscribe(result => {
     this.reportList = [];
-
+    this.reportForExcelList = [];
       if (result['data'].Table.length > 0) {
         this.reportList = result['data'].Table;
         this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;

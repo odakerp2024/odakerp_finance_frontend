@@ -237,6 +237,7 @@ export class ReportDayBookComponent implements OnInit {
     this.endDate = this.reportFilter.controls.ToDate.value;
     this.reportService.GetDayBookReportList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
+      this.reportForExcelList = [];
       if (result['data'].Table.length > 0) {
         this.reportList = result['data'].Table;
         this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
@@ -345,7 +346,7 @@ export class ReportDayBookComponent implements OnInit {
         right: { style: 'thin' },
       };
     });
-
+   
     // Add data rows with concatenated symbol and amount
     this.reportForExcelList.forEach((data) => {
 
@@ -418,6 +419,7 @@ export class ReportDayBookComponent implements OnInit {
       });
       column.width = maxLength + 2;
     });
+  
 
     // Style the footer row with yellow background, bold, and centered text
     const footerRow = worksheet.addRow(['End of Report']);
