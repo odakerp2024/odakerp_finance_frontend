@@ -160,10 +160,13 @@
                         <table class="table table-responsive table-bordered w-100 dataTable no-footer">
                             <thead>
                                 <tr>
-                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('header')" style="width: 177.575px;"
-                                        *ngFor="let header of headers">{{ header }}</th>
+                                    <th h class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                    colspan="1" aria-label="Name: activate to sort column ascending"  style="width: 177.575px;"
+                                    *ngFor="let header of headers" (click)="sort(header)">
+                                        {{ header }}
+                                        <span *ngIf="sortOrder[header] === 'asc'"></span>
+                                        <span *ngIf="sortOrder[header] === 'desc'"></span>
+                                      </th> 
                                 </tr>
                             </thead>
                             <tbody>
@@ -206,12 +209,15 @@
                     <div class="col-12" *ngIf="type == 'customerwise'">
                         <table class="table table-responsive table-bordered w-100 dataTable no-footer">
                             <thead>
-                                <tr>
-                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('header')" style="width: 177.575px;"
-                                        *ngFor="let header of calculateHeadersCustomerwise()">{{ header }}</th>
-                                </tr>
+                                    <tr>
+                                        <th h class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"  style="width: 177.575px;"
+                                        *ngFor="let header of calculateHeadersCustomerwise()" (click)="sort(header)">
+                                            {{ header }}
+                                            <span *ngIf="sortOrder[header] === 'asc'"></span>
+                                            <span *ngIf="sortOrder[header] === 'desc'"></span>
+                                          </th> 
+                                    </tr>
                             </thead>
                             <tbody>
                                 <tr *ngFor="let row of pagedItems">
@@ -266,12 +272,15 @@
                     <div class="col-12" *ngIf="type == 'customerinvoicewise'">
                         <table class="table table-responsive table-bordered w-100 dataTable no-footer">
                             <thead>
-                                <tr>
-                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('header')" style="width: 177.575px;"
-                                        *ngFor="let header of calculateHeadersInvoicewise()">{{ header }}</th>
-                                </tr>
+                                    <tr>
+                                        <th h class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        colspan="1" aria-label="Name: activate to sort column ascending"  style="width: 177.575px;"
+                                        *ngFor="let header of calculateHeadersInvoicewise()" (click)="sort(header)">
+                                            {{ header }}
+                                            <span *ngIf="sortOrder[header] === 'asc'"></span>
+                                            <span *ngIf="sortOrder[header] === 'desc'"></span>
+                                          </th> 
+                                    </tr>
                             </thead>
                             <tbody>
                                 <tr *ngFor="let row of pagedItems">

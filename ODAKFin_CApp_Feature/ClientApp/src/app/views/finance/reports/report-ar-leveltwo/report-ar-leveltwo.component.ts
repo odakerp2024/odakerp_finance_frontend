@@ -49,7 +49,6 @@ export class ReportArLeveltwoComponent implements OnInit {
   entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   currentDate = new Date();
   selectedOption: string;
-  pagesort: any = new GridSort().sort;
   campaignOne = new FormGroup({
     start: new FormControl(new Date(year, month, 13)),
     end: new FormControl(new Date(year, month, 16)),
@@ -73,6 +72,7 @@ export class ReportArLeveltwoComponent implements OnInit {
   DueAmountCCYTotal = 0;
   headers: string[] = [];
   data: any[] = [];
+  sortOrder: { [key: string]: 'asc' | 'desc' } = {};
 
   constructor(
     private commonDataService: CommonService,
@@ -84,7 +84,11 @@ export class ReportArLeveltwoComponent implements OnInit {
     private dataService: DataService,
     private reportService: ReportDashboardService,
     public excelService: ExcelService
-  ) { }
+  ) { 
+    this.headers.forEach(header => {
+      this.sortOrder[header] = 'asc';
+    });
+  }
 
   ngOnInit(): void {
     this.createReportForm();
@@ -504,10 +508,28 @@ calculateInvoicewise(header: string): any {
     this.pagedItems = this.reportList.slice(this.pager.startIndex, this.pager.endIndex + 1);
   }
 
-  sort(property) {
+  sort(property: string): void {
     this.pagesort(property, this.pagedItems);
   }
 
+  pagesort(property: string, items: any[]): void {
+    // Toggle sort order
+    const order = this.sortOrder[property] === 'asc' ? 'desc' : 'asc';
+    this.sortOrder[property] = order;
+
+    // Sort items based on the property and order
+    items.sort((a, b) => {
+      const valueA = a[property];
+      const valueB = b[property];
+      if (valueA < valueB) {
+        return order === 'asc' ? -1 : 1;
+      }
+      if (valueA > valueB) {
+        return order === 'asc' ? 1 : -1;
+      }
+      return 0;
+    });
+  }
 
 
   async search() {
