@@ -139,11 +139,11 @@
                             <span class="child-account">{{ balance.ChildAccountName }}</span>
                           </td>
                           <td class="hyperTextColor text-right" *ngIf="balance.ChildTransaction_Type === 'Debit'">
-                            {{ balance.ChildNet_Balance | dynamicDecimal }}
+                            {{ balance.ChildNet_Balance | dynamicentityDecimal }}
                           </td>
                           <td class="hyperTextColor text-right" *ngIf="balance.ChildTransaction_Type !== 'Debit'">0</td>
                           <td class="hyperTextColor text-right" *ngIf="balance.ChildTransaction_Type === 'Credit'">
-                            {{ balance.ChildNet_Balance | dynamicDecimal }}
+                            {{ balance.ChildNet_Balance | dynamicentityDecimal }}
                           </td>
                           <td class="hyperTextColor text-right" *ngIf="balance.ChildTransaction_Type !== 'Credit'">0</td>
                           
@@ -155,8 +155,9 @@
                         <td colspan="1" class="text-left">
                           <span style="font-weight: bold; text-align: left;">{{ parent.ParentAccountName }} Total : </span>
                         </td>
-                        <td class="text-center">{{ parent.totalCredit | dynamicDecimal }}</td>
-                        <td class="text-center">{{ parent.totalDebit | dynamicDecimal }}</td>
+                        <td class="text-center">{{ parent.totalDebit | dynamicentityDecimal }}</td>
+                        <td class="text-center">{{ parent.totalCredit | dynamicentityDecimal }}</td>
+                        
                       </tr>
                     </ng-container>
                 
@@ -181,8 +182,8 @@
                   <td colspan="1" class="text-left">
                     <span style="font-size: medium;">Grand Total : </span>
                   </td>
-                  <td class="text-center" colspan="1">{{ totaldebitamount | dynamicDecimal }}</td>
-                  <td class="text-center" colspan="1">{{ totalcreditamount | dynamicDecimal }}</td>
+                  <td class="text-center" colspan="1">{{ totaldebitamount | dynamicentityDecimal }}</td>
+                  <td class="text-center" colspan="1">{{ totalcreditamount | dynamicentityDecimal }}</td>
                   
                 </tr>
               </tfoot>

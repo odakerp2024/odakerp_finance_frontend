@@ -240,6 +240,7 @@ export class ReportArLeveltwoComponent implements OnInit {
         Peroid: [''],
       });
     }
+    this.getAgingDropdown();
     this.reportFilter.controls.Peroid.setValue('month');
     this.onOptionChange('month');
     this.getAgingDropdown();
