@@ -242,7 +242,6 @@ export class ReportArLeveloneComponent implements OnInit {
   
 
   getDivisionList() {
-    debugger
     var service = `${this.globals.APIURL}/Division/GetOrganizationDivisionList`; var payload: any = {}
     this.dataService.post(service, payload).subscribe((result: any) => {
       this.divisionList = [];
@@ -256,7 +255,6 @@ export class ReportArLeveloneComponent implements OnInit {
   }
 
   getOfficeList(id: number) {
-    debugger
     this.reportFilter.controls.OfficeId.setValue(0);
     this.commonDataService.getOfficeByDivisionId({ DivisionId: id }).subscribe(result => {
       this.officeList = [];

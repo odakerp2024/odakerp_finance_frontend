@@ -191,7 +191,6 @@ export class ReportApLeveloneComponent implements OnInit {
       Peroid: [''],
     });
   }else if( this.type == 'Vendor-Invoice-wise'){
-    debugger
     this.reportFilter = this.fb.group({
       FromDate: [this.startDate],
       ToDate: [this.endDate],
@@ -219,7 +218,6 @@ export class ReportApLeveloneComponent implements OnInit {
   
   
   async showVendor(subTypeId:number){
-    debugger
    this.subtype = subTypeId;
     this.pagedItems = [];
     this.type = 'Vendor-wise';
@@ -231,7 +229,6 @@ export class ReportApLeveloneComponent implements OnInit {
   }
 
   async showVendorinvoicewise(subTypeId:number){
-    debugger
     this.invoicevendortype = subTypeId;
     this.pagedItems = [];
     this.type = 'Vendor-Invoice-wise';
@@ -241,7 +238,6 @@ export class ReportApLeveloneComponent implements OnInit {
   }
 
   async Cancel() {
-    debugger
     if (this.type === 'Vendor-Invoice-wise') {
       this.type = 'Vendor-wise';
       await this.createReportForm();
@@ -323,7 +319,6 @@ export class ReportApLeveloneComponent implements OnInit {
   }
   
   async search(){
- debugger
     if(this.type  == 'Overall-list'){
       await this.getAccountPayableOverallList();
     }
@@ -361,7 +356,6 @@ export class ReportApLeveloneComponent implements OnInit {
   }
 
 getAccountPayableVendorList() {
-    debugger
     this.startDate = this.reportFilter.controls.FromDate.value;
     this.endDate = this.reportFilter.controls.ToDate.value;
 
@@ -390,7 +384,6 @@ getAccountPayableVendorList() {
   }
 
   getAccountPayableInvoiceVendorList() {
-    debugger
     this.startDate = this.reportFilter.controls.FromDate.value;
     this.endDate = this.reportFilter.controls.ToDate.value;
 
