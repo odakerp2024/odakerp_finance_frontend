@@ -520,180 +520,6 @@ getAccountPayableVendorList() {
     }
   } 
   
-  // async downloadAsExcel(
-  //   reportList: any[],
-  //   startDate: string,
-  //   endDate: string,
-  //   reportType: 'Overall-list' | 'Vendor-wise' | 'Vendor-Invoice-wise'
-  // ) {
-  //   if (reportList.length === 0) {
-  //     Swal.fire('No record found');
-  //     return;
-  //   }
-  
-  //   const workbook = new Workbook();
-  //   const worksheet = workbook.addWorksheet('Report');
-  
-  //   let titleHeader: string;
-  //   let excludeKeys: string[];
-  
-  //   switch (reportType) {
-  //     case 'Overall-list':
-  //       titleHeader = 'Payable Balance Summary - Overall';
-  //       excludeKeys = ['Id'];
-  //       break;
-  //     case 'Vendor-wise':
-  //       titleHeader = 'Payable Balance Summary - Vendor Wise';
-  //       excludeKeys = ['VendorID', 'InvoiceDate'];
-  //       break;
-  //     case 'Vendor-Invoice-wise':
-  //       titleHeader = 'Payable Balance Summary - Invoice Wise';
-  //       excludeKeys = [];
-  //       break;
-  //     default:
-  //       titleHeader = 'Payable Balance Summary';
-  //       excludeKeys = [];
-  //       break;
-  //   }
-  
-  //   const header = Object.keys(reportList[0]).filter((key) => !excludeKeys.includes(key));
-  
-  //   const titleRow = worksheet.addRow(['', '', '', 'NAVIO SHIPPING PRIVATE LIMITED','', '', '']);
-  //   titleRow.getCell(4).font = { size: 15, bold: true };
-  //   titleRow.getCell(4).alignment = { horizontal: 'center' };
-  //   worksheet.mergeCells(`D${titleRow.number}:E${titleRow.number}`);
-  
-  //   const subtitleRow = worksheet.addRow(['', '', '', titleHeader,'', '', '']);
-  //   subtitleRow.getCell(4).font = { size: 14 };
-  //   subtitleRow.getCell(4).alignment = { horizontal: 'center' };
-  //   worksheet.mergeCells(`D${subtitleRow.number}:E${subtitleRow.number}`);
-  
-  //   const dateRow = worksheet.addRow(['', '', '',  `FROM ${startDate} - TO ${endDate}`,'', '', '']);
-  //   dateRow.eachCell((cell) => {
-  //     cell.alignment = { horizontal: 'center' };
-  //   });
-  //   worksheet.mergeCells(`D${dateRow.number}:E${dateRow.number}`);
-  
-  //   const headerRow = worksheet.addRow(header);
-  //   headerRow.eachCell((cell) => {
-  //     cell.fill = {
-  //       type: 'pattern',
-  //       pattern: 'solid',
-  //       fgColor: { argb: '8A9A5B' },
-  //     };
-  //     cell.font = {
-  //       bold: true,
-  //       color: { argb: 'FFFFF7' }
-  //     };
-  //     cell.alignment = {
-  //       horizontal: 'center',
-  //     };
-  //     cell.border = {
-  //       top: { style: 'thin' },
-  //       left: { style: 'thin' },
-  //       bottom: { style: 'thin' },
-  //       right: { style: 'thin' },
-  //     };
-  //   });
-  
-  //   const columnColorMapping = {
-  //     'Overall-list': ['Sub Category', 'Balance (Company Currency)'],
-  //     'Vendor-wise': ['Vendor', 'Credit Amount', 'Balance (Invoice Currency)', 'Net Balance (Invoice currency)', 'Balance (Company Currency)'],
-  //     'Vendor-Invoice-wise': ['Vendor Invoice #', 'Transaction Type', 'Purchase Invoice Amount', 'Balance (Invoice currency)', 'Balance (Company Currency)']
-  //   };
-  //   const columnsToColor = columnColorMapping[reportType];
-  
-  //   reportList.forEach((data) => {
-  //     let filteredData: { [key: string]: any } = {};
-  //     const defaultValue = 0;
-  
-  //     switch (reportType) {
-  //       case 'Vendor-Invoice-wise':
-  //         data.Date = data.Date.split('T')[0];
-  //         filteredData = Object.keys(data)
-  //           .filter((key) => !excludeKeys.includes(key))
-  //           .reduce((obj, key) => {
-  //             obj[key] = data[key];
-  //             return obj;
-  //           }, {});
-  
-  //         filteredData['Purchase Invoice Amount'] = `${data['Purchase Invoice Amount'] !== null ? parseFloat(data['Purchase Invoice Amount']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
-  //         filteredData['Balance (Invoice currency)'] = `${data['Balance (Invoice currency)'] !== null ? parseFloat(data['Balance (Invoice currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
-  //         filteredData['Balance (Company Currency)'] = `${data['Balance (Company Currency)'] !== null ? parseFloat(data['Balance (Company Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
-  //         break;
-  
-  //       case 'Overall-list':
-  //         filteredData = Object.keys(data)
-  //           .filter((key) => !excludeKeys.includes(key))
-  //           .reduce((obj, key) => {
-  //             obj[key] = data[key];
-  //             return obj;
-  //           }, {});
-  
-  //         filteredData['Balance (Company Currency)'] = `${data['Balance (Company Currency)'] !== null ? parseFloat(data['Balance (Company Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
-  //         break;
-  
-  //       case 'Vendor-wise':
-  //       default:
-  //         filteredData = Object.keys(data)
-  //           .filter((key) => !excludeKeys.includes(key))
-  //           .reduce((obj, key) => {
-  //             obj[key] = data[key];
-  //             return obj;
-  //           }, {});
-  
-  //         filteredData['Credit Amount'] = `${data['Credit Amount'] !== null ? parseFloat(data['Credit Amount']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
-  //         filteredData['Balance (Invoice Currency)'] = `${data['Balance (Invoice Currency)'] !== null ? parseFloat(data['Balance (Invoice Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
-  //         filteredData['Net Balance (Invoice currency)'] = `${data['Net Balance (Invoice currency)'] !== null ? parseFloat(data['Net Balance (Invoice currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
-  //         filteredData['Balance (Company Currency)'] = `${data['Balance (Company Currency)'] !== null ? parseFloat(data['Balance (Company Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
-  //         break;
-  //     }
-  
-  //     const row = worksheet.addRow(Object.values(filteredData));
-  
-  //     columnsToColor.forEach((columnName) => {
-  //       const columnIndex = header.indexOf(columnName);
-  //       if (columnIndex !== -1) {
-  //         const cell = row.getCell(columnIndex + 1);
-  //         cell.font = { color: { argb: '8B0000' }, bold: true };
-  //         cell.alignment = { horizontal: 'right' };
-  //       }
-  //     });
-  //   });
-  
-  //   worksheet.columns.forEach((column) => {
-  //     let maxLength = 0;
-  //     column.eachCell({ includeEmpty: true }, (cell) => {
-  //       const cellLength = cell.value ? cell.value.toString().length : 0;
-  //       if (cellLength > maxLength) {
-  //         maxLength = cellLength;
-  //       }
-  //     });
-  //     column.width = maxLength + 2;
-  //   });
-  
-  //   const footerRow = worksheet.addRow(['End of Report']);
-  //   footerRow.eachCell((cell) => {
-  //     cell.fill = {
-  //       type: 'pattern',
-  //       pattern: 'solid',
-  //       fgColor: { argb: '8A9A5B' },
-  //     };
-  //     cell.font = {
-  //       bold: true,
-  //       color: { argb: 'FFFFF7' },
-  //     };
-  //     cell.alignment = {
-  //       horizontal: 'center',
-  //     };
-  //   });
-  //   worksheet.mergeCells(`A${footerRow.number}:${String.fromCharCode(65 + header.length - 1)}${footerRow.number}`);
-  
-  //   const buffer = await workbook.xlsx.writeBuffer();
-  //   const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-  //   saveAs(blob, `PayableBalanceSummary-${reportType}.xlsx`);
-  // }
-
   async downloadAsExcel(
     reportList: any[],
     startDate: string,
@@ -725,10 +551,10 @@ getAccountPayableVendorList() {
         columnsToAlignRight = ['Balance (Company Currency)'];
         break;
       case 'Vendor-wise':
-        titleHeader = 'Payable Balance Summary - Customer Wise';
+        titleHeader = 'Payable Balance Summary - Vendor Wise';
         excludeKeys = ['VendorID', 'InvoiceDate'];
         columnsToColor = ['Vendor', 'Credit Amount', 'Balance (Invoice Currency)', 'Net Balance (Invoice currency)', 'Balance (Company Currency)'],
-        columnsToAlignLeft = ['Customer'];
+        columnsToAlignLeft = ['Vendor'];
         columnsToAlignRight = ['Credit Amount', 'Balance (Invoice Currency)', 'Net Balance (Invoice currency)', 'Balance (Company Currency)'];
         break;
       case'Vendor-Invoice-wise':
@@ -789,7 +615,7 @@ getAccountPayableVendorList() {
     let totalBalanceInvoiceCurrency = 0;
     let totalNetBalanceInvoiceCurrency = 0;
     let totalBalanceCompanyCurrency = 0;
-    let totalcustomer = 0;
+    let totalvendor = 0;
     let totalInvoice = 0;
     let totalInvoiceAmount = 0;
     let totaInvoiceCurrency = 0;
@@ -830,7 +656,7 @@ getAccountPayableVendorList() {
           filteredData['No of Vendors (Open)'] = `${data['No of Vendors (Open)'] !== null ? parseFloat(data['No of Vendors (Open)']) : defaultValue}`;
           filteredData['No of Invoices (Open)'] = `${data['No of Invoices (Open)'] !== null ? parseFloat(data['No of Invoices (Open)']) : defaultValue}`;
           // Accumulate totals
-          totalcustomer += parseFloat(data['No of Vendors (Open)']) || 0;
+          totalvendor += parseFloat(data['No of Vendors (Open)']) || 0;
           totalInvoice += parseFloat(data['No of Invoices (Open)']) || 0;
           totalBalanceCompanyCurrency += parseFloat(data['Balance (Company Currency)']) || 0;
           break;
@@ -907,7 +733,7 @@ getAccountPayableVendorList() {
         footerData.push(totalCreditAmount.toFixed(this.entityFraction));
       }
       else if(header[i] === 'No of Vendors (Open)'){
-        footerData.push(totalcustomer.toFixed(defaultValue));
+        footerData.push(totalvendor.toFixed(defaultValue));
       } else if(header[i] === 'No of Invoices (Open)'){
         footerData.push(totalInvoice.toFixed(defaultValue));
       }else if (header[i] === 'Balance (Invoice Currency)') {
@@ -957,7 +783,7 @@ getAccountPayableVendorList() {
   
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    saveAs(blob, `ReceivableBalanceSummary-${reportType}.xlsx`);
+    saveAs(blob, `PayableBalanceSummary-${reportType}.xlsx`);
   }
   
   
