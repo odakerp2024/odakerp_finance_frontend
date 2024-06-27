@@ -309,7 +309,7 @@ export class ReportPaymentVoucherComponent implements OnInit {
 
     this.reportService.getPaymentVoucherReportList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
-
+      this.reportForExcelList = [];
       if (result['data'].Table.length > 0) {
         this.reportList = result['data'].Table;
         this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
