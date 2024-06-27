@@ -239,6 +239,7 @@ async showVendor(SubTypeId:number){
           Peroid: [''],
         });
     }
+    this.getAgingDropdown();
     this.reportFilter.controls.Peroid.setValue('month');
     this.onOptionChange('month');
      if(this.type == 'Overall-list'){

@@ -563,14 +563,14 @@ async downloadExcel() {
     };
     cell.font = {
       bold: true,
-      color: { argb: 'FFFFF7' }
+      color: { argb: 'FFFFF7' } 
     };
     cell.alignment = {
       horizontal: 'center',
     };
     cell.border = {
       top: { style: 'thin' },
-      left: { style: 'thin' },
+      left: { style: 'thin' }, 
       bottom: { style: 'thin' },
       right: { style: 'thin' },
     };
