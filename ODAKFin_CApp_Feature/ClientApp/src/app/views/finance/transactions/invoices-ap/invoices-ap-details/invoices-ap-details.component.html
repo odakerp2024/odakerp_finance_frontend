@@ -277,12 +277,12 @@
                             <tr>
                                 <td class="font-weight-bold">Debit</td>
                                 <td>
-                                    {{TotalDebitAmount}}
+                                    {{TotalDebitAmount | dynamicDecimal : entityFraction  }}
                                 </td>
                             </tr>
                             <tr>
                                 <td class="font-weight-bold">Credit</td>
-                                <td>{{TotalCreditAmount}}</td>
+                                <td>{{TotalCreditAmount | dynamicDecimal: entityFraction}}</td>
                             </tr>
                         </tbody>
                     </table>

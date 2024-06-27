@@ -13,13 +13,16 @@
         <!-- Table View -->
         <div class="col-sm-12 col-md-9">
             <div class=" mr-3 card">
-                <div class="row">
+                 <div class="card-body cpad enqview">
                     <div class="col-12">
-                        <table
-                            class="table table-responsive   table-bordered w-100 table-striped  p-3 mt-3 border-0 text-center">
+
+
+
+                        <table class="table table-responsive table-striped table-bordered w-100 dataTable no-footer "
+                        style="text-align-last: center;">
                             <thead>
-                                <tr role="row">
-                                    <th id="th1" tabindex="0">
+                                <tr>
+                                    <th id="th1" tabindex="0" >
                                         AR Set Off Reference #
                                     </th>
                                     <th id="th2">
@@ -48,7 +51,7 @@
                                           </td>
 
                                         <!-- <td>{{invoiceAR.Customer}}</td> -->
-                                        <td>{{invoiceAR.Amount}}</td>
+                                        <td>{{invoiceAR.Amount | dynamicDecimal : entityFraction}}</td>
                                         <td>
                                             <div
                                         [ngClass]="invoiceAR.Status == 'Confirmed' ? 'badge badge-state-confirm' : invoiceAR.Status == 'Cancelled' ? 'badge badge-state-cancel' : 'badge badge-state'">
@@ -115,7 +118,7 @@
                         </div>
                     </div> -->
 
-                    <div class="col-md-12" style="margin-top: -7px;">
+                    <div class="col-md-12" style="margin-top: -2px;">
                         <div class="form-group bmd-form-group">
                            <div class="row">
                                 <div class="col-md-6">
@@ -131,7 +134,7 @@
                                  placeholder="voucher Date" /> -->
                                  </div>
                                 </div>
-                                 <div class="col-md-6">
+                                 <div class="col-md-6" style="margin-top: -2px;">
                                    <label class=" mb-3">Till</label>
                                    <div class="input-group">
                                     <mat-form-field  class="tillDate mat_date_picker"  appearance="outline">
@@ -148,7 +151,7 @@
                          </div>
                      </div>
 
-                    <div class="col-12" style="margin-top: -20px;" >
+                    <div class="col-12" style="margin-top: -10px;">
                         <div class="form-group bmd-form-group">
                             <!-- <select class="form-control my-select" formControlName="PartyId">
                                 <option value='0' disabled>--SELECT CUSTOMER--</option>
@@ -167,9 +170,11 @@
 
                     <div class="col-12">
                         <div class="form-group bmd-form-group">
-                            <input class="w-100" placeholder="AMOUNT" onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly
-                                formControlName="TotalDebitAmount" />
-                        </div>
+                            <input class="w-100" placeholder="AMOUNT" appDynamicDecimal  
+                              onkeypress='return event.charCode >= 48 && event.charCode <= 57' min="0" numbersOnly
+                              formControlName="TotalDebitAmount" />
+                          </div>
+                           
                     </div>
 
                     <div class="col-12">
