@@ -91,7 +91,7 @@
                             <label class=" fontstyles">SALES PERSON</label>
                             <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'SalesPersonId'">
                                 <ng-option [value]="0" disabled>--SELECT SALES PERSON--</ng-option>
-                                <ng-option *ngFor="let data of salesPerson" [value]="data.Id">
+                                <ng-option *ngFor="let data of salesPerson" [value]="data.SourceName">
                                     <span class="textwrap">{{ data.SourceName | uppercase }}</span>
                                 </ng-option>
                             </ng-select>
@@ -257,7 +257,7 @@
                                     </td>
                                     <td>{{data.Branch}}</td>
                                     <td>{{data['Credit Days']}}</td>
-                                    <td class="text-right hyperTextColor">{{data['Credit Amount']}}</td>
+                                    <td class="text-right hyperTextColor">{{data['Credit Amount']  | dynamicDecimal: entityFraction}}</td>
                                     <td class="text-right hyperTextColor">{{data['Balance (Invoice Currency)'] | dynamicDecimal: entityFraction }}</td>
                                     <td>{{data.credit}}</td>
                                     <td class="text-right hyperTextColor">{{data['Net Balance (Invoice Currency)'] | dynamicDecimal: entityFraction }}</td>
