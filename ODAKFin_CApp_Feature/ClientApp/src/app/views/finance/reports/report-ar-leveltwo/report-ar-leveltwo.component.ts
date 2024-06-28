@@ -305,13 +305,14 @@ export class ReportArLeveltwoComponent implements OnInit {
     
       this.reportService.getAgingDropdown(payload).subscribe((result: any) => {
         if (result.message == 'Success') {
+          this.reportFilter.controls.AgingTypeId.setValue('');
           this.agingGroupDropdown = [];
           if (result["data"].Table.length > 0) {
             this.agingGroupDropdown = result.data.Table;
   
           }
-              this.reportFilter.controls.AgingTypeId.setValue(this.agingGroupDropdown[0].AgingGroupName);
-  
+          this.reportFilter.controls.AgingTypeId.setValue(this.agingGroupDropdown[0].AgingTypeId);
+         
         }
       }), error => {
         console.error(error);
@@ -326,6 +327,7 @@ export class ReportArLeveltwoComponent implements OnInit {
 
     this.reportService.getAgingSummaryList(this.reportFilter.value).subscribe(result => {
       if (result.message == "Success" && result.data && result.data.Table) {
+        this.headers = [];
         this.reportList = result['data'].Table;
         let tableData = result.data.Table;
        
@@ -355,6 +357,7 @@ export class ReportArLeveltwoComponent implements OnInit {
     this.reportService.getAgingSummaryList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
       if (result.message == "Success" && result.data && result.data.Table) {
+        this.headers = [];
         this.reportList = result['data'].Table;
         let tableData = result.data.Table;
        
@@ -386,6 +389,7 @@ export class ReportArLeveltwoComponent implements OnInit {
     this.reportService.getAgingSummaryList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
       if (result.message == "Success" && result.data && result.data.Table) {
+        this.headers = [];
         this.reportList = result['data'].Table;
         let tableData = result.data.Table;
        
@@ -591,6 +595,7 @@ calculateInvoicewise(header: string): any {
     }
     this.officeList = [];
     this.reportFilter.controls.Peroid.setValue('month');
+    this.getAgingDropdown();
     if (this.type == 'overall') {
       this.getOverallList();
     }

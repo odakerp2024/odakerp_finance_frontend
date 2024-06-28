@@ -91,7 +91,7 @@
                             <label class=" fontstyles">SALES PERSON</label>
                             <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'SalesPersonId'">
                                 <ng-option [value]="0" disabled>--SELECT SALES PERSON--</ng-option>
-                                <ng-option *ngFor="let data of salesPerson" [value]="data.Id">
+                                <ng-option *ngFor="let data of salesPerson" [value]="data.SourceName">
                                     <span class="textwrap">{{ data.SourceName | uppercase }}</span>
                                 </ng-option>
                             </ng-select>
