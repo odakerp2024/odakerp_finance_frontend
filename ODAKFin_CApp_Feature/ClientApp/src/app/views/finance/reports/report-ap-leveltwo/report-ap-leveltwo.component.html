@@ -249,7 +249,7 @@
                                 {{ (row[header] && row[header].length > 20) ? row[header].slice(0, 20) + '-' : row[header] }}
                                 </a>
                         
-                                <ng-container *ngIf="header === 'Balance (Company Currency)' || header === 'Balance (Invoice currency)' || header === 'Credit Amount'">
+                                <ng-container *ngIf="header === 'Balance (Company Currency)' || header === 'Balance (Invoice currency)'">
                                     <a class="hyperlink-style">{{ row[header] | dynamicDecimal: entityFraction }}</a>
                                 </ng-container>
                         
@@ -313,7 +313,7 @@
                                         <ng-container [ngSwitch]="header">
                                 
                                             <!-- Condition for 'Invoice #' column -->
-                                            <a *ngSwitchCase="'Invoice #'" class="hyperlink-style">{{ row[header] }}</a>
+                                            <a *ngSwitchCase="'Vendor Invoice #'" class="hyperlink-style">{{ row[header] }}</a>
                                 
                                             <!-- Condition for 'Date' column -->
                                             <span *ngSwitchCase="'Date'">{{ row[header] | date: commonDataService.convertToLowerCaseDay(entityDateFormat) }}</span>

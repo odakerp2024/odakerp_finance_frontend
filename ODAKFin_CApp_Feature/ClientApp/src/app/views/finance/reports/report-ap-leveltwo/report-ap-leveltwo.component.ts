@@ -695,8 +695,8 @@ calculateInvoicewise(header: string): any {
         case 'Vendor-Invoice-wise':
             titleHeader = 'Payable Aging Summary - Invoice Wise';
             excludeKeys = [];
-            columnsToColor = ['Vendor Invoice #', 'Transaction Type', 'Invoice Amount', 'Balance (Invoice currency)', 'Balance (Company Currency)']
-            columnsToAlignLeft = ['Vendor Invoice #', 'Transaction Type'];
+            columnsToColor = ['Vendor Invoice #', 'Invoice Amount', 'Balance (Invoice currency)', 'Balance (Company Currency)']
+            columnsToAlignLeft = ['Vendor Invoice #'];
             columnsToAlignRight = ['Invoice Amount', 'Balance (Invoice currency)', 'Balance (Company Currency)'];
             break;
         default:
