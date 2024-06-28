@@ -138,7 +138,7 @@
                     <ng-select class="searchdropdown-dropdown-size field-responsive" [clearable]="false" [formControlName]="'PaidFrom'" name="active"
                         id="active">
                         <ng-option [value]="0" disabled>-- SELECT --</ng-option>
-                        <ng-option *ngFor="let Deposit of bankList" [value]="Deposit.Id">
+                        <ng-option *ngFor="let Deposit of bankList" [value]="Deposit.BankID">
                             {{Deposit.BankName | uppercase}} - {{Deposit.AccountNo}}
                     </ng-option>
                 </ng-select>
