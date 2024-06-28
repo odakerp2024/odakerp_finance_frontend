@@ -84,7 +84,7 @@ export class ReportPaymentVoucherComponent implements OnInit {
     this.getDivisionList();
     this.getVoucherList();
     this.getVendorList();
-    this.getBankList();
+   // this.getBankList();
     this.reportFilter.controls.Peroid.setValue('month');
   }
 
@@ -191,10 +191,15 @@ export class ReportPaymentVoucherComponent implements OnInit {
   }
 
   getOfficeList(id: number) {
+   this.reportFilter.controls.OfficeId.setValue(0);
     this.commonDataService.getOfficeByDivisionId({ DivisionId: id }).subscribe(result => {
       this.officeList = [];
       if (result['data'].Table.length > 0) {
         this.officeList = result['data'].Table;
+      }
+       if (this.officeList.length == 1) {
+        const ID =
+          this.reportFilter.controls.OfficeId.setValue(this.officeList[0].ID);
       }
     })
   }
@@ -245,6 +250,7 @@ export class ReportPaymentVoucherComponent implements OnInit {
   }
 
   getBankList() {
+    debugger
     let payload = {
       "OfficeId": this.reportFilter.value.OfficeId,
       "DivisionId": this.reportFilter.value.DivisionId
@@ -276,6 +282,7 @@ export class ReportPaymentVoucherComponent implements OnInit {
 
       let service = `${this.globals.APIURL}/ReceiptVoucher/GetReceiptVoucherDropDownList`
       this.dataService.post(service, { CustomerId: 0 }).subscribe((result: any) => {
+      // this.customerList = result.data.Table2;
         this.paymentModeList = result.data.Table4;
 
         resolve(true)
@@ -287,6 +294,7 @@ export class ReportPaymentVoucherComponent implements OnInit {
   }
 
   getDivisionBasedOffice(officeId: number, divisoinId: any) {
+                this.reportFilter.controls.PaidFrom.setValue(0);
     if (officeId && divisoinId) {
       let service = `${this.globals.APIURL}/Common/GetBankByOfficeId`;
       let payload = {
@@ -306,7 +314,7 @@ export class ReportPaymentVoucherComponent implements OnInit {
   getPaymentVoucherReportList() {
     this.startDate = this.reportFilter.controls.FromDate.value;
     this.endDate = this.reportFilter.controls.ToDate.value;
-
+debugger
     this.reportService.getPaymentVoucherReportList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
       this.reportForExcelList = [];

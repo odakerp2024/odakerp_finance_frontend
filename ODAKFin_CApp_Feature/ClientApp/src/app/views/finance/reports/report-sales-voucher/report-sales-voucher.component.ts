@@ -191,12 +191,17 @@ export class ReportSalesVoucherComponent implements OnInit {
       console.log('err--', error);
     });
   }
-
+  
   getOfficeList(id: number) {
+    this.reportFilter.controls.OfficeId.setValue(0);
     this.commonDataService.getOfficeByDivisionId({ DivisionId: id }).subscribe(result => {
       this.officeList = [];
       if (result['data'].Table.length > 0) {
         this.officeList = result['data'].Table;
+      }
+      if (this.officeList.length == 1) {
+        const ID =
+          this.reportFilter.controls.OfficeId.setValue(this.officeList[0].ID);
       }
     })
   }
