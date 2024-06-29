@@ -327,7 +327,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       NetAmount: [''],
       BankId: [''],
       InvoiceCurrency: [''],
-      InvoiceExrate: [''],
+      InvoiceExrate: ['1'],
       Remarks: [''],
       CreatedDate: [this.minDate],
       CreatedBy: localStorage.getItem('UserID'),
@@ -458,7 +458,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
           NetAmount: info.NetAmount,
           Remarks: info.Remarks,
           BankId: info.BankId,
-          InvoiceExrate: info.InvoiceExRate,
+          InvoiceExrate: info.InvoiceExRate ? info.InvoiceExRate : 1,
         });
         console.log('After Patching', this.PurchaseCreateForm.value)
         if (info.PurchaseOrder) this.orderType = 'Purchase';
@@ -743,7 +743,6 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
 
   getVendorBranchList(event, setBrach = false, branchId?: any) {
 
-
     this.vendorBranch = [];
     this.vendorBranch = this.allVendorsList.filter(x => x.VendorID == event);
 
@@ -755,7 +754,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       this.PurchaseCreateForm.controls['VendorBranch'].setValue(singleBranchDetails.VendorBranchID);
       this.getVendorDetailsInfo(singleBranchDetails.VendorBranchID);
       this.checkBranchState(singleBranchDetails);
-      this.updateCanSelectOrderType();
+      this.updateCanSelectOrderType();   
     }
 
   }
@@ -797,7 +796,6 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     this.PurchaseCreateForm.controls.TDSRate.setValue(tdsRate.Rate)
   }
   getVendorDetailsInfo(event) {
-
     return new Promise((resolve, reject) => {
       let vendorInfo = this.vendorBranch.find(x => x.VendorBranchID == event);
       if (vendorInfo) {
@@ -821,6 +819,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
             this.vendorLDC = this.tsdDetails.Rate ? this.tsdDetails.Rate : ''
             if (this.tsdDetails) {
               this.PurchaseCreateForm.controls['TDSApplicability'].setValue(this.tsdDetails.TDSApplicability ? this.tsdDetails.TDSApplicability : '');
+              this.PurchaseCreateForm.controls['TDSMaster'].setValue(this.tsdDetails.TDSSectionId ? this.tsdDetails.TDSSectionId : '');
               this.PurchaseCreateForm.controls['TDSSection'].setValue(this.tsdDetails.TDSSectionId ? this.tsdDetails.TDSSectionId : '');
               this.PurchaseCreateForm.controls['ReasonforNonTDS'].setValue(this.tsdDetails.Reason ? this.tsdDetails.Reason : '');
               this.PurchaseCreateForm.controls['LDCRate'].setValue(this.vendorLDC);
@@ -1427,7 +1426,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       NetAmount: info.NetAmount,
       BankId: info.BankId,
       InvoiceCurrency: info.InvoiceCurrency ? info.InvoiceCurrency : 0,
-      InvoiceExrate: info.InvoiceExrate,
+      InvoiceExrate: info.InvoiceExrate ? info.InvoiceExrate : 1,
       Remarks: info.Remarks,
       CreatedBy: info.CreatedBy,
       TDSAmount: info.TDSAmount
@@ -1532,6 +1531,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     let info = this.currencyList.find(x => x.Currency == entityInfo['Currency']);
     this.entityCurrencyID = info.ID;
     if (this.entityCurrencyID == currencyId) {
+      this.PurchaseCreateForm.controls['InvoiceExrate'].setValue(1);
       this.PurchaseCreateForm.controls['ExRate'].setValue(1);
       this.PurchaseCreateForm.controls['Amountccr'].setValue(1 * this.PurchaseCreateForm.value.Rate * this.PurchaseCreateForm.value.Qty);
       this.PurchaseCreateForm.get('ExRate').disable();
@@ -1722,7 +1722,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     this.PurchaseTableList = this.PurchaseTableList.filter(e => (e.IsOrderTypeItem == 0 || e.IsOrderTypeItem == undefined))
   }
 
-
+  
   // toggleRCM(value: string) {
 
   //   if (value === '1') {
@@ -1921,6 +1921,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
 
         tdsAmount = 0;
       } else if (TDSApplicability == 3) {
+        
         const ldcrate = this.PurchaseCreateForm.controls['LDCRate'].value
         if (ldcrate > 0) {
           const tdsCalculation = (amountccr * ldcrate) / 100;
