@@ -1721,7 +1721,23 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     this.orderType == 'Purchase' ? this.PurchaseCreateForm.controls['PurchaseOrder'].setValue('') : this.orderType == 'Internal' ? this.PurchaseCreateForm.controls['InternalOrder'].setValue('') : '';
     this.PurchaseTableList = this.PurchaseTableList.filter(e => (e.IsOrderTypeItem == 0 || e.IsOrderTypeItem == undefined))
   }
+  handleRoundOff() {
+    debugger
+    const roundOffChecked = this.PurchaseCreateForm.get('RoundOffAmount')?.value;
+    let invoiceAmount = this.PurchaseCreateForm.get('InvoiceAmount')?.value;
 
+    if (roundOffChecked) {
+      const roundedAmount = Math.round(invoiceAmount * 10) / 10; // Round to one decimal place
+      this.PurchaseCreateForm.patchValue({
+        RoundedValue: roundedAmount
+      });
+    } else {
+      // If checkbox is unchecked, reset RoundedValue to InvoiceAmount
+      this.PurchaseCreateForm.patchValue({
+        RoundedValue: invoiceAmount
+      });
+    }
+  }
   
   // toggleRCM(value: string) {
 
