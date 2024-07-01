@@ -172,7 +172,7 @@
                         <table class="table table-responsive  table-bordered w-100 dataTable no-footer">
                             <thead>
                                 <tr>
-                                    <th  class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                    <th  class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" 
                                     colspan="1" aria-label="Name: activate to sort column ascending"  style="width: 177.575px;"
                                     *ngFor="let header of headers" (click)="sort(header)">
                                         {{ header }}
@@ -198,8 +198,8 @@
                                             row[header] }}</span>
                                     </td>
                                 </tr>
-                                <tr *ngIf="headers.length === 0">
-                                    <td class="text-center" colspan="10">No records found</td>
+                                <tr *ngIf="pagedItems.length === 0">
+                                    <td colspan="10"  class="text-center">No records found</td>
                                 </tr>
                             </tbody>
                               <!-- Table footer -->
@@ -228,7 +228,7 @@
                         <tr>
                             <th  class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                             colspan="1" aria-label="Name: activate to sort column ascending"  style="width: 177.575px;"
-                            *ngFor="let header of calculateHeadersVendorwise()" (click)="sort(header)">
+                            *ngFor="let header of headers" (click)="sort(header)">
                                 {{ header }}
                                 <span *ngIf="sortOrder[header] === 'asc'"></span>
                                 <span *ngIf="sortOrder[header] === 'desc'"></span>
@@ -260,8 +260,8 @@
                         </tr>
 
 
-                        <tr *ngIf="pagedItems.length === 0">
-                            <td class="text-center" [attr.colspan]="calculateHeadersVendorwise().length">No records found</td>
+                        <tr *ngIf="pagedItems.length == 0">
+                            <td class="text-center" colspan="10">No records found</td>
                         </tr>
                     </tbody>
                     
@@ -296,7 +296,7 @@
                                 <tr>
                                     <th  class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                     colspan="1" aria-label="Name: activate to sort column ascending"  style="width: 177.575px;"
-                                    *ngFor="let header of calculateHeadersInvoicewise()" (click)="sort(header)">
+                                    *ngFor="let header of headers" (click)="sort(header)">
                                         {{ header }}
                                         <span *ngIf="sortOrder[header] === 'asc'"></span>
                                         <span *ngIf="sortOrder[header] === 'desc'"></span>
@@ -329,8 +329,8 @@
                                         </ng-container>
                                     </td>
                                 </tr>
-                                <tr *ngIf="pagedItems.length === 0">
-                                    <td class="text-center" colspan="11">No records found</td>
+                                <tr *ngIf="pagedItems.length == 0">
+                                    <td class="text-center" colspan="10">No records found</td>
                                 </tr>
                             </tbody>
                             
