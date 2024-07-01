@@ -568,7 +568,7 @@
                                             id="Amount (CCR)" /> </td>
                                     <td >
                                         <ng-select class="searchdropdown"  [formControlName]="'TDSMaster'"  
-                                        [clearable]="false" [appendTo]="'body'" [disable] = "isUpdateMode" [ngClass]=" !IsExchangeEnable ? 'disable-input' : ''" [disabled]="true"> 
+                                        [clearable]="false" [appendTo]="'body'" [disable] = "isUpdateMode" [ngClass]=" !IsExchangeEnable ? 'disable-input' : ''" > 
                                             <ng-option [value]="0" disabled>--SELECT--</ng-option>
                                             <ng-option *ngFor="let tdsmaster of SectionMasterList"  [value]="tdsmaster.SectionID">
                                             <span class="textwrap ">{{tdsmaster.SectionName}}</span>
@@ -770,10 +770,16 @@
                                     type="number" id="NetAmount">
                             </div>
                         </div>
-                        <div class="col-md-6 col-sm-6 col-lg-10 col-xl-12 mt-2 mb-2">
-                            <input type="checkbox" formControlName="RoundOffAmount"  (change)="handleRoundOff()">
-                            <lable class="ml-2">Round Off Amount
-                            </lable>
+                        <div class="row">
+                            <div class="col-md-2 col-sm-2 col-lg-5 col-xl-4 mt-2 mb-2">
+                                <input  class="ml-3" type="checkbox" formControlName="RoundOffChecked"  (change)="handleRoundOff()">
+                                <lable class="ml-2">Round Off Amount
+                                </lable>
+                            </div>
+                            <div class="col-md-4 col-sm-4 col-lg-5 col-xl-8 mt-2 mb-2"  style = "margin-left: inherit;">
+                                <input readonly formControlName="RoundOffAmount"   class="form-control" placeholder=""
+                                type="number">
+                            </div>                           
                         </div>
                         <div class="col-md-6 col-sm-6 col-lg-10 col-xl-12">
                             <div class="form-group">
