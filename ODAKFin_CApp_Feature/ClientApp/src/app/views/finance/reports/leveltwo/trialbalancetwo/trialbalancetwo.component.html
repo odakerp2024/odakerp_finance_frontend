@@ -49,6 +49,27 @@
         </ng-select> 
     </div>
 
+    <div class="col-md-2">
+        <label class="str">Transaction Type </label>
+        <ng-select class="searchdropdown" formControlName="Type" [clearable]="false" 
+        id="CategoryId" >
+            <ng-option [value]="''" [disabled]="true">--SELECT VOUCHER TYPE--</ng-option>
+            <ng-container *ngFor="let data of TypeList">
+                <ng-option [value]="data.LedgerTransactionTypeName">
+                    <span class="textwrap"> {{data.LedgerTransactionTypeName | uppercase}}
+                    </span>
+                </ng-option>
+            </ng-container>
+        </ng-select>
+    </div>
+
+    <div class="col-md-2">
+        <div class="form-group">
+            <label class="str">VOUCHER#</label>
+            <input
+                class="form-control my-select amount w-100 mr-0" formControlName="Transaction" />
+        </div>
+    </div>
         </div>
     </div>
 
@@ -133,14 +154,14 @@
                         </tr>
                     </thead>
                     <tbody >
-                        <ng-container *ngIf="dataList.length > 0; else noRecord">
+                        <ng-container *ngIf="dataList.length > 0;">
                             <ng-container *ngFor="let balance of dataList ">
                         <tr >
                             <td>{{balance.Trans_Date | date: commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td>
                             <td>{{balance.Trans_Account_Name}}</td>
                             <td>{{balance.Trans_Details}}</td>
-                            <td>{{balance.Transaction_Type}}</td>
                             <td>{{balance.Trans_Type}}</td>
+                            <td (click)="clickTransactionNumber(balance.ID, balance.Trans_Type)">{{balance.Trans_Number}}</td>
                             <td>{{balance.Trans_Ref_Details}}</td>
                             <td class=" hyperTextColor text-right">{{balance.Debit  | dynamicentityDecimal}}</td>
                             <td class="hyperTextColor text-right">{{balance.Credit  | dynamicentityDecimal}}</td>

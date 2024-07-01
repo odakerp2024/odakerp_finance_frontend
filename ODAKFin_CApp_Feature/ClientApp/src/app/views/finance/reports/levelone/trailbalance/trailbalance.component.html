@@ -135,17 +135,20 @@
                           </tr>
                         </ng-container>
                         <tr>
-                          <td (click)="editBalance(balance.ChartOfAccountsId)" style="color: #0366d6; cursor: pointer;">
-                            <span class="child-account">{{ balance.ChildAccountName }}</span>
+                          <td (click)="editBalance(balance.ChartOfAccountsId)">
+                            <a href="javascript:void(0);" class="no-underline" (click)="hypertext()">
+                              <span class="child-account">{{ balance.ChildAccountName }}</span>
+                            </a>
                           </td>
-                          <td class="hyperTextColor text-right" *ngIf="balance.ChildTransaction_Type === 'Debit'">
+                          
+                          <td class="text-right;no-underline"  *ngIf="balance.ChildTransaction_Type === 'Debit'">
                             {{ balance.ChildNet_Balance | dynamicentityDecimal }}
                           </td>
-                          <td class="hyperTextColor text-right" *ngIf="balance.ChildTransaction_Type !== 'Debit'">0</td>
-                          <td class="hyperTextColor text-right" *ngIf="balance.ChildTransaction_Type === 'Credit'">
+                          <td class=" text-right;no-underline" *ngIf="balance.ChildTransaction_Type !== 'Debit'">0</td>
+                          <td class=" text-right;no-underline" *ngIf="balance.ChildTransaction_Type === 'Credit'">
                             {{ balance.ChildNet_Balance | dynamicentityDecimal }}
                           </td>
-                          <td class="hyperTextColor text-right" *ngIf="balance.ChildTransaction_Type !== 'Credit'">0</td>
+                          <td class=" text-right;no-underline" *ngIf="balance.ChildTransaction_Type !== 'Credit'">0</td>
                           
                         </tr>
                       </ng-container>

@@ -38,6 +38,7 @@ export class TrialbalancetwoComponent implements OnInit {
   totalAmount : any; 
   entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   entityThousands = Number(this.commonDataService.getLocalStorageEntityConfigurable('CurrenecyFormat'));
+  TypeList:any;
 
   @ViewChild('table') table: ElementRef;
 
@@ -52,7 +53,7 @@ export class TrialbalancetwoComponent implements OnInit {
   ngOnInit(): void {
     this.getDivisionList();
     this.getOfficeList();
-    // this. getbyidBalancelist();
+    this.getDropDownType();
     this.createBalanceFilterForm();
 
     this.route.paramMap.subscribe(params => {
@@ -65,6 +66,49 @@ export class TrialbalancetwoComponent implements OnInit {
     this.router.navigate(['/views/finance/reports/levelone', {  }])
   }
 
+
+  clickTransactionNumber(id: number, transType: string) {
+    switch (transType) {
+      case 'Receipt Voucher':
+        this.router.navigate(['/views/transactions/receipt/receipt-details', { id: id }]);
+        break;
+
+      case 'Contra Voucher':
+        this.router.navigate(['/views/contra-info/contra-info-view', { contraId: id }]);
+        break;
+
+        case 'Payment Voucher':
+        this.router.navigate(['/views/transactions/payment/payment-details', { voucherId: id }]);
+        break;
+
+        case 'Journal Voucher':
+          this.router.navigate(['/views/transactions/journal/journal-details', { id: id, isUpdate: true }]);
+          break;
+
+          
+        case'Voucher Reversal':
+           this.router.navigate(['/views/voucher-info/voucher-reversals-info', { id: id, isUpdate: true }]);
+        break
+
+        case'Purchase Voucher':
+          this.router.navigate(['/views/purchase-info/purchase-info-view', { id: id, isUpdate: true, isCopy: false }]);
+        break
+
+        case'Vendor Credit':
+        this.router.navigate(['/views/vendor-info-notes/vendor-info-view', { id: id, isUpdate: true }]);
+         break
+
+        case 'Opening Balance':
+          Swal.fire(' Cannot Open.This Item Belongs To Opening Balance');
+        default:
+
+        console.error('Unhandled Trans_Type:', transType);
+        break;
+    }
+  }
+
+  
+  
 
   onDateChange(event: any): void {
     this.selectedDate = this.datePipe.transform(event.value, 'yyyy-MM-dd');
@@ -101,13 +145,29 @@ export class TrialbalancetwoComponent implements OnInit {
     }, error => { });
   }
 
+  getDropDownType() {
+    this.commonDataService.getTypeDropdown({}).subscribe((result: any) => {
+      if (result.message == 'Success') {
+        this.TypeList = [];
+        if (result["data"].Table.length > 0) {
+          this.TypeList = result.data.Table;
+        }
+      }
+    }),error =>{
+      console.error(error);
+    }
+  }
+
+
   fetchData(id: number): void {
 
     const payload = {
       "AccountId": id,
       "Date": "",
       "DivisionId": "",
-      "OfficeId": ""
+      "OfficeId": "",
+      "Type" : " ",
+      "Transaction" : ""
     };
     this.reportService.GetLedgerDataById(payload).subscribe(response => {
       if (response.data && Array.isArray(response.data.Table) && response.data.Table.length > 0) {
@@ -158,7 +218,9 @@ createBalanceFilterForm() {
   this.filterForm = this.fb.group({
     Date: [''],
     OfficeId: [''],
-    DivisionId : ['']
+    DivisionId : [''],
+    Type:[''],
+    Transaction:['']
   })
 }
 
@@ -168,7 +230,9 @@ BasedOnDate(selectedDate: any ) {
     "AccountId": "",
     "Date": selectedDate,
     "DivisionId": "",
-    "OfficeId": ""
+    "OfficeId": "",
+    "Type" : " ",
+    "Transaction" : ""
   };
   this.reportService.GetLedgerDataById(payload).subscribe(response => {
     this.dataList = [];
@@ -191,7 +255,9 @@ onDivisionChange( divisionId: any, id: number): void {
     "AccountId": id,
     "Date": "",
     "DivisionId": divisionId,
-    "OfficeId": ""
+    "OfficeId": "",
+    "Type" : " ",
+    "Transaction" : ""
   };
   this.reportService.GetLedgerDataById(payload).subscribe(response => {
     this.dataList = [];
@@ -214,7 +280,9 @@ onOfficeChange( OfficeId: any, id: number): void {
     "AccountId": id,
     "Date": "",
     "DivisionId": "",
-    "OfficeId": OfficeId
+    "OfficeId": OfficeId,
+    "Type" : " ",
+    "Transaction" : ""
   };
   this.reportService.GetLedgerDataById(payload).subscribe(response => {
     this.dataList = [];
