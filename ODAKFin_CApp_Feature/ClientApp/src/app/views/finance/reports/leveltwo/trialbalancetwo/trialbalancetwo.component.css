@@ -4,12 +4,6 @@
   font-size: 13px !important;
 }
 
-tr:hover {
-  background-color: aliceblue;
-  text-decoration: underline;
-  text-decoration-color: rgb(0, 162, 255)
-}
-
 .hyperTextColor {
   color: #0366d6;
 }

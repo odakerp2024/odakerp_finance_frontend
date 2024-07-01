@@ -4,11 +4,6 @@
   font-size: 13px !important;
 }
 
-tr:hover {
-  background-color: aliceblue;
-  text-decoration: underline;
-  text-decoration-color: rgb(0, 162, 255)
-}
 
 .hyperTextColor {
   color: #0366d6;
@@ -129,6 +124,15 @@ table.dataTable{
 }
 
 
+.no-underline {
+  text-decoration: none !important; /* Remove underline */
+  color: inherit !important; /* Inherit text color */
+}
+
+.no-underline:hover {
+  text-decoration: underline !important; /* Underline only on hover */
+  color: rgb(7, 84, 250) !important; /* Change color to indicate hyperlink, optional */
+}
 
 
 
