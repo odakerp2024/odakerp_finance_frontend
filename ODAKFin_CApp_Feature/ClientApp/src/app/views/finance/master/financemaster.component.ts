@@ -1094,7 +1094,23 @@ export class FinanceMasterComponent implements OnInit {
 
     else if (routePage == 'APAgingSummary') {
       this.router.navigate(['/views/reports/report-ap-leveltwo']);
-    } 
+    }
+    
+    else if (routePage == 'GSTOutputRegister') {
+      this.router.navigate(['/views/finance/reports/gstoutput-register/gstoutput-register']);
+    }
+
+    else if (routePage == 'GSTInputRegister') {
+      this.router.navigate(['/views/finance/reports/gstinput-register/gstinput-register']);
+    }
+
+    else if (routePage == 'TDSPayable') {
+      this.router.navigate(['/views/finance/reports/tdspayable/tdspayable']);
+    }
+
+    else if (routePage == 'TDSReceivable') {
+      this.router.navigate(['/views/finance/reports/tdsreceivable/tdsreceivable']);
+    }
 
 
     
