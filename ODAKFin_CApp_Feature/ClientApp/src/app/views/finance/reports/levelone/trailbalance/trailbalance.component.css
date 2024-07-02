@@ -4,9 +4,22 @@
   font-size: 13px !important;
 }
 
+tr:hover {
+  background-color: aliceblue;
+  text-decoration-color: rgb(0, 162, 255)
+}
 
 .hyperTextColor {
   color: #0366d6;
+  
+}
+
+.hyperColor {
+  color: #0366d6;
+  cursor: pointer;
+}
+.hyperColor:hover{
+  text-decoration: underline;
 }
 
 .example-form-field {
@@ -121,17 +134,6 @@ table.dataTable{
     font-size: 8px !important;
   }
  
-}
-
-
-.no-underline {
-  text-decoration: none !important; /* Remove underline */
-  color: inherit !important; /* Inherit text color */
-}
-
-.no-underline:hover {
-  text-decoration: underline !important; /* Underline only on hover */
-  color: rgb(7, 84, 250) !important; /* Change color to indicate hyperlink, optional */
 }
 
 

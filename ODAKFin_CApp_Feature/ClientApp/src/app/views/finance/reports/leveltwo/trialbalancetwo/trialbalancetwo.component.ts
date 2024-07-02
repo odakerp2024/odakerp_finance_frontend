@@ -10,6 +10,7 @@ import { CommonService } from 'src/app/services/common.service';
 import { Workbook } from 'exceljs';
 import { saveAs } from 'file-saver';
 import Swal from 'sweetalert2';
+import { GridSort } from 'src/app/model/common';
 import { ReportDashboardService } from 'src/app/services/financeModule/report-dashboard.service';
 
 @Component({
@@ -33,22 +34,25 @@ export class TrialbalancetwoComponent implements OnInit {
   currentDate: Date = new Date();
   data: any[];
   TemplateUploadURL = this.globals.TemplateUploadURL;
-  totalDebitAmount : any;
-  totalCreditAmount : any;
-  totalAmount : any; 
+  totalDebitAmount: any;
+  totalCreditAmount: any;
+  totalAmount: any;
   entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   entityThousands = Number(this.commonDataService.getLocalStorageEntityConfigurable('CurrenecyFormat'));
-  TypeList:any;
+  TypeList: any;
+  pagesort: any = new GridSort().sort;
+  transactionSearchTerm: string = '';
+  filteredData: any;
 
   @ViewChild('table') table: ElementRef;
 
-  constructor(public ps: PaginationService,  private globals: Globals,
+  constructor(public ps: PaginationService, private globals: Globals,
     private dataService: DataService,
-    private datePipe: DatePipe, private fb: FormBuilder, 
+    private datePipe: DatePipe, private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private reportService: ReportDashboardService,
-    private commonDataService: CommonService, ) { }
+    private commonDataService: CommonService,) { }
 
   ngOnInit(): void {
     this.getDivisionList();
@@ -62,8 +66,8 @@ export class TrialbalancetwoComponent implements OnInit {
       // this.setPage(1);
     });
   }
-  Cancel(){
-    this.router.navigate(['/views/finance/reports/levelone', {  }])
+  Cancel() {
+    this.router.navigate(['/views/finance/reports/levelone', {}])
   }
 
 
@@ -77,43 +81,49 @@ export class TrialbalancetwoComponent implements OnInit {
         this.router.navigate(['/views/contra-info/contra-info-view', { contraId: id }]);
         break;
 
-        case 'Payment Voucher':
+      case 'Payment Voucher':
         this.router.navigate(['/views/transactions/payment/payment-details', { voucherId: id }]);
         break;
 
-        case 'Journal Voucher':
-          this.router.navigate(['/views/transactions/journal/journal-details', { id: id, isUpdate: true }]);
-          break;
+      case 'Journal Voucher':
+        this.router.navigate(['/views/transactions/journal/journal-details', { id: id, isUpdate: true }]);
+        break;
 
-          
-        case'Voucher Reversal':
-           this.router.navigate(['/views/voucher-info/voucher-reversals-info', { id: id, isUpdate: true }]);
+
+      case 'Voucher Reversal':
+        this.router.navigate(['/views/voucher-info/voucher-reversals-info', { id: id, isUpdate: true }]);
         break
 
-        case'Purchase Voucher':
-          this.router.navigate(['/views/purchase-info/purchase-info-view', { id: id, isUpdate: true, isCopy: false }]);
+      case 'Purchase Voucher':
+        this.router.navigate(['/views/purchase-info/purchase-info-view', { id: id, isUpdate: true, isCopy: false }]);
         break
 
-        case'Vendor Credit':
+      case 'Vendor Credit':
         this.router.navigate(['/views/vendor-info-notes/vendor-info-view', { id: id, isUpdate: true }]);
-         break
+        break
 
-        case 'Opening Balance':
-          Swal.fire(' Cannot Open.This Item Belongs To Opening Balance');
-        default:
+      case 'Opening Balance':
+        Swal.fire(' Cannot Open.This Item Belongs To Opening Balance');
+      default:
 
         console.error('Unhandled Trans_Type:', transType);
         break;
     }
   }
 
-  
-  
+
+
 
   onDateChange(event: any): void {
     this.selectedDate = this.datePipe.transform(event.value, 'yyyy-MM-dd');
     this.BasedOnDate(this.selectedDate);
   }
+
+
+  sort(property) {
+    this.pagesort(property, this.dataList);
+  }
+
 
   setPage(page: number) {
     if (page < 1 || page > this.pager.totalPages) {
@@ -153,7 +163,7 @@ export class TrialbalancetwoComponent implements OnInit {
           this.TypeList = result.data.Table;
         }
       }
-    }),error =>{
+    }), error => {
       console.error(error);
     }
   }
@@ -166,18 +176,18 @@ export class TrialbalancetwoComponent implements OnInit {
       "Date": "",
       "DivisionId": "",
       "OfficeId": "",
-      "Type" : " ",
-      "Transaction" : ""
+      "Type": " ",
+      "Transaction": ""
     };
     this.reportService.GetLedgerDataById(payload).subscribe(response => {
       if (response.data && Array.isArray(response.data.Table) && response.data.Table.length > 0) {
-        this.dataList = response.data.Table; 
+        this.dataList = response.data.Table;
         this.setPage(1);
-         this.totalDebitAmount = this.dataList.reduce((sum, item) => sum + (parseFloat(item.Debit) || 0), 0);
+        this.totalDebitAmount = this.dataList.reduce((sum, item) => sum + (parseFloat(item.Debit) || 0), 0);
         this.totalCreditAmount = this.dataList.reduce((sum, item) => sum + (parseFloat(item.Credit) || 0), 0);
         this.totalAmount = this.dataList.reduce((sum, item) => sum + (parseFloat(item.Amount) || 0), 0);
-       
-        
+
+
       } else {
         this.totalDebitAmount = 0;
         this.totalCreditAmount = 0;
@@ -189,202 +199,183 @@ export class TrialbalancetwoComponent implements OnInit {
     }, err => {
       console.error('Error:', err);
     });
-}
- 
-// getbyidBalancelist() {
-//   debugger
-//     const service = `https://odakfnqa.odaksolutions.in/api/Reports/GetLedgerDataById`;
-//     const payload = {
-//       "AccountId": id,
-//       "Date": "",
-//       "DivisionId": "",
-//       "OfficeId": ""
-//     };
-
-//     this.dataService.post(service, payload).subscribe((result: any) => {
-//         if (result.message == 'Success' && result.data && Array.isArray(result.data.Table) && result.data.Table.length > 0) {
-//             this.dataList = result.data.Table;
-//             this.calculateTotals();
-//         } else {
-//             console.error('Error: Invalid response format or no data found');
-//         }
-//     }, error => {
-//         console.error("Error occurred:", error); 
-//     });
-// }
-
-
-createBalanceFilterForm() {
-  this.filterForm = this.fb.group({
-    Date: [''],
-    OfficeId: [''],
-    DivisionId : [''],
-    Type:[''],
-    Transaction:['']
-  })
-}
-
-BasedOnDate(selectedDate: any ) {
-
-  const payload = {
-    "AccountId": "",
-    "Date": selectedDate,
-    "DivisionId": "",
-    "OfficeId": "",
-    "Type" : " ",
-    "Transaction" : ""
-  };
-  this.reportService.GetLedgerDataById(payload).subscribe(response => {
-    this.dataList = [];
-    console.log('Response Data:', response); 
-
-    if (response.data.Table.length > 0) {
-      this.dataList = response.data.Table;
-      console.log('Data List:', this.dataList); 
-    } else {
-      console.error('Error: Invalid response format');
-    }
-  }, err => {
-    console.error('Error:', err);
-  });
-}
-
-onDivisionChange( divisionId: any, id: number): void {
- 
-  const payload = {
-    "AccountId": id,
-    "Date": "",
-    "DivisionId": divisionId,
-    "OfficeId": "",
-    "Type" : " ",
-    "Transaction" : ""
-  };
-  this.reportService.GetLedgerDataById(payload).subscribe(response => {
-    this.dataList = [];
-    console.log('Response Data:', response); 
-
-    if (response.data.Table.length > 0) {
-      this.dataList = response.data.Table; 
-      console.log('Data List:', this.dataList);
-    } else {
-      console.error('Error: Invalid response format');
-    }
-  }, err => {
-    console.error('Error:', err);
-  });
-}
-
-onOfficeChange( OfficeId: any, id: number): void {
-
-  const payload = {
-    "AccountId": id,
-    "Date": "",
-    "DivisionId": "",
-    "OfficeId": OfficeId,
-    "Type" : " ",
-    "Transaction" : ""
-  };
-  this.reportService.GetLedgerDataById(payload).subscribe(response => {
-    this.dataList = [];
-    console.log('Response Data:', response);
-
-    if (response.data.Table.length > 0) {
-      this.dataList = response.data.Table; 
-      console.log('Data List:', this.dataList);
-    } else {
-      console.error('Error: Invalid response format');
-    }
-  }, err => {
-    console.error('Error:', err);
-  });
-}
-
-
-getOfficeLists(id: number) {
-  this.commonDataService.getOfficeByDivisionId({ DivisionId: id }).subscribe(result => {
-    this.officeList = [];
-    if (result['data'].Table.length > 0) {
-      this.officeList = result['data'].Table;
-    }
-  })
-}
-
-// downloadExcel() {
-//   if (!this.table) {
-//     console.error('Table element not found.');
-//     return;
-//   }
-
-//   const ws: XLSX.WorkSheet = XLSX.utils.table_to_sheet(this.table.nativeElement);
-//   const wb: XLSX.WorkBook = XLSX.utils.book_new();
-//   XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-//   XLSX.writeFile(wb, 'table_data.xlsx');
-// }
-
-
-async downloadExcel() {
-  if (!this.dataList || this.dataList.length === 0) {
-    Swal.fire('No record found');
-    return;
   }
- 
-  const workbook = new Workbook();
-  const worksheet = workbook.addWorksheet('Report');
 
-  // Add title and subtitle rows
-  const titleRow = worksheet.addRow(['', '', 'ODAK SOLUTIONS PRIVATE LIMITED', '', '', '']);
-  titleRow.getCell(3).font = { size: 15, bold: true };
-  titleRow.getCell(3).alignment = { horizontal: 'center' };
-  worksheet.mergeCells(`C${titleRow.number}:D${titleRow.number}`);
-  const subtitleRow = worksheet.addRow(['', '', 'Account Transactions', '', '', '']);
-  subtitleRow.getCell(3).font = { size: 15, bold: true };
-  subtitleRow.getCell(3).alignment = { horizontal: 'center' };
-  worksheet.mergeCells(`C${subtitleRow.number}:D${subtitleRow.number}`);
-  const subtitleRow1 = worksheet.addRow(['', '', ' Accounts Receivable', '', '', '']);
-  subtitleRow1.getCell(3).font = { size: 15, bold: true };
-  subtitleRow1.getCell(3).alignment = { horizontal: 'center' };
-  worksheet.mergeCells(`C${subtitleRow1.number}:D${subtitleRow1.number}`);
+  createBalanceFilterForm() {
+    this.filterForm = this.fb.group({
+      Date: [''],
+      OfficeId: [''],
+      DivisionId: [''],
+      Type: [''],
+      Transaction: ['']
+    })
+  }
 
-  // Add date row
-  const currentDate = new Date();
-  worksheet.addRow(['', '', `As of ${currentDate.toDateString()}`, '', '', '']);
- 
+  //Filter By Date , Division , Office & TransactionType 
+  BasedOnDate(selectedDate: any) {
+    this.applyFilter('Date', selectedDate);
+  }
 
-  // Define header row
-  const headers = ['Trans_Date', 'Trans_Account_Name', 'Trans_Details', 'Transaction_Type', 'Trans_Type', 'Trans_Ref_Details',  'Credit', 'Debit', 'Amount'];
-  const headerRow = worksheet.addRow(headers);
+  onDivisionChange(divisionId: any, id: number) {
+    this.applyFilter('DivisionId', divisionId, id);
+  }
 
-  // Style the header row
-  headerRow.eachCell((cell) => {
-    cell.fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      fgColor: { argb: '8A9A5B' },
+  onOfficeChange(officeId: any, id: number) {
+    this.applyFilter('OfficeId', officeId, id);
+  }
+
+  onTransactionTypeChange(type: any, id: number): void {
+    this.applyFilter('Type', type, id);
+  }
+
+
+
+  applyFilter(filterType: string, value: any, id: number = null): void {
+    let payload: any = {
+      "AccountId": id,
+      "Date": "",
+      "DivisionId": "",
+      "OfficeId": "",
+      "Type": "",
+      "Transaction": ""
     };
-    cell.font = {
-      bold: true,
-      color: { argb: 'FFFFF7' }
-    };
-    cell.alignment = {
-      horizontal: 'center',
-    };
-    cell.border = {
-      top: { style: 'thin' },
-      left: { style: 'thin' },
-      bottom: { style: 'thin' },
-      right: { style: 'thin' },
-    };
-  });
+
+    switch (filterType) {
+      case 'Date':
+        payload.Date = value;
+        break;
+      case 'DivisionId':
+        payload.DivisionId = value;
+        break;
+      case 'OfficeId':
+        payload.OfficeId = value;
+        break;
+      case 'Type':
+        payload.Type = value;
+        break;
+
+      default:
+        console.error('Invalid filter type');
+        return;
+    }
+
+    this.reportService.GetLedgerDataById(payload).subscribe(response => {
+      this.dataList = [];
+      console.log('Response Data:', response);
+
+      if (response.data.Table && response.data.Table.length > 0) {
+        this.dataList = response.data.Table;
+        console.log('Data List:', this.dataList);
+      } else {
+        console.error('Error: Invalid response format');
+      }
+    }, err => {
+      console.error('Error:', err);
+    });
+  }
+
+  //filter By Transaction Number 
+
+  applyFilters() {
+    // Apply form-based filters
+    const filters = this.filterForm.value;
+    this.filteredData = this.dataList.filter(item =>
+      (!filters.Date || item.Date.includes(filters.Date)) &&
+      (!filters.OfficeId || item.OfficeId === filters.OfficeId) &&
+      (!filters.DivisionId || item.DivisionId === filters.DivisionId) &&
+      (!filters.Type || item.Type === filters.Type) &&
+      (!filters.Transaction || item.Transaction.includes(filters.Transaction))
+      // Adjust conditions based on your data structure
+    );
+
+    // Apply search filter for Transaction field
+    if (this.transactionSearchTerm.trim()) {
+      this.filteredData = this.filteredData.filter(item =>
+        item.Transaction.toLowerCase().includes(this.transactionSearchTerm.toLowerCase())
+        // Adjust fields for search based on your data
+      );
+    }
+  }
+
+  applyTransactionFilter() {
+    this.applyFilters(); // Trigger filtering when transactionSearchTerm changes
+  }
 
 
-  this.dataList.forEach(group => {
-    // Format the date
-    const date = group.Trans_Date;
-    const formattedDate = date.split('T')[0];
-    group.Trans_Date = formattedDate;
 
-    // Create row data
-    const rowData = [
+  getOfficeLists(id: number) {
+    this.commonDataService.getOfficeByDivisionId({ DivisionId: id }).subscribe(result => {
+      this.officeList = [];
+      if (result['data'].Table.length > 0) {
+        this.officeList = result['data'].Table;
+      }
+    })
+  }
+
+
+  async downloadExcel() {
+    if (!this.dataList || this.dataList.length === 0) {
+      Swal.fire('No record found');
+      return;
+    }
+
+    const workbook = new Workbook();
+    const worksheet = workbook.addWorksheet('Report');
+
+    // Add title and subtitle rows
+    const titleRow = worksheet.addRow(['', '', 'ODAK SOLUTIONS PRIVATE LIMITED', '', '', '']);
+    titleRow.getCell(3).font = { size: 15, bold: true };
+    titleRow.getCell(3).alignment = { horizontal: 'center' };
+    worksheet.mergeCells(`C${titleRow.number}:D${titleRow.number}`);
+    const subtitleRow = worksheet.addRow(['', '', 'Account Transactions', '', '', '']);
+    subtitleRow.getCell(3).font = { size: 15, bold: true };
+    subtitleRow.getCell(3).alignment = { horizontal: 'center' };
+    worksheet.mergeCells(`C${subtitleRow.number}:D${subtitleRow.number}`);
+    const subtitleRow1 = worksheet.addRow(['', '', ' Accounts Receivable', '', '', '']);
+    subtitleRow1.getCell(3).font = { size: 15, bold: true };
+    subtitleRow1.getCell(3).alignment = { horizontal: 'center' };
+    worksheet.mergeCells(`C${subtitleRow1.number}:D${subtitleRow1.number}`);
+
+    // Add date row
+    const currentDate = new Date();
+    worksheet.addRow(['', '', `As of ${currentDate.toDateString()}`, '', '', '']);
+
+
+    // Define header row
+    const headers = ['Trans_Date', 'Trans_Account_Name', 'Trans_Details', 'Transaction_Type', 'Trans_Type', 'Trans_Ref_Details', 'Credit', 'Debit', 'Amount'];
+    const headerRow = worksheet.addRow(headers);
+
+    // Style the header row
+    headerRow.eachCell((cell) => {
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: '8A9A5B' },
+      };
+      cell.font = {
+        bold: true,
+        color: { argb: 'FFFFF7' }
+      };
+      cell.alignment = {
+        horizontal: 'center',
+      };
+      cell.border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' },
+      };
+    });
+
+
+    this.dataList.forEach(group => {
+      // Format the date
+      const date = group.Trans_Date;
+      const formattedDate = date.split('T')[0];
+      group.Trans_Date = formattedDate;
+
+      // Create row data
+      const rowData = [
         group.Trans_Date,
         group.Trans_Account_Name,
         group.Trans_Details,
@@ -394,58 +385,58 @@ async downloadExcel() {
         group.Credit,
         group.Debit,
         group.Amount
-    ];
-    
-    // Add row to worksheet
-    const row = worksheet.addRow(rowData);
+      ];
 
-    // Set text color for specific columns
-    const columnsToColor = ['Debit', 'Credit', 'Amount'];
-    columnsToColor.forEach(columnName => {
+      // Add row to worksheet
+      const row = worksheet.addRow(rowData);
+
+      // Set text color for specific columns
+      const columnsToColor = ['Debit', 'Credit', 'Amount'];
+      columnsToColor.forEach(columnName => {
         const columnIndex = Object.keys(group).indexOf(columnName);
         if (columnIndex !== -1) {
-            const cell = row.getCell(columnIndex + 1);
-            cell.font = { color: { argb: '8B0000' }, bold: true }; // Red color
+          const cell = row.getCell(columnIndex + 1);
+          cell.font = { color: { argb: '8B0000' }, bold: true }; // Red color
         }
+      });
     });
-});
 
 
-  // Adjust column widths
-  worksheet.columns.forEach(column => {
-    let maxLength = 0;
-    column.eachCell({ includeEmpty: true }, cell => {
-      const columnLength = cell.value ? cell.value.toString().length : 0;
-      if (columnLength > maxLength) {
-        maxLength = columnLength;
-      }
+    // Adjust column widths
+    worksheet.columns.forEach(column => {
+      let maxLength = 0;
+      column.eachCell({ includeEmpty: true }, cell => {
+        const columnLength = cell.value ? cell.value.toString().length : 0;
+        if (columnLength > maxLength) {
+          maxLength = columnLength;
+        }
+      });
+      column.width = maxLength + 2;
     });
-    column.width = maxLength + 2;
-  });
- // Style the footer row with yellow background, bold, and centered text
- const footerRow = worksheet.addRow(['End of Report']);
- footerRow.eachCell((cell) => {
-   cell.fill = {
-     type: 'pattern',
-     pattern: 'solid',
-     fgColor: { argb: '8A9A5B' },
-   };
-   cell.font = {
-     bold: true,
-     color: { argb: 'FFFFF7' }
-   };
-   cell.alignment = {
-     horizontal: 'center',
-   };
- });
+    // Style the footer row with yellow background, bold, and centered text
+    const footerRow = worksheet.addRow(['End of Report']);
+    footerRow.eachCell((cell) => {
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: '8A9A5B' },
+      };
+      cell.font = {
+        bold: true,
+        color: { argb: 'FFFFF7' }
+      };
+      cell.alignment = {
+        horizontal: 'center',
+      };
+    });
 
- // Merge footer cells if needed
- worksheet.mergeCells(`A${footerRow.number}:${String.fromCharCode(65 + headers.length - 1)}${footerRow.number}`);
-  // Write to Excel and save
-  const buffer = await workbook.xlsx.writeBuffer();
-  const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-  saveAs(blob, 'Report-Account Transactions.xlsx');
-}
+    // Merge footer cells if needed
+    worksheet.mergeCells(`A${footerRow.number}:${String.fromCharCode(65 + headers.length - 1)}${footerRow.number}`);
+    // Write to Excel and save
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    saveAs(blob, 'Report-Account Transactions.xlsx');
+  }
 
 }
 
