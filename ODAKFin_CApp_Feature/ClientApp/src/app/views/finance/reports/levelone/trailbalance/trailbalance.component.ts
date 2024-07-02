@@ -9,7 +9,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonService } from 'src/app/services/common.service';
 import Swal from 'sweetalert2';
 import { ContraVoucherService } from 'src/app/services/contra-voucher.service';
-// import { CommonService } from 'src/app/services/common.service';
+import { GridSort } from 'src/app/model/common';
 import * as XLSX from 'xlsx';
 import { HttpClient } from '@angular/common/http';
 import { Workbook } from 'exceljs';
@@ -47,6 +47,7 @@ export class TrailbalanceComponent implements OnInit {
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
   entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   entityThousands = Number(this.commonDataService.getLocalStorageEntityConfigurable('CurrenecyFormat'));
+  sortOrder: { [key: string]: 'asc' | 'desc' } = {};
   
   @ViewChild('table') table: ElementRef;
 
@@ -93,6 +94,54 @@ export class TrailbalanceComponent implements OnInit {
   }
 }
 
+sort(property: string) {
+  const sortOrder = this.sortOrder[property] === 'asc' ? 'desc' : 'asc';
+  this.sortOrder[property] = sortOrder;
+
+  // Sort the parent groups
+  this.pagedItems.sort((a, b) => {
+    const valueA = a[property];
+    const valueB = b[property];
+    if (valueA < valueB) {
+      return sortOrder === 'asc' ? -1 : 1;
+    }
+    if (valueA > valueB) {
+      return sortOrder === 'asc' ? 1 : -1;
+    }
+    return 0;
+  });
+
+  // Sort the parent items within each group
+  this.pagedItems.forEach(group => {
+    group.parentTotals.sort((a, b) => {
+      const valueA = a[property];
+      const valueB = b[property];
+      if (valueA < valueB) {
+        return sortOrder === 'asc' ? -1 : 1;
+      }
+      if (valueA > valueB) {
+        return sortOrder === 'asc' ? 1 : -1;
+      }
+      return 0;
+    });
+
+    // Optionally, sort the items within each parent if needed
+    group.parentTotals.forEach(parent => {
+      parent.items.sort((a, b) => {
+        const valueA = a[property];
+        const valueB = b[property];
+        if (valueA < valueB) {
+          return sortOrder === 'asc' ? -1 : 1;
+        }
+        if (valueA > valueB) {
+          return sortOrder === 'asc' ? 1 : -1;
+        }
+        return 0;
+      });
+    });
+  });
+}
+
   getDivisionList() {
     var service = `${this.globals.APIURL}/Division/GetOrganizationDivisionList`; var payload: any = {}
     this.dataService.post(service, payload).subscribe((result: any) => {
@@ -116,9 +165,7 @@ export class TrailbalanceComponent implements OnInit {
     }, error => { });
   }
 
-    
   trailbalanceList() {
-
     const payload = {
       "DivisionId": "",
       "OfficeId": "",
@@ -137,6 +184,7 @@ export class TrailbalanceComponent implements OnInit {
           groups[group].push(item);
           return groups;
         }, {});
+        console.log("Grouped items:", groupedItems);
   
         // Process each group to calculate parent totals and group totals
         this.balanceList = Object.keys(groupedItems).map(group => {
@@ -148,9 +196,13 @@ export class TrailbalanceComponent implements OnInit {
             if (!parents[parent]) {
               parents[parent] = [];
             }
-            parents[parent].push(item);
+            // Ensure unique child account names
+            if (!parents[parent].some((child: any) => child.ChildAccountName === item.ChildAccountName)) {
+              parents[parent].push(item);
+            }
             return parents;
           }, {});
+          console.log("Grouped items by ParentAccountName:", parentGroupedItems);
   
           // Calculate totals for each parent account within the group
           const parentTotals = Object.keys(parentGroupedItems).map(parentName => {
@@ -194,6 +246,8 @@ export class TrailbalanceComponent implements OnInit {
       console.error("Error occurred:", error);
     });
   }
+  
+  
   
   // Helper function to calculate the total credit or debit for a particular group
   calculateGroupTotal(groupItems: any[], type: string): number {
@@ -511,7 +565,6 @@ getOfficeLists(id: number) {
 }
 
 getDivisionBasedOffice(officeId, divisoinId: any) {
-debugger
   if (officeId && divisoinId) {
     let service = `${this.globals.APIURL}/Common/GetBankByOfficeId`;
     let payload = {
