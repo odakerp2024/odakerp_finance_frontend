@@ -157,10 +157,10 @@
 
                     <!-- Dynamic Headers By Overall -->
                     <div class="col-12" *ngIf="type == 'overall'">
-                        <table class="table table-responsive table-bordered w-100 dataTable no-footer">
+                        <table class="table table-responsive table-bordered w-100 dataTable no-footer" >
                             <thead>
                                 <tr>
-                                    <th h class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                    <th  class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                     colspan="1" aria-label="Name: activate to sort column ascending"  style="width: 177.575px;"
                                     *ngFor="let header of headers" (click)="sort(header)">
                                         {{ header }}
@@ -185,12 +185,12 @@
                                             row[header] }}</span>
                                     </td>
                                 </tr>
-                                <tr *ngIf="headers.length === 0">
-                                    <td class="text-center" colspan="{{ headers.length }}">No records found</td>
+                                <tr *ngIf="pagedItems.length === 0">
+                                    <td colspan="10"  class="text-center">No records found</td>
                                 </tr>
                             </tbody>
                             <!-- Table footer -->
-                            <tfoot class="table-footer" *ngIf="headers.length > 0">
+                            <tfoot class="table-footer" *ngIf="headers.length > 0 ">
                                 <tr class="footer-position-sticky">
                                     <td class="text-left">
                                         <span style="font-size: medium;">Grand Total : </span>
@@ -210,9 +210,9 @@
                         <table class="table table-responsive table-bordered w-100 dataTable no-footer">
                             <thead>
                                     <tr>
-                                        <th h class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
+                                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"  style="width: 177.575px;"
-                                        *ngFor="let header of calculateHeadersCustomerwise()" (click)="sort(header)">
+                                        *ngFor="let header of headers" (click)="sort(header)">
                                             {{ header }}
                                             <span *ngIf="sortOrder[header] === 'asc'"></span>
                                             <span *ngIf="sortOrder[header] === 'desc'"></span>
@@ -240,10 +240,8 @@
                                         </span>
                                     </td>
                                 </tr>
-                                
-                                <tr *ngIf="pagedItems.length === 0">
-                                    <td class="text-center" [attr.colspan]="calculateHeadersCustomerwise().length">No
-                                        records found</td>
+                                <tr *ngIf="pagedItems.length == 0">
+                                    <td colspan="12"  class="text-center">No records found</td>
                                 </tr>
                             </tbody>
 
@@ -275,7 +273,7 @@
                                     <tr>
                                         <th h class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"  style="width: 177.575px;"
-                                        *ngFor="let header of calculateHeadersInvoicewise()" (click)="sort(header)">
+                                        *ngFor="let header of headers" (click)="sort(header)">
                                             {{ header }}
                                             <span *ngIf="sortOrder[header] === 'asc'"></span>
                                             <span *ngIf="sortOrder[header] === 'desc'"></span>
@@ -306,11 +304,8 @@
                                         </ng-container>
                                     </td>
                                 </tr>
-                                
-                                
-                                <tr *ngIf="pagedItems.length === 0">
-                                    <td class="text-center" [attr.colspan]="calculateHeadersInvoicewise().length">No
-                                        records found</td>
+                                <tr *ngIf="pagedItems.length == 0">
+                                    <td colspan="12" class="text-center">No records found</td>
                                 </tr>
                                 </tbody>
 
