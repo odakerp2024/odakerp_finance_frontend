@@ -1,6 +1,6 @@
 import { TDSRate } from 'src/app/model/financeModule/TDS';
 import { HttpErrorResponse, HttpEventType, HttpResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -98,9 +98,9 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
   AccountList: any[];
   groupedCoaTypeList: { [key: string]: any[] };
   tsdDetails: any;
-  canSelectOrderType: boolean = false;
+  canSelectOrderType: boolean = false;                          
   accountDisabled: boolean = false;
-
+  isTdsmode: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -141,21 +141,27 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     this.getParentAccountList();
     // this.maxDate = new Date();
     // this.maxDate.setDate( this.maxDate.getDate() + 3 );
-
+this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(this.entityFraction));
+      this.PurchaseCreateForm.controls['RoundedValue'].setValue(Number(0).toFixed(this.entityFraction));
   
-
     this.route.params.subscribe(param => {
       if (param.id) {
-        this.PurchaseInvoiceId = param.id;
+        // this.PurchaseInvoiceId = param.id;
         this.isUpdate = true;
         this.isUpdateMode = true;
         this.isUpdateMode1 = false;
+
+        this.PurchaseInvoiceId = param.id;
+        this.getPurchaseInvoiceAdminInfo();
       }
     });
 
-    if (this.isUpdate) {
-      this.getPurchaseInvoiceAdminInfo();
-    }
+    // if (this.isUpdate) {
+    //   debugger
+    //   this.getPurchaseInvoiceAdminInfo();
+    // }
+
+
 
     // this.getModuleType(() => {
     //   if (this.mappingSuccess == false) {
@@ -290,7 +296,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
   }
 
   createPurchaseInvoiceForm() {
-    this.PurchaseCreateForm = this.fb.group({
+        this.PurchaseCreateForm = this.fb.group({
       PurchaseInvoiceId: [this.PurchaseInvoiceId],
       Division: [0],
       Office: [0],
@@ -325,9 +331,13 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       SGST: [''],
       InvoiceAmount: [''],
       NetAmount: [''],
+      RoundOffChecked : 0,
+      RoundOffAmount: [0],
+      RoundedValue: [0],
       BankId: [''],
       InvoiceCurrency: [''],
-      InvoiceExrate: [''],
+      InvoiceExrate: ['1'],
+      InvoiceExrateICY: [''],
       Remarks: [''],
       CreatedDate: [this.minDate],
       CreatedBy: localStorage.getItem('UserID'),
@@ -391,7 +401,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       });
     }
   }
-  async getPurchaseInvoiceAdminInfo() {
+    getPurchaseInvoiceAdminInfo() {
     var service = `${this.globals.APIURL}/PurchaseInvoice/GetPurchaseInvoiceById`; var payload = { Id: this.PurchaseInvoiceId };
     this.dataService.post(service, payload).subscribe(async (result: any) => {
       this.PurchaseTableList = [];
@@ -407,8 +417,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
         if (info.StatusId == 2) this.isFinalRecord = true;
 
         this.getVendorBranchList(info.VendorId, info.VendorBranch, false);
-        await this.getVendorDetailsInfo(info.VendorBranch);
-
+          this.getVendorDetailsInfo(info.VendorBranch);
 
         //  this.onBookingAgainstChange(info.BookingAgainst == 0 ? 'general' : 'provision');
         const bookingType = info.BookingAgainst == 0 ? 'general' : 'provision';
@@ -450,6 +459,9 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
           SGST: info.SGST,
           IsDelete: info.IsDelete ? info.IsDelete : 0,
           InvoiceAmount: info.InvoiceAmount,
+          RoundOffChecked : info.RoundOffChecked,
+          RoundOffAmount: info.RoundOffAmount,
+          RoundedValue: info.RoundedValue,
           InvoiceCurrency: info.InvoiceCurrency,
           CreatedBy: info.CreatedBy,
           ProvisionType: info.ProvisionType,
@@ -458,7 +470,8 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
           NetAmount: info.NetAmount,
           Remarks: info.Remarks,
           BankId: info.BankId,
-          InvoiceExrate: info.InvoiceExRate,
+          InvoiceExrate: info.InvoiceExRate ? info.InvoiceExRate : 1,
+          InvoiceExrateICY: info.InvoiceExrateICY ? info.InvoiceExrateICY : 1,
         });
         console.log('After Patching', this.PurchaseCreateForm.value)
         if (info.PurchaseOrder) this.orderType = 'Purchase';
@@ -742,8 +755,6 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
   }
 
   getVendorBranchList(event, setBrach = false, branchId?: any) {
-
-
     this.vendorBranch = [];
     this.vendorBranch = this.allVendorsList.filter(x => x.VendorID == event);
 
@@ -755,7 +766,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       this.PurchaseCreateForm.controls['VendorBranch'].setValue(singleBranchDetails.VendorBranchID);
       this.getVendorDetailsInfo(singleBranchDetails.VendorBranchID);
       this.checkBranchState(singleBranchDetails);
-      this.updateCanSelectOrderType();
+      this.updateCanSelectOrderType();  
     }
 
   }
@@ -797,11 +808,9 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     this.PurchaseCreateForm.controls.TDSRate.setValue(tdsRate.Rate)
   }
   getVendorDetailsInfo(event) {
-
     return new Promise((resolve, reject) => {
       let vendorInfo = this.vendorBranch.find(x => x.VendorBranchID == event);
       if (vendorInfo) {
-
         this.checkBranchState(vendorInfo);
         this.VendorService.getVendorId({ VendorID: vendorInfo.VendorID, VendorBranchID: event }).pipe().subscribe(response => {
           if (response['data'].Table1.length > 0) { this.officeCityId = response['data'].Table1[0].City; }
@@ -821,10 +830,15 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
             this.vendorLDC = this.tsdDetails.Rate ? this.tsdDetails.Rate : ''
             if (this.tsdDetails) {
               this.PurchaseCreateForm.controls['TDSApplicability'].setValue(this.tsdDetails.TDSApplicability ? this.tsdDetails.TDSApplicability : '');
+              this.PurchaseCreateForm.controls['TDSMaster'].setValue(this.tsdDetails.TDSSectionId ? this.tsdDetails.TDSSectionId : '');
               this.PurchaseCreateForm.controls['TDSSection'].setValue(this.tsdDetails.TDSSectionId ? this.tsdDetails.TDSSectionId : '');
               this.PurchaseCreateForm.controls['ReasonforNonTDS'].setValue(this.tsdDetails.Reason ? this.tsdDetails.Reason : '');
               this.PurchaseCreateForm.controls['LDCRate'].setValue(this.vendorLDC);
               // this.PurchaseCreateForm.controls['TDSRate'].setValue(this.vendorTDS);
+            }
+            const TDSApplicability = this.PurchaseCreateForm.controls['TDSApplicability'].value
+            if(TDSApplicability == 3){
+            this.isTdsmode = true;
             }
             this.onTDSDateCheck();
           }
@@ -1424,10 +1438,14 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
       CGST: info.CGST,
       SGST: info.SGST,
       InvoiceAmount: info.InvoiceAmount,
+      RoundOffChecked : info.RoundOffChecked,
+      RoundOffAmount: info.RoundOffAmount,
+      RoundedValue: info.RoundedValue,
       NetAmount: info.NetAmount,
       BankId: info.BankId,
       InvoiceCurrency: info.InvoiceCurrency ? info.InvoiceCurrency : 0,
-      InvoiceExrate: info.InvoiceExrate,
+      InvoiceExrate: info.InvoiceExrate ? info.InvoiceExrate : 1,
+      InvoiceExrateICY: info.InvoiceExrateICY ? info.InvoiceExrateICY : 1,
       Remarks: info.Remarks,
       CreatedBy: info.CreatedBy,
       TDSAmount: info.TDSAmount
@@ -1532,6 +1550,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     let info = this.currencyList.find(x => x.Currency == entityInfo['Currency']);
     this.entityCurrencyID = info.ID;
     if (this.entityCurrencyID == currencyId) {
+      this.PurchaseCreateForm.controls['InvoiceExrate'].setValue(1);
       this.PurchaseCreateForm.controls['ExRate'].setValue(1);
       this.PurchaseCreateForm.controls['Amountccr'].setValue(1 * this.PurchaseCreateForm.value.Rate * this.PurchaseCreateForm.value.Qty);
       this.PurchaseCreateForm.get('ExRate').disable();
@@ -1722,7 +1741,32 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
     this.PurchaseTableList = this.PurchaseTableList.filter(e => (e.IsOrderTypeItem == 0 || e.IsOrderTypeItem == undefined))
   }
 
+  handleRoundOff() {
+    debugger
+    const roundOffChecked = this.PurchaseCreateForm.get('RoundOffChecked')?.value;
+    let invoiceAmount = this.PurchaseCreateForm.get('InvoiceAmount')?.value;
 
+    if (roundOffChecked) {
+      const roundedAmount = Math.round(invoiceAmount * 10) / 10; // Round to one decimal place
+      const difference = roundedAmount - invoiceAmount;
+      this.PurchaseCreateForm.patchValue({
+        RoundOffAmount: roundedAmount.toFixed(this.entityFraction),
+        RoundedValue: difference.toFixed(this.entityFraction),
+        InvoiceAmount: invoiceAmount
+
+      });
+    } else {
+      // If checkbox is unchecked, reset RoundedValue to InvoiceAmount
+      this.PurchaseCreateForm.patchValue({
+        InvoiceAmount: invoiceAmount,
+        RoundOffAmount: this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(this.entityFraction)),
+        RoundedValue: this.PurchaseCreateForm.controls['RoundedValue'].setValue(Number(0).toFixed(this.entityFraction))
+      });
+      // this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(this.entityFraction));
+      // this.PurchaseCreateForm.controls['RoundedValue'].setValue(Number(0).toFixed(this.entityFraction));
+    }
+  }
+  
   // toggleRCM(value: string) {
 
   //   if (value === '1') {
@@ -1766,7 +1810,6 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
   }
 
   checkBranchState(branch) {
-
     this.selectedBranchStateId = branch.SourceOfSupply;
     this.getFinalCalculation();
   }
