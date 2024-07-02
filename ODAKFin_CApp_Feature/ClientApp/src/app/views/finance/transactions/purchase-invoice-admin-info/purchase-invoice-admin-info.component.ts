@@ -1,6 +1,6 @@
 import { TDSRate } from 'src/app/model/financeModule/TDS';
 import { HttpErrorResponse, HttpEventType, HttpResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -98,9 +98,9 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
   AccountList: any[];
   groupedCoaTypeList: { [key: string]: any[] };
   tsdDetails: any;
-  canSelectOrderType: boolean = false;
+  canSelectOrderType: boolean = false;                          
   accountDisabled: boolean = false;
-
+  isTdsmode: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -144,19 +144,24 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
 this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(this.entityFraction));
       this.PurchaseCreateForm.controls['RoundedValue'].setValue(Number(0).toFixed(this.entityFraction));
   
-
     this.route.params.subscribe(param => {
       if (param.id) {
-        this.PurchaseInvoiceId = param.id;
+        // this.PurchaseInvoiceId = param.id;
         this.isUpdate = true;
         this.isUpdateMode = true;
         this.isUpdateMode1 = false;
+
+        this.PurchaseInvoiceId = param.id;
+        this.getPurchaseInvoiceAdminInfo();
       }
     });
 
-    if (this.isUpdate) {
-      this.getPurchaseInvoiceAdminInfo();
-    }
+    // if (this.isUpdate) {
+    //   debugger
+    //   this.getPurchaseInvoiceAdminInfo();
+    // }
+
+
 
     // this.getModuleType(() => {
     //   if (this.mappingSuccess == false) {
@@ -396,7 +401,7 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
       });
     }
   }
-  async getPurchaseInvoiceAdminInfo() {
+    getPurchaseInvoiceAdminInfo() {
     var service = `${this.globals.APIURL}/PurchaseInvoice/GetPurchaseInvoiceById`; var payload = { Id: this.PurchaseInvoiceId };
     this.dataService.post(service, payload).subscribe(async (result: any) => {
       this.PurchaseTableList = [];
@@ -412,8 +417,7 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
         if (info.StatusId == 2) this.isFinalRecord = true;
 
         this.getVendorBranchList(info.VendorId, info.VendorBranch, false);
-        await this.getVendorDetailsInfo(info.VendorBranch);
-
+          this.getVendorDetailsInfo(info.VendorBranch);
 
         //  this.onBookingAgainstChange(info.BookingAgainst == 0 ? 'general' : 'provision');
         const bookingType = info.BookingAgainst == 0 ? 'general' : 'provision';
@@ -751,7 +755,6 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
   }
 
   getVendorBranchList(event, setBrach = false, branchId?: any) {
-
     this.vendorBranch = [];
     this.vendorBranch = this.allVendorsList.filter(x => x.VendorID == event);
 
@@ -763,7 +766,7 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
       this.PurchaseCreateForm.controls['VendorBranch'].setValue(singleBranchDetails.VendorBranchID);
       this.getVendorDetailsInfo(singleBranchDetails.VendorBranchID);
       this.checkBranchState(singleBranchDetails);
-      this.updateCanSelectOrderType();   
+      this.updateCanSelectOrderType();  
     }
 
   }
@@ -808,7 +811,6 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
     return new Promise((resolve, reject) => {
       let vendorInfo = this.vendorBranch.find(x => x.VendorBranchID == event);
       if (vendorInfo) {
-
         this.checkBranchState(vendorInfo);
         this.VendorService.getVendorId({ VendorID: vendorInfo.VendorID, VendorBranchID: event }).pipe().subscribe(response => {
           if (response['data'].Table1.length > 0) { this.officeCityId = response['data'].Table1[0].City; }
@@ -833,6 +835,10 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
               this.PurchaseCreateForm.controls['ReasonforNonTDS'].setValue(this.tsdDetails.Reason ? this.tsdDetails.Reason : '');
               this.PurchaseCreateForm.controls['LDCRate'].setValue(this.vendorLDC);
               // this.PurchaseCreateForm.controls['TDSRate'].setValue(this.vendorTDS);
+            }
+            const TDSApplicability = this.PurchaseCreateForm.controls['TDSApplicability'].value
+            if(TDSApplicability == 3){
+            this.isTdsmode = true;
             }
             this.onTDSDateCheck();
           }
@@ -1804,7 +1810,6 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
   }
 
   checkBranchState(branch) {
-
     this.selectedBranchStateId = branch.SourceOfSupply;
     this.getFinalCalculation();
   }
@@ -1959,7 +1964,6 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
 
         tdsAmount = 0;
       } else if (TDSApplicability == 3) {
-        
         const ldcrate = this.PurchaseCreateForm.controls['LDCRate'].value
         if (ldcrate > 0) {
           const tdsCalculation = (amountccr * ldcrate) / 100;

@@ -568,7 +568,7 @@
                                             id="Amount (CCR)" /> </td>
                                     <td >
                                         <ng-select class="searchdropdown"  [formControlName]="'TDSMaster'"  
-                                        [clearable]="false" [appendTo]="'body'" [disable] = "isUpdateMode" [ngClass]=" !IsExchangeEnable ? 'disable-input' : ''" > 
+                                        [clearable]="false" [appendTo]="'body'"  [readonly]="isTdsmode"> 
                                             <ng-option [value]="0" disabled>--SELECT--</ng-option>
                                             <ng-option *ngFor="let tdsmaster of SectionMasterList"  [value]="tdsmaster.SectionID">
                                             <span class="textwrap ">{{tdsmaster.SectionName}}</span>
