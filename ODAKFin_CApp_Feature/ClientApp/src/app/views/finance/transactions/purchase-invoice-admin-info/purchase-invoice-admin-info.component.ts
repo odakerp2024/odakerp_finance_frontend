@@ -471,7 +471,7 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
           Remarks: info.Remarks,
           BankId: info.BankId,
           InvoiceExrate: info.InvoiceExRate ? info.InvoiceExRate : 1,
-          InvoiceExrateICY: info.InvoiceExrateICY ? info.InvoiceExrateICY : 1,
+          InvoiceExrateICY: info.InvoiceExrateICY ? info.InvoiceExrateICY.toFixed(this.entityFraction) : 1,
         });
         console.log('After Patching', this.PurchaseCreateForm.value)
         if (info.PurchaseOrder) this.orderType = 'Purchase';
@@ -1445,7 +1445,7 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
       BankId: info.BankId,
       InvoiceCurrency: info.InvoiceCurrency ? info.InvoiceCurrency : 0,
       InvoiceExrate: info.InvoiceExrate ? info.InvoiceExrate : 1,
-      InvoiceExrateICY: info.InvoiceExrateICY ? info.InvoiceExrateICY : 1,
+      InvoiceExrateICY: info.InvoiceExrateICY ? info.InvoiceExrateICY.toFixed(this.entityFraction) : 1,
       Remarks: info.Remarks,
       CreatedBy: info.CreatedBy,
       TDSAmount: info.TDSAmount
@@ -1559,6 +1559,16 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
     else {
       this.PurchaseCreateForm.get('ExRate').enable();
       this.IsExchangeEnable = true;
+      this.PurchaseCreateForm.controls['InvoiceExrateICY'].setValue(this.PurchaseCreateForm.value.InvoiceAmount / this.PurchaseCreateForm.value.InvoiceExrate);
+    }
+  }
+  changeInvoiceExrateICY(event: number) {
+    const invoiceAmount = this.PurchaseCreateForm.value.InvoiceAmount;
+    const invoiceExrate = this.PurchaseCreateForm.value.InvoiceExrate;
+
+    if (invoiceAmount && invoiceExrate) {
+      const invoiceExrateICY = invoiceAmount / invoiceExrate;
+      this.PurchaseCreateForm.controls['InvoiceExrateICY'].setValue(invoiceExrateICY.toFixed(this.entityFraction));
     }
   }
 

@@ -681,7 +681,7 @@
                                 <div class="form-group">
                                     <input  formControlName="InvoiceExrate"  class="form-control" [ngClass]=" !IsExchangeEnable ? 'disable-input' : ''"
                                     onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
-                                    min="0" numbersOnly appDynamicDecimal id="InvoiceExrate">
+                                    min="0" numbersOnly appDynamicDecimal id="InvoiceExrate" (change)="changeInvoiceExrateICY($event)">
                                 </div>
                             </div>
                         </div>
