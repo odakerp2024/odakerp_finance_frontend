@@ -19,6 +19,7 @@ import { AutoCodeService } from 'src/app/services/auto-code.service';
 import { TaxgroupService } from 'src/app/services/taxgroup.service';
 import { rejects } from 'assert';
 import { resolve } from 'dns';
+import { event } from 'jquery';
 
 @Component({
   selector: 'app-purchase-invoice-admin-info',
@@ -471,7 +472,7 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
           Remarks: info.Remarks,
           BankId: info.BankId,
           InvoiceExrate: info.InvoiceExRate ? info.InvoiceExRate : 1,
-          InvoiceExrateICY: info.InvoiceExrateICY ? info.InvoiceExrateICY : 1,
+          InvoiceExrateICY: info.InvoiceExrateICY ? info.InvoiceExrateICY.toFixed(this.entityFraction) : 1,
         });
         console.log('After Patching', this.PurchaseCreateForm.value)
         if (info.PurchaseOrder) this.orderType = 'Purchase';
@@ -1445,7 +1446,7 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
       BankId: info.BankId,
       InvoiceCurrency: info.InvoiceCurrency ? info.InvoiceCurrency : 0,
       InvoiceExrate: info.InvoiceExrate ? info.InvoiceExrate : 1,
-      InvoiceExrateICY: info.InvoiceExrateICY ? info.InvoiceExrateICY : 1,
+      InvoiceExrateICY: info.InvoiceExrateICY ? info.InvoiceExrateICY.toFixed(this.entityFraction) : 1,
       Remarks: info.Remarks,
       CreatedBy: info.CreatedBy,
       TDSAmount: info.TDSAmount
@@ -1559,6 +1560,16 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
     else {
       this.PurchaseCreateForm.get('ExRate').enable();
       this.IsExchangeEnable = true;
+      this.PurchaseCreateForm.controls['InvoiceExrateICY'].setValue(this.PurchaseCreateForm.value.InvoiceAmount / this.PurchaseCreateForm.value.InvoiceExrate);
+    }
+  }
+  changeInvoiceExrateICY(event: number) {
+    const invoiceAmount = this.PurchaseCreateForm.value.InvoiceAmount;
+    const invoiceExrate = this.PurchaseCreateForm.value.InvoiceExrate;
+
+    if (invoiceAmount && invoiceExrate) {
+      const invoiceExrateICY = invoiceAmount / invoiceExrate;
+      this.PurchaseCreateForm.controls['InvoiceExrateICY'].setValue(invoiceExrateICY.toFixed(this.entityFraction));
     }
   }
 
@@ -1924,7 +1935,7 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
 
   getFinalCalculation() {
     this.checkSameState();
-
+    
     let invoiceAmount = 0;
     let tdsAmount = 0;
 
@@ -2030,6 +2041,7 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
       invoiceAmount = subTotalAmount;
       this.PurchaseCreateForm.controls['TDSRate'].setValue(tdsAmount.toFixed(this.entityFraction));
       this.PurchaseCreateForm.controls['InvoiceAmount'].setValue(invoiceAmount.toFixed(this.entityFraction));
+      this.PurchaseCreateForm.controls['InvoiceExrateICY'].setValue(invoiceAmount.toFixed(this.entityFraction));
       this.PurchaseCreateForm.controls['NetAmount'].setValue((invoiceAmount - tdsAmount).toFixed(this.entityFraction));
 
     } else {
@@ -2038,11 +2050,14 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
       this.PurchaseCreateForm.controls['SGST'].setValue(Number(SGST).toFixed(this.entityFraction));
       this.PurchaseCreateForm.controls['IGST'].setValue(Number(IGST).toFixed(this.entityFraction));
 
+
       invoiceAmount = subTotalAmount + CGST + SGST + IGST;
       this.PurchaseCreateForm.controls['TDSRate'].setValue(tdsAmount.toFixed(this.entityFraction));
       this.PurchaseCreateForm.controls['InvoiceAmount'].setValue(invoiceAmount.toFixed(this.entityFraction));
+      this.PurchaseCreateForm.controls['InvoiceExrateICY'].setValue(invoiceAmount.toFixed(this.entityFraction));
       this.PurchaseCreateForm.controls['NetAmount'].setValue((invoiceAmount - tdsAmount).toFixed(this.entityFraction));
     }
+    this.changeInvoiceExrateICY(0);
 
   }
 
