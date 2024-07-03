@@ -70,67 +70,76 @@ export class TrialbalancetwoComponent implements OnInit {
     this.router.navigate(['/views/finance/reports/levelone', {}])
   }
 
-  clickTransactionNumber(id: number, transType: string) {
-    let url: string;
 
+  clickTransactionNumber(id: number, transType: string, Trans_Number: string) {
+  
+    // Check if transType or Trans_Number is empty and return immediately if either is
+    if (!transType || !Trans_Number) {
+      console.warn('Transaction type or Transaction number is empty. Staying in the same place.');
+      return;
+    }
+  
+    let url: string;
+  
+    // Use switch case on transType alone, as switch (transType && Trans_Number) does not work
     switch (transType) {
       case 'Receipt Voucher':
         url = this.router.serializeUrl(
           this.router.createUrlTree(['/views/transactions/receipt/receipt-details', { id: id }])
         );
         break;
-
+  
       case 'Contra Voucher':
         url = this.router.serializeUrl(
           this.router.createUrlTree(['/views/contra-info/contra-info-view', { contraId: id }])
         );
         break;
-
+  
       case 'Payment Voucher':
         url = this.router.serializeUrl(
           this.router.createUrlTree(['/views/transactions/payment/payment-details', { voucherId: id }])
         );
         break;
-
+  
       case 'Journal Voucher':
         url = this.router.serializeUrl(
           this.router.createUrlTree(['/views/transactions/journal/journal-details', { id: id, isUpdate: true }])
         );
         break;
-
+  
       case 'Voucher Reversal':
         url = this.router.serializeUrl(
           this.router.createUrlTree(['/views/voucher-info/voucher-reversals-info', { id: id, isUpdate: true }])
         );
         break;
-
+  
       case 'Purchase Voucher':
         url = this.router.serializeUrl(
           this.router.createUrlTree(['/views/purchase-info/purchase-info-view', { id: id, isUpdate: true, isCopy: false }])
         );
         break;
-
+  
       case 'Vendor Credit':
         url = this.router.serializeUrl(
           this.router.createUrlTree(['/views/vendor-info-notes/vendor-info-view', { id: id, isUpdate: true }])
         );
         break;
-
+  
       case 'Opening Balance':
         Swal.fire('Cannot Open. This Item Belongs To Opening Balance');
-        return; // Exit the function to prevent opening a new tab
+        return; // Exit the function to prevent opening a new tab 
       default:
         console.error('Unhandled Trans_Type:', transType);
         return; // Exit the function to prevent opening a new tab
     }
-
-    // Open the URL in a new tab
-    window.open(url, '_blank');
+  
+    // Open the URL in a new tab if url is defined
+    if (url) {
+      window.open(url, '_blank');
+    }
   }
-
-
-
-
+  
+  
 
   onDateChange(event: any): void {
     this.selectedDate = this.datePipe.transform(event.value, 'yyyy-MM-dd');
@@ -225,12 +234,12 @@ export class TrialbalancetwoComponent implements OnInit {
       OfficeId: [''],
       DivisionId: [''],
       Type: [''],
-      Transaction: [this.transactionSearchTerm]
+      Transaction: ['']
     })
       // Listen for changes in the transaction input field
       this.filterForm.get('Transaction').valueChanges.subscribe(value => {
         this.transactionSearchTerm = value;
-        if (value === '') {
+        if (value == '') {
           this.applyFilter('Transaction', '');
         } else {
           this.applyFilter('Transaction', value , this.id);
@@ -282,7 +291,7 @@ export class TrialbalancetwoComponent implements OnInit {
         break;
 
         case 'Transaction':
-        payload.Type = value;
+        payload.Transaction = value;
         break;
       default:
         console.error('Invalid filter type');

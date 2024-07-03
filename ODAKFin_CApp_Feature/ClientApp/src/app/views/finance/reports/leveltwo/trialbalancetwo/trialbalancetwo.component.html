@@ -66,7 +66,7 @@
     <div class="col-md-2">
         <div class="form-group">
             <label class="str">VOUCHER#</label>
-            <input [(ngModel)]="transactionSearchTerm" 
+            <input
                 class="form-control my-select amount w-100 mr-0" formControlName="Transaction"  />
         </div>
     </div>
@@ -161,8 +161,8 @@
                             <td>{{balance.Trans_Account_Name}}</td>
                             <td>{{balance.Trans_Details}}</td>
                             <td>{{ balance.Trans_Type }}</td>
-                            <td class="hyperColor" (click)="clickTransactionNumber(balance.ID, balance.Trans_Type)">{{balance.Trans_Number == 0 ? null : balance.Trans_Number}}</td>
-                            <td>{{balance.Trans_Ref_Details}}</td>
+                            <td class="hyperColor" (click)="clickTransactionNumber(balance.ID, balance.Trans_Type, balance.Trans_Number)">{{balance.Trans_Number == 0 ? null : balance.Trans_Number}}</td>
+                            <td>[{{balance.Trans_Ref_Details == 0 ? null : balance.Trans_Ref_Details}}</td>
                             <td class="text-right">{{balance.Debit  | dynamicentityDecimal}}</td>
                             <td class="text-right">{{balance.Credit  | dynamicentityDecimal}}</td>
                             <td class="text-right">{{balance.Amount  | dynamicentityDecimal}}</td>
