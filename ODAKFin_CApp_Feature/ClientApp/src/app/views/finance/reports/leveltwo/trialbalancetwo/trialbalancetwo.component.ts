@@ -41,7 +41,7 @@ export class TrialbalancetwoComponent implements OnInit {
   entityThousands = Number(this.commonDataService.getLocalStorageEntityConfigurable('CurrenecyFormat'));
   TypeList: any;
   pagesort: any = new GridSort().sort;
-  transactionSearchTerm: string = '';
+  transactionSearchTerm: any;
   filteredData: any;
 
   @ViewChild('table') table: ElementRef;
@@ -70,46 +70,64 @@ export class TrialbalancetwoComponent implements OnInit {
     this.router.navigate(['/views/finance/reports/levelone', {}])
   }
 
-
   clickTransactionNumber(id: number, transType: string) {
+    let url: string;
+
     switch (transType) {
       case 'Receipt Voucher':
-        this.router.navigate(['/views/transactions/receipt/receipt-details', { id: id }]);
+        url = this.router.serializeUrl(
+          this.router.createUrlTree(['/views/transactions/receipt/receipt-details', { id: id }])
+        );
         break;
 
       case 'Contra Voucher':
-        this.router.navigate(['/views/contra-info/contra-info-view', { contraId: id }]);
+        url = this.router.serializeUrl(
+          this.router.createUrlTree(['/views/contra-info/contra-info-view', { contraId: id }])
+        );
         break;
 
       case 'Payment Voucher':
-        this.router.navigate(['/views/transactions/payment/payment-details', { voucherId: id }]);
+        url = this.router.serializeUrl(
+          this.router.createUrlTree(['/views/transactions/payment/payment-details', { voucherId: id }])
+        );
         break;
 
       case 'Journal Voucher':
-        this.router.navigate(['/views/transactions/journal/journal-details', { id: id, isUpdate: true }]);
+        url = this.router.serializeUrl(
+          this.router.createUrlTree(['/views/transactions/journal/journal-details', { id: id, isUpdate: true }])
+        );
         break;
-
 
       case 'Voucher Reversal':
-        this.router.navigate(['/views/voucher-info/voucher-reversals-info', { id: id, isUpdate: true }]);
-        break
+        url = this.router.serializeUrl(
+          this.router.createUrlTree(['/views/voucher-info/voucher-reversals-info', { id: id, isUpdate: true }])
+        );
+        break;
 
       case 'Purchase Voucher':
-        this.router.navigate(['/views/purchase-info/purchase-info-view', { id: id, isUpdate: true, isCopy: false }]);
-        break
+        url = this.router.serializeUrl(
+          this.router.createUrlTree(['/views/purchase-info/purchase-info-view', { id: id, isUpdate: true, isCopy: false }])
+        );
+        break;
 
       case 'Vendor Credit':
-        this.router.navigate(['/views/vendor-info-notes/vendor-info-view', { id: id, isUpdate: true }]);
-        break
+        url = this.router.serializeUrl(
+          this.router.createUrlTree(['/views/vendor-info-notes/vendor-info-view', { id: id, isUpdate: true }])
+        );
+        break;
 
       case 'Opening Balance':
-        Swal.fire(' Cannot Open.This Item Belongs To Opening Balance');
+        Swal.fire('Cannot Open. This Item Belongs To Opening Balance');
+        return; // Exit the function to prevent opening a new tab
       default:
-
         console.error('Unhandled Trans_Type:', transType);
-        break;
+        return; // Exit the function to prevent opening a new tab
     }
+
+    // Open the URL in a new tab
+    window.open(url, '_blank');
   }
+
 
 
 
@@ -207,8 +225,17 @@ export class TrialbalancetwoComponent implements OnInit {
       OfficeId: [''],
       DivisionId: [''],
       Type: [''],
-      Transaction: ['']
+      Transaction: [this.transactionSearchTerm]
     })
+      // Listen for changes in the transaction input field
+      this.filterForm.get('Transaction').valueChanges.subscribe(value => {
+        this.transactionSearchTerm = value;
+        if (value === '') {
+          this.applyFilter('Transaction', '');
+        } else {
+          this.applyFilter('Transaction', value , this.id);
+        }
+      });
   }
 
   //Filter By Date , Division , Office & TransactionType 
@@ -254,6 +281,9 @@ export class TrialbalancetwoComponent implements OnInit {
         payload.Type = value;
         break;
 
+        case 'Transaction':
+        payload.Type = value;
+        break;
       default:
         console.error('Invalid filter type');
         return;
@@ -272,33 +302,6 @@ export class TrialbalancetwoComponent implements OnInit {
     }, err => {
       console.error('Error:', err);
     });
-  }
-
-  //filter By Transaction Number 
-
-  applyFilters() {
-    // Apply form-based filters
-    const filters = this.filterForm.value;
-    this.filteredData = this.dataList.filter(item =>
-      (!filters.Date || item.Date.includes(filters.Date)) &&
-      (!filters.OfficeId || item.OfficeId === filters.OfficeId) &&
-      (!filters.DivisionId || item.DivisionId === filters.DivisionId) &&
-      (!filters.Type || item.Type === filters.Type) &&
-      (!filters.Transaction || item.Transaction.includes(filters.Transaction))
-      // Adjust conditions based on your data structure
-    );
-
-    // Apply search filter for Transaction field
-    if (this.transactionSearchTerm.trim()) {
-      this.filteredData = this.filteredData.filter(item =>
-        item.Transaction.toLowerCase().includes(this.transactionSearchTerm.toLowerCase())
-        // Adjust fields for search based on your data
-      );
-    }
-  }
-
-  applyTransactionFilter() {
-    this.applyFilters(); // Trigger filtering when transactionSearchTerm changes
   }
 
 
