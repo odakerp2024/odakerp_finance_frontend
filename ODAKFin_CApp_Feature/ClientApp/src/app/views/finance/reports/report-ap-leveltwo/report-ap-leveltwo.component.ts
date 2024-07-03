@@ -417,7 +417,7 @@ getAPAgingVendorList() {
      let tableData = result.data.Table;
        
         if (tableData.length > 0) {
-          this.headers = Object.keys(tableData[0]); 
+          this.headers = Object.keys(tableData[0]).filter(header => header !== 'VendorID'); 
 
           // Extract 'Balance (Company Currency)' field and format it
           this.pagedItems = tableData.map(row => ({
