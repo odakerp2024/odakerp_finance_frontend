@@ -19,7 +19,7 @@ import { AutoCodeService } from 'src/app/services/auto-code.service';
 import { TaxgroupService } from 'src/app/services/taxgroup.service';
 import { rejects } from 'assert';
 import { resolve } from 'dns';
-import { event } from 'jquery';
+
 
 @Component({
   selector: 'app-purchase-invoice-admin-info',
@@ -1271,7 +1271,7 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
     } else {
       combinedText = closeMsg;
     }
-
+    
     // set Delete flag
 
     if (isDelete && this.isUpdate) {
@@ -1446,7 +1446,7 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
       BankId: info.BankId,
       InvoiceCurrency: info.InvoiceCurrency ? info.InvoiceCurrency : 0,
       InvoiceExrate: info.InvoiceExrate ? info.InvoiceExrate : 1,
-      InvoiceExrateICY: info.InvoiceExrateICY ? info.InvoiceExrateICY.toFixed(this.entityFraction) : 1,
+      InvoiceExrateICY: info.InvoiceExrateICY ,
       Remarks: info.Remarks,
       CreatedBy: info.CreatedBy,
       TDSAmount: info.TDSAmount
