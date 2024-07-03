@@ -18,6 +18,8 @@ const today = new Date();
 const month = today.getMonth();
 const year = today.getFullYear();
 
+
+
 @Component({
   selector: 'app-report-ap-leveltwo',
   templateUrl: './report-ap-leveltwo.component.html',
@@ -98,12 +100,38 @@ export class ReportApLeveltwoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Step 1: Initialize the form and other necessary data
     this.createReportForm();
     this.onOptionChange('month');
     this.getDivisionList();
     this.getVendorList();
-     this.getAgingDropdown();
-    this.reportFilter.controls.Peroid.setValue('month');
+    
+    // Step 2: Fetch the aging dropdown data
+    this.getAgingDropdown().then(() => {
+      // Step 3: After fetching dropdown data, set form values
+      this.reportFilter.controls.Peroid.setValue('month');
+      if (this.agingId) {
+        this.reportFilter.controls.AgingTypeId.setValue(this.agingId);
+        this.createReportForm();
+      }
+    });
+  }
+
+  async getAgingDropdown(): Promise<void> {
+    const payload = {
+      type: 1,
+    };
+  
+    try {
+      const result: any = await this.reportService.getAgingDropdown(payload).toPromise();
+      if (result.message === 'Success' && result.data.Table.length > 0) {
+        // Process dropdown data as needed
+        this.agingGroupDropdown = result.data.Table;
+        this.agingId = this.agingGroupDropdown[0].AgingTypeId;
+      }
+    } catch (error) {
+      console.error('Error fetching aging dropdown:', error);
+    }
   }
 
  async Cancel() {
@@ -315,25 +343,25 @@ async showVendor(SubTypeId:number){
   }
 
 
- getAgingDropdown() {
+//  getAgingDropdown() {
 
-  const payload = {
-    type : 1,
-  }
-    this.reportService.getAgingDropdown(payload).subscribe((result: any) => {
-      if (result.message == 'Success') {
-        this.agingGroupDropdown = [];
-        this.reportFilter.controls.AgingTypeId.setValue('');
-        if (result["data"].Table.length > 0) {
-          this.agingGroupDropdown = result.data.Table;
-        }
-        this.reportFilter.controls.AgingTypeId.setValue(this.agingGroupDropdown[0].AgingTypeId);
-        this.agingId = this.agingGroupDropdown[0].AgingTypeId;
-      }
-    }), error => {
-      console.error(error);
-    }
-  }
+//   const payload = {
+//     type : 1,
+//   }
+//     this.reportService.getAgingDropdown(payload).subscribe((result: any) => {
+//       if (result.message == 'Success') {
+//         this.agingGroupDropdown = [];
+//         this.reportFilter.controls.AgingTypeId.setValue('');
+//         if (result["data"].Table.length > 0) {
+//           this.agingGroupDropdown = result.data.Table;
+//         }
+//         this.reportFilter.controls.AgingTypeId.setValue(this.agingGroupDropdown[0].AgingTypeId);
+//         this.agingId = this.agingGroupDropdown[0].AgingTypeId;
+//       }
+//     }), error => {
+//       console.error(error);
+//     }
+//   }
 
 
   getDivisionBasedOffice(officeId: number, divisoinId: any) {
