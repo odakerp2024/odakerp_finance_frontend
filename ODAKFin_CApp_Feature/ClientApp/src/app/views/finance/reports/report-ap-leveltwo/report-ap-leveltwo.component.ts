@@ -342,28 +342,6 @@ async showVendor(SubTypeId:number){
     return Array.from(uniqueMap.values());
   }
 
-
-//  getAgingDropdown() {
-
-//   const payload = {
-//     type : 1,
-//   }
-//     this.reportService.getAgingDropdown(payload).subscribe((result: any) => {
-//       if (result.message == 'Success') {
-//         this.agingGroupDropdown = [];
-//         this.reportFilter.controls.AgingTypeId.setValue('');
-//         if (result["data"].Table.length > 0) {
-//           this.agingGroupDropdown = result.data.Table;
-//         }
-//         this.reportFilter.controls.AgingTypeId.setValue(this.agingGroupDropdown[0].AgingTypeId);
-//         this.agingId = this.agingGroupDropdown[0].AgingTypeId;
-//       }
-//     }), error => {
-//       console.error(error);
-//     }
-//   }
-
-
   getDivisionBasedOffice(officeId: number, divisoinId: any) {
     if (officeId && divisoinId) {
       let service = `${this.globals.APIURL}/Common/GetBankByOfficeId`;
@@ -659,6 +637,7 @@ calculateInvoicewise(header: string): any {
     }
     this.officeList = [];
     this.headers = [];
+    this.createReportForm();
     this.getAgingDropdown();
     this.reportFilter.controls.Peroid.setValue('month');
     if(this.type  == 'Overall-list'){
