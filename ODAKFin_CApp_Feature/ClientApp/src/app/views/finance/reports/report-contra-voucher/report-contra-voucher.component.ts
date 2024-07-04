@@ -287,7 +287,6 @@ export class ReportContraVoucherComponent implements OnInit  {
   }
   
   clear() {
-   debugger
     this.startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd");
     this.endDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd");
 

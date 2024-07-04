@@ -250,7 +250,6 @@ export class ReportPaymentVoucherComponent implements OnInit {
   }
 
   getBankList() {
-    debugger
     let payload = {
       "OfficeId": this.reportFilter.value.OfficeId,
       "DivisionId": this.reportFilter.value.DivisionId
@@ -314,7 +313,6 @@ export class ReportPaymentVoucherComponent implements OnInit {
   getPaymentVoucherReportList() {
     this.startDate = this.reportFilter.controls.FromDate.value;
     this.endDate = this.reportFilter.controls.ToDate.value;
-debugger
     this.reportService.getPaymentVoucherReportList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
       this.reportForExcelList = [];

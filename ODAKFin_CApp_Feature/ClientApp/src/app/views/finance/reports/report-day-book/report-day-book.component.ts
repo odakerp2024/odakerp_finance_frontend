@@ -283,7 +283,6 @@ export class ReportDayBookComponent implements OnInit {
 
 
   async downloadAsExcel() {
-    debugger
     if (this.reportForExcelList.length === 0) {
       Swal.fire('No record found');
       return;

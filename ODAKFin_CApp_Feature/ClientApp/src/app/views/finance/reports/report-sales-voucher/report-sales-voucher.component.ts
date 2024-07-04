@@ -318,7 +318,6 @@ export class ReportSalesVoucherComponent implements OnInit {
 
 
   async downloadAsExcel() {
-    debugger
     if (this.pagedItems.length === 0) {
       Swal.fire('No record found');
       return;
