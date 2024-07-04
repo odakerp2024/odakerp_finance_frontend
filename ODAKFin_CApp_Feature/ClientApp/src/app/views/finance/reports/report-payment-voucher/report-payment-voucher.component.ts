@@ -250,7 +250,6 @@ export class ReportPaymentVoucherComponent implements OnInit {
   }
 
   getBankList() {
-    debugger
     let payload = {
       "OfficeId": this.reportFilter.value.OfficeId,
       "DivisionId": this.reportFilter.value.DivisionId
@@ -314,7 +313,6 @@ export class ReportPaymentVoucherComponent implements OnInit {
   getPaymentVoucherReportList() {
     this.startDate = this.reportFilter.controls.FromDate.value;
     this.endDate = this.reportFilter.controls.ToDate.value;
-debugger
     this.reportService.getPaymentVoucherReportList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
       this.reportForExcelList = [];
@@ -400,7 +398,9 @@ debugger
     worksheet.mergeCells(`F${subtitleRow.number}:G${subtitleRow.number}`);
 
     // Add "FROM Date" and "TO Date" to the worksheet
-    const dateRow = worksheet.addRow(['', '', '', '', '', `FROM ${this.startDate} - TO ${this.endDate}`]);
+    const dateRow = worksheet.addRow(
+      ['', '', '', '', '', `FROM ${this.datePipe.transform(this.startDate, "dd-MM-yyyy")} - TO ${this.datePipe.transform(this.startDate, "dd-MM-yyyy")}`]
+    );
     dateRow.eachCell((cell) => {
       cell.alignment = { horizontal: 'center' };
     });
@@ -478,8 +478,8 @@ debugger
       const row = worksheet.addRow(Object.values(filteredData));
 
         // Set text color for specific columns and align them
-        const columnsToColorRight = ['Vendor', 'Payment', 'Amount (CCY)', 'Amount (ICY)', 'TDS Amount' ,'Ex Rate Gain', 'Ex Rate Loss' ,'Bank Charges'];
-        const columnsToAlignLeft =  ['Vendor', 'Payment',]; 
+        const columnsToColorRight = ['Vendor', 'Payment #', 'Amount (CCY)', 'Amount (ICY)', 'TDS Amount' ,'Ex Rate Gain', 'Ex Rate Loss' ,'Bank Charges'];
+        const columnsToAlignLeft =  ['Vendor', 'Payment #',]; 
         const columnsToAlignRight = ['Amount (CCY)', 'Amount (ICY)', 'TDS Amount' ,'Ex Rate Gain', 'Ex Rate Loss' ,'Bank Charges'];
   
         columnsToColorRight.forEach(columnName => {
@@ -586,7 +586,9 @@ debugger
     worksheet.mergeCells(`F${subtitleRow.number}:G${subtitleRow.number}`);
 
     // Add "FROM Date" and "TO Date" to the worksheet
-    const dateRow = worksheet.addRow(['', '', '', '', '', `FROM ${this.startDate} - TO ${this.endDate}`]);
+    const dateRow = worksheet.addRow(
+      ['', '', '', '', '', `FROM ${this.datePipe.transform(this.startDate, "dd-MM-yyyy")} - TO ${this.datePipe.transform(this.startDate, "dd-MM-yyyy")}`]
+    );
     dateRow.eachCell((cell) => {
       cell.alignment = { horizontal: 'center' };
     });
@@ -665,8 +667,8 @@ debugger
       const row = worksheet.addRow(Object.values(filteredData));
 
         // Set text color for specific columns and align them
-        const columnsToColorRight = ['Vendor', 'Payment', 'Amount (CCY)', 'Amount (ICY)', 'TDS Amount' ,'Ex Rate Gain', 'Ex Rate Loss' ,'Bank Charges'];
-        const columnsToAlignLeft =  ['Vendor', 'Payment',]; 
+        const columnsToColorRight = ['Vendor', 'Payment #', 'Amount (CCY)', 'Amount (ICY)', 'TDS Amount' ,'Ex Rate Gain', 'Ex Rate Loss' ,'Bank Charges'];
+        const columnsToAlignLeft =  ['Vendor', 'Payment #',]; 
         const columnsToAlignRight = ['Amount (CCY)', 'Amount (ICY)', 'TDS Amount' ,'Ex Rate Gain', 'Ex Rate Loss' ,'Bank Charges'];
   
         columnsToColorRight.forEach(columnName => {

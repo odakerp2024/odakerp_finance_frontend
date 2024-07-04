@@ -287,7 +287,6 @@ export class ReportContraVoucherComponent implements OnInit  {
   }
   
   clear() {
-   debugger
     this.startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd");
     this.endDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd");
 
@@ -343,7 +342,8 @@ export class ReportContraVoucherComponent implements OnInit  {
  
 
 
-    const dateRow = worksheet.addRow(['', '', '', '', '', `FROM ${this.startDate} - TO ${this.endDate}`]);
+    const dateRow = worksheet.addRow(
+      ['', '', '', '', '', `FROM ${this.datePipe.transform(this.startDate, "dd-MM-yyyy")} - TO ${this.datePipe.transform(this.startDate, "dd-MM-yyyy")}`]);
     dateRow.eachCell((cell) => {
       cell.alignment = { horizontal: 'center' };
     });
@@ -510,7 +510,9 @@ export class ReportContraVoucherComponent implements OnInit  {
     worksheet.mergeCells(`F${subtitleRow.number}:G${subtitleRow.number}`);
 
     // Add "FROM Date" and "TO Date" to the worksheet
-    const dateRow = worksheet.addRow(['', '', '', '', '', `FROM ${this.startDate} - TO ${this.endDate}`]);
+    const dateRow = worksheet.addRow(
+      ['', '', '', '', '', `FROM ${this.datePipe.transform(this.startDate, "dd-MM-yyyy")} - TO ${this.datePipe.transform(this.startDate, "dd-MM-yyyy")}`]
+    );
     dateRow.eachCell((cell) => {
       cell.alignment = { horizontal: 'center' };
     });
