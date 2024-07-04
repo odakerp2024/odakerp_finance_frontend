@@ -318,6 +318,7 @@ export class ReportSalesVoucherComponent implements OnInit {
 
 
   async downloadAsExcel() {
+    debugger
     if (this.pagedItems.length === 0) {
       Swal.fire('No record found');
       return;
@@ -406,9 +407,7 @@ export class ReportSalesVoucherComponent implements OnInit {
       const mergedICYAmount = `${data['Invoice Amount (ICY)']  !== null ? parseFloat(data['Invoice Amount (ICY)'] ).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
       const mergedCCYAmount = `${data['Invoice Amount (CCY)'] !== null  ? parseFloat(data['Invoice Amount (CCY)']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
       const invoicetax = `${data['Total Tax'] !== null ? parseFloat(data['Total Tax']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const sgst = `${data['SGST'] !== null ? parseFloat(data['SGST']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const cgst = `${data['CGST'] !== null ? parseFloat(data['CGST']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const igst = `${data['IGST'] !== null ? parseFloat(data['IGST']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+
 
       // Filter out properties you don't want to include in the Excel sheet
       
@@ -427,9 +426,6 @@ export class ReportSalesVoucherComponent implements OnInit {
       filteredData['Invoice Amount (ICY)'] = mergedICYAmount;
       filteredData['Invoice Amount (CCY)'] = mergedCCYAmount;
       filteredData['Total Tax'] = invoicetax;
-      filteredData['SGST'] = sgst;
-      filteredData['CGST'] = cgst;
-      filteredData['IGST'] = igst;
       filteredData['Job #'] = data['Job #'] == null ? defalutJobValue : data['Job #'];
       filteredData['GST #'] = data['GST #'] == null ? defalutJobValue : data['GST #'];
       filteredData['Container'] = data['Container'] == null ? defalutJobValue : data['Container'];
@@ -439,9 +435,9 @@ export class ReportSalesVoucherComponent implements OnInit {
       const row = worksheet.addRow(Object.values(filteredData));
 
           // Set text color for specific columns and align them
-          const columnsToColorRight = ['Invoice', 'Customer Name', 'Invoice Amount (ICY)', 'Invoice Amount (CCY)','Total Tax','SGST','CGST','IGST'];
+          const columnsToColorRight = ['Invoice', 'Customer Name', 'Invoice Amount (ICY)', 'Invoice Amount (CCY)','Total Tax'];
           const columnsToAlignLeft =  ['Invoice', 'Customer Name',]; 
-          const columnsToAlignRight = [ 'Invoice Amount (ICY)', 'Invoice Amount (CCY)','Total Tax','SGST','CGST','IGST'];
+          const columnsToAlignRight = [ 'Invoice Amount (ICY)', 'Invoice Amount (CCY)','Total Tax'];
     
           columnsToColorRight.forEach(columnName => {
             const columnIndex = Object.keys(filteredData).indexOf(columnName);
@@ -599,9 +595,7 @@ export class ReportSalesVoucherComponent implements OnInit {
       const mergedICYAmount = `${data['Invoice Amount (ICY)']  !== null ? parseFloat(data['Invoice Amount (ICY)'] ).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
       const mergedCCYAmount = `${data['Invoice Amount (CCY)'] !== null  ? parseFloat(data['Invoice Amount (CCY)']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
       const invoicetax = `${data['Total Tax'] !== null ? parseFloat(data['Total Tax']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const sgst = `${data['SGST'] !== null ? parseFloat(data['SGST']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const cgst = `${data['CGST'] !== null ? parseFloat(data['CGST']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const igst = `${data['IGST'] !== null ? parseFloat(data['IGST']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+
     
       // Filter out properties you don't want to include in the Excel sheet
 
@@ -620,9 +614,6 @@ export class ReportSalesVoucherComponent implements OnInit {
       filteredData['Invoice Amount (ICY)'] = mergedICYAmount;
       filteredData['Invoice Amount (CCY)'] = mergedCCYAmount;
       filteredData['Total Tax'] = invoicetax;
-      filteredData['SGST'] = sgst;
-      filteredData['CGST'] = cgst;
-      filteredData['IGST'] = igst;
       filteredData['Job #'] = data['Job #'] == null ? defalutJobValue : data['Job #'];
       filteredData['GST #'] = data['GST #'] == null ? defalutJobValue : data['GST #'];
       filteredData['Container'] = data['Container'] == null ? defalutJobValue : data['Container'];
@@ -633,9 +624,9 @@ export class ReportSalesVoucherComponent implements OnInit {
       const row = worksheet.addRow(Object.values(filteredData));
 
       // Set text color for specific columns and align them
-      const columnsToColorRight = ['Invoice', 'Customer Name', 'Invoice Amount (ICY)', 'Invoice Amount (CCY)','Total Tax','SGST','CGST','IGST'];
+      const columnsToColorRight = ['Invoice', 'Customer Name', 'Invoice Amount (ICY)', 'Invoice Amount (CCY)','Total Tax'];
       const columnsToAlignLeft =  ['Invoice', 'Customer Name',]; 
-      const columnsToAlignRight = [ 'Invoice Amount (ICY)', 'Invoice Amount (CCY)','Total Tax','SGST','CGST','IGST'];
+      const columnsToAlignRight = [ 'Invoice Amount (ICY)', 'Invoice Amount (CCY)','Total Tax'];
 
       columnsToColorRight.forEach(columnName => {
         const columnIndex = Object.keys(filteredData).indexOf(columnName);

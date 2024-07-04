@@ -480,8 +480,8 @@ debugger
       const row = worksheet.addRow(Object.values(filteredData));
 
         // Set text color for specific columns and align them
-        const columnsToColorRight = ['Vendor', 'Payment', 'Amount (CCY)', 'Amount (ICY)', 'TDS Amount' ,'Ex Rate Gain', 'Ex Rate Loss' ,'Bank Charges'];
-        const columnsToAlignLeft =  ['Vendor', 'Payment',]; 
+        const columnsToColorRight = ['Vendor', 'Payment #', 'Amount (CCY)', 'Amount (ICY)', 'TDS Amount' ,'Ex Rate Gain', 'Ex Rate Loss' ,'Bank Charges'];
+        const columnsToAlignLeft =  ['Vendor', 'Payment #',]; 
         const columnsToAlignRight = ['Amount (CCY)', 'Amount (ICY)', 'TDS Amount' ,'Ex Rate Gain', 'Ex Rate Loss' ,'Bank Charges'];
   
         columnsToColorRight.forEach(columnName => {
@@ -669,8 +669,8 @@ debugger
       const row = worksheet.addRow(Object.values(filteredData));
 
         // Set text color for specific columns and align them
-        const columnsToColorRight = ['Vendor', 'Payment', 'Amount (CCY)', 'Amount (ICY)', 'TDS Amount' ,'Ex Rate Gain', 'Ex Rate Loss' ,'Bank Charges'];
-        const columnsToAlignLeft =  ['Vendor', 'Payment',]; 
+        const columnsToColorRight = ['Vendor', 'Payment #', 'Amount (CCY)', 'Amount (ICY)', 'TDS Amount' ,'Ex Rate Gain', 'Ex Rate Loss' ,'Bank Charges'];
+        const columnsToAlignLeft =  ['Vendor', 'Payment #',]; 
         const columnsToAlignRight = ['Amount (CCY)', 'Amount (ICY)', 'TDS Amount' ,'Ex Rate Gain', 'Ex Rate Loss' ,'Bank Charges'];
   
         columnsToColorRight.forEach(columnName => {

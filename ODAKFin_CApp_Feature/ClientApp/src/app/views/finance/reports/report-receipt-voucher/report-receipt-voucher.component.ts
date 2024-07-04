@@ -236,7 +236,6 @@ export class ReportReceiptVoucherComponent implements OnInit {
   }
 
   getDivisionBasedOffice(officeId: number, divisoinId: any) {
-    this.reportFilter.controls.DepositTo.setValue(0);
     if (officeId && divisoinId) {
       let service = `${this.globals.APIURL}/Common/GetBankByOfficeId`;
       let payload = {
