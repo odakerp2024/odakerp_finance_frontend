@@ -83,6 +83,15 @@ table.dataTable{
     padding: 13px !important;
     font-size: 13px !important;
   }
+   label.maxlabel {
+    font-size: 12px !important;
+  }
+  .ng-select.searchdropdown-dropdown-size ::ng-deep .ng-select-container{
+    height: 26px !important;
+    border-radius: 0 !important;
+    min-height: 15px !important;
+    font-size: 10px !important;
+  }
  
 }
 
@@ -95,6 +104,17 @@ table.dataTable{
     padding: 11px !important;
     font-size: 11px !important;
   }
+   label.maxlabel {
+    font-size: 12px !important;
+  }
+  .ng-select.searchdropdown-dropdown-size ::ng-deep .ng-select-container{
+    height: 26px !important;
+    border-radius: 0 !important;
+    min-height: 15px !important;
+    font-size: 10px !important;
+  }
+ 
+
  
 }
 
@@ -103,6 +123,15 @@ table.dataTable{
   .table>tbody>tr>td {
     /* text-align: left !important; */
     padding: 10px !important;
+    font-size: 10px !important;
+  }
+   label.maxlabel {
+    font-size: 12px !important;
+  }
+  .ng-select.searchdropdown-dropdown-size ::ng-deep .ng-select-container {
+    height: 26px !important;
+    border-radius: 0 !important;
+    min-height: 15px !important;
     font-size: 10px !important;
   }
  
@@ -116,7 +145,40 @@ table.dataTable{
     padding: 9px !important;
     font-size: 9px !important;
   }
+   label.maxlabel {
+    font-size: 12px !important;
+  }
+
+  .ng-select.searchdropdown-dropdown-size ::ng-deep .ng-select-container {
+    height: 26px !important;
+    border-radius: 0 !important;
+    min-height: 15px !important;
+    font-size: 10px !important;
+  }
  
+}
+@media (min-width: 800px) and (max-width: 1000px) {
+
+  .table>tbody>tr>td {
+    padding: 7px !important;
+    font-size: 7px !important;
+  }
+
+  .table thead th {
+    font-size: 10px !important;
+  }
+
+  label.maxlabel {
+    font-size: 12px !important;
+  }
+
+  .ng-select.searchdropdown-dropdown-size ::ng-deep .ng-select-container {
+    height: 26px !important;
+    border-radius: 0 !important;
+    min-height: 15px !important;
+    font-size: 10px !important;
+  }
+  
 }
 
 
@@ -127,9 +189,57 @@ table.dataTable{
     padding: 8px !important;
     font-size: 8px !important;
   }
+   .table thead th {
+    font-size: 9px !important;
+  }
+
+  label.maxlabel {
+    font-size: 10px !important;
+  }
+
+  .ng-select.searchdropdown-dropdown-size ::ng-deep .ng-select-container {
+    height: 26px !important;
+    border-radius: 0 !important;
+    min-height: 15px !important;
+    font-size: 8px !important;
+  }
  
 }
 
+@media (min-width: 857px) and (max-width: 1200px) {
+
+  .table>tbody>tr>td {
+    padding: 7px !important;
+    font-size: 7px !important;
+  }
+
+  .table thead th {
+    font-size: 8px !important;
+  }
+
+  label.maxlabel {
+    font-size: 9px !important;
+  }
+
+  .ng-select.searchdropdown-dropdown-size ::ng-deep .ng-select-container {
+    height: 26px !important;
+    border-radius: 0 !important;
+    min-height: 15px !important;
+    font-size: 8px !important;
+  }
+  
+}
+
+.ng-select.searchdropdown-dropdown-size ::ng-deep .ng-select-container {
+  height: 26px !important;
+  border-radius: 0 !important;
+  min-height: 15px !important;
+  font-size: 9px ;
+} 
+
+ .form-control {
+  height: 26px !important;
+}
 
 
 

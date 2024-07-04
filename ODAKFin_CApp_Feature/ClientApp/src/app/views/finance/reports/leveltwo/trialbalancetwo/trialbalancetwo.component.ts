@@ -240,13 +240,12 @@ export class TrialbalancetwoComponent implements OnInit {
       this.filterForm.get('Transaction').valueChanges.subscribe(value => {
         this.transactionSearchTerm = value;
         if (value == '') {
-          this.applyFilter('Transaction', '');
+          this.applyFilter('Transaction', '' , this.id);
         } else {
           this.applyFilter('Transaction', value , this.id);
         }
       });
   }
-
   //Filter By Date , Division , Office & TransactionType 
   BasedOnDate(selectedDate: any) {
     this.applyFilter('Date', selectedDate);
@@ -262,6 +261,9 @@ export class TrialbalancetwoComponent implements OnInit {
 
   onTransactionTypeChange(type: any, id: number): void {
     this.applyFilter('Type', type, id);
+  }
+  onTransactionChange(transaction: any, id: number): void {
+    this.applyFilter('Transaction', transaction, id);
   }
 
 
@@ -350,11 +352,13 @@ export class TrialbalancetwoComponent implements OnInit {
 
     // Add date row
     const currentDate = new Date();
-    worksheet.addRow(['', '', `As of ${currentDate.toDateString()}`, '', '', '']);
+    const subtitleRow2 = worksheet.addRow(['', '', `As of ${currentDate.toDateString()}`, '', '', '']);
+    subtitleRow2.getCell(3).alignment = { horizontal: 'center' };
+    worksheet.mergeCells(`C${subtitleRow2.number}:D${subtitleRow2.number}`);
 
 
     // Define header row
-    const headers = ['Trans_Date', 'Trans_Account_Name', 'Trans_Details', 'Transaction_Type', 'Trans_Type', 'Trans_Ref_Details', 'Credit', 'Debit', 'Amount'];
+    const headers = ['Trans_Date', 'Trans_Account_Name', 'Trans_Details', 'Trans_Type',  'Transaction', 'Trans_Ref_Details', 'Debit', 'Credit', 'Amount'];
     const headerRow = worksheet.addRow(headers);
 
     // Style the header row
@@ -378,12 +382,13 @@ export class TrialbalancetwoComponent implements OnInit {
         right: { style: 'thin' },
       };
     });
-
+    
 
     this.dataList.forEach(group => {
       // Format the date
       const date = group.Trans_Date;
       const formattedDate = date.split('T')[0];
+      group.Trans_Date =  this.datePipe.transform(formattedDate, "dd-MM-yyyy");
       group.Trans_Date = formattedDate;
 
       // Create row data
@@ -391,19 +396,18 @@ export class TrialbalancetwoComponent implements OnInit {
         group.Trans_Date,
         group.Trans_Account_Name,
         group.Trans_Details,
-        group.Transaction_Type,
         group.Trans_Type,
+        group.Trans_Number,
         group.Trans_Ref_Details,
-        group.Credit,
         group.Debit,
+        group.Credit, 
         group.Amount
       ];
-
       // Add row to worksheet
       const row = worksheet.addRow(rowData);
 
       // Set text color for specific columns
-      const columnsToColor = ['Debit', 'Credit', 'Amount'];
+      const columnsToColor = ['Trans_Number', 'Debit', 'Credit', 'Amount'];
       columnsToColor.forEach(columnName => {
         const columnIndex = Object.keys(group).indexOf(columnName);
         if (columnIndex !== -1) {
