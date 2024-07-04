@@ -104,7 +104,8 @@
                             <div class="col-2">
                                 <label class=" maxlabel">AMOUNT</label>
                                 <input formControlName="Amount"
-                                   appDynamicDecimal min="0" numbersOnly
+                                onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                min="0" numbersOnly appDynamicDecimal
                                     class="form-control" name="Amount">
                             </div>
                             <div class="col-2">
