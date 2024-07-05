@@ -12,6 +12,7 @@ import Swal from 'sweetalert2';
 import { Workbook } from 'exceljs';
 import { saveAs } from 'file-saver';
 import { GridSort } from 'src/app/model/common';
+import { FNReportServiceService } from 'src/app/services/fnreport-service.service';
 declare let $: any;
 
 const today = new Date();
@@ -33,11 +34,20 @@ export class GSTOutputRegisterComponent implements OnInit {
     private ps: PaginationService,
     private dataService: DataService, 
     private reportService: ReportDashboardService,
+    private FNReportService : FNReportServiceService,
     public excelService: ExcelService) { }
 
   reportFilter: FormGroup;
   divisionList: any = [];
   officeList: any = [];
+
+  pager: any = {};// pager object  
+  pagedItems: any[];// paged items
+
+  reportList: any[];
+  reportForExcelList: any[];
+
+  pagesort: any = new GridSort().sort;
   
   PeroidList: PeroidList[] = [
     { peroidId: 'today', peroidName: 'CURRENT DAY' },
@@ -92,6 +102,9 @@ export class GSTOutputRegisterComponent implements OnInit {
       VendorInvoice: [''],
       Peroid: '',
     });
+
+    this.onOptionChange('month');
+    await this.getGSTReportList();
     
   }
 
@@ -202,6 +215,37 @@ export class GSTOutputRegisterComponent implements OnInit {
         console.error(error);
       });
     }
+  }
+
+  getGSTReportList() {
+    this.startDate = this.reportFilter.controls.FromDate.value;
+    this.endDate = this.reportFilter.controls.ToDate.value;
+
+    this.FNReportService.getGSTOutputRegister(this.reportFilter.value).subscribe(result => {
+      this.reportList = [];
+      console.log('ReportResult',result);
+
+      if (result.length > 0) {
+        this.reportList = result;
+        //this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
+        this.setPage(1);
+      } else {
+        this.pager = {};
+        this.pagedItems = [];
+      }
+    })
+  }
+
+
+  setPage(page: number) {
+    if (page < 1 || page > this.pager.totalPages) return;
+
+    this.pager = this.ps.getPager(this.reportList.length, page,12);
+    this.pagedItems = this.reportList.slice(this.pager.startIndex, this.pager.endIndex + 1);
+  }
+
+  sort(property) {
+    this.pagesort(property, this.pagedItems);
   }
 
 }

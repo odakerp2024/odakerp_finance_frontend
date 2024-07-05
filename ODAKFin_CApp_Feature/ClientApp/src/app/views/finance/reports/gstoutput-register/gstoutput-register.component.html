@@ -225,33 +225,26 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="let data of pagedItems">
-                                    <td>{{data.Invoice_date | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}
-                                    </td>
-                                    <td class="hyperTextColor">{{data.Invoice_no}}</td>
-                                    <td>{{data.Invoice_type}}</td>
-                                    <td class="hyperTextColor" [title]="data['VendorName']">
-                                        {{ (data['VendorName'] && data['VendorName'].length > 20) ? data['VendorName'].slice(0, 20) + '-' : data['VendorName'] }}
-                                    </td> 
-                                    <td>{{data.CityName}}</td>
-                                    <td>{{data.CurrencyCode}}</td>
-                                    <td class="text-right hyperTextColor">{{ data.Symbol + ' ' + (data.InvoiceAmountICY |
-                                        dynamicDecimal: entityFraction) }}</td>
-                                    <td class="text-right hyperTextColor">{{ data.Symbol + ' ' + (data.InvoiceAmountCCY |
-                                        dynamicDecimal: entityFraction) }}</td>
-                                    <td
-                                        [ngClass]="data.Status == 'Paid' ? ' badge-confirm' : data.Status == 'Due' ? 'badge-cancel' : ' badge-draft'">
-                                        {{data.Status}}</td>
+                                    <td>{{data.Doc_Date}}</td>
+                                    <td class="hyperTextColor">{{data.Doic_Ref}}</td>
+                                    <td>{{data.Trans_Type}}</td>
+                                    <td class="hyperTextColor">{{data.PartyName}}</td> 
+                                    <td>{{data.Branch}}</td>
+                                    <td>{{data.GSTGroup}}</td>
+                                    <td class="text-right hyperTextColor">{{data.GSTGroup}}</td>
+                                    <td class="text-right hyperTextColor">{{data.InvTotal}}</td>
+                                    <td>{{data.InvTax}}</td>
                                 </tr>
 
-                                <!-- <tr *ngIf="pagedItems.length ==0">
+                                <tr *ngIf="pagedItems.length ==0">
                                     <td class="text-center" colspan="10">No records found</td>
-                                </tr> -->
+                                </tr>
 
                             </tbody>
                         </table>
                     </div>
 
-                    <!-- <div class="row page mr-3" align="right">
+                    <div class="row page mr-3" align="right">
                         <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10 && pager.totalItems > 10"
                             class="pagination">
                             <li [ngClass]="{disabled:pager.currentPage === 1}">
@@ -277,7 +270,7 @@
                                 <a (click)="setPage(pager.totalPages)">Last</a>
                             </li>
                         </ul>
-                    </div> -->
+                    </div>
                 </div>
             </div>
         </div>
