@@ -354,12 +354,12 @@ export class ReportSalesVoucherComponent implements OnInit {
     worksheet.mergeCells(`D${subtitleRow.number}:E${subtitleRow.number}`);
 
     // Add "FROM Date" and "TO Date" to the worksheet
-    const dateRow = worksheet.addRow(['', '', '', `FROM ${this.datePipe.transform(this.startDate, "dd-MM-yyyy")} - TO ${this.datePipe.transform(this.startDate, "dd-MM-yyyy")}`]);
+    const dateRow = worksheet.addRow(['', '', '', `FROM ${this.datePipe.transform(this.startDate, this.entityDateFormat)} - TO ${this.datePipe.transform(this.endDate, this.entityDateFormat)}`]);
     dateRow.eachCell((cell) => {
       cell.alignment = { horizontal: 'center' };
     });
-    dateRow.getCell(4).numFmt = 'dd-MM-yyyy';
-    dateRow.getCell(4).numFmt = 'dd-MM-yyyy';
+    dateRow.getCell(4).numFmt = this.entityDateFormat;
+    dateRow.getCell(4).numFmt =  this.entityDateFormat;
 
     // Merge cells for "FROM Date" and "TO Date"
     worksheet.mergeCells(`D${dateRow.number}:E${dateRow.number}`);
@@ -400,7 +400,7 @@ export class ReportSalesVoucherComponent implements OnInit {
       //To Remove Time from date field data
       const date = data.Date
       const formattedDate = date.split('T')[0];
-      data.Date =  this.datePipe.transform(formattedDate, "dd-MM-yyyy");
+      data.Date =  this.datePipe.transform(formattedDate, this.entityDateFormat);
       const defalutvalue = 0;
       // Merge the symbol and amount into a single string with fixed decimal places
       const mergedICYAmount = `${data['Invoice Amount (ICY)']  !== null ? parseFloat(data['Invoice Amount (ICY)'] ).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
@@ -541,12 +541,12 @@ export class ReportSalesVoucherComponent implements OnInit {
     worksheet.mergeCells(`F${subtitleRow.number}:G${subtitleRow.number}`);
 
     // Add "FROM Date" and "TO Date" to the worksheet
-    const dateRow = worksheet.addRow(['', '', '', '', '', `FROM ${this.datePipe.transform(this.startDate, "dd-MM-yyyy")} - TO ${this.datePipe.transform(this.startDate, "dd-MM-yyyy")}`]);
+    const dateRow = worksheet.addRow(['', '', '', '', '', `FROM ${this.datePipe.transform(this.startDate, this.entityDateFormat)} - TO ${this.datePipe.transform(this.startDate, this.entityDateFormat)}`]);
     dateRow.eachCell((cell) => {
       cell.alignment = { horizontal: 'center' };
     });
-    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
-    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
+    dateRow.getCell(6).numFmt = this.entityDateFormat;
+    dateRow.getCell(6).numFmt = this.entityDateFormat;
 
     // Merge cells for "FROM Date" and "TO Date"
     worksheet.mergeCells(`F${dateRow.number}:G${dateRow.number}`);
@@ -588,7 +588,7 @@ export class ReportSalesVoucherComponent implements OnInit {
       //To Remove Time from date field data
       const date = data.Date
       const formattedDate = date.split('T')[0];
-      data.Date =  this.datePipe.transform(formattedDate, "dd-MM-yyyy");
+      data.Date =  this.datePipe.transform(formattedDate, this.entityDateFormat);
       const defalutvalue = 0;
       // Merge the symbol and amount into a single string with fixed decimal places
       const mergedICYAmount = `${data['Invoice Amount (ICY)']  !== null ? parseFloat(data['Invoice Amount (ICY)'] ).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
