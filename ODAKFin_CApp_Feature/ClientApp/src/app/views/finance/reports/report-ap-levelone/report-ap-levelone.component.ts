@@ -582,7 +582,7 @@ getAccountPayableVendorList() {
     subtitleRow.getCell(4).alignment = { horizontal: 'center' };
     worksheet.mergeCells(`D${subtitleRow.number}:E${subtitleRow.number}`);
   
-    const dateRow = worksheet.addRow(['', '', '', `FROM ${startDate} - TO ${endDate}`, '', '', '']);
+    const dateRow = worksheet.addRow(['', '', '', `FROM ${this.datePipe.transform(this.startDate, this.entityDateFormat)} - TO ${this.datePipe.transform(this.endDate, this.entityDateFormat)}`, '', '', '']);
     dateRow.eachCell((cell) => {
       cell.alignment = { horizontal: 'center' };
     });
