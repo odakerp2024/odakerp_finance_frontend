@@ -236,6 +236,21 @@ export class GSTOutputRegisterComponent implements OnInit {
     })
   }
 
+  getGSTOutputRegisterExcel() {
+    this.startDate = this.reportFilter.controls.FromDate.value;
+    this.endDate = this.reportFilter.controls.ToDate.value;
+
+    this.FNReportService.getGSTOutputRegisterExcel(this.startDate,this.endDate).then(x => {
+      var newBlob = new Blob([x], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", });
+      const data = window.URL.createObjectURL(newBlob);
+      saveAs(data, "GSTOutputRegisterExcel.xlsx");
+     // window.open(data);
+      //var redirectWindow = window.open(data, '_blank');
+      //redirectWindow.location;
+  
+  });
+  }
+
 
   setPage(page: number) {
     if (page < 1 || page > this.pager.totalPages) return;
