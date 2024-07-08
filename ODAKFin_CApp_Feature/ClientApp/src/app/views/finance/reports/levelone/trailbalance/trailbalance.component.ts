@@ -603,9 +603,8 @@ async downloadExcel() {
   worksheet.mergeCells(`B${subtitleRow.number}:C${subtitleRow.number}`);
 
   // Add date row
-
   const currentDate = new Date();
-  const subtitleRow1  = worksheet.addRow(['', `As of ${this.datePipe.transform(currentDate,this.entityDateFormat)}`, '', '']);
+  const subtitleRow1  = worksheet.addRow(['', `As of ${this.datePipe.transform(currentDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`, '', '']);
   // subtitleRow1.getCell(2).font = { size: 15, bold: true };
   subtitleRow1.getCell(2).alignment = { horizontal: 'center' };
   worksheet.mergeCells(`B${subtitleRow1.number}:C${subtitleRow1.number}`);

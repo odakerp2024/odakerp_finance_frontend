@@ -320,13 +320,13 @@ export class ReportDayBookComponent implements OnInit {
     // Add "FROM Date" and "TO Date" to the worksheet
     const dateRow = worksheet.addRow
     (
-      ['', '', '', '', '', `FROM ${this.datePipe.transform(this.startDate,this.entityDateFormat)} - TO ${this.datePipe.transform(this.endDate, this.entityDateFormat)}`]
+      ['', '', '', '', '', `FROM ${this.datePipe.transform(this.startDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))} - TO ${this.datePipe.transform(this.endDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`]
     );
     dateRow.eachCell((cell) => {
       cell.alignment = { horizontal: 'center' };
     });
-    dateRow.getCell(6).numFmt = this.entityDateFormat;
-    dateRow.getCell(6).numFmt = this.entityDateFormat;
+    dateRow.getCell(6).numFmt = this.commonDataService.convertToLowerCaseDay(this.entityDateFormat);
+    dateRow.getCell(6).numFmt = this.commonDataService.convertToLowerCaseDay(this.entityDateFormat);
 
     // Merge cells for "FROM Date" and "TO Date"
     worksheet.mergeCells(`F${dateRow.number}:G${dateRow.number}`);
@@ -364,7 +364,7 @@ export class ReportDayBookComponent implements OnInit {
       //To Remove Time from date field data
       const date = data.Date
       const formattedDate = date.split('T')[0];
-      data.Date =  this.datePipe.transform(formattedDate, this.entityDateFormat);
+      data.Date =  this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
 
       const defalutvalue = 0;
       // Merge the symbol and amount into a single string with fixed decimal places
@@ -461,6 +461,7 @@ export class ReportDayBookComponent implements OnInit {
 
 
   async downloadAsCSV() {
+    debugger
     if (this.reportForExcelList.length === 0) {
       Swal.fire('No record found');
       return;
@@ -484,7 +485,7 @@ export class ReportDayBookComponent implements OnInit {
         column.width = titleLength + 2;
       }
     });
-
+debugger
     // Merge cells for the title
     worksheet.mergeCells(`F${titleRow.number}:G${titleRow.number}`);
 
@@ -498,13 +499,13 @@ export class ReportDayBookComponent implements OnInit {
 
     // Add "FROM Date" and "TO Date" to the worksheet
     const dateRow = worksheet.addRow(
-      ['', '', '', '', '', `FROM ${this.datePipe.transform(this.startDate, this.entityDateFormat)} - TO ${this.datePipe.transform(this.endDate,this.entityDateFormat)}`]
+      ['', '', '', '', '', `FROM ${this.datePipe.transform(this.startDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))} - TO ${this.datePipe.transform(this.endDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`]
     );
     dateRow.eachCell((cell) => {
       cell.alignment = { horizontal: 'center' };
     });
-    dateRow.getCell(6).numFmt = this.entityDateFormat;
-    dateRow.getCell(6).numFmt = this.entityDateFormat;
+    dateRow.getCell(6).numFmt = this.commonDataService.convertToLowerCaseDay(this.entityDateFormat);
+    dateRow.getCell(6).numFmt = this.commonDataService.convertToLowerCaseDay(this.entityDateFormat);
 
     // Merge cells for "FROM Date" and "TO Date"
     worksheet.mergeCells(`F${dateRow.number}:G${dateRow.number}`);
