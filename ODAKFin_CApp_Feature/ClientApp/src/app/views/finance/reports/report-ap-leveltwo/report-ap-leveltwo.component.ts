@@ -726,7 +726,7 @@ calculateInvoicewise(header: string): any {
     subtitleRow.getCell(4).alignment = { horizontal: 'center' };
     worksheet.mergeCells(`D${subtitleRow.number}:E${subtitleRow.number}`);
 
-    const dateRow = worksheet.addRow(['', '', '', `FROM ${this.datePipe.transform(this.startDate, this.entityDateFormat)} - TO ${this.datePipe.transform(this.endDate, this.entityDateFormat)}`, '', '', '']);
+    const dateRow = worksheet.addRow(['', '', '', `FROM ${this.datePipe.transform(this.startDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))} - TO ${this.datePipe.transform(this.endDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`, '', '', '']);
     dateRow.eachCell((cell) => {
         cell.alignment = { horizontal: 'center' };
     });
