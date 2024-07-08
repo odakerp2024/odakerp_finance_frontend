@@ -22,6 +22,8 @@ import { CustomerService } from 'src/app/services/financeModule/customer.service
 import { DatePipe } from '@angular/common';
 import { CommonPatternService } from 'src/app/shared/service/common-pattern.service';
 import { AutoCodeService } from 'src/app/services/auto-code.service';
+import { WorkflowService } from 'src/app/services/workflow.service';
+import { WF_EVENTS, workflowEventObj } from 'src/app/model/financeModule/labels.const';
 
 
 @Component({
@@ -103,6 +105,20 @@ export class VendorsComponent implements OnInit {
   bankDetailsList: any[] = [];
 
   vendorEmailList: any[] = [];
+
+  venID: string='';
+  venBID: string='';
+
+  workflowParamsNo:any=[];
+  workFlowObj!:workflowEventObj;
+  redirectURL:string='';
+  userName: string='';
+  userDiv: string='';
+  userOff: string='';
+  userDivID = 0;
+  userOffID = 0;
+
+  onBoardStatus: any;
 
   onboardStatusList: any;
   currencyList: any[] = [];
@@ -238,7 +254,10 @@ export class VendorsComponent implements OnInit {
   selectedFile: File = null;
   fileUrl: string;
 
-  constructor(private router: Router, private route: ActivatedRoute, private fb: FormBuilder, private ms: MastersService
+  disableSave = true;
+  disableMail = true;
+
+  constructor(private router: Router, private route: ActivatedRoute,private workflow: WorkflowService, private fb: FormBuilder, private ms: MastersService
     , private commonservice: CommonService, private VendorService: VendorService, private fy: FinancialyearService,
     private tdsService: TDSService, private globals: Globals, private dataService: DataService, private autoCodeService: AutoCodeService,
     private customerservice: CustomerService, private datePipe: DatePipe, private patternService: CommonPatternService) {
@@ -268,6 +287,8 @@ export class VendorsComponent implements OnInit {
         VendorID: params['Vendor_ID'],
         VendorBranchID: params['Vendor_BranchID']
       });
+      this.venID = params['Vendor_ID'],
+      this.venBID = params['Vendor_BranchID']
     });
     this.getEntityCompanyDetails(); // get the entity details
     this.createTdsTableForm();
@@ -721,6 +742,158 @@ export class VendorsComponent implements OnInit {
       this.tdsTableForm.controls['Date'].disable();
 
     }
+
+    this.getWFParams();
+    this.getUserDtls();
+
+  }
+
+  getUserDtls(){
+    var userid = localStorage.getItem("UserID");
+    var payload = {
+      "UserID": userid,
+    }
+    this.workflow.getUserDtls(payload).subscribe({
+      next:(res)=>{
+        console.log('getUserDtls', { res })
+        this.userDiv = res[0].DivisionName
+        this.userDivID = res[0].DivisionID
+        this.userOff = res[0].OfficeName
+        this.userOffID = res[0].OfficeID
+        this.userName = res[0].UserName
+      },
+      error:(e)=>{
+        console.log('error', { e })
+      }
+    });
+  }
+
+  sendMail(){
+    var userid = localStorage.getItem("UserID");
+    let payload = {
+      VenID: this.venBID,
+      UserID: userid,
+      userDivID: this.userDivID,
+      userOffID: 0,
+      //userOffID: this.userOffID,
+    }
+    this.workflow.VendorMailTrigger(payload).subscribe({
+      next:(res) => {
+        console.log('mailSend', { res });
+        Swal.fire("Mail Sent Successfully");
+      }
+    });
+  }
+
+  getWFParams(){
+    this.workflow.getWorkflowParams(WF_EVENTS['customerApproval'].EVENT_NO).subscribe({
+      next:(res)=>{
+        console.log('getWorkflowParams', { res })
+        if (res?.AlertMegId == 1) {
+          this.workflowParamsNo = res?.Data ? res?.Data : []
+        }
+      },
+      error:(e)=>{
+        console.log('getWorkflowParams', { e })
+      }
+    });
+  }
+
+  submitApproval(){
+
+    this.redirectURL= window.location.href
+    console.log('redirectURL',this.redirectURL,window.location)
+
+    let eventData: any = {}
+    let checkOutstand = 'Fail'
+
+    this.workflowParamsNo.forEach((param: any) => {
+      const paramName: any = `param${param?.paramnumber}`;
+      if (WF_EVENTS['vendorApproval'].PARAMS.Division.toLowerCase().trim() == param?.paramname?.toLocaleLowerCase().trim()) {
+        eventData[paramName] = this.userDiv.trim();
+      }
+      else if (WF_EVENTS['vendorApproval'].PARAMS.Category.toLowerCase().trim() == param?.paramname?.toLocaleLowerCase().trim()) {
+        eventData[paramName] = JSON.stringify(this.fg.value.Category);
+      }
+      else if (WF_EVENTS['vendorApproval'].PARAMS.Country.toLowerCase().trim() == param?.paramname?.toLocaleLowerCase().trim()) {
+        eventData[paramName] = this.fg.value.CountryID 
+      }
+      else if (WF_EVENTS['vendorApproval'].PARAMS.Created_by.toLowerCase().trim() == param?.paramname?.toLocaleLowerCase().trim()) {
+        eventData[paramName] = this.userName.trim();
+      }
+      
+      else {
+        eventData[paramName] = ""
+      }
+    });
+
+    let callbackPayload={
+      //"isdata": "U",
+      //"customerID": this.cusID,
+      "VenBranchID": this.venBID,
+      "status": 0,
+      //"method":WF_EVENTS['customerApproval'].CALLBACK_METHOD
+    }
+
+    this.workFlowObj = {
+      eventnumber: WF_EVENTS['vendorApproval'].EVENT_NO,
+      eventvalue: this.Branch_Code  ? this.Branch_Code : "" ,
+      app: this.globals.appName,
+      division: this.userDiv.trim() ? this.userDiv.trim() :'',
+      office: this.userOff.trim() ? this.userOff.trim() :'',
+      customername: this.fg.value.VendorName ? this.fg.value.VendorName : '',
+      eventdata: eventData,
+      Initiator: { userid: this.userName ? this.userName.trim() : '', usertype: "string" },
+      //callbackURL:`${this.globals.APIURLlocal}${WF_EVENTS['customerApproval'].apiEndPoint}`,
+      callbackURL:`${this.globals.APIURL}${WF_EVENTS['vendorApproval'].apiEndPoint}`,
+      callbackURLcontent:JSON.stringify(callbackPayload),
+      redirectURL:this.redirectURL
+    }
+    console.log(this.workFlowObj, 'workflow Obj');
+
+    this.workflow.workflowTrigger(this.workFlowObj).subscribe({
+      next: (res) => {
+        console.log('workflowTrigger', { res })
+        if(res?.AlertMegId  > 0 ){
+          
+          if(res?.AlertMegId == 1){
+            let payload = {
+              "VenBranchID": this.venBID,
+            }
+            this.workflow.venKYCValidation(payload).subscribe(data => {
+              if (data.length > 0){
+                let dataQ = {
+                  "VenBranchID": this.venBID,
+              }
+              this.workflow.vendorConfirm(dataQ).subscribe(xyz => {
+                console.log(xyz);
+              });
+
+              Swal.fire("Your request has Approved");
+
+              }
+              else{
+                Swal.fire("Please Update the Accounting Details");
+              }
+            });
+          }
+          else{
+            Swal.fire("Your request waiting for Approval");
+          }         
+
+        }
+        else if(res?.AlertMegId == -1){
+          Swal.fire(res?.AlertMessage ?  res?.AlertMessage : "")
+          return
+        }
+      },
+      error: (err) => {
+        console.log('workflowTrigger', { err })
+        Swal.fire("Your request not claim approval");
+        // this.workflowEventMsg= "Your Quotation not claim approval"
+        // this.save();  
+      }
+  });
 
   }
 
@@ -1437,6 +1610,9 @@ export class VendorsComponent implements OnInit {
       this.fg.controls.PhoneNo.setValue(Table1['PhoneNo']);
       this.fg.controls.MobileNo.setValue(Table1['MobileNo']);
       this.fg.controls.TelephoneNo.setValue(Table1['TelephoneNo']);
+
+      this.onBoardStatus = response['data'].Table1[0]['OnBoard'];
+
     }
 
     //KYC Details //Table 2
@@ -1445,6 +1621,13 @@ export class VendorsComponent implements OnInit {
     }
     if (response['data'].Table3.length > 0) {
       this.documentPayloadInfo = response['data'].Table3;
+      this.disableMail = false;
+    }
+
+    if (response['data'].Table4.length > 0) {
+      if(this.onBoardStatus != 2){
+        this.disableSave = false;
+      }
     }
 
     //Account Link

@@ -32,6 +32,19 @@ export const WF_EVENTS:{ [key: string]: wfListObj }= {
       CALLBACK_METHOD: "CreditApproval",
       apiEndPoint: "/user/CreditAppConfirmUpdate"
   },
+  
+  vendorApproval: {
+    EVENT_NO: "EFI040",
+    PARAMS: {
+        Division:"Division",
+        Category:"Category",
+        Country:"Country",
+        Created_by:"Created By",
+      },
+    CALLBACK_METHOD: "VendorApproval",
+    apiEndPoint: "/user/VendorBranchConfirmUpdate"
+},
+
 }
 
 export interface workflowEventObj{
