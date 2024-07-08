@@ -37,6 +37,7 @@ export class TrialbalancetwoComponent implements OnInit {
   totalDebitAmount: any;
   totalCreditAmount: any;
   totalAmount: any;
+  entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
   entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   entityThousands = Number(this.commonDataService.getLocalStorageEntityConfigurable('CurrenecyFormat'));
   TypeList: any;
@@ -352,7 +353,7 @@ export class TrialbalancetwoComponent implements OnInit {
 
     // Add date row
     const currentDate = new Date();
-    const subtitleRow2 = worksheet.addRow(['', '', `As of ${currentDate.toDateString()}`, '', '', '']);
+    const subtitleRow2 = worksheet.addRow(['', '', `As of ${this.datePipe.transform(currentDate,this.entityDateFormat)}`, '', '', '']);
     subtitleRow2.getCell(3).alignment = { horizontal: 'center' };
     worksheet.mergeCells(`C${subtitleRow2.number}:D${subtitleRow2.number}`);
 
@@ -388,7 +389,7 @@ export class TrialbalancetwoComponent implements OnInit {
       // Format the date
       const date = group.Trans_Date;
       const formattedDate = date.split('T')[0];
-      group.Trans_Date =  this.datePipe.transform(formattedDate, "dd-MM-yyyy");
+      group.Trans_Date =  this.datePipe.transform(formattedDate, this.entityDateFormat);
       group.Trans_Date = formattedDate;
 
       // Create row data

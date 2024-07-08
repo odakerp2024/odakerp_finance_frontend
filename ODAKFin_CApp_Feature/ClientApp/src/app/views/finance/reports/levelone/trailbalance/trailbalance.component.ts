@@ -605,7 +605,7 @@ async downloadExcel() {
   // Add date row
 
   const currentDate = new Date();
-  const subtitleRow1  = worksheet.addRow(['', `As of ${currentDate.toDateString()}`, '', '']);
+  const subtitleRow1  = worksheet.addRow(['', `As of ${this.datePipe.transform(currentDate,this.entityDateFormat)}`, '', '']);
   // subtitleRow1.getCell(2).font = { size: 15, bold: true };
   subtitleRow1.getCell(2).alignment = { horizontal: 'center' };
   worksheet.mergeCells(`B${subtitleRow1.number}:C${subtitleRow1.number}`);
