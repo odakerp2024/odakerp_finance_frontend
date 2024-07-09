@@ -159,7 +159,9 @@
                         <tr >
                             <td>{{balance.Trans_Date | date: commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td>
                             <td>{{balance.Trans_Account_Name}}</td>
-                            <td>{{balance.Trans_Details}}</td>
+                            <td class="hyperTextColor" [title]= balance.Trans_Details>
+                                {{ (balance.Trans_Details && balance.Trans_Details.length > 20) ? balance.Trans_Details.slice(0, 20) + '-' : balance.Trans_Details }}
+                            </td>
                             <td>{{ balance.Trans_Type }}</td>
                             <td class="hyperColor" (click)="clickTransactionNumber(balance.ID, balance.Trans_Type, balance.Trans_Number)">{{balance.Trans_Number == 0 ? null : balance.Trans_Number}}</td>
                             <td>{{balance.Trans_Ref_Details == 0 ? null : balance.Trans_Ref_Details}}</td>
