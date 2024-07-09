@@ -174,10 +174,15 @@ export class ReportVoucherReversalComponent implements OnInit  {
   }
 
   getOfficeList(id: number) {
+    this.reportFilter.controls.OfficeId.setValue(0);
     this.commonDataService.getOfficeByDivisionId({ DivisionId: id }).subscribe(result => {
       this.officeList = [];
       if (result['data'].Table.length > 0) {
         this.officeList = result['data'].Table;
+      }
+      if (this.officeList.length == 1) {
+        const ID =
+          this.reportFilter.controls.OfficeId.setValue(this.officeList[0].ID);
       }
     })
   }
@@ -307,12 +312,12 @@ export class ReportVoucherReversalComponent implements OnInit  {
     worksheet.mergeCells(`C${subtitleRow.number}:D${subtitleRow.number}`);
 
     // Add "FROM Date" and "TO Date" to the worksheet
-    const dateRow = worksheet.addRow(['', '',  `FROM ${this.startDate} - TO ${this.endDate}`]);
+    const dateRow = worksheet.addRow(['', '',  `FROM ${this.datePipe.transform(this.startDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))} - TO ${this.datePipe.transform(this.endDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`]);
     dateRow.eachCell((cell) => {
       cell.alignment = { horizontal: 'center' };
     });
-    dateRow.getCell(3).numFmt = 'dd-MM-yyyy';
-    dateRow.getCell(3).numFmt = 'dd-MM-yyyy';
+    dateRow.getCell(3).numFmt = this.commonDataService.convertToLowerCaseDay(this.entityDateFormat);
+    dateRow.getCell(3).numFmt = this.commonDataService.convertToLowerCaseDay(this.entityDateFormat);
 
     // Merge cells for "FROM Date" and "TO Date"
     worksheet.mergeCells(`C${dateRow.number}:D${dateRow.number}`);
@@ -350,7 +355,7 @@ export class ReportVoucherReversalComponent implements OnInit  {
       const date = data.Date
       const formattedDate = date ? date.split('T')[0] : null;
 
-      data.Date =  this.datePipe.transform(formattedDate, "dd-MM-yyyy");
+      data.Date =  this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
 
 
 
@@ -465,12 +470,12 @@ export class ReportVoucherReversalComponent implements OnInit  {
     worksheet.mergeCells(`F${subtitleRow.number}:G${subtitleRow.number}`);
 
     // Add "FROM Date" and "TO Date" to the worksheet
-    const dateRow = worksheet.addRow(['', '', '', '', '', `FROM ${this.startDate} - TO ${this.endDate}`]);
+    const dateRow = worksheet.addRow(['', '', '', '', '', `FROM ${this.datePipe.transform(this.startDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))} - TO ${this.datePipe.transform(this.endDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`]);
     dateRow.eachCell((cell) => {
       cell.alignment = { horizontal: 'center' };
     });
-    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
-    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
+    dateRow.getCell(6).numFmt = this.commonDataService.convertToLowerCaseDay(this.entityDateFormat);
+    dateRow.getCell(6).numFmt = this.commonDataService.convertToLowerCaseDay(this.entityDateFormat);
 
     // Merge cells for "FROM Date" and "TO Date"
     worksheet.mergeCells(`F${dateRow.number}:G${dateRow.number}`);
@@ -508,7 +513,7 @@ export class ReportVoucherReversalComponent implements OnInit  {
       const date = data.Date
       const formattedDate = date ? date.split('T')[0] : null;
 
-      data.Date =  this.datePipe.transform(formattedDate, "dd-MM-yyyy");
+      data.Date =  this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
 
 
 

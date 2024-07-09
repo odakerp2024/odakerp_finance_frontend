@@ -373,12 +373,12 @@ export class ReportPurchaseVoucherComponent implements OnInit {
     worksheet.mergeCells(`F${subtitleRow.number}:G${subtitleRow.number}`);
 
     // Add "FROM Date" and "TO Date" to the worksheet
-    const dateRow = worksheet.addRow(['', '', '', '', '', `FROM ${this.startDate} - TO ${this.endDate}`]);
+    const dateRow = worksheet.addRow(['', '', '', '', '', `FROM ${this.datePipe.transform(this.startDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))} - TO ${this.datePipe.transform(this.endDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`]);
     dateRow.eachCell((cell) => {
       cell.alignment = { horizontal: 'center' };
     });
-    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
-    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
+    dateRow.getCell(6).numFmt = this.commonDataService.convertToLowerCaseDay(this.entityDateFormat);
+    dateRow.getCell(6).numFmt = this.commonDataService.convertToLowerCaseDay(this.entityDateFormat);
 
     // Merge cells for "FROM Date" and "TO Date"
     worksheet.mergeCells(`F${dateRow.number}:G${dateRow.number}`);
@@ -416,7 +416,7 @@ export class ReportPurchaseVoucherComponent implements OnInit {
       //To Remove Time from date field data
       const date = data.Date
       const formattedDate = date.split('T')[0];
-      data.Date = formattedDate;
+      data.Date = this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
       const defalutvalue = 0;
       // Merge the symbol and amount into a single string with fixed decimal places
       const mergedICYAmount = ` ${data['Amount (ICY)'] !== null ? parseFloat(data['Amount (ICY)']).toFixed(2) : '0.00'}`;
@@ -560,12 +560,12 @@ export class ReportPurchaseVoucherComponent implements OnInit {
     worksheet.mergeCells(`F${subtitleRow.number}:G${subtitleRow.number}`);
 
     // Add "FROM Date" and "TO Date" to the worksheet
-    const dateRow = worksheet.addRow(['', '', '', '', '', `FROM ${this.startDate} - TO ${this.endDate}`]);
+    const dateRow = worksheet.addRow(['', '', '', '', '', `FROM ${this.datePipe.transform(this.startDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))} - TO ${this.datePipe.transform(this.endDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`]);
     dateRow.eachCell((cell) => {
       cell.alignment = { horizontal: 'center' };
     });
-    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
-    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
+    dateRow.getCell(6).numFmt = this.commonDataService.convertToLowerCaseDay(this.entityDateFormat);
+    dateRow.getCell(6).numFmt = this.commonDataService.convertToLowerCaseDay(this.entityDateFormat);
 
     // Merge cells for "FROM Date" and "TO Date"
     worksheet.mergeCells(`F${dateRow.number}:G${dateRow.number}`);
@@ -603,7 +603,7 @@ export class ReportPurchaseVoucherComponent implements OnInit {
       //To Remove Time from date field data
       const date = data.Date
       const formattedDate = date.split('T')[0];
-      data.Date = formattedDate;
+      data.Date = this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
 
       const defalutvalue = 0;
       // Merge the symbol and amount into a single string with fixed decimal places

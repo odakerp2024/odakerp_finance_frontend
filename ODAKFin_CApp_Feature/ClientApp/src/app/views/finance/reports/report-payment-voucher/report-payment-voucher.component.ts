@@ -84,7 +84,7 @@ export class ReportPaymentVoucherComponent implements OnInit {
     this.getDivisionList();
     this.getVoucherList();
     this.getVendorList();
-    this.getBankList();
+   // this.getBankList();
     this.reportFilter.controls.Peroid.setValue('month');
   }
 
@@ -191,10 +191,15 @@ export class ReportPaymentVoucherComponent implements OnInit {
   }
 
   getOfficeList(id: number) {
+   this.reportFilter.controls.OfficeId.setValue(0);
     this.commonDataService.getOfficeByDivisionId({ DivisionId: id }).subscribe(result => {
       this.officeList = [];
       if (result['data'].Table.length > 0) {
         this.officeList = result['data'].Table;
+      }
+       if (this.officeList.length == 1) {
+        const ID =
+          this.reportFilter.controls.OfficeId.setValue(this.officeList[0].ID);
       }
     })
   }
@@ -276,6 +281,7 @@ export class ReportPaymentVoucherComponent implements OnInit {
 
       let service = `${this.globals.APIURL}/ReceiptVoucher/GetReceiptVoucherDropDownList`
       this.dataService.post(service, { CustomerId: 0 }).subscribe((result: any) => {
+      // this.customerList = result.data.Table2;
         this.paymentModeList = result.data.Table4;
 
         resolve(true)
@@ -287,6 +293,7 @@ export class ReportPaymentVoucherComponent implements OnInit {
   }
 
   getDivisionBasedOffice(officeId: number, divisoinId: any) {
+                this.reportFilter.controls.PaidFrom.setValue(0);
     if (officeId && divisoinId) {
       let service = `${this.globals.APIURL}/Common/GetBankByOfficeId`;
       let payload = {
@@ -306,7 +313,6 @@ export class ReportPaymentVoucherComponent implements OnInit {
   getPaymentVoucherReportList() {
     this.startDate = this.reportFilter.controls.FromDate.value;
     this.endDate = this.reportFilter.controls.ToDate.value;
-
     this.reportService.getPaymentVoucherReportList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
       this.reportForExcelList = [];
@@ -392,12 +398,14 @@ export class ReportPaymentVoucherComponent implements OnInit {
     worksheet.mergeCells(`F${subtitleRow.number}:G${subtitleRow.number}`);
 
     // Add "FROM Date" and "TO Date" to the worksheet
-    const dateRow = worksheet.addRow(['', '', '', '', '', `FROM ${this.startDate} - TO ${this.endDate}`]);
+    const dateRow = worksheet.addRow(
+      ['', '', '', '', '', `FROM ${this.datePipe.transform(this.startDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))} - TO ${this.datePipe.transform(this.endDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`]
+    );
     dateRow.eachCell((cell) => {
       cell.alignment = { horizontal: 'center' };
     });
-    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
-    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
+    dateRow.getCell(6).numFmt = this.commonDataService.convertToLowerCaseDay(this.entityDateFormat);
+    dateRow.getCell(6).numFmt = this.commonDataService.convertToLowerCaseDay(this.entityDateFormat);
 
     // Merge cells for "FROM Date" and "TO Date"
     worksheet.mergeCells(`F${dateRow.number}:G${dateRow.number}`);
@@ -435,7 +443,7 @@ export class ReportPaymentVoucherComponent implements OnInit {
       //To Remove Time from date field data
       const date = data.Date
       const formattedDate = date.split('T')[0];
-      data.Date =  this.datePipe.transform(formattedDate, "dd-MM-yyyy");
+      data.Date =  this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
       const defalutvalue=0;
       // Merge the symbol and amount into a single string with fixed decimal places
       const mergedICYAmount = `${data['Amount (ICY)'] !== null ? parseFloat(data['Amount (ICY)']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
@@ -470,8 +478,8 @@ export class ReportPaymentVoucherComponent implements OnInit {
       const row = worksheet.addRow(Object.values(filteredData));
 
         // Set text color for specific columns and align them
-        const columnsToColorRight = ['Vendor', 'Payment', 'Amount (CCY)', 'Amount (ICY)', 'TDS Amount' ,'Ex Rate Gain', 'Ex Rate Loss' ,'Bank Charges'];
-        const columnsToAlignLeft =  ['Vendor', 'Payment',]; 
+        const columnsToColorRight = ['Vendor', 'Payment #', 'Amount (CCY)', 'Amount (ICY)', 'TDS Amount' ,'Ex Rate Gain', 'Ex Rate Loss' ,'Bank Charges'];
+        const columnsToAlignLeft =  ['Vendor', 'Payment #',]; 
         const columnsToAlignRight = ['Amount (CCY)', 'Amount (ICY)', 'TDS Amount' ,'Ex Rate Gain', 'Ex Rate Loss' ,'Bank Charges'];
   
         columnsToColorRight.forEach(columnName => {
@@ -578,12 +586,14 @@ export class ReportPaymentVoucherComponent implements OnInit {
     worksheet.mergeCells(`F${subtitleRow.number}:G${subtitleRow.number}`);
 
     // Add "FROM Date" and "TO Date" to the worksheet
-    const dateRow = worksheet.addRow(['', '', '', '', '', `FROM ${this.startDate} - TO ${this.endDate}`]);
+    const dateRow = worksheet.addRow(
+      ['', '', '', '', '', `FROM ${this.datePipe.transform(this.startDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))} - TO ${this.datePipe.transform(this.endDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`]
+    );
     dateRow.eachCell((cell) => {
       cell.alignment = { horizontal: 'center' };
     });
-    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
-    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
+    dateRow.getCell(6).numFmt = this.commonDataService.convertToLowerCaseDay(this.entityDateFormat);
+    dateRow.getCell(6).numFmt = this.commonDataService.convertToLowerCaseDay(this.entityDateFormat);
 
     // Merge cells for "FROM Date" and "TO Date"
     worksheet.mergeCells(`F${dateRow.number}:G${dateRow.number}`);
@@ -621,7 +631,7 @@ export class ReportPaymentVoucherComponent implements OnInit {
       //To Remove Time from date field data
       const date = data.Date
       const formattedDate = date.split('T')[0];
-      data.Date =  this.datePipe.transform(formattedDate, "dd-MM-yyyy");
+      data.Date =  this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
 
 
       const defalutvalue=0;
@@ -657,8 +667,8 @@ export class ReportPaymentVoucherComponent implements OnInit {
       const row = worksheet.addRow(Object.values(filteredData));
 
         // Set text color for specific columns and align them
-        const columnsToColorRight = ['Vendor', 'Payment', 'Amount (CCY)', 'Amount (ICY)', 'TDS Amount' ,'Ex Rate Gain', 'Ex Rate Loss' ,'Bank Charges'];
-        const columnsToAlignLeft =  ['Vendor', 'Payment',]; 
+        const columnsToColorRight = ['Vendor', 'Payment #', 'Amount (CCY)', 'Amount (ICY)', 'TDS Amount' ,'Ex Rate Gain', 'Ex Rate Loss' ,'Bank Charges'];
+        const columnsToAlignLeft =  ['Vendor', 'Payment #',]; 
         const columnsToAlignRight = ['Amount (CCY)', 'Amount (ICY)', 'TDS Amount' ,'Ex Rate Gain', 'Ex Rate Loss' ,'Bank Charges'];
   
         columnsToColorRight.forEach(columnName => {

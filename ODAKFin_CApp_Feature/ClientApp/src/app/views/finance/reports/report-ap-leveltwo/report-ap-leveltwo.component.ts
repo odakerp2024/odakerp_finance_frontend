@@ -18,6 +18,8 @@ const today = new Date();
 const month = today.getMonth();
 const year = today.getFullYear();
 
+
+
 @Component({
   selector: 'app-report-ap-leveltwo',
   templateUrl: './report-ap-leveltwo.component.html',
@@ -79,6 +81,7 @@ export class ReportApLeveltwoComponent implements OnInit {
   headers: string[] = [];
   data: any[] = [];
   sortOrder: { [key: string]: 'asc' | 'desc' } = {};
+  agingId: any;
 
   constructor(
     private commonDataService: CommonService,
@@ -97,12 +100,38 @@ export class ReportApLeveltwoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Step 1: Initialize the form and other necessary data
     this.createReportForm();
     this.onOptionChange('month');
     this.getDivisionList();
     this.getVendorList();
-     this.getAgingDropdown();
-    this.reportFilter.controls.Peroid.setValue('month');
+    
+    // Step 2: Fetch the aging dropdown data
+    this.getAgingDropdown().then(() => {
+      // Step 3: After fetching dropdown data, set form values
+      this.reportFilter.controls.Peroid.setValue('month');
+      if (this.agingId) {
+        this.reportFilter.controls.AgingTypeId.setValue(this.agingId);
+        this.createReportForm();
+      }
+    });
+  }
+
+  async getAgingDropdown(): Promise<void> {
+    const payload = {
+      type: 1,
+    };
+  
+    try {
+      const result: any = await this.reportService.getAgingDropdown(payload).toPromise();
+      if (result.message === 'Success' && result.data.Table.length > 0) {
+        // Process dropdown data as needed
+        this.agingGroupDropdown = result.data.Table;
+        this.agingId = this.agingGroupDropdown[0].AgingTypeId;
+      }
+    } catch (error) {
+      console.error('Error fetching aging dropdown:', error);
+    }
   }
 
  async Cancel() {
@@ -216,7 +245,7 @@ async showVendor(SubTypeId:number){
        Type:[0],
         SubTypeId: [0],
       Peroid: [''],
-      AgingTypeId: [1]
+      AgingTypeId: [this.agingId]
     });
   }else if( this.type == 'Vendor-wise'){
     this.reportFilter = this.fb.group({
@@ -226,7 +255,7 @@ async showVendor(SubTypeId:number){
       OfficeId: [0],
       VendorID: [0],
        Type:[1],
-       AgingTypeId: [1],
+       AgingTypeId: [this.agingId],
         SubTypeId: [this.subtype],
       Peroid: [''],
     });
@@ -236,14 +265,13 @@ async showVendor(SubTypeId:number){
           OfficeId: [0],
           VendorID: [0],
           Type:[2],
-           AgingTypeId: [1],
+           AgingTypeId: [this.agingId],
           SubTypeId: [this.subtypevendorId],
           FromDate: [this.startDate],
           ToDate: [this.endDate],
           Peroid: [''],
         });
     }
-    this.getAgingDropdown();
     this.reportFilter.controls.Peroid.setValue('month');
     this.onOptionChange('month');
     this.getAgingDropdown();
@@ -314,29 +342,6 @@ async showVendor(SubTypeId:number){
     return Array.from(uniqueMap.values());
   }
 
-
- getAgingDropdown() {
-
-  const payload = {
-    type : 1,
-  }
-  
-    this.reportService.getAgingDropdown(payload).subscribe((result: any) => {
-      if (result.message == 'Success') {
-        this.agingGroupDropdown = [];
-        if (result["data"].Table.length > 0) {
-          this.agingGroupDropdown = result.data.Table;
-
-        }
-            this.reportFilter.controls.AgingTypeId.setValue(this.agingGroupDropdown[0].AgingGroupName);
-
-      }
-    }), error => {
-      console.error(error);
-    }
-  }
-
-
   getDivisionBasedOffice(officeId: number, divisoinId: any) {
     if (officeId && divisoinId) {
       let service = `${this.globals.APIURL}/Common/GetBankByOfficeId`;
@@ -370,14 +375,12 @@ async showVendor(SubTypeId:number){
 
     this.reportService.getAPAgingList(this.reportFilter.value).subscribe(result => {
       if (result.message == "Success" && result.data && result.data.Table) {
-      // if (result['data'].Table.length > 0) {
         this.reportList = result['data'].Table;
         let tableData = result.data.Table;
        
         if (tableData.length > 0) {
-          let headers = Object.keys(tableData[0]); // Assuming Table[0] has headers
-          this.headers = headers.filter(header => header !== 'Id'); // Remove 'Id' from headers if needed
-
+          // Set headers from the first data row
+          this.headers = Object.keys(tableData[0]).filter(header => header !== 'Id');
           // Extract 'Balance (Company Currency)' field and format it
           this.pagedItems = tableData.map(row => ({
             ...row,
@@ -386,9 +389,13 @@ async showVendor(SubTypeId:number){
         this.setPage(1);
 
       }
-      else {     
-       this.headers = [];
-          this.pager = {};
+      else {    
+        
+         // No data found, keep existing headers or set default headers
+         if (!this.headers || this.headers.length === 0) {
+          // Set default headers or handle empty case
+          this.headers = ['Sub Category', '0 Days','Total (Company Currency)'];
+        }
           this.pagedItems = [];
       }
         error => {
@@ -398,6 +405,7 @@ async showVendor(SubTypeId:number){
     })
   }
 
+  
 getAPAgingVendorList() {
     this.startDate = this.reportFilter.controls.FromDate.value;
     this.endDate = this.reportFilter.controls.ToDate.value;
@@ -409,7 +417,7 @@ getAPAgingVendorList() {
      let tableData = result.data.Table;
        
         if (tableData.length > 0) {
-          this.headers = Object.keys(tableData[0]); 
+          this.headers = Object.keys(tableData[0]).filter(header => header !== 'VendorID'); 
 
           // Extract 'Balance (Company Currency)' field and format it
           this.pagedItems = tableData.map(row => ({
@@ -422,8 +430,6 @@ getAPAgingVendorList() {
         this.setPage(1);
         
       } else {
-         this.headers = [];
-          this.pager = {};
           this.pagedItems = [];
       
       }
@@ -443,8 +449,8 @@ getAPAgingVendorList() {
         let tableData = result.data.Table;
        
         if (tableData.length > 0) {
-          let headers = Object.keys(tableData[0]); // Assuming Table[0] has headers
-          this.headers = headers.filter(header => header !== 'VendorID'); 
+           // Set headers from the first data row
+          this.headers = Object.keys(tableData[0]).filter(header => header !== 'VendorID');
 
           // Extract 'Balance (Company Currency)' field and format it
           this.pagedItems = tableData.map(row => ({
@@ -456,8 +462,6 @@ getAPAgingVendorList() {
         this.setPage(1);
       
       } else {
-        this.headers = [];
-          this.pager = {};
           this.pagedItems = [];
       }
     }
@@ -594,6 +598,8 @@ calculateInvoicewise(header: string): any {
   clear() {
     this.startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd");
     this.endDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd");
+
+
     if(this.type  == 'Overall-list'){
     this.reportFilter.reset({
       FromDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
@@ -601,7 +607,7 @@ calculateInvoicewise(header: string): any {
       DivisionId: 0,
       OfficeId: 0,
       Type: 0,
-      AgingTypeId: 0,
+      AgingTypeId: this.agingId,
         SubTypeId: 0,
         VendorID: 0,
       
@@ -612,7 +618,7 @@ calculateInvoicewise(header: string): any {
         OfficeId: 0,
         Type: 1,
         VendorID: 0,
-        AgingTypeId: 0,
+        AgingTypeId: this.agingId,
         SubTypeId: this.subtype,
         FromDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
         ToDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd"),
@@ -623,13 +629,16 @@ calculateInvoicewise(header: string): any {
         OfficeId: 0,
         VendorID: 0,
         Type: 2,
-        AgingTypeId: 0,
+        AgingTypeId: this.agingId,
         SubTypeId: this.subtypevendorId,
         FromDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd"),
         ToDate: this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd"),
       });
     }
     this.officeList = [];
+    this.headers = [];
+    this.createReportForm();
+    this.getAgingDropdown();
     this.reportFilter.controls.Peroid.setValue('month');
     if(this.type  == 'Overall-list'){
       this.getAPAgingOverallList();
@@ -695,8 +704,8 @@ calculateInvoicewise(header: string): any {
         case 'Vendor-Invoice-wise':
             titleHeader = 'Payable Aging Summary - Invoice Wise';
             excludeKeys = [];
-            columnsToColor = ['Vendor Invoice #', 'Transaction Type', 'Invoice Amount', 'Balance (Invoice currency)', 'Balance (Company Currency)']
-            columnsToAlignLeft = ['Vendor Invoice #', 'Transaction Type'];
+            columnsToColor = ['Vendor Invoice #', 'Invoice Amount', 'Balance (Invoice currency)', 'Balance (Company Currency)']
+            columnsToAlignLeft = ['Vendor Invoice #'];
             columnsToAlignRight = ['Invoice Amount', 'Balance (Invoice currency)', 'Balance (Company Currency)'];
             break;
         default:
@@ -717,7 +726,7 @@ calculateInvoicewise(header: string): any {
     subtitleRow.getCell(4).alignment = { horizontal: 'center' };
     worksheet.mergeCells(`D${subtitleRow.number}:E${subtitleRow.number}`);
 
-    const dateRow = worksheet.addRow(['', '', '', `FROM ${startDate} - TO ${endDate}`, '', '', '']);
+    const dateRow = worksheet.addRow(['', '', '', `FROM ${this.datePipe.transform(this.startDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))} - TO ${this.datePipe.transform(this.endDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`, '', '', '']);
     dateRow.eachCell((cell) => {
         cell.alignment = { horizontal: 'center' };
     });

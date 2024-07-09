@@ -104,7 +104,8 @@
                             <div class="col-2">
                                 <label class=" maxlabel">AMOUNT</label>
                                 <input formControlName="Amount"
-                                   appDynamicDecimal min="0" numbersOnly
+                                onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                min="0" numbersOnly appDynamicDecimal
                                     class="form-control" name="Amount">
                             </div>
                             <div class="col-2">
@@ -193,38 +194,38 @@
                                 <tr>
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Date: activate to sort column ascending"
-                                        (click)="sort('Invoice_date')"style="width: 177.575px;">Date
+                                        (click)="sort('Date')"style="width: 177.575px;">Date
                                     </th>
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('Invoice_no')"style="width: 177.575px;">Invoice # </th>
+                                        (click)="sort('Invoice')"style="width: 177.575px;">Invoice # </th>
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('Invoice_type')"style="width: 177.575px;">Tax Type</th>
+                                        (click)="sort('Transaction Type')"style="width: 177.575px;">Tax Type</th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('CustomerName')"style="width: 177.575px;">Customer </th>
+                                        (click)="sort('Customer Name')"style="width: 177.575px;">Customer </th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('CityName')"style="width: 177.575px;">Branch</th>
+                                        (click)="sort('Branch')"style="width: 177.575px;">Branch</th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('CurrencyCode')"style="width: 177.575px;">Invoice Currency </th>
+                                        (click)="sort('Invoice Currency')"style="width: 177.575px;">Invoice Currency </th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('InvoiceAmountICY')" style="width: 177.575px;">Invoice Amount (ICY)</th>
+                                        (click)="sort('Invoice Amount (ICY)')" style="width: 177.575px;">Invoice Amount (ICY)</th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('InvoiceAmountCCY')"style="width: 177.575px;">Invoice Amount (CCY)</th>
+                                        (click)="sort('Invoice Amount (CCY)')"style="width: 177.575px;">Invoice Amount (CCY)</th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('invoice_Tax')" style="width: 177.575px;">Total Tax</th>
+                                        (click)="sort('Total Tax')" style="width: 177.575px;">Total Tax</th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"

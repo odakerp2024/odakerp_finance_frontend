@@ -181,12 +181,17 @@ export class ReportAdjustmentVoucherComponent implements OnInit {
       console.log('err--', error);
     });
   }
-
+ 
   getOfficeList(id: number) {
+    this.reportFilter.controls.OfficeId.setValue(0);
     this.commonDataService.getOfficeByDivisionId({ DivisionId: id }).subscribe(result => {
       this.officeList = [];
       if (result['data'].Table.length > 0) {
         this.officeList = result['data'].Table;
+      }
+      if (this.officeList.length == 1) {
+        const ID =
+          this.reportFilter.controls.OfficeId.setValue(this.officeList[0].ID);
       }
     })
   }
@@ -259,7 +264,7 @@ export class ReportAdjustmentVoucherComponent implements OnInit {
     this.endDate = this.reportFilter.controls.ToDate.value;
     this.reportService.getAdjustmentReportList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
-
+      this.reportForExcelList = [];
       if (result['data'].Table.length > 0) {
         this.reportList = result['data'].Table;
         this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
@@ -340,12 +345,15 @@ export class ReportAdjustmentVoucherComponent implements OnInit {
    worksheet.mergeCells(`F${subtitleRow.number}:G${subtitleRow.number}`);
 
    // Add "FROM Date" and "TO Date" to the worksheet
-   const dateRow = worksheet.addRow(['', '', '', '', '', `FROM ${this.startDate} - TO ${this.endDate}`]);
+   const dateRow = worksheet.addRow(
+    ['', '', '', '', '', `FROM ${this.datePipe.transform(this.startDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))} - TO ${this.datePipe.transform(this.endDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`
+
+    ]);
    dateRow.eachCell((cell) => {
      cell.alignment = { horizontal: 'center' };
    });
-   dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
-   dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
+   dateRow.getCell(6).numFmt = this.commonDataService.convertToLowerCaseDay(this.entityDateFormat);
+   dateRow.getCell(6).numFmt = this.commonDataService.convertToLowerCaseDay(this.entityDateFormat);
 
    // Merge cells for "FROM Date" and "TO Date"
    worksheet.mergeCells(`F${dateRow.number}:G${dateRow.number}`);
@@ -382,7 +390,7 @@ export class ReportAdjustmentVoucherComponent implements OnInit {
       //To Remove Time from date field data
       const date = data.Date
       const formattedDate = date.split('T')[0];
-      data.Date =  this.datePipe.transform(formattedDate, "dd-MM-yyyy");
+      data.Date =  this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
 
      const defaultvalue = 0;
       // Merge the symbol and amount into a single string with fixed decimal places
@@ -514,12 +522,15 @@ export class ReportAdjustmentVoucherComponent implements OnInit {
      worksheet.mergeCells(`F${subtitleRow.number}:G${subtitleRow.number}`);
  
      // Add "FROM Date" and "TO Date" to the worksheet
-     const dateRow = worksheet.addRow(['', '', '', '', '', `FROM ${this.startDate} - TO ${this.endDate}`]);
+     const dateRow = worksheet.addRow(
+      ['', '', '', '', '', `FROM ${this.datePipe.transform(this.startDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))} - TO ${this.datePipe.transform(this.endDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`
+
+      ]);
      dateRow.eachCell((cell) => {
        cell.alignment = { horizontal: 'center' };
      });
-     dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
-     dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
+     dateRow.getCell(6).numFmt = this.commonDataService.convertToLowerCaseDay(this.entityDateFormat);
+     dateRow.getCell(6).numFmt = this.commonDataService.convertToLowerCaseDay(this.entityDateFormat);
  
      // Merge cells for "FROM Date" and "TO Date"
      worksheet.mergeCells(`F${dateRow.number}:G${dateRow.number}`);
@@ -556,7 +567,7 @@ export class ReportAdjustmentVoucherComponent implements OnInit {
       //To Remove Time from date field data
       const date = data.Date
       const formattedDate = date.split('T')[0];
-      data.Date =  this.datePipe.transform(formattedDate, "dd-MM-yyyy");
+      data.Date =  this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
       const defaultvalue =0 ; 
       // Merge the symbol and amount into a single string with fixed decimal places
       const mergedICYAmount = `${data['Amount'] !== null ? parseFloat(data['Amount']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction)}`;

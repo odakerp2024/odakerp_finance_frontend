@@ -100,15 +100,15 @@
                <thead>
                  <tr role="row">
                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
-                       aria-label="Date: activate to sort column ascending" (click)="sort('Date')"
+                       aria-label="Date: activate to sort column ascending" (click)="sort('ChildAccountName')"
                        style="width: 177.575px;">Account
                    </th>
                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
-                       aria-label="Name: activate to sort column ascending" (click)="sort('CustomerName')"
+                       aria-label="Name: activate to sort column ascending" (click)="sort('ChildNet_Balance')"
                        style="width: 177.575px;">Net Debit
                    </th>
                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
-                       aria-label="Name: activate to sort column ascending" (click)="sort('Type')"
+                       aria-label="Name: activate to sort column ascending" (click)="sort('ChildNet_Balance')"
                        style="width: 177.575px;">Net Credit
                    </th>
                    
@@ -135,55 +135,50 @@
                           </tr>
                         </ng-container>
                         <tr>
-                          <td (click)="editBalance(balance.ChartOfAccountsId)" style="color: #0366d6; cursor: pointer;">
-                            <span class="child-account">{{ balance.ChildAccountName }}</span>
+                          <td (click)="editBalance(balance.ChartOfAccountsId)" class="child-account hyperColor">
+                            {{ balance.ChildAccountName }}
                           </td>
-                          <td class="hyperTextColor text-right" *ngIf="balance.ChildTransaction_Type === 'Debit'">
+                          <td *ngIf="balance.ChildTransaction_Type === 'Debit'" class="text-right">
                             {{ balance.ChildNet_Balance | dynamicentityDecimal }}
                           </td>
-                          <td class="hyperTextColor text-right" *ngIf="balance.ChildTransaction_Type !== 'Debit'">0</td>
-                          <td class="hyperTextColor text-right" *ngIf="balance.ChildTransaction_Type === 'Credit'">
-                            {{ balance.ChildNet_Balance | dynamicentityDecimal }}
+                          <td *ngIf="balance.ChildTransaction_Type !== 'Debit'" class="text-right">0</td>
+                          <td *ngIf="balance.ChildTransaction_Type === 'Credit'" class="text-right">
+                            {{ balance.ChildNet_Balance | dynamicentityDecimal  }}
                           </td>
-                          <td class="hyperTextColor text-right" *ngIf="balance.ChildTransaction_Type !== 'Credit'">0</td>
-                          
+                          <td *ngIf="balance.ChildTransaction_Type !== 'Credit'" class="text-right">0</td>
                         </tr>
                       </ng-container>
-                      
+              
                       <!-- Parent account totals -->
                       <tr style="padding: 7px !important; background-image: linear-gradient(#3A5BA0, #273773) !important; color: #fff !important;">
                         <td colspan="1" class="text-left">
                           <span style="font-weight: bold; text-align: left;">{{ parent.ParentAccountName }} Total : </span>
                         </td>
-                        <td class="text-center">{{ parent.totalDebit | dynamicentityDecimal }}</td>
-                        <td class="text-center">{{ parent.totalCredit | dynamicentityDecimal }}</td>
-                        
+                        <td class="text-right">{{ parent.totalDebit | dynamicentityDecimal }}</td>
+                        <td class="text-right">{{ parent.totalCredit | dynamicentityDecimal }}</td>
                       </tr>
                     </ng-container>
-                
-                    <!-- Row for group totals -->
-                    <!-- <tr style="padding: 7px !important; background-image: linear-gradient(#3A5BA0, #273773) !important; color: #fff !important;"> -->
-                      <!-- <td style="font-weight: bold; text-align: left;">Group Total:</td> -->
-                      <!-- <td style="font-weight: bold; text-align: left;"></td>
-                      <td class="text-center">{{ group.totalCredit | dynamicDecimal }}</td>
-                      <td class="text-center">{{ group.totalDebit | dynamicDecimal }}</td>
-                    </tr> -->
                   </ng-container>
                 </ng-container>
                 
-                 <tr *ngIf="pagedItems.length == 0">
-                    <td class="text-center" colspan="10">No records found</td>
+                <!-- <tr *ngIf="pagedItems.length == 0">
+                  <td class="text-center" colspan="10">No records found</td>
+                </tr> -->
+              </tbody>
+              <ng-template #noRecord>
+                <tr>
+                  <td class="text-center" colspan="10">No records found</td>
                 </tr>
-               
-                </tbody>
+              </ng-template>
+              
       
                <tfoot class="table-footer"   *ngIf="pagedItems.length > 0">
                 <tr class="footer-position-sticky" style="padding: 7px !important; background-image: linear-gradient(#3A5BA0, #273773) !important; color: #fff !important;">
                   <td colspan="1" class="text-left">
                     <span style="font-size: medium;">Grand Total : </span>
                   </td>
-                  <td class="text-center" colspan="1">{{ totaldebitamount | dynamicentityDecimal }}</td>
-                  <td class="text-center" colspan="1">{{ totalcreditamount | dynamicentityDecimal }}</td>
+                  <td class="text-right" colspan="1">{{ totaldebitamount | dynamicentityDecimal }}</td>
+                  <td class="text-right" colspan="1">{{ totalcreditamount | dynamicentityDecimal }}</td>
                   
                 </tr>
               </tfoot>

@@ -107,17 +107,32 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="col-2">
-                    <div class="d-flex justify-content-center">
-                        <button type="button" class="btn btn-primary text-white mx-1 btn-sm-custom" (click)="getJournalReportList()">
+                    <div class="text-center">
+                        <button type="button" class="btn btn-primary text-white col-auto btn-sm-custom"
+                            (click)="getJournalReportList()">
                             SEARCH
                         </button>
-                        <button type="button" class="btn btn-warning text-white mx-1 btn-sm-custom" (click)="clear()">
+                    </div>
+
+                    <div class="text-center">
+                        <button type="button" (click)="clear()"
+                            class="btn btn-warning text-white mb-0 col-auto clear-btn btn-sm-custom">
                             CLEAR
                         </button>
                     </div>
                 </div>
+
+                <!-- <div class="col-2">
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="btn btn-primary text-white mx-1 btn-sm-custom" (click)="">
+                            SEARCH
+                        </button>
+                        <button type="button" class="btn btn-warning text-white mx-1 btn-sm-custom" (click)="">
+                            CLEAR
+                        </button>
+                    </div>
+                </div> -->
 
             </div>
         </div>

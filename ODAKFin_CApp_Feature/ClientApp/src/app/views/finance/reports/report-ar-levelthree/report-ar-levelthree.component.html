@@ -6,7 +6,7 @@
             <div class="row">
                 <div class="col-10">
                     <div class="row pb-3">
-                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                        <div class="col-2">
 
                             <label class=" fontstyles">PEROID</label>
                             <ng-select class="searchdropdown custom" formControlName="Peroid"
@@ -48,7 +48,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                        <div class="col-2">
                             <label class=" fontstyles">DIVISION</label>
                             <ng-select class="searchdropdown custom" formControlName="DivisionId"
                                 (ngModelChange)="getOfficeList($event);" [clearable]="false">
@@ -61,7 +61,7 @@
                             </ng-select>
                         </div>
 
-                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
+                        <div class="col-2">
                             <label class=" fontstyles ">OFFICE</label>
                             <ng-select class="searchdropdown" formControlName="OfficeId" name="active" id="active"
                                 [clearable]="false" name="CategoryId" id="CategoryId">
@@ -74,7 +74,7 @@
                             </ng-select>
                         </div>
 
-                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4" *ngIf="type == 'customerwise'">
+                        <div class="col-2" *ngIf="type == 'customerwise'">
                             <label class=" fontstyles">CUSTOMER</label>
                             <ng-select class="searchdropdown" formControlName="CustomerId" [clearable]="false"
                                 name="CategoryId" id="CategoryId">
@@ -87,11 +87,11 @@
                                 </ng-container>
                             </ng-select>
                         </div>
-                        <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4" *ngIf="type == 'customerwise'">
+                        <div class="col-2" *ngIf="type == 'customerwise'">
                             <label class=" fontstyles">SALES PERSON</label>
                             <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'SalesPersonId'">
                                 <ng-option [value]="0" disabled>--SELECT SALES PERSON--</ng-option>
-                                <ng-option *ngFor="let data of salesPerson" [value]="data.Id">
+                                <ng-option *ngFor="let data of salesPerson" [value]="data.SourceName">
                                     <span class="textwrap">{{ data.SourceName | uppercase }}</span>
                                 </ng-option>
                             </ng-select>
@@ -257,7 +257,7 @@
                                     </td>
                                     <td>{{data.Branch}}</td>
                                     <td>{{data['Credit Days']}}</td>
-                                    <td class="text-right hyperTextColor">{{data['Credit Amount']}}</td>
+                                    <td class="text-right hyperTextColor">{{data['Credit Amount']  | dynamicDecimal: entityFraction}}</td>
                                     <td class="text-right hyperTextColor">{{data['Balance (Invoice Currency)'] | dynamicDecimal: entityFraction }}</td>
                                     <td>{{data.credit}}</td>
                                     <td class="text-right hyperTextColor">{{data['Net Balance (Invoice Currency)'] | dynamicDecimal: entityFraction }}</td>

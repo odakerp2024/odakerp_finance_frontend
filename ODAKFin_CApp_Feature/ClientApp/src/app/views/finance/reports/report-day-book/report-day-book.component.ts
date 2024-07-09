@@ -11,6 +11,7 @@ import { ReportDashboardService } from 'src/app/services/financeModule/report-da
 import Swal from 'sweetalert2';
 import { Workbook } from 'exceljs';
 import { saveAs } from 'file-saver';
+import { GridSort } from 'src/app/model/common';
 
 
 const today = new Date();
@@ -55,6 +56,7 @@ export class ReportDayBookComponent implements OnInit {
 
   startDate = '';
   endDate = '';
+  pagesort: any = new GridSort().sort;
 
   constructor(
     private commonDataService: CommonService,
@@ -256,6 +258,12 @@ export class ReportDayBookComponent implements OnInit {
     this.pagedItems = this.reportList.slice(this.pager.startIndex, this.pager.endIndex + 1);
   }
 
+
+  sort(property) {
+    this.pagesort(property, this.pagedItems);
+  }
+
+
   clear() {
     this.startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd");
     this.endDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd");
@@ -310,12 +318,15 @@ export class ReportDayBookComponent implements OnInit {
     worksheet.mergeCells(`F${subtitleRow.number}:G${subtitleRow.number}`);
 
     // Add "FROM Date" and "TO Date" to the worksheet
-    const dateRow = worksheet.addRow(['', '', '', '', '', `FROM ${this.startDate} - TO ${this.endDate}`]);
+    const dateRow = worksheet.addRow
+    (
+      ['', '', '', '', '', `FROM ${this.datePipe.transform(this.startDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))} - TO ${this.datePipe.transform(this.endDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`]
+    );
     dateRow.eachCell((cell) => {
       cell.alignment = { horizontal: 'center' };
     });
-    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
-    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
+    dateRow.getCell(6).numFmt = this.commonDataService.convertToLowerCaseDay(this.entityDateFormat);
+    dateRow.getCell(6).numFmt = this.commonDataService.convertToLowerCaseDay(this.entityDateFormat);
 
     // Merge cells for "FROM Date" and "TO Date"
     worksheet.mergeCells(`F${dateRow.number}:G${dateRow.number}`);
@@ -353,7 +364,7 @@ export class ReportDayBookComponent implements OnInit {
       //To Remove Time from date field data
       const date = data.Date
       const formattedDate = date.split('T')[0];
-      data.Date =  this.datePipe.transform(formattedDate, "dd-MM-yyyy");
+      data.Date =  this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
 
       const defalutvalue = 0;
       // Merge the symbol and amount into a single string with fixed decimal places
@@ -473,7 +484,6 @@ export class ReportDayBookComponent implements OnInit {
         column.width = titleLength + 2;
       }
     });
-
     // Merge cells for the title
     worksheet.mergeCells(`F${titleRow.number}:G${titleRow.number}`);
 
@@ -486,12 +496,14 @@ export class ReportDayBookComponent implements OnInit {
     worksheet.mergeCells(`F${subtitleRow.number}:G${subtitleRow.number}`);
 
     // Add "FROM Date" and "TO Date" to the worksheet
-    const dateRow = worksheet.addRow(['', '', '', '', '', `FROM ${this.startDate} - TO ${this.endDate}`]);
+    const dateRow = worksheet.addRow(
+      ['', '', '', '', '', `FROM ${this.datePipe.transform(this.startDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))} - TO ${this.datePipe.transform(this.endDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`]
+    );
     dateRow.eachCell((cell) => {
       cell.alignment = { horizontal: 'center' };
     });
-    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
-    dateRow.getCell(6).numFmt = 'dd-MM-yyyy';
+    dateRow.getCell(6).numFmt = this.commonDataService.convertToLowerCaseDay(this.entityDateFormat);
+    dateRow.getCell(6).numFmt = this.commonDataService.convertToLowerCaseDay(this.entityDateFormat);
 
     // Merge cells for "FROM Date" and "TO Date"
     worksheet.mergeCells(`F${dateRow.number}:G${dateRow.number}`);
