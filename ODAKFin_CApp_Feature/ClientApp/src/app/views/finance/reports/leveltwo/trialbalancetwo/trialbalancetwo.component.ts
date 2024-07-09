@@ -144,7 +144,7 @@ export class TrialbalancetwoComponent implements OnInit {
 
   onDateChange(event: any): void {
     this.selectedDate = this.datePipe.transform(event.value, 'yyyy-MM-dd');
-    this.BasedOnDate(this.selectedDate);
+    this.BasedOnDate(this.selectedDate , this.id);
   }
 
 
@@ -248,8 +248,8 @@ export class TrialbalancetwoComponent implements OnInit {
       });
   }
   //Filter By Date , Division , Office & TransactionType 
-  BasedOnDate(selectedDate: any) {
-    this.applyFilter('Date', selectedDate);
+  BasedOnDate(selectedDate: any, id: number) {
+    this.applyFilter('Date', selectedDate , id);
   }
 
   onDivisionChange(divisionId: any, id: number) {
@@ -269,7 +269,7 @@ export class TrialbalancetwoComponent implements OnInit {
 
 
 
-  applyFilter(filterType: string, value: any, id: number = null): void {
+  applyFilter(filterType: string, value: any, id: number ): void {
     let payload: any = {
       "AccountId": id,
       "Date": "",
@@ -391,6 +391,7 @@ export class TrialbalancetwoComponent implements OnInit {
       const formattedDate = date.split('T')[0];
       group.Trans_Date =  this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
 
+
       // Create row data
       const rowData = [
         group.Trans_Date,
@@ -399,15 +400,17 @@ export class TrialbalancetwoComponent implements OnInit {
         group.Trans_Type,
         group.Trans_Number,
         group.Trans_Ref_Details,
-        group.Debit,
-        group.Credit, 
-        group.Amount
+        group.Debit.toFixed(this.entityFraction),
+        group.Credit.toFixed(this.entityFraction), 
+        group.Amount.toFixed(this.entityFraction)
       ];
       // Add row to worksheet
       const row = worksheet.addRow(rowData);
 
       // Set text color for specific columns
-      const columnsToColor = ['Trans_Number', 'Debit', 'Credit', 'Amount'];
+      const columnsToColor = ['Trans_Number', 'Trans_Details','Debit', 'Credit', 'Amount'];
+      const columnsToleft =['Trans_Number', 'Trans_Details'];
+      const columnsToright =['Debit', 'Credit', 'Amount'];
       columnsToColor.forEach(columnName => {
         const columnIndex = Object.keys(group).indexOf(columnName);
         if (columnIndex !== -1) {
@@ -415,8 +418,26 @@ export class TrialbalancetwoComponent implements OnInit {
           cell.font = { color: { argb: '8B0000' }, bold: true }; // Red color
         }
       });
+
+
+    columnsToleft.forEach(columnName => {
+      const columnIndex = Object.keys(group).indexOf(columnName);
+      if (columnIndex !== -1) {
+        const cell = row.getCell(columnIndex + 1);
+        cell.alignment = { horizontal: 'left' };
+      }
     });
 
+
+
+  columnsToright.forEach(columnName => {
+    const columnIndex = Object.keys(group).indexOf(columnName);
+    if (columnIndex !== -1) {
+      const cell = row.getCell(columnIndex + 1);
+      cell.alignment = { horizontal: 'right' };
+    }
+  });
+})
 
     // Adjust column widths
     worksheet.columns.forEach(column => {

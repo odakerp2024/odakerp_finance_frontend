@@ -461,7 +461,6 @@ export class ReportDayBookComponent implements OnInit {
 
 
   async downloadAsCSV() {
-    debugger
     if (this.reportForExcelList.length === 0) {
       Swal.fire('No record found');
       return;
@@ -485,7 +484,6 @@ export class ReportDayBookComponent implements OnInit {
         column.width = titleLength + 2;
       }
     });
-debugger
     // Merge cells for the title
     worksheet.mergeCells(`F${titleRow.number}:G${titleRow.number}`);
 
