@@ -48,8 +48,16 @@ export class WorkflowService {
       return this.http.post<any>(`${this.APIURL}/User/CustomerBranchConfirmUpdate/`, payload);
     }
 
+    vendorConfirm(payload:any):Observable<any> {
+      return this.http.post<any>(`${this.APIURL}/User/VendorBranchConfirmUpdate/`, payload);
+    }
+
     KYCValidation(payload:any):Observable<any> {
       return this.http.post<any>(`${this.APIURL}/User/CustomerBranchKYCValidation/`, payload);
+    }
+
+    venKYCValidation(payload:any):Observable<any> {
+      return this.http.post<any>(`${this.APIURL}/User/VendorBranchKYCValidation/`, payload);
     }
 
     CreditAppConfirm(payload:any):Observable<any> {
@@ -58,6 +66,10 @@ export class WorkflowService {
 
     CustomerMailTrigger(payload:any):Observable<any> {
       return this.http.post<any>(`${this.APIURL}/EmailNotifications/CustomerNotificationEmailSend/`, payload);
+    }
+
+    VendorMailTrigger(payload:any):Observable<any> {
+      return this.http.post<any>(`${this.APIURL}/EmailNotifications/VendorNotificationEmailSend/`, payload);
     }
 
     CreditAppNewMailTrigger(payload:any):Observable<any> {
