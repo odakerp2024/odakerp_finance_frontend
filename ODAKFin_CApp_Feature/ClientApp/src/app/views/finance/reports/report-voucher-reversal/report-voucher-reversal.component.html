@@ -164,7 +164,9 @@
                                 <tr *ngFor="let data of pagedItems">
                                     <td>{{data.DateOfReversal | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}
                                     </td>
-                                    <td class="hyperTextColor">{{data.ReversalReference}}</td>
+                                    <td class="hyperTextColor" (click)="clickVoucherNumber(data.Id, data.ReversalReference)">
+                                        {{data.ReversalReference == 0 ? null : data.ReversalReference}}</td>
+                                    <!-- <td class="hyperTextColor">{{data.ReversalReference}}</td> -->
                                     <td>{{data.VoucherName}}</td>
                                     <td>{{data.AccountOrParty}}</td>
                                 </tr>

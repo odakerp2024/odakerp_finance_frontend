@@ -193,7 +193,9 @@
                                     <td>{{data.AVDate |
                                         date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}
                                     </td>
-                                    <td class="hyperTextColor">{{data.AVNumber}}</td>
+                                    <td class="hyperTextColor" (click)="clickVoucherNumber(data.Id, data.AVNumber)">
+                                        {{data.AVNumber == 0 ? null : data.AVNumber}}</td>
+                                    <!-- <td class="hyperTextColor">{{data.AVNumber}}</td> -->
                                     <td>{{data.AccountName}}</td>
                                     <td>{{data.Invoice_type}}</td>
                                     <td class=" text-right hyperTextColor">{{ data.Symbol + ' ' + (data.Amount | dynamicDecimal: entityFraction) }}</td>
