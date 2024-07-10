@@ -17,8 +17,17 @@ export class FNReportServiceService {
     return this.http.post<any>(`${this.workFlowAPI}/FNReport/GSTOutputRegister`, payload);
   }
 
+  getGSTInputRegister(payload:any):Observable<any> {
+    return this.http.post<any>(`${this.workFlowAPI}/FNReport/GSTInputRegister`, payload);
+  }
+
   async getGSTOutputRegisterExcel(FromDate: string, ToDate: string): Promise<Blob> {
     const url = `${this.workFlowAPI}/FNReport/GSTOutputRegisterExcel?FromDate=${FromDate}&&ToDate=${ToDate}`;
+    return this.http.get(url, { responseType: 'blob' }).toPromise();
+  }
+
+  async getGSTInputRegisterExcel(FromDate: string, ToDate: string): Promise<Blob> {
+    const url = `${this.workFlowAPI}/FNReport/GSTInputRegisterExcel?FromDate=${FromDate}&&ToDate=${ToDate}`;
     return this.http.get(url, { responseType: 'blob' }).toPromise();
   }
 
