@@ -61,7 +61,8 @@
 
                         <div class="col-2">
                             <label class=" maxlabel ">OFFICE</label>
-                            <ng-select class="searchdropdown-dropdown-size" formControlName="Office" name="active" id="active"
+                            <ng-select class="searchdropdown-dropdown-size" formControlName="Office" name="active"
+                                id="active"
                                 (ngModelChange)="getDivisionBasedOffice($event, reportFilter.value.Division)"
                                 [clearable]="false" name="CategoryId" id="CategoryId">
                                 <ng-option [value]="0" disabled>-- SELECT --</ng-option>
@@ -75,8 +76,8 @@
 
                         <div class="col-2">
                             <label class=" maxlabel">CUSTOMER</label>
-                            <ng-select class="searchdropdown-dropdown-size" formControlName="Customer" [clearable]="false"
-                                name="CategoryId" id="CategoryId"
+                            <ng-select class="searchdropdown-dropdown-size" formControlName="Customer"
+                                [clearable]="false" name="CategoryId" id="CategoryId"
                                 (change)="isShowBranch = true;selectedCustomerBranch($event)">
                                 <ng-option [value]="0" disabled>-- SELECT --</ng-option>
                                 <ng-container *ngFor="let customer of customerList">
@@ -87,13 +88,14 @@
                                 </ng-container>
                             </ng-select>
                         </div>
-                   
 
-                  
+
+
 
                         <div class="col-2">
                             <label class="maxlabel">CUSTOMER BRANCH</label>
-                            <ng-select class="searchdropdown-dropdown-size" [formControlName]="'Branch'" [clearable]="false">
+                            <ng-select class="searchdropdown-dropdown-size" [formControlName]="'Branch'"
+                                [clearable]="false">
                                 <ng-option [value]="0" disabled>-- SELECT --</ng-option>
                                 <ng-option *ngFor="let branch of branchList" [value]="branch.CustomerBranchID">
                                     {{ branch.CityName | uppercase }}
@@ -103,13 +105,16 @@
 
                         <div class="col-2">
                             <label class=" maxlabel">AMOUNT</label>
-                            <input formControlName="Amount" name="active" id="active"  onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
-                            min="0" numbersOnly appDynamicDecimal class="form-control field-responsive" name="Amount">
+                            <input formControlName="Amount" name="active" id="active"
+                                onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
+                                min="0" numbersOnly appDynamicDecimal class="form-control field-responsive"
+                                name="Amount">
                         </div>
 
                         <div class="col-2">
                             <label class=" maxlabel">TYPE</label>
-                            <ng-select class="searchdropdown-dropdown-size" [clearable]="false" [formControlName]="'Type'">
+                            <ng-select class="searchdropdown-dropdown-size" [clearable]="false"
+                                [formControlName]="'Type'">
                                 <ng-option [value]="0" disabled>-- SELECT --</ng-option>
                                 <ng-option *ngFor="let TypeItem of TypeList" [value]="TypeItem.TypeId">
                                     {{ TypeItem.TypeName | uppercase }}
@@ -119,7 +124,8 @@
 
                         <div class="col-2">
                             <label class=" maxlabel">PAYMENT MODE</label>
-                            <ng-select class="searchdropdown-dropdown-size" [clearable]="false" [formControlName]="'PaymentMode'">
+                            <ng-select class="searchdropdown-dropdown-size" [clearable]="false"
+                                [formControlName]="'PaymentMode'">
                                 <ng-option [value]="0" disabled>-- SELECT --</ng-option>
                                 <ng-option *ngFor="let paymentMode of paymentModeList" [value]="paymentMode.ID">
                                     {{ paymentMode.PaymentType | uppercase }}
@@ -173,7 +179,8 @@
                         <div class="col-10 justify-content-end text-center ">
                             <h6 class="title">NAVIO SHIPPING PRIVATE LIMITED</h6>
                             <h6 class="subtitle">Receipt Voucher</h6>
-                            <h6 class="subtitle">FROM {{ startDate | date: commonDataService.convertToLowerCaseDay(entityDateFormat) }} -
+                            <h6 class="subtitle">FROM {{ startDate | date:
+                                commonDataService.convertToLowerCaseDay(entityDateFormat) }} -
                                 TO {{ endDate | date:commonDataService.convertToLowerCaseDay(entityDateFormat) }}
                             </h6>
                         </div>
@@ -245,11 +252,12 @@
                                 <tr *ngFor="let data of pagedItems">
                                     <td>{{data.Date | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}
                                     </td>
-                                    <td class="hyperTextColor"><a>{{data.Receipt == '' ? '-' :
-                                            data.Receipt}}</a></td>
+                                    <td class="hyperTextColor" (click)="clickTransactionNumber(data.Id, data.Receipt)">
+                                        <a>{{data.Receipt == '' ? '-' : data.Receipt}}</a></td>
                                     <td>{{data.Type}}</td>
                                     <td class="hyperTextColor" [title]="data['CustomerName']">
-                                        {{ (data['CustomerName'] && data['CustomerName'].length > 20) ? data['CustomerName'].slice(0, 20) + '-' : data['CustomerName'] }}
+                                        {{ (data['CustomerName'] && data['CustomerName'].length > 20) ?
+                                        data['CustomerName'].slice(0, 20) + '-' : data['CustomerName'] }}
                                     </td>
                                     <td>{{data.Branch}}</td>
                                     <td>{{data.PaymentMode}}</td>
