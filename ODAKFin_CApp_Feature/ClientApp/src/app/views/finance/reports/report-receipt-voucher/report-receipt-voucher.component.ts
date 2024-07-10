@@ -87,6 +87,24 @@ export class ReportReceiptVoucherComponent implements OnInit {
     this.reportFilter.controls.Peroid.setValue('month');
   }
 
+  clickTransactionNumber(id: number, Trans_Number: string) {
+    // Check if transType or Trans_Number is empty and return immediately if either is
+    if (!Trans_Number) {
+      console.warn('Transaction type or Transaction number is empty. Staying in the same place.');
+      return;
+    }
+
+    let url: string;
+
+    url = this.router.serializeUrl(
+      this.router.createUrlTree(['/views/transactions/receipt/receipt-details', { id: id }])
+    )
+    // Open the URL in a new tab if url is defined
+    if (url) {
+      window.open(url, '_blank');
+    }
+  }
+
   onOptionChange(selectedOption: string) {
     this.selectedOption = '';
     switch (selectedOption) {
@@ -389,7 +407,7 @@ export class ReportReceiptVoucherComponent implements OnInit {
       //To Remove Time from date field data
       const date = data.Date
       const formattedDate = date.split('T')[0];
-      data.Date =  this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
+      data.Date = this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
       const defalutvalue = 0;
       // Merge the symbol and amount into a single string with fixed decimal places
       const mergedICYAmount = `${data['Amount (ICY)'] !== null ? parseFloat(data['Amount (ICY)']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
@@ -421,9 +439,9 @@ export class ReportReceiptVoucherComponent implements OnInit {
       const row = worksheet.addRow(Object.values(filteredData));
 
       // Set text color for specific columns and align them
-      const columnsToColorRight = ['Customer', 'Receipt #', 'Amount (CCY)', 'Amount (ICY)' , 'TDS Amount', 'Ex Rate Gain','Ex Rate Loss','Bank Charges'];
-      const columnsToAlignLeft = ['Customer', 'Receipt #']; 
-      const columnsToAlignRight = [ 'Amount (CCY)', 'Amount (ICY)' , 'TDS Amount', 'Ex Rate Gain','Ex Rate Loss','Bank Charges'];
+      const columnsToColorRight = ['Customer', 'Receipt #', 'Amount (CCY)', 'Amount (ICY)', 'TDS Amount', 'Ex Rate Gain', 'Ex Rate Loss', 'Bank Charges'];
+      const columnsToAlignLeft = ['Customer', 'Receipt #'];
+      const columnsToAlignRight = ['Amount (CCY)', 'Amount (ICY)', 'TDS Amount', 'Ex Rate Gain', 'Ex Rate Loss', 'Bank Charges'];
 
       columnsToColorRight.forEach(columnName => {
         const columnIndex = Object.keys(filteredData).indexOf(columnName);
@@ -491,7 +509,7 @@ export class ReportReceiptVoucherComponent implements OnInit {
 
 
 
- async downloadAsExcel() {
+  async downloadAsExcel() {
     if (this.reportForExcelList.length === 0) {
       Swal.fire('No record found');
       return;
@@ -573,8 +591,8 @@ export class ReportReceiptVoucherComponent implements OnInit {
       //To Remove Time from date field data
       const date = data.Date
       const formattedDate = date.split('T')[0];
-     
-      data.Date =  this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
+
+      data.Date = this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
 
       const defalutvalue = 0;
       // Merge the symbol and amount into a single string with fixed decimal places
@@ -601,43 +619,43 @@ export class ReportReceiptVoucherComponent implements OnInit {
       filteredData['Ex Rate Gain'] = ExRateGain;
       filteredData['Ex Rate Loss'] = ExRateLoss;
       filteredData['Bank Charges'] = BankCharges;
-    
+
 
 
       // Add the filtered data to the worksheet
       const row = worksheet.addRow(Object.values(filteredData));
 
-       // Set text color for specific columns and align them
-       const columnsToColorRight = ['Customer', 'Receipt #', 'Amount (CCY)', 'Amount (ICY)' , 'TDS Amount', 'Ex Rate Gain','Ex Rate Loss','Bank Charges'];
-       const columnsToAlignLeft = ['Customer', 'Receipt #']; 
-       const columnsToAlignRight = [ 'Amount (CCY)', 'Amount (ICY)' , 'TDS Amount', 'Ex Rate Gain','Ex Rate Loss','Bank Charges'];
- 
-       columnsToColorRight.forEach(columnName => {
-         const columnIndex = Object.keys(filteredData).indexOf(columnName);
-         if (columnIndex !== -1) {
-           const cell = row.getCell(columnIndex + 1);
-           cell.font = { color: { argb: '8B0000' }, bold: true }; // Red color
-         }
-       });
- 
-       columnsToAlignLeft.forEach(columnName => {
-         const columnIndex = Object.keys(filteredData).indexOf(columnName);
-         if (columnIndex !== -1) {
-           const cell = row.getCell(columnIndex + 1);
-           cell.alignment = { horizontal: 'left' };
-         }
-       });
- 
-       columnsToAlignRight.forEach(columnName => {
-         const columnIndex = Object.keys(filteredData).indexOf(columnName);
-         if (columnIndex !== -1) {
-           const cell = row.getCell(columnIndex + 1);
-           cell.alignment = { horizontal: 'right' };
-         }
-       });
- 
-     });
- 
+      // Set text color for specific columns and align them
+      const columnsToColorRight = ['Customer', 'Receipt #', 'Amount (CCY)', 'Amount (ICY)', 'TDS Amount', 'Ex Rate Gain', 'Ex Rate Loss', 'Bank Charges'];
+      const columnsToAlignLeft = ['Customer', 'Receipt #'];
+      const columnsToAlignRight = ['Amount (CCY)', 'Amount (ICY)', 'TDS Amount', 'Ex Rate Gain', 'Ex Rate Loss', 'Bank Charges'];
+
+      columnsToColorRight.forEach(columnName => {
+        const columnIndex = Object.keys(filteredData).indexOf(columnName);
+        if (columnIndex !== -1) {
+          const cell = row.getCell(columnIndex + 1);
+          cell.font = { color: { argb: '8B0000' }, bold: true }; // Red color
+        }
+      });
+
+      columnsToAlignLeft.forEach(columnName => {
+        const columnIndex = Object.keys(filteredData).indexOf(columnName);
+        if (columnIndex !== -1) {
+          const cell = row.getCell(columnIndex + 1);
+          cell.alignment = { horizontal: 'left' };
+        }
+      });
+
+      columnsToAlignRight.forEach(columnName => {
+        const columnIndex = Object.keys(filteredData).indexOf(columnName);
+        if (columnIndex !== -1) {
+          const cell = row.getCell(columnIndex + 1);
+          cell.alignment = { horizontal: 'right' };
+        }
+      });
+
+    });
+
 
     // Adjust column widths to fit content
     worksheet.columns.forEach((column) => {
