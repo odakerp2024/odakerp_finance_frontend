@@ -21,6 +21,10 @@ export class FNReportServiceService {
     return this.http.post<any>(`${this.workFlowAPI}/FNReport/GSTInputRegister`, payload);
   }
 
+  getTDSPayableReport(payload:any):Observable<any> {
+    return this.http.post<any>(`${this.workFlowAPI}/FNReport/TDSPayableReport`, payload);
+  }
+
   async getGSTOutputRegisterExcel(FromDate: string, ToDate: string): Promise<Blob> {
     const url = `${this.workFlowAPI}/FNReport/GSTOutputRegisterExcel?FromDate=${FromDate}&&ToDate=${ToDate}`;
     return this.http.get(url, { responseType: 'blob' }).toPromise();
@@ -28,6 +32,11 @@ export class FNReportServiceService {
 
   async getGSTInputRegisterExcel(FromDate: string, ToDate: string): Promise<Blob> {
     const url = `${this.workFlowAPI}/FNReport/GSTInputRegisterExcel?FromDate=${FromDate}&&ToDate=${ToDate}`;
+    return this.http.get(url, { responseType: 'blob' }).toPromise();
+  }
+
+  async getTDSPayableExcel(FromDate: string, ToDate: string): Promise<Blob> {
+    const url = `${this.workFlowAPI}/FNReport/TDSPayableExcel?FromDate=${FromDate}&&ToDate=${ToDate}`;
     return this.http.get(url, { responseType: 'blob' }).toPromise();
   }
 
