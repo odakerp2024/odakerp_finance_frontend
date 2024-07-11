@@ -1,12 +1,12 @@
 <div class="container-fluid">
     <form [formGroup]="reportFilter">
         <div class="card mt-0 p-3">
-
             <div class="row">
                 <div class="col-10">
                     <div class="row pb-1">
 
                         <div class="col-2">
+
                             <label class=" maxlabel">PEROID</label>
                             <ng-select class="searchdropdown-dropdown-size" formControlName="Peroid"
                                 (ngModelChange)="onOptionChange($event);" [clearable]="false">
@@ -17,38 +17,41 @@
                                     </ng-option>
                                 </ng-container>
                             </ng-select>
+                            <!-- <select class="searchdropdown-dropdown-size form-control my-select" formControlName="Peroid">
+                            <option value="''" disabled>--SELECT--</option>
+                            <option *ngFor="let peroid of PeroidList" [value]="peroid.peroidId">{{peroid.peroidName}}</option>
+                            </select> -->
                         </div>
-
                         <div class="col-2" *ngIf="selectedOption === 'custom'">
                             <label class="maxlabel mb-3">FROM</label>
                             <div class="input-group">
                                 <mat-form-field class="tillDate mat_date_picker" appearance="outline">
-                                    <input matInput (click)="StartDate.open()" readonly autocomplete="off"
-                                        (onchange)="formatchange(true)" [matDatepicker]="StartDate" id="StartDate"
-                                        [placeholder]="entityDateFormat" formControlName="StartDate">
-                                    <mat-datepicker-toggle matSuffix [for]="StartDate"></mat-datepicker-toggle>
-                                    <mat-datepicker #StartDate></mat-datepicker>
+                                    <input matInput (click)="FromDate.open()" readonly autocomplete="off"
+                                        (onchange)="formatchange(true)" [matDatepicker]="FromDate" id="FromDate"
+                                        [placeholder]="entityDateFormat" formControlName="FromDate">
+                                    <mat-datepicker-toggle matSuffix [for]="FromDate"></mat-datepicker-toggle>
+                                    <mat-datepicker #FromDate></mat-datepicker>
                                 </mat-form-field>
                             </div>
                         </div>
-
+        
                         <div class="col-2" *ngIf="selectedOption === 'custom'">
                             <label class="maxlabel mb-3">TO</label>
                             <div class="input-group">
                                 <mat-form-field class="tillDate mat_date_picker" appearance="outline">
-                                    <input matInput (click)="EndDate.open()" readonly autocomplete="off"
-                                        formControlName="EndDate" [matDatepicker]="EndDate" id="EndDate"
-                                        [min]="reportFilter.get('StartDate').value" [placeholder]="entityDateFormat"
+                                    <input matInput (click)="ToDate.open()" readonly autocomplete="off"
+                                        formControlName="ToDate" [matDatepicker]="ToDate" id="ToDate"
+                                        [min]="reportFilter.get('FromDate').value" [placeholder]="entityDateFormat"
                                         (ngModelChange)="formatchange(false)">
-                                    <mat-datepicker-toggle matSuffix [for]="EndDate"></mat-datepicker-toggle>
-                                    <mat-datepicker #EndDate></mat-datepicker>
+                                    <mat-datepicker-toggle matSuffix [for]="ToDate"></mat-datepicker-toggle>
+                                    <mat-datepicker #ToDate></mat-datepicker>
                                 </mat-form-field>
                             </div>
                         </div>
 
                         <div class="col-2">
                             <label class=" maxlabel">DIVISION</label>
-                            <ng-select class="searchdropdown-dropdown-size" formControlName="Division"
+                            <ng-select class="searchdropdown-dropdown-size" formControlName="DivisionId"
                                 (ngModelChange)="getOfficeList($event);" [clearable]="false">
                                 <ng-option [value]="0" disabled>-- SELECT --</ng-option>
                                 <ng-container *ngFor="let division of divisionList">
@@ -60,10 +63,9 @@
                         </div>
 
                         <div class="col-2">
-                            <label class=" maxlabel ">OFFICE</label>
-                            <ng-select class="searchdropdown-dropdown-size" formControlName="Office" name="active"
-                                id="active"
-                                (ngModelChange)="getDivisionBasedOffice($event, reportFilter.value.Division)"
+                            <label class=" maxlabel">OFFICE</label>
+                            <ng-select class="searchdropdown-dropdown-size" formControlName="OfficeId"
+                                (ngModelChange)="getDivisionBasedOffice($event, reportFilter.value.Division);getBankList()"
                                 [clearable]="false" name="CategoryId" id="CategoryId">
                                 <ng-option [value]="0" disabled>-- SELECT --</ng-option>
                                 <ng-container class="field-responsive" *ngFor="let office of officeList">
@@ -74,75 +76,57 @@
                             </ng-select>
                         </div>
 
+
+
                         <div class="col-2">
                             <label class=" maxlabel">CUSTOMER</label>
-                            <ng-select class="searchdropdown-dropdown-size" formControlName="Customer"
-                                [clearable]="false" name="CategoryId" id="CategoryId"
-                                (change)="isShowBranch = true;selectedCustomerBranch($event)">
+                            <ng-select class="searchdropdown-dropdown-size" formControlName="VendorId" [clearable]="false"
+                                name="CategoryId" id="CategoryId" (change)="getVendorBranch($event)">
                                 <ng-option [value]="0" disabled>-- SELECT --</ng-option>
-                                <ng-container *ngFor="let customer of customerList">
-                                    <ng-option [value]="customer.CustomerID">
-                                        <span class="textwrap">{{customer.CustomerName | uppercase}}
+                                <!-- <ng-container *ngFor="let vendor of vendorList">
+                                    <ng-option [value]="vendor.VendorID">
+                                        <span class="textwrap">{{vendor.VendorName | uppercase}}
                                         </span>
                                     </ng-option>
-                                </ng-container>
+                                </ng-container> -->
                             </ng-select>
                         </div>
-
-
-
-
                         <div class="col-2">
                             <label class="maxlabel">CUSTOMER BRANCH</label>
-                            <ng-select class="searchdropdown-dropdown-size" [formControlName]="'Branch'"
-                                [clearable]="false">
-                                <ng-option [value]="0" disabled>-- SELECT --</ng-option>
-                                <ng-option *ngFor="let branch of branchList" [value]="branch.CustomerBranchID">
-                                    {{ branch.CityName | uppercase }}
-                                </ng-option>
+                            <ng-select class="searchdropdown-dropdown-size" formControlName='BranchId'
+                                [ngClass]="!IsBranchEnable " (change)="getVendorTan($event)" [clearable]="false">
+                                <ng-option [value]="0" [disabled]="true">--SELECT--</ng-option>
+                                <!-- <ng-option *ngFor="let vendor of vendorBranch" [value]="vendor.VendorBranchID">
+                                    {{ vendor.CityName | uppercase }}
+                                </ng-option> -->
                             </ng-select>
                         </div>
 
                         <div class="col-2">
-                            <label class=" maxlabel">AMOUNT</label>
-                            <input formControlName="Amount" name="active" id="active"
-                                onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
-                                min="0" numbersOnly appDynamicDecimal class="form-control field-responsive"
-                                name="Amount">
-                        </div>
-
-                        <div class="col-2">
-                            <label class=" maxlabel">TYPE</label>
-                            <ng-select class="searchdropdown-dropdown-size" [clearable]="false"
-                                [formControlName]="'Type'">
+                            <label class=" maxlabel">GST CATEGORY</label>
+                            <ng-select class="searchdropdown-dropdown-size" [clearable]="false" [formControlName]="'Type'"
+                                name="active" id="active">
                                 <ng-option [value]="0" disabled>-- SELECT --</ng-option>
-                                <ng-option *ngFor="let TypeItem of TypeList" [value]="TypeItem.TypeId">
-                                    {{ TypeItem.TypeName | uppercase }}
-                                </ng-option>
+                                <!-- <ng-option *ngFor="let Type of TypeList" [value]="Type.BLTypeID">
+                                    {{Type.BLType | uppercase}} </ng-option> -->
                             </ng-select>
                         </div>
 
                         <div class="col-2">
-                            <label class=" maxlabel">PAYMENT MODE</label>
-                            <ng-select class="searchdropdown-dropdown-size" [clearable]="false"
-                                [formControlName]="'PaymentMode'">
+                            <label class=" maxlabel">INVOICE TYPE</label>
+                            <ng-select class="searchdropdown-dropdown-size" [clearable]="false" [formControlName]="'InvoiceType'"
+                                name="active" id="active">
                                 <ng-option [value]="0" disabled>-- SELECT --</ng-option>
-                                <ng-option *ngFor="let paymentMode of paymentModeList" [value]="paymentMode.ID">
-                                    {{ paymentMode.PaymentType | uppercase }}
-                                </ng-option>
+                                <!-- <ng-option *ngFor="let Type of VoucherTypeList" [value]="Type.TypeId">
+                                    {{Type.TypeName | uppercase}}
+                                </ng-option> -->
                             </ng-select>
                         </div>
 
-                        <div class="col-3">
-                            <label class="maxlabel">DEPOSIT TO</label>
-                            <ng-select class="searchdropdown-dropdown-size field-responsive" [clearable]="false"
-                                [formControlName]="'DepositTo'" name="active" id="active">
-                                <ng-option [value]="0" disabled>-- SELECT --</ng-option>
-                                <ng-option *ngFor="let Deposit of bankList" [value]="Deposit.BankID">
-                                    <span class="textwrap">{{Deposit.BankName | uppercase}} -
-                                        {{Deposit.AccountNo}}</span>
-                                </ng-option>
-                            </ng-select>
+                        <div class="col-2">
+                            <label class=" maxlabel">TRANSACTION TYPE</label>
+                            <input formControlName="VendorInvoice" appDynamicDecimal numbersOnly class="form-control"
+                                name="VendorInvoice">
                         </div>
                     </div>
                 </div>
@@ -150,7 +134,7 @@
                 <div class="col-2">
                     <div class="text-center">
                         <button type="button" class="btn btn-primary text-white col-auto btn-sm-custom"
-                            (click)="getReceiptReportList()">
+                            (click)="getPurchaseVoucherReportList()">
                             SEARCH
                         </button>
                     </div>
@@ -166,7 +150,6 @@
 
             </div>
 
-
         </div>
     </form>
 
@@ -178,9 +161,8 @@
                     <div class="row">
                         <div class="col-10 justify-content-end text-center ">
                             <h6 class="title">NAVIO SHIPPING PRIVATE LIMITED</h6>
-                            <h6 class="subtitle">Receipt Voucher</h6>
-                            <h6 class="subtitle">FROM {{ startDate | date:
-                                commonDataService.convertToLowerCaseDay(entityDateFormat) }} -
+                            <h6 class="subtitle">GST OUTPUT REGISTER</h6>
+                            <h6 class="subtitle">FROM {{ startDate | date: commonDataService.convertToLowerCaseDay(entityDateFormat) }} -
                                 TO {{ endDate | date:commonDataService.convertToLowerCaseDay(entityDateFormat) }}
                             </h6>
                         </div>
@@ -193,15 +175,15 @@
                                     alt="logo">
                                 <img style="cursor: pointer;" width="36px" height="36px"
                                     class="exportAs mx-1 align-baseline"
-                                    src="../../../../../assets/images/xlsx_color.png" (click)="downloadAsExcel()"
+                                    src="../../../../../assets/images/xlsx_color.png" (click)="getGSTOutputRegisterExcel()"
                                     alt="logo">
                             </div>
                         </div>
 
                     </div>
 
-                    <div class="col-12">
-                        <table class="table table-responsive table-bordered w-100 dataTable no-footer">
+                    <div class="col-12 ">
+                        <table class="table table-responsive  table-bordered w-100 dataTable no-footer">
                             <thead>
                                 <tr>
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
@@ -210,14 +192,14 @@
                                     </th>
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('Receipt')" style="width: 177.575px;">Receipt # </th>
+                                        (click)="sort('Invoice')" style="width: 177.575px;">Invoice # </th>
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('Type')" style="width: 177.575px;">Type</th>
+                                        (click)="sort('TaxType')" style="width: 177.575px;">Txn Type</th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('CustomerName')" style="width: 177.575px;">Customer </th>
+                                        (click)="sort('VendorName')" style="width: 177.575px;">Customer </th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
@@ -225,51 +207,36 @@
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('PaymentMode')" style="width: 177.575px;">Payment Mode</th>
+                                        (click)="sort('InvoiceCurrency')" style="width: 177.575px;">GST Category
+                                    </th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('BankName')" style="width: 177.575px;">Deposit To</th>
+                                        (click)="sort('AmountICY')" style="width: 177.575px;">GST #</th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('ReferenceNo')" style="width: 177.575px;">Reference no</th>
+                                        (click)="sort('AmountCCY')" style="width: 177.575px;">Invoice Amount</th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('Currency')" style="width: 177.575px;">Currency</th>
-
-                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('Amount')" style="width: 177.575px;">Amount</th>
-
-                                    <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('Invoice')" style="width: 177.575px;">Invoice #</th>
+                                        (click)="sort('Status')" style="width: 177.575px;">Tax Amount</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr *ngFor="let data of pagedItems">
-                                    <td>{{data.Date | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}
-                                    </td>
-                                    <td class="hyperTextColor" (click)="clickTransactionNumber(data.Id, data.Receipt)">
-                                        <a>{{data.Receipt == 0 ? ' ' : data.Receipt}}</a></td>
-                                    <td>{{data.Type}}</td>
-                                    <td class="hyperTextColor" [title]="data['CustomerName']">
-                                        {{ (data['CustomerName'] && data['CustomerName'].length > 20) ?
-                                        data['CustomerName'].slice(0, 20) + '-' : data['CustomerName'] }}
-                                    </td>
+                                    <td>{{data.Doc_Date}}</td>
+                                    <td class="hyperTextColor">{{data.Doic_Ref}}</td>
+                                    <td>{{data.Trans_Type}}</td>
+                                    <td class="hyperTextColor">{{data.PartyName}}</td> 
                                     <td>{{data.Branch}}</td>
-                                    <td>{{data.PaymentMode}}</td>
-                                    <td>{{data.BankName}}</td>
-                                    <td>{{data.ReferenceNo}}</td>
-                                    <td>{{data.Currency}}</td>
-                                    <td class="text-right hyperTextColor">{{ data.Symbol + ' ' + (data.Amount |
-                                        dynamicDecimal: entityFraction) }}</td>
-                                    <td>{{data.Invoice}}</td>
+                                    <td>{{data.GSTGroup}}</td>
+                                    <td class="text-right hyperTextColor">{{data.GSTGroup}}</td>
+                                    <td class="text-right hyperTextColor">{{data.InvTotal}}</td>
+                                    <td>{{data.InvTax}}</td>
                                 </tr>
 
-                                <tr *ngIf="pagedItems.length == 0">
+                                <tr *ngIf="pagedItems.length ==0">
                                     <td class="text-center" colspan="10">No records found</td>
                                 </tr>
 
@@ -278,7 +245,8 @@
                     </div>
 
                     <div class="row page mr-3" align="right">
-                        <ul *ngIf="pager && pager.totalItems > 10" class="pagination">
+                        <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10 && pager.totalItems > 10"
+                            class="pagination">
                             <li [ngClass]="{disabled:pager.currentPage === 1}">
                                 <a (click)="setPage(1)">First</a>
                             </li>

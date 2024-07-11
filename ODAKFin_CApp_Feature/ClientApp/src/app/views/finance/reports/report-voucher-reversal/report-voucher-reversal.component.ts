@@ -219,6 +219,25 @@ export class ReportVoucherReversalComponent implements OnInit  {
     }
   }
 
+  clickVoucherNumber(Id: number, ReversalReference: string) {
+
+    // Check if transType or Trans_Number is empty and return immediately if either is
+    if (!ReversalReference) {
+      console.warn('Voucher number is empty. Staying in the same place.');
+      return;
+    }
+  
+    let url: string;
+
+    url = this.router.serializeUrl(
+      this.router.createUrlTree(['/views/voucher-info/voucher-reversals-info', { id: Id, isUpdate: true }])
+    );
+    // Open the URL in a new tab if url is defined
+    if (url) {
+      window.open(url, '_blank');
+    }
+  }
+
   getVoucherReversalReportList() {
     this.startDate = this.reportFilter.controls.FromDate.value;
       this.endDate = this.reportFilter.controls.ToDate.value;

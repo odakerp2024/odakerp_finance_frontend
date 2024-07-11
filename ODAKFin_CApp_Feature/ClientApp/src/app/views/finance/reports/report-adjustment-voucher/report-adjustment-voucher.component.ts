@@ -241,7 +241,25 @@ export class ReportAdjustmentVoucherComponent implements OnInit {
     return groupedData;
   }
 
+  clickVoucherNumber(Id: number, AVNumber: string) {
+  
+    // Check if transType or Trans_Number is empty and return immediately if either is
+    if (!AVNumber) {
+      console.warn('Voucher number is empty. Staying in the same place.');
+      return;
+    }
+  
+    let url: string;
 
+    url = this.router.serializeUrl(
+      this.router.createUrlTree(['/views/Adjustment-info/Adjustment-Voucher-info', { id: Id, isUpdate: true }])
+    );
+    // Open the URL in a new tab if url is defined
+    if (url) {
+      window.open(url, '_blank');
+    }
+  }
+  
   getDivisionBasedOffice(officeId: number, divisoinId: any) {
     if (officeId && divisoinId) {
       let service = `${this.globals.APIURL}/Common/GetBankByOfficeId`;

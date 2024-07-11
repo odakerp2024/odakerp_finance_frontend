@@ -209,6 +209,12 @@ import { ReportReceiptVoucherComponent } from './views/finance/reports/report-re
 import { ReportPaymentVoucherComponent } from './views/finance/reports/report-payment-voucher/report-payment-voucher.component';
 import { ReportContraVoucherComponent } from './views/finance/reports/report-contra-voucher/report-contra-voucher.component';
 import { ReportVoucherReversalComponent } from './views/finance/reports/report-voucher-reversal/report-voucher-reversal.component';
+
+import { GSTOutputRegisterComponent } from './views/finance/reports/gstoutput-register/gstoutput-register.component';
+import { GSTInputRegisterComponent } from './views/finance/reports/gstinput-register/gstinput-register.component';
+import { TDSPayableComponent } from './views/finance/reports/tdspayable/tdspayable.component';
+import { TDSReceivableComponent } from './views/finance/reports/tdsreceivable/tdsreceivable.component';
+
 const routes: Routes = [
 
     // { path: '', redirectTo: "/login", pathMatch: 'full' },
@@ -230,6 +236,11 @@ const routes: Routes = [
         path: 'views', component: ViewsComponent,
 
         children: [
+            { path: 'finance/reports/gstoutput-register/gstoutput-register', component: GSTOutputRegisterComponent },
+            { path: 'finance/reports/gstinput-register/gstinput-register', component: GSTInputRegisterComponent },
+            { path: 'finance/reports/tdspayable/tdspayable', component: TDSPayableComponent },
+            { path: 'finance/reports/tdsreceivable/tdsreceivable', component: TDSReceivableComponent },
+
             { path: 'dashboard', component: DashboardComponent },
             { path: 'dashboard/:Token/:TokenID', component: DashboardComponent },
             { path: 'administration/administration', component: AdministrationComponent },

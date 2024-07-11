@@ -197,7 +197,7 @@
                                 <tr *ngFor="let data of pagedItems">
                                     <td>{{data.ContraVoucherDate | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}
                                     </td>
-                                    <td class="hyperTextColor">{{data.ContraVoucherNumber}}</td>
+                                    <td class="hyperTextColor" (click)="clickTransactionNumber(data.Id, data.ContraVoucherNumber)">{{data.ContraVoucherNumber == 0 ? null : data.ContraVoucherNumber}}</td>
                                     <td>{{data.FromAccount}}</td>
                                     <td>{{data.ToAccount}}</td>
                                     <td class="text-right hyperTextColor">{{ data.Symbol + ' ' + (data.Amount | dynamicDecimal: entityFraction) }}</td>

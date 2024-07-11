@@ -1356,12 +1356,13 @@ export class VendorsComponent implements OnInit {
       if (result.length > 0) {
         this.currencyList = result;
         // const entitySelectedCurrency = this.currencyList.find(c => c.Currency == this.entityCurrency);
-        const entitySelectedCurrency = this.currencyList.find(c => c.Currency === this.entityCurrency.toUpperCase());
-
+        const entitySelectedCurrency = this.currencyList.find(c => c.Currency == this.entityCurrency);
+  
         if (entitySelectedCurrency) {
           this.creditDetailsForm.controls.Currency.setValue(entitySelectedCurrency.ID);
           this.fg.controls.CurrencyId.setValue(entitySelectedCurrency.ID);
           this.fg.controls.AccountCurrencyId.setValue(entitySelectedCurrency.ID);
+
 
           this.entityCurrencyID = entitySelectedCurrency.ID
         }
@@ -1869,7 +1870,7 @@ export class VendorsComponent implements OnInit {
     // this.fg.controls.onboardStatus.setValue('2')
     // ! set the onboarding status as true in the branch tab
     if (this.Current_Tab == "tabAccounting") {
-      this.TabOfficeDetails.OnBoard = 2;
+      this.TabOfficeDetails.OnBoard = 1;
     }
 
     this.VendorModel.Vendor.Table1 = [];
