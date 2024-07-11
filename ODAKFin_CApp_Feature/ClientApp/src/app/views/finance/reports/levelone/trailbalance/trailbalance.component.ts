@@ -48,7 +48,11 @@ export class TrailbalanceComponent implements OnInit {
   entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   entityThousands = Number(this.commonDataService.getLocalStorageEntityConfigurable('CurrenecyFormat'));
   sortOrder: { [key: string]: 'asc' | 'desc' } = {};
-  
+
+  expandedParents: { [key: string]: boolean } = {};
+ 
+
+
   @ViewChild('table') table: ElementRef;
 
   constructor(public ps: PaginationService,
@@ -68,6 +72,20 @@ export class TrailbalanceComponent implements OnInit {
     this.trailbalanceList();
     // this.createAdjustment();
     this.createFilterForm();
+
+
+  }
+
+
+  toggleParent(groupName: string, parentName: string): void {
+    const key = `${groupName}-${parentName}`;
+    this.expandedParents[key] = !this.expandedParents[key];
+  }
+
+  isParentExpanded(groupName: string, parentName: string): boolean {
+    debugger
+    const key = `${groupName}-${parentName}`;
+    return this.expandedParents[key];
   }
 
   navigate(){
