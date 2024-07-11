@@ -253,7 +253,7 @@
                                     <td>{{data.Date | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}
                                     </td>
                                     <td class="hyperTextColor" (click)="clickTransactionNumber(data.Id, data.Payment)">
-                                        <a>{{data.Payment == '' ? '-' :  data.Payment}}</a></td>
+                                        <a>{{data.Payment == 0 ? '' :  data.Payment}}</a></td>
                                     <td>{{data.Type}}</td>
                                     <td class="hyperTextColor" [title]="data['VendorName']">
                                         {{ (data['VendorName'] && data['VendorName'].length > 20) ? data['VendorName'].slice(0, 20) + '-' : data['VendorName'] }}

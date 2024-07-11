@@ -237,7 +237,7 @@
                                 <tr *ngFor="let data of pagedItems">
                                     <td>{{data.Invoice_date | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}
                                     </td>
-                                    <td class="hyperTextColor">{{data.Invoice_no}}</td>
+                                    <td class="hyperTextColor">{{data.Invoice_no == 0 ? '' :  data.Invoice_no}}</td>
                                     <td>{{data.Invoice_type}}</td>
                                     <td class="hyperTextColor" [title]="data['VendorName']">
                                         {{ (data['VendorName'] && data['VendorName'].length > 20) ? data['VendorName'].slice(0, 20) + '-' : data['VendorName'] }}
