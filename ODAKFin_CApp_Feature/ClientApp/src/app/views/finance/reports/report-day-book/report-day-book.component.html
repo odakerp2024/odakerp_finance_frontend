@@ -187,7 +187,7 @@
                                     <td class="hyperTextColor"[title]="data.Trans_Details">
                                       {{ (data['Trans_Details'] && data['Trans_Details'].length > 20) ? data['Trans_Details'].slice(0, 20) + '-' : data['Trans_Details'] }}</td>
                                     <td>{{data.Trans_Type}}</td>
-                                    <td class="hyperTextColor">{{data.Trans_Number}}</td>
+                                    <td class="hyperTextColor">{{data.Trans_Number == 0 ? null : data.Trans_Number}}</td>
                                     <td>{{data.Trans_Ref_Details}}</td>
                                     <td class="text-right hyperTextColor">{{data.Debit  | dynamicDecimal: entityFraction}}</td>
                                     <td class="text-right hyperTextColor">{{data.Credit | dynamicDecimal: entityFraction}}</td>
