@@ -1351,17 +1351,19 @@ export class VendorsComponent implements OnInit {
   }
 
   getCurrency() {
+    debugger
     let service = `${this.globals.SaApi}/SystemAdminApi/GetCurrency`
     this.dataService.post(service, {}).subscribe((result: any) => {
       if (result.length > 0) {
         this.currencyList = result;
         // const entitySelectedCurrency = this.currencyList.find(c => c.Currency == this.entityCurrency);
-        const entitySelectedCurrency = this.currencyList.find(c => c.Currency === this.entityCurrency.toUpperCase());
-
+        const entitySelectedCurrency = this.currencyList.find(c => c.Currency == this.entityCurrency);
+  
         if (entitySelectedCurrency) {
           this.creditDetailsForm.controls.Currency.setValue(entitySelectedCurrency.ID);
           this.fg.controls.CurrencyId.setValue(entitySelectedCurrency.ID);
           this.fg.controls.AccountCurrencyId.setValue(entitySelectedCurrency.ID);
+
 
           this.entityCurrencyID = entitySelectedCurrency.ID
         }
