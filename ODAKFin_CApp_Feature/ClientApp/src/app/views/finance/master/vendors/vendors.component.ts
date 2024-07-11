@@ -1351,7 +1351,6 @@ export class VendorsComponent implements OnInit {
   }
 
   getCurrency() {
-    debugger
     let service = `${this.globals.SaApi}/SystemAdminApi/GetCurrency`
     this.dataService.post(service, {}).subscribe((result: any) => {
       if (result.length > 0) {
