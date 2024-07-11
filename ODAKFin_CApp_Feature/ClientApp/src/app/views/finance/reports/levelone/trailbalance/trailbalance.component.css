@@ -68,9 +68,15 @@ table.dataTable{
   width: 96px;
 }
 .child-account {
-  margin-left: 35px ;
+  margin-left: 10px ;
+}
+.child-name-indent {
+  padding-left: 40px; /* Adjust the value as needed */
 }
 
+.hidden {
+  display: none;
+}
 
 
 
@@ -135,11 +141,5 @@ table.dataTable{
   }
  
 }
-
-
-
-
-
-
 
 
