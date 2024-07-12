@@ -8,7 +8,7 @@
                         <div class="col-2">
 
                             <label class=" maxlabel">PEROID</label>
-                            <ng-select class="searchdropdown-dropdown-size" formControlName="Peroid"
+                            <ng-select class="searchdropdown-dropdown-size" formControlName="Peroid" id="periodDate"
                                 (ngModelChange)="onOptionChange($event);" [clearable]="false">
                                 <ng-option [value]="''" disabled>-- SELECT --</ng-option>
                                 <ng-container *ngFor="let peroid of PeroidList">
@@ -51,7 +51,7 @@
 
                         <div class="col-2">
                             <label class=" maxlabel">DIVISION</label>
-                            <ng-select class="searchdropdown-dropdown-size" formControlName="DivisionId"
+                            <ng-select class="searchdropdown-dropdown-size" formControlName="DivisionID"
                                 (ngModelChange)="getOfficeList($event);" [clearable]="false">
                                 <ng-option [value]="0" disabled>-- SELECT --</ng-option>
                                 <ng-container *ngFor="let division of divisionList">
@@ -64,7 +64,7 @@
 
                         <div class="col-2">
                             <label class=" maxlabel">OFFICE</label>
-                            <ng-select class="searchdropdown-dropdown-size" formControlName="OfficeId"
+                            <ng-select class="searchdropdown-dropdown-size" formControlName="OfficeID"
                                 (ngModelChange)="getDivisionBasedOffice($event, reportFilter.value.Division);getBankList()"
                                 [clearable]="false" name="CategoryId" id="CategoryId">
                                 <ng-option [value]="0" disabled>-- SELECT --</ng-option>
@@ -134,7 +134,7 @@
                 <div class="col-2">
                     <div class="text-center">
                         <button type="button" class="btn btn-primary text-white col-auto btn-sm-custom"
-                            (click)="getPurchaseVoucherReportList()">
+                            (click)="getTDSPayableReport()">
                             SEARCH
                         </button>
                     </div>
@@ -175,7 +175,7 @@
                                     alt="logo">
                                 <img style="cursor: pointer;" width="36px" height="36px"
                                     class="exportAs mx-1 align-baseline"
-                                    src="../../../../../assets/images/xlsx_color.png" (click)="getGSTOutputRegisterExcel()"
+                                    src="../../../../../assets/images/xlsx_color.png" (click)="getTDSPayableExcel()"
                                     alt="logo">
                             </div>
                         </div>

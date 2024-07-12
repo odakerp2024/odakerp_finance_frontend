@@ -36,7 +36,7 @@ export class FNReportServiceService {
   }
 
   async getTDSPayableExcel(FromDate: string, ToDate: string): Promise<Blob> {
-    const url = `${this.workFlowAPI}/FNReport/TDSPayableExcel?FromDate=${FromDate}&&ToDate=${ToDate}`;
+    const url = `${this.workFlowAPI}/FNReport/GSTInputRegisterExcel?FromDate=${FromDate}&&ToDate=${ToDate}`;
     return this.http.get(url, { responseType: 'blob' }).toPromise();
   }
 

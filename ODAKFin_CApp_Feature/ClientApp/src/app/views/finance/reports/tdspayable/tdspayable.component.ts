@@ -91,8 +91,8 @@ export class TDSPayableComponent implements OnInit {
     this.reportFilter = this.fb.group({
       FromDate: [this.startDate],
       ToDate: [this.endDate],
-      DivisionId: [0],
-      OfficeId: [0],
+      DivisionID: [0],
+      OfficeID: [0],
       VendorId: [0],
      
       BranchId: [0],
@@ -105,7 +105,7 @@ export class TDSPayableComponent implements OnInit {
     });
 
     this.onOptionChange('month');
-    await this.getGSTReportList();
+    await this.getTDSPayableReport();
     
   }
 
@@ -171,6 +171,8 @@ export class TDSPayableComponent implements OnInit {
         this.selectedOption = 'custom';
         this.startDate = this.reportFilter.controls.FromDate.value;
         this.endDate = this.reportFilter.controls.ToDate.value;
+        this.reportFilter.controls.FromDate.setValue(this.datePipe.transform(this.startDate , "yyyy-MM-dd"));
+        this.reportFilter.controls.ToDate.setValue(this.datePipe.transform(this.endDate, "yyyy-MM-dd"));
         break;
 
       default:
@@ -218,7 +220,7 @@ export class TDSPayableComponent implements OnInit {
     }
   }
 
-  getGSTReportList() {
+  getTDSPayableReport() {
     this.startDate = this.reportFilter.controls.FromDate.value;
     this.endDate = this.reportFilter.controls.ToDate.value;
 
@@ -237,7 +239,7 @@ export class TDSPayableComponent implements OnInit {
     })
   }
 
-  getGSTOutputRegisterExcel() {
+  getTDSPayableExcel() {
     this.startDate = this.reportFilter.controls.FromDate.value;
     this.endDate = this.reportFilter.controls.ToDate.value;
 
