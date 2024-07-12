@@ -487,7 +487,6 @@ export class PaymentVoucherDetailsComponent implements OnInit {
 
 
   async submit(isDelete = false) {
-    
     if (this.mappingSuccess == false) {
       Swal.fire(this.errorMessage)
       return false;
@@ -786,7 +785,7 @@ export class PaymentVoucherDetailsComponent implements OnInit {
 
     // this.paymentForm.controls['Table'].controls['VendorId'].setValue(0);
     // this.paymentForm.controls['Table'].controls['VendorBranhId'].setValue(0);
-    this.paymentForm.controls['Table'].controls['ExchangeRateId'].setValue(0);
+  //   this.paymentForm.controls['Table'].controls['ExchangeRateId'].setValue(0);
 
     let payload = {
       "paymentVoucher": {
@@ -981,7 +980,7 @@ export class PaymentVoucherDetailsComponent implements OnInit {
     this.setVendor(VendorId);
     this.paymentForm.controls.Table.controls['TDSAmount'].setValue(tableData.TDS_Amount);
     this.calculateFinalTotal();
-    this.setCurrencyId(tableData.CurrencyId);
+  //  this.setCurrencyId(tableData.CurrencyId);
     if(this.receivedCurrencyName != tableData.CurrencyName){
       await this.getBankList(false);
     }
@@ -1395,7 +1394,6 @@ export class PaymentVoucherDetailsComponent implements OnInit {
   }
 
   setCurrencyId(CurrencyID) {
-    
     const currencyDetails = this.currencyList.find((curr) => curr.ID == CurrencyID);
     this.receivedCurrencyName = currencyDetails.CurrencyCode;
     this.getSameCurrencyBank();
@@ -1403,9 +1401,9 @@ export class PaymentVoucherDetailsComponent implements OnInit {
     this.paymentForm.controls['Table'].controls['CurrencyId'].setValue(currencyDetails.ID)
 
     if (this.paymentForm.controls['Table'].value.CurrencyId != this.entityCurrencyId) {
-      this.paymentForm.controls.Table.controls['ExchangeRate'].setValue(0);
-      this.paymentForm.controls.Table.controls['ExGain'].setValue(0);
-      this.paymentForm.controls.Table.controls['ExLoss'].setValue(0);
+     this.paymentForm.controls.Table.controls['ExchangeRate'].setValue(0);
+      // this.paymentForm.controls.Table.controls['ExGain'].setValue(0);
+      // this.paymentForm.controls.Table.controls['ExLoss'].setValue(0);
       this.IsExGainEnable = true;
       this.IsExLossEnable = true;
       this.IsExchangeRateEnable = true;
