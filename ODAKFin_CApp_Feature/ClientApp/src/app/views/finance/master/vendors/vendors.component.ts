@@ -1869,10 +1869,9 @@ export class VendorsComponent implements OnInit {
 
     // this.fg.controls.onboardStatus.setValue('2')
     // ! set the onboarding status as true in the branch tab
-    if (this.Current_Tab == "tabAccounting") {
-      this.TabOfficeDetails.OnBoard = 1;
-    }
-
+    // if (this.Current_Tab == "tabAccounting") {
+    //   this.TabOfficeDetails.OnBoard = 2;
+    // }
     this.VendorModel.Vendor.Table1 = [];
     this.VendorModel.Vendor.Table1.push(this.TabOfficeDetails);
     // }
@@ -2378,6 +2377,7 @@ export class VendorsComponent implements OnInit {
             //  }
             this.VendorModel.Vendor.Table10[0] = { 'InputPage': InputPage };
             
+            debugger
             this.VendorModel.Vendor.Table1[0].BranchCode = this.fg.value.BranchCode == "" ? this.Branch_Code : this.fg.value.BranchCode;
             
             //-----
