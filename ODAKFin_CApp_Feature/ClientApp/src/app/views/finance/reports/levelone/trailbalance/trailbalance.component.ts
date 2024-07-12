@@ -726,10 +726,10 @@ async downloadExcel() {
     });
    
 
-    // // Add group total row
-    // worksheet.addRow([`${group.GroupName.toUpperCase()} Total`, groupTotalDebit, groupTotalCredit]);
-    // grandTotalDebit += groupTotalDebit;
-    // grandTotalCredit += groupTotalCredit;
+    // Add group total row
+    worksheet.addRow([`${group.GroupName.toUpperCase()} Total`, groupTotalDebit, groupTotalCredit]);
+    grandTotalDebit += groupTotalDebit;
+    grandTotalCredit += groupTotalCredit;
 
    
   });

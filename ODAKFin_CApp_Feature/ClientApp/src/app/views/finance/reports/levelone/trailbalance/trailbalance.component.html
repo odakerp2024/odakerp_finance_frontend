@@ -96,17 +96,17 @@
               <tr role="row">
                 <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
                   aria-label="Account: activate to sort column ascending" 
-                  (click)="sort(['GrandParentAccountName', 'ParentAccountName', 'ChildAccountName'])"
+                  (click)="sort(['GroupName', 'ParentAccountName', 'GrandParentAccountName', 'ChildAccountName'])"
                   style="width: 177.575px;">Account
                 </th>
                 <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
                   aria-label="Net Debit: activate to sort column ascending" 
-                  (click)="sort(['ChildNet_Balance', 'GrandParentAccountName', 'ParentAccountName', 'ChildAccountName'])"
+                  (click)="sort([ 'ChildNet_Balance', 'GroupName', 'ParentAccountName', 'GrandParentAccountName', 'ChildAccountName'])"
                   style="width: 177.575px;">Net Debit
                 </th>
                 <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
                   aria-label="Net Credit: activate to sort column ascending" 
-                  (click)="sort(['ChildNet_Balance', 'GrandParentAccountName', 'ParentAccountName', 'ChildAccountName'])"
+                  (click)="sort([ 'ChildNet_Balance', 'GroupName', 'ParentAccountName', 'GrandParentAccountName', 'ChildAccountName'])"
                   style="width: 177.575px;">Net Credit
                 </th>
               </tr>
@@ -130,7 +130,6 @@
                           [ngClass]="{ 'hidden': isParentExpanded(group.GroupName, parent.ParentAccountName) }"></i>
                         <i class="fa fa-angle-double-down child-account hyperColor"
                           [ngClass]="{ 'hidden': !isParentExpanded(group.GroupName, parent.ParentAccountName) }"></i>
-                        <!-- <strong class="child-account hyperColor">{{ parent.items[0]?.GrandParentAccountName }}</strong> - -->
                         <strong class="child-account hyperColor">{{ parent.ParentAccountName }}</strong>
                       </td>
                       <td class="text-right">
@@ -189,7 +188,7 @@
           </table>
         </div>
         
-        
+               
 
         
         
