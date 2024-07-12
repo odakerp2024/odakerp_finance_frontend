@@ -47,7 +47,13 @@ export class TrailbalanceComponent implements OnInit {
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
   entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   entityThousands = Number(this.commonDataService.getLocalStorageEntityConfigurable('CurrenecyFormat'));
-  sortOrder: { [key: string]: 'asc' | 'desc' } = {};
+  // sortOrder: { [key: string]: 'asc' | 'desc' } = {};
+
+  sortOrder: { [key: string]: 'asc' | 'desc' } = {
+    ChildAccountName: 'asc',
+    ParentAccountName: 'asc',
+    ChildNet_Balance: 'asc',
+  };
 
   expandedParents: { [key: string]: boolean } = {};
  
@@ -112,50 +118,36 @@ export class TrailbalanceComponent implements OnInit {
   }
 }
 
-sort(property: string) {
-  const sortOrder = this.sortOrder[property] === 'asc' ? 'desc' : 'asc';
-  this.sortOrder[property] = sortOrder;
 
-  // Sort the parent groups
-  this.pagedItems.sort((a, b) => {
-    const valueA = a[property];
-    const valueB = b[property];
-    if (valueA < valueB) {
-      return sortOrder === 'asc' ? -1 : 1;
-    }
-    if (valueA > valueB) {
-      return sortOrder === 'asc' ? 1 : -1;
-    }
-    return 0;
+sort(properties: string[]) {
+  properties.forEach(property => {
+    this.sortOrder[property] = this.sortOrder[property] === 'asc' ? 'desc' : 'asc';
   });
 
-  // Sort the parent items within each group
-  this.pagedItems.forEach(group => {
-    group.parentTotals.sort((a, b) => {
+  const compare = (a, b) => {
+    for (const property of properties) {
       const valueA = a[property];
       const valueB = b[property];
       if (valueA < valueB) {
-        return sortOrder === 'asc' ? -1 : 1;
+        return this.sortOrder[property] === 'asc' ? -1 : 1;
       }
       if (valueA > valueB) {
-        return sortOrder === 'asc' ? 1 : -1;
+        return this.sortOrder[property] === 'asc' ? 1 : -1;
       }
-      return 0;
-    });
+    }
+    return 0;
+  };
 
-    // Optionally, sort the items within each parent if needed
+  // Sort the parent groups
+  this.pagedItems.sort((a, b) => compare(a, b));
+
+  // Sort the parent items within each group
+  this.pagedItems.forEach(group => {
+    group.parentTotals.sort((a, b) => compare(a, b));
+
+    // Sort the items within each parent
     group.parentTotals.forEach(parent => {
-      parent.items.sort((a, b) => {
-        const valueA = a[property];
-        const valueB = b[property];
-        if (valueA < valueB) {
-          return sortOrder === 'asc' ? -1 : 1;
-        }
-        if (valueA > valueB) {
-          return sortOrder === 'asc' ? 1 : -1;
-        }
-        return 0;
-      });
+      parent.items.sort((a, b) => compare(a, b));
     });
   });
 }
@@ -653,8 +645,8 @@ async downloadExcel() {
     };
   });
 
-  // let grandTotalDebit = 0;
-  // let grandTotalCredit = 0;
+  let grandTotalDebit = 0;
+  let grandTotalCredit = 0;
 
   this.pagedItems.forEach(group => {
     // Add group header row
@@ -677,8 +669,8 @@ async downloadExcel() {
       pattern: 'solid',
       fgColor: { argb: 'f0f0f0' },
     };
-    // let groupTotalDebit = 0;
-    // let groupTotalCredit = 0;
+    let groupTotalDebit = 0;
+    let groupTotalCredit = 0;
 
     group.parentTotals.forEach(parent => {
       let parentTotalDebit = 0;
@@ -718,21 +710,41 @@ async downloadExcel() {
       });
 
 
-      // // Add parent total row
-      // worksheet.addRow([`${parent.ParentAccountName} Total`, parentTotalDebit, parentTotalCredit]);
-      // groupTotalDebit += parentTotalDebit;
-      // groupTotalCredit += parentTotalCredit;
+      // Add parent total row
+      const grouptotal = worksheet.addRow([`${parent.ParentAccountName} Total`, parentTotalDebit, parentTotalCredit]);
+      groupTotalDebit += parentTotalDebit;
+      groupTotalCredit += parentTotalCredit;
+      grouptotal.eachCell((cell, colNumber) => {
+        cell.font = { bold: true };
+        cell.alignment = { horizontal: colNumber === 1 ? 'left' : 'right' }; // Align first column to left
+        cell.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: 'f0f0f0' }, // Example color, change as needed
+        };
     });
+    });
+   
 
     // // Add group total row
     // worksheet.addRow([`${group.GroupName.toUpperCase()} Total`, groupTotalDebit, groupTotalCredit]);
     // grandTotalDebit += groupTotalDebit;
     // grandTotalCredit += groupTotalCredit;
+
+   
   });
 
-  // // Add grand total row
-  // worksheet.addRow(['Grand Total', grandTotalDebit, grandTotalCredit]);
-
+  // Add grand total row
+  const grandtotal = worksheet.addRow(['Grand Total', grandTotalDebit, grandTotalCredit]);
+  grandtotal.eachCell((cell, colNumber) => {
+          cell.font = { bold: true };
+          cell.alignment = { horizontal: colNumber === 1 ? 'left' : 'right' }; // Align first column to left
+          cell.fill = {
+              type: 'pattern',
+              pattern: 'solid',
+              fgColor: { argb: 'FFFF99' }, // Example color, change as needed
+          };
+      });
   // Adjust column widths
   worksheet.columns.forEach(column => {
     let maxLength = 0;
