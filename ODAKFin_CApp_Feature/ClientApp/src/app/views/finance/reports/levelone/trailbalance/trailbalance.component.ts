@@ -290,7 +290,7 @@ sort(properties: string[]) {
 
 createFilterForm(){
   this.filterForm = this.fb.group({
-    Date: [''],
+    Date: [this.currentDate],
     OfficeId: [''],
     DivisionId: ['']
   })
