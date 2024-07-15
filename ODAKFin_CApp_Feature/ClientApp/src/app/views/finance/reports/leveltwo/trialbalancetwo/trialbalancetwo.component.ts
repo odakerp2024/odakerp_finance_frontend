@@ -73,15 +73,15 @@ export class TrialbalancetwoComponent implements OnInit {
 
 
   clickTransactionNumber(id: number, transType: string, Trans_Number: string) {
-  
+
     // Check if transType or Trans_Number is empty and return immediately if either is
     if (!transType || !Trans_Number) {
       console.warn('Transaction type or Transaction number is empty. Staying in the same place.');
       return;
     }
-  
+
     let url: string;
-  
+
     // Use switch case on transType alone, as switch (transType && Trans_Number) does not work
     switch (transType) {
       case 'Receipt Voucher':
@@ -89,43 +89,43 @@ export class TrialbalancetwoComponent implements OnInit {
           this.router.createUrlTree(['/views/transactions/receipt/receipt-details', { id: id }])
         );
         break;
-  
+
       case 'Contra Voucher':
         url = this.router.serializeUrl(
           this.router.createUrlTree(['/views/contra-info/contra-info-view', { contraId: id }])
         );
         break;
-  
+
       case 'Payment Voucher':
         url = this.router.serializeUrl(
           this.router.createUrlTree(['/views/transactions/payment/payment-details', { voucherId: id }])
         );
         break;
-  
+
       case 'Journal Voucher':
         url = this.router.serializeUrl(
           this.router.createUrlTree(['/views/transactions/journal/journal-details', { id: id, isUpdate: true }])
         );
         break;
-  
+
       case 'Voucher Reversal':
         url = this.router.serializeUrl(
           this.router.createUrlTree(['/views/voucher-info/voucher-reversals-info', { id: id, isUpdate: true }])
         );
         break;
-  
+
       case 'Purchase Voucher':
         url = this.router.serializeUrl(
           this.router.createUrlTree(['/views/purchase-info/purchase-info-view', { id: id, isUpdate: true, isCopy: false }])
         );
         break;
-  
+
       case 'Vendor Credit':
         url = this.router.serializeUrl(
           this.router.createUrlTree(['/views/vendor-info-notes/vendor-info-view', { id: id, isUpdate: true }])
         );
         break;
-  
+
       case 'Opening Balance':
         Swal.fire('Cannot Open. This Item Belongs To Opening Balance');
         return; // Exit the function to prevent opening a new tab 
@@ -133,18 +133,18 @@ export class TrialbalancetwoComponent implements OnInit {
         console.error('Unhandled Trans_Type:', transType);
         return; // Exit the function to prevent opening a new tab
     }
-  
+
     // Open the URL in a new tab if url is defined
     if (url) {
       window.open(url, '_blank');
     }
   }
-  
-  
+
+
 
   onDateChange(event: any): void {
     this.selectedDate = this.datePipe.transform(event.value, 'yyyy-MM-dd');
-    this.BasedOnDate(this.selectedDate , this.id);
+    this.BasedOnDate(this.selectedDate, this.id);
   }
 
 
@@ -211,9 +211,15 @@ export class TrialbalancetwoComponent implements OnInit {
       if (response.data && Array.isArray(response.data.Table) && response.data.Table.length > 0) {
         this.dataList = response.data.Table;
         this.setPage(1);
+        // Calculate total debit amount
         this.totalDebitAmount = this.dataList.reduce((sum, item) => sum + (parseFloat(item.Debit) || 0), 0);
+
+        // Calculate total credit amount
         this.totalCreditAmount = this.dataList.reduce((sum, item) => sum + (parseFloat(item.Credit) || 0), 0);
-        this.totalAmount = this.dataList.reduce((sum, item) => sum + (parseFloat(item.Amount) || 0), 0);
+
+
+        // Calculate the difference between total credit and debit
+        this.totalAmount = this.totalCreditAmount - this.totalDebitAmount;
 
 
       } else {
@@ -237,19 +243,19 @@ export class TrialbalancetwoComponent implements OnInit {
       Type: [''],
       Transaction: ['']
     })
-      // Listen for changes in the transaction input field
-      this.filterForm.get('Transaction').valueChanges.subscribe(value => {
-        this.transactionSearchTerm = value;
-        if (value == '') {
-          this.applyFilter('Transaction', '' , this.id);
-        } else {
-          this.applyFilter('Transaction', value , this.id);
-        }
-      });
+    // Listen for changes in the transaction input field
+    this.filterForm.get('Transaction').valueChanges.subscribe(value => {
+      this.transactionSearchTerm = value;
+      if (value == '') {
+        this.applyFilter('Transaction', '', this.id);
+      } else {
+        this.applyFilter('Transaction', value, this.id);
+      }
+    });
   }
   //Filter By Date , Division , Office & TransactionType 
   BasedOnDate(selectedDate: any, id: number) {
-    this.applyFilter('Date', selectedDate , id);
+    this.applyFilter('Date', selectedDate, id);
   }
 
   onDivisionChange(divisionId: any, id: number) {
@@ -269,7 +275,7 @@ export class TrialbalancetwoComponent implements OnInit {
 
 
 
-  applyFilter(filterType: string, value: any, id: number ): void {
+  applyFilter(filterType: string, value: any, id: number): void {
     let payload: any = {
       "AccountId": id,
       "Date": "",
@@ -293,7 +299,7 @@ export class TrialbalancetwoComponent implements OnInit {
         payload.Type = value;
         break;
 
-        case 'Transaction':
+      case 'Transaction':
         payload.Transaction = value;
         break;
       default:
@@ -353,13 +359,13 @@ export class TrialbalancetwoComponent implements OnInit {
 
     // Add date row
     const currentDate = new Date();
-    const subtitleRow2 = worksheet.addRow(['', '', `As of ${this.datePipe.transform(currentDate,this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`, '', '', '']);
+    const subtitleRow2 = worksheet.addRow(['', '', `As of ${this.datePipe.transform(currentDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`, '', '', '']);
     subtitleRow2.getCell(3).alignment = { horizontal: 'center' };
     worksheet.mergeCells(`C${subtitleRow2.number}:D${subtitleRow2.number}`);
 
 
     // Define header row
-    const headers = ['Trans_Date', 'Trans_Account_Name', 'Trans_Details', 'Trans_Type',  'Transaction', 'Trans_Ref_Details', 'Debit', 'Credit', 'Amount'];
+    const headers = ['Trans_Date', 'Trans_Account_Name', 'Trans_Details', 'Trans_Type', 'Transaction', 'Trans_Ref_Details', 'Debit', 'Credit', 'Amount'];
     const headerRow = worksheet.addRow(headers);
 
     // Style the header row
@@ -383,13 +389,13 @@ export class TrialbalancetwoComponent implements OnInit {
         right: { style: 'thin' },
       };
     });
-    
+
 
     this.dataList.forEach(group => {
       // Format the date
       const date = group.Trans_Date;
       const formattedDate = date.split('T')[0];
-      group.Trans_Date =  this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
+      group.Trans_Date = this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
 
 
       // Create row data
@@ -401,16 +407,16 @@ export class TrialbalancetwoComponent implements OnInit {
         group.Trans_Number,
         group.Trans_Ref_Details,
         group.Debit.toFixed(this.entityFraction),
-        group.Credit.toFixed(this.entityFraction), 
+        group.Credit.toFixed(this.entityFraction),
         group.Amount.toFixed(this.entityFraction)
       ];
       // Add row to worksheet
       const row = worksheet.addRow(rowData);
 
       // Set text color for specific columns
-      const columnsToColor = ['Trans_Number', 'Trans_Details','Debit', 'Credit', 'Amount'];
-      const columnsToleft =['Trans_Number', 'Trans_Details'];
-      const columnsToright =['Debit', 'Credit', 'Amount'];
+      const columnsToColor = ['Trans_Number', 'Trans_Details', 'Debit', 'Credit', 'Amount'];
+      const columnsToleft = ['Trans_Number', 'Trans_Details'];
+      const columnsToright = ['Debit', 'Credit', 'Amount'];
       columnsToColor.forEach(columnName => {
         const columnIndex = Object.keys(group).indexOf(columnName);
         if (columnIndex !== -1) {
@@ -420,24 +426,24 @@ export class TrialbalancetwoComponent implements OnInit {
       });
 
 
-    columnsToleft.forEach(columnName => {
-      const columnIndex = Object.keys(group).indexOf(columnName);
-      if (columnIndex !== -1) {
-        const cell = row.getCell(columnIndex + 1);
-        cell.alignment = { horizontal: 'left' };
-      }
-    });
+      columnsToleft.forEach(columnName => {
+        const columnIndex = Object.keys(group).indexOf(columnName);
+        if (columnIndex !== -1) {
+          const cell = row.getCell(columnIndex + 1);
+          cell.alignment = { horizontal: 'left' };
+        }
+      });
 
 
 
-  columnsToright.forEach(columnName => {
-    const columnIndex = Object.keys(group).indexOf(columnName);
-    if (columnIndex !== -1) {
-      const cell = row.getCell(columnIndex + 1);
-      cell.alignment = { horizontal: 'right' };
-    }
-  });
-})
+      columnsToright.forEach(columnName => {
+        const columnIndex = Object.keys(group).indexOf(columnName);
+        if (columnIndex !== -1) {
+          const cell = row.getCell(columnIndex + 1);
+          cell.alignment = { horizontal: 'right' };
+        }
+      });
+    })
 
     // Adjust column widths
     worksheet.columns.forEach(column => {
