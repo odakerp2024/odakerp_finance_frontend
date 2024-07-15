@@ -642,7 +642,7 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
       StatusId: 2,
       Id: 0
     };
-    var service = `${this.globals.APIURL}/Provision/GetProvisionList`;
+    var service = `${this.globals.APIURL}/PurchaseInvoice/GetProvisionList`;
     this.dataService.post(service, payload).subscribe((result: any) => {
       this.provisionDropDownList = [];
       this.pagedItems = [];
@@ -1753,7 +1753,6 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
   }
 
   handleRoundOff() {
-    debugger
     const roundOffChecked = this.PurchaseCreateForm.get('RoundOffChecked')?.value;
     let invoiceAmount = this.PurchaseCreateForm.get('InvoiceAmount')?.value;
 
