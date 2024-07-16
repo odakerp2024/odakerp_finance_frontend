@@ -529,8 +529,8 @@
                                            <span class="textwrap">{{name.AccountName | uppercase}}</span>
                                           </ng-option>
                                         </ng-select>  -->
-                                        <ng-select class="searchdropdown" [clearable]="false" [appendTo]="'body'"    [readonly]="accountDisabled"
-                                        [items]="AccountList" bindLabel="AccountName" bindValue="ChartOfAccountsId"
+                                        <ng-select class="searchdropdown" [clearable]="false" [appendTo]="'body'"    [readonly]="!accountDisabled"
+                                        [items]="AccountList" bindLabel="AccountName" bindValue="ChartOfAccountsId" 
                                         groupBy="GroupName" formControlName="AccountId">
                                         <ng-template ng-optgroup let-item="item"  >
                                             {{item.GroupName | uppercase}}
@@ -585,7 +585,7 @@
                                          </ng-select>                        
                                     </td>
                                     <td>
-                                        <input type="checkbox" formControlName="IsRCM" >
+                                        <input type="checkbox" [ngClass]=" !IsRCM ? 'disable-input' : ''" formControlName="IsRCM" >
                                     </td>
                                                                         
                                     <td> </td>
