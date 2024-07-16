@@ -102,6 +102,7 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
   canSelectOrderType: boolean = false;                          
   accountDisabled: boolean = false;
   isTdsmode: boolean = false;
+  IsOrderTypeItem:number
 
   constructor(
     private fb: FormBuilder,
@@ -375,9 +376,9 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
     // });
     this.PurchaseCreateForm.get('RCMApplicable').valueChanges.subscribe(value => {
       if (value === '1') { // If RCM is selected as "YES"
-        this.PurchaseCreateForm.get('IsRCM').enable(); // Enable the GSTGroup field
+        this.IsRCM = true// Enable the GSTGroup field
       } else { // If RCM is selected as "NO"
-        this.PurchaseCreateForm.get('IsRCM').disable(); // Disable the GSTGroup field
+        this.IsRCM = false// Disable the GSTGroup field
       }
     });
   }
@@ -482,10 +483,12 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
        await this.getPurchaseList(this.PurchaseInvoiceId , info.VendorId);
       //  to get Purchase or Internal order number
         // if( this.orderType == 'Purchase'){
-        //   this.purchaseOrderChangeEvent('Purchase', info.PurchaseOrder);
+        //   // this.purchaseOrderChangeEvent('Purchase', info.PurchaseOrder);
+        //   this.IsOrderTypeItem = info.IsOrderTypeItem
         // }
         // else{
-        //   this.purchaseOrderChangeEvent('Internal', info.InternalOrder);
+        //   // this.purchaseOrderChangeEvent('Internal', info.InternalOrder);
+        //   this.IsOrderTypeItem = info.IsOrderTypeItem
         // }
 
         this.getOfficeList(info.Division);
@@ -1066,7 +1069,12 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
       });
     
     }
-    this.accountDisabled = this.PurchaseCreateForm.get('IsOrderTypeItem').value == 1;
+    if (this.PurchaseCreateForm.get('IsOrderTypeItem').value == true) {
+      this.accountDisabled = true;
+    } else {
+      this.PurchaseCreateForm.get('IsOrderTypeItem').setValue(0);
+      this.accountDisabled = false;
+    }
     this.resetTable();
     this.getFinalCalculation();
  
@@ -1119,7 +1127,8 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
       IsOrderTypeItem: info.IsOrderTypeItem
     });
     this.isEditMode = !this.isEditMode;
-    if (this.PurchaseCreateForm.get('IsOrderTypeItem').value == 1) {
+    
+    if (this.PurchaseCreateForm.get('IsOrderTypeItem').value == true) {
       this.accountDisabled = true;
     } else {
       this.PurchaseCreateForm.get('IsOrderTypeItem').setValue(0);
@@ -1456,7 +1465,7 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
       element.TDSValue = element.TDSValue === '-' ? 0 : element.TDSValue;
 
       // console.log(element.TDSValue , 'tdsvalue')
-      delete element.IsOrderTypeItem;
+      //delete element.IsOrderTypeItem;
     });
     this.payload = {
       "PurchaseInvoice": {
