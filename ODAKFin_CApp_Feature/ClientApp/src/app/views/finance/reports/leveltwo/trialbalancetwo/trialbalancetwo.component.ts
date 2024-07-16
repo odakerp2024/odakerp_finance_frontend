@@ -32,6 +32,7 @@ export class TrialbalancetwoComponent implements OnInit {
   divisionList: any = [];
   balanceList: any = [];
   currentDate: Date = new Date();
+  fromMaxDate = this.currentDate;
   data: any[];
   TemplateUploadURL = this.globals.TemplateUploadURL;
   totalDebitAmount: any;
@@ -219,7 +220,7 @@ export class TrialbalancetwoComponent implements OnInit {
 
 
         // Calculate the difference between total credit and debit
-        this.totalAmount = this.totalCreditAmount - this.totalDebitAmount;
+        this.totalAmount = this.totalDebitAmount - this.totalCreditAmount ;
 
 
       } else {
@@ -237,7 +238,7 @@ export class TrialbalancetwoComponent implements OnInit {
 
   createBalanceFilterForm() {
     this.filterForm = this.fb.group({
-      Date: [''],
+      Date: [this.currentDate],
       OfficeId: [''],
       DivisionId: [''],
       Type: [''],
