@@ -252,7 +252,7 @@
                                 <tr *ngFor="let data of pagedItems">
                                     <td>{{data.Date | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}
                                     </td>
-                                    <td class="hyperTextColor" (click)="clickTransactionNumber(data.Id, data.Payment)">
+                                    <td class="hyperColor" (click)="clickTransactionNumber(data.Id, data.Payment)">
                                         <a>{{data.Payment == 0 ? '' :  data.Payment}}</a></td>
                                     <td>{{data.Type}}</td>
                                     <td class="hyperTextColor" [title]="data['VendorName']">

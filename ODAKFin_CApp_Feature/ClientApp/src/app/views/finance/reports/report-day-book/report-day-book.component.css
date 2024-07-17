@@ -17,6 +17,7 @@ tr:hover {
   color: #0366d6;
   cursor: pointer;
 }
+
 .hyperColor:hover{
   text-decoration: underline;
 }
