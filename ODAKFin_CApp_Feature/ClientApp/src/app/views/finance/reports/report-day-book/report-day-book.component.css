@@ -4,13 +4,22 @@
 }
 
 tr:hover {
-    background-color: aliceblue;
-    text-decoration: underline;
-    text-decoration-color: rgb(0, 162, 255)
+  background-color: aliceblue;
+  text-decoration-color: rgb(0, 162, 255)
 }
 
 .hyperTextColor {
-    color: #0366d6;
+  color: #0366d6;
+  
+}
+
+.hyperColor {
+  color: #0366d6;
+  cursor: pointer;
+}
+
+.hyperColor:hover{
+  text-decoration: underline;
 }
 
 .example-form-field {

@@ -663,7 +663,6 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
   // }
 
   fileSelected(event) {
-    debugger
     if (event) {
       this.selectedFile = event.target.files[0];
       const filedata = new FormData();
@@ -693,7 +692,6 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
 
    /*File Download*/
 download = (fileUrl) => {
-  debugger
   this.fileUrl = "UploadFolder\\Attachments\\" + fileUrl;
   this.commonDataService.download(fileUrl).subscribe((event) => {
 
@@ -710,7 +708,6 @@ download = (fileUrl) => {
 }
 
 private downloadFile = (data: HttpResponse<Blob>) => {
-  debugger
   const downloadedFile = new Blob([data.body], { type: data.body.type });
   const a = document.createElement('a');
   a.setAttribute('style', 'display:none;');
@@ -1476,7 +1473,7 @@ private downloadFile = (data: HttpResponse<Blob>) => {
   setInitalPaymentAmount(checkedIndex) {
     
     const controlAtIndex = this.myArray.at(checkedIndex);
-    controlAtIndex.value.IsSelect = controlAtIndex.value.IsSelect == false ? true : false;
+    controlAtIndex.value.IsSelect = controlAtIndex.value.IsSelect == true ? true : false;
     if (!controlAtIndex.value.Payment && controlAtIndex.value.IsSelect) {
       controlAtIndex.value.Payment = controlAtIndex.value.DueAmount;
       this.getDueAmount(checkedIndex, 'payment');

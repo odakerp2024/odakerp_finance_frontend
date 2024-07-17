@@ -102,6 +102,8 @@ export class PurchaseInvoiceAdminInfoComponent implements OnInit {
   canSelectOrderType: boolean = false;                          
   accountDisabled: boolean = false;
   isTdsmode: boolean = false;
+  IsOrderTypeItem:number
+  PurchaseInvoiceForm: any;
 
   constructor(
     private fb: FormBuilder,
@@ -375,9 +377,9 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
     // });
     this.PurchaseCreateForm.get('RCMApplicable').valueChanges.subscribe(value => {
       if (value === '1') { // If RCM is selected as "YES"
-        this.PurchaseCreateForm.get('IsRCM').enable(); // Enable the GSTGroup field
+        this.IsRCM = true// Enable the GSTGroup field
       } else { // If RCM is selected as "NO"
-        this.PurchaseCreateForm.get('IsRCM').disable(); // Disable the GSTGroup field
+        this.IsRCM = false// Disable the GSTGroup field
       }
     });
   }
@@ -473,6 +475,8 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
           BankId: info.BankId,
           InvoiceExrate: info.InvoiceExRate ? info.InvoiceExRate : 1,
           InvoiceExrateICY: info.InvoiceExrateICY ? info.InvoiceExrateICY.toFixed(this.entityFraction) : 1,
+          IsOrderTypeItem: info.IsOrderTypeItem
+
         });
         console.log('After Patching', this.PurchaseCreateForm.value)
         if (info.PurchaseOrder) this.orderType = 'Purchase';
@@ -482,10 +486,12 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
        await this.getPurchaseList(this.PurchaseInvoiceId , info.VendorId);
       //  to get Purchase or Internal order number
         // if( this.orderType == 'Purchase'){
-        //   this.purchaseOrderChangeEvent('Purchase', info.PurchaseOrder);
+        //    this.purchaseOrderChangeEvent('Purchase', info.PurchaseOrder);
+          
         // }
         // else{
-        //   this.purchaseOrderChangeEvent('Internal', info.InternalOrder);
+        //    this.purchaseOrderChangeEvent('Internal', info.InternalOrder);
+          
         // }
 
         this.getOfficeList(info.Division);
@@ -642,7 +648,7 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
       StatusId: 2,
       Id: 0
     };
-    var service = `${this.globals.APIURL}/Provision/GetProvisionList`;
+    var service = `${this.globals.APIURL}/PurchaseInvoice/GetProvisionList`;
     this.dataService.post(service, payload).subscribe((result: any) => {
       this.provisionDropDownList = [];
       this.pagedItems = [];
@@ -796,7 +802,6 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
 
 
   getTDSSection() {
-
     const payLoad = { TDSRatesId: 0, TaxName: '', RatePercentage: '', sectionID: 0, SectionID: 0, SectionName: '', Date: '', IsActive: true, Status: '', Remarks: '', TDSRate: 0 };
     this.VendorService.getVendorSectionRate(payLoad).subscribe(data => {
       this.tdsSectionData = data['data']['Table'];
@@ -804,10 +809,10 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
   }
 
   getTdsSection(SectionName) {
-
     const tdsRate: any = this.tdsSectionData.find((item) => item.SectionID == SectionName);
     this.PurchaseCreateForm.controls.TDSRate.setValue(tdsRate.Rate)
   }
+
   getVendorDetailsInfo(event) {
     return new Promise((resolve, reject) => {
       let vendorInfo = this.vendorBranch.find(x => x.VendorBranchID == event);
@@ -837,6 +842,8 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
               this.PurchaseCreateForm.controls['LDCRate'].setValue(this.vendorLDC);
               // this.PurchaseCreateForm.controls['TDSRate'].setValue(this.vendorTDS);
             }
+
+            this.checkAndUpdateTDSApplicability();
             const TDSApplicability = this.PurchaseCreateForm.controls['TDSApplicability'].value
             if(TDSApplicability == 3){
             this.isTdsmode = true;
@@ -850,6 +857,46 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
     })
 
   }
+
+  checkAndUpdateTDSApplicability() {
+    try {
+      if (this.PurchaseTableList.length > 0) {
+        const tdsApplicability = this.PurchaseCreateForm.get('TDSApplicability')?.value;
+        const tdsSectionID = this.PurchaseCreateForm.get('TDSSection')?.value;
+        const tds = this.tdsSectionData.find(item => item.SectionID == tdsSectionID);
+        const tdsName = !tds ? '-' : tds.SectionName;
+        const tdsValue = !tds ? '-' : tds.Rate;
+  
+        this.PurchaseTableList.forEach(item => {
+          // Check if the name already exists
+            if (tdsApplicability === 1) {
+              item.TDSName = tdsName;
+              item.TDSValue = tdsValue;
+              item.TDSMaster = tdsSectionID;
+            } else if (tdsApplicability === 3) {
+              this.isTdsmode = true;
+            } else {
+              item.TDSName = '-';
+              item.TDSValue = 0;
+              item.TDSMaster = 0;
+            }
+        });
+  
+        // Update PurchaseCreateForm's TDSMaster, TDSName, TDSValue for consistency
+        if (tds) {
+          this.PurchaseCreateForm.patchValue({
+            TDSMaster: tdsSectionID,
+            TDSName: tdsName,
+            TDSValue: tdsValue
+          });
+        }
+      }
+      this.getFinalCalculation();
+    } catch (error) {
+      console.error('Error in checkAndUpdateTDSApplicability method:', error);
+    }
+  }
+  
 
   OnClickDeleteValueFile(index: number) {
     this.FileList.splice(index, 1);
@@ -1031,9 +1078,14 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
         IGST: 0,
         CGST: 0,
         SGST: 0,
-        IsOrderTypeItem: info.IsOrderTypeItem
+        IsOrderTypeItem: info.IsOrderTypeItem 
       };
-
+      if (this.PurchaseCreateForm.get('IsOrderTypeItem').value == 1) {
+        this.accountDisabled = true;
+      } else {
+        this.PurchaseCreateForm.get('IsOrderTypeItem').value;
+        this.accountDisabled = false;
+      }
       this.PurchaseTableList[this.editSelectedIdex] = editValue;
       this.isEditMode = !this.isEditMode;
 
@@ -1066,11 +1118,20 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
       });
     
     }
-    this.accountDisabled = this.PurchaseCreateForm.get('IsOrderTypeItem').value == 1;
+    if (this.PurchaseCreateForm.get('IsOrderTypeItem').value == 1) {
+      this.accountDisabled = true;
+    } else {
+      this.PurchaseCreateForm.get('IsOrderTypeItem').setValue(0);
+      this.accountDisabled = false;
+    }
+   console.log(this.PurchaseCreateForm.get('IsOrderTypeItem').value,'orderitem')
     this.resetTable();
     this.getFinalCalculation();
  
   }
+
+
+  
 
   setPage(page: number) {
     if (page < 1 || page > this.pager.totalPages) { return; }
@@ -1116,9 +1177,10 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
       TDSMaster: info.TDSMaster,
       IsRCM: info.IsRCM,
       GSTGroup: info.GSTGroup,
-      IsOrderTypeItem: info.IsOrderTypeItem
+      IsOrderTypeItem: info.IsOrderTypeItem == true ? 1: 0
     });
     this.isEditMode = !this.isEditMode;
+    
     if (this.PurchaseCreateForm.get('IsOrderTypeItem').value == 1) {
       this.accountDisabled = true;
     } else {
@@ -1401,7 +1463,6 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
   }
 
   createPayload(status) {
-
     // if(this.vendorBranch.length == 1)
     // {
     //   this.PurchaseCreateForm.value.VendorBranch = this.newOne;
@@ -1456,7 +1517,7 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
       element.TDSValue = element.TDSValue === '-' ? 0 : element.TDSValue;
 
       // console.log(element.TDSValue , 'tdsvalue')
-      delete element.IsOrderTypeItem;
+      //delete element.IsOrderTypeItem;
     });
     this.payload = {
       "PurchaseInvoice": {
@@ -1753,7 +1814,6 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
   }
 
   handleRoundOff() {
-    debugger
     const roundOffChecked = this.PurchaseCreateForm.get('RoundOffChecked')?.value;
     let invoiceAmount = this.PurchaseCreateForm.get('InvoiceAmount')?.value;
 
@@ -1833,20 +1893,118 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
     }
   }
 
-  purchaseOrderChangeEvent(type: string, id = 0) {
-    this.PurchaseTableList = this.PurchaseTableList.filter(e => (e.IsOrderTypeItem == 0 || e.IsOrderTypeItem == undefined))
+  // purchaseOrderChangeEvent(type: string, id = 0) {
+  //   this.PurchaseTableList = this.PurchaseTableList.filter(e => (e.IsOrderTypeItem == 0 || e.IsOrderTypeItem == undefined))
 
-    if (type == 'Purchase') {
+  //   if (type == 'Purchase') {
+  //     var service = `${this.globals.APIURL}/PurchaseOrder/GetPurchaseOrderById`;
+  //     this.dataService.post(service, { Id: id }).subscribe(async (result: any) => {
+  //       if (result.message == 'Success' && result.data.Table1.length > 0) {
+  //         result.data.Table1.forEach(info => {
+
+  //           // let account = this.accountName.find(x => x.ChartOfAccountsId == !info.AccountId ? 0 : info.AccountId);
+  //           // let currency = this.currencyList.find(x => x.ID == !info.CurrencyId ? 0 : info.CurrencyId);
+  //           let account = this.accountName.find(x => x.ChartOfAccountsId == info.AccountId);
+  //           let currency = this.currencyList.find(x => x.ID == info.CurrencyId);
+
+  //           let value = {
+  //             Id: 0,
+  //             PurchaseInvoiceId: this.PurchaseInvoiceId,
+  //             AccountId: info.AccountId,
+  //             Rate: info.Rate,
+  //             Qty: info.Quantity,
+  //             Amount: info.Rate * info.Quantity,
+  //             CurrencyId: info.CurrencyId,
+  //             ExRate: info.ExRate ? info.ExRate : 1,
+  //             Amountccr: (info.ExRate ? info.ExRate : 1) * (info.Rate * info.Quantity),
+  //             TDSMaster: 0,
+  //             TDSName: '-',
+  //             TDSValue: 0,
+  //             IsRCM: this.PurchaseCreateForm.controls['IsRCM'].value,
+  //             GSTGroup: info.GSTGroup ? info.GSTGroup : 0,
+  //             CurrencyName: !currency ? '-' : currency.CurrencyCode,
+  //             AccountName: !account ? '-' : account.AccountName,
+  //             IGST: 0,
+  //             CGST: 0,
+  //             SGST: 0,
+  //             IsOrderTypeItem: 1
+  //           };
+
+  //           this.PurchaseTableList.push(value);
+  //         })
+
+  //       }
+  //     }, error => {
+  //       console.log("error--->", error);
+  //     });
+
+  //   } else if (type == 'Internal') {
+  //     var service = `${this.globals.APIURL}/InternalOrder/GetInternalOrderById`;
+  //     this.dataService.post(service, { Id: id }).subscribe(async (result: any) => {
+  //       if (result.message == 'Success' && result.data.Table1.length > 0) {
+  //         result.data.Table1.forEach(info => {
+
+  //           //  let account = this.accountName.find(x => x.ChartOfAccountsId == !info.AccountId ? 0 : info.AccountId);
+  //           // let currency = this.currencyList.find(x => x.ID == !info.CurrencyId ? 0 : info.CurrencyId);
+
+  //           let account = this.accountName.find(x => x.ChartOfAccountsId == info.AccountId);
+  //           let currency = this.currencyList.find(x => x.ID == info.CurrencyId);
+
+  //           let value = {
+  //             Id: 0,
+  //             PurchaseInvoiceId: this.PurchaseInvoiceId,
+  //             AccountId: info.AccountId,
+  //             Rate: info.Rate,
+  //             Qty: info.Quantity,
+  //             Amount: info.Rate * info.Quantity,
+  //             CurrencyId: info.CurrencyId,
+  //             ExRate: info.ExRate ? info.ExRate : 1,
+  //             Amountccr: (info.ExRate ? info.ExRate : 1) * (info.Rate * info.Quantity),
+  //             TDSMaster: 0,
+  //             TDSName: '-',
+  //             TDSValue: 0,
+  //             IsRCM: this.PurchaseCreateForm.controls['IsRCM'].value,
+  //             GSTGroup: info.GSTGroup ? info.GSTGroup : 0,
+  //             CurrencyName: !currency ? '-' : currency.CurrencyCode,
+  //             AccountName: !account ? '-' : account.AccountName,
+  //             IGST: 0,
+  //             CGST: 0,
+  //             SGST: 0,
+  //             IsOrderTypeItem: 1
+  //           };
+
+  //           this.PurchaseTableList.push(value);
+  //         })
+
+  //       }
+  //     }, error => {
+  //       console.log("error--->", error);
+  //     });
+  //   }
+  // }
+  purchaseOrderChangeEvent(type: string, id = 0) {
+    this.PurchaseTableList = this.PurchaseTableList.filter(e => e.IsOrderTypeItem === 0 || e.IsOrderTypeItem === undefined);
+    const tdsApplicability = this.PurchaseCreateForm.get('TDSApplicability')?.value; // Assuming TdsApplicability is a form control
+    const tdsSectionID = this.PurchaseCreateForm.get('TDSSection')?.value; 
+    const tdsmaster = this.PurchaseCreateForm.get('TDSMaster')?.value; 
+
+    let tdsName = '-';
+    let tdsValue = 0;
+    if (tdsApplicability === 1) {
+      const tds = this.tdsSectionData.find(item => item.SectionID == tdsSectionID);
+      tdsName = !tds ? '-' : tds.SectionName;
+      tdsValue = !tds ? '-' : tds.Rate;
+    }
+    if (type === 'Purchase') {
       var service = `${this.globals.APIURL}/PurchaseOrder/GetPurchaseOrderById`;
       this.dataService.post(service, { Id: id }).subscribe(async (result: any) => {
-        if (result.message == 'Success' && result.data.Table1.length > 0) {
+        if (result.message === 'Success' && result.data.Table1.length > 0) {
           result.data.Table1.forEach(info => {
-
-            // let account = this.accountName.find(x => x.ChartOfAccountsId == !info.AccountId ? 0 : info.AccountId);
-            // let currency = this.currencyList.find(x => x.ID == !info.CurrencyId ? 0 : info.CurrencyId);
-            let account = this.accountName.find(x => x.ChartOfAccountsId == info.AccountId);
-            let currency = this.currencyList.find(x => x.ID == info.CurrencyId);
-
+            let account = this.accountName.find(x => x.ChartOfAccountsId === info.AccountId);
+            let currency = this.currencyList.find(x => x.ID === info.CurrencyId);
+  
+         
+  
             let value = {
               Id: 0,
               PurchaseInvoiceId: this.PurchaseInvoiceId,
@@ -1857,39 +2015,33 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
               CurrencyId: info.CurrencyId,
               ExRate: info.ExRate ? info.ExRate : 1,
               Amountccr: (info.ExRate ? info.ExRate : 1) * (info.Rate * info.Quantity),
-              TDSMaster: 0,
-              TDSName: '-',
-              TDSValue: 0,
+              TDSMaster: tdsmaster,
+              TDSName: tdsName,
+              TDSValue: tdsValue,
               IsRCM: this.PurchaseCreateForm.controls['IsRCM'].value,
               GSTGroup: info.GSTGroup ? info.GSTGroup : 0,
-              CurrencyName: !currency ? '-' : currency.CurrencyCode,
-              AccountName: !account ? '-' : account.AccountName,
+              CurrencyName: currency ? currency.CurrencyCode : '-',
+              AccountName: account ? account.AccountName : '-',
               IGST: 0,
               CGST: 0,
               SGST: 0,
               IsOrderTypeItem: 1
             };
-
+  
             this.PurchaseTableList.push(value);
-          })
-
+          });
         }
       }, error => {
         console.log("error--->", error);
       });
-
-    } else if (type == 'Internal') {
+    } else if (type === 'Internal') {
       var service = `${this.globals.APIURL}/InternalOrder/GetInternalOrderById`;
       this.dataService.post(service, { Id: id }).subscribe(async (result: any) => {
-        if (result.message == 'Success' && result.data.Table1.length > 0) {
+        if (result.message === 'Success' && result.data.Table1.length > 0) {
           result.data.Table1.forEach(info => {
-
-            //  let account = this.accountName.find(x => x.ChartOfAccountsId == !info.AccountId ? 0 : info.AccountId);
-            // let currency = this.currencyList.find(x => x.ID == !info.CurrencyId ? 0 : info.CurrencyId);
-
-            let account = this.accountName.find(x => x.ChartOfAccountsId == info.AccountId);
-            let currency = this.currencyList.find(x => x.ID == info.CurrencyId);
-
+            let account = this.accountName.find(x => x.ChartOfAccountsId === info.AccountId);
+            let currency = this.currencyList.find(x => x.ID === info.CurrencyId);
+  
             let value = {
               Id: 0,
               PurchaseInvoiceId: this.PurchaseInvoiceId,
@@ -1900,28 +2052,30 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
               CurrencyId: info.CurrencyId,
               ExRate: info.ExRate ? info.ExRate : 1,
               Amountccr: (info.ExRate ? info.ExRate : 1) * (info.Rate * info.Quantity),
-              TDSMaster: 0,
-              TDSName: '-',
-              TDSValue: 0,
+              TDSMaster: tdsmaster,
+              TDSName: tdsName,
+              TDSValue: tdsValue,
               IsRCM: this.PurchaseCreateForm.controls['IsRCM'].value,
               GSTGroup: info.GSTGroup ? info.GSTGroup : 0,
-              CurrencyName: !currency ? '-' : currency.CurrencyCode,
-              AccountName: !account ? '-' : account.AccountName,
+              CurrencyName: currency ? currency.CurrencyCode : '-',
+              AccountName: account ? account.AccountName : '-',
               IGST: 0,
               CGST: 0,
               SGST: 0,
               IsOrderTypeItem: 1
             };
-
+  
             this.PurchaseTableList.push(value);
-          })
-
+          });
         }
       }, error => {
         console.log("error--->", error);
       });
     }
+    this.getFinalCalculation();
   }
+  
+  
 
   onTDSDateCheck() {
     if (this.PurchaseCreateForm.value['VIDate'] !== '') {

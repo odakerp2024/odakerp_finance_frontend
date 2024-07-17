@@ -17,7 +17,7 @@
     <div class="col-md-2">
         <label class="str mb-2">Date</label>
         <mat-form-field class="tillDate mat_date_picker" appearance="outline">
-            <input matInput formControlName="Date" (dateChange)="onDateChange($event)" readonly autocomplete="off" [matDatepicker]="ToDate" id="ToDate" style="padding:3px;">
+            <input matInput formControlName="Date" (dateChange)="onDateChange($event)" readonly autocomplete="off" [max]="fromMaxDate" [matDatepicker]="ToDate" id="ToDate" style="padding:3px;">
             <mat-datepicker-toggle matSuffix [for]="ToDate" class="center-icon"></mat-datepicker-toggle>
             <mat-datepicker #ToDate></mat-datepicker>
         </mat-form-field>
@@ -121,7 +121,7 @@
 
 
 
-            <div class="col-10" style="margin-left: auto; margin-right: auto;">
+            <div class="col-10" id="table-container" style="margin-left: auto; margin-right: auto;">
                 <table id="datatable-buttons" #table class="table table-responsive table-bordered w-100 dataTable no-footer" role="grid"
                     aria-describedby="datatable-buttons_info">
                     <thead>
@@ -163,7 +163,7 @@
                                 {{ (balance.Trans_Details && balance.Trans_Details.length > 20) ? balance.Trans_Details.slice(0, 20) + '-' : balance.Trans_Details }}
                             </td>
                             <td>{{ balance.Trans_Type }}</td>
-                            <td class="hyperColor" (click)="clickTransactionNumber(balance.ID, balance.Trans_Type, balance.Trans_Number)">{{balance.Trans_Number == 0 ? null : balance.Trans_Number}}</td>
+                            <td class="hyperColor" (click)="clickTransactionNumber(balance.ID, balance.Trans_Type, balance.Trans_Number, balance.RedirectUrl)">{{balance.Trans_Number == 0 ? null : balance.Trans_Number}}</td>
                             <td>{{balance.Trans_Ref_Details == 0 ? null : balance.Trans_Ref_Details}}</td>
                             <td class="text-right">{{balance.Debit  | dynamicentityDecimal}}</td>
                             <td class="text-right">{{balance.Credit  | dynamicentityDecimal}}</td>

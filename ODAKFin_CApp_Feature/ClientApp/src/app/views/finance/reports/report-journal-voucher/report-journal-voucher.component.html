@@ -210,7 +210,7 @@
                                     <td>{{data.JournalDate |
                                         date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}
                                     </td>
-                                    <td class="hyperTextColor" (click)="clickVoucherNumber(data.Id, data.JournalNumber)">
+                                    <td class="hyperColor" (click)="clickVoucherNumber(data.Id, data.JournalNumber)">
                                         {{data.JournalNumber == 0 ? null : data.JournalNumber}}</td>
                                    
                                     <!-- <td class="hyperTextColor">{{data.JournalNumber}}</td> -->
