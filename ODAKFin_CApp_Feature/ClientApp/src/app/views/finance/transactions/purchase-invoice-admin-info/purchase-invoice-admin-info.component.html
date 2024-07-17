@@ -529,7 +529,7 @@
                                            <span class="textwrap">{{name.AccountName | uppercase}}</span>
                                           </ng-option>
                                         </ng-select>  -->
-                                        <ng-select class="searchdropdown" [clearable]="false" [appendTo]="'body'"    [readonly]="!accountDisabled"
+                                        <ng-select class="searchdropdown" [clearable]="false" [appendTo]="'body'" [readonly]=" accountDisabled ? 'disable-input' : ''" 
                                         [items]="AccountList" bindLabel="AccountName" bindValue="ChartOfAccountsId" 
                                         groupBy="GroupName" formControlName="AccountId">
                                         <ng-template ng-optgroup let-item="item"  >
