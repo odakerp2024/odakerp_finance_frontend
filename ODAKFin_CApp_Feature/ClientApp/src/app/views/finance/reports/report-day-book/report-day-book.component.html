@@ -189,9 +189,9 @@
                                     <td>{{data.Trans_Type}}</td>
                                     <td class="hyperColor" (click)="clickTransactionNumber(data.ID, data.Trans_Type, data.Trans_Number,data.RedirectUrl)">{{data.Trans_Number == 0 ? null : data.Trans_Number}}</td>
                                     <td>{{data.Trans_Ref_Details}}</td>
-                                    <td class="text-right">{{data.Debit  | dynamicDecimal: entityFraction}}</td>
-                                    <td class="text-right">{{data.Credit | dynamicDecimal: entityFraction}}</td>
-                                    <td class="text-right">{{data.Amount | dynamicDecimal: entityFraction }}</td>
+                                    <td class="text-right hyperTextColor">{{data.Debit  | dynamicDecimal: entityFraction}}</td>
+                                    <td class="text-right hyperTextColor">{{data.Credit | dynamicDecimal: entityFraction}}</td>
+                                    <td class="text-right hyperTextColor">{{data.Amount | dynamicDecimal: entityFraction }}</td>
                                 </tr>
 
                                 <tr *ngIf="pagedItems.length == 0">
