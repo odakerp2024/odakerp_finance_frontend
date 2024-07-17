@@ -48,6 +48,7 @@ export class TrailbalanceComponent implements OnInit {
   entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   entityThousands = Number(this.commonDataService.getLocalStorageEntityConfigurable('CurrenecyFormat'));
   // sortOrder: { [key: string]: 'asc' | 'desc' } = {};
+  fromMaxDate = this.currentDate;
 
   sortOrder: { [key: string]: 'asc' | 'desc' } = {
     ChildAccountName: 'asc',
@@ -89,7 +90,6 @@ export class TrailbalanceComponent implements OnInit {
   }
 
   isParentExpanded(groupName: string, parentName: string): boolean {
-    debugger
     const key = `${groupName}-${parentName}`;
     return this.expandedParents[key];
   }
@@ -324,106 +324,18 @@ onDivisionChange(value: any) {
 
   this.reportService.GetTrailBalanceList(payload).subscribe(result => {
     this.balanceList = [];
-    if (result.message == 'Success' && result.data.Table.length > 0) {
-     // Group the items by group name
+    this.pagedItems = [];
+    if (result.message === 'Success' && result.data.Table.length > 0) {
+      // Group the items by GroupName
       const groupedItems = result.data.Table.reduce((groups: any, item: any) => {
-          const group = item.GroupName;
-          if (!groups[group]) {
-              groups[group] = [];
-          }
-          groups[group].push(item);
-          return groups;
-      }, {});
-
-     // this.balanceList = Object.keys(groupedItems).map(group => ({
-       //   GroupName: group,
-      //    items: groupedItems[group]
-     // }));
-
-
-        // Process each group to calculate parent totals and group totals
-        this.balanceList = Object.keys(groupedItems).map(group => {
-          const items = groupedItems[group];
-  
-          // Group items by ParentAccountName within the group
-          const parentGroupedItems = items.reduce((parents: any, item: any) => {
-            const parent = item.ParentAccountName;
-            if (!parents[parent]) {
-              parents[parent] = [];
-            }
-            parents[parent].push(item);
-            return parents;
-          }, {});
-  
-          // Calculate totals for each parent account within the group
-          const parentTotals = Object.keys(parentGroupedItems).map(parentName => {
-            const parentItems = parentGroupedItems[parentName];
-            const totalCredit = this.calculateParentTotal(parentItems, 'Credit');
-            const totalDebit = this.calculateParentTotal(parentItems, 'Debit');
-  
-            return {
-              ParentAccountName: parentName,
-              items: parentItems,
-              totalCredit: totalCredit,
-              totalDebit: totalDebit
-            };
-          });
-  
-          // Calculate total credit and debit for the group
-          const totalCredit = this.calculateGroupTotal(items, 'Credit');
-          const totalDebit = this.calculateGroupTotal(items, 'Debit');
-  
-          return {
-            GroupName: group,
-            parentTotals: parentTotals,
-            totalCredit: totalCredit,
-            totalDebit: totalDebit
-          };
-        });
-
-      // Assign grouped list to pagedItems
-      this.pagedItems = this.balanceList;
-      this.setPage(1);
-      this.totalcreditamount = this.calculateTotalCreditAmount(this.pagedItems);
-        this.totaldebitamount = this.calculateTotalDebitAmount(this.pagedItems);
-    }else{
-      this.totalcreditamount = 0;
-        this.totaldebitamount = 0;
-      this.pager = {};
-      this.balanceList = []
-      this.pagedItems = [];
-    }
-  }, error => {
-    console.error("Error occurred:", error); // Log the error for debugging
-  });
-}
-
-
-onOfficeChange(values: any) {
-
-  var payload = {
-    "DivisionId": "",
-    "OfficeId": values,
-    "Date": ""
-  };
- this.reportService.GetTrailBalanceList(payload).subscribe(result => {
-  this.balanceList = [];
-  if (result.message == 'Success' && result.data.Table.length > 0) {
-   // Group the items by group name
-    const groupedItems = result.data.Table.reduce((groups: any, item: any) => {
         const group = item.GroupName;
         if (!groups[group]) {
-            groups[group] = [];
+          groups[group] = [];
         }
         groups[group].push(item);
         return groups;
-    }, {});
-
-   // this.balanceList = Object.keys(groupedItems).map(group => ({
-     //   GroupName: group,
-    //    items: groupedItems[group]
-   // }));
-
+      }, {});
+      console.log("Grouped items:", groupedItems);
 
       // Process each group to calculate parent totals and group totals
       this.balanceList = Object.keys(groupedItems).map(group => {
@@ -435,9 +347,13 @@ onOfficeChange(values: any) {
           if (!parents[parent]) {
             parents[parent] = [];
           }
-          parents[parent].push(item);
+          // Ensure unique child account names
+          if (!parents[parent].some((child: any) => child.ChildAccountName === item.ChildAccountName)) {
+            parents[parent].push(item);
+          }
           return parents;
         }, {});
+        console.log("Grouped items by ParentAccountName:", parentGroupedItems);
 
         // Calculate totals for each parent account within the group
         const parentTotals = Object.keys(parentGroupedItems).map(parentName => {
@@ -465,21 +381,105 @@ onOfficeChange(values: any) {
         };
       });
 
-    // Assign grouped list to pagedItems
-    this.pagedItems = this.balanceList;
-    this.setPage(1);
-    this.totalcreditamount = this.calculateTotalCreditAmount(this.pagedItems);
+      // Assign grouped list to pagedItems
+      this.pagedItems = this.balanceList;
+      this.setPage(1);
+      this.totalcreditamount = this.calculateTotalCreditAmount(this.pagedItems);
       this.totaldebitamount = this.calculateTotalDebitAmount(this.pagedItems);
-  }else{
-    this.totalcreditamount = 0;
+    } else {
+      this.totalcreditamount = 0;
       this.totaldebitamount = 0;
-    this.pager = {};
-    this.balanceList = []
+      this.pager = {};
+      this.balanceList = [];
+      this.pagedItems = [];
+    }
+  }, error => {
+    console.error("Error occurred:", error);
+  });
+}
+
+
+onOfficeChange(values: any) {
+
+  var payload = {
+    "DivisionId": "",
+    "OfficeId": values,
+    "Date": ""
+  };
+  this.reportService.GetTrailBalanceList(payload).subscribe(result => {
+    this.balanceList = [];
     this.pagedItems = [];
-  }
-}, error => {
-  console.error("Error occurred:", error); // Log the error for debugging
-});
+    if (result.message === 'Success' && result.data.Table.length > 0) {
+      // Group the items by GroupName
+      const groupedItems = result.data.Table.reduce((groups: any, item: any) => {
+        const group = item.GroupName;
+        if (!groups[group]) {
+          groups[group] = [];
+        }
+        groups[group].push(item);
+        return groups;
+      }, {});
+      console.log("Grouped items:", groupedItems);
+
+      // Process each group to calculate parent totals and group totals
+      this.balanceList = Object.keys(groupedItems).map(group => {
+        const items = groupedItems[group];
+
+        // Group items by ParentAccountName within the group
+        const parentGroupedItems = items.reduce((parents: any, item: any) => {
+          const parent = item.ParentAccountName;
+          if (!parents[parent]) {
+            parents[parent] = [];
+          }
+          // Ensure unique child account names
+          if (!parents[parent].some((child: any) => child.ChildAccountName === item.ChildAccountName)) {
+            parents[parent].push(item);
+          }
+          return parents;
+        }, {});
+        console.log("Grouped items by ParentAccountName:", parentGroupedItems);
+
+        // Calculate totals for each parent account within the group
+        const parentTotals = Object.keys(parentGroupedItems).map(parentName => {
+          const parentItems = parentGroupedItems[parentName];
+          const totalCredit = this.calculateParentTotal(parentItems, 'Credit');
+          const totalDebit = this.calculateParentTotal(parentItems, 'Debit');
+
+          return {
+            ParentAccountName: parentName,
+            items: parentItems,
+            totalCredit: totalCredit,
+            totalDebit: totalDebit
+          };
+        });
+
+        // Calculate total credit and debit for the group
+        const totalCredit = this.calculateGroupTotal(items, 'Credit');
+        const totalDebit = this.calculateGroupTotal(items, 'Debit');
+
+        return {
+          GroupName: group,
+          parentTotals: parentTotals,
+          totalCredit: totalCredit,
+          totalDebit: totalDebit
+        };
+      });
+
+      // Assign grouped list to pagedItems
+      this.pagedItems = this.balanceList;
+      this.setPage(1);
+      this.totalcreditamount = this.calculateTotalCreditAmount(this.pagedItems);
+      this.totaldebitamount = this.calculateTotalDebitAmount(this.pagedItems);
+    } else {
+      this.totalcreditamount = 0;
+      this.totaldebitamount = 0;
+      this.pager = {};
+      this.balanceList = [];
+      this.pagedItems = [];
+    }
+  }, error => {
+    console.error("Error occurred:", error);
+  });
 }
 
 BasedOnDate(selectedDate: any) {
@@ -491,77 +491,77 @@ BasedOnDate(selectedDate: any) {
   };
   this.reportService.GetTrailBalanceList(payload).subscribe(result => {
     this.balanceList = [];
-    if (result.message == 'Success' && result.data.Table.length > 0) {
-     // Group the items by group name
+    this.pagedItems = [];
+    if (result.message === 'Success' && result.data.Table.length > 0) {
+      // Group the items by GroupName
       const groupedItems = result.data.Table.reduce((groups: any, item: any) => {
-          const group = item.GroupName;
-          if (!groups[group]) {
-              groups[group] = [];
-          }
-          groups[group].push(item);
-          return groups;
+        const group = item.GroupName;
+        if (!groups[group]) {
+          groups[group] = [];
+        }
+        groups[group].push(item);
+        return groups;
       }, {});
+      console.log("Grouped items:", groupedItems);
 
-     // this.balanceList = Object.keys(groupedItems).map(group => ({
-       //   GroupName: group,
-      //    items: groupedItems[group]
-     // }));
+      // Process each group to calculate parent totals and group totals
+      this.balanceList = Object.keys(groupedItems).map(group => {
+        const items = groupedItems[group];
 
-
-        // Process each group to calculate parent totals and group totals
-        this.balanceList = Object.keys(groupedItems).map(group => {
-          const items = groupedItems[group];
-  
-          // Group items by ParentAccountName within the group
-          const parentGroupedItems = items.reduce((parents: any, item: any) => {
-            const parent = item.ParentAccountName;
-            if (!parents[parent]) {
-              parents[parent] = [];
-            }
+        // Group items by ParentAccountName within the group
+        const parentGroupedItems = items.reduce((parents: any, item: any) => {
+          const parent = item.ParentAccountName;
+          if (!parents[parent]) {
+            parents[parent] = [];
+          }
+          // Ensure unique child account names
+          if (!parents[parent].some((child: any) => child.ChildAccountName === item.ChildAccountName)) {
             parents[parent].push(item);
-            return parents;
-          }, {});
-  
-          // Calculate totals for each parent account within the group
-          const parentTotals = Object.keys(parentGroupedItems).map(parentName => {
-            const parentItems = parentGroupedItems[parentName];
-            const totalCredit = this.calculateParentTotal(parentItems, 'Credit');
-            const totalDebit = this.calculateParentTotal(parentItems, 'Debit');
-  
-            return {
-              ParentAccountName: parentName,
-              items: parentItems,
-              totalCredit: totalCredit,
-              totalDebit: totalDebit
-            };
-          });
-  
-          // Calculate total credit and debit for the group
-          const totalCredit = this.calculateGroupTotal(items, 'Credit');
-          const totalDebit = this.calculateGroupTotal(items, 'Debit');
-  
+          }
+          return parents;
+        }, {});
+        console.log("Grouped items by ParentAccountName:", parentGroupedItems);
+
+        // Calculate totals for each parent account within the group
+        const parentTotals = Object.keys(parentGroupedItems).map(parentName => {
+          const parentItems = parentGroupedItems[parentName];
+          const totalCredit = this.calculateParentTotal(parentItems, 'Credit');
+          const totalDebit = this.calculateParentTotal(parentItems, 'Debit');
+
           return {
-            GroupName: group,
-            parentTotals: parentTotals,
+            ParentAccountName: parentName,
+            items: parentItems,
             totalCredit: totalCredit,
             totalDebit: totalDebit
           };
         });
 
+        // Calculate total credit and debit for the group
+        const totalCredit = this.calculateGroupTotal(items, 'Credit');
+        const totalDebit = this.calculateGroupTotal(items, 'Debit');
+
+        return {
+          GroupName: group,
+          parentTotals: parentTotals,
+          totalCredit: totalCredit,
+          totalDebit: totalDebit
+        };
+      });
+
       // Assign grouped list to pagedItems
       this.pagedItems = this.balanceList;
       this.setPage(1);
       this.totalcreditamount = this.calculateTotalCreditAmount(this.pagedItems);
-        this.totaldebitamount = this.calculateTotalDebitAmount(this.pagedItems);
-    }else{
+      this.totaldebitamount = this.calculateTotalDebitAmount(this.pagedItems);
+    } else {
       this.totalcreditamount = 0;
-        this.totaldebitamount = 0;
+      this.totaldebitamount = 0;
       this.pager = {};
-      this.balanceList = []
+      this.balanceList = [];
       this.pagedItems = [];
     }
   }, error => {
-    console.error("Error occurred:", error); // Log the error for debugging
+    console.error("Error occurred:", error);
   });
 }
 

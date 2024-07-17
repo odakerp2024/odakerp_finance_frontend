@@ -9,7 +9,7 @@
             <div class="col-md-2">
               <label class="str mb-2">Date</label>
               <mat-form-field class="tillDate mat_date_picker" appearance="outline">
-                <input matInput (dateChange)="onDateChange($event)" formControlName="Date" autocomplete="off"
+                <input matInput (dateChange)="onDateChange($event)" formControlName="Date" autocomplete="off" [max]="fromMaxDate"
                   [matDatepicker]="ToDate" id="ToDate" style="padding:3px;">
                 <mat-datepicker-toggle matSuffix [for]="ToDate" class="center-icon"></mat-datepicker-toggle>
                 <mat-datepicker #ToDate></mat-datepicker>
@@ -192,7 +192,7 @@
 
         
         
-        <!-- <div class="row page mr-3" align="right">
+        <div class="row page mr-3" align="right">
         <ul *ngIf="pager.totalItems > 10 && pager.totalItems > 10"
             class="pagination">
             <li [ngClass]="{disabled:pager.currentPage === 1}">
@@ -218,7 +218,7 @@
                 <a (click)="setPage(pager.totalPages)">Last</a>
             </li>
         </ul>
-    </div> -->
+    </div>
 
       </div>
     </div>
