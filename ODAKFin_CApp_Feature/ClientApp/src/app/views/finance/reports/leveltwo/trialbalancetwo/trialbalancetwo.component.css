@@ -263,6 +263,39 @@ table {
   overflow-y: auto;
 } */
 
+/* header scroll code */
+#table-container {
+  max-height: 600px; 
+  overflow-y: auto; 
+  position: relative;
+}
+
+#table-container::-webkit-scrollbar {
+  display: none; 
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.table tbody {
+  max-height: 500px; 
+  overflow-y: auto;
+}
+
+
+.text-center {
+  text-align: center;
+}
+
+
 
 
 
