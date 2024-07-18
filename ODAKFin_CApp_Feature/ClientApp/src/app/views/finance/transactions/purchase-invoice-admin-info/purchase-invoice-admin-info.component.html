@@ -212,7 +212,7 @@
                 <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group">
                         <label class="str">PJ Status</label>
-                        <select [ngClass]=" isUpdate ? 'block-input' : 'block-input'" readonly formControlName="StatusId" name="Status" class="form-control my-select disable-input--nostyle">
+                        <select [ngClass]=" isUpdate ? 'block-input' : 'block-input'" readonly formControlName="StatusId"  name="Status" class="form-control my-select disable-input--nostyle">
                             <option disabled value="">--SELECT STATUS--</option>
                             <option disabled *ngFor="let status of statusList" [value]="status.Id">
                                 {{status.StatusName | uppercase}}
@@ -773,8 +773,8 @@
                         <div class="row">
                             <div class="col-md-2 col-sm-2 col-lg-5 col-xl-4 mt-2 mb-2">
                                 <input  class="ml-3" type="checkbox" formControlName="RoundOffChecked"  (change)="handleRoundOff()">
-                                <lable class="ml-2">Round Off Amount
-                                </lable>
+                                <label class="ml-2">Round Off Amount
+                                </label>
                             </div>
                             <div class="col-md-4 col-sm-4 col-lg-5 col-xl-8 mt-2 mb-2"  style = "margin-left: inherit;">
                                 <input readonly formControlName="RoundOffAmount"   class="form-control" placeholder=""
