@@ -180,7 +180,7 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="let data of pagedItems">
-                                    <td class="hyperTextColor" type="vendor-wise">
+                                    <td class="hyperColor" type="vendor-wise">
                                         <a (click)="showVendor(data.Id)">{{ data['Sub Category'] }}</a>
                                     </td>
                                     <td>{{ data['No of Vendors (Open)'] }}</td>
@@ -252,7 +252,7 @@
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('Net Balance (Invoice currency)')" style="width: 177.575px;">Net Balance (Invoice currency)
+                                        (click)="sort('Net Balance (Invoice currency)')" style="width: 177.575px;">Net Balance (Invoice Currency)
                                         </th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
@@ -264,7 +264,7 @@
                             <tbody>
                                 <tr *ngFor="let data of pagedItems">
                                     <td>{{ data['Sub Category'] }}</td>
-                                    <td class="hyperTextColor" [title]="data.Vendor">
+                                    <td class="hyperColor" [title]="data.Vendor">
                                         <a (click)="showVendorinvoicewise(data.VendorID)">{{ (data.Vendor && data.Vendor.length > 20) ? data.Vendor.slice(0, 20) + '-' : data.Vendor }}
                                     </a></td>
                                     <td class="hyperTextColor">{{ data['Credit Days'] }}</td>
@@ -338,7 +338,7 @@
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('Balance (Invoice currency)')"style="width: 177.575px;">Balance (Invoice currency)
+                                        (click)="sort('Balance (Invoice currency)')"style="width: 177.575px;">Balance (Invoice Currency)
                                         </th>
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
@@ -372,10 +372,10 @@
                                     <td class="text-right" colspan="1"></td>    
                                     <td class="text-right" colspan="1"></td>
                                     <td class="text-right" colspan="1"></td>
-                                    <td class="text-center" colspan="1">{{totalinvoiceamount | dynamicDecimal: entityFraction}}</td>
+                                    <td class="text-right" colspan="1">{{totalinvoiceamount | dynamicDecimal: entityFraction}}</td>
                                     <td class="text-right" colspan="1"></td>
-                                    <td class="text-center" colspan="1">{{totalbalanceicy | dynamicDecimal: entityFraction}}</td>
-                                    <td class="text-center" colspan="1">{{totalbalanceccy | dynamicDecimal: entityFraction}}</td>
+                                    <td class="text-right" colspan="1">{{totalbalanceicy | dynamicDecimal: entityFraction}}</td>
+                                    <td class="text-right" colspan="1">{{totalbalanceccy | dynamicDecimal: entityFraction}}</td>
                                 </tr>
                             </tfoot>
                         </table>
