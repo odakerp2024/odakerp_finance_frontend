@@ -180,7 +180,7 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="let data of pagedItems">
-                                    <td class="hyperTextColor" type="vendor-wise">
+                                    <td class="hyperColor" type="vendor-wise">
                                         <a (click)="showVendor(data.Id)">{{ data['Sub Category'] }}</a>
                                     </td>
                                     <td>{{ data['No of Vendors (Open)'] }}</td>
@@ -264,7 +264,7 @@
                             <tbody>
                                 <tr *ngFor="let data of pagedItems">
                                     <td>{{ data['Sub Category'] }}</td>
-                                    <td class="hyperTextColor" [title]="data.Vendor">
+                                    <td class="hyperColor" [title]="data.Vendor">
                                         <a (click)="showVendorinvoicewise(data.VendorID)">{{ (data.Vendor && data.Vendor.length > 20) ? data.Vendor.slice(0, 20) + '-' : data.Vendor }}
                                     </a></td>
                                     <td class="hyperTextColor">{{ data['Credit Days'] }}</td>

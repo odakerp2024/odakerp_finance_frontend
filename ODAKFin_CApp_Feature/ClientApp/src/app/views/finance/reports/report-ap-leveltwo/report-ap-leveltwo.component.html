@@ -190,7 +190,7 @@
                                         <a *ngIf="header === 'Sub Category'" class="hyperlink-style ">{{ row[header]
                                             }}</a>
                                         <ng-container *ngIf="header === 'Total (Company Currency)'">
-                                            <a class="hyperlink-style" (click)="showBalanceDetails(row)">{{ row[header]
+                                            <a class="hyperTextColor" (click)="showBalanceDetails(row)">{{ row[header]
                                                 | dynamicDecimal: entityFraction }}</a>
                                         </ng-container>
                                         <span
@@ -250,7 +250,7 @@
                                 </a>
                         
                                 <ng-container *ngIf="header === 'Balance (Company Currency)' || header === 'Balance (Invoice currency)'">
-                                    <a class="hyperlink-style">{{ row[header] | dynamicDecimal: entityFraction }}</a>
+                                    <a class="hyperTextColor">{{ row[header] | dynamicDecimal: entityFraction }}</a>
                                 </ng-container>
                         
                                 <span *ngIf="header !== 'Vendor' && header !== 'Balance (Company Currency)' && header !== 'Balance (Invoice currency)' && header !== 'Credit Amount'">
@@ -313,15 +313,15 @@
                                         <ng-container [ngSwitch]="header">
                                 
                                             <!-- Condition for 'Invoice #' column -->
-                                            <a *ngSwitchCase="'Vendor Invoice #'" class="hyperlink-style">{{ row[header] }}</a>
+                                            <a *ngSwitchCase="'Vendor Invoice #'" class="hyperTextColor">{{ row[header] }}</a>
                                 
                                             <!-- Condition for 'Date' column -->
                                             <span *ngSwitchCase="'Date'">{{ row[header] | date: commonDataService.convertToLowerCaseDay(entityDateFormat) }}</span>
                                 
                                             <!-- Condition for amount columns -->
-                                            <a *ngSwitchCase="'Balance (Invoice currency)'" class="hyperlink-style">{{ row[header] | dynamicDecimal: entityFraction }}</a>
-                                            <a *ngSwitchCase="'Balance (Company Currency)'" class="hyperlink-style">{{ row[header] | dynamicDecimal: entityFraction }}</a>
-                                            <a *ngSwitchCase="'Invoice Amount'" class="hyperlink-style">{{ row[header] | dynamicDecimal: entityFraction }}</a>
+                                            <a *ngSwitchCase="'Balance (Invoice currency)'" class="hyperTextColor">{{ row[header] | dynamicDecimal: entityFraction }}</a>
+                                            <a *ngSwitchCase="'Balance (Company Currency)'" class="hyperTextColor">{{ row[header] | dynamicDecimal: entityFraction }}</a>
+                                            <a *ngSwitchCase="'Invoice Amount'" class="hyperTextColor">{{ row[header] | dynamicDecimal: entityFraction }}</a>
                                 
                                             <!-- Default condition for other columns -->
                                             <span *ngSwitchDefault>{{ row[header] }}</span>

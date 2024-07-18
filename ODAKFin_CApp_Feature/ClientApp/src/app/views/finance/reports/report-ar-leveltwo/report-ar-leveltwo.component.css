@@ -13,15 +13,21 @@ tr:hover {
     color: #0366d6 !important;
 }
 
-.hyperColor {
+.hyperlink-style {
   color: #0366d6 !important;
   cursor: pointer !important;
 }
 
-.hyperColor:hover{
+
+.hyperlink-style:hover{
   text-decoration: underline !important;
 }
 
+/* .hyperlink-style {
+    color: rgb(19, 108, 243) !important;
+    
+  } */
+  
 .example-form-field {
     margin: 0 8px 16px 0;
 }
@@ -120,7 +126,4 @@ tr:hover {
     text-align: right;
   }
   
-  .hyperlink-style {
-    color: rgb(19, 108, 243) !important;
-    
-  }
+  
