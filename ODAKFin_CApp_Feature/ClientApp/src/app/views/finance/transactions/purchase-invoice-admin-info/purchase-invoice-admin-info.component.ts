@@ -160,7 +160,6 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
     });
 
     // if (this.isUpdate) {
-    //   debugger
     //   this.getPurchaseInvoiceAdminInfo();
     // }
 
@@ -612,8 +611,10 @@ this.PurchaseCreateForm.controls['RoundOffAmount'].setValue(Number(0).toFixed(th
     });
   }
 
+
+
   getStatus() {
-    var service = `${this.globals.APIURL}/PurchaseInvoice/GetPurchaseInvoiceDropDownList`; var payload: any = { Id: 0 };
+    var service = `${this.globals.APIURL}/PurchaseInvoice/GetPurchaseInvoiceDropDownList`; var payload: any = { Id: 0,VendorId: 0 }
     this.dataService.post(service, payload).subscribe((result: any) => {
       this.statusList = [];
       if (result.data.Table.length > 0) {
