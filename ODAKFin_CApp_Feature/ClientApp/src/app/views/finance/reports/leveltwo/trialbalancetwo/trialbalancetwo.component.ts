@@ -238,7 +238,8 @@ export class TrialbalancetwoComponent implements OnInit {
 
 
         // Calculate the difference between total credit and debit
-        this.totalAmount = this.totalDebitAmount - this.totalCreditAmount ;
+        this.totalAmount = Math.abs(this.totalDebitAmount - this.totalCreditAmount);
+
 
 
       } else {
