@@ -597,7 +597,7 @@ async downloadExcel() {
     Swal.fire('No record found');
     return;
   }
-  
+
   const workbook = new Workbook();
   const worksheet = workbook.addWorksheet('Report');
 
@@ -606,7 +606,7 @@ async downloadExcel() {
   titleRow.getCell(2).font = { size: 15, bold: true };
   titleRow.getCell(2).alignment = { horizontal: 'center' };
   worksheet.mergeCells(`B${titleRow.number}:C${titleRow.number}`);
-  
+
   const subtitleRow = worksheet.addRow(['', 'Trail Balance', '', '']);
   subtitleRow.getCell(2).font = { size: 15, bold: true };
   subtitleRow.getCell(2).alignment = { horizontal: 'center' };
@@ -614,8 +614,7 @@ async downloadExcel() {
 
   // Add date row
   const currentDate = new Date();
-  const subtitleRow1  = worksheet.addRow(['', `As of ${this.datePipe.transform(currentDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`, '', '']);
-  // subtitleRow1.getCell(2).font = { size: 15, bold: true };
+  const subtitleRow1 = worksheet.addRow(['', `As of ${this.datePipe.transform(currentDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`, '', '']);
   subtitleRow1.getCell(2).alignment = { horizontal: 'center' };
   worksheet.mergeCells(`B${subtitleRow1.number}:C${subtitleRow1.number}`);
 
@@ -632,7 +631,7 @@ async downloadExcel() {
     };
     cell.font = {
       bold: true,
-      color: { argb: 'FFFFF7' }
+      color: { argb: 'FFFFF7' },
     };
     cell.alignment = {
       horizontal: 'center',
@@ -676,19 +675,12 @@ async downloadExcel() {
       let parentTotalDebit = 0;
       let parentTotalCredit = 0;
 
-      parent.items.forEach((balance, i) => {
-        const isNewParent = i === 0 || balance.GrandParentAccountName !== parent.items[i - 1].GrandParentAccountName || balance.ParentAccountName !== parent.items[i - 1].ParentAccountName;
-
-        if (isNewParent) {
-          worksheet.addRow([`${balance.GrandParentAccountName} - ${balance.ParentAccountName}`, '', '']);
-        }
-
+      parent.items.forEach(balance => {
         const rowData = [
-          balance.ChildAccountName,
+          balance.ParentAccountName + ' - ' + balance.ChildAccountName,
           balance.ChildTransaction_Type === 'Debit' ? balance.ChildNet_Balance : 0,
           balance.ChildTransaction_Type === 'Credit' ? balance.ChildNet_Balance : 0,
         ];
-           
 
         const row = worksheet.addRow(rowData);
 
@@ -709,42 +701,50 @@ async downloadExcel() {
         }
       });
 
-
       // Add parent total row
-      const grouptotal = worksheet.addRow([`${parent.ParentAccountName} Total`, parentTotalDebit, parentTotalCredit]);
-      groupTotalDebit += parentTotalDebit;
-      groupTotalCredit += parentTotalCredit;
-      grouptotal.eachCell((cell, colNumber) => {
+      const parentTotalRow = worksheet.addRow([`${parent.ParentAccountName} Total`, parentTotalDebit, parentTotalCredit]);
+      parentTotalRow.eachCell((cell, colNumber) => {
         cell.font = { bold: true };
         cell.alignment = { horizontal: colNumber === 1 ? 'left' : 'right' }; // Align first column to left
         cell.fill = {
-            type: 'pattern',
-            pattern: 'solid',
-            fgColor: { argb: 'f0f0f0' }, // Example color, change as needed
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'f0f0f0' },
         };
+      });
+
+      groupTotalDebit += parentTotalDebit;
+      groupTotalCredit += parentTotalCredit;
     });
-    });
-   
 
     // Add group total row
-    worksheet.addRow([`${group.GroupName.toUpperCase()} Total`, groupTotalDebit, groupTotalCredit]);
+    const groupTotalRow = worksheet.addRow([`${group.GroupName.toUpperCase()} Total`, groupTotalDebit, groupTotalCredit]);
     grandTotalDebit += groupTotalDebit;
     grandTotalCredit += groupTotalCredit;
 
-   
+    groupTotalRow.eachCell((cell, colNumber) => {
+      cell.font = { bold: true };
+      cell.alignment = { horizontal: colNumber === 1 ? 'left' : 'right' };
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'f0f0f0' },
+      };
+    });
   });
 
   // Add grand total row
-  const grandtotal = worksheet.addRow(['Grand Total', grandTotalDebit, grandTotalCredit]);
-  grandtotal.eachCell((cell, colNumber) => {
-          cell.font = { bold: true };
-          cell.alignment = { horizontal: colNumber === 1 ? 'left' : 'right' }; // Align first column to left
-          cell.fill = {
-              type: 'pattern',
-              pattern: 'solid',
-              fgColor: { argb: 'FFFF99' }, // Example color, change as needed
-          };
-      });
+  const grandTotalRow = worksheet.addRow(['Grand Total', grandTotalDebit, grandTotalCredit]);
+  grandTotalRow.eachCell((cell, colNumber) => {
+    cell.font = { bold: true };
+    cell.alignment = { horizontal: colNumber === 1 ? 'left' : 'right' };
+    cell.fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FFFF99' },
+    };
+  });
+
   // Adjust column widths
   worksheet.columns.forEach(column => {
     let maxLength = 0;
@@ -767,7 +767,7 @@ async downloadExcel() {
     };
     cell.font = {
       bold: true,
-      color: { argb: 'FFFFF7' }
+      color: { argb: 'FFFFF7' },
     };
     cell.alignment = {
       horizontal: 'center',
@@ -780,6 +780,7 @@ async downloadExcel() {
   const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
   saveAs(blob, 'Report-TrailBalance.xlsx');
 }
+
 
 
 

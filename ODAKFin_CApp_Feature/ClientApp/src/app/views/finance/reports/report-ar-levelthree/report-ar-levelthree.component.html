@@ -177,7 +177,7 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="let data of pagedItems">
-                                    <td class="hyperTextColor" type="customerwise">
+                                    <td class="hyperColor" type="customerwise">
                                         <a (click)="showCustomerWise(data.SalesId)">{{data['Sales Person']}}</a>
                                     </td>
                                     <td>{{data['No of Customer']}}</td>
@@ -243,14 +243,14 @@
 
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
                                         colspan="1" aria-label="Name: activate to sort column ascending"
-                                        (click)="sort('Balance (Company Currency)')" style="width: 177.575px;">Balance(Company Currency)
+                                        (click)="sort('Balance (Company Currency)')" style="width: 177.575px;">Balance (Company Currency)
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr *ngFor="let data of pagedItems">
                                     <td>{{data['Sales Person']}}</td>
-                                    <td class="hyperTextColor" [title]="data.Customer">
+                                    <td class="hyperColor" [title]="data.Customer">
                                         <a (click)="showCustomerInvoiceWise(data.CustomerID)">
                                             {{ (data.Customer && data.Customer.length > 20) ? data.Customer.slice(0, 20) + '-' : data.Customer }}
                                         </a>
