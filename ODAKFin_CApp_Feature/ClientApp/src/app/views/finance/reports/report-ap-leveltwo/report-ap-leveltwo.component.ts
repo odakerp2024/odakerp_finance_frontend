@@ -150,7 +150,9 @@ async showVendor(SubTypeId:number){
   this.subtype = SubTypeId;
     this.pagedItems = [];
     this.type = 'Vendor-wise';
-    await this.createReportForm();
+    //await this.createReportForm();
+    this.reportFilter.controls.Type.setValue(1);   
+    this.reportFilter.controls.SubTypeId.setValue(this.subtype); 
         await this.getAPAgingVendorList();
 
   }
@@ -159,7 +161,9 @@ async showVendor(SubTypeId:number){
    this.subtypevendorId = subtypevendorId;
     this.pagedItems = [];
     this.type = 'Vendor-Invoice-wise';
-    await this.createReportForm();
+    //await this.createReportForm();
+    this.reportFilter.controls.Type.setValue(2);
+   this.reportFilter.controls.SubTypeId.setValue(this.subtypevendorId);
     await this.getAPAgingInvoiceList();
 
   }
