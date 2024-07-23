@@ -73,6 +73,7 @@ export class ReportArLeveltwoComponent implements OnInit {
   headers: string[] = [];
   data: any[] = [];
   sortOrder: { [key: string]: 'asc' | 'desc' } = {};
+  totals: any;
 
   constructor(
     private commonDataService: CommonService,
@@ -624,6 +625,7 @@ calculateInvoicewise(header: string): any {
     endDate: string,
     reportType: 'overall' | 'customerwise' | 'customerinvoicewise'
 ) {
+  debugger
     if (reportList.length === 0) {
         Swal.fire('No record found');
         return;
@@ -739,18 +741,58 @@ calculateInvoicewise(header: string): any {
                 totalBalanceCompanyCurrency += parseFloat(data['Balance (Company Currency)']) || 0;
                 break;
 
-            case 'overall':
-                filteredData = Object.keys(data)
-                    .filter((key) => !excludeKeys.includes(key))
-                    .reduce((obj, key) => {
-                        obj[key] = data[key];
-                        return obj;
-                    }, {});
+            // case 'overall':
+            //     filteredData = Object.keys(data)
+            //         .filter((key) => !excludeKeys.includes(key))
+            //         .reduce((obj, key) => {
+            //             obj[key] = data[key];
+            //             return obj;
+            //         }, {});
 
-                filteredData['Balance (Company Currency)'] = `${data['Balance (Company Currency)'] !== null ? parseFloat(data['Balance (Company Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
-                // Accumulate totals
-                totalBalanceCompanyCurrency += parseFloat(data['Balance (Company Currency)']) || 0;
-                break;
+            //     filteredData['Balance (Company Currency)'] = `${data['Balance (Company Currency)'] !== null ? parseFloat(data['Balance (Company Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
+            //     // Accumulate totals
+            //     totalBalanceCompanyCurrency += parseFloat(data['Balance (Company Currency)']) || 0;
+            //     break;
+
+            case 'overall':
+              // Initialize totals object if it doesn't exist
+              if (!this.totals) {
+                  this.totals = {};
+              }
+          
+              // Process and filter the data
+              filteredData = Object.keys(data)
+                  .filter((key) => !excludeKeys.includes(key))
+                  .reduce((obj, key) => {
+                      obj[key] = data[key];
+                      return obj;
+                  }, {});
+          
+              // Format and update Balance (Company Currency)
+              filteredData['Balance (Company Currency)'] = `${data['Balance (Company Currency)'] !== null ? parseFloat(data['Balance (Company Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
+              
+              // Accumulate totals
+              totalBalanceCompanyCurrency += parseFloat(data['Balance (Company Currency)']) || 0;
+          
+              // Initialize the headers array if it doesn't exist
+              if (!this.headers) {
+                  this.headers = [];
+              }
+          
+              // Add dynamic headers if the value is a number and update totals
+              Object.keys(filteredData).forEach(key => {
+                  if (!isNaN(filteredData[key]) && key !== 'Id' && key !== 'Sub Category') {
+                      if (!this.headers.includes(key)) {
+                          this.headers.push(key);
+                      }
+                      // Update totals for each numeric column
+                      if (!this.totals[key]) {
+                          this.totals[key] = 0;
+                      }
+                      this.totals[key] += parseFloat(filteredData[key]) || 0;
+                  }
+              });
+
 
             case 'customerwise':
                 filteredData = Object.keys(data)
@@ -813,14 +855,36 @@ calculateInvoicewise(header: string): any {
 
     const footerData = ['Grand Total']; // First column with text "Grand Total"
 
+    console.log('Report Type:', reportType);
+    console.log('Headers:', this.headers);
+    console.log('Totals:', this.totals);
+    console.log('Entity Fraction:', this.entityFraction);
+    
     if (reportType === 'overall') {
-      for (let i = 1; i < header.length; i++) { // Start loop from 1 to skip the first column
-        if (header[i] == 'Balance (Company Currency)') {
-          footerData.push(totalBalanceCompanyCurrency.toFixed(this.entityFraction));
+      this.headers.forEach((header, index) => {
+        if (index === 0) {
+          // Skip the first column which already has 'Grand Total'
+          return;
+        }
+        console.log('Processing header:', header);
+        if (header in this.totals) {
+          const total = this.totals[header];
+          console.log(`Total for ${header}:`, total);
+          if (total != null && !isNaN(total) && total.length > 0) {
+            footerData.push(total.toFixed(this.entityFraction));
+          } else {
+            footerData.push('');
+          }
         } else {
           footerData.push('');
         }
-      }
+      });
+ 
+    
+    
+
+    
+
     } else if (reportType === 'customerwise') {
       for (let i = 1; i < header.length; i++) { // Start loop from 1 to skip the first column
         if (header[i] == 'Credit Amount') {
