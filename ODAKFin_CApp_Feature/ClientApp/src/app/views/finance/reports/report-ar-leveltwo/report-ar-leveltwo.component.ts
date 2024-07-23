@@ -116,7 +116,9 @@ export class ReportArLeveltwoComponent implements OnInit {
     this.subtype = subTypeId;
     this.pagedItems = [];
     this.type = 'customerwise';
-    await this.createReportForm();
+    //await this.createReportForm();
+    this.reportFilter.controls.Type.setValue(1);
+    this.reportFilter.controls.SubTypeId.setValue(this.subtype);
     await this.getCustomerWiseList();
   }
 
@@ -124,7 +126,9 @@ export class ReportArLeveltwoComponent implements OnInit {
     this.subtypecustomerId = subtypecustomerId;
     this.pagedItems = [];
     this.type = 'customerinvoicewise';
-    await this.createReportForm();
+    //await this.createReportForm();
+    this.reportFilter.controls.Type.setValue(1);
+    this.reportFilter.controls.SubTypeId.setValue(this.subtypecustomerId);
     await this.getInvoiceWiseList();
   }
 

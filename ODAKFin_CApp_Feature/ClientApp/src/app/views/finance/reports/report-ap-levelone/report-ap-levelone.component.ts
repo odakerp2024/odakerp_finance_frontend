@@ -221,8 +221,9 @@ export class ReportApLeveloneComponent implements OnInit {
    this.subtype = subTypeId;
     this.pagedItems = [];
     this.type = 'Vendor-wise';
-    await this.createReportForm();
-    this.reportFilter.controls.Peroid.setValue('month');
+    //await this.createReportForm();
+    this.reportFilter.controls.Type.setValue(1);   
+    this.reportFilter.controls.SubTypeId.setValue(this.subtype); 
     await this.getAccountPayableVendorList();
    
 
@@ -232,8 +233,9 @@ export class ReportApLeveloneComponent implements OnInit {
     this.invoicevendortype = subTypeId;
     this.pagedItems = [];
     this.type = 'Vendor-Invoice-wise';
-    await this.createReportForm();
-    this.reportFilter.controls.Peroid.setValue('month');
+   // await this.createReportForm();
+   this.reportFilter.controls.Type.setValue(2);
+   this.reportFilter.controls.SubTypeId.setValue(this.invoicevendortype);
     await this.getAccountPayableInvoiceVendorList();
   }
 
