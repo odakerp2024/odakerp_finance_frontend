@@ -853,6 +853,12 @@ private downloadFile = (data: HttpResponse<Blob>) => {
       validation += "<span style='color:red;'>*</span> <span>Please select Security Deposit.</span></br>"
     }
 
+    if (this.receiptForm.value.VoucherDate == '') {
+      validation += "<span style='color:red;'>*</span> <span>Please select Receipt Voucher Date.</span></br>"
+    }
+
+    
+
     if (validation != "") {
       if (finalNumber != 2) {
         Swal.fire(validation)

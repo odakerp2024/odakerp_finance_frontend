@@ -90,6 +90,7 @@ export class ReportArLeveloneComponent implements OnInit {
     this.getDivisionList();
     this.getCustomerList(0);
     this.reportFilter.controls.Peroid.setValue('month');
+   // this.search();
   }
 
   async goBack() {
@@ -108,15 +109,19 @@ export class ReportArLeveloneComponent implements OnInit {
     this.subtype = subTypeId;
     this.pagedItems = [];
     this.type = 'customerwise';
-    await this.createReportForm();
-    await this.getCustomerWiseList();
+   // await this.createReportForm();
+   this.reportFilter.controls.Type.setValue(1);
+   this.reportFilter.controls.SubTypeId.setValue( this.subtype);
+   await this.getCustomerWiseList();
   }
 
   async showCustomerInvoiceWise(subtypecustomerId:number) {
     this.subtypecustomerId = subtypecustomerId;
     this.pagedItems = []; 
     this.type = 'customerinvoicewise';
-    await this.createReportForm();
+    //await this.createReportForm();
+    this.reportFilter.controls.Type.setValue(2);
+    this.reportFilter.controls.SubTypeId.setValue(this.subtypecustomerId);
     await this.getInvoiceWiseList();
   }
 
@@ -189,7 +194,22 @@ export class ReportArLeveloneComponent implements OnInit {
         break;
     }
   }
-
+  // onPeriodChange() {
+  
+  //   this.reportFilter.controls.Peroid.valueChanges.subscribe((selectedPeriod: string) => {
+  //     this.onOptionChange(selectedPeriod);
+  //     this.updateCustomerInvoiceData(selectedPeriod);
+  //   });
+  // }
+  
+  // updateCustomerInvoiceData(period: string) {
+    
+  //   // Implement logic to update customer invoice data based on selected period
+  //   const selectedPeriod = this.reportFilter.controls.Period.value;
+  //   this.onOptionChange(selectedPeriod);
+  //   this.search();
+  //   // Example: Fetch new data or update view
+  // }
 
   async createReportForm() {
     if (this.type == 'overall') {
@@ -229,6 +249,7 @@ export class ReportArLeveloneComponent implements OnInit {
     }
     this.reportFilter.controls.Peroid.setValue('month');
     this.onOptionChange('month');
+    //this.onPeriodChange();
     if(this.type == 'overall'){
       await this.getOverallList();
     }
@@ -722,17 +743,31 @@ export class ReportArLeveloneComponent implements OnInit {
         footerData.push('');
       }
     }
-    const footerRow = worksheet.addRow(footerData);
-    footerRow.eachCell((cell, colNumber) => {
-      cell.font = { bold: true };
-      cell.alignment = { horizontal: colNumber === 1 ? 'left' : 'right' }; // Align first column to left
-      cell.fill = {
-        type: 'pattern',
-        pattern: 'solid',
-        fgColor: { argb: 'FFFF99' }, // Example color, change as needed
-      };
-    });
-  
+    const type = 'overall';
+    if (type !== 'overall') {
+      const footerRow = worksheet.addRow(footerData);
+      footerRow.eachCell((cell, colNumber) => {
+        cell.font = { bold: true };
+        cell.alignment = { horizontal: colNumber === 1 ? 'left' : 'right' }; // Align first column to left
+        cell.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'FFFF99' }, // Example color, change as needed
+        };
+      });
+    } else if (type === 'overall') {
+      const footerRow = worksheet.addRow(footerData);
+      footerRow.eachCell((cell, colNumber) => {
+        cell.font = { bold: true };
+        // Align columns 1, 2, and 3 to left, others to right
+        cell.alignment = { horizontal: colNumber <= 3 ? 'left' : 'right' }; 
+        cell.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'FFFF99' }, // Example color, change as needed
+        };
+      });
+    }
     // Add "End of Report" row
     const endOfReportRow = worksheet.addRow(['End of Report']);
     endOfReportRow.eachCell((cell) => {

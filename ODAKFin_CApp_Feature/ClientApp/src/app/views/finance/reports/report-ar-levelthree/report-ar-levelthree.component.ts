@@ -109,7 +109,9 @@ export class ReportArLevelthreeComponent implements OnInit {
     this.subtype = subTypeId;
     this.pagedItems = [];
     this.type = 'customerwise';
-    await this.createReportForm();
+    //await this.createReportForm();
+    this.reportFilter.controls.Type.setValue(1);
+    this.reportFilter.controls.SubTypeId.setValue(this.subtype);
     await this.getCustomerWiseList();
   }
 
@@ -117,7 +119,9 @@ export class ReportArLevelthreeComponent implements OnInit {
     this.subtypecustomerId = subtypecustomerId;
     this.pagedItems = []; 
     this.type = 'customerinvoicewise';
-    await this.createReportForm();
+    //await this.createReportForm();
+    this.reportFilter.controls.SubTypeId.setValue(this.subtypecustomerId);
+    this.reportFilter.controls.Type.setValue(2);
     await this.getInvoiceWiseList();
   }
 
@@ -723,17 +727,42 @@ export class ReportArLevelthreeComponent implements OnInit {
         }
       }
 
-      const footerRow = worksheet.addRow(footerData);
-      footerRow.eachCell((cell, colNumber) => {
+      // const footerRow = worksheet.addRow(footerData);
+      // footerRow.eachCell((cell, colNumber) => {
+      //     cell.font = { bold: true };
+      //     cell.alignment = { horizontal: colNumber === 1 ? 'left' : 'right' }; // Align first column to left
+      //     cell.fill = {
+      //         type: 'pattern',
+      //         pattern: 'solid',
+      //         fgColor: { argb: 'FFFF99' }, // Example color, change as needed
+      //     };
+      // });
+  
+      const type = 'overall';
+      if (type !== 'overall') {
+        const footerRow = worksheet.addRow(footerData);
+        footerRow.eachCell((cell, colNumber) => {
           cell.font = { bold: true };
           cell.alignment = { horizontal: colNumber === 1 ? 'left' : 'right' }; // Align first column to left
           cell.fill = {
-              type: 'pattern',
-              pattern: 'solid',
-              fgColor: { argb: 'FFFF99' }, // Example color, change as needed
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: 'FFFF99' }, // Example color, change as needed
           };
-      });
-  
+        });
+      } else if (type === 'overall') {
+        const footerRow = worksheet.addRow(footerData);
+        footerRow.eachCell((cell, colNumber) => {
+          cell.font = { bold: true };
+          // Align columns 1, 2, and 3 to left, others to right
+          cell.alignment = { horizontal: colNumber <= 3 ? 'left' : 'right' }; 
+          cell.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: 'FFFF99' }, // Example color, change as needed
+          };
+        });
+      }
       // Add "End of Report" row
       const endOfReportRow = worksheet.addRow(['End of Report']);
       endOfReportRow.eachCell((cell) => {

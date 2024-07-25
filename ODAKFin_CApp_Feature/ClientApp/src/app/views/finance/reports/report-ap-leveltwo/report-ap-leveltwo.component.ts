@@ -82,6 +82,7 @@ export class ReportApLeveltwoComponent implements OnInit {
   data: any[] = [];
   sortOrder: { [key: string]: 'asc' | 'desc' } = {};
   agingId: any;
+  totals: any;
 
   constructor(
     private commonDataService: CommonService,
@@ -150,7 +151,9 @@ async showVendor(SubTypeId:number){
   this.subtype = SubTypeId;
     this.pagedItems = [];
     this.type = 'Vendor-wise';
-    await this.createReportForm();
+    //await this.createReportForm();
+    this.reportFilter.controls.Type.setValue(1);   
+    this.reportFilter.controls.SubTypeId.setValue(this.subtype); 
         await this.getAPAgingVendorList();
 
   }
@@ -159,7 +162,9 @@ async showVendor(SubTypeId:number){
    this.subtypevendorId = subtypevendorId;
     this.pagedItems = [];
     this.type = 'Vendor-Invoice-wise';
-    await this.createReportForm();
+    //await this.createReportForm();
+    this.reportFilter.controls.Type.setValue(2);
+   this.reportFilter.controls.SubTypeId.setValue(this.subtypevendorId);
     await this.getAPAgingInvoiceList();
 
   }
@@ -685,6 +690,8 @@ calculateInvoicewise(header: string): any {
     let columnsToColor: string[] = [];
     let columnsToAlignLeft: string[] = [];
     let columnsToAlignRight: string[] = [];
+    this.totals = [];
+
 
     switch (reportType) {
         case 'Overall-list':
@@ -761,6 +768,7 @@ calculateInvoicewise(header: string): any {
     let totalBalanceInvoiceVendorWise = 0;
     let totalBalanceCompanyVendorWise = 0;
     let totalBalanceCompanyCurrency = 0;
+    // let ageTotal=0;
     let totalInvoiceAmount = 0;
 
     reportList.forEach((data) => {
@@ -769,8 +777,11 @@ calculateInvoicewise(header: string): any {
 
         switch (reportType) {
             case 'Vendor-Invoice-wise':
+              if (!this.totals) {
+                this.totals = {};
+            }
                 data.Date = data.Date.split('T')[0];
-                filteredData = Object.keys(data)
+                 filteredData = Object.keys(data)
                     .filter((key) => !excludeKeys.includes(key))
                     .reduce((obj, key) => {
                         obj[key] = data[key];
@@ -780,14 +791,37 @@ calculateInvoicewise(header: string): any {
                     filteredData['Invoice Amount'] = `${data['Invoice Amount'] !== null ? parseFloat(data['Invoice Amount']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
                     filteredData['Balance (Invoice currency)'] = `${data['Balance (Invoice currency)'] !== null ? parseFloat(data['Balance (Invoice currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
                     filteredData['Balance (Company Currency)'] = `${data['Balance (Company Currency)'] !== null ? parseFloat(data['Balance (Company Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
-
+                    // filteredData['Age(Days)']=`${data['Age(Days)']!== null ? parseFloat(data['Age(Days)']).toFixed(this.entityFraction): defaultValue.toFixed(this.entityFraction)}`;
                 // Accumulate totals
                 totalInvoiceAmount += parseFloat(data['Invoice Amount']) || 0;
                 totaInvoiceCurrency += parseFloat(data['Balance (Invoice currency)']) || 0;
                 totalBalanceCompanyCurrency += parseFloat(data['Balance (Company Currency)']) || 0;
+                // ageTotal+=parseInt(data['Age(Days)']) || 0;
+
+                if (!this.headers) {
+                  this.headers = [];
+              }
+          
+              // Add dynamic headers if the value is a number and update totals
+              Object.keys(filteredData).forEach(key => {
+                  if (!isNaN(filteredData[key]) && key !== 'Id' && key !== 'Sub Category') {
+                      if (!this.headers.includes(key)) {
+                          this.headers.push(key);
+                      }
+                      // Update totals for each numeric column
+                      if (!this.totals[key]) {
+                          this.totals[key] = 0;
+                      }
+                      this.totals[key] += parseFloat(filteredData[key]) || 0;
+                  }
+              });
                 break;
 
             case 'Overall-list':
+              if (!this.totals) {
+                this.totals || {};
+            }
+        
                 filteredData = Object.keys(data)
                     .filter((key) => !excludeKeys.includes(key))
                     .reduce((obj, key) => {
@@ -798,7 +832,25 @@ calculateInvoicewise(header: string): any {
                     filteredData['Total (Company Currency)'] = `${data['Total (Company Currency)'] !== null ? parseFloat(data['Total (Company Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
               
                     totalCompanyCurrency += parseFloat(data['Total (Company Currency)']) || 0;
-                break;
+                    if (!this.headers) {
+                      this.headers || [];
+                  }
+              
+                  // Add dynamic headers if the value is a number and update totals
+                  Object.keys(filteredData).forEach(key => {
+                      if (!isNaN(filteredData[key]) && key !== 'Id' && key !== 'Sub Category') {
+                          if (!this.headers.includes(key)) {
+                              this.headers.push(key);
+                          }
+                          // Update totals for each numeric column
+                          if (!this.totals[key]) {
+                              this.totals[key] = 0;
+                          }
+                          this.totals[key] += parseFloat(filteredData[key]) || null;
+                      }
+                  });
+              
+                  break;
 
             case 'Vendor-wise':
                 filteredData = Object.keys(data)
@@ -860,15 +912,36 @@ calculateInvoicewise(header: string): any {
 
     const footerData = ['Grand Total']; // First column with text "Grand Total"
 
+    // if (reportType === 'Overall-list') {
+    //   for (let i = 1; i < header.length; i++) { // Start loop from 1 to skip the first column
+    //     if (header[i] == 'Total (Company Currency)') {
+    //       footerData.push(totalCompanyCurrency.toFixed(this.entityFraction));
+    //     } else {
+    //       footerData.push('');
+    //     }
+    //   }
+    // } 
     if (reportType === 'Overall-list') {
-      for (let i = 1; i < header.length; i++) { // Start loop from 1 to skip the first column
-        if (header[i] == 'Total (Company Currency)') {
-          footerData.push(totalCompanyCurrency.toFixed(this.entityFraction));
+      this.headers.forEach((header, index) => {
+        if (index === 0) {
+          // Skip the first column which already has 'Grand Total'
+          return;
+        }
+        console.log('Processing header:', header);
+        if (header in this.totals) {
+          const total = this.totals[header];
+          console.log(`Total for ${header}:`, total);
+          if (total != null && !isNaN(total)) {
+            footerData.push(total.toFixed(this.entityFraction));
+          } else {
+            footerData.push('');
+          }
         } else {
           footerData.push('');
         }
-      }
-    } else if (reportType === 'Vendor-wise') {
+      });
+    }
+    else if (reportType === 'Vendor-wise') {
       for (let i = 1; i < header.length; i++) { // Start loop from 1 to skip the first column
         if (header[i] == 'Credit Amount') {
           footerData.push(totalCreditAmount.toFixed(this.entityFraction));
@@ -880,24 +953,32 @@ calculateInvoicewise(header: string): any {
           footerData.push('');
         }
       }
-    } else if (reportType === 'Vendor-Invoice-wise') {
-      for (let i = 1; i < header.length; i++) { // Start loop from 1 to skip the first column
-        if (header[i] == 'Invoice Amount') {
-          footerData.push(totalInvoiceAmount.toFixed(this.entityFraction));
+    }else if (reportType === 'Vendor-Invoice-wise') {
+      this.headers.forEach((header, index) => {
+        if (index === 0) {
+          // Skip the first column which already has 'Grand Total'
+          return;
         }
-        else if (header[i] == 'Balance (Invoice currency)') {
-          footerData.push(totaInvoiceCurrency.toFixed(this.entityFraction));
-        } else if (header[i] == 'Balance (Company Currency)') {
-          footerData.push(totalBalanceCompanyCurrency.toFixed(this.entityFraction));
+        console.log('Processing header:', header);
+        if (header in this.totals) {
+          const total = this.totals[header];
+          console.log(`Total for ${header}:`, total);
+          if (total != null && !isNaN(total)) {
+            footerData.push(total.toFixed(this.entityFraction));
+          } else {
+            footerData.push('');  // Ensure empty string if total is null or NaN
+          }
         } else {
-          footerData.push('');
+          footerData.push('');  // Ensure empty string if header is not in totals
         }
-      }
+      });
     } else {
-      for (let i = 1; i < header.length; i++) {
+      for (let i = 1; i < this.headers.length; i++) {
         footerData.push('');
       }
     }
+    
+    
 
     const footerRow = worksheet.addRow(footerData);
     footerRow.eachCell((cell, colNumber) => {

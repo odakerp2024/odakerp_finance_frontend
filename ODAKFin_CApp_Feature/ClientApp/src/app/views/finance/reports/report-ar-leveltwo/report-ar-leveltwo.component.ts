@@ -73,6 +73,7 @@ export class ReportArLeveltwoComponent implements OnInit {
   headers: string[] = [];
   data: any[] = [];
   sortOrder: { [key: string]: 'asc' | 'desc' } = {};
+  totals: any;
 
   constructor(
     private commonDataService: CommonService,
@@ -84,7 +85,7 @@ export class ReportArLeveltwoComponent implements OnInit {
     private dataService: DataService,
     private reportService: ReportDashboardService,
     public excelService: ExcelService
-  ) { 
+  ) {
     this.headers.forEach(header => {
       this.sortOrder[header] = 'asc';
     });
@@ -116,7 +117,9 @@ export class ReportArLeveltwoComponent implements OnInit {
     this.subtype = subTypeId;
     this.pagedItems = [];
     this.type = 'customerwise';
-    await this.createReportForm();
+    //await this.createReportForm();
+    this.reportFilter.controls.Type.setValue(1);
+    this.reportFilter.controls.SubTypeId.setValue(this.subtype);
     await this.getCustomerWiseList();
   }
 
@@ -124,7 +127,9 @@ export class ReportArLeveltwoComponent implements OnInit {
     this.subtypecustomerId = subtypecustomerId;
     this.pagedItems = [];
     this.type = 'customerinvoicewise';
-    await this.createReportForm();
+    //await this.createReportForm();
+    this.reportFilter.controls.Type.setValue(1);
+    this.reportFilter.controls.SubTypeId.setValue(this.subtypecustomerId);
     await this.getInvoiceWiseList();
   }
 
@@ -298,43 +303,43 @@ export class ReportArLeveltwoComponent implements OnInit {
     })
   }
 
-  getAgingDropdown() {  
+  getAgingDropdown() {
     const payload = {
-      type : 2,
+      type: 2,
     }
-    
-      this.reportService.getAgingDropdown(payload).subscribe((result: any) => {
-        if (result.message == 'Success') {
-          this.reportFilter.controls.AgingTypeId.setValue('');
-          this.agingGroupDropdown = [];
-          if (result["data"].Table.length > 0) {
-            this.agingGroupDropdown = result.data.Table;
-  
-          }
-          this.reportFilter.controls.AgingTypeId.setValue(this.agingGroupDropdown[0].AgingTypeId);
-         
+
+    this.reportService.getAgingDropdown(payload).subscribe((result: any) => {
+      if (result.message == 'Success') {
+        this.reportFilter.controls.AgingTypeId.setValue('');
+        this.agingGroupDropdown = [];
+        if (result["data"].Table.length > 0) {
+          this.agingGroupDropdown = result.data.Table;
+
         }
-      }), error => {
-        console.error(error);
+        this.reportFilter.controls.AgingTypeId.setValue(this.agingGroupDropdown[0].AgingTypeId);
+
       }
+    }), error => {
+      console.error(error);
     }
+  }
 
 
   //Dynamic Overall List 
   getOverallList() {
     this.startDate = this.reportFilter.controls.FromDate.value;
     this.endDate = this.reportFilter.controls.ToDate.value;
-  
+
     this.reportService.getAgingSummaryList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
       if (result.message == "Success" && result.data && result.data.Table) {
         this.reportList = result['data'].Table;
         let tableData = result.data.Table;
-  
+
         if (tableData.length > 0) {
           // Set headers from the first data row
           this.headers = Object.keys(tableData[0]).filter(header => header !== 'Id');
-  
+
           // Format the data rows
           this.pagedItems = tableData.map(row => ({
             ...row,
@@ -350,7 +355,7 @@ export class ReportArLeveltwoComponent implements OnInit {
       }
     });
   }
-  
+
 
   getInvoiceWiseList() {
     this.startDate = this.reportFilter.controls.FromDate.value;
@@ -361,9 +366,9 @@ export class ReportArLeveltwoComponent implements OnInit {
       if (result.message == "Success" && result.data && result.data.Table) {
         this.reportList = result['data'].Table;
         let tableData = result.data.Table;
-       
+
         if (tableData.length > 0) {
-          this.headers = Object.keys(tableData[0]); 
+          this.headers = Object.keys(tableData[0]).filter(header => header !== 'CustomerID');
 
           // Extract 'Balance (Company Currency)' field and format it
           this.pagedItems = tableData.map(row => ({
@@ -371,7 +376,7 @@ export class ReportArLeveltwoComponent implements OnInit {
             'Invoice Amount': Number(row['Invoice Amount']).toFixed(this.entityFraction),
             'Balance (Invoice currency)': Number(row['Balance (Invoice currency)']).toFixed(this.entityFraction),
             'Balance (Company Currency)': Number(row['Balance (Company Currency)']).toFixed(this.entityFraction)
-          }));          
+          }));
           this.setPage(1);
         } else {
           this.pagedItems = [];
@@ -380,7 +385,7 @@ export class ReportArLeveltwoComponent implements OnInit {
     });
   }
 
- //Dynamic CustomerWise List 
+  //Dynamic CustomerWise List 
   getCustomerWiseList() {
     this.startDate = this.reportFilter.controls.FromDate.value;
     this.endDate = this.reportFilter.controls.ToDate.value;
@@ -390,18 +395,18 @@ export class ReportArLeveltwoComponent implements OnInit {
       if (result.message == "Success" && result.data && result.data.Table) {
         this.reportList = result['data'].Table;
         let tableData = result.data.Table;
-       
+
         if (tableData.length > 0) {
           // Set headers from the first data row
           this.headers = Object.keys(tableData[0]).filter(header => header !== 'CustomerID');
-    
+
           // Extract 'Balance (Company Currency)' field and format it
           this.pagedItems = tableData.map(row => ({
             ...row,
             'Balance (Company Currency)': Number(row['Balance (Company Currency)']).toFixed(this.entityFraction),
             'Balance (Invoice currency)': Number(row['Balance (Invoice currency)']).toFixed(this.entityFraction),
             'Credit Amount': Number(row['Credit Amount']).toFixed(this.entityFraction)
-          }));          
+          }));
           this.setPage(1);
         } else {
           this.pagedItems = [];
@@ -410,7 +415,7 @@ export class ReportArLeveltwoComponent implements OnInit {
     });
   }
 
-  
+
   //Dynamic Grand Total Calculation Methods overall
   calculateDynamicHeaders(): string[] {
     let excludedColumns: string[] = ['Sub Category', 'Id']; // Define columns to be excluded
@@ -429,85 +434,88 @@ export class ReportArLeveltwoComponent implements OnInit {
     return this.pagedItems.reduce((acc, item) => acc + parseFloat(item[header] || 0), 0);
   }
 
- //Dynamic Grand Total Calculation Methods Customer Wise 
+  //Dynamic Grand Total Calculation Methods Customer Wise 
   calculateHeadersCustomerwise(): string[] {
     let excludedColumns: string[] = ['CustomerID']; // Define columns to be excluded
-  
+
     if (this.pagedItems.length > 0) {
       return Object.keys(this.pagedItems[0])
         .filter(key => !excludedColumns.includes(key));
     }
-  
+
     return [];
   }
-  
+
   isNumeric(value: any): boolean {
     return !isNaN(parseFloat(value)) && isFinite(value);
   }
-  
+
   customerTotals(header: string): any {
     // Check if the header corresponds to numeric fields
     const isNumeric = this.pagedItems.some(item => !isNaN(parseFloat(item[header])));
-  
+
     // If none of the fields are numeric, return an empty string
     if (!isNumeric) {
       return '';
     }
-  
+
     // Calculate total for the specified header
     const total = this.pagedItems.reduce((acc, item) => {
       const value = parseFloat(item[header]);
       return isNaN(value) ? acc : acc + value;
     }, 0);
-  
+
     // Return  total 
     return total
   }
-  
+
   calculateCustomerTotals(header: string): any {
     const total = this.customerTotals(header);
     return this.isNumeric(total) ? total : '';
   }
-  
+
   //Dynamic Header Invoice Wise 
   calculateHeadersInvoicewise(): string[] {
+    let excludedColumns: string[] = ['CustomerID']; // Define columns to be excluded
     if (this.pagedItems.length > 0) {
-      return Object.keys(this.pagedItems[0]) 
+      return Object.keys(this.pagedItems[0])
+        .filter(key => !excludedColumns.includes(key));
     }
+
     return [];
   }
-  
+
   isDate(value: any): boolean {
     return !isNaN(Date.parse(value));
-}
-
-InvoiceTotals(header: string): any {
-  const specifiedFields = [
-    "Balance (Invoice currency)",
-    "Balance (Company Currency)",
-    "Invoice Amount",
-    "Age (Days)"
-  ];
-
-  // Check if the header is one of the specified fields
-  if (!specifiedFields.includes(header)) {
-    return ''; // Return empty for non-specified fields
   }
 
-  // Calculate total for the specified header
-  const total = this.pagedItems.reduce((acc, item) => {
-    const value = parseFloat(item[header]);
-    return isNaN(value) ? acc : acc + value;
-  }, 0);
+  InvoiceTotals(header: string): any {
+    const specifiedFields = [
+      "Balance (Invoice currency)",
+      "Balance (Company Currency)",
+      "Invoice Amount",
+      "Age (Days)"
+    ];
 
-  return total;
-}
+    // Check if the header is one of the specified fields
+    if (!specifiedFields.includes(header)) {
+      return ''; // Return empty for non-specified fields
+    }
 
-  
-calculateInvoicewise(header: string): any {
-  const total = this.InvoiceTotals(header);
-  return this.isNumeric(total) ? total : '';
-}
+    // Calculate total for the specified header
+    const total = this.pagedItems.reduce((acc, item) => {
+      const value = parseFloat(item[header]);
+      return isNaN(value) ? acc : acc + value;
+    }, 0);
+
+    return total;
+  }
+
+
+  calculateInvoicewise(header: string): any {
+    const total = this.InvoiceTotals(header);
+    return this.isNumeric(total) ? total : '';
+  }
 
   setPage(page: number) {
     if (page < 1 || page > this.pager.totalPages) return;
@@ -619,10 +627,11 @@ calculateInvoicewise(header: string): any {
     startDate: string,
     endDate: string,
     reportType: 'overall' | 'customerwise' | 'customerinvoicewise'
-) {
+  ) {
+    debugger
     if (reportList.length === 0) {
-        Swal.fire('No record found');
-        return;
+      Swal.fire('No record found');
+      return;
     }
 
     const workbook = new Workbook();
@@ -634,33 +643,35 @@ calculateInvoicewise(header: string): any {
     let columnsToColor: string[] = [];
     let columnsToAlignLeft: string[] = [];
     let columnsToAlignRight: string[] = [];
+    this.totals = [];
+
 
     switch (reportType) {
-        case 'overall':
-            titleHeader = 'Receivable Aging Summary - Overall';
-            excludeKeys = ['Id'];
-            columnsToColor = ['Sub Category', 'Balance (Company Currency)'],
-            columnsToAlignLeft = ['Sub Category'];
-            columnsToAlignRight = ['Balance (Company Currency)'];
-            break;
-        case 'customerwise':
-            titleHeader = 'Receivable Aging Summary - Customer Wise';
-            excludeKeys = ['CustomerID', 'InvoiceDate'];
-            columnsToColor = ['Customer', 'Credit Amount', 'Balance (Company Currency)', 'Balance (Invoice currency)']
-            columnsToAlignLeft = ['Customer'];
-            columnsToAlignRight = ['Credit Amount', 'Balance (Invoice Currency)', 'Net Balance (Invoice Currency)', 'Balance (Company Currency)'];
-            break;
-        case 'customerinvoicewise':
-            titleHeader = 'Receivable Aging Summary - Invoice Wise';
-            excludeKeys = [];
-            columnsToColor = ['Invoice #', 'Transaction Type', 'Invoice Amount', 'Balance (Invoice currency)', 'Balance (Company Currency)']
-            columnsToAlignLeft = ['Invoice #', 'Transaction Type'];
-            columnsToAlignRight = ['Invoice Amount', 'Balance (Invoice Currency)', 'Balance (Company Currency)'];
-            break;
-        default:
-            titleHeader = 'Receivable Aging Summary';
-            excludeKeys = [];
-            break;
+      case 'overall':
+        titleHeader = 'Receivable Aging Summary - Overall';
+        excludeKeys = ['Id'];
+        columnsToColor = ['Sub Category', 'Balance (Company Currency)'],
+          columnsToAlignLeft = ['Sub Category'];
+        columnsToAlignRight = ['Balance (Company Currency)'];
+        break;
+      case 'customerwise':
+        titleHeader = 'Receivable Aging Summary - Customer Wise';
+        excludeKeys = ['CustomerID', 'InvoiceDate'];
+        columnsToColor = ['Customer', 'Credit Amount', 'Balance (Company Currency)', 'Balance (Invoice currency)']
+        columnsToAlignLeft = ['Customer'];
+        columnsToAlignRight = ['Credit Amount', 'Balance (Invoice Currency)', 'Net Balance (Invoice Currency)', 'Balance (Company Currency)'];
+        break;
+      case 'customerinvoicewise':
+        titleHeader = 'Receivable Aging Summary - Invoice Wise';
+        excludeKeys = ['CustomerID'];
+        columnsToColor = [ 'Balance (Invoice Currency)', 'Balance (Company Currency)']
+        columnsToAlignLeft = ['Invoice #', 'Transaction Type'];
+        columnsToAlignRight = ['Invoice Amount', 'Balance (Invoice Currency)', 'Balance (Company Currency)'];
+        break;
+      default:
+        titleHeader = 'Receivable Aging Summary';
+        excludeKeys = [];
+        break;
     }
 
     const header = Object.keys(reportList[0]).filter((key) => !excludeKeys.includes(key));
@@ -677,30 +688,30 @@ calculateInvoicewise(header: string): any {
 
     const dateRow = worksheet.addRow(['', '', '', `FROM ${this.datePipe.transform(this.startDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))} - TO ${this.datePipe.transform(this.endDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`, '', '', '']);
     dateRow.eachCell((cell) => {
-        cell.alignment = { horizontal: 'center' };
+      cell.alignment = { horizontal: 'center' };
     });
     worksheet.mergeCells(`D${dateRow.number}:E${dateRow.number}`);
 
     const headerRow = worksheet.addRow(header);
     headerRow.eachCell((cell) => {
-        cell.fill = {
-            type: 'pattern',
-            pattern: 'solid',
-            fgColor: { argb: '8A9A5B' },
-        };
-        cell.font = {
-            bold: true,
-            color: { argb: 'FFFFF7' },
-        };
-        cell.alignment = {
-            horizontal: 'center',
-        };
-        cell.border = {
-            top: { style: 'thin' },
-            left: { style: 'thin' },
-            bottom: { style: 'thin' },
-            right: { style: 'thin' },
-        };
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: '8A9A5B' },
+      };
+      cell.font = {
+        bold: true,
+        color: { argb: 'FFFFF7' },
+      };
+      cell.alignment = {
+        horizontal: 'center',
+      };
+      cell.border = {
+        top: { style: 'thin' },
+        left: { style: 'thin' },
+        bottom: { style: 'thin' },
+        right: { style: 'thin' },
+      };
     });
 
     // Initialize totals
@@ -713,143 +724,257 @@ calculateInvoicewise(header: string): any {
     let totalinvoiceamount = 0;
 
     reportList.forEach((data) => {
-        let filteredData: { [key: string]: any } = {};
-        const defaultValue = 0;
+      let filteredData: { [key: string]: any } = {};
+      const defaultValue = 0;
 
-        switch (reportType) {
-            case 'customerinvoicewise':
-                data.Date = data.Date.split('T')[0];
-                filteredData = Object.keys(data)
-                    .filter((key) => !excludeKeys.includes(key))
-                    .reduce((obj, key) => {
-                        obj[key] = data[key];
-                        return obj;
-                    }, {});
+      switch (reportType) {
+        case 'customerinvoicewise':
 
-                    filteredData['Invoice Amount'] = `${data['Invoice Amount'] !== null ? parseFloat(data['Invoice Amount']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
-                    filteredData['Balance (Invoice currency)'] = `${data['Balance (Invoice currency)'] !== null ? parseFloat(data['Balance (Invoice currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
-                    filteredData['Balance (Company Currency)'] = `${data['Balance (Company Currency)'] !== null ? parseFloat(data['Balance (Company Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
-                // Accumulate totals
-                totalinvoiceamount += parseFloat(data['Invoice Amount']) || 0;
-                totaInvoiceCurrency += parseFloat(data['Balance (Invoice currency)']) || 0;
-                totalBalanceCompanyCurrency += parseFloat(data['Balance (Company Currency)']) || 0;
-                break;
-
-            case 'overall':
-                filteredData = Object.keys(data)
-                    .filter((key) => !excludeKeys.includes(key))
-                    .reduce((obj, key) => {
-                        obj[key] = data[key];
-                        return obj;
-                    }, {});
-
-                filteredData['Balance (Company Currency)'] = `${data['Balance (Company Currency)'] !== null ? parseFloat(data['Balance (Company Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
-                // Accumulate totals
-                totalBalanceCompanyCurrency += parseFloat(data['Balance (Company Currency)']) || 0;
-                break;
-
-            case 'customerwise':
-                filteredData = Object.keys(data)
-                    .filter((key) => !excludeKeys.includes(key))
-                    .reduce((obj, key) => {
-                        obj[key] = data[key];
-                        return obj;
-                    }, {});
-
-                    filteredData['Credit Amount'] = `${data['Credit Amount'] !== null ? parseFloat(data['Credit Amount']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
-                    filteredData['Balance (Company Currency)'] = `${data['Balance (Company Currency)'] !== null ? parseFloat(data['Balance (Company Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
-                    filteredData['Balance (Invoice currency)'] = `${data['Balance (Invoice currency)'] !== null ? parseFloat(data['Balance (Invoice currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
-                // Accumulate totals
-                totalCreditAmount += parseFloat(data['Credit Amount']) || 0;
-                totalBalanceInvoiceCustomerWise += parseFloat(data['Balance (Invoice Currency)']) || 0;
-                totalBalanceCustomerWise += parseFloat(data['Balance (Company Currency)']) || 0;
-                totalBalanceCompanyCustomerWise += parseFloat(data['Balance (Invoice currency)']) || 0;
-                break;
+        if (!this.totals) {
+          this.totals = {};
         }
+      
+          filteredData = Object.keys(data)
+            .filter((key) => !excludeKeys.includes(key))
+            .reduce((obj, key) => {
+              obj[key] = data[key];
+              return obj;
+            }, {});
 
-        const row = worksheet.addRow(Object.values(filteredData));
+         
+          filteredData['Balance (Invoice Currency)'] = `${data['Balance (Invoice Currency)'] !== null ? parseFloat(data['Balance (Invoice Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
+          filteredData['Balance (Company Currency)'] = `${data['Balance (Company Currency)'] !== null ? parseFloat(data['Balance (Company Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
+          // Accumulate totals
+       
+          totaInvoiceCurrency += parseFloat(data['Balance (Invoice Currency)']) || 0;
+          totalBalanceCompanyCurrency += parseFloat(data['Balance (Company Currency)']) || 0;
 
-        // Apply color and alignment based on the category
-        columnsToColor.forEach((columnName) => {
-            const columnIndex = header.indexOf(columnName);
-            if (columnIndex !== -1) {
-                const cell = row.getCell(columnIndex + 1);
-                cell.font = { color: { argb: '8B0000' }, bold: true };
-                cell.alignment = { horizontal: 'right' };
+          if (!this.headers) {
+            this.headers = [];
+          }
+
+          // Add dynamic headers if the value is a number and update totals
+          Object.keys(filteredData).forEach(key => {
+            if (!isNaN(filteredData[key]) && key !== 'Id' && key !== 'Sub Category' && key !== 'Customer' && key !== 'Branch' && key !== 'Sales Person') {
+              if (!this.headers.includes(key)) {
+                this.headers.push(key);
+              }
+              // Update totals for each numeric column
+              if (!this.totals[key]) {
+                this.totals[key] = 0;
+              }
+              this.totals[key] += parseFloat(filteredData[key]) || 0;
             }
-        });
+          });
 
-        columnsToAlignLeft.forEach((columnName) => {
-            const columnIndex = header.indexOf(columnName);
-            if (columnIndex !== -1) {
-                const cell = row.getCell(columnIndex + 1);
-                cell.alignment = { horizontal: 'left' };
-            }
-        });
+          break;
 
-        columnsToAlignRight.forEach((columnName) => {
-            const columnIndex = header.indexOf(columnName);
-            if (columnIndex !== -1) {
-                const cell = row.getCell(columnIndex + 1);
-                cell.alignment = { horizontal: 'right' };
+        // case 'overall':
+        //     filteredData = Object.keys(data)
+        //         .filter((key) => !excludeKeys.includes(key))
+        //         .reduce((obj, key) => {
+        //             obj[key] = data[key];
+        //             return obj;
+        //         }, {});
+
+        //     filteredData['Balance (Company Currency)'] = `${data['Balance (Company Currency)'] !== null ? parseFloat(data['Balance (Company Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
+        //     // Accumulate totals
+        //     totalBalanceCompanyCurrency += parseFloat(data['Balance (Company Currency)']) || 0;
+        //     break;
+
+        case 'overall':
+          debugger;
+          // Initialize totals object if it doesn't exist
+          if (!this.totals) {
+            this.totals = {};
+          }
+
+          // Process and filter the data
+          filteredData = Object.keys(data)
+            .filter((key) => !excludeKeys.includes(key))
+            .reduce((obj, key) => {
+              obj[key] = data[key];
+              return obj;
+            }, {});
+
+          // Format and update Balance (Company Currency)
+          filteredData['Balance (Company Currency)'] = `${data['Balance (Company Currency)'] !== null ? parseFloat(data['Balance (Company Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
+
+          // Accumulate totals
+          totalBalanceCompanyCurrency += parseFloat(data['Balance (Company Currency)']) || 0;
+
+          // Initialize the headers array if it doesn't exist
+          if (!this.headers) {
+            this.headers = [];
+          }
+
+          // Add dynamic headers if the value is a number and update totals
+          Object.keys(filteredData).forEach(key => {
+            if (!isNaN(filteredData[key]) && key !== 'Id' && key !== 'Sub Category') {
+              if (!this.headers.includes(key)) {
+                this.headers.push(key);
+              }
+              // Update totals for each numeric column
+              if (!this.totals[key]) {
+                this.totals[key] = 0;
+              }
+              this.totals[key] += parseFloat(filteredData[key]) || 0;
             }
-        });
+          });
+
+          break;
+        case 'customerwise':
+          if (!this.totals) {
+            this.totals = {};
+          }
+
+          filteredData = Object.keys(data)
+            .filter((key) => !excludeKeys.includes(key))
+            .reduce((obj, key) => {
+              obj[key] = data[key];
+              return obj;
+            }, {});
+
+          filteredData['Credit Amount'] = `${data['Credit Amount'] !== null ? parseFloat(data['Credit Amount']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
+          filteredData['Balance (Company Currency)'] = `${data['Balance (Company Currency)'] !== null ? parseFloat(data['Balance (Company Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
+          filteredData['Balance (Invoice currency)'] = `${data['Balance (Invoice currency)'] !== null ? parseFloat(data['Balance (Invoice currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
+          // Accumulate totals
+          totalCreditAmount += parseFloat(data['Credit Amount']) || 0;
+          totalBalanceInvoiceCustomerWise += parseFloat(data['Balance (Invoice Currency)']) || 0;
+          totalBalanceCustomerWise += parseFloat(data['Balance (Company Currency)']) || 0;
+          totalBalanceCompanyCustomerWise += parseFloat(data['Balance (Invoice currency)']) || 0;
+
+
+          if (!this.headers) {
+            this.headers = [];
+          }
+
+          // Add dynamic headers if the value is a number and update totals
+          Object.keys(filteredData).forEach(key => {
+            if (!isNaN(filteredData[key]) && key !== 'Id' && key !== 'Sub Category' && key !== 'Customer' && key !== 'Branch' && key !== 'Sales Person') {
+              if (!this.headers.includes(key)) {
+                this.headers.push(key);
+              }
+              // Update totals for each numeric column
+              if (!this.totals[key]) {
+                this.totals[key] = 0;
+              }
+              this.totals[key] += parseFloat(filteredData[key]) || 0;
+            }
+          });
+
+          break;
+      }
+
+      const row = worksheet.addRow(Object.values(filteredData));
+
+      // Apply color and alignment based on the category
+      columnsToColor.forEach((columnName) => {
+        const columnIndex = header.indexOf(columnName);
+        if (columnIndex !== -1) {
+          const cell = row.getCell(columnIndex + 1);
+          cell.font = { color: { argb: '8B0000' }, bold: true };
+          cell.alignment = { horizontal: 'right' };
+        }
+      });
+
+      columnsToAlignLeft.forEach((columnName) => {
+        const columnIndex = header.indexOf(columnName);
+        if (columnIndex !== -1) {
+          const cell = row.getCell(columnIndex + 1);
+          cell.alignment = { horizontal: 'left' };
+        }
+      });
+
+      columnsToAlignRight.forEach((columnName) => {
+        const columnIndex = header.indexOf(columnName);
+        if (columnIndex !== -1) {
+          const cell = row.getCell(columnIndex + 1);
+          cell.alignment = { horizontal: 'right' };
+        }
+      });
     });
 
     worksheet.columns.forEach((column) => {
-        let maxLength = 0;
-        column.eachCell({ includeEmpty: true }, (cell) => {
-            const cellLength = cell.value ? cell.value.toString().length : 0;
-            if (cellLength > maxLength) {
-                maxLength = cellLength;
-            }
-        });
-        column.width = maxLength + 2;
+      let maxLength = 0;
+      column.eachCell({ includeEmpty: true }, (cell) => {
+        const cellLength = cell.value ? cell.value.toString().length : 0;
+        if (cellLength > maxLength) {
+          maxLength = cellLength;
+        }
+      });
+      column.width = maxLength + 2;
     });
 
-    const footerData = ['Grand Total']; // First column with text "Grand Total"
+
+
+
+    const footerData = ['Grand Total']; // Initialize footerData within the function
+    console.log('Report Type:', reportType);
+    console.log('Headers:', this.headers);
+    console.log('Totals:', this.totals);
+    console.log('Entity Fraction:', this.entityFraction);
 
     if (reportType === 'overall') {
-      for (let i = 1; i < header.length; i++) { // Start loop from 1 to skip the first column
-        if (header[i] == 'Balance (Company Currency)') {
-          footerData.push(totalBalanceCompanyCurrency.toFixed(this.entityFraction));
+      this.headers.forEach((header, index) => {
+        if (index === 0) {
+          // Skip the first column which already has 'Grand Total'
+          return;
+        }
+        console.log('Processing header:', header);
+        if (header in this.totals) {
+          const total = this.totals[header];
+          console.log(`Total for ${header}:`, total);
+          if (total != null && !isNaN(total)) {
+            footerData.push(total.toFixed(this.entityFraction));
+          } else {
+            footerData.push('');
+          }
         } else {
           footerData.push('');
         }
-      }
-    } else if (reportType === 'customerwise') {
-      for (let i = 1; i < header.length; i++) { // Start loop from 1 to skip the first column
-        if (header[i] == 'Credit Amount') {
-          footerData.push(totalCreditAmount.toFixed(this.entityFraction));
-        } else if (header[i] == 'Balance (Invoice Currency)') {
-          footerData.push(totalBalanceInvoiceCustomerWise.toFixed(this.entityFraction));
-        } else if (header[i] == 'Balance (Company Currency)') {
-          footerData.push(totalBalanceCustomerWise.toFixed(this.entityFraction));
-        } else if (header[i] == 'Balance (Invoice currency)') {
-          footerData.push(totalBalanceCompanyCustomerWise.toFixed(this.entityFraction));
-        } else {
-          footerData.push('');
-        }
-      }
-    } else if (reportType === 'customerinvoicewise') {
-      for (let i = 1; i < header.length; i++) { // Start loop from 1 to skip the first column
-          if (header[i] == 'Balance (Invoice currency)') {
-          footerData.push(totaInvoiceCurrency.toFixed(this.entityFraction));
-        } else if (header[i] == 'Balance (Company Currency)') {
-          footerData.push(totalBalanceCompanyCurrency.toFixed(this.entityFraction));
-        } else if (header[i] == 'Invoice Amount') {
-          footerData.push(totaInvoiceCurrency.toFixed(this.entityFraction));
-        } 
-        else {
-          footerData.push('');
-        }
-      }
-    } else {
-      for (let i = 1; i < header.length; i++) {
-        footerData.push('');
-      }
-    }
+      });
 
+
+    } else if (reportType === 'customerwise') {
+      this.headers.forEach((header, index) => {
+        if (index === 0) {
+          // Skip the first column which already has 'Grand Total'
+          return;
+        }
+        console.log('Processing header:', header);
+        if (header in this.totals) {
+          const total = this.totals[header];
+          console.log(`Total for ${header}:`, total);
+          if (total != null && !isNaN(total)) {
+            footerData.push(total.toFixed(this.entityFraction));
+          } else {
+            footerData.push('');
+          }
+        } else {
+          footerData.push('');
+        }
+      });
+    } else if (reportType === 'customerinvoicewise') {
+      this.headers.forEach((header, index) => {
+        if (index === 0) {
+          // Skip the first column which already has 'Grand Total'
+          return;
+        }
+        console.log('Processing header:', header);
+        if (header in this.totals) {
+          const total = this.totals[header];
+          console.log(`Total for ${header}:`, total);
+          if (total != null && !isNaN(total)) {
+            footerData.push(total.toFixed(this.entityFraction));
+          } else {
+            footerData.push('');
+          }
+        } else {
+          footerData.push('');
+        }
+      });
+    }
     const footerRow = worksheet.addRow(footerData);
     footerRow.eachCell((cell, colNumber) => {
         cell.font = { bold: true };
@@ -860,28 +985,63 @@ calculateInvoicewise(header: string): any {
             fgColor: { argb: 'FFFF99' }, // Example color, change as needed
         };
     });
+    // const applyFooterStyles = (footerData, worksheet, colNumberCondition) => {
+    //   const footerRow = worksheet.addRow(footerData);
+    //   footerRow.eachCell((cell, colNumber) => {
+    //     cell.font = { bold: true };
+    //     cell.alignment = { horizontal: colNumberCondition(colNumber) ? 'left' : 'right' };
+    //     cell.fill = {
+    //       type: 'pattern',
+    //       pattern: 'solid',
+    //       fgColor: { argb: 'FFFF99' }, // Example color, change as needed
+    //     };
+    //   });
+    // };
+
+
+    // const type = 'customerinvoicewise' || 'overall' || 'customerwise';
+
+    // // const footerData = []; // Your footer data here
+    // // const worksheet = {}; // Your worksheet object here
+
+    // switch (type) {
+    //   case 'overall':
+    //     applyFooterStyles(footerData, worksheet, colNumber => colNumber >= 3);
+    //     break;
+
+    //   case 'customerinvoicewise':
+    //     applyFooterStyles(footerData, worksheet, colNumber => colNumber <= 4);
+    //     break;
+
+    //   case 'customerwise':
+    //     applyFooterStyles(footerData, worksheet, colNumber => colNumber <= 3);
+    //     break;
+
+    // }
+
 
     // Add "End of Report" row
     const endOfReportRow = worksheet.addRow(['End of Report']);
     endOfReportRow.eachCell((cell) => {
-        cell.fill = {
-            type: 'pattern',
-            pattern: 'solid',
-            fgColor: { argb: '8A9A5B' },
-        };
-        cell.font = {
-            bold: true,
-            color: { argb: 'FFFFF7' },
-        };
-        cell.alignment = {
-            horizontal: 'center',
-        };
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: '8A9A5B' },
+      };
+      cell.font = {
+        bold: true,
+        color: { argb: 'FFFFF7' },
+      };
+      cell.alignment = {
+        horizontal: 'center',
+      };
     });
     worksheet.mergeCells(`A${endOfReportRow.number}:${String.fromCharCode(65 + header.length - 1)}${endOfReportRow.number}`);
 
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     saveAs(blob, `ReceivableAgingSummary-${reportType}.xlsx`);
-}
+  }
+
 
 }
