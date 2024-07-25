@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { parse } from 'path';
 import { Status, StatusView } from 'src/app/model/common';
 import { PaginationService } from 'src/app/pagination.service';
 import { AgingConfigurationService } from 'src/app/services/financeModule/aging-configuration.service';
@@ -361,11 +362,11 @@ export class AgingConfigurationComponent implements OnInit {
     if (!this.agingConfigurationForm.value.Description) {
       validation += '<span style=\'color:red;\'>*</span> <span>Please enter description</span></br>';
     }
-
-    if (this.agingConfigurationForm.value.From > this.agingConfigurationForm.value.To) {
+debugger
+    if (parseInt(this.agingConfigurationForm.value.From) > parseInt(this.agingConfigurationForm.value.To)) {
       validation += '<span style=\'color:red;\'>*</span> <span>From (days) should be lower than To (days)</span></br>';
     }
-    if (this.agingConfigurationForm.value.From == this.agingConfigurationForm.value.To) {
+    if (parseInt(this.agingConfigurationForm.value.From) == parseInt(this.agingConfigurationForm.value.To)) {
       validation += '<span style=\'color:red;\'>*</span> <span>From (days) should be lower than To (days)</span></br>';
     }
 
