@@ -373,10 +373,12 @@ export class ReportVoucherReversalComponent implements OnInit  {
       //To Remove Time from date field data
       const date = data.Date
       const formattedDate = date ? date.split('T')[0] : null;
-
-      data.Date =  this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
-
-
+      if(formattedDate != date){
+        data.Date =  this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
+      }
+      else{
+        data.Date =  formattedDate
+      }
 
       // Add the filtered data to the worksheet
       const row = worksheet.addRow(Object.values(data));
@@ -531,8 +533,12 @@ export class ReportVoucherReversalComponent implements OnInit  {
       //To Remove Time from date field data
       const date = data.Date
       const formattedDate = date ? date.split('T')[0] : null;
-
-      data.Date =  this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
+      if(formattedDate != date){
+        data.Date =  this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
+      }
+      else{
+        data.Date =  formattedDate
+      }
 
 
 
