@@ -121,8 +121,7 @@
 
 
 
-            <div class="col-10" id="outer-container" style="margin-left: auto; margin-right: auto;">
-                <div id="table-container">
+            <div class="col-10" id="table-container"  style="margin-left: auto; margin-right: auto;">
                   <table id="datatable-buttons" class="table table-responsive table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
                     <thead class="header">
                       <tr role="row">
@@ -147,7 +146,7 @@
                         <ng-container *ngFor="let balance of dataList">
                           <tr>
                             <td>{{balance.Trans_Date | date: commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td>
-                            <td>{{balance.Trans_Account_Name}}</td>
+                            <td [title]= balance.Trans_Account_Name>{{(balance.Trans_Account_Name && balance.Trans_Account_Name.length > 20) ? balance.Trans_Account_Name.slice(0, 20) + '-' : balance.Trans_Account_Name}}</td>
                             <td class="hyperTextColor" [title]= balance.Trans_Details>{{(balance.Trans_Details && balance.Trans_Details.length > 20) ? balance.Trans_Details.slice(0, 20) + '-' : balance.Trans_Details}}</td>
                             <td>{{balance.Trans_Type}}</td>
                             <td class="hyperColor" (click)="clickTransactionNumber(balance.ID, balance.Trans_Type, balance.Trans_Number, balance.RedirectUrl)">{{balance.Trans_Number == 0 ? null : balance.Trans_Number}}</td>
@@ -177,7 +176,6 @@
                       </tr>
                     </tfoot>
                   </table>
-                </div>
               </div>
               
               
