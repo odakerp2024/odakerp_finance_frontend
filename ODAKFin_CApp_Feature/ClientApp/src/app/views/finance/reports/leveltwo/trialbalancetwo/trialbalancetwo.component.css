@@ -263,8 +263,52 @@ table {
   overflow-y: auto;
 } */
 
+/* header scroll code */
+#outer-container {
+  overflow: hidden; 
+}
 
+#table-container {
+  max-height: 600px;
+  overflow-y: auto; 
+  position: relative;
+}
 
+#table-container::-webkit-scrollbar {
+  display: none; 
+}
 
+#table-container {
+  -ms-overflow-style: none; 
+  scrollbar-width: none;
+}
 
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
 
+.header th {
+  position: sticky;
+  top: 0;
+  background: #fff; 
+  z-index: 1;
+}
+
+.table tbody {
+  display: block;
+  max-height: 500px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  
+}
+
+.table thead, .table tbody tr, .table tfoot {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.text-center {
+  text-align: center;
+}
