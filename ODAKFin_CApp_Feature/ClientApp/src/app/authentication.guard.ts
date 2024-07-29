@@ -11,7 +11,7 @@ export class AuthenticationGuard implements CanActivate {
     constructor(private Authguardservice: AuthguardServiceService, private router: Router) { }
     canActivate(): boolean {
         if (!this.Authguardservice.gettoken()) {
-            this.router.navigateByUrl("/login");
+          this.router.navigate(['/views/finance/financemaster',{tabName : 'transactions'}],);
         }
     //next: ActivatedRouteSnapshot,
     //state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
