@@ -149,8 +149,22 @@ export class ContraInfoComponent implements OnInit {
       UpdatedBy: [localStorage.getItem("UserID")],
       Exchange: [1],
     });
+    const statusId = this.contraForm.get('StatusId').value;
+    this.contraForm.get('StatusId').setValue(statusId == 1 ? 'Draft' : statusId == 2 ? 'Confirmed' : 'Cancelled');
   }
 
+  getStatusDisplayValue(statusId: number): string {
+    switch (statusId) {
+      case 1:
+        return 'Draft';
+      case 2:
+        return 'Confirmed';
+      case 3:
+        return 'Canceled';
+      default:
+        return '';
+    }
+  }
   async patchForm(contra) {
     // ! set to account
     const toAccount = this.bankList?.filter(

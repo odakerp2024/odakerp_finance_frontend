@@ -187,14 +187,17 @@
                     <div class="col-4">
                         <div class="form-group">
                             <label class="str fontstyles">Status</label>
-                            <select [ngClass]=" isUpdate ? 'block-input' : 'block-input'" readonly
+                            <input disabled type="text" class="w-100 pl-2"
+                            formControlName="StatusId"
+                            [value]="getStatusDisplayValue(paymentForm.get('Table').get('StatusId').value)"/>                                                
+                            <!-- <select [ngClass]=" isUpdate ? 'block-input' : 'block-input'" readonly
                                 formControlName="StatusId" name="Status"
                                 class="form-control my-select disable-input--nostyle">
                                 <option disabled value="">--SELECT STATUS--</option>
                                 <option disabled *ngFor="let status of statusList" [value]="status.Id">
                                     {{status.StatusName | uppercase}}
                                 </option>
-                            </select>
+                            </select> -->
                         </div>
                     </div>
 

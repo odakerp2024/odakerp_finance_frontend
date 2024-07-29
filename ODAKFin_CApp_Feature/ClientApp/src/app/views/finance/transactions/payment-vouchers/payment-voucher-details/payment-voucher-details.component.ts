@@ -226,6 +226,7 @@ export class PaymentVoucherDetailsComponent implements OnInit {
         TotalTDSAmount: [0],
         TotalPaymentAmount: [0]
       }),
+
       Table1: this.fb.group({
 
       }),
@@ -263,8 +264,26 @@ export class PaymentVoucherDetailsComponent implements OnInit {
         Narration: ['']
       })
     });
-  }
 
+  // Set initial value of StatusId based on your condition
+  const statusId = this.paymentForm.get('Table').get('StatusId').value;
+  this.paymentForm.get('Table').get('StatusId').setValue(statusId === 1 ? 'Draft' : statusId === 2 ? 'Confirmed' : 'Cancelled');
+}
+  
+
+
+  getStatusDisplayValue(statusId: number): string {
+    switch (statusId) {
+      case 1:
+        return 'Draft';
+      case 2:
+        return 'Confirmed';
+      case 3:
+        return 'Canceled';
+      default:
+        return '';
+    }
+  }
   getDrCr() {
     var service = `${this.globals.APIURL}/JournalVoucher/GetJournalVoucherDropDownList`;
     this.dataService.post(service, {}).subscribe((result: any) => {

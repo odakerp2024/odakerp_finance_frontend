@@ -190,14 +190,17 @@
                 <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group bmd-form-group w-100">
                         <label class="str fontstyles">Status</label>
-                        <select [ngClass]=" isUpdate ? 'block-input' : 'block-input'" readonly
+                        <input style="background-color: #e9ecef;border: 1px solid #a9a9a9;"  formControlName="StatusId"
+                        [value]="getStatusDisplayValue(receiptForm.get('StatusId').value)"
+                        readonly type="text" class="w-100" />
+                        <!-- <select [ngClass]=" isUpdate ? 'block-input' : 'block-input'" readonly
                             formControlName="StatusId" name="Status"
                             class="form-control my-select disable-input--nostyle">
                             <option disabled value="">--SELECT STATUS--</option>
                             <option disabled *ngFor="let status of statusList" [value]="status.Id">
                                 {{status.StatusName | uppercase}}
                             </option>
-                        </select>
+                        </select> -->
                     </div>
                 </div>
             </div>
@@ -465,7 +468,7 @@
                         <label class="fontstyles">TDS Amount (INR)</label>
                         <input [ngClass]="!IsTDSEnable ? 'disable-input' : ''" (ngModelChange)="summaryAmountCalculation()"
                             onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
-                            min="0" numbersOnly appDynamicDecimal class=" form-control mt-1"
+                            min="0" numbersOnly appDynamicDecimFal class=" form-control mt-1"
                             formControlName="TDSAmount" />
                     </div>
                 </div>
