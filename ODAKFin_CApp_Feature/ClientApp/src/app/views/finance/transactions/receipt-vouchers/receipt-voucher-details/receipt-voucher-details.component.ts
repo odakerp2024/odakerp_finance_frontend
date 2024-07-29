@@ -116,6 +116,7 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    debugger
     this.getModuleType();
     // this.checkLedgerMapping();
     this.createReceiptForm();
@@ -191,6 +192,7 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
   }
 
   createReceiptForm() {
+    debugger
     this.receiptForm = this.fb.group({
       ReceiptVoucherId: [this.receiptVoucherId],
 
@@ -225,7 +227,7 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
       IsFileUpload: [0],
       paymentDetailsArray: this.fb.array([]),
       LocalAmount: [0],
-      StatusId: [1],
+      StatusId: [1], 
       SDMode: [''],
       IsDelete: [0],
       CurrentExRate: [0],
@@ -249,9 +251,26 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
       this.isReceiptForInvoice = 3;
       this.setPaymentVoucherType(3)
     }
+
+  
+  // Set initial value of StatusId based on your condition
+  const statusId = this.receiptForm.get('StatusId').value;
+  this.receiptForm.get('StatusId').setValue(statusId == 1 ? 'Draft' : statusId == 2 ? 'Confirmed' : 'Cancelled');
+
   }
-
-
+  // Set from reports voucher value of StatusId based on your condition
+  getStatusDisplayValue(statusId: number): string {
+    switch (statusId) {
+      case 1:
+        return 'Draft';
+      case 2:
+        return 'Confirmed';
+      case 3:
+        return 'Canceled';
+      default:
+        return '';
+    }
+  }
   addNewAddressGroup() {
     const add = this.receiptForm.get('paymentDetailsArray') as FormArray;
     // Push a new group to the current value
