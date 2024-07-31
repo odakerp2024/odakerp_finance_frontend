@@ -94,14 +94,17 @@
                 <div class="col-md-6 col-sm-6 col-lg-4 col-xl-4">
                     <div class="form-group">
                         <label class="str ">Status</label>
-                        <select class="form-control my-select disable-input--nostyle"
+                        <input style="background-color: #e9ecef;border: 1px solid #a9a9a9;"  formControlName="StatusId"
+                        [value]="getStatusDisplayValue(journalForm.get('StatusId').value)"
+                        readonly type="text" class="w-100" />
+                        <!-- <select class="form-control my-select disable-input--nostyle"
                             [ngClass]=" isUpdate ? 'block-input' : 'block-input'" readonly formControlName="StatusId"
                             name="Status">
                             <option disabled value="">--SELECT STATUS--</option>
                             <option disabled *ngFor="let status of statusList" [value]="status.ID">
                                 {{status.StatusName | uppercase}}
                             </option>
-                        </select>
+                        </select> -->
                     </div>
                 </div>
 

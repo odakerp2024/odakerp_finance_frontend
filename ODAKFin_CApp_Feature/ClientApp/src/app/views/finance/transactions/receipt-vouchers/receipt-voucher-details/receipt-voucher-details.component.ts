@@ -24,6 +24,7 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
   // branches: any;
   // newOne: any;
   receivedCurrencyName = '';
+  statusId: string;
   onTextareaInput(event: Event): void {
     const textarea = this.autoResizeTextArea.nativeElement as HTMLTextAreaElement;
     textarea.style.height = 'auto';
@@ -95,6 +96,7 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
   IsExLossEnable: boolean = false;
   selectedFile: File = null;
   fileUrl: string;
+  statusDisplayValue: string = '';
 
   isCopied = false;
   currentDate = this.datePipe.transform(new Date(), "yyyy-MM-dd");
@@ -225,7 +227,7 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
       IsFileUpload: [0],
       paymentDetailsArray: this.fb.array([]),
       LocalAmount: [0],
-      StatusId: [1],
+      StatusId: [1], 
       SDMode: [''],
       IsDelete: [0],
       CurrentExRate: [0],
@@ -249,9 +251,26 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
       this.isReceiptForInvoice = 3;
       this.setPaymentVoucherType(3)
     }
+
+  
+  // Set initial value of StatusId based on your condition
+  const statusId = this.receiptForm.get('StatusId').value;
+  this.receiptForm.get('StatusId').setValue(statusId == 1 ? 'Draft' : statusId == 2 ? 'Confirmed' : 'Cancelled');
+
   }
-
-
+  // Set from reports voucher value of StatusId based on your condition
+  getStatusDisplayValue(statusId: number): string {
+    switch (statusId) {
+      case 1:
+        return 'Draft';
+      case 2:
+        return 'Confirmed';
+      case 3:
+        return 'Canceled';
+      default:
+        return '';
+    }
+  }
   addNewAddressGroup() {
     const add = this.receiptForm.get('paymentDetailsArray') as FormArray;
     // Push a new group to the current value
@@ -389,7 +408,6 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
           this.IsExGainEnable = true;
           this.IsExLossEnable = true;
         }
-
         await this.getDivisionBasedOffice(info.OfficeId, info.DivisionId);
         this.isShowBranch = true;
         this.ModifiedOn = info.UpdatedDate;
@@ -429,7 +447,7 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
           TotalAmount: info.TotalAmount,
           IsFinal: info.IsFinal ? 1 : 0,
           LocalAmount: info.LocalAmount,
-          StatusId: info.StatusId,
+          StatusId: info.StatusId ,
           SDMode: info.SDMode,
           IsDelete: info.IsDelete ? info.IsDelete : 0,
           CurrentExRate: info.CurrentExRate ? info.CurrentExRate : 0,
@@ -438,7 +456,7 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
           ExLoss: info.EX_Loss_CR,
           ExchangeRate: info.ExchangeRate == 0 ? 1 : info.ExchangeRate
         });
-
+        this.getStatusName(info.StatusId )
         if (info.IsInvoice == true) {
           this.isReceiptForInvoice = 1;
           this.setPaymentVoucherType(1)
@@ -489,6 +507,19 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
         this.summaryAmountCalculation();
       }
     }, error => { console.error(error) });
+  }
+
+  getStatusName(statusId: number): string {
+    switch (statusId) {
+      case 1:
+        return 'Draft';
+      case 2:
+        return 'Confirmed';
+      case 3:
+        return 'Cancelled';
+      default:
+        return 'Unknown';
+    }
   }
 
   enableEdit() {
@@ -929,10 +960,9 @@ private downloadFile = (data: HttpResponse<Blob>) => {
           return;
         }
         if (finalNumber == 1) {
-          this.receiptForm.controls['IsFinal'].setValue(1); this.receiptForm.controls['StatusId'].setValue(2);
+          this.receiptForm.controls['IsFinal'].setValue(1); this.receiptForm.controls['StatusId'].setValue('Confirmed');
         }
         await this.createPayload(finalNumber === 1);
-
         let service = `${this.globals.APIURL}/ReceiptVoucher/SaveReceiptVoucherInfo`;
         // console.log('payload', this.payload);
         // return
@@ -1038,25 +1068,46 @@ private downloadFile = (data: HttpResponse<Blob>) => {
       table1.forEach((v) => {
         // set the due amount as same if it is not Final
         if (!isFinal) {
-          v.DueAmount = v.DueAmountActual
+          v.DueAmount = v.DueAmountActual;
         }
         delete v.DueAmountActual;
         delete v.BillDueAmount;
-
       });
       if (table1.length > 0) for (let data of table1) data.InvoiceDate = new Date(data.InvoiceDate);
+    } else { 
+      var table1: any = []; 
     }
-    else { var table1: any = []; }
     let table = this.receiptForm.value;
-    table.VoucherDate = table.VoucherDate
-    delete table.paymentDetailsArray
+    table.VoucherDate = table.VoucherDate;
+    delete table.paymentDetailsArray;
+  
+ 
+         // Set the StatusId based on the current value
+  const statusId = this.receiptForm.get('StatusId').value;
+    switch (statusId) {
+      case 'Draft':
+        table.StatusId = 1;
+        break;
+      case 'Confirmed':
+        table.StatusId = 2;
+        break;
+      case 'Cancelled':
+        table.StatusId = 3;
+        break;
+      default:
+        table.StatusId = 1;  // Default to Draft if none matches
+    }
+
+ 
+
+  
     this.payload = {
       ReceiptVoucher: {
         Table: [table],
         Table1: table1,
         Table2: this.voucherFileList,
       }
-    }
+    };
   }
 
   getNumberRange() {
@@ -1331,7 +1382,6 @@ private downloadFile = (data: HttpResponse<Blob>) => {
 
   createPaymentDetailsPayload(info, exchangeRate = 0) {
     
-    
     this.paymentDetailsTableList = [];
     for (let data of info) {
       // const exchangeRate = this.ExchangeRatePairList.length ? +this.ExchangeRatePairList[0].Rate : 0
@@ -1479,7 +1529,7 @@ private downloadFile = (data: HttpResponse<Blob>) => {
   setInitalPaymentAmount(checkedIndex) {
     
     const controlAtIndex = this.myArray.at(checkedIndex);
-    controlAtIndex.value.IsSelect = controlAtIndex.value.IsSelect == true ? true : false;
+    controlAtIndex.value.IsSelect = controlAtIndex.value.IsSelect == true ? false : true;
     if (!controlAtIndex.value.Payment && controlAtIndex.value.IsSelect) {
       controlAtIndex.value.Payment = controlAtIndex.value.DueAmount;
       this.getDueAmount(checkedIndex, 'payment');

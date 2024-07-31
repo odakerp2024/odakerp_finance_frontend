@@ -263,8 +263,55 @@ table {
   overflow-y: auto;
 } */
 
+/* header scroll code */
+#outer-container {
+  overflow-y: hidden; 
+}
 
+#table-container {
+  max-height: 600px;
+  overflow-y: hidden; 
+  position: relative;
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+}
 
+#table-container::-webkit-scrollbar {
+  display: none;  /* Safari and Chrome */
+}
 
+.table {
+  border-collapse: collapse;
+}
 
+.header th {
+  position: sticky;
+  top: 0;
+  background: #fff;  /* Adjust the background color as needed */
+  z-index: 1;
+  font-size: x-small;
+}
 
+.table tbody {
+  display: block;
+  max-height: 500px;
+  overflow-y: scroll;  /* Enable scrolling but hide the scrollbar */
+  overflow-x: hidden;
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.table thead, .table tbody tr, .table tfoot {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.col-10 {
+  flex: 0 0 83.333333% !important;
+  max-width: 94.333333% !important;
+}

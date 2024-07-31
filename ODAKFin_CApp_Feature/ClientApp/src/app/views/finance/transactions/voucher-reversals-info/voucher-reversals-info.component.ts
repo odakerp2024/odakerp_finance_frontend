@@ -156,8 +156,22 @@ export class VoucherReversalsInfoComponent implements OnInit {
       CreatedBy: [localStorage.getItem('UserID')],
       IsDelete: [0]
     });
+     // Set initial value of StatusId based on your condition
+  const statusId = this.voucherCreateForm.get('StatusId').value;
+  this.voucherCreateForm.get('StatusId').setValue(statusId == 1 ? 'Draft' : statusId == 2 ? 'Confirmed' : 'Cancelled');
   }
-
+  getStatusDisplayValue(statusId: number): string {
+    switch (statusId) {
+      case 1:
+        return 'Draft';
+      case 2:
+        return 'Confirmed';
+      case 3:
+        return 'Canceled';
+      default:
+        return '';
+    }
+  }
   getVoucherInfo() {
     var service = `${this.globals.APIURL}/VoucherReversals/GetVoucherReversalsById`;
     this.dataService.post(service, { Id: this.VoucherReversalsId }).subscribe(async (result: any) => {

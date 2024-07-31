@@ -250,8 +250,23 @@ export class JournalVoucherDetailsComponent implements OnInit {
       Narration: [''],
       IsDelete: [0]
     })
-  }
+     // Set initial value of StatusId based on your condition
+  const statusId = this.journalForm.get('StatusId').value;
+  this.journalForm.get('StatusId').setValue(statusId == 1 ? 'Draft' : statusId == 2 ? 'Confirmed' : 'Cancelled');
 
+  }
+  getStatusDisplayValue(statusId: number): string {
+    switch (statusId) {
+      case 1:
+        return 'Draft';
+      case 2:
+        return 'Confirmed';
+      case 3:
+        return 'Canceled';
+      default:
+        return '';
+    }
+  }
   async copyAndPasteFromOldvoucher(JournalVoucherId_copy) {
    
    this.isCopied = true;
