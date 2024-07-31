@@ -383,10 +383,10 @@ export class FinanceMasterComponent implements OnInit {
 
      // Below code for locally run the application
 
-    //  localStorage.setItem("UserID", "15");
-    //  this.GeneratePermission(localStorage.getItem("UserID"));
-    //  localStorage.setItem("TokenID", "15")
-    //  this.setEntityConfigurable();
+     localStorage.setItem("UserID", "15");
+     this.GeneratePermission(localStorage.getItem("UserID"));
+     localStorage.setItem("TokenID", "15")
+     this.setEntityConfigurable();
 
      // end of code
 
@@ -421,7 +421,7 @@ export class FinanceMasterComponent implements OnInit {
     }
 
     // below code uncommand before you push
-    this.BindTokenValues();
+    // this.BindTokenValues();
   }
 
   getUserDtls() {
