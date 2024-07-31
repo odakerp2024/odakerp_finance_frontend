@@ -69,6 +69,7 @@ export class ContraInfoComponent implements OnInit {
   fileUrl: string;
   entityDateFormat =
     this.commonDataService.getLocalStorageEntityConfigurable("DateFormat");
+  statusId: string;
   constructor(
     private ps: PaginationService,
     private contraVoucherService: ContraVoucherService,
@@ -255,6 +256,7 @@ export class ContraInfoComponent implements OnInit {
   }
 
   getContraById() {
+    debugger
     // this.showExchangeRate = true;
 
     return new Promise((resolve, rejects) => {
@@ -277,6 +279,9 @@ export class ContraInfoComponent implements OnInit {
           if (contraData.length) {
             this.patchForm(contraData[0]);
           }
+          // Assuming `StatusId` is available in contraData[0]
+  const statusId = contraData[0]['StatusId'];
+ this.getStatusDescription(statusId);
           let documentList = result["data"].Table1;
           // documentList.forEach(element => {
           //   element.UpdatedBy = +this.UpdatedBy;
@@ -290,6 +295,21 @@ export class ContraInfoComponent implements OnInit {
     });
   }
 
+
+  getStatusDescription(statusId: number): string {
+    switch (statusId) {
+      case 1:
+        return 'Draft';
+      case 2:
+        return 'Confirmed';
+      case 3:
+        return 'Cancelled';
+      default:
+        return 'Unknown';
+    }
+  }
+  
+  
   onFileSelected(index: any) {
     this.editSelectedDocument = index;
   }
@@ -331,67 +351,67 @@ export class ContraInfoComponent implements OnInit {
       this.selectedFile = event.target.files[0];
       const filedata = new FormData();
       filedata.append('file', this.selectedFile, this.selectedFile.name)
-    let validation = "";
-    if (
-      this.documentTableList.length >= 5 &&
-      this.uploadFilePath &&
-      this.uploadFileName
-    ) {
-      validation +=
-        "<span style='color:red;'>*</span> <span>You can upload Maximum of 5 </span></br>";
-      Swal.fire(validation);
-      return true;
-    }
-    this.commonservice.AttachUpload(this.selectedFile).subscribe(data => {
-      if (data) {
-    const payload = {
-      BankAttachmentsID: 0,
-      ContraVoucherId: 0,
-      DocumentName: this.uploadFilePath,
-      FilePath: this.uploadFileName,
-      UniqueFilePath: data.FileNamev,
-    };
-    this.documentTableList.push(payload);
-    this.documentUploadReset();
-  }
-  (error: HttpErrorResponse) => {
-    Swal.fire(error.message, 'error')
-    };
-  });
-    
-}
-  
-}
-
-     /*File Download*/
-download = (fileUrl) => {
-  this.fileUrl = "UploadFolder\\Attachments\\" + fileUrl;
-  this.commonDataService.download(fileUrl).subscribe((event) => {
-
-      if (event.type === HttpEventType.UploadProgress){ 
-        
+      let validation = "";
+      if (
+        this.documentTableList.length >= 5 &&
+        this.uploadFilePath &&
+        this.uploadFileName
+      ) {
+        validation +=
+          "<span style='color:red;'>*</span> <span>You can upload Maximum of 5 </span></br>";
+        Swal.fire(validation);
+        return true;
       }
-          // this.progress1 = Math.round((100 * event.loaded) / event.total);
+      this.commonservice.AttachUpload(this.selectedFile).subscribe(data => {
+        if (data) {
+          const payload = {
+            BankAttachmentsID: 0,
+            ContraVoucherId: 0,
+            DocumentName: this.uploadFilePath,
+            FilePath: this.uploadFileName,
+            UniqueFilePath: data.FileNamev,
+          };
+          this.documentTableList.push(payload);
+          this.documentUploadReset();
+        }
+        (error: HttpErrorResponse) => {
+          Swal.fire(error.message, 'error')
+        };
+      });
+
+    }
+
+  }
+
+  /*File Download*/
+  download = (fileUrl) => {
+    this.fileUrl = "UploadFolder\\Attachments\\" + fileUrl;
+    this.commonDataService.download(fileUrl).subscribe((event) => {
+
+      if (event.type === HttpEventType.UploadProgress) {
+
+      }
+      // this.progress1 = Math.round((100 * event.loaded) / event.total);
 
       else if (event.type === HttpEventType.Response) {
-          // this.message = 'Download success.';
-          this.downloadFile(event);
+        // this.message = 'Download success.';
+        this.downloadFile(event);
       }
-  });
-}
+    });
+  }
 
-private downloadFile = (data: HttpResponse<Blob>) => {
-  const downloadedFile = new Blob([data.body], { type: data.body.type });
-  const a = document.createElement('a');
-  a.setAttribute('style', 'display:none;');
-  document.body.appendChild(a);
-  a.download = this.fileUrl;
-  a.href = URL.createObjectURL(downloadedFile);
-  a.target = '_blank';
-  a.click();
-  document.body.removeChild(a);
-}
- 
+  private downloadFile = (data: HttpResponse<Blob>) => {
+    const downloadedFile = new Blob([data.body], { type: data.body.type });
+    const a = document.createElement('a');
+    a.setAttribute('style', 'display:none;');
+    document.body.appendChild(a);
+    a.download = this.fileUrl;
+    a.href = URL.createObjectURL(downloadedFile);
+    a.target = '_blank';
+    a.click();
+    document.body.removeChild(a);
+  }
+
 
   documentUploadReset() {
     this.uploadFilePath = "";
@@ -406,7 +426,7 @@ private downloadFile = (data: HttpResponse<Blob>) => {
           this.divisionList = result.data.Table;
         }
       },
-      (error) => {}
+      (error) => { }
     );
   }
 
@@ -442,7 +462,7 @@ private downloadFile = (data: HttpResponse<Blob>) => {
           const entityInfo: any = this.commonDataService.getLocalStorageEntityConfigurable();
           let info = this.currencyList.find(x => x.Currency == entityInfo.Currency);
           let currencyCode = entityInfo.Currency.split('-');
-         this.receivedCurrencyName = currencyCode[0].trim();
+          this.receivedCurrencyName = currencyCode[0].trim();
           resolve(true)
         }
       });
@@ -574,7 +594,7 @@ private downloadFile = (data: HttpResponse<Blob>) => {
       FromCurrencyId: +this.entityCurrencyId,
       ToCurrencyId: +this.contraForm.controls["CurrencyId"].value,
     };
-   
+
 
     if (payload.FromCurrencyId !== payload.ToCurrencyId) {
       this.contraForm.controls["Exchange"].setValue(null);
@@ -586,9 +606,9 @@ private downloadFile = (data: HttpResponse<Blob>) => {
     }
   }
   getsExchangeRate() {
-    
-      this.isSameCurrency = false;
-  
+
+    this.isSameCurrency = false;
+
   }
 
   private getValidationMessage(message: string): string {
@@ -688,193 +708,193 @@ private downloadFile = (data: HttpResponse<Blob>) => {
         i == 0
           ? sectionInfo[i].sectionA
           : i == 1
-          ? sectionInfo[i].sectionB
-          : i == 2
-          ? sectionInfo[i].sectionC
-          : i == 3
-          ? sectionInfo[i].sectionD
-          : sectionInfo[i].sectionD;
+            ? sectionInfo[i].sectionB
+            : i == 2
+              ? sectionInfo[i].sectionC
+              : i == 3
+                ? sectionInfo[i].sectionD
+                : sectionInfo[i].sectionD;
       switch (condition) {
         case "Office Code (3 Chars)":
           i == 0
             ? (sectionA = officeInfo.OfficeName ? officeInfo.OfficeName : "")
             : i == 1
-            ? (sectionB = officeInfo.OfficeName ? officeInfo.OfficeName : "")
-            : i == 2
-            ? (sectionC = officeInfo.OfficeName ? officeInfo.OfficeName : "")
-            : i == 3
-            ? (sectionD = officeInfo.OfficeName)
-            : "";
+              ? (sectionB = officeInfo.OfficeName ? officeInfo.OfficeName : "")
+              : i == 2
+                ? (sectionC = officeInfo.OfficeName ? officeInfo.OfficeName : "")
+                : i == 3
+                  ? (sectionD = officeInfo.OfficeName)
+                  : "";
           break;
         case "Running Number (3 Chars)":
           i == 0
             ? (sectionA = runningNumber)
             : i == 1
-            ? (sectionB = runningNumber)
-            : i == 2
-            ? (sectionC = runningNumber)
-            : i == 3
-            ? (sectionD = runningNumber)
-            : "";
+              ? (sectionB = runningNumber)
+              : i == 2
+                ? (sectionC = runningNumber)
+                : i == 3
+                  ? (sectionD = runningNumber)
+                  : "";
           break;
         case "Running Number (4 Chars)":
           i == 0
             ? (sectionA = runningNumber)
             : i == 1
-            ? (sectionB = runningNumber)
-            : i == 2
-            ? (sectionC = runningNumber)
-            : i == 3
-            ? (sectionD = runningNumber)
-            : "";
+              ? (sectionB = runningNumber)
+              : i == 2
+                ? (sectionC = runningNumber)
+                : i == 3
+                  ? (sectionD = runningNumber)
+                  : "";
           break;
         case "Running Number (5 Chars)":
           i == 0
             ? (sectionA = runningNumber)
             : i == 1
-            ? (sectionB = runningNumber)
-            : i == 2
-            ? (sectionC = runningNumber)
-            : i == 3
-            ? (sectionD = runningNumber)
-            : "";
+              ? (sectionB = runningNumber)
+              : i == 2
+                ? (sectionC = runningNumber)
+                : i == 3
+                  ? (sectionD = runningNumber)
+                  : "";
           break;
         case "Running Number (6 Chars)":
           i == 0
             ? (sectionA = runningNumber)
             : i == 1
-            ? (sectionB = runningNumber)
-            : i == 2
-            ? (sectionC = runningNumber)
-            : i == 3
-            ? (sectionD = runningNumber)
-            : "";
+              ? (sectionB = runningNumber)
+              : i == 2
+                ? (sectionC = runningNumber)
+                : i == 3
+                  ? (sectionD = runningNumber)
+                  : "";
           break;
         case "Running Number (7 Chars)":
           i == 0
             ? (sectionA = runningNumber)
             : i == 1
-            ? (sectionB = runningNumber)
-            : i == 2
-            ? (sectionC = runningNumber)
-            : i == 3
-            ? (sectionD = runningNumber)
-            : "";
+              ? (sectionB = runningNumber)
+              : i == 2
+                ? (sectionC = runningNumber)
+                : i == 3
+                  ? (sectionD = runningNumber)
+                  : "";
           break;
         case "Office Code (4 Chars)":
           i == 0
             ? (sectionA = officeInfo.OfficeName ? officeInfo.OfficeName : "")
             : i == 1
-            ? (sectionB = officeInfo.OfficeName ? officeInfo.OfficeName : "")
-            : i == 2
-            ? (sectionC = officeInfo.OfficeName ? officeInfo.OfficeName : "")
-            : i == 3
-            ? (sectionD = officeInfo.OfficeName)
-            : "";
+              ? (sectionB = officeInfo.OfficeName ? officeInfo.OfficeName : "")
+              : i == 2
+                ? (sectionC = officeInfo.OfficeName ? officeInfo.OfficeName : "")
+                : i == 3
+                  ? (sectionD = officeInfo.OfficeName)
+                  : "";
           break;
         case "Division Code (4 Chars)":
           i == 0
             ? (sectionA = divisionInfo.DivisionName
-                ? divisionInfo.DivisionName
-                : "")
+              ? divisionInfo.DivisionName
+              : "")
             : i == 1
-            ? (sectionB = divisionInfo.DivisionName
+              ? (sectionB = divisionInfo.DivisionName
                 ? divisionInfo.DivisionName
                 : "")
-            : i == 2
-            ? (sectionC = divisionInfo.DivisionName
-                ? divisionInfo.DivisionName
-                : "")
-            : i == 3
-            ? (sectionD = divisionInfo.DivisionName
-                ? divisionInfo.DivisionName
-                : "")
-            : "";
+              : i == 2
+                ? (sectionC = divisionInfo.DivisionName
+                  ? divisionInfo.DivisionName
+                  : "")
+                : i == 3
+                  ? (sectionD = divisionInfo.DivisionName
+                    ? divisionInfo.DivisionName
+                    : "")
+                  : "";
           break;
         case "Division Code (3 Chars)":
           i == 0
             ? (sectionA = divisionInfo.DivisionName
-                ? divisionInfo.DivisionName
-                : "")
+              ? divisionInfo.DivisionName
+              : "")
             : i == 1
-            ? (sectionB = divisionInfo.DivisionName
+              ? (sectionB = divisionInfo.DivisionName
                 ? divisionInfo.DivisionName
                 : "")
-            : i == 2
-            ? (sectionC = divisionInfo.DivisionName
-                ? divisionInfo.DivisionName
-                : "")
-            : i == 3
-            ? (sectionD = divisionInfo.DivisionName
-                ? divisionInfo.DivisionName
-                : "")
-            : "";
+              : i == 2
+                ? (sectionC = divisionInfo.DivisionName
+                  ? divisionInfo.DivisionName
+                  : "")
+                : i == 3
+                  ? (sectionD = divisionInfo.DivisionName
+                    ? divisionInfo.DivisionName
+                    : "")
+                  : "";
           break;
         case "FY (4 Char e.g. 2023)":
           i == 0
             ? (sectionA = "")
             : i == 1
-            ? (sectionB = "")
-            : i == 2
-            ? (sectionC = "")
-            : i == 3
-            ? (sectionD = "")
-            : "";
+              ? (sectionB = "")
+              : i == 2
+                ? (sectionC = "")
+                : i == 3
+                  ? (sectionD = "")
+                  : "";
           break;
         case "FY (5 Char e.g. 22-23)":
           i == 0
             ? (sectionA = "")
             : i == 1
-            ? (sectionB = "")
-            : i == 2
-            ? (sectionC = "")
-            : i == 3
-            ? (sectionD = "")
-            : "";
+              ? (sectionB = "")
+              : i == 2
+                ? (sectionC = "")
+                : i == 3
+                  ? (sectionD = "")
+                  : "";
           break;
         case "FY (6 Char e.g. FY2023)":
           i == 0
             ? (sectionA = "")
             : i == 1
-            ? (sectionB = "")
-            : i == 2
-            ? (sectionC = "")
-            : i == 3
-            ? (sectionD = "")
-            : "";
+              ? (sectionB = "")
+              : i == 2
+                ? (sectionC = "")
+                : i == 3
+                  ? (sectionD = "")
+                  : "";
           break;
         case "FY (7 Char e.g. FY22-23)":
           i == 0
             ? (sectionA = "")
             : i == 1
-            ? (sectionB = "")
-            : i == 2
-            ? (sectionC = "")
-            : i == 3
-            ? (sectionD = "")
-            : "";
+              ? (sectionB = "")
+              : i == 2
+                ? (sectionC = "")
+                : i == 3
+                  ? (sectionD = "")
+                  : "";
           break;
         case "POD Port Code (3 Char)":
           i == 0
             ? (sectionA = "")
             : i == 1
-            ? (sectionB = "")
-            : i == 2
-            ? (sectionC = "")
-            : i == 3
-            ? (sectionD = "")
-            : "";
+              ? (sectionB = "")
+              : i == 2
+                ? (sectionC = "")
+                : i == 3
+                  ? (sectionD = "")
+                  : "";
           break;
         case "POFD Port Code (3 Char)":
           i == 0
             ? (sectionA = "")
             : i == 1
-            ? (sectionB = "")
-            : i == 2
-            ? (sectionC = "")
-            : i == 3
-            ? (sectionD = "")
-            : "";
+              ? (sectionB = "")
+              : i == 2
+                ? (sectionC = "")
+                : i == 3
+                  ? (sectionD = "")
+                  : "";
           break;
         default:
           break;
@@ -1027,7 +1047,21 @@ private downloadFile = (data: HttpResponse<Blob>) => {
         //   }
         //   this.submitData(payload, 'draft');
         // }
-
+   // Set the StatusId based on the current value
+   const statusId = this.contraForm.get('StatusId').value;
+   switch (statusId) {
+     case 'Draft':
+      this.contraForm.value.StatusId = 1;
+       break;
+     case 'Confirmed':
+      this.contraForm.value.StatusId = 2;
+       break;
+     case 'Cancelled':
+      this.contraForm.value.StatusId = 3;
+       break;
+     default:
+      this.contraForm.value.StatusId = 1;  // Default to Draft if none matches
+   }
         const payload = {
           contraVoucher: {
             Table: [this.contraForm.value],
@@ -1102,8 +1136,25 @@ private downloadFile = (data: HttpResponse<Blob>) => {
         this.updateAutoGenerated();
         const Table = this.contraForm.value;
         Table.IsFinal = 1; // ! set the final Value;
-        Table.StatusId = 2;
+        Table.StatusId = 'Confirmed';
 
+        // Set the StatusId based on the current value
+        const statusId = this.contraForm.get('StatusId').value;
+        switch (statusId) {
+          case 'Draft':
+            Table.StatusId = 1;
+            break;
+          case 'Confirmed':
+            Table.StatusId = 2;
+            break;
+          case 'Cancelled':
+            Table.StatusId = 3;
+            break;
+          default:
+            Table.StatusId = 2;  // Default to Draft if none matches
+        }
+
+       
         const payload = {
           contraVoucher: {
             Table: [Table],
@@ -1181,7 +1232,7 @@ private downloadFile = (data: HttpResponse<Blob>) => {
         // console.log(result, 'status result')
         this.statusList = result.data.Table;
       },
-      (error) => {}
+      (error) => { }
     );
   }
   enableEdit() {
