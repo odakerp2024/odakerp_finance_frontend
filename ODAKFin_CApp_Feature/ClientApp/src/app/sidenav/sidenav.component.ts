@@ -188,34 +188,34 @@ export class SidenavComponent implements OnInit {
     }
 
     LogOut() {
-        debugger
-        this.TokenID = parseInt(localStorage.getItem("TokenID"));
-        this.ProfileForm.value.ID = Number(localStorage.getItem("TokenID"));
-        this.commonDataService.getDeleteToken(this.ProfileForm.value.ID).subscribe(() => {
-            //this.allItems = data;
-        });
-        //window.location.href = "https://localhost:44323/login";
-        window.location.href = 'https://navioindia.freighteiz.com/login';
+        // debugger
+        // this.TokenID = parseInt(localStorage.getItem("TokenID"));
+        // this.ProfileForm.value.ID = Number(localStorage.getItem("TokenID"));
+        // this.commonDataService.getDeleteToken(this.ProfileForm.value.ID).subscribe(() => {
+        //     //this.allItems = data;
+        // });
+        // //window.location.href = "https://localhost:44323/login";
+        // window.location.href = 'https://navioindia.freighteiz.com/login';
     }
 
     BindTokenValues(val) {
 
-        this.ProfileForm.value.ID = localStorage.getItem("TokenID");
-        const payload  = {
-            ID : this.ProfileForm.value.ID
-        }
-        this.commonDataService.SendToken(payload).subscribe(data => {
-            this.TokenID = data[0].ID;
-            this.Token = data[0].access_token;
+        // this.ProfileForm.value.ID = localStorage.getItem("TokenID");
+        // const payload  = {
+        //     ID : this.ProfileForm.value.ID
+        // }
+        // this.commonDataService.SendToken(payload).subscribe(data => {
+        //     this.TokenID = data[0].ID;
+        //     this.Token = data[0].access_token;
 
-            if (this.Token != 'null') {
-                this.OnClickLink(val);
-            }
-            else {
-                //window.location.href = "https://localhost:44323/login";
-                window.location.href = this.globals.LANDINGURL + "login";
-            }
-        });
+        //     if (this.Token != 'null') {
+        //         this.OnClickLink(val);
+        //     }
+        //     else {
+        //         //window.location.href = "https://localhost:44323/login";
+        //         window.location.href = this.globals.LANDINGURL + "login";
+        //     }
+        // });
     }
 
     // BindInstanceDtls() {

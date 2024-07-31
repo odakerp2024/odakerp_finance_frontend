@@ -217,8 +217,23 @@ export class AdjustmentVoucherInfoComponent implements OnInit {
       // AccountType:['']
       
     })
-  }
+    // Set initial value of StatusId based on your condition
+  const statusId = this.AdjustmentCreateForm.get('StatusId').value;
+  this.AdjustmentCreateForm.get('StatusId').setValue(statusId == 1 ? 'Draft' : statusId == 2 ? 'Confirmed' : 'Cancelled');
 
+  }
+  getStatusDisplayValue(statusId: number): string {
+    switch (statusId) {
+      case 1:
+        return 'Draft';
+      case 2:
+        return 'Confirmed';
+      case 3:
+        return 'Canceled';
+      default:
+        return '';
+    }
+  }
   async copyAndPasteFromOldvoucher(AdjustmentVoucherId_copy) {
    
     this.isCopied = true;

@@ -59,10 +59,10 @@ export class FinanceMasterComponent implements OnInit {
   workflowSubmitted: boolean = false;
   workflowDetailTitle: string = 'test-test';
   workflowDetailsList: any = [];
-  isNotApproval:boolean=false;
+  isNotApproval: boolean = false;
   dispStyle: any = 'none';
 
-  userName: string='';
+  userName: string = '';
 
   wfnumber: string = "0";
   eventnumber: string = "0";
@@ -79,18 +79,18 @@ export class FinanceMasterComponent implements OnInit {
   event_valueH: string = "0";
   customernameH: string = "0";
 
-  cusBID: string='';
-  eventName: string='';
-  redirectURL: string='';
+  cusBID: string = '';
+  eventName: string = '';
+  redirectURL: string = '';
 
   constructor(
     private titleService: Title, private workflow: WorkflowService, public ps: PaginationService,
-    private router: Router,private fb: FormBuilder,
+    private router: Router, private fb: FormBuilder,
     private route: ActivatedRoute,
     private commonDataService: CommonService,
     private LService: LoginService,
     private globals: Globals,
-  ) { 
+  ) {
     this.workFlowUpdateForm = fb.group({
       userEmail: "",
       workflowNo: "",
@@ -305,7 +305,7 @@ export class FinanceMasterComponent implements OnInit {
       SubfunctionID: value
     }
     this.LService.GetUserPermissionObject(paylod).subscribe(data => {
-   
+
 
       if (route == 'Open Request') {
 
@@ -373,12 +373,22 @@ export class FinanceMasterComponent implements OnInit {
 
 
   ngOnInit() {
+    debugger
     this.titleService.setTitle(this.title);
     $('.my-select').select2();
     //this.getUserDtls();
     if (localStorage.getItem('DashboardType')) {
       this.selectedTabName = localStorage.getItem('DashboardType');
     }
+
+     // Below code for locally run the application
+
+     localStorage.setItem("UserID", "15");
+     this.GeneratePermission(localStorage.getItem("UserID"));
+     localStorage.setItem("TokenID", "15")
+     this.setEntityConfigurable();
+
+     // end of code
 
     this.route.params.subscribe(param => {
       if (!param.tabName) {
@@ -400,7 +410,7 @@ export class FinanceMasterComponent implements OnInit {
     if (localStorage.getItem("TokenID") == null || localStorage.getItem("TokenID") == 'undefined') {
 
       this.route.queryParams.subscribe(params => {
-        if(params['TokenID']){
+        if (params['TokenID']) {
           localStorage.setItem("TokenID", params['TokenID']);
         } else {
           Swal.fire('Please Contact Administrator');
@@ -409,30 +419,32 @@ export class FinanceMasterComponent implements OnInit {
 
       this.setEntityConfigurable();
     }
-    this.BindTokenValues();
+
+    // below code uncommand before you push
+    // this.BindTokenValues();
   }
 
-  getUserDtls(){
+  getUserDtls() {
     var userid = localStorage.getItem("UserID");
     var payload = {
       "UserID": userid,
     }
     this.workflow.getUserDtls(payload).subscribe({
-      next:(res)=>{
+      next: (res) => {
         console.log('getUserDtls', { res })
         this.userName = res[0].UserName;
         this.getWorkflowInbox();
         this.getWorkflowInboxSearch();
         this.getwfEventList();
       },
-      error:(e)=>{
+      error: (e) => {
         console.log('error', { e })
       }
     });
   }
 
-  tabClick(value){
-    if(value == 1){
+  tabClick(value) {
+    if (value == 1) {
       this.wfnumber = "0";
       this.event_value = "0";
       this.eventnumber = "0";
@@ -445,7 +457,7 @@ export class FinanceMasterComponent implements OnInit {
       this.getWorkflowInboxSearch();
       this.wfClear();
     }
-    else if(value == 2){
+    else if (value == 2) {
       this.wfnumber = "0";
       this.event_value = "0";
       this.eventnumber = "0";
@@ -467,90 +479,90 @@ export class FinanceMasterComponent implements OnInit {
       eventnumber: "0",
       fromdate: "0",
       tilldate: "0",
-      event_value:"0",
+      event_value: "0",
       customername: "0",
       status: this.status,
     }
-    
+
     this.workflow.getWorkflowInbox(payload).subscribe(data => {
-        console.log(data)
-        if ((data.Status == true) && (data.AlertMegId == 1)) {
-          
-          this.wfItems = data.Data
-          
-        }
-        else {
-          
-        }
-      });
+      console.log(data)
+      if ((data.Status == true) && (data.AlertMegId == 1)) {
+
+        this.wfItems = data.Data
+
+      }
+      else {
+
+      }
+    });
   }
 
-  wfSearch(){
-    
-    if($('#ddlwfnumber').val() == "" || $('#ddlwfnumber').val() == null){
+  wfSearch() {
+
+    if ($('#ddlwfnumber').val() == "" || $('#ddlwfnumber').val() == null) {
       this.wfnumber = "0";
     }
-    else{
+    else {
       this.wfnumber = $('#ddlwfnumber').val().toString();
     }
     //this.wfnumber = $('#ddlwfnumber').val() ? $('#ddlwfnumber').val().toString() : "0";
-    
-    if($('#ddlwfdetails').val() == "" || $('#ddlwfdetails').val() == null){
+
+    if ($('#ddlwfdetails').val() == "" || $('#ddlwfdetails').val() == null) {
       this.event_value = "0";
     }
-    else{
+    else {
       this.event_value = $('#ddlwfdetails').val().toString();
     }
     //this.event_value = $('#ddlwfdetails').val() ? $('#ddlwfdetails').val().toString() : "0";
-    
+
     this.eventnumber = $('#ddlwfeventName').val() ? $('#ddlwfeventName').val().toString() : "0";
-    
-    if($('#ddlCustomerName').val() == "" || $('#ddlCustomerName').val() == null){
+
+    if ($('#ddlCustomerName').val() == "" || $('#ddlCustomerName').val() == null) {
       this.customername = "0";
     }
-    else{
+    else {
       this.customername = $('#ddlCustomerName').val().toString();
     }
     //this.customername = $('#ddlCustomerName').val() ? $('#ddlCustomerName').val().toString() : "0";
     this.fromdate = $('#ddlfromDate').val() ? $('#ddlfromDate').val().toString() : "0";
     this.tilldate = $('#ddltillDate').val() ? $('#ddltillDate').val().toString() : "0";
-    
-    
+
+
     this.getWorkflowInbox();
   }
 
-  wfSearchHistory(){
-    if($('#ddlwfnumberH').val() == "" || $('#ddlwfnumberH').val() == null){
+  wfSearchHistory() {
+    if ($('#ddlwfnumberH').val() == "" || $('#ddlwfnumberH').val() == null) {
       this.wfnumberH = "0";
     }
-    else{
+    else {
       this.wfnumberH = $('#ddlwfnumberH').val().toString();
     }
     //this.wfnumberH = $('#ddlwfnumberH').val() ? $('#ddlwfnumberH').val().toString() : "0";
 
-    if($('#ddlwfdetailsH').val() == "" || $('#ddlwfdetailsH').val() == null){
+    if ($('#ddlwfdetailsH').val() == "" || $('#ddlwfdetailsH').val() == null) {
       this.event_valueH = "0";
     }
-    else{
+    else {
       this.event_valueH = $('#ddlwfdetailsH').val().toString();
     }
     //this.event_valueH = $('#ddlwfdetailsH').val() ? $('#ddlwfdetailsH').val().toString() : "0";
     this.eventnumberH = $('#ddlwfeventNameH').val() ? $('#ddlwfeventNameH').val().toString() : "0";
 
-    if($('#ddlCustomerNameH').val() == "" || $('#ddlCustomerNameH').val() == null){
+    if ($('#ddlCustomerNameH').val() == "" || $('#ddlCustomerNameH').val() == null) {
       this.customernameH = "0";
     }
-    else{
+    else {
       this.customernameH = $('#ddlCustomerNameH').val().toString();
     }
     //this.customernameH = $('#ddlCustomerNameH').val() ? $('#ddlCustomerNameH').val().toString() : "0";
     this.fromdateH = $('#ddlfromDateH').val() ? $('#ddlfromDateH').val().toString() : "0";
     this.tilldateH = $('#ddltillDateH').val() ? $('#ddltillDateH').val().toString() : "0";
     // alert($('#ddlwfStatusH').val());
-    if($('#ddlwfStatusH').val() == 0 || $('#ddlwfStatusH').val() == null){
+    if ($('#ddlwfStatusH').val() == 0 || $('#ddlwfStatusH').val() == null) {
       this.status = "approve";
     }
-    else{
+    else {
       this.status = $('#ddlwfStatusH').val().toString();
     }
     //this.status = $('#ddlwfStatusH').val() ? $('#ddlwfStatusH').val().toString() : "approve";
@@ -558,14 +570,14 @@ export class FinanceMasterComponent implements OnInit {
     this.getWorkflowInboxHistory();
   }
 
-  wfClear(){
+  wfClear() {
     $('#ddlwfnumber').val('').trigger("change");
     $('#ddlwfdetails').val('').trigger("change");
     $('#ddlwfeventName').val(0).trigger("change");
     $('#ddlCustomerName').val('').trigger("change");
     $('#ddlfromDate').val('').trigger("change");
     $('#ddltillDate').val('').trigger("change");
-    
+
     this.wfnumber = "0";
     this.event_value = "0";
     this.eventnumber = "0";
@@ -576,7 +588,7 @@ export class FinanceMasterComponent implements OnInit {
     this.getWorkflowInbox();
   }
 
-  wfClearHistory(){
+  wfClearHistory() {
     $('#ddlwfnumberH').val('').trigger("change");
     $('#ddlwfdetailsH').val('').trigger("change");
     $('#ddlwfeventNameH').val(0).trigger("change");
@@ -595,7 +607,7 @@ export class FinanceMasterComponent implements OnInit {
     this.getWorkflowInboxHistory();
   }
 
-  getwfEventList(){
+  getwfEventList() {
     let payload = {
 
     }
@@ -619,16 +631,16 @@ export class FinanceMasterComponent implements OnInit {
     }
 
     this.workflow.getWorkflowInbox(payload).subscribe(data => {
-        console.log(data)
-        if ((data.Status == true) && (data.AlertMegId == 1)) {
-          this.wfAllItems = data.Data
-          this.setPageWF(1)
-        }
-        else {
-          this.wfAllItems = []
-          this.setPageWF(1)
-        }
-      });
+      console.log(data)
+      if ((data.Status == true) && (data.AlertMegId == 1)) {
+        this.wfAllItems = data.Data
+        this.setPageWF(1)
+      }
+      else {
+        this.wfAllItems = []
+        this.setPageWF(1)
+      }
+    });
   }
 
   getWorkflowInboxHistory() {
@@ -645,16 +657,16 @@ export class FinanceMasterComponent implements OnInit {
     }
 
     this.workflow.getWorkflowInbox(payload).subscribe(data => {
-        console.log(data)
-        if ((data.Status == true) && (data.AlertMegId == 1)) {
-          this.wfAllItemsHistory = data.Data
-          this.setPageWFH(1)
-        }
-        else {
-          this.wfAllItemsHistory = []
-          this.setPageWFH(1)
-        }
-      });
+      console.log(data)
+      if ((data.Status == true) && (data.AlertMegId == 1)) {
+        this.wfAllItemsHistory = data.Data
+        this.setPageWFH(1)
+      }
+      else {
+        this.wfAllItemsHistory = []
+        this.setPageWFH(1)
+      }
+    });
   }
 
   getWorkflowDetails(workflowData: any, value) {
@@ -670,16 +682,16 @@ export class FinanceMasterComponent implements OnInit {
           console.log(res)
           if (res?.Status == true || res?.AlertMegId == 1) {
             let resData = res?.Data
-            
-            let findUser = resData?.find((item:any) => item?.user?.toLowerCase() == this.userName.toLowerCase() && item?.step !=0)
-            let findPending = resData?.find((item:any)=> item?.status?.toLowerCase() == 'pending')
+
+            let findUser = resData?.find((item: any) => item?.user?.toLowerCase() == this.userName.toLowerCase() && item?.step != 0)
+            let findPending = resData?.find((item: any) => item?.status?.toLowerCase() == 'pending')
             // let findUser = res?.Data?.find((item:any) => item?.user?.toLowerCase() == this.userName?.toLowerCase() && item?.step !=0)
             // let findstep = res?.Data?.find((item:any) => item?.status?.toLowerCase() == 'pending' && item?.step !=0)
             // let findPending = res?.Data?.find((item:any)=> item?.status?.toLowerCase() == 'pending' && findstep?.step == item?.step)
-            if(findUser?.step == findPending?.step){
-              this.isNotApproval=true;
+            if (findUser?.step == findPending?.step) {
+              this.isNotApproval = true;
             }
-            let mapUserPool=resData?.reduce((acc: any, item: any) => {
+            let mapUserPool = resData?.reduce((acc: any, item: any) => {
               const existingItem = acc.find((group: any) => group.step === item.step);
               if (existingItem) {
                 existingItem.user = existingItem?.user + ', ' + item?.user;
@@ -690,15 +702,15 @@ export class FinanceMasterComponent implements OnInit {
             }, []);
             console.log(mapUserPool)
 
-            this.workflowDetailsList = this.isNotApproval ?  resData?.filter((item: any) => item?.status?.toLowerCase() !== "pending") : mapUserPool
-            
+            this.workflowDetailsList = this.isNotApproval ? resData?.filter((item: any) => item?.status?.toLowerCase() !== "pending") : mapUserPool
+
             this.isShowWorkflowDetails = true;
             this.isShowWorkflowInbox = false;
-            console.log("testworkflow",findUser,findPending);
+            console.log("testworkflow", findUser, findPending);
             this.cusBID = workflowData.details;
             this.eventName = workflowData?.eventname;
             //alert(this.cusBID);
-            console.log('CusBID',this.cusBID);
+            console.log('CusBID', this.cusBID);
             this.workflowDetailTitle = `${workflowData?.workflowno} - ${workflowData?.eventname} - ${workflowData.details} - ${workflowData.customername}`
             this.workFlowUpdateForm.patchValue({
               userEmail: this.userName,
@@ -706,13 +718,13 @@ export class FinanceMasterComponent implements OnInit {
               currentStep: workflowData.currentstep,
               totalStep: workflowData.totalstep
             });
-            if(value == 1){
+            if (value == 1) {
               ($('#progressModel') as any).modal('show');
             }
-            if(value == 2){
+            if (value == 2) {
               ($('#progressModelHistory') as any).modal('show');
             }
-            
+
             // this.dispStyle = 'block'
           }
           else {
@@ -747,7 +759,7 @@ export class FinanceMasterComponent implements OnInit {
   //     else {
   //       Swal.fire("Please Update the Accounting Details");
   //     }
-      
+
   //   });
   // }
 
@@ -756,10 +768,10 @@ export class FinanceMasterComponent implements OnInit {
       this.workflowSubmitted = false;
       console.log(this.workFlowUpdateForm.value);
       var temp;
-      if(statuscode == '0'){
+      if (statuscode == '0') {
         temp = 'reject';
       }
-      else{
+      else {
         temp = 'approve';
       }
       let payload = {
@@ -800,11 +812,11 @@ export class FinanceMasterComponent implements OnInit {
   onBackWorkflowInbox() {
     this.isShowWorkflowDetails = false;
     this.isShowWorkflowInbox = true;
-    this.isNotApproval=false;
+    this.isNotApproval = false;
     this.workFlowUpdateForm.reset();
     this.getWorkflowInbox()
     this.dispStyle = 'none',
-    ($('#progressModel') as any).modal('hide')
+      ($('#progressModel') as any).modal('hide')
   }
 
   getSuffix(step: number): string {
@@ -820,7 +832,7 @@ export class FinanceMasterComponent implements OnInit {
   }
 
   setPageWF(page: number) {
-    
+
     this.Pager = this.ps.getPager(this.wfAllItems.length, page);
     this.PagedItems = this.wfAllItems.slice(this.Pager.startIndex, this.Pager.endIndex + 1)
   }
@@ -918,7 +930,7 @@ export class FinanceMasterComponent implements OnInit {
 
 
   setPageWFH(page: number) {
-    
+
     this.PagerH = this.ps.getPager(this.wfAllItemsHistory.length, page);
     this.PagedItemsH = this.wfAllItemsHistory.slice(this.PagerH.startIndex, this.PagerH.endIndex + 1)
   }
@@ -1146,26 +1158,26 @@ export class FinanceMasterComponent implements OnInit {
     }
     else if (routePage == 'provision') {
       this.router.navigate(['/views/provision/provision-view']);
-    } 
+    }
     else if (routePage == 'trailBalance') {
       this.router.navigate(['/views/finance/reports/levelone']);
-    } 
+    }
 
     else if (routePage == 'DayBook') {
       this.router.navigate(['/views/reports/report-day-book']);
-    } 
-    
+    }
+
     else if (routePage == 'recieptVoucher') {
       this.router.navigate(['/views/reports/report-receipt-voucher']);
-    } 
+    }
 
     else if (routePage == 'PaymentVoucher') {
       this.router.navigate(['/views/reports/report-payment-voucher']);
-    } 
+    }
 
     else if (routePage == 'ContraVoucher') {
       this.router.navigate(['/views/reports/report-contra-voucher']);
-    } 
+    }
 
     else if (routePage == 'JournalVoucher') {
       this.router.navigate(['/views/reports/report-journal-voucher']);
@@ -1188,24 +1200,24 @@ export class FinanceMasterComponent implements OnInit {
 
     else if (routePage == 'ARBalanceSummary') {
       this.router.navigate(['/views/reports/report-ar-levelone']);
-    } 
+    }
 
     else if (routePage == 'ARAgingSummary') {
       this.router.navigate(['/views/reports/report-ar-leveltwo']);
-    } 
+    }
 
     else if (routePage == 'ARSalesSummary') {
       this.router.navigate(['/views/reports/report-ar-levelthree']);
-    } 
+    }
 
     else if (routePage == 'APBalanceSummary') {
       this.router.navigate(['/views/reports/report-ap-levelone']);
-    } 
+    }
 
     else if (routePage == 'APAgingSummary') {
       this.router.navigate(['/views/reports/report-ap-leveltwo']);
     }
-    
+
     else if (routePage == 'GSTOutputRegister') {
       this.router.navigate(['/views/finance/reports/gstoutput-register/gstoutput-register']);
     }
@@ -1223,8 +1235,8 @@ export class FinanceMasterComponent implements OnInit {
     }
 
 
-    
-    
+
+
     const userID = localStorage.getItem("UserID");
     const paylod = {
       userID: Number(userID),
@@ -1591,7 +1603,7 @@ export class FinanceMasterComponent implements OnInit {
                 }
               }
               else if (routePage == 'BankMaster') {
-                
+
                 if (data[0].Read_Opt != 2) {
                   Swal.fire('Please Contact Administrator');
                 }
@@ -1600,7 +1612,7 @@ export class FinanceMasterComponent implements OnInit {
                 }
               }
               // else if (routePage == 'provision') {
-                
+
               //   if (data[0].Read_Opt != 2) {
               //     Swal.fire('Please Contact Administrator');
               //   }
