@@ -177,8 +177,7 @@
                                         <a *ngIf="header === 'Sub Category'" class="hyperlink-style">{{ row[header]
                                             }}</a>
                                         <ng-container *ngIf="header === 'Balance (Company Currency)'">
-                                            <a class="hyperTextColor" (click)="showBalanceDetails(row)">{{ row[header]
-                                                | dynamicDecimal: entityFraction }}</a>
+                                            <a class="hyperTextColor" (click)="showBalanceDetails(row)">{{ row[header] }}</a>
                                         </ng-container>
                                         <span
                                             *ngIf="header !== 'Sub Category' && header !== 'Balance (Company Currency)'">{{
@@ -197,8 +196,7 @@
                                     </td>
                                     <ng-container *ngFor="let header of calculateDynamicHeaders(); let last = last">
                                         <td *ngIf="!last">{{ calculateTotals(header) }}</td>
-                                        <td class="text-right" *ngIf="last">{{ calculateTotals(header) | dynamicDecimal:
-                                            entityFraction }}</td>
+                                        <td class="text-right" *ngIf="last">{{ calculateTotals(header) }}</td>
                                     </ng-container>
                                 </tr>
                             </tfoot>
@@ -232,7 +230,7 @@
                                         </a>
                                 
                                         <ng-container *ngIf="header === 'Balance (Company Currency)' || header === 'Balance (Invoice Currency)' || header === 'Credit Amount'">
-                                            <a class="hyperTextColor">{{ row[header] | dynamicDecimal: entityFraction }}</a>
+                                            <a class="hyperTextColor">{{ row[header]}}</a>
                                         </ng-container>
                                 
                                         <span *ngIf="header !== 'Customer' && header !== 'Balance (Company Currency)' && header !== 'Balance (Invoice Currency)' && header !== 'Credit Amount'">
@@ -254,7 +252,7 @@
                                         *ngFor="let header of calculateHeadersCustomerwise(); let last = last">
                                         <td [class.text-right]="header === 'Balance (Company Currency)' || header === 'Balance (Invoice Currency)' || header === 'Credit Amount'"
                                             *ngIf="header !== 'Customer' && isNumeric(customerTotals(header))">
-                                            {{ calculateCustomerTotals(header) | dynamicDecimal: entityFraction }}
+                                            {{ calculateCustomerTotals(header)}}
                                         </td>
                                         <td *ngIf="header !== 'Customer' && !isNumeric(customerTotals(header))">
                                             <!-- Display empty cell for non-numeric totals -->
@@ -294,9 +292,9 @@
                                             <span *ngSwitchCase="'Date'">{{ row[header] | date: commonDataService.convertToLowerCaseDay(entityDateFormat) }}</span>
                                 
                                             <!-- Condition for amount columns -->
-                                            <a *ngSwitchCase="'Balance (Company Currency)'" class="hyperTextColor">{{ row[header] | dynamicDecimal: entityFraction }}</a>
-                                            <a *ngSwitchCase="'Balance (Invoice Currency)'" class="hyperTextColor">{{ row[header] | dynamicDecimal: entityFraction }}</a>
-                                            <a *ngSwitchCase="'Invoice Amount'" class="hyperTextColor">{{ row[header] | dynamicDecimal: entityFraction }}</a>
+                                            <a *ngSwitchCase="'Balance (Company Currency)'" class="hyperTextColor">{{ row[header] }}</a>
+                                            <a *ngSwitchCase="'Balance (Invoice Currency)'" class="hyperTextColor">{{ row[header] }}</a>
+                                            <a *ngSwitchCase="'Invoice Amount'" class="hyperTextColor">{{ row[header]}}</a>
                                 
                                             <!-- Default condition for other columns -->
                                             <span *ngSwitchDefault>{{ row[header] }}</span>
@@ -319,7 +317,7 @@
                                             <td [class.text-right]="header === 'Balance (Company Currency)' || header === 'Balance (Invoice currency)' 
                                             || header === 'Invoice Amount'"
                                                 *ngIf="header !== 'Customer' && isNumeric(InvoiceTotals(header))">
-                                                {{ calculateInvoicewise(header) | dynamicDecimal: entityFraction }}
+                                                {{ calculateInvoicewise(header) }}
                                             </td>
                                            
                                             <td *ngIf="header !== 'Customer' && !isNumeric(InvoiceTotals(header))">
