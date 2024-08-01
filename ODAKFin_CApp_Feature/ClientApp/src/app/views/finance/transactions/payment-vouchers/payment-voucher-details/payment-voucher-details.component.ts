@@ -48,7 +48,7 @@ export class PaymentVoucherDetailsComponent implements OnInit {
   accountDetailsTableDetailList: Array<DynamicAccountDetail> = [];
   AccountForm: FormGroup;
   divisionList: any[];
-  officeList: any[];
+  officeList:  any[];
   bankList: any;
   sameCurrencyBankList = [];
   vendorList: any;
@@ -155,7 +155,7 @@ export class PaymentVoucherDetailsComponent implements OnInit {
     this.getStatus();
     // this.getOffice();
     await this.getVendorList();
-    this.getModeOfPayment();
+    await this.getModeOfPayment();
     this.getNumberRangeList();
     this.route.params.subscribe(async param => {
       this.paymentId = +param['voucherId'] ? +param['voucherId'] : 0;
