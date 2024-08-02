@@ -162,13 +162,13 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="let data of pagedItems">
-                                    <td>{{data.DateOfReversal | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}
+                                    <td>{{data.Date | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}
                                     </td>
-                                    <td class="hyperColor" (click)="clickVoucherNumber(data.Id, data.ReversalReference)">
-                                        {{data.ReversalReference == 0 ? null : data.ReversalReference}}</td>
+                                    <td class="hyperColor" (click)="clickVoucherNumber(data.Id, data['Voucher Reversal #'])">
+                                        {{data['Voucher Reversal #'] == null ? null : data['Voucher Reversal #']}}
                                     <!-- <td class="hyperTextColor">{{data.ReversalReference}}</td> -->
-                                    <td>{{data.VoucherName}}</td>
-                                    <td>{{data.AccountOrParty}}</td>
+                                    <td>{{data['Voucher Type']}}</td>
+                                    <td>{{data['Account or Party']}}</td>
                                 </tr>
 
                                  <tr *ngIf="pagedItems.length ==0">
