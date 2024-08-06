@@ -377,12 +377,11 @@ async showVendor(SubTypeId:number){
   getAPAgingOverallList() {
     this.startDate = this.reportFilter.controls.FromDate.value;
     this.endDate = this.reportFilter.controls.ToDate.value;
-
+  
     this.reportService.getAPAgingList(this.reportFilter.value).subscribe(result => {
-      if (result.message == "Success" && result.data && result.data.Table) {
-        this.reportList = result['data'].Table;
+      if (result.message === "Success" && result.data && result.data.Table) {
         let tableData = result.data.Table;
-       
+  
         if (tableData.length > 0) {
           // Set headers from the first data row
           this.headers = Object.keys(tableData[0]).filter(header => header !== 'Id');
@@ -391,25 +390,31 @@ async showVendor(SubTypeId:number){
             ...row,
             'Total (Company Currency)': Number(row['Total (Company Currency)']).toFixed(this.entityFraction)
           }));
-        this.setPage(1);
-
-      }
-      else {    
-        
-         // No data found, keep existing headers or set default headers
-         if (!this.headers || this.headers.length === 0) {
-          // Set default headers or handle empty case
-          this.headers = ['Sub Category', '0 Days','Total (Company Currency)'];
-        }
+          this.setPage(1);
+        } else {
+          this.showNoDataAlert();
+          this.headers = [];  // Clear headers when no data is found
           this.pagedItems = [];
-      }
-        error => {
-        console.log(error);
         }
+      } else {
+        this.showNoDataAlert();
+        this.headers = [];  // Clear headers when no data is found
+        this.pagedItems = [];
       }
-    })
+    }, error => {
+      console.log(error);
+    });
   }
-
+  
+  showNoDataAlert() {
+    Swal.fire({
+      icon: 'warning',
+      title: 'No Data',
+      text: 'No data found, please configure AP settings.',
+      confirmButtonText: 'OK'
+    });
+  }
+  
   
 getAPAgingVendorList() {
     this.startDate = this.reportFilter.controls.FromDate.value;
@@ -932,7 +937,7 @@ calculateInvoicewise(header: string): any {
           const total = this.totals[header];
           console.log(`Total for ${header}:`, total);
           if (total != null && !isNaN(total)) {
-            footerData.push(total.toFixed(this.entityFraction));
+            footerData.push(total.toFixed());
           } else {
             footerData.push('');
           }
@@ -946,9 +951,9 @@ calculateInvoicewise(header: string): any {
         if (header[i] == 'Credit Amount') {
           footerData.push(totalCreditAmount.toFixed(this.entityFraction));
         }  else if (header[i] == 'Balance (Company Currency)') {
-          footerData.push(totalBalanceCompanyVendorWise.toFixed(this.entityFraction));
+          footerData.push(totalBalanceCompanyVendorWise.toFixed());
         } else if (header[i] == 'Balance (Invoice currency)') {
-          footerData.push(totalBalanceInvoiceVendorWise.toFixed(this.entityFraction));
+          footerData.push(totalBalanceInvoiceVendorWise.toFixed());
         } else {
           footerData.push('');
         }
@@ -964,7 +969,7 @@ calculateInvoicewise(header: string): any {
           const total = this.totals[header];
           console.log(`Total for ${header}:`, total);
           if (total != null && !isNaN(total)) {
-            footerData.push(total.toFixed(this.entityFraction));
+            footerData.push(total.toFixed());
           } else {
             footerData.push('');  // Ensure empty string if total is null or NaN
           }

@@ -16,7 +16,7 @@ export class ReportDashboardService {
   }
 
   GetReceiptVoucherReportList(FormValue: any): Observable<any> {
-    FormValue.Amount = FormValue.Amount == '' ? 0 : FormValue.Amount;
+    //FormValue.Amount = FormValue.Amount == '' ? 0 : FormValue.Amount;
     return this.http.post<any>(this.globals.APIURL + '/Reports/ReceiptVoucherList/', FormValue);
   }
 
@@ -25,13 +25,13 @@ export class ReportDashboardService {
   }
 
   GetContraVoucherReportList(FormValue: any): Observable<any> {
-    FormValue.Amount = FormValue.Amount == '' ? 0 : FormValue.Amount;
+    //FormValue.Amount = FormValue.Amount == '' ? 0 : FormValue.Amount;
     return this.http.post<any>(this.globals.APIURL + '/Reports/ContraVoucherList/', FormValue);
   }
 
 
   getPaymentVoucherReportList(FormValue: any): Observable<any> {
-    FormValue.Amount = FormValue.Amount == '' ? 0 : FormValue.Amount;
+    //FormValue.Amount = FormValue.Amount == '' ? 0 : FormValue.Amount;
     return this.http.post<any>(this.globals.APIURL + '/Reports/PaymentVoucherList', FormValue);
   }
 
@@ -44,28 +44,28 @@ export class ReportDashboardService {
   }
  
   getVoucherReversalReportList(FormValue: any): Observable<any> {
-    FormValue.Amount = FormValue.Amount == '' ? 0 : FormValue.Amount;
+    //FormValue.Amount = FormValue.Amount == '' ? 0 : FormValue.Amount;
     return this.http.post<any>(this.globals.APIURL + '/Reports/VoucherReversalList/', FormValue);
   }
 
   getSalesVoucherReportList(FormValue: any): Observable<any> {
-    FormValue.Amount = FormValue.Amount == '' ? 0 : FormValue.Amount;
+     FormValue.Amount = FormValue.Amount == '' ? 0 : FormValue.Amount;
     return this.http.post<any>(this.globals.APIURL + '/Reports/SalesVoucherList', FormValue);
   }
   
   
   getJournalVoucherReportList(FormValue: any): Observable<any> {
-    FormValue.Amount = FormValue.Amount == '' ? 0 : FormValue.Amount;
+    //FormValue.Amount = FormValue.Amount == '' ? 0 : FormValue.Amount;
     return this.http.post<any>(this.globals.APIURL + '/Reports/JournalVoucherList', FormValue);
   }
 
   getAdjustmentReportList(FormValue: any): Observable<any> {
-    FormValue.Amount = FormValue.Amount == '' ? 0 : FormValue.Amount;
+    //FormValue.Amount = FormValue.Amount == '' ? 0 : FormValue.Amount;
     return this.http.post<any>(this.globals.APIURL + '/Reports/AdjustmentVoucherList', FormValue);
   }
   
   getPurchaseVoucherReportList(FormValue: any): Observable<any> {
-    FormValue.Amount = FormValue.Amount == '' ? 0 : FormValue.Amount;
+    //FormValue.Amount = FormValue.Amount == '' ? 0 : FormValue.Amount;
     return this.http.post<any>(this.globals.APIURL + '/Reports/PurchaseVoucherList', FormValue);
   }
 

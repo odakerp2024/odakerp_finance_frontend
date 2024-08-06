@@ -256,12 +256,12 @@
                                         <a>{{data.Payment == 0 ? '' :  data.Payment}}</a></td>
                                     <td>{{data.Type}}</td>
                                     <td class="hyperTextColor" [title]="data['VendorName']">
-                                        {{ (data['VendorName'] && data['VendorName'].length > 20) ? data['VendorName'].slice(0, 20) + '-' : data['VendorName'] }}
+                                        {{ (data['VendorName'] && data['VendorName'].length > 30) ? data['VendorName'].slice(0, 30) + '-' : data['VendorName'] }}
                                     </td>
                                     <td>{{data.Branch}}</td>
                                     <td>{{data.PaymentMode}}</td>
                                     <td>{{data.BankName}}</td>
-                                    <td>{{data.ReferenceNo}}</td>
+                                    <td [title]="data.ReferenceNo">{{ data.ReferenceNo == 0 ? null : (data.ReferenceNo.length > 30 ? data.ReferenceNo.slice(0, 30) + '-' : data.ReferenceNo) }}</td>
                                     <td>{{data.Currency}}</td>
                                     <td class="text-right hyperTextColor">{{ data.Symbol + ' ' + (data.Amount | dynamicDecimal: entityFraction) }}</td>
                                     <td>{{data.Invoice}}</td>

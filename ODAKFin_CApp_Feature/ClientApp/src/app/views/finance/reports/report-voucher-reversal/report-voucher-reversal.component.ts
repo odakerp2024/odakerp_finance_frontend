@@ -37,6 +37,7 @@ export class ReportVoucherReversalComponent implements OnInit  {
   pagedItems: any[];// paged items
   pagesort: any = new GridSort().sort;
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat')
+  entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   PeroidList = [
     { peroidId: 'today', peroidName: 'CURRENT DAY' },
     { peroidId: 'week', peroidName: 'CURRENT WEEK' },
@@ -247,7 +248,7 @@ export class ReportVoucherReversalComponent implements OnInit  {
       this.reportForExcelList = [];
       if (result['data'].Table.length > 0) {
         this.reportList = result['data'].Table;
-        this.reportForExcelList = !result['data'].Table1 ? [] : result['data'].Table1;
+        this.reportForExcelList = !result['data'].Table ? [] : result['data'].Table;
         this.setPage(1)
       } else {
         this.pager ={};
@@ -341,8 +342,10 @@ export class ReportVoucherReversalComponent implements OnInit  {
     // Merge cells for "FROM Date" and "TO Date"
     worksheet.mergeCells(`C${dateRow.number}:D${dateRow.number}`);
 
-
-    const header = Object.keys(this.reportForExcelList[0]);
+    const keysToRemove = 'Id';
+    
+    const header = Object.keys(this.reportForExcelList[0])
+                  .filter(key => !keysToRemove.includes(key));
     const headerRow = worksheet.addRow(header);
 
 
@@ -373,20 +376,49 @@ export class ReportVoucherReversalComponent implements OnInit  {
       //To Remove Time from date field data
       const date = data.Date
       const formattedDate = date ? date.split('T')[0] : null;
-      if(formattedDate != date){
-        data.Date =  this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
+      data.Date = formattedDate ? this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat)) : formattedDate;
+      const defalutvalue = 0;
+
+      let TDSAmount = '';
+      let ExrateGain = '';
+      let ExrateLoss = '';
+      let BankCharges = '';
+
+      if ('TDS Amount' in data) {
+       TDSAmount = `${data['TDS Amount']  !== null ? parseFloat(data['TDS Amount'] ).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
       }
-      else{
-        data.Date =  formattedDate
+      if ('Ex rate Gain' in data) {
+       ExrateGain = `${data['Ex rate Gain'] !== null  ? parseFloat(data['Ex rate Gain']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
       }
+      if ('Ex rate Loss' in data) {
+       ExrateLoss = `${data['Ex rate Loss'] !== null ? parseFloat(data['Ex rate Loss']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      }
+      if ('Bank Charges' in data) {
+       BankCharges = `${data['Bank Charges'] !== null ? parseFloat(data['Bank Charges']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      }
+      
+      // Define keys to remove
+      const keysToRemove = ['Id'];
+
+      const filteredData = Object.keys(data)
+      .filter(key => !keysToRemove.includes(key))
+      .reduce((obj, key) => {
+        obj[key] = data[key];
+        return obj;
+      }, {});
+
+      if (TDSAmount) filteredData['TDS Amount'] = TDSAmount;
+      if (ExrateGain) filteredData['Ex rate Gain'] = ExrateGain;
+      if (ExrateLoss) filteredData['Ex rate Loss'] = ExrateLoss;
+      if (BankCharges) filteredData['Bank Charges'] = BankCharges;
 
       // Add the filtered data to the worksheet
-      const row = worksheet.addRow(Object.values(data));
+      const row = worksheet.addRow(Object.values(filteredData));
 
    
     // Set text color for specific columns and align them
-    const columnsToColorRight =  ['Voucher Reversal'];
-    const columnsToAlignLeft  = ['Voucher Reversal'];
+    const columnsToColorRight =  ['Voucher Reversal #'];
+    const columnsToAlignLeft  = ['Voucher Reversal #'];
     const columnsToAlignRight =  [ ]; // Specify columns to align right
 
     columnsToColorRight.forEach(columnName => {
@@ -455,6 +487,7 @@ export class ReportVoucherReversalComponent implements OnInit  {
 
  
   async downloadAsCSV() {
+    debugger
     if (this.reportForExcelList.length === 0) {
       Swal.fire('No record found');
       return;
@@ -483,13 +516,12 @@ export class ReportVoucherReversalComponent implements OnInit  {
     worksheet.mergeCells(`F${titleRow.number}:G${titleRow.number}`);
 
     // Add subtitle row
-    const subtitleRow = worksheet.addRow(['', '', '', '', '', 'Voucher Reversal', '']);
+    const subtitleRow = worksheet.addRow(['', '', '', '', '', '[Voucher Reversal #]', '']);
     subtitleRow.getCell(6).font = { size: 14 };
     subtitleRow.getCell(6).alignment = { horizontal: 'center' };
 
     // Merge cells for the subtitle
-    worksheet.mergeCells(`F${subtitleRow.number}:G${subtitleRow.number}`);
-
+    worksheet.mergeCells(`F${subtitleRow.number}:G${subtitleRow.number}`);  
     // Add "FROM Date" and "TO Date" to the worksheet
     const dateRow = worksheet.addRow(['', '', '', '', '', `FROM ${this.datePipe.transform(this.startDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))} - TO ${this.datePipe.transform(this.endDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`]);
     dateRow.eachCell((cell) => {
@@ -497,12 +529,14 @@ export class ReportVoucherReversalComponent implements OnInit  {
     });
     dateRow.getCell(6).numFmt = this.commonDataService.convertToLowerCaseDay(this.entityDateFormat);
     dateRow.getCell(6).numFmt = this.commonDataService.convertToLowerCaseDay(this.entityDateFormat);
-
+    
     // Merge cells for "FROM Date" and "TO Date"
     worksheet.mergeCells(`F${dateRow.number}:G${dateRow.number}`);
+    
+    const keysToRemove = 'Id';
 
-
-    const header = Object.keys(this.reportForExcelList[0]);
+    const header = Object.keys(this.reportForExcelList[0])
+                  .filter(key => !keysToRemove.includes(key));;
     const headerRow = worksheet.addRow(header);
 
 
@@ -526,28 +560,53 @@ export class ReportVoucherReversalComponent implements OnInit  {
         right: { style: 'thin' },
       };
     });
-
     // Add data rows with concatenated symbol and amount
     this.reportForExcelList.forEach((data) => {
-
-      //To Remove Time from date field data
-      const date = data.Date
+      // To Remove Time from date field data
+      const date = data.Date;
       const formattedDate = date ? date.split('T')[0] : null;
-      if(formattedDate != date){
-        data.Date =  this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
+      data.Date = formattedDate ? this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat)) : formattedDate;
+      const defalutvalue = 0;
+
+      let TDSAmount = '';
+      let ExrateGain = '';
+      let ExrateLoss = '';
+      let BankCharges = '';
+
+      if ('TDS Amount' in data) {
+       TDSAmount = `${data['TDS Amount']  !== null ? parseFloat(data['TDS Amount'] ).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
       }
-      else{
-        data.Date =  formattedDate
+      if ('Ex rate Gain' in data) {
+       ExrateGain = `${data['Ex rate Gain'] !== null  ? parseFloat(data['Ex rate Gain']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
       }
+      if ('Ex rate Loss' in data) {
+       ExrateLoss = `${data['Ex rate Loss'] !== null ? parseFloat(data['Ex rate Loss']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      }
+      if ('Bank Charges' in data) {
+       BankCharges = `${data['Bank Charges'] !== null ? parseFloat(data['Bank Charges']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      }
+      // Define keys to remove
+      const keysToRemove = ['Id'];
 
+      const filteredData = Object.keys(data)
+    .filter(key => !keysToRemove.includes(key))
+    .reduce((obj, key) => {
+      obj[key] = data[key];
+      return obj;
+    }, {});
 
+    if (TDSAmount) filteredData['TDS Amount'] = TDSAmount;
+    if (ExrateGain) filteredData['Ex rate Gain'] = ExrateGain;
+    if (ExrateLoss) filteredData['Ex rate Loss'] = ExrateLoss;
+    if (BankCharges) filteredData['Bank Charges'] = BankCharges;
 
+debugger
       // Add the filtered data to the worksheet
-      const row = worksheet.addRow(Object.values(data));
+      const row = worksheet.addRow(Object.values(filteredData));
 
      // Set text color for specific columns and align them
-     const columnsToColorRight =  ['Voucher Reversal'];
-     const columnsToAlignLeft  = ['Voucher Reversal'];
+     const columnsToColorRight =  ['Voucher Reversal #'];
+     const columnsToAlignLeft  = ['Voucher Reversal #'];
      const columnsToAlignRight =  [ ]; // Specify columns to align right
  
      columnsToColorRight.forEach(columnName => {
@@ -575,7 +634,6 @@ export class ReportVoucherReversalComponent implements OnInit  {
      });
  
    });
-
     // Adjust column widths to fit content
     worksheet.columns.forEach((column) => {
       let maxLength = 0;

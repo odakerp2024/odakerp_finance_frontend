@@ -188,7 +188,8 @@
                                       {{ (data['Trans_Details'] && data['Trans_Details'].length > 20) ? data['Trans_Details'].slice(0, 20) + '-' : data['Trans_Details'] }}</td>
                                     <td>{{data.Trans_Type}}</td>
                                     <td class="hyperColor" (click)="clickTransactionNumber(data.ID, data.Trans_Type, data.Trans_Number,data.RedirectUrl)">{{data.Trans_Number == 0 ? null : data.Trans_Number}}</td>
-                                    <td>{{data.Trans_Ref_Details}}</td>
+                                    <td *ngIf="data.Trans_Ref_Details === '-'"> {{data.Trans_Ref_Details }}</td>
+                                    <td *ngIf="data.Trans_Ref_Details !== '-'" [title]="data.Trans_Ref_Details">{{ data.Trans_Ref_Details == 0 ? null : (data.Trans_Ref_Details.length > 30 ? data.Trans_Ref_Details.slice(0, 30) + '-' : data.Trans_Ref_Details) }}</td>
                                     <td class="text-right hyperTextColor">{{data.Debit  | dynamicDecimal: entityFraction}}</td>
                                     <td class="text-right hyperTextColor">{{data.Credit | dynamicDecimal: entityFraction}}</td>
                                     <td class="text-right hyperTextColor">{{data.Amount | dynamicDecimal: entityFraction }}</td>

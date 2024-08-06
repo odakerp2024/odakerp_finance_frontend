@@ -301,12 +301,12 @@
                             </div>
                             <div class="col-md-6 col-sm-6 col-lg-6 col-xl-6">
                                 <div class="form-group">
-                                    <label class="str fontstyles">Amount Paid</label>
+                                    <label class="str fontstyles">Amount Paid </label>
                                     <input
                                         onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
                                         min="0" numbersOnly
                                         (ngModelChange)="amountChange($event); summaryAmountCalculation()"
-                                        appDynamicDecimal class="form-control my-select amount w-200 m-0"
+                                        appDynamicDecimal class="form-control  amount w-200 m-0"
                                         formControlName="AmountPaid" />
                                 </div>
                             </div>
@@ -368,7 +368,7 @@
                                 {{payment.PaymentType | uppercase}}
                             </option>
                         </select> -->
-                            <ng-select class="my-select" [formControlName]="'ModeofPaymentId'"
+                            <ng-select class="searchdropdown" formControlName="ModeofPaymentId"
                                 [ngClass]="{'disable-input': isCopied}" [clearable]="false">
                                 <ng-option [value]="''" [disabled]="true">--Mode Of Payment--</ng-option>
                                 <ng-option *ngFor="let payment of paymentModeList" [value]="payment.Id">{{

@@ -65,7 +65,7 @@
 
     <div class="col-md-2">
         <div class="form-group">
-            <label class="str">VOUCHER#</label>
+            <label class="str">VOUCHER #</label>
             <input
                 class="form-control my-select amount w-100 mr-0" formControlName="Transaction"  />
         </div>
@@ -148,9 +148,10 @@
                             <td>{{balance.Trans_Date | date: commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td>
                             <td [title]= balance.Trans_Account_Name>{{(balance.Trans_Account_Name && balance.Trans_Account_Name.length > 20) ? balance.Trans_Account_Name.slice(0, 20) + '-' : balance.Trans_Account_Name}}</td>
                             <td class="hyperTextColor" [title]= balance.Trans_Details>{{(balance.Trans_Details && balance.Trans_Details.length > 20) ? balance.Trans_Details.slice(0, 20) + '-' : balance.Trans_Details}}</td>
-                            <td>{{balance.Trans_Type}}</td>
+                            <td [title]="balance.Trans_Type"> {{ balance.Trans_Type.length > 20 ? balance.Trans_Type.slice(0, 20) + '-' : balance.Trans_Type }} </td>
                             <td class="hyperColor" (click)="clickTransactionNumber(balance.ID, balance.Trans_Type, balance.Trans_Number, balance.RedirectUrl)">{{balance.Trans_Number == 0 ? null : balance.Trans_Number}}</td>
-                            <td>{{balance.Trans_Ref_Details == 0 ? null : balance.Trans_Ref_Details}}</td>
+                            <td *ngIf = "balance.Trans_Ref_Details === '-'">{{balance.Trans_Ref_Details}} </td>
+                            <td *ngIf = "balance.Trans_Ref_Details !== '-'" [title]="balance.Trans_Ref_Details">{{ balance.Trans_Ref_Details == 0 ? null : (balance.Trans_Ref_Details.length > 20 ? balance.Trans_Ref_Details.slice(0, 20) + '-' : balance.Trans_Ref_Details) }} </td>
                             <td class="text-right">{{balance.Debit | dynamicentityDecimal}}</td>
                             <td class="text-right">{{balance.Credit | dynamicentityDecimal}}</td>
                             <td class="text-right">{{balance.Amount | dynamicentityDecimal}}</td>
