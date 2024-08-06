@@ -384,6 +384,7 @@ export class FinanceMasterComponent implements OnInit {
      // Below code for locally run the application
 
      localStorage.setItem("UserID", "15");
+     localStorage.setItem("OrgId", "1");
      this.GeneratePermission(localStorage.getItem("UserID"));
      localStorage.setItem("TokenID", "15")
      this.setEntityConfigurable();
