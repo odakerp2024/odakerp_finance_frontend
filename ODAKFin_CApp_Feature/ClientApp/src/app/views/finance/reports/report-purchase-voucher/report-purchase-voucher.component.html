@@ -134,7 +134,7 @@
                         </div>
 
                         <div class="col-2">
-                            <label class=" maxlabel">VENDOR INVOICE#</label>
+                            <label class=" maxlabel">VENDOR INVOICE #</label>
                             <input formControlName="VendorInvoice" appDynamicDecimal numbersOnly class="form-control"
                                 name="VendorInvoice">
                         </div>
@@ -240,7 +240,7 @@
                                     <td class="hyperTextColor">{{data.Invoice_no == 0 ? '' :  data.Invoice_no}}</td>
                                     <td>{{data.Invoice_type}}</td>
                                     <td class="hyperTextColor" [title]="data['VendorName']">
-                                        {{ (data['VendorName'] && data['VendorName'].length > 20) ? data['VendorName'].slice(0, 20) + '-' : data['VendorName'] }}
+                                        {{ (data['VendorName'] && data['VendorName'].length > 30) ? data['VendorName'].slice(0, 30) + '-' : data['VendorName'] }}
                                     </td> 
                                     <td>{{data.CityName}}</td>
                                     <td>{{data.CurrencyCode}}</td>

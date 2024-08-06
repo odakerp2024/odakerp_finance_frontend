@@ -256,13 +256,13 @@
                                         <a>{{data.Receipt == 0 ? ' ' : data.Receipt}}</a></td>
                                     <td>{{data.Type}}</td>
                                     <td class="hyperTextColor" [title]="data['CustomerName']">
-                                        {{ (data['CustomerName'] && data['CustomerName'].length > 20) ?
-                                        data['CustomerName'].slice(0, 20) + '-' : data['CustomerName'] }}
+                                        {{ (data['CustomerName'] && data['CustomerName'].length > 30) ?
+                                        data['CustomerName'].slice(0, 30) + '-' : data['CustomerName'] }}
                                     </td>
                                     <td>{{data.Branch}}</td>
                                     <td>{{data.PaymentMode}}</td>
                                     <td>{{data.BankName}}</td>
-                                    <td>{{data.ReferenceNo}}</td>
+                                    <td [title]="data.ReferenceNo">{{ data.ReferenceNo == 0 ? null : (data.ReferenceNo.length > 30 ? data.ReferenceNo.slice(0, 30) + '-' : data.ReferenceNo) }}</td>
                                     <td>{{data.Currency}}</td>
                                     <td class="text-right hyperTextColor">{{ data.Symbol + ' ' + (data.Amount |
                                         dynamicDecimal: entityFraction) }}</td>
