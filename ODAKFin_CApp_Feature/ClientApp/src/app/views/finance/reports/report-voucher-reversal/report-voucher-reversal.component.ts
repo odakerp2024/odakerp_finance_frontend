@@ -379,11 +379,24 @@ export class ReportVoucherReversalComponent implements OnInit  {
       data.Date = formattedDate ? this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat)) : formattedDate;
       const defalutvalue = 0;
 
-      const TDSAmount = `${data['TDS Amount']  !== null ? parseFloat(data['TDS Amount'] ).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const ExrateGain = `${data['Ex rate Gain'] !== null  ? parseFloat(data['Ex rate Gain']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const ExrateLoss = `${data['Ex rate Loss'] !== null ? parseFloat(data['Ex rate Loss']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const BankCharges = `${data['Bank Charges'] !== null ? parseFloat(data['Bank Charges']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      let TDSAmount = '';
+      let ExrateGain = '';
+      let ExrateLoss = '';
+      let BankCharges = '';
 
+      if ('TDS Amount' in data) {
+       TDSAmount = `${data['TDS Amount']  !== null ? parseFloat(data['TDS Amount'] ).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      }
+      if ('Ex rate Gain' in data) {
+       ExrateGain = `${data['Ex rate Gain'] !== null  ? parseFloat(data['Ex rate Gain']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      }
+      if ('Ex rate Loss' in data) {
+       ExrateLoss = `${data['Ex rate Loss'] !== null ? parseFloat(data['Ex rate Loss']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      }
+      if ('Bank Charges' in data) {
+       BankCharges = `${data['Bank Charges'] !== null ? parseFloat(data['Bank Charges']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      }
+      
       // Define keys to remove
       const keysToRemove = ['Id'];
 
@@ -394,10 +407,10 @@ export class ReportVoucherReversalComponent implements OnInit  {
         return obj;
       }, {});
 
-      filteredData['TDS Amount'] = TDSAmount;
-      filteredData['Ex rate Gain'] = ExrateGain;
-      filteredData['Ex rate Loss'] = ExrateLoss;
-      filteredData['Bank Charges'] = BankCharges;
+      if (TDSAmount) filteredData['TDS Amount'] = TDSAmount;
+      if (ExrateGain) filteredData['Ex rate Gain'] = ExrateGain;
+      if (ExrateLoss) filteredData['Ex rate Loss'] = ExrateLoss;
+      if (BankCharges) filteredData['Bank Charges'] = BankCharges;
 
       // Add the filtered data to the worksheet
       const row = worksheet.addRow(Object.values(filteredData));
@@ -555,11 +568,23 @@ export class ReportVoucherReversalComponent implements OnInit  {
       data.Date = formattedDate ? this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat)) : formattedDate;
       const defalutvalue = 0;
 
-      const TDSAmount = `${data['TDS Amount']  !== null ? parseFloat(data['TDS Amount'] ).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const ExrateGain = `${data['Ex rate Gain'] !== null  ? parseFloat(data['Ex rate Gain']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const ExrateLoss = `${data['Ex rate Loss'] !== null ? parseFloat(data['Ex rate Loss']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const BankCharges = `${data['Bank Charges'] !== null ? parseFloat(data['Bank Charges']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      let TDSAmount = '';
+      let ExrateGain = '';
+      let ExrateLoss = '';
+      let BankCharges = '';
 
+      if ('TDS Amount' in data) {
+       TDSAmount = `${data['TDS Amount']  !== null ? parseFloat(data['TDS Amount'] ).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      }
+      if ('Ex rate Gain' in data) {
+       ExrateGain = `${data['Ex rate Gain'] !== null  ? parseFloat(data['Ex rate Gain']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      }
+      if ('Ex rate Loss' in data) {
+       ExrateLoss = `${data['Ex rate Loss'] !== null ? parseFloat(data['Ex rate Loss']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      }
+      if ('Bank Charges' in data) {
+       BankCharges = `${data['Bank Charges'] !== null ? parseFloat(data['Bank Charges']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      }
       // Define keys to remove
       const keysToRemove = ['Id'];
 
@@ -570,10 +595,10 @@ export class ReportVoucherReversalComponent implements OnInit  {
       return obj;
     }, {});
 
-    filteredData['TDS Amount'] = TDSAmount;
-    filteredData['Ex rate Gain'] = ExrateGain;
-    filteredData['Ex rate Loss'] = ExrateLoss;
-    filteredData['Bank Charges'] = BankCharges;
+    if (TDSAmount) filteredData['TDS Amount'] = TDSAmount;
+    if (ExrateGain) filteredData['Ex rate Gain'] = ExrateGain;
+    if (ExrateLoss) filteredData['Ex rate Loss'] = ExrateLoss;
+    if (BankCharges) filteredData['Bank Charges'] = BankCharges;
 
 debugger
       // Add the filtered data to the worksheet
