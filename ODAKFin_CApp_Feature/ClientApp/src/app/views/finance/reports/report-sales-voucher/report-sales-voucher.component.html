@@ -236,8 +236,7 @@
                                 <tr *ngFor="let data of pagedItems">
                                     <td>{{data.Date | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}
                                     </td>
-                                    <td class="hyperTextColor"><a>{{data.Invoice_no == 0 ? '' :
-                                            data['Invoice']}}</a></td>
+                                    <td class="hyperColor" (click)="clickTransactionNumber(data.RedirectUrl)">{{data.Invoice == 0 ? null : data.Invoice}}</td>    
                                     <td>{{data['Transaction Type']}}</td>
                                     <td class="hyperTextColor" [title]="data['Customer Name']">
                                         {{ (data['Customer Name'] && data['Customer Name'].length > 20) ? data['Customer Name'].slice(0, 20) + '-' : data['Customer Name'] }}

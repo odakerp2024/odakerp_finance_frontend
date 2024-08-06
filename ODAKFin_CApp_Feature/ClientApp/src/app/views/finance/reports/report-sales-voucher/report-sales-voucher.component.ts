@@ -316,6 +316,16 @@ export class ReportSalesVoucherComponent implements OnInit {
     this.getSalesVoucherReportList();
   }
 
+  clickTransactionNumber(RedirectUrl: string) {
+    
+    let url: string;
+
+    url = RedirectUrl;
+       
+    if (url) {
+        window.open(url, '_blank');
+    }
+}
 
   async downloadAsExcel() {
     if (this.pagedItems.length === 0) {
@@ -366,7 +376,7 @@ export class ReportSalesVoucherComponent implements OnInit {
 
 
     // Define header row and style it with yellow background, bold, and centered text
-    const keysToRemove = ['Symbol', 'BLTpes'];
+    const keysToRemove = ['Symbol', 'BLTpes','RedirectUrl'];
 
     const header = Object.keys(this.pagedItems[0])
         .filter(key => !keysToRemove.includes(key));
@@ -411,7 +421,7 @@ export class ReportSalesVoucherComponent implements OnInit {
       // Filter out properties you don't want to include in the Excel sheet
       
     
-      const keysToRemove = ['Symbol', 'BLTpes'];
+      const keysToRemove = ['Symbol', 'BLTpes','RedirectUrl'];
 
       const filteredData = Object.keys(data)
           .filter(key => !keysToRemove.includes(key))
@@ -553,7 +563,7 @@ export class ReportSalesVoucherComponent implements OnInit {
 
 
     // Define header row and style it with yellow background, bold, and centered text
-    const keysToRemove = ['Symbol', 'BLTpes'];
+    const keysToRemove = ['Symbol', 'BLTpes','RedirectUrl'];
 
     const header = Object.keys(this.pagedItems[0])
         .filter(key => !keysToRemove.includes(key));
@@ -598,7 +608,7 @@ export class ReportSalesVoucherComponent implements OnInit {
     
       // Filter out properties you don't want to include in the Excel sheet
 
-      const keysToRemove = ['Symbol', 'BLTpes'];
+      const keysToRemove = ['Symbol', 'BLTpes','RedirectUrl'];
 
       const filteredData = Object.keys(data)
           .filter(key => !keysToRemove.includes(key))
