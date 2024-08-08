@@ -177,10 +177,11 @@
                     <tr>
                         <th scope="col">Date</th>
                         <th scope="col">Bank Reference #</th>
-                        <th scope="col">Cheque No</th>
+                        <th scope="col">Ref/Cheque No</th>
                         <th scope="col">Deposits</th>
                         <th scope="col">Withdrawals</th>
                         <th scope="col">Bank Closing Balance</th>
+                        <th scope="col">Transaction Type</th>
                         <th scope="col">Reconciliation Status</th>
                     </tr>
                 </thead>
@@ -193,23 +194,22 @@
                             <td class="text-center">{{bankStatement.StatementDate | date : commonService.convertToLowerCaseDay(entityDateFormat)}}</td>
 
                             <td  class="text-center" [title]="bankStatement.BankReference | uppercase">
-                                {{ (bankStatement.BankReference && bankStatement.BankReference.length > 25) ? bankStatement.BankReference.slice(0, 25) + '-' : (bankStatement.BankReference|| '-') }}
+                                {{ (bankStatement.BankReference && bankStatement.BankReference.length > 30) ? bankStatement.BankReference.slice(0, 30) + '-' : (bankStatement.BankReference|| '-') }}
                               </td>
-                            <!-- <td class="text-center">{{bankStatement.BankReference ? bankStatement.BankReference : '-'}}</td> -->
-                              <td  class="text-center" [title]="bankStatement.ChequeDetails | uppercase">
-                                {{ (bankStatement.ChequeDetails && bankStatement.ChequeDetails.length > 25) ? bankStatement.ChequeDetails.slice(0, 25) + '-'  : (bankStatement.ChequeDetails|| '-') }}
+                              <td class="text-center" *ngIf = "bankStatement.ChequeDetails === '-'">{{bankStatement.ChequeDetails}} </td>
+                              <td  class="text-center" *ngIf = "bankStatement.ChequeDetails !== '-'" [title]="bankStatement.ChequeDetails | uppercase">
+                                {{ (bankStatement.ChequeDetails.length > 30) ? bankStatement.ChequeDetails.slice(0, 30) + '-'  : (bankStatement.ChequeDetails|| '-') }}
                               </td>
-                            <!-- <td class="text-center">{{bankStatement.BankReference ? bankStatement.BankReference : '-'}}</td> -->
-                            <td class="text-center">{{bankStatement.Deposits ? bankStatement.Deposits : '-'}}</td>
-                            <td class="text-center">{{bankStatement.Withdrawals ? bankStatement.Withdrawals : '-'}}</td>
-                            <td class="text-center">{{bankStatement.BankClosingBalance ? bankStatement.BankClosingBalance : '-'}}</td>
+                            <td class="text-center">{{bankStatement.Deposits ? (bankStatement.Deposits |dynamicDecimal: entityFraction) : '-'}}</td>
+                            <td class="text-center">{{bankStatement.Withdrawals ? (bankStatement.Withdrawals |dynamicDecimal: entityFraction) : '-'}}</td>
+                            <td class="text-center">{{bankStatement.BankClosingBalance ? (bankStatement.BankClosingBalance |dynamicDecimal: entityFraction) : '-'}}</td>
+                            <td class="text-center">{{bankStatement.TransactionType ? bankStatement.TransactionType : '-'}}</td>
                             <td class="text-center">
                                 <div
                                     [ngClass]="bankStatement.IsReconcile == true ? 'badge badge-state-confirm' : 'badge badge-state'">
                                     {{bankStatement.IsReconcile? 'Reconcile' : 'Un-reconcile'}}
                                 </div>
                             </td>
-                            <!-- <td class="text-center">{{bankStatement.IsReconcile ? 'Reconcile' : 'Un-reconcile'}}</td> -->
                         </tr>
                     </ng-container>
                     <!-- no data -->
