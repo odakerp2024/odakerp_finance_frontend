@@ -359,35 +359,35 @@ export class TrialbalancetwoComponent implements OnInit {
       Swal.fire('No record found');
       return;
     }
-
+  
     const workbook = new Workbook();
     const worksheet = workbook.addWorksheet('Report');
-
+  
     // Add title and subtitle rows
     const titleRow = worksheet.addRow(['', '', 'ODAK SOLUTIONS PRIVATE LIMITED', '', '', '']);
     titleRow.getCell(3).font = { size: 15, bold: true };
     titleRow.getCell(3).alignment = { horizontal: 'center' };
     worksheet.mergeCells(`C${titleRow.number}:D${titleRow.number}`);
+  
     const subtitleRow = worksheet.addRow(['', '', 'Account Transactions', '', '', '']);
     subtitleRow.getCell(3).font = { size: 15, bold: true };
     subtitleRow.getCell(3).alignment = { horizontal: 'center' };
     worksheet.mergeCells(`C${subtitleRow.number}:D${subtitleRow.number}`);
-    const subtitleRow1 = worksheet.addRow(['', '', ' Accounts Receivable', '', '', '']);
+  
+    const subtitleRow1 = worksheet.addRow(['', '', 'Accounts Receivable', '', '', '']);
     subtitleRow1.getCell(3).font = { size: 15, bold: true };
     subtitleRow1.getCell(3).alignment = { horizontal: 'center' };
     worksheet.mergeCells(`C${subtitleRow1.number}:D${subtitleRow1.number}`);
-
-    // Add date row
+  
     const currentDate = new Date();
     const subtitleRow2 = worksheet.addRow(['', '', `As of ${this.datePipe.transform(currentDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`, '', '', '']);
     subtitleRow2.getCell(3).alignment = { horizontal: 'center' };
     worksheet.mergeCells(`C${subtitleRow2.number}:D${subtitleRow2.number}`);
-
-
+  
     // Define header row
     const headers = ['Trans_Date', 'Trans_Account_Name', 'Trans_Details', 'Trans_Type', 'Transaction', 'Trans_Ref_Details', 'Debit', 'Credit', 'Amount'];
     const headerRow = worksheet.addRow(headers);
-
+  
     // Style the header row
     headerRow.eachCell((cell) => {
       cell.fill = {
@@ -409,16 +409,15 @@ export class TrialbalancetwoComponent implements OnInit {
         right: { style: 'thin' },
       };
     });
-
-
+  
+    // Add data rows
     this.dataList.forEach(group => {
-      // Format the date
       const date = group.Trans_Date;
-      const formattedDate = date.split('T')[0];
-      group.Trans_Date = this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
-
-
-      // Create row data
+      const formattedDate = date ? date.split('T')[0] : null;
+      group.Trans_Date = formattedDate != date
+        ? this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))
+        : formattedDate;
+  
       const rowData = [
         group.Trans_Date,
         group.Trans_Account_Name,
@@ -430,41 +429,63 @@ export class TrialbalancetwoComponent implements OnInit {
         group.Credit.toFixed(this.entityFraction),
         group.Amount.toFixed(this.entityFraction)
       ];
-      // Add row to worksheet
+  
       const row = worksheet.addRow(rowData);
-
-      // Set text color for specific columns
+  
       const columnsToColor = ['Trans_Number', 'Trans_Details', 'Debit', 'Credit', 'Amount'];
-      const columnsToleft = ['Trans_Number', 'Trans_Details'];
-      const columnsToright = ['Debit', 'Credit', 'Amount'];
+      const columnsToLeft = ['Trans_Number', 'Trans_Details'];
+      const columnsToRight = ['Debit', 'Credit', 'Amount'];
+  
       columnsToColor.forEach(columnName => {
         const columnIndex = Object.keys(group).indexOf(columnName);
         if (columnIndex !== -1) {
           const cell = row.getCell(columnIndex + 1);
-          cell.font = { color: { argb: '8B0000' }, bold: true }; // Red color
+          cell.font = { color: { argb: '8B0000' }, bold: true };
         }
       });
-
-
-      columnsToleft.forEach(columnName => {
+  
+      columnsToLeft.forEach(columnName => {
         const columnIndex = Object.keys(group).indexOf(columnName);
         if (columnIndex !== -1) {
           const cell = row.getCell(columnIndex + 1);
           cell.alignment = { horizontal: 'left' };
         }
       });
-
-
-
-      columnsToright.forEach(columnName => {
+  
+      columnsToRight.forEach(columnName => {
         const columnIndex = Object.keys(group).indexOf(columnName);
         if (columnIndex !== -1) {
           const cell = row.getCell(columnIndex + 1);
           cell.alignment = { horizontal: 'right' };
         }
       });
-    })
-
+    });
+  
+    // Add Grand Total row
+    const totalRow = worksheet.addRow([
+      'Grand Total:',
+      '',
+      '',
+      '',
+      '',
+      '',
+      this.totalDebitAmount.toFixed(this.entityFraction),
+      this.totalCreditAmount.toFixed(this.entityFraction),
+      this.totalAmount.toFixed(this.entityFraction)
+    ]);
+  
+    totalRow.eachCell((cell) => {
+      cell.font = { bold: true };
+      cell.alignment = { horizontal: 'right' };
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FFFF99' },
+      };
+    });
+  
+    worksheet.getRow(totalRow.number).getCell(1).alignment = { horizontal: 'left' };
+  
     // Adjust column widths
     worksheet.columns.forEach(column => {
       let maxLength = 0;
@@ -476,7 +497,8 @@ export class TrialbalancetwoComponent implements OnInit {
       });
       column.width = maxLength + 2;
     });
-    // Style the footer row with yellow background, bold, and centered text
+  
+    //Style the footer row with yellow background, bold, and centered text
     const footerRow = worksheet.addRow(['End of Report']);
     footerRow.eachCell((cell) => {
       cell.fill = {
@@ -492,14 +514,16 @@ export class TrialbalancetwoComponent implements OnInit {
         horizontal: 'center',
       };
     });
-
-    // Merge footer cells if needed
+  
+    //Merge footer cells if needed
     worksheet.mergeCells(`A${footerRow.number}:${String.fromCharCode(65 + headers.length - 1)}${footerRow.number}`);
+  
     // Write to Excel and save
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     saveAs(blob, 'Report-Account Transactions.xlsx');
   }
+  
 
 }
 

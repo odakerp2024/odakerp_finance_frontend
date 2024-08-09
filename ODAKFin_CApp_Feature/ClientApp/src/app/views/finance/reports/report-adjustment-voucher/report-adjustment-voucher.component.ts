@@ -407,8 +407,15 @@ export class ReportAdjustmentVoucherComponent implements OnInit {
 
       //To Remove Time from date field data
       const date = data.Date
-      const formattedDate = date.split('T')[0];
-      data.Date =  this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
+      // const formattedDate = date.split('T')[0];
+      // data.Date =  this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
+      const formattedDate = date ? date.split('T')[0] : null;
+      if(formattedDate != date){
+        data.Date =  this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
+      }
+      else{
+        data.Date =  formattedDate
+      }
 
      const defaultvalue = 0;
       // Merge the symbol and amount into a single string with fixed decimal places
@@ -584,8 +591,15 @@ export class ReportAdjustmentVoucherComponent implements OnInit {
      this.reportForExcelList.forEach((data) => {
       //To Remove Time from date field data
       const date = data.Date
-      const formattedDate = date.split('T')[0];
-      data.Date =  this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
+      // const formattedDate = date.split('T')[0];
+      // data.Date =  this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
+      const formattedDate = date ? date.split('T')[0] : null;
+      if(formattedDate != date){
+        data.Date =  this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
+      }
+      else{
+        data.Date =  formattedDate
+      }
       const defaultvalue =0 ; 
       // Merge the symbol and amount into a single string with fixed decimal places
       const mergedICYAmount = `${data['Amount'] !== null ? parseFloat(data['Amount']).toFixed(this.entityFraction) : (defaultvalue).toFixed(this.entityFraction)}`;
