@@ -101,51 +101,43 @@ export class ReportApLeveltwoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Step 1: Initialize the form and other necessary data
     this.createReportForm();
     this.onOptionChange('month');
     this.getDivisionList();
     this.getVendorList();
-    
-    // Step 2: Fetch the aging dropdown data
     this.getAgingDropdown().then(() => {
-      // Step 3: After fetching dropdown data, set form values
       this.reportFilter.controls.Peroid.setValue('month');
       if (this.agingId) {
         this.reportFilter.controls.AgingTypeId.setValue(this.agingId);
         this.createReportForm();
       }
     });
-  }
+}
 
-  async getAgingDropdown(): Promise<void> {
-    const payload = {
-      type: 1,
-    };
-  
-    try {
+async getAgingDropdown(): Promise<void> {
+  const payload = { type: 1 };
+  try {
       const result: any = await this.reportService.getAgingDropdown(payload).toPromise();
       if (result.message === 'Success' && result.data.Table.length > 0) {
-        // Process dropdown data as needed
-        this.agingGroupDropdown = result.data.Table;
-        this.agingId = this.agingGroupDropdown[0].AgingTypeId;
+          this.agingGroupDropdown = result.data.Table;
+          this.agingId = this.agingGroupDropdown[0].AgingTypeId;
+          console.log('Aging Dropdown:', this.agingGroupDropdown);
       }
-    } catch (error) {
+  } catch (error) {
       console.error('Error fetching aging dropdown:', error);
-    }
   }
-
- async Cancel() {
-    if (this.type === 'Vendor-Invoice-wise') {
+}
+async Cancel() {
+  if (this.type === 'Vendor-Invoice-wise') {
       this.type = 'Vendor-wise';
       await this.createReportForm();
-      await this.showVendor(0); 
-    } else if (this.type === 'Vendor-wise') {
+      await this.showVendor(0);
+  } else if (this.type === 'Vendor-wise') {
       this.type = 'Overall-list';
-      await this.createReportForm();    
+      await this.createReportForm();
       await this.getAPAgingOverallList();
-    }
   }
+}
 
 async showVendor(SubTypeId:number){
   this.subtype = SubTypeId;
@@ -240,56 +232,55 @@ async showVendor(SubTypeId:number){
   }
 
   async createReportForm() {
-    if (this.type == 'Overall-list' ){
-    this.reportFilter = this.fb.group({
-      FromDate: [this.startDate],
-      ToDate: [this.endDate],
-      VendorID: [0],
-      DivisionId: [0],
-      OfficeId: [0],
-       Type:[0],
-        SubTypeId: [0],
-      Peroid: [''],
-      AgingTypeId: [this.agingId]
-    });
-  }else if( this.type == 'Vendor-wise'){
-    this.reportFilter = this.fb.group({
-      FromDate: [this.startDate],
-      ToDate: [this.endDate],
-      DivisionId: [0],
-      OfficeId: [0],
-      VendorID: [0],
-       Type:[1],
-       AgingTypeId: [this.agingId],
-        SubTypeId: [this.subtype],
-      Peroid: [''],
-    });
-  } else {
+    if (this.type == 'Overall-list' ) {
         this.reportFilter = this.fb.group({
-          DivisionId: [0],
-          OfficeId: [0],
-          VendorID: [0],
-          Type:[2],
-           AgingTypeId: [this.agingId],
-          SubTypeId: [this.subtypevendorId],
-          FromDate: [this.startDate],
-          ToDate: [this.endDate],
-          Peroid: [''],
+            FromDate: [this.startDate],
+            ToDate: [this.endDate],
+            VendorID: [0],
+            DivisionId: [0],
+            OfficeId: [0],
+            Type: [0],
+            SubTypeId: [0],
+            Peroid: [''],
+            AgingTypeId: [this.agingId]
+        });
+    } else if (this.type == 'Vendor-wise') {
+        this.reportFilter = this.fb.group({
+            FromDate: [this.startDate],
+            ToDate: [this.endDate],
+            DivisionId: [0],
+            OfficeId: [0],
+            VendorID: [0],
+            Type: [1],
+            AgingTypeId: [this.agingId],
+            SubTypeId: [this.subtype],
+            Peroid: [''],
+        });
+    } else {
+        this.reportFilter = this.fb.group({
+            DivisionId: [0],
+            OfficeId: [0],
+            VendorID: [0],
+            Type: [2],
+            AgingTypeId: [this.agingId],
+            SubTypeId: [this.subtypevendorId],
+            FromDate: [this.startDate],
+            ToDate: [this.endDate],
+            Peroid: [''],
         });
     }
     this.reportFilter.controls.Peroid.setValue('month');
     this.onOptionChange('month');
-    this.getAgingDropdown();
-     if(this.type == 'Overall-list'){
-      await this.getAPAgingOverallList();
+    await this.getAgingDropdown();
+    if (this.type == 'Overall-list') {
+        await this.getAPAgingOverallList();
+    } else if (this.type == 'Vendor-wise') {
+        await this.getAPAgingVendorList();
+    } else {
+        await this.getAPAgingInvoiceList();
     }
-    else if(this.type == 'Vendor-wise'){
-      await this.getAPAgingVendorList();
-    }else{
-      await this.getAPAgingInvoiceList();
-    }
-  }
-  
+}
+
  
   getDivisionList() {
     var service = `${this.globals.APIURL}/Division/GetOrganizationDivisionList`; var payload: any = {}
@@ -377,35 +368,35 @@ async showVendor(SubTypeId:number){
   getAPAgingOverallList() {
     this.startDate = this.reportFilter.controls.FromDate.value;
     this.endDate = this.reportFilter.controls.ToDate.value;
-  
     this.reportService.getAPAgingList(this.reportFilter.value).subscribe(result => {
-      if (result.message === "Success" && result.data && result.data.Table) {
-        let tableData = result.data.Table;
-  
-        if (tableData.length > 0) {
-          // Set headers from the first data row
-          this.headers = Object.keys(tableData[0]).filter(header => header !== 'Id');
-          // Extract 'Balance (Company Currency)' field and format it
-          this.pagedItems = tableData.map(row => ({
-            ...row,
-            'Total (Company Currency)': Number(row['Total (Company Currency)']).toFixed(this.entityFraction)
-          }));
-          this.setPage(1);
+      this.reportList = [];
+      if (result.message == "Success" && result.data && result.data.Table) {
+       // if (result['data'].Table.length > 0) {
+         this.reportList = result['data'].Table;
+        // if (result.message === "Success" && result.data && result.data.Table) {
+            let tableData = result.data.Table;
+            if (tableData.length > 0) {
+                this.headers = Object.keys(tableData[0]).filter(header => header !== 'Id');
+                this.pagedItems = tableData.map(row => ({
+                    ...row,
+                    'Total (Company Currency)': Number(row['Total (Company Currency)']).toFixed(this.entityFraction)
+                }));
+                this.setPage(1);
+                console.log('Overall List Data:', this.pagedItems);
+            } else {
+                this.showNoDataAlert();
+                this.headers = [];
+                this.pagedItems = [];
+            }
         } else {
-          this.showNoDataAlert();
-          this.headers = [];  // Clear headers when no data is found
-          this.pagedItems = [];
+            this.showNoDataAlert();
+            this.headers = [];
+            this.pagedItems = [];
         }
-      } else {
-        this.showNoDataAlert();
-        this.headers = [];  // Clear headers when no data is found
-        this.pagedItems = [];
-      }
     }, error => {
-      console.log(error);
+        console.log('Error fetching overall list:', error);
     });
-  }
-  
+}
   showNoDataAlert() {
     Swal.fire({
       icon: 'warning',
@@ -661,6 +652,7 @@ calculateInvoicewise(header: string): any {
 
 
   export(){
+    debugger
     if(this.type =="Overall-list")
     {
       this.downloadAsExcel(this.reportList, this.startDate, this.endDate, 'Overall-list');
@@ -817,7 +809,7 @@ calculateInvoicewise(header: string): any {
                       if (!this.totals[key]) {
                           this.totals[key] = 0;
                       }
-                      this.totals[key] += parseFloat(filteredData[key]) || 0;
+                      this.totals[key] += parseFloat(filteredData[key]) ;
                   }
               });
                 break;
@@ -858,6 +850,9 @@ calculateInvoicewise(header: string): any {
                   break;
 
             case 'Vendor-wise':
+              if (!this.totals) {
+                this.totals = {};
+              }
                 filteredData = Object.keys(data)
                     .filter((key) => !excludeKeys.includes(key))
                     .reduce((obj, key) => {
@@ -872,6 +867,25 @@ calculateInvoicewise(header: string): any {
                 totalCreditAmount += parseFloat(data['Credit Amount']) || 0;
                 totalBalanceInvoiceVendorWise += parseFloat(data['Balance (Invoice currency)']) || 0;
                 totalBalanceCompanyVendorWise += parseFloat(data['Balance (Company Currency)']) || 0;
+
+                if (!this.headers) {
+                  this.headers = [];
+                }
+      
+                // Add dynamic headers if the value is a number and update totals
+                Object.keys(filteredData).forEach(key => {
+                  if (!isNaN(filteredData[key]) && key !== 'Id' && key !== 'Sub Category' && key !== 'Customer' && key !== 'Branch' && key !== 'Sales Person') {
+                    if (!this.headers.includes(key)) {
+                      this.headers.push(key);
+                    }
+                    // Update totals for each numeric column
+                    if (!this.totals[key]) {
+                      this.totals[key] = 0;
+                    }
+                    this.totals[key] += parseFloat(filteredData[key]) || 0;
+                  }
+                });
+      
                 break;
         }
 
@@ -937,7 +951,12 @@ calculateInvoicewise(header: string): any {
           const total = this.totals[header];
           console.log(`Total for ${header}:`, total);
           if (total != null && !isNaN(total)) {
-            footerData.push(total.toFixed());
+            // Apply decimal formatting only to 'Balance (Company Currency)'
+            if (header === 'Total (Company Currency)') {
+              footerData.push(total.toFixed(this.entityFraction));
+            } else {
+              footerData.push(total.toFixed(0)); // No decimals for other columns
+            }
           } else {
             footerData.push('');
           }
@@ -945,19 +964,31 @@ calculateInvoicewise(header: string): any {
           footerData.push('');
         }
       });
+
     }
     else if (reportType === 'Vendor-wise') {
-      for (let i = 1; i < header.length; i++) { // Start loop from 1 to skip the first column
-        if (header[i] == 'Credit Amount') {
-          footerData.push(totalCreditAmount.toFixed(this.entityFraction));
-        }  else if (header[i] == 'Balance (Company Currency)') {
-          footerData.push(totalBalanceCompanyVendorWise.toFixed());
-        } else if (header[i] == 'Balance (Invoice currency)') {
-          footerData.push(totalBalanceInvoiceVendorWise.toFixed());
+      this.headers.forEach((header, index) => {
+        if (index === 0) {
+          // Skip the first column which already has 'Grand Total'
+          return;
+        }
+        console.log('Processing header:', header);
+        if (header in this.totals) {
+          const total = this.totals[header];
+          console.log(`Total for ${header}:`, total);
+          if (total != null && !isNaN(total)) {
+            if (header === 'Balance (Company Currency)' || header === 'Balance (Invoice currency)') {
+              footerData.push(total.toFixed(this.entityFraction));
+            } else {
+              footerData.push(total.toFixed(0)); // No decimals for other columns
+            }
+          } else {
+            footerData.push('');
+          }
         } else {
           footerData.push('');
         }
-      }
+      });
     }else if (reportType === 'Vendor-Invoice-wise') {
       this.headers.forEach((header, index) => {
         if (index === 0) {
@@ -969,12 +1000,16 @@ calculateInvoicewise(header: string): any {
           const total = this.totals[header];
           console.log(`Total for ${header}:`, total);
           if (total != null && !isNaN(total)) {
-            footerData.push(total.toFixed());
+            if (header === 'Balance (Company Currency)' || header === 'Balance (Invoice currency)'  || header === 'Invoice Amount') {
+              footerData.push(total.toFixed(this.entityFraction));
+            } else {
+              footerData.push(total.toFixed(0)); // No decimals for other columns
+            }
           } else {
-            footerData.push('');  // Ensure empty string if total is null or NaN
+            footerData.push('');
           }
         } else {
-          footerData.push('');  // Ensure empty string if header is not in totals
+          footerData.push('');
         }
       });
     } else {

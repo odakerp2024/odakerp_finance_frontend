@@ -13,6 +13,7 @@ import { Workbook } from 'exceljs';
 import { saveAs } from 'file-saver';
 import { GridSort } from 'src/app/model/common';
 import { debug } from 'console';
+import { debugOutputAstAsTypeScript } from '@angular/compiler';
 
 
 const today = new Date();
@@ -31,8 +32,9 @@ export class ReportArLeveltwoComponent implements OnInit {
   officeList: any = [];
   reportList: any[];
   reportForExcelList: any[];
-  pager: any = {};// pager object  
+  pager: any = {};// pager object
   pagedItems: any[];// paged items
+  specifiedFields: string[] = [ "Balance (Invoice Currency)", "Balance (Company Currency)", "Invoice Amount", "Age (Days)" ];
   customerList: any[];
   agingGroupDropdown: any[];
   PeroidList = [
@@ -106,56 +108,43 @@ export class ReportArLeveltwoComponent implements OnInit {
     });
   }
 
-  async getAgingDropdown() {
-    debugger
-    const payload = { type: 2 };
 
-    return this.reportService.getAgingDropdown(payload).toPromise().then((result: any) => {
-      if (result.message === 'Success') {
-        this.agingGroupDropdown = result.data.Table || [];
-        if (this.agingGroupDropdown.length > 0) {
-          this.reportFilter.controls.AgingTypeId.setValue(this.agingGroupDropdown[0].AgingTypeId);
-        }
-      }
-    }).catch(error => {
-      console.error(error);
-    });
-  }
+  
 
 
   async goBack() {
     debugger
     if (this.type === 'customerinvoicewise') {
       this.type = 'customerwise';
-      await this.createReportForm();
+      //await this.createReportForm();
       await this.showCustomerWise(0);
     } else if (this.type === 'customerwise') {
       this.type = 'overall';
       await this.createReportForm();
       await this.getOverallList();
+      await this.getAgingDropdown();
     }
   }
-
+  
   async showCustomerWise(subTypeId: number) {
-    debugger
     this.subtype = subTypeId;
     this.pagedItems = [];
     this.type = 'customerwise';
-    await this.createReportForm();
-    this.reportFilter.controls.AgingTypeId.setValue(1);
+    //await this.createReportForm();
     this.reportFilter.controls.Type.setValue(1);
     this.reportFilter.controls.SubTypeId.setValue(this.subtype);
+    this.reportFilter.controls.AgingTypeId.setValue(1);
     await this.getCustomerWiseList();
   }
 
   async showCustomerInvoiceWise(subtypecustomerId: number) {
-    this.subtypecustomerId = subtypecustomerId;
     debugger
+    this.subtypecustomerId = subtypecustomerId;
     this.pagedItems = [];
     this.type = 'customerinvoicewise';
-    await this.createReportForm();
+    //await this.createReportForm();
     this.reportFilter.controls.AgingTypeId.setValue(1);
-    this.reportFilter.controls.Type.setValue(1);
+    this.reportFilter.controls.Type.setValue(2);
     this.reportFilter.controls.SubTypeId.setValue(this.subtypecustomerId);
     await this.getInvoiceWiseList();
   }
@@ -273,21 +262,20 @@ export class ReportArLeveltwoComponent implements OnInit {
         Peroid: [''],
       });
     }
-    this.getAgingDropdown();
+    
+    await this.getAgingDropdown();
     this.reportFilter.controls.Peroid.setValue('month');
     this.onOptionChange('month');
-    this.getAgingDropdown();
+    
     if (this.type == 'overall') {
       await this.getOverallList();
-    }
-    else if (this.type == 'customerwise') {
+    } else if (this.type == 'customerwise') {
       await this.getCustomerWiseList();
-    }
-    else {
+    } else {
       await this.getInvoiceWiseList();
     }
   }
-
+  
 
   getDivisionList() {
     var service = `${this.globals.APIURL}/Division/GetOrganizationDivisionList`; var payload: any = {}
@@ -352,15 +340,29 @@ export class ReportArLeveltwoComponent implements OnInit {
   //   }
   // }
 
-
-  //Dynamic Overall List 
+  async getAgingDropdown() {
+    debugger
+    const payload = { type: 2 };
+  
+    return this.reportService.getAgingDropdown(payload).toPromise().then((result: any) => {
+      if (result.message === 'Success') {
+        this.agingGroupDropdown = result.data.Table || [];
+        if (this.agingGroupDropdown.length > 0) {
+          this.reportFilter.controls.AgingTypeId.setValue(this.agingGroupDropdown[0].AgingTypeId);
+        }
+      }
+    }).catch(error => {
+      console.error(error);
+    });
+  }
+  //Dynamic Overall List
   getOverallList() {
     debugger
     this.startDate = this.reportFilter.controls.FromDate.value;
     this.endDate = this.reportFilter.controls.ToDate.value;
 
     this.reportService.getAgingSummaryList(this.reportFilter.value).subscribe(result => {
-      // this.reportList = [];
+      this.reportList = [];
       if (result.message == "Success" && result.data && result.data.Table) {
         this.reportList = result['data'].Table;
         let tableData = result.data.Table;
@@ -368,7 +370,6 @@ export class ReportArLeveltwoComponent implements OnInit {
         if (tableData.length > 0) {
           // Set headers from the first data row
           this.headers = Object.keys(tableData[0]).filter(header => header !== 'Id');
-
           // Format the data rows
           this.pagedItems = tableData.map(row => ({
             ...row,
@@ -403,7 +404,7 @@ export class ReportArLeveltwoComponent implements OnInit {
           this.pagedItems = tableData.map(row => ({
             ...row,
             'Invoice Amount': Number(row['Invoice Amount']).toFixed(this.entityFraction),
-            'Balance (Invoice currency)': Number(row['Balance (Invoice currency)']).toFixed(this.entityFraction),
+            'Balance (Invoice Currency)': Number(row['Balance (Invoice Currency)']).toFixed(this.entityFraction),
             'Balance (Company Currency)': Number(row['Balance (Company Currency)']).toFixed(this.entityFraction)
           }));
           this.setPage(1);
@@ -414,7 +415,7 @@ export class ReportArLeveltwoComponent implements OnInit {
     });
   }
 
-  //Dynamic CustomerWise List 
+  //Dynamic CustomerWise List
   getCustomerWiseList() {
     this.startDate = this.reportFilter.controls.FromDate.value;
     this.endDate = this.reportFilter.controls.ToDate.value;
@@ -463,7 +464,7 @@ export class ReportArLeveltwoComponent implements OnInit {
     return this.pagedItems.reduce((acc, item) => acc + parseFloat(item[header] || 0), 0);
   }
 
-  //Dynamic Grand Total Calculation Methods Customer Wise 
+  //Dynamic Grand Total Calculation Methods Customer Wise
   calculateHeadersCustomerwise(): string[] {
     let excludedColumns: string[] = ['CustomerID']; // Define columns to be excluded
 
@@ -494,7 +495,7 @@ export class ReportArLeveltwoComponent implements OnInit {
       return isNaN(value) ? acc : acc + value;
     }, 0);
 
-    // Return  total 
+    // Return  total
     return total
   }
 
@@ -503,10 +504,15 @@ export class ReportArLeveltwoComponent implements OnInit {
     return this.isNumeric(total) ? total : '';
   }
 
-  //Dynamic Header Invoice Wise 
+
+
+
+  //Dynamic Header Invoice Wise
   calculateHeadersInvoicewise(): string[] {
     let excludedColumns: string[] = ['CustomerID']; // Define columns to be excluded
     if (this.pagedItems.length > 0) {
+      // var list = Object.keys(this.pagedItems[0])
+      // .filter(key => !excludedColumns.includes(key));
       return Object.keys(this.pagedItems[0])
         .filter(key => !excludedColumns.includes(key));
     }
@@ -518,18 +524,30 @@ export class ReportArLeveltwoComponent implements OnInit {
     return !isNaN(Date.parse(value));
   }
 
+
+  
+
+
   InvoiceTotals(header: string): any {
+    console.log('Header value:', header); // Log the header value
     const specifiedFields = [
-      "Balance (Invoice currency)",
+      "Balance (Invoice Currency)",
       "Balance (Company Currency)",
       "Invoice Amount",
-      "Age (Days)"
+      "Age (Days)",
     ];
 
-    // Check if the header is one of the specified fields
+    //Check if the header is one of the specified fields
     if (!specifiedFields.includes(header)) {
       return ''; // Return empty for non-specified fields
     }
+    // const isNumeric = this.pagedItems.some(item => !isNaN(parseFloat(item[header])));
+
+    // // If none of the fields are numeric, return an empty string
+    // if (!isNumeric) {
+    //   return '';
+    // }
+
 
     // Calculate total for the specified header
     const total = this.pagedItems.reduce((acc, item) => {
@@ -640,6 +658,7 @@ export class ReportArLeveltwoComponent implements OnInit {
   }
 
   export() {
+    debugger
     if (this.type == "overall") {
       this.downloadAsExcel(this.reportList, this.startDate, this.endDate, 'overall');
     }
@@ -657,7 +676,6 @@ export class ReportArLeveltwoComponent implements OnInit {
     endDate: string,
     reportType: 'overall' | 'customerwise' | 'customerinvoicewise'
   ) {
-    debugger
     if (reportList.length === 0) {
       Swal.fire('No record found');
       return;
@@ -677,6 +695,7 @@ export class ReportArLeveltwoComponent implements OnInit {
 
     switch (reportType) {
       case 'overall':
+        debugger
         titleHeader = 'Receivable Aging Summary - Overall';
         excludeKeys = ['Id'];
         columnsToColor = ['Sub Category', 'Balance (Company Currency)'],
@@ -751,6 +770,7 @@ export class ReportArLeveltwoComponent implements OnInit {
     let totalBalanceCustomerWise = 0;
     let totalBalanceCompanyCustomerWise = 0;
     let totalinvoiceamount = 0;
+    let agingSlab =0;
 
     reportList.forEach((data) => {
       let filteredData: { [key: string]: any } = {};
@@ -762,7 +782,7 @@ export class ReportArLeveltwoComponent implements OnInit {
         if (!this.totals) {
           this.totals = {};
         }
-      
+
           filteredData = Object.keys(data)
             .filter((key) => !excludeKeys.includes(key))
             .reduce((obj, key) => {
@@ -770,13 +790,16 @@ export class ReportArLeveltwoComponent implements OnInit {
               return obj;
             }, {});
 
-         
-          filteredData['Balance (Invoice Currency)'] = `${data['Balance (Invoice Currency)'] !== null ? parseFloat(data['Balance (Invoice Currency)']).toFixed() : defaultValue.toFixed()}`;
-          filteredData['Balance (Company Currency)'] = `${data['Balance (Company Currency)'] !== null ? parseFloat(data['Balance (Company Currency)']).toFixed() : defaultValue.toFixed()}`;
+
+          filteredData['Balance (Invoice Currency)'] = `${data['Balance (Invoice Currency)'] !== null ? parseFloat(data['Balance (Invoice Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
+          filteredData['Balance (Company Currency)'] = `${data['Balance (Company Currency)'] !== null ? parseFloat(data['Balance (Company Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
+          //filteredData['Aging Slab'] = `${data['Aging Slab'] !== null ? parseFloat(data['Aging Slab']).toFixed(this.entityFraction) : defaultValue.toFixed()}`;
+
           // Accumulate totals
-       
+
           totaInvoiceCurrency += parseFloat(data['Balance (Invoice Currency)']) || 0;
           totalBalanceCompanyCurrency += parseFloat(data['Balance (Company Currency)']) || 0;
+          //agingSlab += parseFloat(data['Aging Slab']) || 0;
 
           if (!this.headers) {
             this.headers = [];
@@ -812,7 +835,7 @@ export class ReportArLeveltwoComponent implements OnInit {
         //     break;
 
         case 'overall':
-          debugger;
+          debugger
           // Initialize totals object if it doesn't exist
           if (!this.totals) {
             this.totals = {};
@@ -827,7 +850,7 @@ export class ReportArLeveltwoComponent implements OnInit {
             }, {});
 
           // Format and update Balance (Company Currency)
-          filteredData['Balance (Company Currency)'] = `${data['Balance (Company Currency)'] !== null ? parseFloat(data['Balance (Company Currency)']).toFixed() : defaultValue.toFixed()}`;
+          filteredData['Balance (Company Currency)'] = `${data['Balance (Company Currency)'] !== null ? parseFloat(data['Balance (Company Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
 
           // Accumulate totals
           totalBalanceCompanyCurrency += parseFloat(data['Balance (Company Currency)']) || 0;
@@ -860,13 +883,13 @@ export class ReportArLeveltwoComponent implements OnInit {
           filteredData = Object.keys(data)
             .filter((key) => !excludeKeys.includes(key))
             .reduce((obj, key) => {
-              obj[key] = data[key] !== null ? data[key] : defaultValue; 
+              obj[key] = data[key] !== null ? data[key] : defaultValue;
               return obj;
             }, {});
 
-          filteredData['Credit Amount'] = `${data['Credit Amount'] !== null ? parseFloat(data['Credit Amount']).toFixed() : defaultValue.toFixed()}`;
-          filteredData['Balance (Company Currency)'] = `${data['Balance (Company Currency)'] !== null ? parseFloat(data['Balance (Company Currency)']).toFixed() : defaultValue.toFixed()}`;
-          filteredData['Balance (Invoice Currency)'] = `${data['Balance (Invoice Currency)'] !== null ? parseFloat(data['Balance (Invoice Currency)']).toFixed() : defaultValue.toFixed()}`;
+          filteredData['Credit Amount'] = `${data['Credit Amount'] !== null ? parseFloat(data['Credit Amount']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
+          filteredData['Balance (Company Currency)'] = `${data['Balance (Company Currency)'] !== null ? parseFloat(data['Balance (Company Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
+          filteredData['Balance (Invoice Currency)'] = `${data['Balance (Invoice Currency)'] !== null ? parseFloat(data['Balance (Invoice Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
           // Accumulate totals
           totalCreditAmount += parseFloat(data['Credit Amount']) || 0;
           totalBalanceInvoiceCustomerWise += parseFloat(data['Balance (Invoice Currency)']) || 0;
@@ -945,6 +968,7 @@ export class ReportArLeveltwoComponent implements OnInit {
     console.log('Entity Fraction:', this.entityFraction);
 
     if (reportType === 'overall') {
+      debugger
       this.headers.forEach((header, index) => {
         if (index === 0) {
           // Skip the first column which already has 'Grand Total'
@@ -955,7 +979,12 @@ export class ReportArLeveltwoComponent implements OnInit {
           const total = this.totals[header];
           console.log(`Total for ${header}:`, total);
           if (total != null && !isNaN(total)) {
-            footerData.push(total.toFixed());
+            // Apply decimal formatting only to 'Balance (Company Currency)'
+            if (header === 'Balance (Company Currency)') {
+              footerData.push(total.toFixed(this.entityFraction));
+            } else {
+              footerData.push(total.toFixed(0)); // No decimals for other columns
+            }
           } else {
             footerData.push('');
           }
@@ -965,7 +994,8 @@ export class ReportArLeveltwoComponent implements OnInit {
       });
 
 
-    } else if (reportType === 'customerwise') {
+
+    }  else if (reportType === 'customerwise') {
       this.headers.forEach((header, index) => {
         if (index === 0) {
           // Skip the first column which already has 'Grand Total'
@@ -976,7 +1006,12 @@ export class ReportArLeveltwoComponent implements OnInit {
           const total = this.totals[header];
           console.log(`Total for ${header}:`, total);
           if (total != null && !isNaN(total)) {
-            footerData.push(total.toFixed());
+            // Apply decimal formatting only to 'Balance (Company Currency)' and 'Balance (Invoice Currency)'
+            if (header === 'Balance (Company Currency)' || header === 'Balance (Invoice Currency)' || header === 'Credit Amount') {
+              footerData.push(total.toFixed(this.entityFraction));
+            } else {
+              footerData.push(total.toFixed(0)); // No decimals for other columns
+            }
           } else {
             footerData.push('');
           }
@@ -995,7 +1030,11 @@ export class ReportArLeveltwoComponent implements OnInit {
           const total = this.totals[header];
           console.log(`Total for ${header}:`, total);
           if (total != null && !isNaN(total)) {
-            footerData.push(total.toFixed());
+            if (header === 'Balance (Company Currency)' || header === 'Balance (Invoice Currency)' || header === 'Invoice Amount')  {
+              footerData.push(total.toFixed(this.entityFraction));
+            } else {
+              footerData.push(total.toFixed(0)); // No decimals for other columns
+            }
           } else {
             footerData.push('');
           }
