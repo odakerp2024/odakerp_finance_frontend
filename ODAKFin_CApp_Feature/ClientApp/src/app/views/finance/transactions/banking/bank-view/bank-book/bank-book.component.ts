@@ -22,6 +22,8 @@ export class BankBookComponent implements OnInit {
 
   @ViewChild('allSelected') private allSelected: MatOption;      
   @ViewChild('allSelected1') private allSelected1: MatOption; 
+  entityFraction = +this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions');
+
   @Input() bankSummaryFilterData;
   pager: any = {};// pager object  
   pagedItems: any[];// paged items
@@ -55,7 +57,8 @@ export class BankBookComponent implements OnInit {
     public exportTo: ExportFileService,
     public datePipe: DatePipe,
     public commonService: CommonService,
-    private excelService : ExcelService
+    private excelService : ExcelService,
+    private commonDataService: CommonService
 
   ) { }
 
@@ -182,8 +185,8 @@ export class BankBookComponent implements OnInit {
     this.bankCurrency = this.bankDropdown.find((bank) => bank.BankID == filterData.bankId).CurrencyName
 
     const payload = {
-      "FromDate": filterData.fromPeriod ? this.datePipe.transform(filterData.fromPeriod, "dd-MM-yyyy") : '',
-      "ToDate": filterData.toPeriod ? this.datePipe.transform(filterData.toPeriod, "dd-MM-yyyy") : '',
+      "FromDate": filterData.fromPeriod ? this.datePipe.transform(filterData.fromPeriod, "yyyy-MM-dd") : '',
+      "ToDate": filterData.toPeriod ? this.datePipe.transform(filterData.toPeriod, "yyyy-MM-dd") : '',
       "Bank": filterData.bankId
     }
     this.bankBookService.getBankBookDetails(payload).subscribe((result: any) => {
