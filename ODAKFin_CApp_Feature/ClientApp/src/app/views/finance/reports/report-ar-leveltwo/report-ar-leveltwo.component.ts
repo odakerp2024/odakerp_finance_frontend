@@ -377,14 +377,29 @@ export class ReportArLeveltwoComponent implements OnInit {
           }));
           this.setPage(1);
         } else {
-          // Clear the row data but keep the headers
+          this.showNoDataAlert();
+          this.headers = [];  // Clear headers when no data is found
           this.pagedItems = [];
         }
       } else {
-        console.error('Error fetching data');
+        this.showNoDataAlert();
+        this.headers = [];  // Clear headers when no data is found
+        this.pagedItems = [];
       }
+    }, error => {
+      console.log(error);
     });
   }
+  
+  showNoDataAlert() {
+    Swal.fire({
+      icon: 'warning',
+      title: 'No Data',
+      text: 'No data found, please configure AP settings.',
+      confirmButtonText: 'OK'
+    });
+  }
+  
 
 
   getInvoiceWiseList() {
