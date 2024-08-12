@@ -1350,7 +1350,7 @@ private downloadFile = (data: HttpResponse<Blob>) => {
   getInvoicePaymentList(customerId: number) {
     let service = `${this.globals.APIURL}/ReceiptVoucher/ReceiptVoucherDuePaymentList`;
     this.dataService.post(service, { CustomerId: customerId }).subscribe(async (result: any) => {
-
+    console.log('Result',result);
       this.clearFormArray();
       if (result.message = "Success" && result.data.Table.length > 0) {
         let entityInfo = this.commonDataService.getLocalStorageEntityConfigurable();
@@ -1387,7 +1387,7 @@ private downloadFile = (data: HttpResponse<Blob>) => {
       // const exchangeRate = this.ExchangeRatePairList.length ? +this.ExchangeRatePairList[0].Rate : 0
       this.addNewAddressGroup();
       // const newDue = dueAmount - (data.TDS + data.Payment);
-      const invoceObj = {
+      const invoceObj : any = {
         Id: data.Id ? data.Id : 0,
         ReceiptVoucherId: this.receiptVoucherId ? this.receiptVoucherId : 0,
         CustomerId: data.CustomerId,
@@ -1426,7 +1426,10 @@ private downloadFile = (data: HttpResponse<Blob>) => {
       //     invoceObj.DueAmountCCY =  (+invoceObj.TDS + +invoceObj.Payment) * exchangeRate
       //   }
       if (this.isFinalMode) {
-        invoceObj.DueAmount = Number(data.DueAmount).toFixed(this.entityFraction);
+        if(data.DueAmount)
+        {
+          invoceObj.DueAmount = Number(data.DueAmount).toFixed(this.entityFraction);
+        }
       } else {
         // const exchangeRate = this.ExchangeRatePairList.length ? +this.ExchangeRatePairList[0].Rate : 0
         invoceObj.InvoiceAmountCCY = Number(invoceObj.InvoiceAmount) * (data.ExchangeRate ? data.ExchangeRate : 1);
@@ -1442,9 +1445,22 @@ private downloadFile = (data: HttpResponse<Blob>) => {
         }
 
         const dueAmount = data.DueAmount ? data.DueAmount : data.InvoiceAmount;
+        console.log("due",dueAmount);
+        console.log("Due Amount",data.DueAmount);
         const newDue = dueAmount - (+invoceObj.TDS + +invoceObj.Payment);
         if (newDue < 0) {
-          invoceObj.DueAmount = dueAmount.toFixed(this.entityFraction);
+          // if(dueAmount)
+          // {
+          //   invoceObj.DueAmount =Number(dueAmount.toFixed(this.entityFraction)) ;
+          // }
+          const dueAmountNumber = Number(dueAmount);
+if (!isNaN(dueAmountNumber)) {
+    invoceObj.DueAmount = dueAmountNumber.toFixed(this.entityFraction);
+} else {
+    // Handle the case where dueAmount is not a valid number
+    console.error('Invalid dueAmount:', dueAmount);
+}
+          // invoceObj.DueAmount = dueAmount.toFixed(this.entityFraction);
           invoceObj.TDS = 0;
           invoceObj.Payment = 0;
         } else {

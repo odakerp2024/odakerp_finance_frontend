@@ -383,6 +383,7 @@ export class PaymentVoucherDetailsComponent implements OnInit {
     this.paymentForm.disable();
     this.isEditMode = false;
     this.isEditMode1 = false;
+    
   }
   enableEdit() {
     const userID = localStorage.getItem("UserID");
