@@ -402,7 +402,13 @@ export class ReportContraVoucherComponent implements OnInit  {
       //To Remove Time from date field data
       const date = data.Date
       const formattedDate = date.split('T')[0];
-      data.Date =  this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
+      // data.Date =  this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
+      if(formattedDate != date){
+        data.Date =  this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
+      }
+      else{
+        data.Date =  formattedDate
+      }
       const defalutvalue = 0;
       
        const mergedICYAmount = `${data['Amount'] !== null ? parseFloat(data['Amount']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
@@ -572,7 +578,13 @@ export class ReportContraVoucherComponent implements OnInit  {
        //To Remove Time from date field data
        const date = data.Date
        const formattedDate = date.split('T')[0];
-       data.Date =  this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
+       //data.Date =  this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
+       if(formattedDate != date){
+        data.Date =  this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
+      }
+      else{
+        data.Date =  formattedDate
+      }
       // data.Date = formattedDate;
        const defalutvalue = 0;
       
