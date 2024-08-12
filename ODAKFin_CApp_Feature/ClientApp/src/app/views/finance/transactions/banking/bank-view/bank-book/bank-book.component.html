@@ -112,10 +112,10 @@
                             <!-- <td>
                                 <input type="radio" (click)="OnClickRadio(i)" />
                             </td> -->
-                            <td class="text-center">{{bookMiniStatement.OpeningBalance}}</td>
-                            <td class="text-center">{{bookMiniStatement.TotalDebit}}</td>
-                            <td class="text-center">{{bookMiniStatement.TotalSum}}</td>
-                            <td class="text-center">{{bookMiniStatement.ClosingBalance}}</td>
+                            <td class="text-center">{{bookMiniStatement.OpeningBalance | dynamicDecimal: entityFraction}}</td>
+                            <td class="text-center">{{bookMiniStatement.TotalDebit | dynamicDecimal: entityFraction}}</td>
+                            <td class="text-center">{{bookMiniStatement.TotalSum | dynamicDecimal: entityFraction}}</td>
+                            <td class="text-center">{{bookMiniStatement.ClosingBalance | dynamicDecimal: entityFraction}}</td>
                         </tr>
                     </ng-container>
                     <!-- no data -->
@@ -244,10 +244,14 @@
                             <td class="text-center">{{backBookCount.FinalDate | date :
                                 commonService.convertToLowerCaseDay(entityDateFormat)}}</td>
                             <td class="text-center">
-                                {{ backBookCount.VoucherName == 'Receipt Voucher' ? backBookCount.Debit: '-' }}
+                                <!-- {{ backBookCount.VoucherName == 'Receipt Voucher' ? backBookCount.Debit: '-' }} -->
+                                {{ (backBookCount.Debit ? (backBookCount.Debit | dynamicDecimal: entityFraction): '-' )}}
                             </td>
                             <td class="text-center">
-                                {{backBookCount.VoucherName == 'Payment Voucher' ? backBookCount.Credit: '-' }}
+                                <!-- {{backBookCount.VoucherName == 'Payment Voucher' ? backBookCount.Credit: '-' }} -->
+
+                                {{ (backBookCount.Credit ? (backBookCount.Credit | dynamicDecimal: entityFraction): '-' )}}
+                                <!-- {{(backBookCount.Credit | dynamicDecimal: entityFraction): '-' }} -->
                             </td>
                             <td
                                 [ngClass]="backBookCount.ReconcileStatus == true ? 'badge badge-state-confirm' : 'badge badge-state'">

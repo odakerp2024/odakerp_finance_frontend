@@ -39,6 +39,7 @@ pagedItems: any[];// paged items
   asd1 = true
   currentDate: string = this.datePipe.transform(new Date(), "yyyy-MM-dd");
   entityDateFormat = this.commonService.getLocalStorageEntityConfigurable("DateFormat");
+  entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   fromMaxDate = this.currentDate;
   toMaxDate = this.currentDate;
 
@@ -57,7 +58,8 @@ pagedItems: any[];// paged items
     private ps: PaginationService,
     private fb: FormBuilder,
     public exportTo: ExportFileService,
-    public excelService : ExcelService
+    public excelService : ExcelService,
+    private commonDataService: CommonService
   ) {
 
   }
@@ -84,7 +86,7 @@ pagedItems: any[];// paged items
       formData.append('BankName',selectedBank.BankName);
       this.bankStatementService.uploadFile(formData).subscribe((result: any) => {
         if (result.message == 'Success') {
-          Swal.fire('File uploaded Successfully.');
+          Swal.fire(result.data);
           this.selectedBank = '';
           this.file = '';
           this.templateDownloadPath = '';
