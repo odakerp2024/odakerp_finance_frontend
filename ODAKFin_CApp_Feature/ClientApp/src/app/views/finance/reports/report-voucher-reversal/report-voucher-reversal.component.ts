@@ -375,8 +375,14 @@ export class ReportVoucherReversalComponent implements OnInit  {
 
       //To Remove Time from date field data
       const date = data.Date
+
       const formattedDate = date ? date.split('T')[0] : null;
-      data.Date = formattedDate ? this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat)) : formattedDate;
+      if(formattedDate != date){
+        data.Date =  this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
+      }
+      else{
+        data.Date =  formattedDate
+      }
       const defalutvalue = 0;
 
       let TDSAmount = '';
@@ -564,8 +570,15 @@ export class ReportVoucherReversalComponent implements OnInit  {
     this.reportForExcelList.forEach((data) => {
       // To Remove Time from date field data
       const date = data.Date;
+      // const formattedDate = date ? date.split('T')[0] : null;
+      // data.Date = formattedDate ? this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat)) : formattedDate;
       const formattedDate = date ? date.split('T')[0] : null;
-      data.Date = formattedDate ? this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat)) : formattedDate;
+      if(formattedDate != date){
+        data.Date =  this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
+      }
+      else{
+        data.Date =  formattedDate
+      }
       const defalutvalue = 0;
 
       let TDSAmount = '';

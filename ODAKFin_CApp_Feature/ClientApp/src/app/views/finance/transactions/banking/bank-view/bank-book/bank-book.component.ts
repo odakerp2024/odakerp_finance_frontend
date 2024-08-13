@@ -11,6 +11,8 @@ import Swal from 'sweetalert2';
 import { filterColumnNames} from './bank-book.model'
 import { ExcelService } from 'src/app/services/excel.service';
 import { MatOption } from '@angular/material';
+import { DataService } from 'src/app/services/data.service';
+import { Globals } from 'src/app/globals';
 
 @Component({
   selector: 'app-bank-book',
@@ -22,6 +24,8 @@ export class BankBookComponent implements OnInit {
 
   @ViewChild('allSelected') private allSelected: MatOption;      
   @ViewChild('allSelected1') private allSelected1: MatOption; 
+  entityFraction = +this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions');
+
   @Input() bankSummaryFilterData;
   pager: any = {};// pager object  
   pagedItems: any[];// paged items
@@ -48,6 +52,7 @@ export class BankBookComponent implements OnInit {
   bankBookCountTable1: any;
   bankBookCountPagedItems1: any = [];
   allValues: boolean;
+  modeOfPayment: any;
   constructor(
     private fb: FormBuilder,
     private bankBookService: BankBookService,
@@ -55,7 +60,10 @@ export class BankBookComponent implements OnInit {
     public exportTo: ExportFileService,
     public datePipe: DatePipe,
     public commonService: CommonService,
-    private excelService : ExcelService
+    private excelService : ExcelService,
+    private commonDataService: CommonService,
+    private dataService: DataService,
+    private globals: Globals,
 
   ) { }
 
@@ -64,6 +72,7 @@ export class BankBookComponent implements OnInit {
     this.getBankBookDetailForm();
     // this.getBankBookList();
     this.getDivisionDropdown();
+    this.getVoucherList();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -182,8 +191,8 @@ export class BankBookComponent implements OnInit {
     this.bankCurrency = this.bankDropdown.find((bank) => bank.BankID == filterData.bankId).CurrencyName
 
     const payload = {
-      "FromDate": filterData.fromPeriod ? this.datePipe.transform(filterData.fromPeriod, "dd-MM-yyyy") : '',
-      "ToDate": filterData.toPeriod ? this.datePipe.transform(filterData.toPeriod, "dd-MM-yyyy") : '',
+      "FromDate": filterData.fromPeriod ? this.datePipe.transform(filterData.fromPeriod, "yyyy-MM-dd") : '',
+      "ToDate": filterData.toPeriod ? this.datePipe.transform(filterData.toPeriod, "yyyy-MM-dd") : '',
       "Bank": filterData.bankId
     }
     this.bankBookService.getBankBookDetails(payload).subscribe((result: any) => {
@@ -203,18 +212,19 @@ export class BankBookComponent implements OnInit {
     const selectedColumnValue = this.filterForm.value.SearchByValue;
     const filterData =  this.bankBookDetails.value;
     let payload = {
-      "FromDate": filterData.fromPeriod ? new Date(filterData.fromPeriod) : '',
-      "ToDate": filterData.toPeriod ? new Date(filterData.toPeriod) : '',
+      "FromDate": filterData.fromPeriod ? this.datePipe.transform(filterData.fromPeriod, "yyyy-MM-dd") : '',
+      "ToDate": filterData.toPeriod ? this.datePipe.transform(filterData.toPeriod, "yyyy-MM-dd") : '',
       "Bank":filterData.bankId,
       "Date":"",
+      "Bank Date":"",
       "Voucher":"",
       "PaymentType":"",
       "Party":"",
       "Reference":"",
       "Debit":"",
       "Credit":"",
-      "ReconcileStatus":"",
-      "ClosingBalance":""
+      "ReconcileStatus":""
+      
     }
 
     if (!filterData.bankId) {
@@ -457,5 +467,11 @@ export class BankBookComponent implements OnInit {
 
   resetValue() {
     this.filterForm.controls.SearchByValue.setValue('')
+  }
+  getVoucherList() {
+    let service = `${this.globals.APIURL}/ReceiptVoucher/GetReceiptVoucherDropDownList`
+    this.dataService.post(service, { CustomerId: 0 }).subscribe((result: any) => {
+      if (result.data.Table4.length > 0) { this.modeOfPayment = result.data.Table4; }
+    }, error => { });
   }
 }

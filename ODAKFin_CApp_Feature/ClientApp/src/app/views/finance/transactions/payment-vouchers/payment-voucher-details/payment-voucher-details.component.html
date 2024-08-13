@@ -410,9 +410,25 @@
 
                     <div class="col-4">
                         <label for="" class="fontstyles">Payment Remarks</label><br>
-                        <textarea class="p-1 inputs " name="" id="" cols="50" rows="2" [disabled]="!isEditMode"
-                            formControlName="Remarks"></textarea>
+                        <!-- <textarea class="p-1 inputs " name="" id="" cols="50" rows="2" [disabled]="!isEditMode"
+                            formControlName="Remarks"></textarea> -->
+                            <input formControlName="Remarks" type="textarea" class="w-100 inputs" placeholder="" />
                     </div>
+                    <!-- <div class="col-4">
+                        <label for="" class="fontstyles">Payment Remarks</label><br>
+                        <textarea 
+                            class="p-1 inputs" 
+                            name="" 
+                            id="" 
+                            cols="50" 
+                            rows="2" 
+                            readonly 
+                            [disabled]="!isEditMode"
+                            formControlName="Remarks"
+                            style="overflow: hidden; resize: none;">
+                        </textarea>
+                    </div> -->
+                    
 
                 </div>
 

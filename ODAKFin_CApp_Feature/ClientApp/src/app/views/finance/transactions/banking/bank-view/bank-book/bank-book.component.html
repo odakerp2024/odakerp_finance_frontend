@@ -112,10 +112,10 @@
                             <!-- <td>
                                 <input type="radio" (click)="OnClickRadio(i)" />
                             </td> -->
-                            <td class="text-center">{{bookMiniStatement.OpeningBalance}}</td>
-                            <td class="text-center">{{bookMiniStatement.TotalDebit}}</td>
-                            <td class="text-center">{{bookMiniStatement.TotalSum}}</td>
-                            <td class="text-center">{{bookMiniStatement.ClosingBalance}}</td>
+                            <td class="text-center">{{bookMiniStatement.OpeningBalance | dynamicDecimal: entityFraction}}</td>
+                            <td class="text-center">{{bookMiniStatement.TotalDebit | dynamicDecimal: entityFraction}}</td>
+                            <td class="text-center">{{bookMiniStatement.TotalSum | dynamicDecimal: entityFraction}}</td>
+                            <td class="text-center">{{bookMiniStatement.ClosingBalance | dynamicDecimal: entityFraction}}</td>
                         </tr>
                     </ng-container>
                     <!-- no data -->
@@ -177,12 +177,12 @@
             </div>
 
 
-            <div class="col text-center font-weight-bolder">
+            <!-- <div class="col text-center font-weight-bolder">
                 <div class="form-group bmd-form-group">
                     <input type="date" *ngIf="filterForm.value.SearchBy === 'Date'" formControlName="SearchByValue"
                         class="w-100 pl-2 pt-0 pb-0 pr-0 form-control">
                     <input type="text"
-                        *ngIf="filterForm.value.SearchBy !== 'Date' && filterForm.value.SearchBy !== 'ReconcileStatus'"
+                        *ngIf="filterForm.value.SearchBy !== 'Date' && filterForm.value.SearchBy !== 'ReconcileStatus' && filterForm.value.SearchBy !== 'PaymentType'"
                         name="" formControlName="SearchByValue" id="" class="w-100 pl-2">
                     <select class="form-control my-select" formControlName="SearchByValue"
                         *ngIf="filterForm.value.SearchBy !== 'Date' && filterForm.value.SearchBy == 'ReconcileStatus'">
@@ -194,6 +194,59 @@
                             Un-reconcile
                         </option>
                     </select>
+                   
+                    <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'SearchByValue'"
+                    (ngModelChange)="resetValue()"
+                    *ngIf="filterForm.value.SearchBy == 'PaymentType'">
+                    <ng-option [value]="''" disabled>--SELECT MODE OF PAYMENT--</ng-option>
+                    <ng-option *ngFor="let paymentMode of modeOfPayment" [value]="paymentMode.ID">
+                        <span class="textwrap">{{paymentMode.PaymentType | uppercase}}</span>
+                    </ng-option>
+                   </ng-select>
+                
+                    
+                </div>
+            </div> -->
+
+            <div class="col-4 mt-2 font-weight-bolder">
+                <div class="form-group bmd-form-group">
+                    <!-- Date input field for 'Date' and 'Bank Date' -->
+                    <input type="date"
+                        *ngIf="filterForm.value.SearchBy === 'Date' || filterForm.value.SearchBy === 'Bank Date'" 
+                        formControlName="SearchByValue"
+                        class="w-50 pl-2 pt-0 pb-0 pr-0 form-control searchdropdown"
+                        style="width: 60%;">
+            
+                    <!-- Text input field for other conditions -->
+                    <input type="text"
+                        *ngIf="filterForm.value.SearchBy !== 'Date' && filterForm.value.SearchBy !== 'Bank Date' && filterForm.value.SearchBy !== 'ReconcileStatus' && filterForm.value.SearchBy !== 'PaymentType'"
+                        formControlName="SearchByValue" 
+                        class="w-50 pl-2 pt-0 pb-0 pr-0 searchdropdown"
+                        style="width: 60%;">
+            
+                    <!-- Select input for ReconcileStatus -->
+                    <ng-select class="my-select searchdropdown"
+                        formControlName="SearchByValue"
+                        [clearable]="false"
+                        *ngIf="filterForm.value.SearchBy === 'ReconcileStatus'"
+                        style="width: 60%; text-align: left;">
+                        <ng-option [value]="''" disabled>--SELECT TYPE --</ng-option>
+                        <ng-option [value]="1" class="textwrap">Reconcile</ng-option>
+                        <ng-option [value]="0" class="textwrap">Un-reconcile</ng-option>
+                    </ng-select>
+            
+                    <!-- Dropdown for PaymentType -->
+                    <ng-select class=" my-select searchdropdown"
+                        [clearable]="false" 
+                        [formControlName]="'SearchByValue'"
+                        (ngModelChange)="resetValue()"
+                        *ngIf="filterForm.value.SearchBy === 'PaymentType'"
+                        style="width: 60%; text-align: left;">
+                        <ng-option [value]="''" disabled>--SELECT MODE OF PAYMENT--</ng-option>
+                        <ng-option *ngFor="let paymentMode of modeOfPayment" [value]="paymentMode.ID">
+                            <span class="textwrap">{{paymentMode.PaymentType | uppercase}}</span>
+                        </ng-option>
+                    </ng-select>
                 </div>
             </div>
             <div class="col text-right font-weight-bolder d-flex justify-content-end">
@@ -244,10 +297,14 @@
                             <td class="text-center">{{backBookCount.FinalDate | date :
                                 commonService.convertToLowerCaseDay(entityDateFormat)}}</td>
                             <td class="text-center">
-                                {{ backBookCount.VoucherName == 'Receipt Voucher' ? backBookCount.Debit: '-' }}
+                                <!-- {{ backBookCount.VoucherName == 'Receipt Voucher' ? backBookCount.Debit: '-' }} -->
+                                {{ (backBookCount.Debit ? (backBookCount.Debit | dynamicDecimal: entityFraction): '-' )}}
                             </td>
                             <td class="text-center">
-                                {{backBookCount.VoucherName == 'Payment Voucher' ? backBookCount.Credit: '-' }}
+                                <!-- {{backBookCount.VoucherName == 'Payment Voucher' ? backBookCount.Credit: '-' }} -->
+
+                                {{ (backBookCount.Credit ? (backBookCount.Credit | dynamicDecimal: entityFraction): '-' )}}
+                                <!-- {{(backBookCount.Credit | dynamicDecimal: entityFraction): '-' }} -->
                             </td>
                             <td
                                 [ngClass]="backBookCount.ReconcileStatus == true ? 'badge badge-state-confirm' : 'badge badge-state'">
