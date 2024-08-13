@@ -79,11 +79,13 @@ pagedItems: any[];// paged items
   uploadFile() {
     if (this.file && this.selectedBank) {
       const selectedBank = this.bankList.find((bank) => { return bank.BankID == this.selectedBank });
+      const CreatedBy = localStorage.getItem('UserID');
       const formData = new FormData();
       formData.append('file', this.file   ); // Append files
       formData.append('BankId', selectedBank.BankID);
       formData.append('StatementUploadedDate', new Date(this.StatementUploadedDate).toISOString());
       formData.append('BankName',selectedBank.BankName);
+      formData.append('CreatedBy',CreatedBy);
       this.bankStatementService.uploadFile(formData).subscribe((result: any) => {
         if (result.message == 'Success') {
           Swal.fire(result.data);
