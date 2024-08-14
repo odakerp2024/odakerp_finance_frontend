@@ -71,32 +71,69 @@ pagedItems: any[];// paged items
     this.getBankList();
   }
 
-  fileSelected(event) {
-    // console.log('xls file', event);
+  fileSelected(event: any) {
+    // Handle file selection
     this.file = event.target.files[0];
-  }
+}
 
-  uploadFile() {
-    if (this.file && this.selectedBank) {
-      const selectedBank = this.bankList.find((bank) => { return bank.BankID == this.selectedBank });
+uploadFile() {
+  // Check if the file, selected bank, and date are provided
+  if (this.file && this.selectedBank && this.StatementUploadedDate) {
+      const selectedBank = this.bankList.find((bank) => bank.BankID == this.selectedBank);
       const formData = new FormData();
-      formData.append('file', this.file   ); // Append files
+      formData.append('file', this.file); // Append file
       formData.append('BankId', selectedBank.BankID);
       formData.append('StatementUploadedDate', new Date(this.StatementUploadedDate).toISOString());
-      formData.append('BankName',selectedBank.BankName);
+      formData.append('BankName', selectedBank.BankName);
+
       this.bankStatementService.uploadFile(formData).subscribe((result: any) => {
-        if (result.message == 'Success') {
-          Swal.fire(result.data);
-          this.selectedBank = '';
-          this.file = '';
-          this.templateDownloadPath = '';
-          this.StatementUploadedDate = '';
-        }
-      }) 
-    } else {
-      Swal.fire('Select The Bank, File And Date To Uploaded The File.');
-    }
+          if (result.message === 'Success') {
+              Swal.fire(result.data);
+
+              // Reset file input and variables
+              this.selectedBank = '';
+              this.file = null;
+              (document.getElementById('myFile') as HTMLInputElement).value = ''; // Clear the file input
+              this.templateDownloadPath = '';
+              this.StatementUploadedDate = '';
+          }
+      });
+  } else {
+      // Show error message if any of the required fields are missing
+      Swal.fire('Select The Bank, File And Date To Upload The File.');
   }
+}
+
+
+  // fileSelected(event) {
+  //   debugger
+  //   // console.log('xls file', event);
+  //   this.file = event.target.files[0];
+  // }
+  
+
+  // uploadFile() {
+  //   debugger
+  //   if (this.file && this.selectedBank) {
+  //     const selectedBank = this.bankList.find((bank) => { return bank.BankID == this.selectedBank });
+  //     const formData = new FormData();
+  //     formData.append('file', this.file   ); // Append files
+  //     formData.append('BankId', selectedBank.BankID);
+  //     formData.append('StatementUploadedDate', new Date(this.StatementUploadedDate).toISOString());
+  //     formData.append('BankName',selectedBank.BankName);
+  //     this.bankStatementService.uploadFile(formData).subscribe((result: any) => {
+  //       if (result.message == 'Success') {
+  //         Swal.fire(result.data);
+  //         this.selectedBank = '';
+  //         this.file = '';
+  //         this.templateDownloadPath = '';
+  //         this.StatementUploadedDate = '';
+  //       }
+  //     }) 
+  //   } else {
+  //     Swal.fire('Select The Bank, File And Date To Uploaded The File.');
+  //   }
+  // }
 
   getBankSummeryDetailForm() {
     this.bankSummaryDetailsForm = this.fb.group({
@@ -194,8 +231,11 @@ pagedItems: any[];// paged items
   }
 
   clearUpload() {
-    this.file = undefined;
-  }
+    this.file = null; // Clear the file
+    this.selectedBank = ''; // Clear the selected bank
+    this.StatementUploadedDate = ''; // Clear the date field
+}
+
 
   async getDivisionDropdown() {
     const payload = {
