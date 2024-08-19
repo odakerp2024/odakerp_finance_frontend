@@ -163,104 +163,60 @@
     </div>
     <div class="row  mb-5"></div>
     <form [formGroup]="filterForm" class="">
-        <div class="row">
+       <div class="row">
+    <div class="col-3 m-auto">
+        <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'SearchBy'" (ngModelChange)="resetValue()">
+            <ng-option [value]="''" disabled>--SELECT REPORT TYPE--</ng-option>
+            <ng-option *ngFor="let column of filterColumnNames" [value]="column.name">
+                <span class="textwrap">{{column.display_name | uppercase}}</span>
+            </ng-option>
+        </ng-select>
+    </div>
 
-            <div class="col-3 m-auto ">
-
-                <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'SearchBy'"
-                    (ngModelChange)="resetValue()">
-                    <ng-option [value]="''" disabled>--SELECT REPORT TYPE--</ng-option>
-                    <ng-option *ngFor="let column of filterColumnNames" [value]="column.name">
-                        <span class="textwrap">{{column.display_name | uppercase}}</span>
-                    </ng-option>
-                </ng-select>
-            </div>
-
-
-            <!-- <div class="col text-center font-weight-bolder">
-                <div class="form-group bmd-form-group">
-                    <input type="date" *ngIf="filterForm.value.SearchBy === 'Date'" formControlName="SearchByValue"
-                        class="w-100 pl-2 pt-0 pb-0 pr-0 form-control">
-                    <input type="text"
-                        *ngIf="filterForm.value.SearchBy !== 'Date' && filterForm.value.SearchBy !== 'ReconcileStatus' && filterForm.value.SearchBy !== 'PaymentType'"
-                        name="" formControlName="SearchByValue" id="" class="w-100 pl-2">
-                    <select class="form-control my-select" formControlName="SearchByValue"
-                        *ngIf="filterForm.value.SearchBy !== 'Date' && filterForm.value.SearchBy == 'ReconcileStatus'">
-                        <option [value]="0" disabled>--SELECT TYPE --</option>
-                        <option [value]="1">
-                            Reconcile
-                        </option>
-                        <option [value]="0">
-                            Un-reconcile
-                        </option>
-                    </select>
-                   
-                    <ng-select class="searchdropdown" [clearable]="false" [formControlName]="'SearchByValue'"
-                    (ngModelChange)="resetValue()"
-                    *ngIf="filterForm.value.SearchBy == 'PaymentType'">
-                    <ng-option [value]="''" disabled>--SELECT MODE OF PAYMENT--</ng-option>
-                    <ng-option *ngFor="let paymentMode of modeOfPayment" [value]="paymentMode.ID">
-                        <span class="textwrap">{{paymentMode.PaymentType | uppercase}}</span>
-                    </ng-option>
-                   </ng-select>
-                
-                    
-                </div>
-            </div> -->
-
-            <div class="col-4 mt-2 font-weight-bolder">
-                <div class="form-group bmd-form-group">
-                    <!-- Date input field for 'Date' and 'Bank Date' -->
-                    <input type="date"
-                        *ngIf="filterForm.value.SearchBy === 'Date' || filterForm.value.SearchBy === 'Bank Date'" 
-                        formControlName="SearchByValue"
-                        class="w-50 pl-2 pt-0 pb-0 pr-0 form-control searchdropdown"
-                        style="width: 60%;">
-            
-                    <!-- Text input field for other conditions -->
-                    <input type="text"
-                        *ngIf="filterForm.value.SearchBy !== 'Date' && filterForm.value.SearchBy !== 'Bank Date' && filterForm.value.SearchBy !== 'ReconcileStatus' && filterForm.value.SearchBy !== 'PaymentType'"
-                        formControlName="SearchByValue" 
-                        class="w-50 pl-2 pt-0 pb-0 pr-0 searchdropdown"
-                        style="width: 60%;">
-            
-                    <!-- Select input for ReconcileStatus -->
-                    <ng-select class="my-select searchdropdown"
-                        formControlName="SearchByValue"
-                        [clearable]="false"
-                        *ngIf="filterForm.value.SearchBy === 'ReconcileStatus'"
-                        style="width: 60%; text-align: left;">
-                        <ng-option [value]="''" disabled>--SELECT TYPE --</ng-option>
-                        <ng-option [value]="1" class="textwrap">Reconcile</ng-option>
-                        <ng-option [value]="0" class="textwrap">Un-reconcile</ng-option>
-                    </ng-select>
-            
-                    <!-- Dropdown for PaymentType -->
-                    <ng-select class=" my-select searchdropdown"
-                        [clearable]="false" 
-                        [formControlName]="'SearchByValue'"
-                        (ngModelChange)="resetValue()"
-                        *ngIf="filterForm.value.SearchBy === 'PaymentType'"
-                        style="width: 60%; text-align: left;">
-                        <ng-option [value]="''" disabled>--SELECT MODE OF PAYMENT--</ng-option>
-                        <ng-option *ngFor="let paymentMode of modeOfPayment" [value]="paymentMode.ID">
-                            <span class="textwrap">{{paymentMode.PaymentType | uppercase}}</span>
-                        </ng-option>
-                    </ng-select>
-                </div>
-            </div>
-            <div class="col text-right font-weight-bolder d-flex justify-content-end">
-                <button type="submit" style="padding: 2px 0px !important;width: 35%;font-size: 14px !important;"
-                    (click)="filter()" class="btn btn-primary btn-raised mb-0">
-                    Search
-                </button>
-                <button style="padding: 2px 0px !important;width: 35%;font-size: 14px !important;"
-                    class="btn btn-raised btn-danger mb-0" (click)="filterFormCreate();getBankBookList();">
-                    Clear
-                </button>
-            </div>
-
+    <div class="col-4 m-auto">
+        <div class="form-group bmd-form-group">
+            <input type="date"
+            *ngIf="filterForm.value.SearchBy === 'Date' || filterForm.value.SearchBy === 'Bank Date'" 
+            formControlName="SearchByValue"
+            class="w-50 pl-2 pt-1 mt-2 pb-0 pr-0 form-control searchdropdown format">
+        
+        <input type="text"
+            *ngIf="filterForm.value.SearchBy !== 'Date' && filterForm.value.SearchBy !== 'Bank Date' && filterForm.value.SearchBy !== 'ReconcileStatus' && filterForm.value.SearchBy !== 'PaymentType'"
+            formControlName="SearchByValue" 
+            class="w-50 pl-2 pt-1 mt-2  pb-0 pr-0  searchdropdown format">
+        
+        <ng-select class="pl-2 pt-1 mt-0  pb-0 pr-0 light-text searchdropdown format"
+            formControlName="SearchByValue"
+            [clearable]="false"
+            *ngIf="filterForm.value.SearchBy === 'ReconcileStatus'">
+            <ng-option [value]="''" disabled class="textwrap night-text">--SELECT TYPE --</ng-option>
+            <ng-option [value]="1" class="textwrap light-text">RECONCILE</ng-option>
+            <ng-option [value]="0" class="textwrap light-text">UN-RECONCILE</ng-option>
+        </ng-select>
+        
+        <ng-select class="pl-2 pt-1 mt-0 mb-2 pb-0 pr-0 light-text searchdropdown format"
+            [clearable]="false"
+            [formControlName]="'SearchByValue'"
+            *ngIf="filterForm.value.SearchBy === 'PaymentType'">
+            <ng-option [value]="''" disabled class="textwrap light-text">--SELECT MODE OF PAYMENT--</ng-option>
+            <ng-option *ngFor="let paymentMode of modeOfPayment" [value]="paymentMode.ID" class="light-text">
+                <span class="textwrap light-text">{{ paymentMode.PaymentType | uppercase }}</span>
+            </ng-option>
+        </ng-select>
+        
         </div>
+    </div>
+
+    <div class="col-5 d-flex justify-content-end align-items-center">
+        <button type="submit" class="btn btn-primary btn-raised mb-0 fixed-height" (click)="filter()">
+            Search
+        </button>
+        <button class="btn btn-raised btn-danger mb-0 fixed-height" (click)="filterFormCreate();getBankBookList();">
+            Clear
+        </button>
+    </div>
+</div>
+
     </form>
     <div class="row  mb-3"></div>
     <div class="row mb-4">
