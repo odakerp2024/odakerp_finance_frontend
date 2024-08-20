@@ -114,19 +114,44 @@ export class ReportApLeveltwoComponent implements OnInit {
     });
 }
 
+// async getAgingDropdown(): Promise<void> {
+//   const payload = { type: 1 };
+//   try {
+//       const result: any = await this.reportService.getAgingDropdown(payload).toPromise();
+//       if (result.message === 'Success' && result.data.Table.length > 0) {
+//           this.agingGroupDropdown = result.data.Table;
+//           this.agingId = this.agingGroupDropdown[0].AgingTypeId;
+//           console.log('Aging Dropdown:', this.agingGroupDropdown);
+//       }
+//   } catch (error) {
+//       console.error('Error fetching aging dropdown:', error);
+//   }
+// }
+
 async getAgingDropdown(): Promise<void> {
   const payload = { type: 1 };
   try {
       const result: any = await this.reportService.getAgingDropdown(payload).toPromise();
       if (result.message === 'Success' && result.data.Table.length > 0) {
           this.agingGroupDropdown = result.data.Table;
-          this.agingId = this.agingGroupDropdown[0].AgingTypeId;
+
+          // Find the first aging group with data, if available
+          const firstGroupWithData = this.agingGroupDropdown.find(group => group.HasData);
+          this.agingId = firstGroupWithData ? firstGroupWithData.AgingTypeId : this.agingGroupDropdown[0].AgingTypeId;
+
+          // Set the selected AgingTypeId in the form
+          this.reportFilter.controls.AgingTypeId.setValue(this.agingId);
+
+          // Fetch the overall list for the selected aging group
+          this.getAPAgingOverallList();
+
           console.log('Aging Dropdown:', this.agingGroupDropdown);
       }
   } catch (error) {
       console.error('Error fetching aging dropdown:', error);
   }
 }
+
 async Cancel() {
   if (this.type === 'Vendor-Invoice-wise') {
       this.type = 'Vendor-wise';
@@ -368,43 +393,89 @@ async showVendor(SubTypeId:number){
   getAPAgingOverallList() {
     this.startDate = this.reportFilter.controls.FromDate.value;
     this.endDate = this.reportFilter.controls.ToDate.value;
+  
     this.reportService.getAPAgingList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
-      if (result.message == "Success" && result.data && result.data.Table) {
-       // if (result['data'].Table.length > 0) {
-         this.reportList = result['data'].Table;
-        // if (result.message === "Success" && result.data && result.data.Table) {
-            let tableData = result.data.Table;
-            if (tableData.length > 0) {
-                this.headers = Object.keys(tableData[0]).filter(header => header !== 'Id');
-                this.pagedItems = tableData.map(row => ({
-                    ...row,
-                    'Total (Company Currency)': Number(row['Total (Company Currency)']).toFixed(this.entityFraction)
-                }));
-                this.setPage(1);
-                console.log('Overall List Data:', this.pagedItems);
-            } else {
-                this.showNoDataAlert();
-                this.headers = [];
-                this.pagedItems = [];
-            }
-        } else {
-            this.showNoDataAlert();
-            this.headers = [];
-            this.pagedItems = [];
-        }
+      if (result.message === "Success" && result.data && result.data.Table) {
+          let tableData = result.data.Table;
+          if (tableData.length > 0) {
+              // Set headers from the first data row
+              this.headers = Object.keys(tableData[0]).filter(header => header !== 'Id');
+  
+              // Format the data rows
+              this.pagedItems = tableData.map(row => ({
+                  ...row,
+                  'Total (Company Currency)': Number(row['Total (Company Currency)']).toFixed(this.entityFraction)
+              }));
+              this.setPage(1);
+              console.log('Overall List Data:', this.pagedItems);
+          } else {
+              // No data found, show alert with aging group name
+              const selectedGroupName = this.agingGroupDropdown.find(group => group.AgingTypeId === this.reportFilter.controls.AgingTypeId.value)?.AgingGroupName;
+              this.showNoDataAlert(selectedGroupName);
+              this.headers = [];
+              this.pagedItems = [];
+          }
+      } else {
+          // No data found, show alert with aging group name
+          const selectedGroupName = this.agingGroupDropdown.find(group => group.AgingTypeId === this.reportFilter.controls.AgingTypeId.value)?.AgingGroupName;
+          this.showNoDataAlert(selectedGroupName);
+          this.headers = [];
+          this.pagedItems = [];
+      }
     }, error => {
         console.log('Error fetching overall list:', error);
     });
-}
-  showNoDataAlert() {
+  }
+  showNoDataAlert(agingGroupName?: string) {
     Swal.fire({
-      icon: 'warning',
-      title: 'No Data',
-      text: 'No data found, please configure AP settings.',
-      confirmButtonText: 'OK'
+        icon: 'warning',
+        title: 'No Data',
+        text: agingGroupName ? `No data found for ${agingGroupName}, please configure Aging Configuration settings.` : 'No data found, please configure AP settings.',
+        confirmButtonText: 'OK'
     });
   }
+    
+//   getAPAgingOverallList() {
+//     this.startDate = this.reportFilter.controls.FromDate.value;
+//     this.endDate = this.reportFilter.controls.ToDate.value;
+//     this.reportService.getAPAgingList(this.reportFilter.value).subscribe(result => {
+//       this.reportList = [];
+//       if (result.message == "Success" && result.data && result.data.Table) {
+//        // if (result['data'].Table.length > 0) {
+//          this.reportList = result['data'].Table;
+//         // if (result.message === "Success" && result.data && result.data.Table) {
+//             let tableData = result.data.Table;
+//             if (tableData.length > 0) {
+//                 this.headers = Object.keys(tableData[0]).filter(header => header !== 'Id');
+//                 this.pagedItems = tableData.map(row => ({
+//                     ...row,
+//                     'Total (Company Currency)': Number(row['Total (Company Currency)']).toFixed(this.entityFraction)
+//                 }));
+//                 this.setPage(1);
+//                 console.log('Overall List Data:', this.pagedItems);
+//             } else {
+//                 this.showNoDataAlert();
+//                 this.headers = [];
+//                 this.pagedItems = [];
+//             }
+//         } else {
+//             this.showNoDataAlert();
+//             this.headers = [];
+//             this.pagedItems = [];
+//         }
+//     }, error => {
+//         console.log('Error fetching overall list:', error);
+//     });
+// }
+//   showNoDataAlert() {
+//     Swal.fire({
+//       icon: 'warning',
+//       title: 'No Data',
+//       text: 'No data found, please configure AP settings.',
+//       confirmButtonText: 'OK'
+//     });
+//   }
   
   
 getAPAgingVendorList() {
@@ -652,7 +723,6 @@ calculateInvoicewise(header: string): any {
 
 
   export(){
-    debugger
     if(this.type =="Overall-list")
     {
       this.downloadAsExcel(this.reportList, this.startDate, this.endDate, 'Overall-list');

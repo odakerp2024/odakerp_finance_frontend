@@ -125,29 +125,60 @@ export class ReportArLeveltwoComponent implements OnInit {
       await this.getAgingDropdown();
     }
   }
-  
   async showCustomerWise(subTypeId: number) {
     this.subtype = subTypeId;
     this.pagedItems = [];
     this.type = 'customerwise';
-    //await this.createReportForm();
+  
+    // Set the report type and sub-type
     this.reportFilter.controls.Type.setValue(1);
     this.reportFilter.controls.SubTypeId.setValue(this.subtype);
-    this.reportFilter.controls.AgingTypeId.setValue(1);
+  
+    // Get the selected AgingTypeId from the form
+    const selectedAgingTypeId = this.reportFilter.controls.AgingTypeId.value;
+    this.reportFilter.controls.AgingTypeId.setValue(selectedAgingTypeId);
+  
     await this.getCustomerWiseList();
   }
-
+  
   async showCustomerInvoiceWise(subtypecustomerId: number) {
-    debugger
     this.subtypecustomerId = subtypecustomerId;
     this.pagedItems = [];
     this.type = 'customerinvoicewise';
-    //await this.createReportForm();
-    this.reportFilter.controls.AgingTypeId.setValue(1);
+  
+    // Set the report type and sub-type
     this.reportFilter.controls.Type.setValue(2);
     this.reportFilter.controls.SubTypeId.setValue(this.subtypecustomerId);
+  
+    // Get the selected AgingTypeId from the form
+    const selectedAgingTypeId = this.reportFilter.controls.AgingTypeId.value;
+    this.reportFilter.controls.AgingTypeId.setValue(selectedAgingTypeId);
+  
     await this.getInvoiceWiseList();
   }
+  
+  // async showCustomerWise(subTypeId: number) {
+  //   this.subtype = subTypeId;
+  //   this.pagedItems = [];
+  //   this.type = 'customerwise';
+  //   //await this.createReportForm();
+  //   this.reportFilter.controls.Type.setValue(1);
+  //   this.reportFilter.controls.SubTypeId.setValue(this.subtype);
+  //   this.reportFilter.controls.AgingTypeId.setValue(1);
+  //   await this.getCustomerWiseList();
+  // }
+
+  // async showCustomerInvoiceWise(subtypecustomerId: number) {
+  //   debugger
+  //   this.subtypecustomerId = subtypecustomerId;
+  //   this.pagedItems = [];
+  //   this.type = 'customerinvoicewise';
+  //   //await this.createReportForm();
+  //   this.reportFilter.controls.AgingTypeId.setValue(1);
+  //   this.reportFilter.controls.Type.setValue(2);
+  //   this.reportFilter.controls.SubTypeId.setValue(this.subtypecustomerId);
+  //   await this.getInvoiceWiseList();
+  // }
 
 
 
@@ -340,24 +371,87 @@ export class ReportArLeveltwoComponent implements OnInit {
   //   }
   // }
 
-  async getAgingDropdown() {
-    debugger
-    const payload = { type: 2 };
+  // async getAgingDropdown() {
+  //   const payload = { type: 2 };
   
+  //   return this.reportService.getAgingDropdown(payload).toPromise().then((result: any) => {
+  //     if (result.message === 'Success') {
+  //       this.agingGroupDropdown = result.data.Table || [];
+  //       if (this.agingGroupDropdown.length > 0) {
+  //         this.reportFilter.controls.AgingTypeId.setValue(this.agingGroupDropdown[0].AgingTypeId);
+  //       }
+  //     }
+  //   }).catch(error => {
+  //     console.error(error);
+  //   });
+  // }
+  // //Dynamic Overall List
+  // getOverallList() {
+  //   this.startDate = this.reportFilter.controls.FromDate.value;
+  //   this.endDate = this.reportFilter.controls.ToDate.value;
+
+  //   this.reportService.getAgingSummaryList(this.reportFilter.value).subscribe(result => {
+  //     this.reportList = [];
+  //     if (result.message == "Success" && result.data && result.data.Table) {
+  //       this.reportList = result['data'].Table;
+  //       let tableData = result.data.Table;
+
+  //       if (tableData.length > 0) {
+  //         // Set headers from the first data row
+  //         this.headers = Object.keys(tableData[0]).filter(header => header !== 'Id');
+  //         // Format the data rows
+  //         this.pagedItems = tableData.map(row => ({
+  //           ...row,
+  //           'Balance (Company Currency)': Number(row['Balance (Company Currency)']).toFixed(this.entityFraction)
+  //         }));
+  //         this.setPage(1);
+  //       } else {
+  //         this.showNoDataAlert();
+  //         this.headers = [];  // Clear headers when no data is found
+  //         this.pagedItems = [];
+  //       }
+  //     } else {
+  //       this.showNoDataAlert();
+  //       this.headers = [];  // Clear headers when no data is found
+  //       this.pagedItems = [];
+  //     }
+  //   }, error => {
+  //     console.log(error);
+  //   });
+  // }
+  
+  // showNoDataAlert() {
+  //   Swal.fire({
+  //     icon: 'warning',
+  //     title: 'No Data',
+  //     text: 'No data found, please configure AP settings.',
+  //     confirmButtonText: 'OK'
+  //   });
+  // }
+  
+  async getAgingDropdown() {
+    const payload = { type: 2 };
+
     return this.reportService.getAgingDropdown(payload).toPromise().then((result: any) => {
       if (result.message === 'Success') {
         this.agingGroupDropdown = result.data.Table || [];
         if (this.agingGroupDropdown.length > 0) {
-          this.reportFilter.controls.AgingTypeId.setValue(this.agingGroupDropdown[0].AgingTypeId);
+          // Set the first aging group with data as the selected one
+          const firstGroupWithData = this.agingGroupDropdown.find(group => group.HasData);
+          const selectedAgingTypeId = firstGroupWithData ? firstGroupWithData.AgingTypeId : this.agingGroupDropdown[0].AgingTypeId;
+          
+          this.reportFilter.controls.AgingTypeId.setValue(selectedAgingTypeId);
+          
+          // Call getOverallList to populate the overall list based on the selected AgingTypeId
+          this.getOverallList();
         }
       }
     }).catch(error => {
       console.error(error);
     });
   }
-  //Dynamic Overall List
+
   getOverallList() {
-    debugger
     this.startDate = this.reportFilter.controls.FromDate.value;
     this.endDate = this.reportFilter.controls.ToDate.value;
 
@@ -377,12 +471,14 @@ export class ReportArLeveltwoComponent implements OnInit {
           }));
           this.setPage(1);
         } else {
-          this.showNoDataAlert();
+          const selectedGroupName = this.agingGroupDropdown.find(group => group.AgingTypeId === this.reportFilter.controls.AgingTypeId.value)?.AgingGroupName;
+          this.showNoDataAlert(selectedGroupName);
           this.headers = [];  // Clear headers when no data is found
           this.pagedItems = [];
         }
       } else {
-        this.showNoDataAlert();
+        const selectedGroupName = this.agingGroupDropdown.find(group => group.AgingTypeId === this.reportFilter.controls.AgingTypeId.value)?.AgingGroupName;
+        this.showNoDataAlert(selectedGroupName);
         this.headers = [];  // Clear headers when no data is found
         this.pagedItems = [];
       }
@@ -390,16 +486,15 @@ export class ReportArLeveltwoComponent implements OnInit {
       console.log(error);
     });
   }
-  
-  showNoDataAlert() {
+
+  showNoDataAlert(agingGroupName?: string) {
     Swal.fire({
       icon: 'warning',
       title: 'No Data',
-      text: 'No data found, please configure AP settings.',
+      text: agingGroupName ? `No data found for ${agingGroupName}, please configure Aging Configuration settings.` : 'No data found, please configure AP settings.',
       confirmButtonText: 'OK'
     });
   }
-  
 
 
   getInvoiceWiseList() {
