@@ -412,6 +412,7 @@ export class ReportContraVoucherComponent implements OnInit  {
       const defalutvalue = 0;
       
        const mergedICYAmount = `${data['Amount'] !== null ? parseFloat(data['Amount']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+       const Localamount = `${data['Local Amount'] !== null ? parseFloat(data['Local Amount']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
 
       // Filter out properties you don't want to include in the Excel sheet
       const filteredData = Object.keys(data)
@@ -423,6 +424,7 @@ export class ReportContraVoucherComponent implements OnInit  {
 
       // Update the 'Amount (ICY)' property in the filtered data object with the merged amount
       filteredData['Amount'] = mergedICYAmount;
+      filteredData['Local Amount'] = Localamount;
 
       // Add the filtered data to the worksheet
       const row = worksheet.addRow(Object.values(filteredData));
@@ -430,7 +432,7 @@ export class ReportContraVoucherComponent implements OnInit  {
        // Set text color for specific columns and align them
        const columnsToColorRight =  ['Contra Voucher #', 'Amount'];
        const columnsToAlignLeft  =  ['Contra Voucher #']; // Specify columns to align left
-       const columnsToAlignRight =  ['Amount']; // Specify columns to align right
+       const columnsToAlignRight =  ['Amount','Local Amount']; // Specify columns to align right
   
        columnsToColorRight.forEach(columnName => {
          const columnIndex = Object.keys(filteredData).indexOf(columnName);
@@ -589,7 +591,7 @@ export class ReportContraVoucherComponent implements OnInit  {
        const defalutvalue = 0;
       
        const mergedICYAmount = data['Amount'] !== null ? parseFloat(data['Amount']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction);
-
+       const Localamount = `${data['Local Amount'] !== null ? parseFloat(data['Local Amount']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
       
        // Filter out properties you don't want to include in the Excel sheet
        const filteredData = Object.keys(data)
@@ -601,6 +603,7 @@ export class ReportContraVoucherComponent implements OnInit  {
  
        // Update the 'Amount' property in the filtered data object with the merged amount
        filteredData['Amount'] = mergedICYAmount;
+       filteredData['Local Amount'] = Localamount;
 
        // Add the filtered data to the worksheet
        const row = worksheet.addRow(Object.values(filteredData));
@@ -608,7 +611,7 @@ export class ReportContraVoucherComponent implements OnInit  {
      // Set text color for specific columns and align them
      const columnsToColorRight =  ['Contra Voucher #', 'Amount'];
      const columnsToAlignLeft  =  ['Contra Voucher #']; // Specify columns to align left
-     const columnsToAlignRight =  ['Amount']; // Specify columns to align right
+     const columnsToAlignRight =  ['Amount', 'Local Amount']; // Specify columns to align right
 
      columnsToColorRight.forEach(columnName => {
        const columnIndex = Object.keys(filteredData).indexOf(columnName);
