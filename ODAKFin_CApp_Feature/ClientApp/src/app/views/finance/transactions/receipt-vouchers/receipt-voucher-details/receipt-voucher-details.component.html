@@ -554,7 +554,7 @@
                                 <ng-container *ngIf="paymentDetailsTableList.length; else noRecord">
                                     <tr *ngFor="let journal of receiptForm.get('paymentDetailsArray').controls; let i = index"  
                                         [formGroupName]="i" [ngClass]="getIsChecked(i) ? 'checked-row' : ''">
-                                        <td id = tabledata >{{i + 1}}</td>
+                                        <td class="text-center" id = tabledata >{{i + 1}}</td>
                                         <td> <input class="text-center border-0 invoice-date-text-box"  id = tabledata
                                                 formControlName="InvoiceNo" readonly [value]="journal.InvoiceNumber"
                                                 type="text">
