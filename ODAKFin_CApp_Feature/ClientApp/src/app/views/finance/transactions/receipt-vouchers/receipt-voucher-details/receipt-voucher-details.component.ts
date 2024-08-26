@@ -1381,6 +1381,7 @@ private downloadFile = (data: HttpResponse<Blob>) => {
   }
 
   createPaymentDetailsPayload(info, exchangeRate = 0) {
+    debugger
     
     this.paymentDetailsTableList = [];
     for (let data of info) {
@@ -1445,6 +1446,7 @@ private downloadFile = (data: HttpResponse<Blob>) => {
         }
 
         const dueAmount = data.DueAmount ? data.DueAmount : data.InvoiceAmount;
+       
         console.log("due",dueAmount);
         console.log("Due Amount",data.DueAmount);
         const newDue = dueAmount - (+invoceObj.TDS + +invoceObj.Payment);
@@ -1518,6 +1520,7 @@ if (!isNaN(dueAmountNumber)) {
 
 
   getDueAmount(index, type) {
+    debugger
     const controlAtIndex = this.myArray.at(index);
     !controlAtIndex.value.TDS ? controlAtIndex.value.TDS = 0 : '';
     !controlAtIndex.value.Payment ? controlAtIndex.value.Payment = 0 : '';
@@ -1532,8 +1535,16 @@ if (!isNaN(dueAmountNumber)) {
       controlAtIndex.value.DueAmount = +currentRow.value.DueAmountActual - (+currentRow.value.TDS + +currentRow.value.Payment)
 
     } else {
-      // controlAtIndex.value.DueAmount = +dueAmount - (+tds + +payment);
-      controlAtIndex.value.DueAmount = +currentRow.value.DueAmountActual - (+controlAtIndex.value.TDS + +controlAtIndex.value.Payment)
+      
+      const dueAmountActual = parseFloat(currentRow.value.DueAmountActual);
+      const tds = parseFloat(controlAtIndex.value.TDS);
+      const payment = parseFloat(controlAtIndex.value.Payment);
+      const calculatedDueAmount = dueAmountActual - (tds + payment);
+      const roundedDueAmount = parseFloat(calculatedDueAmount.toFixed(this.entityFraction));
+
+      controlAtIndex.value.DueAmount = roundedDueAmount;
+
+      //controlAtIndex.value.DueAmount = +(currentRow.value.DueAmountActual - (+controlAtIndex.value.TDS + +controlAtIndex.value.Payment).toFixed(this.entityFraction))
     }
     // const exchangeRate = this.ExchangeRatePairList[0] ? +this.ExchangeRatePairList[0].Rate : 0
     controlAtIndex.value.DueAmountCCY = (controlAtIndex.value.ExchangeRate * controlAtIndex.value.DueAmount).toFixed(this.entityFraction);
@@ -1560,7 +1571,7 @@ if (!isNaN(dueAmountNumber)) {
   }
 
   onSelectEvent() {
-    
+    debugger
     if (this.receiptForm.value.paymentDetailsArray.length > 0) {
       let info = this.receiptForm.value.paymentDetailsArray.filter(x => x.IsSelect == true);
       var totalAmount = 0;
@@ -1773,6 +1784,7 @@ if (!isNaN(dueAmountNumber)) {
   }
 
   summaryAmountCalculation() {
+    debugger
     
     var TotalDebit = 0;
     var TotalCredit = 0;
