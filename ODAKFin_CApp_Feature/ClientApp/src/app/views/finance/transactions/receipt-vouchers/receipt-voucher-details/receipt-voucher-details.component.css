@@ -127,64 +127,87 @@ div.form-group input.form-control.amount {
     
     #tabledata {
       padding: 10px !important;
-      font-size: 10px !important;
+      font-size: 13px !important;
     }
 
     .table thead th {
-        font-size: 11px !important;
+        font-size: 13px !important;
       }
    
   }
   
   
   
-  @media (min-width: 1601px) and (max-width: 1700px) {
+  @media (min-width: 1600px) and (max-width: 1700px) {
   
     #tabledata{
       padding: 9px !important;
-      font-size: 9px !important;
+      font-size: 13px !important;
     }
-   
+
     .table thead th {
-        font-size: 10px !important;
+        font-size: 13px !important;
       }
   }
   
-  @media (min-width: 1498px) and (max-width: 1600px) {
+  @media (min-width: 1498px) and (max-width: 1500px) {
+    /* //important  */
+
     
-    #tabledata {
+    #tabledata{
       padding: 9px !important;
-      font-size: 8px !important;
+      font-size: 13px !important;
     }
   
     .table thead th {
-        font-size: 8px !important;
-      }
+      padding: 9px 13px !important;
+      font-size: 13px !important;
+    }
+    .table td {
+      padding: 0px 0px !important;
+    }
+   
+   
    
   }
+
+  
+  
   
   
   @media (min-width: 1400px) and (max-width: 1498px) {
     
-    #tabledata {
-      padding: 8px !important;
-      font-size: 8px !important;
+    #tabledata{
+      padding: 9px !important;
+      font-size: 13px !important;
     }
   
     .table thead th {
-        font-size: 8px !important;
-      }
+      font-size: 13px !important;
+    }
   }
   
-  @media (min-width: 800px) and (max-width: 1000px) {
-  
+  @media (min-width: 1900px) and (max-width:1920px) {
     #tabledata {
-      padding: 7px !important;
-      font-size: 7px !important;
+        padding: 9px !important;
+        font-size: 13px !important;
     }
   
     .table thead th {
-      font-size: 8px !important;
+        font-size: 13px !important;
+    }
+}
+
+
+  @media (min-width: 800px) and (max-width: 1000px) {
+  
+    #tabledata{
+      padding: 9px !important;
+      font-size: 13px !important;
+    }
+  
+    .table thead th {
+      font-size: 13px !important;
     }
     
   }
@@ -192,13 +215,13 @@ div.form-group input.form-control.amount {
   @media (min-width: 700px) and (max-width: 1399px) {
     
   
-    #tabledata {
-      padding: 10px !important;
-      font-size: 6px !important;
+    #tabledata{
+      padding: 9px !important;
+      font-size: 13px !important;
     }
   
     .table thead th {
-      font-size: 8px !important;
+      font-size: 13px !important;
     }
   
   }
@@ -207,12 +230,12 @@ div.form-group input.form-control.amount {
   @media (min-width: 857px) and (max-width: 1200px) {
   
     #tabledata{
-      padding: 5px !important;
-      font-size: 6px !important;
+      padding: 9px !important;
+      font-size: 13px !important;
     }
   
     .table thead th {
-      font-size: 8px !important;
+      font-size: 13px !important;
     }
     
   }
@@ -220,12 +243,12 @@ div.form-group input.form-control.amount {
   @media (min-width: 860px) and (max-width: 1045px) {
   
     #tabledata{
-      padding: 3px !important;
-      font-size: 5px !important;
+      padding: 9px !important;
+      font-size: 13px !important;
     }
   
     .table thead th {
-      font-size: 6px !important;
+      font-size: 13px !important;
     }
     
   }

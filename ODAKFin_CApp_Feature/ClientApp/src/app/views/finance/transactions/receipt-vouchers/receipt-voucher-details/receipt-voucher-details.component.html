@@ -533,7 +533,7 @@
                     </div>
 
                     <div class="col-12  table-wrapper">
-                        <table class="bend-table" style="max-height: 500px;"
+                        <table class="bend-table" style="max-height: 500px; overflow-x: hidden;"
                             class="table table-responsive  table-bordered w-100 table-striped border-0 agingTable mt-2">
                             <thead class="text-center">
                                 <tr>
@@ -602,8 +602,8 @@
                                                 class="text-center payment-textbox" [value]="journal.Payment"
                                                 formControlName="Payment">
                                         </td>
-                                        <td>
-                                            <input (change)="setInitalPaymentAmount(i);onSelectEvent();summaryAmountCalculation()"
+                                        <td class="text-center">
+                                            <input class="text-center" (change)="setInitalPaymentAmount(i);onSelectEvent();summaryAmountCalculation()"
                                                 formControlName="IsSelect" type="checkbox"  id = tabledata
                                                 [ngClass]=" !isEditMode ? 'disable-input--nostyle' : ''" />
                                         </td>
