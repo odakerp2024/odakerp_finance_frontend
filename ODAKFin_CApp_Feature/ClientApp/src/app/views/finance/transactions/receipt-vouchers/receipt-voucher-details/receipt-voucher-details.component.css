@@ -127,30 +127,30 @@ div.form-group input.form-control.amount {
     
     #tabledata {
       padding: 10px !important;
-      font-size: 10px !important;
+      font-size: 13px !important;
     }
 
     .table thead th {
-        font-size: 11px !important;
+        font-size: 13px !important;
       }
    
   }
   
   
   
-  @media (min-width: 1601px) and (max-width: 1700px) {
+  @media (min-width: 1600px) and (max-width: 1700px) {
   
     #tabledata{
       padding: 9px !important;
-      font-size: 9px !important;
+      font-size: 13px !important;
     }
-   
+
     .table thead th {
-        font-size: 10px !important;
+        font-size: 13px !important;
       }
   }
   
-  @media (min-width: 1498px) and (max-width: 1600px) {
+  @media (min-width: 1498px) and (max-width: 1500px) {
     /* //important  */
 
     
@@ -187,6 +187,18 @@ div.form-group input.form-control.amount {
     }
   }
   
+  @media (min-width: 1900px) and (max-width:1920px) {
+    #tabledata {
+        padding: 9px !important;
+        font-size: 13px !important;
+    }
+  
+    .table thead th {
+        font-size: 13px !important;
+    }
+}
+
+
   @media (min-width: 800px) and (max-width: 1000px) {
   
     #tabledata{
