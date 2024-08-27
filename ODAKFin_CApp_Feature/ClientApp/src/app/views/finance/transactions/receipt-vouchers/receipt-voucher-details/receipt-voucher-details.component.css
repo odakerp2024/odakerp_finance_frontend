@@ -28,15 +28,15 @@
 
 
 
-/* :host .checked-row {
+ /* :host .checked-row {
     background: rgb(208, 252, 208) !important;
-}
+} */
 
 div.form-group input.form-control.amount {
     background-color: rgb(192, 247, 192) !important;
     font-weight: bold !important;
     font-size: large !important;
-} */
+} 
 
 /* .form-control.local {
     background-color: rgb(192, 247, 192) !important;
