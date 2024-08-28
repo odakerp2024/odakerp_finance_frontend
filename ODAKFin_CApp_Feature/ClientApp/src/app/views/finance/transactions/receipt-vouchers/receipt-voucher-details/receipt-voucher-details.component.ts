@@ -579,7 +579,20 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
     }, error => { console.error(error) });
   }
 
+  CurrentFinancialYear() {
+    debugger
+    const service = `${this.globals.APIURL}/financialyear/CurrentFinancialYear`;
 
+    this.dataService.post(service, { VoucherDate: this.receiptForm.value.VoucherDate }).subscribe(
+        (result: any) => {
+            if (result.message === "Success" && result.data != "") {
+                // Display the data using Swal.fire
+                Swal.fire(result.data);
+            }
+        }
+    );
+  }
+  
   editclick() {
     this.showExchangeRate = true;
 
@@ -828,6 +841,7 @@ private downloadFile = (data: HttpResponse<Blob>) => {
   }
 
   async saveVoucherInfo(finalNumber: number, isDelete = false) {
+    this.CurrentFinancialYear();
     this.summaryAmountCalculation();
 
     if (this.AmountDifference != 0) {
