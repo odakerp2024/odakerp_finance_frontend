@@ -1,269 +1,201 @@
+/* For text overflow handling */
 #documentFileName {
-    max-width: 100px;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.fixTableHead thead th {
-    position: sticky;
-    top: 0;
+/* Sticky Header and Footer */
+.fixTableHead thead th, 
+.bend-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #fff;
 }
 
-.fixTableHead tfoot td {
-    position: -webkit-sticky;
-    position: sticky;
-    bottom: 0;
-    background: #e2e3e5;
-    z-index: 4;
+.fixTableHead tfoot td,
+.bend-table tfoot td {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  background: #e2e3e5;
 }
 
-.table-Input-box {
-    background-color: #e9ecef;
-    pointer-events: none;
-    border: 1px solid #767676;
-}
+/* General table styling */
 .table td {
   padding: 0px 0px !important;
 }
 
-
-
- /* :host .checked-row {
-    background: rgb(208, 252, 208) !important;
-} */
-
-div.form-group input.form-control.amount {
-    background-color: rgb(192, 247, 192) !important;
-    font-weight: bold !important;
-    font-size: large !important;
-} 
-
-/* .form-control.local {
-    background-color: rgb(192, 247, 192) !important;
-    font-weight: bolder !important;
-    font-size: larger !important;
-} */
-
-/* :host ::ng-deep .mat-form-field-outline {
-    background: #ffffff !important;
-
-} */
-
-.receipt-table.table {
-    max-height: 450px;
-    overflow: scroll;
+/* Table Input Box Styling */
+.table-Input-box {
+  background-color: #e9ecef;
+  pointer-events: none;
+  border: 1px solid #767676;
 }
 
+/* Receipt Table Specific Styles */
 .receipt-table .table td {
-    padding: 6px 7px !important
+  padding: 6px 7px !important;
 }
 
-.receipt-table .table td .tds-text-box {
-    width: 94% !important
-}
-
+.receipt-table .table td .tds-text-box, 
 .receipt-table .table td .payment-textbox {
-    width: 94% !important
+  width: 94% !important;
 }
 
 .receipt-table .tds-text-box {
-    width: 70px !important;
+  width: 70px !important;
 }
 
-.receipt-table .payment-textbox {
-    width: 100px !important;
-}
-
+.receipt-table .payment-textbox,
 .receipt-table .invoice-date-text-box {
-    width: 100px !important;
+  width: 100px !important;
 }
 
+/* Font Styling */
 .fontstyles {
-    font-family: Inter, "Source Sans Pro", Helvetica, Arial, sans-serif !important;
-    font-size: 13px;
+  font-family: Inter, "Source Sans Pro", Helvetica, Arial, sans-serif !important;
+  font-size: 13px;
 }
 
-
+/* Input Field Styling */
 .inputs {
-    color: #333;
-    background-color: #fff;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    min-height: 28px;
-    align-items: center;
-    border-radius: 0px;
+  color: #333;
+  background-color: #fff;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  min-height: 28px;
+  align-items: center;
+  border-radius: 0px;
 }
 
+/* Responsive Table Content Styling */
 .table-content {
-    display: flex;
+  display: flex;
 }
 
+/* Responsive Media Queries */
 @media (min-width: 1200px) {
-    .unique-table .container {
-        max-width: 866px;
-    }
-}
-
-#tabledata {
-    text-transform: uppercase !important;
-    padding: 9px !important;
-    font-size: 13px !important;
-    
-}
-
-.table thead th {
-    font-size: 13px !important;
+  .unique-table .container {
+      max-width: 866px;
   }
-  
+}
+
 @media (min-width: 1000px) and (max-width: 1800px) {
-    .field-responsive#active {
+  .field-responsive#active {
       width: 102% !important;
-      max-width: 105% !important; 
+      max-width: 105% !important;
       overflow: visible !important;
-    }
   }
-  
-  @media (min-width: 1701px) and (max-width: 1820px) {
-    
-    #tabledata {
-      padding: 10px !important;
-      font-size: 13px !important;
-    }
+}
 
-    .table thead th {
-        font-size: 13px !important;
-      }
-   
-  }
-  
-  
-  
-  @media (min-width: 1600px) and (max-width: 1700px) {
-  
-    #tabledata{
+@media (min-width: 1600px) and (max-width: 1700px) {
+  #tabledata {
       padding: 9px !important;
       font-size: 13px !important;
-    }
-
-    .table thead th {
-        font-size: 13px !important;
-      }
+      width: 118px;
   }
-  
-  @media (min-width: 1498px) and (max-width: 1500px) {
-    /* //important  */
+}
 
-    
-    #tabledata{
+@media (min-width: 1498px) and (max-width: 1500px) {
+  #tabledata {
       padding: 9px !important;
       font-size: 13px !important;
-    }
-  
-    .table thead th {
+      width: 118px;
+  }
+  .table thead th {
       padding: 9px 13px !important;
       font-size: 13px !important;
-    }
-    .table td {
+  }
+  .table td {
       padding: 0px 0px !important;
-    }
-   
-   
-   
   }
-
-  
-  
-  
-  
-  @media (min-width: 1400px) and (max-width: 1498px) {
-    
-    #tabledata{
-      padding: 9px !important;
-      font-size: 13px !important;
-    }
-  
-    .table thead th {
-      font-size: 13px !important;
-    }
-  }
-  
-  @media (min-width: 1900px) and (max-width:1920px) {
-    #tabledata {
-        padding: 9px !important;
-        font-size: 13px !important;
-    }
-  
-    .table thead th {
-        font-size: 13px !important;
-    }
 }
 
+@media (min-width: 1400px) and (max-width: 1498px) {
+  #tabledata {
+      padding: 9px !important;
+      font-size: 13px !important;
+      width: 118px;
+  }
+  .table thead th {
+      font-size: 13px !important;
+  }
+}
 
-  @media (min-width: 800px) and (max-width: 1000px) {
-  
-    #tabledata{
+@media (min-width: 1900px) and (max-width: 1920px) {
+  #tabledata {
       padding: 9px !important;
       font-size: 13px !important;
-    }
-  
-    .table thead th {
-      font-size: 13px !important;
-    }
-    
   }
-  
-  @media (min-width: 700px) and (max-width: 1399px) {
-    
-  
-    #tabledata{
-      padding: 9px !important;
+  .table thead th {
       font-size: 13px !important;
-    }
-  
-    .table thead th {
-      font-size: 13px !important;
-    }
-  
   }
-  
-  
-  @media (min-width: 857px) and (max-width: 1200px) {
-  
-    #tabledata{
-      padding: 9px !important;
-      font-size: 13px !important;
-    }
-  
-    .table thead th {
-      font-size: 13px !important;
-    }
-    
-  }
+}
 
-  @media (min-width: 860px) and (max-width: 1045px) {
-  
-    #tabledata{
+@media (min-width: 700px) and (max-width: 1399px) {
+  #tabledata {
       padding: 9px !important;
       font-size: 13px !important;
-    }
-  
-    .table thead th {
+  }
+  .table thead th {
       font-size: 13px !important;
-    }
-    
   }
-  /* style for table field currency */
-  .invoice-date-text-box-currency {
-    width: 100% !important;
-    max-width: 150px !important;
-    box-sizing: border-box !important;
-  }
+}
 
-  @media (max-width: 1280px) {
-    .table > tbody > tr > td, .table > tfoot > tr > td, .table > thead > tr > td {
-    
-        vertical-align: middle !important;
-        font-size: 16px !important;
-        max-width: 6rem !important;
-    }
+@media (max-width: 1280px) {
+  .table > tbody > tr > td, .table > tfoot > tr > td, .table > thead > tr > td {
+      vertical-align: middle !important;
+      font-size: 16px !important;
+      max-width: 6rem !important;
+  }
+}
+
+/* Ensure the table container has a fixed height and overflow */
+.bend-table-container {
+  max-height: 500px; /* Adjust height as needed */
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Fix the table header */
+.bend-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 10; /* Increase z-index to ensure it's above other content */
+  background-color: #fff; /* Match the header background to the table */
+  border-bottom: 1px solid #ddd; /* Add a border to prevent shift */
+}
+
+/* Fix the table footer */
+.bend-table tfoot td {
+  position: sticky;
+  bottom: 0;
+  z-index: 10; /* Increase z-index to ensure it's above other content */
+  background-color: #fff; /* Match the footer background to the table */
+  border-top: 1px solid #ddd; /* Add a border to prevent shift */
+}
+
+/* Ensure the table rows have padding */
+.table td {
+  padding: 0px 0px !important;
+}
+
+/* Adjustments to ensure content does not overflow */
+.table tbody td {
+  word-wrap: break-word;
+  white-space: nowrap;
+}
+
+/* Style for table field currency */
+.invoice-date-text-box-currency {
+  width: 100% !important;
+  max-width: 150px !important;
+  box-sizing: border-box !important;
+}
+
+.bend-table thead th,
+.bend-table tfoot td {
+  transform: translateZ(0);
 }
