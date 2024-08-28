@@ -39,6 +39,26 @@
   padding: 6px 7px !important;
 }
 
+ /* :host .checked-row {
+    background: rgb(208, 252, 208) !important;
+} */
+
+div.form-group input.form-control.amount {
+  background-color: rgb(192, 247, 192) !important;
+  font-weight: bold !important;
+  font-size: large !important;
+} 
+
+/* .form-control.local {
+  background-color: rgb(192, 247, 192) !important;
+  font-weight: bolder !important;
+  font-size: larger !important;
+} */
+
+/* :host ::ng-deep .mat-form-field-outline {
+  background: #ffffff !important;
+
+
 .receipt-table .table td .tds-text-box, 
 .receipt-table .table td .payment-textbox {
   width: 94% !important;
