@@ -532,9 +532,9 @@
                         </div>
                     </div>
 
-                    <div class="col-12  table-wrapper">
-                        <table class="bend-table" style="max-height: 500px;"
-                            class="table table-responsive  table-bordered w-100 table-striped border-0 agingTable mt-2">
+                    <div class="col-12 bend-table-container  table-wrapper">
+                        <table  style="max-height: 500px; overflow-x: hidden;"
+                            class="bend-table table   table-bordered w-100 table-striped border-0 agingTable mt-2">
                             <thead class="text-center">
                                 <tr>
                                     <th>S.NO</th>
@@ -554,12 +554,12 @@
                                 <ng-container *ngIf="paymentDetailsTableList.length; else noRecord">
                                     <tr *ngFor="let journal of receiptForm.get('paymentDetailsArray').controls; let i = index"  
                                         [formGroupName]="i" [ngClass]="getIsChecked(i) ? 'checked-row' : ''">
-                                        <td id = tabledata >{{i + 1}}</td>
-                                        <td> <input class="text-center border-0 invoice-date-text-box"  id = tabledata
+                                        <td class="text-center" id = tabledata >{{i + 1}}</td>
+                                        <td> <input class="text-left border-0 invoice-date-text-box"  id = tabledata
                                                 formControlName="InvoiceNo" readonly [value]="journal.InvoiceNumber"
                                                 type="text">
                                         </td>
-                                        <td> <input class="text-center border-0 invoice-date-text-box"  id = tabledata
+                                        <td> <input class="text-left border-0 invoice-date-text-box"  id = tabledata
                                                 formControlName="InvoiceDate" readonly
                                                 [value]="journal.InvoiceDate | date:'DD-MM-YYYY'" type="text">
                                         </td>
@@ -568,30 +568,30 @@
                                             [value]="journal.InvoiceDate | date:'DD-MM-YYYY'">
                                         </td> -->
                                         <td>
-                                            <input class="text-center border-0 invoice-date-text-box-currency" id = tabledata
+                                            <input class="text-left border-0 invoice-date-text-box-currency" id = tabledata
                                                 formControlName="CurrencyCode" readonly [value]="journal.Currency"
                                                 type="text">
                                         </td>
                                         <td>
-                                            <input class="text-center border-0" formControlName="InvoiceAmount" readonly
+                                            <input class="text-right border-0" formControlName="InvoiceAmount" readonly
                                                 [value]="journal.InvoiceAmount" type="text"  id = tabledata>
                                         </td>
                                         <td>
-                                            <input class="text-center border-0" formControlName="DueAmount" readonly
+                                            <input class="text-right border-0" formControlName="DueAmount" readonly
                                                 [value]="journal.DueAmount" type="text"  id = tabledata>
                                         </td>
                                         <td>
-                                            <input class="text-center border-0" formControlName="InvoiceAmountCCY"
+                                            <input class="text-right border-0" formControlName="InvoiceAmountCCY"
                                                 readonly [value]="journal.Currency" type="text"  id = tabledata>
                                         </td>
                                         <td>
-                                            <input class="text-center border-0" formControlName="DueAmountCCY"
+                                            <input class="text-right border-0" formControlName="DueAmountCCY"
                                              readonly [value]="journal.DueAmountCCY" type="text"  id = tabledata>
                                         </td>
                                         <td>
                                             <input min="1" numbersOnly appDynamicDecimal onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
                                                 [ngClass]=" !isShowTDSColumn || !isEditMode || !getIsChecked(i) ? 'disable-input' : ''"  id = tabledata
-                                                class="text-center border-0" formControlName="TDS" [value]="journal.TDS"
+                                                class="text-right border-0" formControlName="TDS" [value]="journal.TDS"
                                                 (change)="getDueAmount( i,'tds'); onSelectEvent();summaryAmountCalculation()">
 
                                         </td>
@@ -599,11 +599,11 @@
                                             <input min="1" onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47' appDynamicDecimal  numbersOnly 
                                                 [ngClass]="[ !isEditMode || !getIsChecked(i) ? 'disable-input' : '',]"  id = tabledata
                                                 (change)="getDueAmount(i,'Payment');onSelectEvent();summaryAmountCalculation()"
-                                                class="text-center payment-textbox" [value]="journal.Payment"
+                                                class="text-right payment-textbox" [value]="journal.Payment"
                                                 formControlName="Payment">
                                         </td>
-                                        <td>
-                                            <input (change)="setInitalPaymentAmount(i);onSelectEvent();summaryAmountCalculation()"
+                                        <td class="text-center">
+                                            <input class="text-center" (change)="setInitalPaymentAmount(i);onSelectEvent();summaryAmountCalculation()"
                                                 formControlName="IsSelect" type="checkbox"  id = tabledata
                                                 [ngClass]=" !isEditMode ? 'disable-input--nostyle' : ''" />
                                         </td>

@@ -579,7 +579,20 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
     }, error => { console.error(error) });
   }
 
+  CurrentFinancialYear() {
+    debugger
+    const service = `${this.globals.APIURL}/financialyear/CurrentFinancialYear`;
 
+    this.dataService.post(service, { VoucherDate: this.receiptForm.value.VoucherDate }).subscribe(
+        (result: any) => {
+            if (result.message === "Success" && result.data != "") {
+                // Display the data using Swal.fire
+                Swal.fire(result.data);
+            }
+        }
+    );
+  }
+  
   editclick() {
     this.showExchangeRate = true;
 
@@ -828,6 +841,7 @@ private downloadFile = (data: HttpResponse<Blob>) => {
   }
 
   async saveVoucherInfo(finalNumber: number, isDelete = false) {
+    this.CurrentFinancialYear();
     this.summaryAmountCalculation();
 
     if (this.AmountDifference != 0) {
@@ -1202,29 +1216,41 @@ private downloadFile = (data: HttpResponse<Blob>) => {
       divisionInfo = this.divisionList.find(x => x.ID == this.receiptForm.value.DivisionId);
     }
 
+        const currentDate = new Date(this.currentDate);
+        const currentYear = currentDate.getFullYear();
+        const startYear = currentDate.getMonth() >= 3 ? currentYear : currentYear - 1;
+        const endYear = startYear + 1;
+        const financialYear = `/${startYear.toString().slice(-2)}${endYear.toString().slice(-2)}`;
+
     for (var i = 0; i < sectionInfo.length; i++) {
       var condition = i == 0 ? sectionInfo[i].sectionA : i == 1 ? sectionInfo[i].sectionB : i == 2 ? sectionInfo[i].sectionC : i == 3 ? sectionInfo[i].sectionD : sectionInfo[i].sectionD;
-      switch (condition) {
-        case 'Office Code (3 Chars)': i == 0 ? sectionA = officeInfo.OfficeName ? officeInfo.OfficeName : '' : i == 1 ? sectionB = officeInfo.OfficeName ? officeInfo.OfficeName : '' : i == 2 ? sectionC = officeInfo.OfficeName ? officeInfo.OfficeName : '' : i == 3 ? sectionD = officeInfo.OfficeName : ''; break;
-        case 'Running Number (3 Chars)': i == 0 ? sectionA = runningNumber : i == 1 ? sectionB = runningNumber : i == 2 ? sectionC = runningNumber : i == 3 ? sectionD = runningNumber : ''; break;
-        case 'Running Number (4 Chars)': i == 0 ? sectionA = runningNumber : i == 1 ? sectionB = runningNumber : i == 2 ? sectionC = runningNumber : i == 3 ? sectionD = runningNumber : ''; break;
-        case 'Running Number (5 Chars)': i == 0 ? sectionA = runningNumber : i == 1 ? sectionB = runningNumber : i == 2 ? sectionC = runningNumber : i == 3 ? sectionD = runningNumber : ''; break;
-        case 'Running Number (6 Chars)': i == 0 ? sectionA = runningNumber : i == 1 ? sectionB = runningNumber : i == 2 ? sectionC = runningNumber : i == 3 ? sectionD = runningNumber : ''; break;
-        case 'Running Number (7 Chars)': i == 0 ? sectionA = runningNumber : i == 1 ? sectionB = runningNumber : i == 2 ? sectionC = runningNumber : i == 3 ? sectionD = runningNumber : ''; break;
-        case 'Office Code (4 Chars)': i == 0 ? sectionA = officeInfo.OfficeName ? officeInfo.OfficeName : '' : i == 1 ? sectionB = officeInfo.OfficeName ? officeInfo.OfficeName : '' : i == 2 ? sectionC = officeInfo.OfficeName ? officeInfo.OfficeName : '' : i == 3 ? sectionD = officeInfo.OfficeName : ''; break;
-        case 'Division Code (4 Chars)': i == 0 ? sectionA = divisionInfo.DivisionName ? divisionInfo.DivisionName : '' : i == 1 ? sectionB = divisionInfo.DivisionName ? divisionInfo.DivisionName : '' : i == 2 ? sectionC = divisionInfo.DivisionName ? divisionInfo.DivisionName : '' : i == 3 ? sectionD = divisionInfo.DivisionName ? divisionInfo.DivisionName : '' : ''; break;
-        case 'Division Code (3 Chars)': i == 0 ? sectionA = divisionInfo.DivisionName ? divisionInfo.DivisionName : '' : i == 1 ? sectionB = divisionInfo.DivisionName ? divisionInfo.DivisionName : '' : i == 2 ? sectionC = divisionInfo.DivisionName ? divisionInfo.DivisionName : '' : i == 3 ? sectionD = divisionInfo.DivisionName ? divisionInfo.DivisionName : '' : ''; break;
-        case 'FY (4 Char e.g. 2023)': i == 0 ? sectionA = '' : i == 1 ? sectionB = '' : i == 2 ? sectionC = '' : i == 3 ? sectionD = '' : ''; break;
-        case 'FY (5 Char e.g. 22-23)': i == 0 ? sectionA = '' : i == 1 ? sectionB = '' : i == 2 ? sectionC = '' : i == 3 ? sectionD = '' : ''; break;
-        case "FY (5 Char e.g. /2223)": i == 0 ? sectionA = '' : i == 1 ? sectionB = '' : i == 2 ? sectionC = '/2223' : i == 3 ? sectionD = '' : ''; break;
-        case 'FY (6 Char e.g. FY2023)': i == 0 ? sectionA = '' : i == 1 ? sectionB = '' : i == 2 ? sectionC = '' : i == 3 ? sectionD = '' : ''; break;
-        case 'FY (7 Char e.g. FY22-23)': i == 0 ? sectionA = '' : i == 1 ? sectionB = '' : i == 2 ? sectionC = '' : i == 3 ? sectionD = '' : ''; break;
-        case 'POD Port Code (3 Char)': i == 0 ? sectionA = '' : i == 1 ? sectionB = '' : i == 2 ? sectionC = '' : i == 3 ? sectionD = '' : ''; break;
-        case 'POFD Port Code (3 Char)': i == 0 ? sectionA = '' : i == 1 ? sectionB = '' : i == 2 ? sectionC = '' : i == 3 ? sectionD = '' : ''; break;
-        default: break;
+      // switch (condition) {
+      //   case 'Office Code (3 Chars)': i == 0 ? sectionA = officeInfo.OfficeName ? officeInfo.OfficeName : '' : i == 1 ? sectionB = officeInfo.OfficeName ? officeInfo.OfficeName : '' : i == 2 ? sectionC = officeInfo.OfficeName ? officeInfo.OfficeName : '' : i == 3 ? sectionD = officeInfo.OfficeName : ''; break;
+      //   case 'Running Number (3 Chars)': i == 0 ? sectionA = runningNumber : i == 1 ? sectionB = runningNumber : i == 2 ? sectionC = runningNumber : i == 3 ? sectionD = runningNumber : ''; break;
+      //   case 'Running Number (4 Chars)': i == 0 ? sectionA = runningNumber : i == 1 ? sectionB = runningNumber : i == 2 ? sectionC = runningNumber : i == 3 ? sectionD = runningNumber : ''; break;
+      //   case 'Running Number (5 Chars)': i == 0 ? sectionA = runningNumber : i == 1 ? sectionB = runningNumber : i == 2 ? sectionC = runningNumber : i == 3 ? sectionD = runningNumber : ''; break;
+      //   case 'Running Number (6 Chars)': i == 0 ? sectionA = runningNumber : i == 1 ? sectionB = runningNumber : i == 2 ? sectionC = runningNumber : i == 3 ? sectionD = runningNumber : ''; break;
+      //   case 'Running Number (7 Chars)': i == 0 ? sectionA = runningNumber : i == 1 ? sectionB = runningNumber : i == 2 ? sectionC = runningNumber : i == 3 ? sectionD = runningNumber : ''; break;
+      //   case 'Office Code (4 Chars)': i == 0 ? sectionA = officeInfo.OfficeName ? officeInfo.OfficeName : '' : i == 1 ? sectionB = officeInfo.OfficeName ? officeInfo.OfficeName : '' : i == 2 ? sectionC = officeInfo.OfficeName ? officeInfo.OfficeName : '' : i == 3 ? sectionD = officeInfo.OfficeName : ''; break;
+      //   case 'Division Code (4 Chars)': i == 0 ? sectionA = divisionInfo.DivisionName ? divisionInfo.DivisionName : '' : i == 1 ? sectionB = divisionInfo.DivisionName ? divisionInfo.DivisionName : '' : i == 2 ? sectionC = divisionInfo.DivisionName ? divisionInfo.DivisionName : '' : i == 3 ? sectionD = divisionInfo.DivisionName ? divisionInfo.DivisionName : '' : ''; break;
+      //   case 'Division Code (3 Chars)': i == 0 ? sectionA = divisionInfo.DivisionName ? divisionInfo.DivisionName : '' : i == 1 ? sectionB = divisionInfo.DivisionName ? divisionInfo.DivisionName : '' : i == 2 ? sectionC = divisionInfo.DivisionName ? divisionInfo.DivisionName : '' : i == 3 ? sectionD = divisionInfo.DivisionName ? divisionInfo.DivisionName : '' : ''; break;
+      //   case 'FY (4 Char e.g. 2023)': i == 0 ? sectionA = '' : i == 1 ? sectionB = '' : i == 2 ? sectionC = '' : i == 3 ? sectionD = '' : ''; break;
+      //   case 'FY (5 Char e.g. 22-23)': i == 0 ? sectionA = '' : i == 1 ? sectionB = '' : i == 2 ? sectionC = '' : i == 3 ? sectionD = '' : ''; break;
+      //   case "FY (5 Char e.g. /2223)": i == 0 ? sectionA = '' : i == 1 ? sectionB = '' : i == 2 ? sectionC = '/2223' : i == 3 ? sectionD = '' : ''; break;
+      //   case 'FY (6 Char e.g. FY2023)': i == 0 ? sectionA = '' : i == 1 ? sectionB = '' : i == 2 ? sectionC = '' : i == 3 ? sectionD = '' : ''; break;
+      //   case 'FY (7 Char e.g. FY22-23)': i == 0 ? sectionA = '' : i == 1 ? sectionB = '' : i == 2 ? sectionC = '' : i == 3 ? sectionD = '' : ''; break;
+      //   case 'POD Port Code (3 Char)': i == 0 ? sectionA = '' : i == 1 ? sectionB = '' : i == 2 ? sectionC = '' : i == 3 ? sectionD = '' : ''; break;
+      //   case 'POFD Port Code (3 Char)': i == 0 ? sectionA = '' : i == 1 ? sectionB = '' : i == 2 ? sectionC = '' : i == 3 ? sectionD = '' : ''; break;
+      //   default: break;
+      // }
+      if (condition === sectionInfo[i].sectionA) {
+        sectionA = officeInfo?.OfficeName || '';
+      } else if (condition === sectionInfo[i].sectionC) {
+        sectionC = financialYear;
       }
     }
-    return { sectionA: sectionA, sectionB: sectionB, sectionC: sectionC, sectionD: sectionD };
+    // return { sectionA: sectionA, sectionB: sectionB, sectionC: sectionC, sectionD: sectionD };
+    return { sectionA: sectionA, sectionB: '', sectionC: sectionC, sectionD: '' };
   }
 
   paymentByPartyChecked(event) {
@@ -1381,6 +1407,7 @@ private downloadFile = (data: HttpResponse<Blob>) => {
   }
 
   createPaymentDetailsPayload(info, exchangeRate = 0) {
+    debugger
     
     this.paymentDetailsTableList = [];
     for (let data of info) {
@@ -1445,6 +1472,7 @@ private downloadFile = (data: HttpResponse<Blob>) => {
         }
 
         const dueAmount = data.DueAmount ? data.DueAmount : data.InvoiceAmount;
+       
         console.log("due",dueAmount);
         console.log("Due Amount",data.DueAmount);
         const newDue = dueAmount - (+invoceObj.TDS + +invoceObj.Payment);
@@ -1518,6 +1546,7 @@ if (!isNaN(dueAmountNumber)) {
 
 
   getDueAmount(index, type) {
+    debugger
     const controlAtIndex = this.myArray.at(index);
     !controlAtIndex.value.TDS ? controlAtIndex.value.TDS = 0 : '';
     !controlAtIndex.value.Payment ? controlAtIndex.value.Payment = 0 : '';
@@ -1532,8 +1561,16 @@ if (!isNaN(dueAmountNumber)) {
       controlAtIndex.value.DueAmount = +currentRow.value.DueAmountActual - (+currentRow.value.TDS + +currentRow.value.Payment)
 
     } else {
-      // controlAtIndex.value.DueAmount = +dueAmount - (+tds + +payment);
-      controlAtIndex.value.DueAmount = +currentRow.value.DueAmountActual - (+controlAtIndex.value.TDS + +controlAtIndex.value.Payment)
+      
+      const dueAmountActual = parseFloat(currentRow.value.DueAmountActual);
+      const tds = parseFloat(controlAtIndex.value.TDS);
+      const payment = parseFloat(controlAtIndex.value.Payment);
+      const calculatedDueAmount = dueAmountActual - (tds + payment);
+      const roundedDueAmount = parseFloat(calculatedDueAmount.toFixed(this.entityFraction));
+
+      controlAtIndex.value.DueAmount = roundedDueAmount;
+
+      //controlAtIndex.value.DueAmount = +(currentRow.value.DueAmountActual - (+controlAtIndex.value.TDS + +controlAtIndex.value.Payment).toFixed(this.entityFraction))
     }
     // const exchangeRate = this.ExchangeRatePairList[0] ? +this.ExchangeRatePairList[0].Rate : 0
     controlAtIndex.value.DueAmountCCY = (controlAtIndex.value.ExchangeRate * controlAtIndex.value.DueAmount).toFixed(this.entityFraction);
@@ -1560,7 +1597,7 @@ if (!isNaN(dueAmountNumber)) {
   }
 
   onSelectEvent() {
-    
+    debugger
     if (this.receiptForm.value.paymentDetailsArray.length > 0) {
       let info = this.receiptForm.value.paymentDetailsArray.filter(x => x.IsSelect == true);
       var totalAmount = 0;
@@ -1773,6 +1810,7 @@ if (!isNaN(dueAmountNumber)) {
   }
 
   summaryAmountCalculation() {
+    debugger
     
     var TotalDebit = 0;
     var TotalCredit = 0;
