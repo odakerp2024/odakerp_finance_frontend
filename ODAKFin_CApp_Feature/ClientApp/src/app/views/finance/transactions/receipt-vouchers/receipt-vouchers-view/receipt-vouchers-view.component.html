@@ -55,34 +55,37 @@
                                     <th scope="col">Currency</th>
                                 </tr>
                             </thead>
-                            <tbody class="text-center">
+                            <tbody class="text-left">
                                 <tr *ngFor="let receipt of pagedItems;let i = index">
                                     <td (click)="editReceipt(receipt.Id)" style="color: #0366d6;cursor: pointer;">
                                         <a>{{receipt.VoucherNumber}}</a>
                                     </td>
                                     <!-- <td>{{receipt.VoucherType}}</td> -->
                                     
-                                <td>{{receipt.VoucherDate | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td>
+                                <td class="text-left">{{receipt.VoucherDate | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td>
 
                                     
-                                    <td [title]="receipt.CustomerName | uppercase">
-                                        {{ (receipt.CustomerName && receipt.CustomerName.length > 20) ? receipt.CustomerName.slice(0, 20) + '-' : receipt.CustomerName }}
+                                    <td class="text-left" [title]="receipt.CustomerName | uppercase">
+                                        {{ (receipt.CustomerName && receipt.CustomerName.length > 30) ? receipt.CustomerName.slice(0, 30) + '-' : receipt.CustomerName }}
                                       </td>
                                     
                                     
                                     <!-- <td>{{receipt.CustomerName ? receipt.CustomerName : ''}}</td> -->
                                     <!-- <td>{{receipt.CustomerBranch}}</td> -->
-                                    <td>{{receipt.AmountReceived}}</td>
-                                    <td>{{receipt.AmountTypeName}}</td>
-                                    <td>{{receipt.BankName ? receipt.BankName : ''}}</td>
-                                    <td>{{receipt.ReferenceNo || '-'}}</td>
+                                    <td class="text-right">{{ receipt.AmountReceived | dynamicDecimal: entityFraction }}</td>
+                                    <td class="text-left">{{receipt.AmountTypeName}}</td>
+                                    <td class="text-left">{{receipt.BankName ? receipt.BankName : ''}}</td>
+                                    <td class="text-left"
+                                        [title]="receipt.ReferenceNo | uppercase">
+                                        {{ (receipt.ReferenceNo.length > 30) ? receipt.ReferenceNo.slice(0, 30) + '-' : receipt.ReferenceNo }}
+                                    </td>
                                     <td>
                                         <div
                                     [ngClass]="receipt.StatusName == 'Confirmed' ? 'badge badge-state-confirm' : receipt.StatusName == 'Cancelled' ? 'badge badge-state-cancel' : 'badge badge-state'">
                                     {{receipt.StatusName}}
                                         </div>
                                 </td>
-                                    <td>
+                                    <td class="text-center">
                                         <button (click)="copyPaste(receipt.Id, true)"
                                             class="btn btn-primary bmd-btn-fab">
                                             <i class="material-icons">filter_none</i>
