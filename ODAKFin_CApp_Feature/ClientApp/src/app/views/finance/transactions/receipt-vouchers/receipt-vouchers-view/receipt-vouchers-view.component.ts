@@ -25,6 +25,7 @@ export class ReceiptVouchersViewComponent implements OnInit {
   filterForm: FormGroup;
   // * pagination end
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat')
+  entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   searchData: BankFilter = new BankFilter();
  // maxDate: string = this.datePipe.transform(new Date(), "yyyy-MM-dd");
 //  minDate: string = this.datePipe.transform(new Date(), this.entityDateFormat);
