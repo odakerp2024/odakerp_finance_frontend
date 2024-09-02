@@ -1492,7 +1492,25 @@ if (!isNaN(dueAmountNumber)) {
           invoceObj.TDS = 0;
           invoceObj.Payment = 0;
         } else {
-          invoceObj.DueAmount = newDue.toFixed(this.entityFraction);
+          const validdue = newDue.toFixed(this.entityFraction);
+          const [integerPart, decimalPart] = String(validdue).split('.');
+
+      
+          let finalDueAmount;
+          
+          if (decimalPart && decimalPart.length === 3) {
+            const thirdDecimal = parseInt(decimalPart.charAt(2)); 
+          
+            if (thirdDecimal >= 5) {
+              
+              const incrementedValue = parseFloat(`${integerPart}.${decimalPart.substring(0, 2)}`) + 0.01;
+              finalDueAmount = incrementedValue.toFixed(this.entityFraction); 
+            } else {
+              
+              finalDueAmount = validdue;
+            }
+          }
+          invoceObj.DueAmount = parseFloat(finalDueAmount).toFixed(this.entityFraction);
         }
       }
 
@@ -1566,16 +1584,34 @@ if (!isNaN(dueAmountNumber)) {
       const tds = parseFloat(controlAtIndex.value.TDS);
       const payment = parseFloat(controlAtIndex.value.Payment);
       const calculatedDueAmount = dueAmountActual - (tds + payment);
-      const roundedDueAmount = parseFloat(calculatedDueAmount.toFixed(this.entityFraction));
+      const roundedDueAmount = calculatedDueAmount.toFixed(this.entityFraction);
 
-      controlAtIndex.value.DueAmount = roundedDueAmount;
+      const dueAmountStr = roundedDueAmount.toString();
 
-      //controlAtIndex.value.DueAmount = +(currentRow.value.DueAmountActual - (+controlAtIndex.value.TDS + +controlAtIndex.value.Payment).toFixed(this.entityFraction))
+      
+
+      const [integerPart, decimalPart] = dueAmountStr.split('.');
+      
+      let finalRoundedDueAmount;
+      
+      if (decimalPart && decimalPart.length === 3) {
+        const thirdDecimal = parseInt(decimalPart.charAt(2)); 
+      
+        if (thirdDecimal >= 5) {
+          
+          const incrementedValue = parseFloat(`${integerPart}.${decimalPart.substring(0, 2)}`) + 0.01;
+          finalRoundedDueAmount = incrementedValue.toFixed(this.entityFraction); 
+        } else {
+          
+          finalRoundedDueAmount = roundedDueAmount;
+        }
+      }
+
+      controlAtIndex.value.DueAmount = finalRoundedDueAmount;
     }
-    // const exchangeRate = this.ExchangeRatePairList[0] ? +this.ExchangeRatePairList[0].Rate : 0
+    
     controlAtIndex.value.DueAmountCCY = (controlAtIndex.value.ExchangeRate * controlAtIndex.value.DueAmount).toFixed(this.entityFraction);
-    // this.calculateFinalTotal();
-    // console.log('paymentDetailsTableList edit tds and pay', this.paymentDetailsTableList)
+    
   }
 
   //  set payment Amount as due Amount when checked;
