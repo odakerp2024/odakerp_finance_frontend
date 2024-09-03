@@ -101,5 +101,9 @@ export class ReportDashboardService {
   GetTrailBalanceList(FormValue: any): Observable<any> {
     return this.http.post<any>(this.globals.APIURL + '/Reports/GetTrailBalanceList', FormValue);
   }
+
+  GetProfitLossList(FormValue: any): Observable<any> {
+    return this.http.post<any>(this.globals.APIURL + '/Reports/GetProfitLossList', FormValue);
+  }
  
 }

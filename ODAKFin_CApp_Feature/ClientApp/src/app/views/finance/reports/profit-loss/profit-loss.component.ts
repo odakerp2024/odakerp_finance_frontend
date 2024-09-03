@@ -179,7 +179,7 @@ sort(properties: string[]) {
       "OfficeId": "",
       "Date": ""
     };
-    this.reportService.GetTrailBalanceList(payload).subscribe(result => {
+    this.reportService.GetProfitLossList(payload).subscribe(result => {
       this.balanceList = [];
       this.pagedItems = [];
       if (result.message === 'Success' && result.data.Table.length > 0) {
@@ -590,194 +590,194 @@ getDivisionBasedOffice(officeId, divisoinId: any) {
 }
 
 
-async downloadExcel() {
-  if (!this.pagedItems || this.pagedItems.length === 0) {
-    Swal.fire('No record found');
-    return;
-  }
+// async downloadExcel() {
+//   if (!this.pagedItems || this.pagedItems.length === 0) {
+//     Swal.fire('No record found');
+//     return;
+//   }
 
-  const workbook = new Workbook();
-  const worksheet = workbook.addWorksheet('Report');
+//   const workbook = new Workbook();
+//   const worksheet = workbook.addWorksheet('Report');
 
-  // Add title and subtitle rows
-  const titleRow = worksheet.addRow(['', 'ODAK SOLUTIONS PRIVATE LIMITED', '', '']);
-  titleRow.getCell(2).font = { size: 15, bold: true };
-  titleRow.getCell(2).alignment = { horizontal: 'center' };
-  worksheet.mergeCells(`B${titleRow.number}:C${titleRow.number}`);
+//   // Add title and subtitle rows
+//   const titleRow = worksheet.addRow(['', 'ODAK SOLUTIONS PRIVATE LIMITED', '', '']);
+//   titleRow.getCell(2).font = { size: 15, bold: true };
+//   titleRow.getCell(2).alignment = { horizontal: 'center' };
+//   worksheet.mergeCells(`B${titleRow.number}:C${titleRow.number}`);
 
-  const subtitleRow = worksheet.addRow(['', 'Trail Balance', '', '']);
-  subtitleRow.getCell(2).font = { size: 15, bold: true };
-  subtitleRow.getCell(2).alignment = { horizontal: 'center' };
-  worksheet.mergeCells(`B${subtitleRow.number}:C${subtitleRow.number}`);
+//   const subtitleRow = worksheet.addRow(['', 'Trail Balance', '', '']);
+//   subtitleRow.getCell(2).font = { size: 15, bold: true };
+//   subtitleRow.getCell(2).alignment = { horizontal: 'center' };
+//   worksheet.mergeCells(`B${subtitleRow.number}:C${subtitleRow.number}`);
 
-  // Add date row
-  const currentDate = new Date();
-  const subtitleRow1 = worksheet.addRow(['', `As of ${this.datePipe.transform(currentDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`, '', '']);
-  subtitleRow1.getCell(2).alignment = { horizontal: 'center' };
-  worksheet.mergeCells(`B${subtitleRow1.number}:C${subtitleRow1.number}`);
+//   // Add date row
+//   const currentDate = new Date();
+//   const subtitleRow1 = worksheet.addRow(['', `As of ${this.datePipe.transform(currentDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`, '', '']);
+//   subtitleRow1.getCell(2).alignment = { horizontal: 'center' };
+//   worksheet.mergeCells(`B${subtitleRow1.number}:C${subtitleRow1.number}`);
 
-  // Define header row
-  const headers = ['Account', 'Net Debit', 'Net Credit'];
-  const headerRow = worksheet.addRow(headers);
+//   // Define header row
+//   const headers = ['Account', 'Net Debit', 'Net Credit'];
+//   const headerRow = worksheet.addRow(headers);
 
-  // Style the header row
-  headerRow.eachCell((cell) => {
-    cell.fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      fgColor: { argb: '8A9A5B' },
-    };
-    cell.font = {
-      bold: true,
-      color: { argb: 'FFFFF7' },
-    };
-    cell.alignment = {
-      horizontal: 'center',
-    };
-    cell.border = {
-      top: { style: 'thin' },
-      left: { style: 'thin' },
-      bottom: { style: 'thin' },
-      right: { style: 'thin' },
-    };
-  });
+//   // Style the header row
+//   headerRow.eachCell((cell) => {
+//     cell.fill = {
+//       type: 'pattern',
+//       pattern: 'solid',
+//       fgColor: { argb: '8A9A5B' },
+//     };
+//     cell.font = {
+//       bold: true,
+//       color: { argb: 'FFFFF7' },
+//     };
+//     cell.alignment = {
+//       horizontal: 'center',
+//     };
+//     cell.border = {
+//       top: { style: 'thin' },
+//       left: { style: 'thin' },
+//       bottom: { style: 'thin' },
+//       right: { style: 'thin' },
+//     };
+//   });
 
-  let grandTotalDebit = 0;
-  let grandTotalCredit = 0;
+//   let grandTotalDebit = 0;
+//   let grandTotalCredit = 0;
 
-  this.pagedItems.forEach(group => {
-    // Add group header row
-    const groupRow = worksheet.addRow([group.GroupName.toUpperCase(), '', '']);
-    groupRow.font = { bold: true };
+//   this.pagedItems.forEach(group => {
+//     // Add group header row
+//     const groupRow = worksheet.addRow([group.GroupName.toUpperCase(), '', '']);
+//     groupRow.font = { bold: true };
 
-    // Apply color only to content cells
-    groupRow.getCell(1).fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      fgColor: { argb: 'f0f0f0' },
-    };
-    groupRow.getCell(2).fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      fgColor: { argb: 'f0f0f0' },
-    };
-    groupRow.getCell(3).fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      fgColor: { argb: 'f0f0f0' },
-    };
-    let groupTotalDebit = 0;
-    let groupTotalCredit = 0;
+//     // Apply color only to content cells
+//     groupRow.getCell(1).fill = {
+//       type: 'pattern',
+//       pattern: 'solid',
+//       fgColor: { argb: 'f0f0f0' },
+//     };
+//     groupRow.getCell(2).fill = {
+//       type: 'pattern',
+//       pattern: 'solid',
+//       fgColor: { argb: 'f0f0f0' },
+//     };
+//     groupRow.getCell(3).fill = {
+//       type: 'pattern',
+//       pattern: 'solid',
+//       fgColor: { argb: 'f0f0f0' },
+//     };
+//     let groupTotalDebit = 0;
+//     let groupTotalCredit = 0;
 
-    group.parentTotals.forEach(parent => {
-      let parentTotalDebit = 0;
-      let parentTotalCredit = 0;
+//     group.parentTotals.forEach(parent => {
+//       let parentTotalDebit = 0;
+//       let parentTotalCredit = 0;
 
-      parent.items.forEach(balance => {
-        const rowData = [
-          balance.ParentAccountName + ' - ' + balance.ChildAccountName,
-          balance.ChildTransaction_Type === 'Debit' ? balance.ChildNet_Balance : 0,
-          balance.ChildTransaction_Type === 'Credit' ? balance.ChildNet_Balance : 0,
-        ];
+//       parent.items.forEach(balance => {
+//         const rowData = [
+//           balance.ParentAccountName + ' - ' + balance.ChildAccountName,
+//           balance.ChildTransaction_Type === 'Debit' ? balance.ChildNet_Balance : 0,
+//           balance.ChildTransaction_Type === 'Credit' ? balance.ChildNet_Balance : 0,
+//         ];
 
-        const row = worksheet.addRow(rowData);
+//         const row = worksheet.addRow(rowData);
 
-        // Apply styles based on column index
-        row.eachCell((cell, colNumber) => {
-          if (colNumber === 1) {
-            cell.font = { color: { argb: '8B0000' }, bold: true }; // Red color for ChildAccountName
-            cell.alignment = { horizontal: 'left' };
-          } else if (colNumber === 2 || colNumber === 3) {
-            cell.alignment = { horizontal: 'right' }; // Right align for Net Debit and Net Credit
-          }
-        });
+//         // Apply styles based on column index
+//         row.eachCell((cell, colNumber) => {
+//           if (colNumber === 1) {
+//             cell.font = { color: { argb: '8B0000' }, bold: true }; // Red color for ChildAccountName
+//             cell.alignment = { horizontal: 'left' };
+//           } else if (colNumber === 2 || colNumber === 3) {
+//             cell.alignment = { horizontal: 'right' }; // Right align for Net Debit and Net Credit
+//           }
+//         });
 
-        if (balance.ChildTransaction_Type === 'Debit') {
-          parentTotalDebit += balance.ChildNet_Balance;
-        } else if (balance.ChildTransaction_Type === 'Credit') {
-          parentTotalCredit += balance.ChildNet_Balance;
-        }
-      });
+//         if (balance.ChildTransaction_Type === 'Debit') {
+//           parentTotalDebit += balance.ChildNet_Balance;
+//         } else if (balance.ChildTransaction_Type === 'Credit') {
+//           parentTotalCredit += balance.ChildNet_Balance;
+//         }
+//       });
 
-      // Add parent total row
-      const parentTotalRow = worksheet.addRow([`${parent.ParentAccountName} Total`, parentTotalDebit, parentTotalCredit]);
-      parentTotalRow.eachCell((cell, colNumber) => {
-        cell.font = { bold: true };
-        cell.alignment = { horizontal: colNumber === 1 ? 'left' : 'right' }; // Align first column to left
-        cell.fill = {
-          type: 'pattern',
-          pattern: 'solid',
-          fgColor: { argb: 'f0f0f0' },
-        };
-      });
+//       // Add parent total row
+//       const parentTotalRow = worksheet.addRow([`${parent.ParentAccountName} Total`, parentTotalDebit, parentTotalCredit]);
+//       parentTotalRow.eachCell((cell, colNumber) => {
+//         cell.font = { bold: true };
+//         cell.alignment = { horizontal: colNumber === 1 ? 'left' : 'right' }; // Align first column to left
+//         cell.fill = {
+//           type: 'pattern',
+//           pattern: 'solid',
+//           fgColor: { argb: 'f0f0f0' },
+//         };
+//       });
 
-      groupTotalDebit += parentTotalDebit;
-      groupTotalCredit += parentTotalCredit;
-    });
+//       groupTotalDebit += parentTotalDebit;
+//       groupTotalCredit += parentTotalCredit;
+//     });
 
-    // Add group total row
-    const groupTotalRow = worksheet.addRow([`${group.GroupName.toUpperCase()} Total`, groupTotalDebit, groupTotalCredit]);
-    grandTotalDebit += groupTotalDebit;
-    grandTotalCredit += groupTotalCredit;
+//     // Add group total row
+//     const groupTotalRow = worksheet.addRow([`${group.GroupName.toUpperCase()} Total`, groupTotalDebit, groupTotalCredit]);
+//     grandTotalDebit += groupTotalDebit;
+//     grandTotalCredit += groupTotalCredit;
 
-    groupTotalRow.eachCell((cell, colNumber) => {
-      cell.font = { bold: true };
-      cell.alignment = { horizontal: colNumber === 1 ? 'left' : 'right' };
-      cell.fill = {
-        type: 'pattern',
-        pattern: 'solid',
-        fgColor: { argb: 'f0f0f0' },
-      };
-    });
-  });
+//     groupTotalRow.eachCell((cell, colNumber) => {
+//       cell.font = { bold: true };
+//       cell.alignment = { horizontal: colNumber === 1 ? 'left' : 'right' };
+//       cell.fill = {
+//         type: 'pattern',
+//         pattern: 'solid',
+//         fgColor: { argb: 'f0f0f0' },
+//       };
+//     });
+//   });
 
-  // Add grand total row
-  const grandTotalRow = worksheet.addRow(['Grand Total', grandTotalDebit, grandTotalCredit]);
-  grandTotalRow.eachCell((cell, colNumber) => {
-    cell.font = { bold: true };
-    cell.alignment = { horizontal: colNumber === 1 ? 'left' : 'right' };
-    cell.fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      fgColor: { argb: 'FFFF99' },
-    };
-  });
+//   // Add grand total row
+//   const grandTotalRow = worksheet.addRow(['Grand Total', grandTotalDebit, grandTotalCredit]);
+//   grandTotalRow.eachCell((cell, colNumber) => {
+//     cell.font = { bold: true };
+//     cell.alignment = { horizontal: colNumber === 1 ? 'left' : 'right' };
+//     cell.fill = {
+//       type: 'pattern',
+//       pattern: 'solid',
+//       fgColor: { argb: 'FFFF99' },
+//     };
+//   });
 
-  // Adjust column widths
-  worksheet.columns.forEach(column => {
-    let maxLength = 0;
-    column.eachCell({ includeEmpty: true }, cell => {
-      const columnLength = cell.value ? cell.value.toString().length : 0;
-      if (columnLength > maxLength) {
-        maxLength = columnLength;
-      }
-    });
-    column.width = maxLength + 2;
-  });
+//   // Adjust column widths
+//   worksheet.columns.forEach(column => {
+//     let maxLength = 0;
+//     column.eachCell({ includeEmpty: true }, cell => {
+//       const columnLength = cell.value ? cell.value.toString().length : 0;
+//       if (columnLength > maxLength) {
+//         maxLength = columnLength;
+//       }
+//     });
+//     column.width = maxLength + 2;
+//   });
 
-  // Style the footer row
-  const footerRow = worksheet.addRow(['End of Report']);
-  footerRow.eachCell((cell) => {
-    cell.fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      fgColor: { argb: '8A9A5B' },
-    };
-    cell.font = {
-      bold: true,
-      color: { argb: 'FFFFF7' },
-    };
-    cell.alignment = {
-      horizontal: 'center',
-    };
-  });
-  worksheet.mergeCells(`A${footerRow.number}:C${footerRow.number}`);
+//   // Style the footer row
+//   const footerRow = worksheet.addRow(['End of Report']);
+//   footerRow.eachCell((cell) => {
+//     cell.fill = {
+//       type: 'pattern',
+//       pattern: 'solid',
+//       fgColor: { argb: '8A9A5B' },
+//     };
+//     cell.font = {
+//       bold: true,
+//       color: { argb: 'FFFFF7' },
+//     };
+//     cell.alignment = {
+//       horizontal: 'center',
+//     };
+//   });
+//   worksheet.mergeCells(`A${footerRow.number}:C${footerRow.number}`);
 
-  // Write to Excel and save
-  const buffer = await workbook.xlsx.writeBuffer();
-  const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-  saveAs(blob, 'Report-TrailBalance.xlsx');
-}
+//   // Write to Excel and save
+//   const buffer = await workbook.xlsx.writeBuffer();
+//   const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+//   saveAs(blob, 'Report-TrailBalance.xlsx');
+// }
 
 
 
