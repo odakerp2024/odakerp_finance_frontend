@@ -20,6 +20,7 @@ import { ReportArLeveltwoComponent } from './report-ar-leveltwo/report-ar-levelt
 import { ReportArLevelthreeComponent } from './report-ar-levelthree/report-ar-levelthree.component';
 import { ReportApLeveloneComponent } from './report-ap-levelone/report-ap-levelone.component';
 import { ReportApLeveltwoComponent } from './report-ap-leveltwo/report-ap-leveltwo.component';
+import { ProfitLossComponent } from './profit-loss/profit-loss.component';
 
 
 @NgModule({
@@ -37,7 +38,8 @@ import { ReportApLeveltwoComponent } from './report-ap-leveltwo/report-ap-levelt
     ReportArLeveltwoComponent,
     ReportArLevelthreeComponent,
     ReportApLeveloneComponent,
-    ReportApLeveltwoComponent
+    ReportApLeveltwoComponent,
+    ProfitLossComponent
   ],
   imports: [
     CommonModule,
