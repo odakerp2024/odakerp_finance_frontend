@@ -1235,7 +1235,9 @@ export class FinanceMasterComponent implements OnInit {
       this.router.navigate(['/views/finance/reports/tdsreceivable/tdsreceivable']);
     }
 
-
+    else if (routePage == 'ProfitandLoss') {
+      this.router.navigate(['/views/finance/reports/profitandloss']);
+    }
 
 
     const userID = localStorage.getItem("UserID");
