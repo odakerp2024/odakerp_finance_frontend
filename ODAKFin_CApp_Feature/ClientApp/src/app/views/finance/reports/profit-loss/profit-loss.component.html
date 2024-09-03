@@ -69,10 +69,12 @@
   
             <div class="row">
               <div class="col-10 justify-content-end text-center ">
-                <h6 class="title">ODAK SOLUTIONS PRIVATE LIMITED</h6>
-                <h6 class="subtitle">Trail Balance</h6>
-                <p class="subtitle">Basis: Accrual</p>
-                <p class="subtitle">As of {{ selectedDate ? selectedDate : currentDate | date:'mediumDate' }}</p>
+                <h6 class="title">Profit and Loss</h6>
+                <h6 class="subtitle">Basis: Accrual</h6>
+                <p class="subtitle">
+                 From  {{ (selectedDate ? (selectedDate | date:'dd/MM/yyyy') : (currentDate | date:'dd/MM/yyyy')) }} To {{ (currentDate | date:'dd/MM/yyyy') }}
+                </p>
+                
   
               </div>
   
