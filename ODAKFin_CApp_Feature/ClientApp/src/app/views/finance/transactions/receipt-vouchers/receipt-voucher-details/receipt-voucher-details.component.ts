@@ -1407,7 +1407,6 @@ private downloadFile = (data: HttpResponse<Blob>) => {
   }
 
   createPaymentDetailsPayload(info, exchangeRate = 0) {
-    debugger
     
     this.paymentDetailsTableList = [];
     for (let data of info) {
@@ -1564,7 +1563,6 @@ if (!isNaN(dueAmountNumber)) {
 
 
   getDueAmount(index, type) {
-    debugger
     const controlAtIndex = this.myArray.at(index);
     !controlAtIndex.value.TDS ? controlAtIndex.value.TDS = 0 : '';
     !controlAtIndex.value.Payment ? controlAtIndex.value.Payment = 0 : '';
@@ -1633,7 +1631,6 @@ if (!isNaN(dueAmountNumber)) {
   }
 
   onSelectEvent() {
-    debugger
     if (this.receiptForm.value.paymentDetailsArray.length > 0) {
       let info = this.receiptForm.value.paymentDetailsArray.filter(x => x.IsSelect == true);
       var totalAmount = 0;
@@ -1846,7 +1843,6 @@ if (!isNaN(dueAmountNumber)) {
   }
 
   summaryAmountCalculation() {
-    debugger
     
     var TotalDebit = 0;
     var TotalCredit = 0;
