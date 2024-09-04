@@ -118,11 +118,11 @@ div.form-group input.form-control.amount {
   }
 }
 
-@media (min-width: 1498px) and (max-width: 1500px) {
+@media (min-width: 1498px) and (max-width: 1600px) {
   #tabledata {
       padding: 9px !important;
       font-size: 13px !important;
-      width: 118px;
+      width: 141px;
   }
   .table thead th {
       padding: 9px 13px !important;
@@ -182,7 +182,7 @@ div.form-group input.form-control.amount {
 /* Fix the table header */
 .bend-table thead th {
   position: sticky;
-  top: 0;
+  top: -3px;
   z-index: 10; /* Increase z-index to ensure it's above other content */
   background-color: #fff; /* Match the header background to the table */
   border-bottom: 1px solid #ddd; /* Add a border to prevent shift */
@@ -191,7 +191,7 @@ div.form-group input.form-control.amount {
 /* Fix the table footer */
 .bend-table tfoot td {
   position: sticky;
-  bottom: 0;
+  bottom: -3px;
   z-index: 10; /* Increase z-index to ensure it's above other content */
   background-color: #fff; /* Match the footer background to the table */
   border-top: 1px solid #ddd; /* Add a border to prevent shift */
