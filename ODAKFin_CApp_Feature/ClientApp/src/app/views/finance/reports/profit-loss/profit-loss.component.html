@@ -1,0 +1,228 @@
+<div class="container-fluid">
+    <form [formGroup]="filterForm">
+      <div class="card mt-0 p-3">
+  
+        <div class="row">
+          <div class="col-10">
+            <div class="row pb-1">
+  
+              <div class="col-md-2">
+                <label class="str mb-2">Date</label>
+                <mat-form-field class="tillDate mat_date_picker" appearance="outline">
+                  <input matInput (dateChange)="onDateChange($event)" formControlName="Date" autocomplete="off" [max]="fromMaxDate"
+                    [matDatepicker]="ToDate" id="ToDate" style="padding:3px;">
+                  <mat-datepicker-toggle matSuffix [for]="ToDate" class="center-icon"></mat-datepicker-toggle>
+                  <mat-datepicker #ToDate></mat-datepicker>
+                </mat-form-field>
+              </div>
+  
+              <div class="col-md-2">
+                <label class="str" for="companyName">Select Division</label><br>
+                <ng-select class="searchdropdown custom" [clearable]="false" formControlName="DivisionId"
+                  (change)="onDivisionChange(filterForm.value.DivisionId)" (ngModelChange)="getOfficeLists($event)">
+                  <ng-option [value]="''" disabled>--SELECT DIVISION--</ng-option>
+                  <ng-container *ngFor="let division of divisionList">
+                    <ng-option *ngIf="division.Active" [value]="division.ID">
+                      <span class="textwrap">{{ division.DivisionName | uppercase }}</span>
+                    </ng-option>
+                  </ng-container>
+                </ng-select>
+              </div>
+  
+              <div class="col-md-2">
+                <label class="str">Select Office</label><br>
+  
+                <ng-select class="searchdropdown" [clearable]="false" formControlName="OfficeId"
+                  (change)="onOfficeChange(filterForm.value.OfficeId)">
+                  <ng-option [value]="''" disabled>--SELECT OFFICE--</ng-option>
+                  <ng-container *ngFor="let office of officeList">
+                    <ng-option [value]="office.ID">
+                      <span class="textwrap">{{office.OfficeName | uppercase}}</span>
+                    </ng-option>
+                  </ng-container>
+                </ng-select>
+              </div>
+  
+            </div>
+          </div>
+  
+  
+          <div class="col-2" style="padding-top: 23px;">
+            <div class="text-center">
+              <button type="button" (click)="createFilterForm();trailbalanceList();"
+                class="btn btn-warning text-white mb-0 col-auto clear-btn">
+                CLEAR
+              </button>
+            </div>
+          </div>
+  
+        </div>
+  
+      </div>
+    </form>
+  
+  
+    <div class="row">
+      <div class="col-md-12 mt-2">
+        <div class="card m-b-30">
+          <div class="card-body cpad enqview">
+  
+            <div class="row">
+              <div class="col-10 justify-content-end text-center ">
+                <h6 class="title">Profit and Loss</h6>
+                <h6 class="subtitle">Basis: Accrual</h6>
+                <p class="subtitle">
+                 From  {{ (selectedDate ? (selectedDate | date:'dd/MM/yyyy') : (currentDate | date:'dd/MM/yyyy')) }} To {{ (currentDate | date:'dd/MM/yyyy') }}
+                </p>
+                
+  
+              </div>
+  
+              <div class="col-2 text-right ">
+                <div style="font-weight: 600;padding-top: 18px;padding-right: 10px;">
+                  <img style="cursor: pointer;" width="36px" height="36px" class="exportAs mx-1 align-baseline"
+                    src="../../../../../assets/images/csv_color.png" (click)="downloadExcel()" alt="logo">
+                  <img style="cursor: pointer;" width="36px" height="36px" class="exportAs mx-1 align-baseline"
+                    src="../../../../../assets/images/xlsx_color.png" (click)="downloadExcel()" alt="logo">
+                </div>
+              </div>
+  
+            </div>
+  
+          </div>
+  
+          <div class="col-9" style="margin-left: auto; margin-right: auto;">
+            <table id="datatable-buttons" #table class="table table-responsive table-bordered w-100 dataTable no-footer"
+              role="grid" aria-describedby="datatable-buttons_info">
+              <thead>
+                <tr role="row">
+                  <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                    aria-label="Account: activate to sort column ascending" 
+                    (click)="sort(['GroupName', 'ParentAccountName', 'GrandParentAccountName', 'ChildAccountName'])"
+                    style="width: 177.575px;">Account
+                  </th>
+                  <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                    aria-label="Net Debit: activate to sort column ascending" 
+                    (click)="sort([ 'ChildNet_Balance', 'GroupName', 'ParentAccountName', 'GrandParentAccountName', 'ChildAccountName'])"
+                    style="width: 177.575px;">Net Debit
+                  </th>
+                  <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                    aria-label="Net Credit: activate to sort column ascending" 
+                    (click)="sort([ 'ChildNet_Balance', 'GroupName', 'ParentAccountName', 'GrandParentAccountName', 'ChildAccountName'])"
+                    style="width: 177.575px;">Net Credit
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngIf="pagedItems.length > 0; else noRecord">
+                  <ng-container *ngFor="let group of pagedItems">
+                    <!-- Group header row with blue background -->
+                    <tr>
+                      <td colspan="5" style="font-weight: bold; background-color: #f0f0f0;">
+                        <strong>{{ group.GroupName | uppercase }}</strong>
+                      </td>
+                    </tr>
+          
+                    <!-- Rows for items within the parent account -->
+                    <ng-container *ngFor="let parent of group.parentTotals">
+                      <!-- Grandparent and Parent names row -->
+                      <tr (click)="toggleParent(group.GroupName, parent.ParentAccountName)" style="cursor: pointer;">
+                        <td>
+                          <i class="fa fa-angle-double-right child-account hyperColor"
+                            [ngClass]="{ 'hidden': isParentExpanded(group.GroupName, parent.ParentAccountName) }"></i>
+                          <i class="fa fa-angle-double-down child-account hyperColor"
+                            [ngClass]="{ 'hidden': !isParentExpanded(group.GroupName, parent.ParentAccountName) }"></i>
+                          <strong class="child-account hyperColor">{{ parent.ParentAccountName }}</strong>
+                        </td>
+                        <td class="text-right">
+                          {{ isParentExpanded(group.GroupName, parent.ParentAccountName) ? 0 : (parent.totalDebit | dynamicentityDecimal) }}
+                        </td>
+                        <td class="text-right">
+                          {{ isParentExpanded(group.GroupName, parent.ParentAccountName) ? 0 : (parent.totalCredit | dynamicentityDecimal) }}
+                        </td>
+                      </tr>
+          
+                      <ng-container *ngIf="isParentExpanded(group.GroupName, parent.ParentAccountName)">
+                        <ng-container *ngFor="let balance of parent.items; let i = index">
+                          <tr>
+                            <td (click)="editBalance(balance.ChartOfAccountsId)"><span class="hyperColor child-name-indent">
+                                {{ balance.ChildAccountName }}</span>
+                            </td>
+                            <td *ngIf="balance.ChildTransaction_Type === 'Debit'" class="text-right">
+                              {{ balance.ChildNet_Balance | dynamicentityDecimal }}
+                            </td>
+                            <td *ngIf="balance.ChildTransaction_Type !== 'Debit'" class="text-right">0</td>
+                            <td *ngIf="balance.ChildTransaction_Type === 'Credit'" class="text-right">
+                              {{ balance.ChildNet_Balance | dynamicentityDecimal }}
+                            </td>
+                            <td *ngIf="balance.ChildTransaction_Type !== 'Credit'" class="text-right">0</td>
+                          </tr>
+                        </ng-container>
+          
+                        <!-- Parent account totals -->
+                        <tr style="padding: 7px !important; font-weight: bold; background-color: #f0f0f0;">
+                          <td colspan="1" class="text-left">
+                            <span style="font-weight: bold; text-align: left;">{{ parent.ParentAccountName }} Total :</span>
+                          </td>
+                          <td class="text-right">{{ parent.totalDebit | dynamicentityDecimal }}</td>
+                          <td class="text-right">{{ parent.totalCredit | dynamicentityDecimal }}</td>
+                        </tr>
+                      </ng-container>
+                    </ng-container>
+                  </ng-container>
+                </ng-container>
+              </tbody>
+              <ng-template #noRecord>
+                <tr>
+                  <td class="text-center" colspan="10">No records found</td>
+                </tr>
+              </ng-template>
+              <tfoot class="table-footer" *ngIf="pagedItems.length > 0">
+                <tr class="footer-position-sticky"
+                  style="padding: 8px !important; background-image: linear-gradient(#3A5BA0, #273773) !important; color: #fff !important;">
+                  <td colspan="1" class="text-left">
+                    <span style="font-size: medium;">Grand Total :</span>
+                  </td>
+                  <td class="text-right" colspan="1">{{ totaldebitamount | dynamicentityDecimal }}</td>
+                  <td class="text-right" colspan="1">{{ totalcreditamount | dynamicentityDecimal }}</td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          
+                 
+  
+          
+          
+          <div class="row page mr-3" align="right">
+          <ul *ngIf="pager.totalItems > 10 && pager.totalItems > 10"
+              class="pagination">
+              <li [ngClass]="{disabled:pager.currentPage === 1}">
+                  <a (click)="setPage(1)">First</a>
+              </li>
+              <li [ngClass]="{disabled:pager.currentPage === 1}">
+                  <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+              </li>
+              <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                  <a (click)="setPage(page)">{{page}}</a>
+              </li>
+              <li *ngIf="(pager.totalPages - pager.startPage) > 5 ">
+                  <a (click)="setPage(pager.startPage + 5)">...</a>
+              </li>
+              <li *ngIf="(pager.totalPages - pager.startPage) > 5">
+                  <a (click)="setPage(pager.totalPages)">{{pager.totalPages}}</a>
+              </li>
+  
+              <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                  <a (click)="setPage(pager.currentPage + 1)">Next</a>
+              </li>
+              <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                  <a (click)="setPage(pager.totalPages)">Last</a>
+              </li>
+          </ul>
+      </div>
+  
+        </div>
+      </div>
+    </div>
+  </div>

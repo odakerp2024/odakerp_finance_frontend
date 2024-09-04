@@ -1407,7 +1407,6 @@ private downloadFile = (data: HttpResponse<Blob>) => {
   }
 
   createPaymentDetailsPayload(info, exchangeRate = 0) {
-    debugger
     
     this.paymentDetailsTableList = [];
     for (let data of info) {
@@ -1492,7 +1491,25 @@ if (!isNaN(dueAmountNumber)) {
           invoceObj.TDS = 0;
           invoceObj.Payment = 0;
         } else {
-          invoceObj.DueAmount = newDue.toFixed(this.entityFraction);
+          const validdue = newDue.toFixed(this.entityFraction);
+          const [integerPart, decimalPart] = String(validdue).split('.');
+
+      
+          let finalDueAmount;
+          
+          if (decimalPart && decimalPart.length === 3) {
+            const thirdDecimal = parseInt(decimalPart.charAt(2)); 
+          
+            if (thirdDecimal >= 5) {
+              
+              const incrementedValue = parseFloat(`${integerPart}.${decimalPart.substring(0, 2)}`) + 0.01;
+              finalDueAmount = incrementedValue.toFixed(this.entityFraction); 
+            } else {
+              
+              finalDueAmount = validdue;
+            }
+          }
+          invoceObj.DueAmount = parseFloat(finalDueAmount).toFixed(this.entityFraction);
         }
       }
 
@@ -1546,7 +1563,6 @@ if (!isNaN(dueAmountNumber)) {
 
 
   getDueAmount(index, type) {
-    debugger
     const controlAtIndex = this.myArray.at(index);
     !controlAtIndex.value.TDS ? controlAtIndex.value.TDS = 0 : '';
     !controlAtIndex.value.Payment ? controlAtIndex.value.Payment = 0 : '';
@@ -1566,16 +1582,34 @@ if (!isNaN(dueAmountNumber)) {
       const tds = parseFloat(controlAtIndex.value.TDS);
       const payment = parseFloat(controlAtIndex.value.Payment);
       const calculatedDueAmount = dueAmountActual - (tds + payment);
-      const roundedDueAmount = parseFloat(calculatedDueAmount.toFixed(this.entityFraction));
+      const roundedDueAmount = calculatedDueAmount.toFixed(this.entityFraction);
 
-      controlAtIndex.value.DueAmount = roundedDueAmount;
+      const dueAmountStr = roundedDueAmount.toString();
 
-      //controlAtIndex.value.DueAmount = +(currentRow.value.DueAmountActual - (+controlAtIndex.value.TDS + +controlAtIndex.value.Payment).toFixed(this.entityFraction))
+      
+
+      const [integerPart, decimalPart] = dueAmountStr.split('.');
+      
+      let finalRoundedDueAmount;
+      
+      if (decimalPart && decimalPart.length === 3) {
+        const thirdDecimal = parseInt(decimalPart.charAt(2)); 
+      
+        if (thirdDecimal >= 5) {
+          
+          const incrementedValue = parseFloat(`${integerPart}.${decimalPart.substring(0, 2)}`) + 0.01;
+          finalRoundedDueAmount = incrementedValue.toFixed(this.entityFraction); 
+        } else {
+          
+          finalRoundedDueAmount = roundedDueAmount;
+        }
+      }
+
+      controlAtIndex.value.DueAmount = finalRoundedDueAmount;
     }
-    // const exchangeRate = this.ExchangeRatePairList[0] ? +this.ExchangeRatePairList[0].Rate : 0
+    
     controlAtIndex.value.DueAmountCCY = (controlAtIndex.value.ExchangeRate * controlAtIndex.value.DueAmount).toFixed(this.entityFraction);
-    // this.calculateFinalTotal();
-    // console.log('paymentDetailsTableList edit tds and pay', this.paymentDetailsTableList)
+    
   }
 
   //  set payment Amount as due Amount when checked;
@@ -1597,7 +1631,6 @@ if (!isNaN(dueAmountNumber)) {
   }
 
   onSelectEvent() {
-    debugger
     if (this.receiptForm.value.paymentDetailsArray.length > 0) {
       let info = this.receiptForm.value.paymentDetailsArray.filter(x => x.IsSelect == true);
       var totalAmount = 0;
@@ -1810,7 +1843,6 @@ if (!isNaN(dueAmountNumber)) {
   }
 
   summaryAmountCalculation() {
-    debugger
     
     var TotalDebit = 0;
     var TotalCredit = 0;
