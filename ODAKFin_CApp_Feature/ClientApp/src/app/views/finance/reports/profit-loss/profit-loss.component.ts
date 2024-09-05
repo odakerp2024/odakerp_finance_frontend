@@ -36,6 +36,7 @@ export class ProfitLossComponent implements OnInit {
   adjustmentFilter: FormGroup;
   currentDate: Date = new Date();
   filterForm: any;
+  currentFinancialYear: string;
   selectedDivisionId: number;
   bankListDetails: any = [];
   TemplateUploadURL = this.globals.TemplateUploadURL;
@@ -56,6 +57,30 @@ export class ProfitLossComponent implements OnInit {
 
   expandedParents: { [key: string]: boolean } = {};
  
+  calculateCurrentFinancialYear() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth() + 1; // months are 0-indexed, so +1
+
+    let startYear: number;
+    let endYear: number;
+
+    // If the month is April (4) or later, use the current year as the starting year
+    if (month >= 4) {
+      startYear = year;
+      endYear = year + 1;
+    } else {
+      // If it's before April, use the previous year as the starting year
+      startYear = year - 1;
+      endYear = year;
+    }
+    
+
+    // Format the financial year as "01/04/yyyy - 31/03/yyyy"
+    const startDate = `01/04/${startYear}`;
+    const endDate = `31/03/${endYear}`;
+    this.currentFinancialYear = `${startDate} - ${endDate}`;
+  }
 
 
   @ViewChild('table') table: ElementRef;
@@ -69,6 +94,7 @@ export class ProfitLossComponent implements OnInit {
     private reportService: ReportDashboardService,
     private http: HttpClient) { 
       this.createFilterForm();
+      this.calculateCurrentFinancialYear();
     }
 
   ngOnInit(): void {
@@ -303,7 +329,7 @@ editBalance(id: number) {
     "DivisionId": "",
 	"OfficeId" : ""
   };
-  this.reportService.GetTrailBalanceList(payload).subscribe(data => {
+  this.reportService.GetProfitLossList(payload).subscribe(data => {
     this.router.navigate(['/views/finance/reports/leveltwo', { id: id }])
    
   }, err => {
@@ -320,7 +346,7 @@ onDivisionChange(value: any) {
     "Date": ""
   };
 
-  this.reportService.GetTrailBalanceList(payload).subscribe(result => {
+  this.reportService.GetProfitLossList(payload).subscribe(result => {
     this.balanceList = [];
     this.pagedItems = [];
     if (result.message === 'Success' && result.data.Table.length > 0) {
@@ -404,7 +430,7 @@ onOfficeChange(values: any) {
     "OfficeId": values,
     "Date": ""
   };
-  this.reportService.GetTrailBalanceList(payload).subscribe(result => {
+  this.reportService.GetProfitLossList(payload).subscribe(result => {
     this.balanceList = [];
     this.pagedItems = [];
     if (result.message === 'Success' && result.data.Table.length > 0) {
@@ -487,7 +513,7 @@ BasedOnDate(selectedDate: any) {
     "OfficeId": "",
     "Date": selectedDate
   };
-  this.reportService.GetTrailBalanceList(payload).subscribe(result => {
+  this.reportService.GetProfitLossList(payload).subscribe(result => {
     this.balanceList = [];
     this.pagedItems = [];
     if (result.message === 'Success' && result.data.Table.length > 0) {

@@ -99,18 +99,26 @@
                   <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
                     aria-label="Account: activate to sort column ascending" 
                     (click)="sort(['GroupName', 'ParentAccountName', 'GrandParentAccountName', 'ChildAccountName'])"
-                    style="width: 177.575px;">Account
+                    style="width: 177.575px; text-align: center">Account
+                  </th>
+                  <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                    aria-label="Account: activate to sort column ascending" 
+                    (click)="sort(['GroupName', 'ParentAccountName', 'GrandParentAccountName', 'ChildAccountName'])"
+                    style="width: 177.575px; text-align: center">Account Code
                   </th>
                   <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
                     aria-label="Net Debit: activate to sort column ascending" 
                     (click)="sort([ 'ChildNet_Balance', 'GroupName', 'ParentAccountName', 'GrandParentAccountName', 'ChildAccountName'])"
-                    style="width: 177.575px;">Net Debit
+                    style="width: 177.575px; text-align: center">Total
                   </th>
+                 
                   <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
-                    aria-label="Net Credit: activate to sort column ascending" 
-                    (click)="sort([ 'ChildNet_Balance', 'GroupName', 'ParentAccountName', 'GrandParentAccountName', 'ChildAccountName'])"
-                    style="width: 177.575px;">Net Credit
-                  </th>
+                aria-label="Net Credit: activate to sort column ascending" 
+                (click)="applyReportFilter()"
+                style="width: 177.575px; text-align: center">
+                Year To Date<br>
+                {{ currentFinancialYear }}
+            </th>
                 </tr>
               </thead>
               <tbody>
@@ -134,11 +142,12 @@
                             [ngClass]="{ 'hidden': !isParentExpanded(group.GroupName, parent.ParentAccountName) }"></i>
                           <strong class="child-account hyperColor">{{ parent.ParentAccountName }}</strong>
                         </td>
+                        <td class="text-right"></td>
                         <td class="text-right">
-                          {{ isParentExpanded(group.GroupName, parent.ParentAccountName) ? 0 : (parent.totalDebit | dynamicentityDecimal) }}
+                          {{ isParentExpanded(group.GroupName, parent.ParentAccountName) ? 0 : ((parent.totalDebit+parent.totalCredit) | dynamicentityDecimal) }}
                         </td>
                         <td class="text-right">
-                          {{ isParentExpanded(group.GroupName, parent.ParentAccountName) ? 0 : (parent.totalCredit | dynamicentityDecimal) }}
+                          {{ isParentExpanded(group.GroupName, parent.ParentAccountName) ? 0 : ((parent.totalCredit+parent.totalDebit) | dynamicentityDecimal) }}
                         </td>
                       </tr>
           
@@ -148,14 +157,17 @@
                             <td (click)="editBalance(balance.ChartOfAccountsId)"><span class="hyperColor child-name-indent">
                                 {{ balance.ChildAccountName }}</span>
                             </td>
-                            <td *ngIf="balance.ChildTransaction_Type === 'Debit'" class="text-right">
+                            <td (click)="editBalance(balance.ChartOfAccountsId)"><span class="text-left">
+                              {{ balance.AccountCode }}</span>
+                          </td>
+                          
+                            <td class="text-right">
                               {{ balance.ChildNet_Balance | dynamicentityDecimal }}
                             </td>
-                            <td *ngIf="balance.ChildTransaction_Type !== 'Debit'" class="text-right">0</td>
-                            <td *ngIf="balance.ChildTransaction_Type === 'Credit'" class="text-right">
+                            <td class="text-right">
                               {{ balance.ChildNet_Balance | dynamicentityDecimal }}
                             </td>
-                            <td *ngIf="balance.ChildTransaction_Type !== 'Credit'" class="text-right">0</td>
+                           
                           </tr>
                         </ng-container>
           
@@ -164,8 +176,13 @@
                           <td colspan="1" class="text-left">
                             <span style="font-weight: bold; text-align: left;">{{ parent.ParentAccountName }} Total :</span>
                           </td>
-                          <td class="text-right">{{ parent.totalDebit | dynamicentityDecimal }}</td>
-                          <td class="text-right">{{ parent.totalCredit | dynamicentityDecimal }}</td>
+                          <td colspan="1" class="text-left">
+                            <span style="font-weight: bold; text-align: left;"></span>
+                          </td>
+                          <td class="text-right">{{ parent.totalDebit+parent.totalCredit | dynamicentityDecimal }}</td>
+
+                          <!-- <td class="text-right">{{ parent.totaslDebit | dynamicentityDecimal }}</td> -->
+                          <td class="text-right">{{ parent.totalDebit+parent.totalCredit | dynamicentityDecimal }}</td>
                         </tr>
                       </ng-container>
                     </ng-container>
@@ -183,8 +200,11 @@
                   <td colspan="1" class="text-left">
                     <span style="font-size: medium;">Grand Total :</span>
                   </td>
-                  <td class="text-right" colspan="1">{{ totaldebitamount | dynamicentityDecimal }}</td>
-                  <td class="text-right" colspan="1">{{ totalcreditamount | dynamicentityDecimal }}</td>
+                   <td colspan="1" class="text-left">
+                    <span style="font-size: medium;"></span>
+                  </td>
+                  <td class="text-right" colspan="1">{{ (totaldebitamount+totalcreditamount) | dynamicentityDecimal }}</td>
+                  <td class="text-right" colspan="1">{{ (totaldebitamount+totalcreditamount) | dynamicentityDecimal }}</td>
                 </tr>
               </tfoot>
             </table>
