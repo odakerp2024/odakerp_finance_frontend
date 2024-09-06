@@ -330,7 +330,11 @@ editBalance(id: number) {
 	"OfficeId" : ""
   };
   this.reportService.GetProfitLossList(payload).subscribe(data => {
+
+    //Waiting for the screens while redirecting from the KK in profit and loss
+
     this.router.navigate(['/views/finance/reports/leveltwo', { id: id }])
+    this.router.navigate(['/views/finance/repodrts/leveltwo', { id: id }])
    
   }, err => {
     console.log('error:', err.message);
@@ -624,26 +628,31 @@ async downloadExcel() {
 
   const workbook = new Workbook();
   const worksheet = workbook.addWorksheet('Report');
-
+  
   // Add title and subtitle rows
-  const titleRow = worksheet.addRow(['', 'ODAK SOLUTIONS PRIVATE LIMITED', '', '']);
-  titleRow.getCell(2).font = { size: 15, bold: true };
-  titleRow.getCell(2).alignment = { horizontal: 'center' };
-  worksheet.mergeCells(`B${titleRow.number}:C${titleRow.number}`);
+  // const titleRow = worksheet.addRow(['', 'ODAK SOLUTIONS PRIVATE LIMITED', '', '']);
+  // titleRow.getCell(2).font = { size: 15, bold: true };
+  // titleRow.getCell(2).alignment = { horizontal: 'center' };
+  // worksheet.mergeCells(`B${titleRow.number}:C${titleRow.number}`);
 
-  const subtitleRow = worksheet.addRow(['', 'Trail Balance', '', '']);
+  // added based on the Proift and loss scenerio
+
+  const subtitleRow = worksheet.addRow(['', 'Profit and Loss', '', '']);
   subtitleRow.getCell(2).font = { size: 15, bold: true };
   subtitleRow.getCell(2).alignment = { horizontal: 'center' };
   worksheet.mergeCells(`B${subtitleRow.number}:C${subtitleRow.number}`);
 
   // Add date row
   const currentDate = new Date();
-  const subtitleRow1 = worksheet.addRow(['', `As of ${this.datePipe.transform(currentDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`, '', '']);
+  debugger
+  // const subtitleRow1 = worksheet.addRow(['', `From ${this.datePipe.transform(this.selectedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`, '', '']);
+  const subtitleRow1 = worksheet.addRow(['', `From ${this.datePipe.transform(this.selectedDate, 'dd-MM-yyyy')} To ${this.datePipe.transform(this.selectedDate, 'dd-MM-yyyy')}`, '', '']);
+
   subtitleRow1.getCell(2).alignment = { horizontal: 'center' };
   worksheet.mergeCells(`B${subtitleRow1.number}:C${subtitleRow1.number}`);
 
   // Define header row
-  const headers = ['Account', 'Net Debit', 'Net Credit'];
+  const headers = ['Account', 'Account Code', 'Total', 'Year To Date'];
   const headerRow = worksheet.addRow(headers);
 
   // Style the header row
@@ -669,6 +678,7 @@ async downloadExcel() {
   });
 
   let grandTotalDebit = 0;
+  let AccountCode = '';
   let grandTotalCredit = 0;
 
   this.pagedItems.forEach(group => {
@@ -692,28 +702,41 @@ async downloadExcel() {
       pattern: 'solid',
       fgColor: { argb: 'f0f0f0' },
     };
+    groupRow.getCell(4).fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'f0f0f0' },
+    };
     let groupTotalDebit = 0;
+    let AccountCode = '';
     let groupTotalCredit = 0;
 
     group.parentTotals.forEach(parent => {
       let parentTotalDebit = 0;
+      let AccountCode = '';
       let parentTotalCredit = 0;
 
       parent.items.forEach(balance => {
         const rowData = [
           balance.ParentAccountName + ' - ' + balance.ChildAccountName,
-          balance.ChildTransaction_Type === 'Debit' ? balance.ChildNet_Balance : 0,
-          balance.ChildTransaction_Type === 'Credit' ? balance.ChildNet_Balance : 0,
+          // balance.ChildTransaction_Type === 'Debit' ? balance.ChildNet_Balance : 0,
+          // balance.ChildTransaction_Type === 'Credit' ? balance.ChildNet_Balance : 0,
+          balance.AccountCode,
+          balance.ChildNet_Balance ? balance.ChildNet_Balance: 0,
+          balance.ChildNet_Balance ? balance.ChildNet_Balance: 0
+          
+
+          
         ];
 
         const row = worksheet.addRow(rowData);
 
         // Apply styles based on column index
         row.eachCell((cell, colNumber) => {
-          if (colNumber === 1) {
+          if (colNumber === 1 || colNumber === 2) {
             cell.font = { color: { argb: '8B0000' }, bold: true }; // Red color for ChildAccountName
             cell.alignment = { horizontal: 'left' };
-          } else if (colNumber === 2 || colNumber === 3) {
+          } else if (colNumber === 3 || colNumber === 4) {
             cell.alignment = { horizontal: 'right' }; // Right align for Net Debit and Net Credit
           }
         });
@@ -726,7 +749,7 @@ async downloadExcel() {
       });
 
       // Add parent total row
-      const parentTotalRow = worksheet.addRow([`${parent.ParentAccountName} Total`, parentTotalDebit, parentTotalCredit]);
+      const parentTotalRow = worksheet.addRow([`${parent.ParentAccountName} Total`, AccountCode, parentTotalDebit, parentTotalCredit]);
       parentTotalRow.eachCell((cell, colNumber) => {
         cell.font = { bold: true };
         cell.alignment = { horizontal: colNumber === 1 ? 'left' : 'right' }; // Align first column to left
@@ -742,7 +765,7 @@ async downloadExcel() {
     });
 
     // Add group total row
-    const groupTotalRow = worksheet.addRow([`${group.GroupName.toUpperCase()} Total`, groupTotalDebit, groupTotalCredit]);
+    const groupTotalRow = worksheet.addRow([`${group.GroupName.toUpperCase()} Total`, '', groupTotalDebit, groupTotalCredit]);
     grandTotalDebit += groupTotalDebit;
     grandTotalCredit += groupTotalCredit;
 
@@ -758,7 +781,7 @@ async downloadExcel() {
   });
 
   // Add grand total row
-  const grandTotalRow = worksheet.addRow(['Grand Total', grandTotalDebit, grandTotalCredit]);
+  const grandTotalRow = worksheet.addRow(['Grand Total', '', grandTotalDebit, grandTotalCredit]);
   grandTotalRow.eachCell((cell, colNumber) => {
     cell.font = { bold: true };
     cell.alignment = { horizontal: colNumber === 1 ? 'left' : 'right' };
@@ -797,7 +820,7 @@ async downloadExcel() {
       horizontal: 'center',
     };
   });
-  worksheet.mergeCells(`A${footerRow.number}:C${footerRow.number}`);
+  worksheet.mergeCells(`A${footerRow.number}:D${footerRow.number}`);
 
   // Write to Excel and save
   const buffer = await workbook.xlsx.writeBuffer();
