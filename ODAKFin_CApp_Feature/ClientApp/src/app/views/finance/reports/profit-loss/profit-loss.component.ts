@@ -36,6 +36,7 @@ export class ProfitLossComponent implements OnInit {
   adjustmentFilter: FormGroup;
   currentDate: Date = new Date();
   filterForm: any;
+  currentFinancialYear: string;
   selectedDivisionId: number;
   bankListDetails: any = [];
   TemplateUploadURL = this.globals.TemplateUploadURL;
@@ -99,8 +100,8 @@ export class ProfitLossComponent implements OnInit {
   onDateChange(event: any): void {
     this.selectedDate = this.datePipe.transform(event.value, 'yyyy-MM-dd');
     this.BasedOnDate(this.selectedDate);
-  }
-
+    this.calculateCurrentFinancialYear(this.selectedDate);
+  } 
   setPage(page: number) {
     if (this.balanceList.length) {
     if (page < 1 || page > this.pager.totalPages) {
@@ -179,6 +180,14 @@ sort(properties: string[]) {
       "OfficeId": "",
       "Date": ""
     };
+
+    let financedate;
+    if (payload.Date === "") {
+      financedate = this.currentDate
+     
+    }
+    this.calculateCurrentFinancialYear(financedate);
+
     this.reportService.GetProfitLossList(payload).subscribe(result => {
       this.balanceList = [];
       this.pagedItems = [];
@@ -303,8 +312,12 @@ editBalance(id: number) {
     "DivisionId": "",
 	"OfficeId" : ""
   };
-  this.reportService.GetTrailBalanceList(payload).subscribe(data => {
+  this.reportService.GetProfitLossList(payload).subscribe(data => {
+
+    //Waiting for the screens while redirecting from the KK in profit and loss
+
     this.router.navigate(['/views/finance/reports/leveltwo', { id: id }])
+    this.router.navigate(['/views/finance/repodrts/leveltwo', { id: id }])
    
   }, err => {
     console.log('error:', err.message);
@@ -320,7 +333,7 @@ onDivisionChange(value: any) {
     "Date": ""
   };
 
-  this.reportService.GetTrailBalanceList(payload).subscribe(result => {
+  this.reportService.GetProfitLossList(payload).subscribe(result => {
     this.balanceList = [];
     this.pagedItems = [];
     if (result.message === 'Success' && result.data.Table.length > 0) {
@@ -404,7 +417,7 @@ onOfficeChange(values: any) {
     "OfficeId": values,
     "Date": ""
   };
-  this.reportService.GetTrailBalanceList(payload).subscribe(result => {
+  this.reportService.GetProfitLossList(payload).subscribe(result => {
     this.balanceList = [];
     this.pagedItems = [];
     if (result.message === 'Success' && result.data.Table.length > 0) {
@@ -480,6 +493,30 @@ onOfficeChange(values: any) {
   });
 }
 
+calculateCurrentFinancialYear(selectedDate: string) {
+  debugger
+  const today = new Date(selectedDate);
+  const year = today.getFullYear();
+  const month = today.getMonth() + 1; // months are 0-indexed, so +1
+
+  let startYear: number;
+  let endYear: number;
+
+  if (month >= 4) {
+    startYear = year;
+    endYear = year + 1;
+  }
+  else {
+   
+    startYear = year - 1;
+    endYear = year;
+  }
+  const startDate = `01/04/${startYear}`;
+  const endDate = `31/03/${endYear}`;
+  this.currentFinancialYear = `${startDate} - ${endDate}`;
+ 
+}
+
 BasedOnDate(selectedDate: any) {
 
   var payload = {
@@ -487,7 +524,7 @@ BasedOnDate(selectedDate: any) {
     "OfficeId": "",
     "Date": selectedDate
   };
-  this.reportService.GetTrailBalanceList(payload).subscribe(result => {
+  this.reportService.GetProfitLossList(payload).subscribe(result => {
     this.balanceList = [];
     this.pagedItems = [];
     if (result.message === 'Success' && result.data.Table.length > 0) {
@@ -598,26 +635,31 @@ async downloadExcel() {
 
   const workbook = new Workbook();
   const worksheet = workbook.addWorksheet('Report');
-
+  
   // Add title and subtitle rows
-  const titleRow = worksheet.addRow(['', 'ODAK SOLUTIONS PRIVATE LIMITED', '', '']);
-  titleRow.getCell(2).font = { size: 15, bold: true };
-  titleRow.getCell(2).alignment = { horizontal: 'center' };
-  worksheet.mergeCells(`B${titleRow.number}:C${titleRow.number}`);
+  // const titleRow = worksheet.addRow(['', 'ODAK SOLUTIONS PRIVATE LIMITED', '', '']);
+  // titleRow.getCell(2).font = { size: 15, bold: true };
+  // titleRow.getCell(2).alignment = { horizontal: 'center' };
+  // worksheet.mergeCells(`B${titleRow.number}:C${titleRow.number}`);
 
-  const subtitleRow = worksheet.addRow(['', 'Trail Balance', '', '']);
+  // added based on the Proift and loss scenerio
+
+  const subtitleRow = worksheet.addRow(['', 'Profit and Loss', '', '']);
   subtitleRow.getCell(2).font = { size: 15, bold: true };
   subtitleRow.getCell(2).alignment = { horizontal: 'center' };
   worksheet.mergeCells(`B${subtitleRow.number}:C${subtitleRow.number}`);
 
   // Add date row
   const currentDate = new Date();
-  const subtitleRow1 = worksheet.addRow(['', `As of ${this.datePipe.transform(currentDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`, '', '']);
+  debugger
+  // const subtitleRow1 = worksheet.addRow(['', `From ${this.datePipe.transform(this.selectedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`, '', '']);
+  const subtitleRow1 = worksheet.addRow(['', `From ${this.datePipe.transform(this.selectedDate, 'dd-MM-yyyy')} To ${this.datePipe.transform(this.selectedDate, 'dd-MM-yyyy')}`, '', '']);
+
   subtitleRow1.getCell(2).alignment = { horizontal: 'center' };
   worksheet.mergeCells(`B${subtitleRow1.number}:C${subtitleRow1.number}`);
 
   // Define header row
-  const headers = ['Account', 'Net Debit', 'Net Credit'];
+  const headers = ['Account', 'Account Code', 'Total', 'Year To Date'];
   const headerRow = worksheet.addRow(headers);
 
   // Style the header row
@@ -643,6 +685,7 @@ async downloadExcel() {
   });
 
   let grandTotalDebit = 0;
+  let AccountCode = '';
   let grandTotalCredit = 0;
 
   this.pagedItems.forEach(group => {
@@ -666,28 +709,41 @@ async downloadExcel() {
       pattern: 'solid',
       fgColor: { argb: 'f0f0f0' },
     };
+    groupRow.getCell(4).fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'f0f0f0' },
+    };
     let groupTotalDebit = 0;
+    let AccountCode = '';
     let groupTotalCredit = 0;
 
     group.parentTotals.forEach(parent => {
       let parentTotalDebit = 0;
+      let AccountCode = '';
       let parentTotalCredit = 0;
 
       parent.items.forEach(balance => {
         const rowData = [
           balance.ParentAccountName + ' - ' + balance.ChildAccountName,
-          balance.ChildTransaction_Type === 'Debit' ? balance.ChildNet_Balance : 0,
-          balance.ChildTransaction_Type === 'Credit' ? balance.ChildNet_Balance : 0,
+          // balance.ChildTransaction_Type === 'Debit' ? balance.ChildNet_Balance : 0,
+          // balance.ChildTransaction_Type === 'Credit' ? balance.ChildNet_Balance : 0,
+          balance.AccountCode,
+          balance.ChildNet_Balance ? balance.ChildNet_Balance: 0,
+          balance.ChildNet_Balance ? balance.ChildNet_Balance: 0
+          
+
+          
         ];
 
         const row = worksheet.addRow(rowData);
 
         // Apply styles based on column index
         row.eachCell((cell, colNumber) => {
-          if (colNumber === 1) {
+          if (colNumber === 1 || colNumber === 2) {
             cell.font = { color: { argb: '8B0000' }, bold: true }; // Red color for ChildAccountName
             cell.alignment = { horizontal: 'left' };
-          } else if (colNumber === 2 || colNumber === 3) {
+          } else if (colNumber === 3 || colNumber === 4) {
             cell.alignment = { horizontal: 'right' }; // Right align for Net Debit and Net Credit
           }
         });
@@ -700,7 +756,7 @@ async downloadExcel() {
       });
 
       // Add parent total row
-      const parentTotalRow = worksheet.addRow([`${parent.ParentAccountName} Total`, parentTotalDebit, parentTotalCredit]);
+      const parentTotalRow = worksheet.addRow([`${parent.ParentAccountName} Total`, AccountCode, parentTotalDebit, parentTotalCredit]);
       parentTotalRow.eachCell((cell, colNumber) => {
         cell.font = { bold: true };
         cell.alignment = { horizontal: colNumber === 1 ? 'left' : 'right' }; // Align first column to left
@@ -716,7 +772,7 @@ async downloadExcel() {
     });
 
     // Add group total row
-    const groupTotalRow = worksheet.addRow([`${group.GroupName.toUpperCase()} Total`, groupTotalDebit, groupTotalCredit]);
+    const groupTotalRow = worksheet.addRow([`${group.GroupName.toUpperCase()} Total`, '', groupTotalDebit, groupTotalCredit]);
     grandTotalDebit += groupTotalDebit;
     grandTotalCredit += groupTotalCredit;
 
@@ -732,7 +788,7 @@ async downloadExcel() {
   });
 
   // Add grand total row
-  const grandTotalRow = worksheet.addRow(['Grand Total', grandTotalDebit, grandTotalCredit]);
+  const grandTotalRow = worksheet.addRow(['Grand Total', '', grandTotalDebit, grandTotalCredit]);
   grandTotalRow.eachCell((cell, colNumber) => {
     cell.font = { bold: true };
     cell.alignment = { horizontal: colNumber === 1 ? 'left' : 'right' };
@@ -771,7 +827,7 @@ async downloadExcel() {
       horizontal: 'center',
     };
   });
-  worksheet.mergeCells(`A${footerRow.number}:C${footerRow.number}`);
+  worksheet.mergeCells(`A${footerRow.number}:D${footerRow.number}`);
 
   // Write to Excel and save
   const buffer = await workbook.xlsx.writeBuffer();
