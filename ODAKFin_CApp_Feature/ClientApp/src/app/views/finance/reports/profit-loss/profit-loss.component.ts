@@ -57,30 +57,6 @@ export class ProfitLossComponent implements OnInit {
 
   expandedParents: { [key: string]: boolean } = {};
  
-  calculateCurrentFinancialYear() {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = today.getMonth() + 1; // months are 0-indexed, so +1
-
-    let startYear: number;
-    let endYear: number;
-
-    // If the month is April (4) or later, use the current year as the starting year
-    if (month >= 4) {
-      startYear = year;
-      endYear = year + 1;
-    } else {
-      // If it's before April, use the previous year as the starting year
-      startYear = year - 1;
-      endYear = year;
-    }
-    
-
-    // Format the financial year as "01/04/yyyy - 31/03/yyyy"
-    const startDate = `01/04/${startYear}`;
-    const endDate = `31/03/${endYear}`;
-    this.currentFinancialYear = `${startDate} - ${endDate}`;
-  }
 
 
   @ViewChild('table') table: ElementRef;
@@ -94,7 +70,6 @@ export class ProfitLossComponent implements OnInit {
     private reportService: ReportDashboardService,
     private http: HttpClient) { 
       this.createFilterForm();
-      this.calculateCurrentFinancialYear();
     }
 
   ngOnInit(): void {
@@ -125,8 +100,8 @@ export class ProfitLossComponent implements OnInit {
   onDateChange(event: any): void {
     this.selectedDate = this.datePipe.transform(event.value, 'yyyy-MM-dd');
     this.BasedOnDate(this.selectedDate);
-  }
-
+    this.calculateCurrentFinancialYear(this.selectedDate);
+  } 
   setPage(page: number) {
     if (this.balanceList.length) {
     if (page < 1 || page > this.pager.totalPages) {
@@ -205,6 +180,14 @@ sort(properties: string[]) {
       "OfficeId": "",
       "Date": ""
     };
+
+    let financedate;
+    if (payload.Date === "") {
+      financedate = this.currentDate
+     
+    }
+    this.calculateCurrentFinancialYear(financedate);
+
     this.reportService.GetProfitLossList(payload).subscribe(result => {
       this.balanceList = [];
       this.pagedItems = [];
@@ -508,6 +491,30 @@ onOfficeChange(values: any) {
   }, error => {
     console.error("Error occurred:", error);
   });
+}
+
+calculateCurrentFinancialYear(selectedDate: string) {
+  debugger
+  const today = new Date(selectedDate);
+  const year = today.getFullYear();
+  const month = today.getMonth() + 1; // months are 0-indexed, so +1
+
+  let startYear: number;
+  let endYear: number;
+
+  if (month >= 4) {
+    startYear = year;
+    endYear = year + 1;
+  }
+  else {
+   
+    startYear = year - 1;
+    endYear = year;
+  }
+  const startDate = `01/04/${startYear}`;
+  const endDate = `31/03/${endYear}`;
+  this.currentFinancialYear = `${startDate} - ${endDate}`;
+ 
 }
 
 BasedOnDate(selectedDate: any) {
