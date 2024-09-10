@@ -38,7 +38,6 @@ export class ProfitLossComponent implements OnInit {
   filterForm: any;
   currentFinancialYear: string;
   currentFinancialYears: string;
-
   selectedDivisionId: number;
   bankListDetails: any = [];
   TemplateUploadURL = this.globals.TemplateUploadURL;
@@ -290,6 +289,12 @@ sort(properties: string[]) {
     }, 0);
   }
 
+  calculateTotalAmount1(items: any[]): number {
+    return items.reduce((sum, group) => {
+      return sum + group.totalAmount1;
+    }, 0);
+  }
+
   
 
 createFilterForm(){
@@ -532,6 +537,7 @@ BasedOnDate(selectedDate: any) {
       // Process each group to calculate parent totals and group totals
       this.balanceList = Object.keys(groupedItems).map(group => {
         const items = groupedItems[group];
+        const items1 = groupedItems[group];
 
         // Group items by ParentAccountName within the group
         const parentGroupedItems = items.reduce((parents: any, item: any) => {
@@ -553,6 +559,9 @@ BasedOnDate(selectedDate: any) {
           debugger
           let total = 0;
         let total1 = 0;
+        let ChildNet = 0;
+        let ChildNet1 = 0;
+        
 
         // Check if any transaction date is less than or equal to selectedDate
         const hasSelectedDate = parentItems.some(item => {
@@ -565,9 +574,7 @@ BasedOnDate(selectedDate: any) {
         const startDateStr = this.currentFinancialYears.substring(0, 10);
         const endDateStr = this.currentFinancialYears.substring(13, 23);
 
-        // Convert date strings to Date objects
-        // const startDate = new Date(startDateStr);
-        // const endDate = new Date(endDateStr);
+       
         
         // Check if any transaction date falls within the financial year range
         const isWithinFinancialYear = parentItems.some(item => {
@@ -579,15 +586,28 @@ BasedOnDate(selectedDate: any) {
           
             // Calculate total based on the condition
             if (hasSelectedDate) {
+              ChildNet = parentItems.reduce((sum, item) => sum + (item.ChildNet_Balance || 0), 0);
               total += this.calculateParentTotal(parentItems);
+              
+
             } 
             if(isWithinFinancialYear)  {
+              ChildNet1 = parentItems.reduce((sum, item) => sum + (item.ChildNet_Balance || 0), 0);
               total1 += this.calculateParentTotal1(parentItems);
             }
 
+            const itemsWithTotals  = parentItems.map(item => ({
+              ...item,
+              ChildNet: hasSelectedDate ? ChildNet : 0,
+              ChildNet1: isWithinFinancialYear ? ChildNet1 : 0
+          }));
+
           return {
             ParentAccountName: parentName,
-            items: parentItems,
+            items: itemsWithTotals ,
+            // ChildNet: hasSelectedDate ? ChildNet : 0,  
+            // ChildNet1: isWithinFinancialYear ? ChildNet1 : 0,  
+
             Amount: total,
             Amount1: total1
 
@@ -596,14 +616,17 @@ BasedOnDate(selectedDate: any) {
 
         // Calculate total credit and debit for the group
         
-        const GroupTotals = this.calculateGroupTotal(items);
+        const GroupTotals = parentTotals.reduce((sum, pt) => sum + pt.Amount, 0);
+        const GroupTotals1 = parentTotals.reduce((sum, pt) => sum + pt.Amount1, 0);
+
         
 
         debugger
         return {
           GroupName: group,
           parentTotals: parentTotals,
-          totalAmount: GroupTotals
+          totalAmount: GroupTotals,
+          totalAmount1: GroupTotals1
         };
       });
 
@@ -613,7 +636,7 @@ BasedOnDate(selectedDate: any) {
       // this.totalcreditamount = this.calculateTotalCreditAmount(this.pagedItems);
       // this.totaldebitamount = this.calculateTotalDebitAmount(this.pagedItems);
         this.totalAmount = this.calculateTotalAmount(this.pagedItems);
-        this.totalAmount1 = this.calculateTotalAmount(this.pagedItems);
+        this.totalAmount1 = this.calculateTotalAmount1(this.pagedItems);
       
     } else {
       this.totalAmount = 0
@@ -663,10 +686,10 @@ async downloadExcel() {
   const worksheet = workbook.addWorksheet('Report');
   
   // Add title and subtitle rows
-  // const titleRow = worksheet.addRow(['', 'ODAK SOLUTIONS PRIVATE LIMITED', '', '']);
-  // titleRow.getCell(2).font = { size: 15, bold: true };
-  // titleRow.getCell(2).alignment = { horizontal: 'center' };
-  // worksheet.mergeCells(`B${titleRow.number}:C${titleRow.number}`);
+  const titleRow = worksheet.addRow(['', 'ODAK SOLUTIONS PRIVATE LIMITED', '', '']);
+  titleRow.getCell(2).font = { size: 15, bold: true };
+  titleRow.getCell(2).alignment = { horizontal: 'center' };
+  worksheet.mergeCells(`B${titleRow.number}:C${titleRow.number}`);
 
   // added based on the Proift and loss scenerio
 
