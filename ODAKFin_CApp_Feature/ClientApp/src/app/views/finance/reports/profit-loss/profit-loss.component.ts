@@ -306,6 +306,9 @@ editBalance(id: number) {
   this.reportService.GetProfitLossList(payload).subscribe(data => {
 
     //Waiting for the screens while redirecting from the KK in profit and loss
+    // this.router.navigate(['/views/reports/profit-loss']);
+    this.router.navigate(['/views/reports/leveltwo-profitloss', { id: id }])
+    this.router.navigate(['/views/reports/leveltwo-profitloss', { id: id }])
 
     this.router.navigate(['/views/finance/reports/leveltwo', { id: id }])
    
