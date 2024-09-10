@@ -111,6 +111,12 @@ export class LeveltwoProfitlossComponent implements OnInit {
           this.router.createUrlTree(['/views/contra-info/contra-info-view', { contraId: id }])
         );
         break;
+
+      case 'Adjustment Voucher':
+      url = this.router.serializeUrl(
+        this.router.createUrlTree(['/views/Adjustment-info/Adjustment-Voucher-info', { id: id, isUpdate: true }])
+      );
+      break;
         
       case 'Voucher Reversal':
       url = this.router.serializeUrl(
@@ -389,7 +395,7 @@ export class LeveltwoProfitlossComponent implements OnInit {
     worksheet.mergeCells(`C${subtitleRow2.number}:D${subtitleRow2.number}`);
   
     // Define header row
-    const headers = ['Trans_Date', 'Trans_Account_Name', 'Trans_Details', 'Trans_Type', 'Transaction', 'Trans_Ref_Details', 'Debit', 'Credit', 'Amount'];
+    const headers = ['Trans_Date', 'Trans_Account_Name', 'Trans_Details', 'Trans_Type', 'Transaction', 'Trans_Ref_Details', 'Amount'];
     const headerRow = worksheet.addRow(headers);
   
     // Style the header row
@@ -429,8 +435,8 @@ export class LeveltwoProfitlossComponent implements OnInit {
         group.Trans_Type,
         group.Trans_Number,
         group.Trans_Ref_Details,
-        group.Debit.toFixed(this.entityFraction),
-        group.Credit.toFixed(this.entityFraction),
+        // group.Debit.toFixed(this.entityFraction),
+        // group.Credit.toFixed(this.entityFraction),
         group.Amount.toFixed(this.entityFraction)
       ];
   
@@ -473,8 +479,8 @@ export class LeveltwoProfitlossComponent implements OnInit {
       '',
       '',
       '',
-      this.totalDebitAmount.toFixed(this.entityFraction),
-      this.totalCreditAmount.toFixed(this.entityFraction),
+      // this.totalDebitAmount.toFixed(this.entityFraction),
+      // this.totalCreditAmount.toFixed(this.entityFraction),
       this.totalAmount.toFixed(this.entityFraction)
     ]);
   
@@ -525,7 +531,7 @@ export class LeveltwoProfitlossComponent implements OnInit {
     // Write to Excel and save
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    saveAs(blob, 'Report-Account Transactions.xlsx');
+    saveAs(blob, 'Report-PL_Account Transactions.xlsx');
   }
   
 

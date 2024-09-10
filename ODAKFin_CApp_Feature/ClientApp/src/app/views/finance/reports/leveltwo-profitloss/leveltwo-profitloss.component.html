@@ -131,14 +131,14 @@
                         <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" (click)="sort('Trans_Type')">TRANSACTION TYPE</th>
                         <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" (click)="sort('Trans_Number')">TRANSACTION #</th>
                         <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" (click)="sort('Trans_Ref_Details')">REFERENCE #</th>
-                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" (click)="sort('Debit')">DEBIT</th>
-                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" (click)="sort('Credit')">CREDIT</th>
+                        <!-- <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" (click)="sort('Debit')">DEBIT</th>
+                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" (click)="sort('Credit')">CREDIT</th> -->
                         <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" (click)="sort('Amount')">AMOUNT</th>
                       </tr>
                       <tr>
                         <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" (click)="sort('Type')">As On</th>
                         <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" (click)="sort('Type')">Opening Balance</th>
-                        <th colspan="7"></th>
+                        <th colspan="5"></th>
                       </tr>
                     </thead>
                     <tbody id="scrollable-body">
@@ -152,8 +152,8 @@
                             <td class="hyperColor" (click)="clickTransactionNumber(balance.ID, balance.Trans_Type, balance.Trans_Number, balance.RedirectUrl)">{{balance.Trans_Number == 0 ? null : balance.Trans_Number}}</td>
                             <td *ngIf = "balance.Trans_Ref_Details === '-'">{{balance.Trans_Ref_Details}} </td>
                             <td *ngIf = "balance.Trans_Ref_Details !== '-'" [title]="balance.Trans_Ref_Details">{{ balance.Trans_Ref_Details == 0 ? null : (balance.Trans_Ref_Details.length > 20 ? balance.Trans_Ref_Details.slice(0, 20) + '-' : balance.Trans_Ref_Details) }} </td>
-                            <td class="text-right">{{balance.Debit | dynamicentityDecimal}}</td>
-                            <td class="text-right">{{balance.Credit | dynamicentityDecimal}}</td>
+                            <!-- <td class="text-right">{{balance.Debit | dynamicentityDecimal}}</td>
+                            <td class="text-right">{{balance.Credit | dynamicentityDecimal}}</td> -->
                             <td class="text-right">{{balance.Amount | dynamicentityDecimal}}</td>
                           </tr>
                         </ng-container>
@@ -171,8 +171,8 @@
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td class="text-right" colspan="1">{{totalDebitAmount | dynamicentityDecimal }}</td>
-                        <td class="text-right" colspan="1">{{totalCreditAmount | dynamicentityDecimal}}</td>
+                        <!-- <td class="text-right" colspan="1">{{totalDebitAmount | dynamicentityDecimal }}</td>
+                        <td class="text-right" colspan="1">{{totalCreditAmount | dynamicentityDecimal}}</td> -->
                         <td class="text-right" colspan="1">{{totalAmount | dynamicentityDecimal }}</td>
                       </tr>
                     </tfoot>
