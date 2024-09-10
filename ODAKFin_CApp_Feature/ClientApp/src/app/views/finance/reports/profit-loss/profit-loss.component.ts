@@ -37,6 +37,8 @@ export class ProfitLossComponent implements OnInit {
   currentDate: Date = new Date();
   filterForm: any;
   currentFinancialYear: string;
+  currentFinancialYears: string;
+
   selectedDivisionId: number;
   bankListDetails: any = [];
   TemplateUploadURL = this.globals.TemplateUploadURL;
@@ -306,7 +308,6 @@ editBalance(id: number) {
     //Waiting for the screens while redirecting from the KK in profit and loss
 
     this.router.navigate(['/views/finance/reports/leveltwo', { id: id }])
-    this.router.navigate(['/views/finance/repodrts/leveltwo', { id: id }])
    
   }, err => {
     console.log('error:', err.message);
@@ -493,7 +494,10 @@ calculateCurrentFinancialYear(selectedDate: string) {
   }
   const startDate = `01/04/${startYear}`;
   const endDate = `31/03/${endYear}`;
+  const startDates = `${startYear}-04-01`;
+  const endDates = `${endYear}-03-31`;
   this.currentFinancialYear = `${startDate} - ${endDate}`;
+  this.currentFinancialYears = `${startDates} - ${endDates}`;
  
 }
 
@@ -540,12 +544,48 @@ BasedOnDate(selectedDate: any) {
         // Calculate totals for each parent account within the group
           const parentTotals = Object.keys(parentGroupedItems).map(parentName => {
           const parentItems = parentGroupedItems[parentName];
-          const total = this.calculateParentTotal(parentItems);
+          debugger
+          let total = 0;
+          let total1 = 0;
+
+         
+          const hasSelectedDate = parentItems.some(item => 
+            item.Trans_Date <= this.selectedDate);
+
+
+          
+          // Extract start and end dates from currentFinancialYears
+
+
+          const startDateStr = this.currentFinancialYears.substring(0, 10); 
+          const endDateStr = this.currentFinancialYears.substring(13, 23); 
+          
+          // const isWithinFinancialYear = parentItems.some(item => 
+          //    item.Trans_Date <=startDateStr ||
+          //   item.Trans_Date >=endDateStr
+
+          const isWithinFinancialYear = parentItems.some(item => 
+            item.Trans_Date >= startDateStr && 
+            item.Trans_Date <= endDateStr
+      
+          
+        );
+        console.log("hasSelectedDate>", hasSelectedDate);
+        console.log("isWithinFinancialYear>", isWithinFinancialYear);
+          
+            // Calculate total based on the condition
+            if (hasSelectedDate) {
+              total += this.calculateParentTotal(parentItems);
+            } 
+            if(isWithinFinancialYear)  {
+              total1 += this.calculateParentTotal(parentItems);
+            }
 
           return {
             ParentAccountName: parentName,
             items: parentItems,
-            Amount: total
+            Amount: total,
+            Amount1: total1
 
           };
         });

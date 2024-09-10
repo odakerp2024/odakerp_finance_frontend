@@ -147,7 +147,7 @@
                           {{ isParentExpanded(group.GroupName, parent.ParentAccountName) ? 0 : ((parent.Amount) | dynamicentityDecimal) }}
                         </td>
                         <td class="text-right">
-                          {{ isParentExpanded(group.GroupName, parent.ParentAccountName) ? 0 : ((parent.Amount) | dynamicentityDecimal) }}
+                          {{ isParentExpanded(group.GroupName, parent.ParentAccountName) ? 0 : ((parent.Amount1) | dynamicentityDecimal) }}
                         </td>
                       </tr>
           
@@ -182,7 +182,7 @@
                           <td class="text-right">{{ parent.Amount | dynamicentityDecimal }}</td>
 
                           <!-- <td class="text-right">{{ parent.totaslDebit | dynamicentityDecimal }}</td> -->
-                          <td class="text-right">{{ parent.Amount | dynamicentityDecimal }}</td>
+                          <td class="text-right">{{ parent.Amount1 | dynamicentityDecimal }}</td>
                         </tr>
                       </ng-container>
                     </ng-container>
