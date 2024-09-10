@@ -144,10 +144,10 @@
                         </td>
                         <td class="text-right"></td>
                         <td class="text-right">
-                          {{ isParentExpanded(group.GroupName, parent.ParentAccountName) ? 0 : ((parent.totalDebit+parent.totalCredit) | dynamicentityDecimal) }}
+                          {{ isParentExpanded(group.GroupName, parent.ParentAccountName) ? 0 : ((parent.Amount) | dynamicentityDecimal) }}
                         </td>
                         <td class="text-right">
-                          {{ isParentExpanded(group.GroupName, parent.ParentAccountName) ? 0 : ((parent.totalCredit+parent.totalDebit) | dynamicentityDecimal) }}
+                          {{ isParentExpanded(group.GroupName, parent.ParentAccountName) ? 0 : ((parent.Amount) | dynamicentityDecimal) }}
                         </td>
                       </tr>
           
@@ -179,10 +179,10 @@
                           <td colspan="1" class="text-left">
                             <span style="font-weight: bold; text-align: left;"></span>
                           </td>
-                          <td class="text-right">{{ parent.totalDebit+parent.totalCredit | dynamicentityDecimal }}</td>
+                          <td class="text-right">{{ parent.Amount | dynamicentityDecimal }}</td>
 
                           <!-- <td class="text-right">{{ parent.totaslDebit | dynamicentityDecimal }}</td> -->
-                          <td class="text-right">{{ parent.totalDebit+parent.totalCredit | dynamicentityDecimal }}</td>
+                          <td class="text-right">{{ parent.Amount | dynamicentityDecimal }}</td>
                         </tr>
                       </ng-container>
                     </ng-container>
@@ -203,8 +203,8 @@
                    <td colspan="1" class="text-left">
                     <span style="font-size: medium;"></span>
                   </td>
-                  <td class="text-right" colspan="1">{{ (totaldebitamount+totalcreditamount) | dynamicentityDecimal }}</td>
-                  <td class="text-right" colspan="1">{{ (totaldebitamount+totalcreditamount) | dynamicentityDecimal }}</td>
+                  <td class="text-right" colspan="1">{{ (totalAmount) | dynamicentityDecimal }}</td>
+                  <td class="text-right" colspan="1">{{ (totalAmount) | dynamicentityDecimal }}</td>
                 </tr>
               </tfoot>
             </table>

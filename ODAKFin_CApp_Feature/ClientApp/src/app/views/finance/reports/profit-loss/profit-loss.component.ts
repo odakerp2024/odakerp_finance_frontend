@@ -41,8 +41,7 @@ export class ProfitLossComponent implements OnInit {
   bankListDetails: any = [];
   TemplateUploadURL = this.globals.TemplateUploadURL;
   dataList: any;
-  totalcreditamount  = 0;
-  totaldebitamount   = 0;
+  totalAmount   = 0;
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
   entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   entityThousands = Number(this.commonDataService.getLocalStorageEntityConfigurable('CurrenecyFormat'));
@@ -224,37 +223,31 @@ sort(properties: string[]) {
           // Calculate totals for each parent account within the group
           const parentTotals = Object.keys(parentGroupedItems).map(parentName => {
             const parentItems = parentGroupedItems[parentName];
-            const totalCredit = this.calculateParentTotal(parentItems, 'Credit');
-            const totalDebit = this.calculateParentTotal(parentItems, 'Debit');
-  
+            const total = this.calculateParentTotal(parentItems);
+            
             return {
               ParentAccountName: parentName,
               items: parentItems,
-              totalCredit: totalCredit,
-              totalDebit: totalDebit
+              Amount: total
             };
           });
   
           // Calculate total credit and debit for the group
-          const totalCredit = this.calculateGroupTotal(items, 'Credit');
-          const totalDebit = this.calculateGroupTotal(items, 'Debit');
+          const GroupTotals = this.calculateGroupTotal(items);
   
           return {
             GroupName: group,
             parentTotals: parentTotals,
-            totalCredit: totalCredit,
-            totalDebit: totalDebit
+            totalAmount: GroupTotals
           };
         });
   
         // Assign grouped list to pagedItems
         this.pagedItems = this.balanceList;
         this.setPage(1);
-        this.totalcreditamount = this.calculateTotalCreditAmount(this.pagedItems);
-        this.totaldebitamount = this.calculateTotalDebitAmount(this.pagedItems);
+        this.totalAmount = this.calculateTotalAmount(this.pagedItems);
       } else {
-        this.totalcreditamount = 0;
-        this.totaldebitamount = 0;
+        this.totalAmount = 0
         this.pager = {};
         this.balanceList = [];
         this.pagedItems = [];
@@ -267,32 +260,28 @@ sort(properties: string[]) {
   
   
   // Helper function to calculate the total credit or debit for a particular group
-  calculateGroupTotal(groupItems: any[], type: string): number {
-    return groupItems.reduce((sum, item) => {
-      return sum + (item.ChildTransaction_Type === type ? item.ChildNet_Balance : 0);
-    }, 0);
-  }
-  
-  // Helper function to calculate the total credit or debit for parent accounts
-  calculateParentTotal(parentItems: any[], type: string): number {
+ 
+  calculateParentTotal(parentItems: any[]): number {
     return parentItems.reduce((sum, item) => {
-      return sum + (item.ChildTransaction_Type === type ? item.ChildNet_Balance : 0);
+      return sum + (item.ChildNet_Balance? item.ChildNet_Balance : 0);
     }, 0);
   }
+
+  calculateGroupTotal(groupItems: any[]): number {
+    return groupItems.reduce((sum, item) => {
+      return sum + (item.ChildNet_Balance ? item.ChildNet_Balance : 0);
+    }, 0);
+  }
+
+  
   
   // Helper function to calculate the total credit amount for all groups
-  calculateTotalCreditAmount(items: any[]): number {
+  calculateTotalAmount(items: any[]): number {
     return items.reduce((sum, group) => {
-      return sum + group.totalCredit;
+      return sum + group.totalAmount;
     }, 0);
   }
-  
-  // Helper function to calculate the total debit amount for all groups
-  calculateTotalDebitAmount(items: any[]): number {
-    return items.reduce((sum, group) => {
-      return sum + group.totalDebit;
-    }, 0);
-  }
+
   
 
 createFilterForm(){
@@ -315,9 +304,9 @@ editBalance(id: number) {
   this.reportService.GetProfitLossList(payload).subscribe(data => {
 
     //Waiting for the screens while redirecting from the KK in profit and loss
-
-    this.router.navigate(['/views/finance/reports/leveltwo', { id: id }])
-    this.router.navigate(['/views/finance/repodrts/leveltwo', { id: id }])
+    // this.router.navigate(['/views/reports/profit-loss']);
+    this.router.navigate(['/views/reports/leveltwo-profitloss', { id: id }])
+    this.router.navigate(['/views/reports/leveltwo-profitloss', { id: id }])
    
   }, err => {
     console.log('error:', err.message);
@@ -369,37 +358,32 @@ onDivisionChange(value: any) {
         // Calculate totals for each parent account within the group
         const parentTotals = Object.keys(parentGroupedItems).map(parentName => {
           const parentItems = parentGroupedItems[parentName];
-          const totalCredit = this.calculateParentTotal(parentItems, 'Credit');
-          const totalDebit = this.calculateParentTotal(parentItems, 'Debit');
+          const total = this.calculateParentTotal(parentItems);
+          
 
           return {
             ParentAccountName: parentName,
             items: parentItems,
-            totalCredit: totalCredit,
-            totalDebit: totalDebit
+            Amount: total
           };
         });
 
         // Calculate total credit and debit for the group
-        const totalCredit = this.calculateGroupTotal(items, 'Credit');
-        const totalDebit = this.calculateGroupTotal(items, 'Debit');
+        const GroupTotals = this.calculateGroupTotal(items);
 
         return {
           GroupName: group,
           parentTotals: parentTotals,
-          totalCredit: totalCredit,
-          totalDebit: totalDebit
+          totalAmount: GroupTotals
         };
       });
 
       // Assign grouped list to pagedItems
       this.pagedItems = this.balanceList;
       this.setPage(1);
-      this.totalcreditamount = this.calculateTotalCreditAmount(this.pagedItems);
-      this.totaldebitamount = this.calculateTotalDebitAmount(this.pagedItems);
+      this.totalAmount = this.calculateTotalAmount(this.pagedItems);
     } else {
-      this.totalcreditamount = 0;
-      this.totaldebitamount = 0;
+      this.totalAmount = 0;
       this.pager = {};
       this.balanceList = [];
       this.pagedItems = [];
@@ -453,37 +437,33 @@ onOfficeChange(values: any) {
         // Calculate totals for each parent account within the group
         const parentTotals = Object.keys(parentGroupedItems).map(parentName => {
           const parentItems = parentGroupedItems[parentName];
-          const totalCredit = this.calculateParentTotal(parentItems, 'Credit');
-          const totalDebit = this.calculateParentTotal(parentItems, 'Debit');
+          const total = this.calculateParentTotal(parentItems);
+          
 
           return {
             ParentAccountName: parentName,
             items: parentItems,
-            totalCredit: totalCredit,
-            totalDebit: totalDebit
+            Amount: total
           };
         });
 
         // Calculate total credit and debit for the group
-        const totalCredit = this.calculateGroupTotal(items, 'Credit');
-        const totalDebit = this.calculateGroupTotal(items, 'Debit');
+        const GroupTotals = this.calculateGroupTotal(items);
+   
 
         return {
           GroupName: group,
           parentTotals: parentTotals,
-          totalCredit: totalCredit,
-          totalDebit: totalDebit
+          totalAmount: GroupTotals
         };
       });
 
       // Assign grouped list to pagedItems
       this.pagedItems = this.balanceList;
       this.setPage(1);
-      this.totalcreditamount = this.calculateTotalCreditAmount(this.pagedItems);
-      this.totaldebitamount = this.calculateTotalDebitAmount(this.pagedItems);
+      this.totalAmount = this.calculateTotalAmount(this.pagedItems);
     } else {
-      this.totalcreditamount = 0;
-      this.totaldebitamount = 0;
+      this.totalAmount = 0
       this.pager = {};
       this.balanceList = [];
       this.pagedItems = [];
@@ -558,39 +538,40 @@ BasedOnDate(selectedDate: any) {
         console.log("Grouped items by ParentAccountName:", parentGroupedItems);
 
         // Calculate totals for each parent account within the group
-        const parentTotals = Object.keys(parentGroupedItems).map(parentName => {
+          const parentTotals = Object.keys(parentGroupedItems).map(parentName => {
           const parentItems = parentGroupedItems[parentName];
-          const totalCredit = this.calculateParentTotal(parentItems, 'Credit');
-          const totalDebit = this.calculateParentTotal(parentItems, 'Debit');
+          const total = this.calculateParentTotal(parentItems);
 
           return {
             ParentAccountName: parentName,
             items: parentItems,
-            totalCredit: totalCredit,
-            totalDebit: totalDebit
+            Amount: total
+
           };
         });
 
         // Calculate total credit and debit for the group
-        const totalCredit = this.calculateGroupTotal(items, 'Credit');
-        const totalDebit = this.calculateGroupTotal(items, 'Debit');
+        
+        const GroupTotals = this.calculateGroupTotal(items);
+        
 
+        debugger
         return {
           GroupName: group,
           parentTotals: parentTotals,
-          totalCredit: totalCredit,
-          totalDebit: totalDebit
+          totalAmount: GroupTotals
         };
       });
 
       // Assign grouped list to pagedItems
       this.pagedItems = this.balanceList;
       this.setPage(1);
-      this.totalcreditamount = this.calculateTotalCreditAmount(this.pagedItems);
-      this.totaldebitamount = this.calculateTotalDebitAmount(this.pagedItems);
+      // this.totalcreditamount = this.calculateTotalCreditAmount(this.pagedItems);
+      // this.totaldebitamount = this.calculateTotalDebitAmount(this.pagedItems);
+        this.totalAmount = this.calculateTotalAmount(this.pagedItems);
+      
     } else {
-      this.totalcreditamount = 0;
-      this.totaldebitamount = 0;
+      this.totalAmount = 0
       this.pager = {};
       this.balanceList = [];
       this.pagedItems = [];
@@ -684,9 +665,9 @@ async downloadExcel() {
     };
   });
 
-  let grandTotalDebit = 0;
+  let grandTotal = 0;
   let AccountCode = '';
-  let grandTotalCredit = 0;
+  let grandTotalFY = 0;
 
   this.pagedItems.forEach(group => {
     // Add group header row
@@ -714,27 +695,21 @@ async downloadExcel() {
       pattern: 'solid',
       fgColor: { argb: 'f0f0f0' },
     };
-    let groupTotalDebit = 0;
-    let AccountCode = '';
-    let groupTotalCredit = 0;
+    let groupTotal = 0;
+    let groupTotalFY = 0;
 
     group.parentTotals.forEach(parent => {
-      let parentTotalDebit = 0;
       let AccountCode = '';
-      let parentTotalCredit = 0;
+      let parentTotal = 0;
+      let parentTotalFY = 0;
 
       parent.items.forEach(balance => {
         const rowData = [
           balance.ParentAccountName + ' - ' + balance.ChildAccountName,
-          // balance.ChildTransaction_Type === 'Debit' ? balance.ChildNet_Balance : 0,
-          // balance.ChildTransaction_Type === 'Credit' ? balance.ChildNet_Balance : 0,
           balance.AccountCode,
           balance.ChildNet_Balance ? balance.ChildNet_Balance: 0,
           balance.ChildNet_Balance ? balance.ChildNet_Balance: 0
-          
-
-          
-        ];
+         ];
 
         const row = worksheet.addRow(rowData);
 
@@ -748,15 +723,17 @@ async downloadExcel() {
           }
         });
 
-        if (balance.ChildTransaction_Type === 'Debit') {
-          parentTotalDebit += balance.ChildNet_Balance;
-        } else if (balance.ChildTransaction_Type === 'Credit') {
-          parentTotalCredit += balance.ChildNet_Balance;
-        }
+       debugger
+       
+          parentTotal += balance.ChildNet_Balance;
+          parentTotalFY += balance.ChildNet_Balance;
+       
+       
       });
+      
 
       // Add parent total row
-      const parentTotalRow = worksheet.addRow([`${parent.ParentAccountName} Total`, AccountCode, parentTotalDebit, parentTotalCredit]);
+      const parentTotalRow = worksheet.addRow([`${parent.ParentAccountName} Total`, AccountCode, parentTotal, parentTotalFY]);
       parentTotalRow.eachCell((cell, colNumber) => {
         cell.font = { bold: true };
         cell.alignment = { horizontal: colNumber === 1 ? 'left' : 'right' }; // Align first column to left
@@ -767,14 +744,14 @@ async downloadExcel() {
         };
       });
 
-      groupTotalDebit += parentTotalDebit;
-      groupTotalCredit += parentTotalCredit;
+      groupTotal += parentTotal;
+      groupTotalFY += parentTotalFY;
     });
 
     // Add group total row
-    const groupTotalRow = worksheet.addRow([`${group.GroupName.toUpperCase()} Total`, '', groupTotalDebit, groupTotalCredit]);
-    grandTotalDebit += groupTotalDebit;
-    grandTotalCredit += groupTotalCredit;
+    const groupTotalRow = worksheet.addRow([`${group.GroupName.toUpperCase()} Total`, '', groupTotal, groupTotalFY]);
+    grandTotal += groupTotal;
+    grandTotalFY += groupTotalFY;
 
     groupTotalRow.eachCell((cell, colNumber) => {
       cell.font = { bold: true };
@@ -788,7 +765,7 @@ async downloadExcel() {
   });
 
   // Add grand total row
-  const grandTotalRow = worksheet.addRow(['Grand Total', '', grandTotalDebit, grandTotalCredit]);
+  const grandTotalRow = worksheet.addRow(['Grand Total', '', grandTotal, grandTotalFY]);
   grandTotalRow.eachCell((cell, colNumber) => {
     cell.font = { bold: true };
     cell.alignment = { horizontal: colNumber === 1 ? 'left' : 'right' };
