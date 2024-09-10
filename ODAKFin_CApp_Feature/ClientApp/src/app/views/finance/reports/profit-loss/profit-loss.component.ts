@@ -44,6 +44,7 @@ export class ProfitLossComponent implements OnInit {
   TemplateUploadURL = this.globals.TemplateUploadURL;
   dataList: any;
   totalAmount   = 0;
+  totalAmount1   = 0;
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
   entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   entityThousands = Number(this.commonDataService.getLocalStorageEntityConfigurable('CurrenecyFormat'));
@@ -268,6 +269,11 @@ sort(properties: string[]) {
       return sum + (item.ChildNet_Balance? item.ChildNet_Balance : 0);
     }, 0);
   }
+  calculateParentTotal1(parentItems: any[]): number {
+    return parentItems.reduce((sum, item) => {
+      return sum + (item.ChildNet_Balance? item.ChildNet_Balance : 0);
+    }, 0);
+  }
 
   calculateGroupTotal(groupItems: any[]): number {
     return groupItems.reduce((sum, item) => {
@@ -308,9 +314,6 @@ editBalance(id: number) {
     //Waiting for the screens while redirecting from the KK in profit and loss
     // this.router.navigate(['/views/reports/profit-loss']);
     this.router.navigate(['/views/reports/leveltwo-profitloss', { id: id }])
-    this.router.navigate(['/views/reports/leveltwo-profitloss', { id: id }])
-
-    this.router.navigate(['/views/finance/reports/leveltwo', { id: id }])
    
   }, err => {
     console.log('error:', err.message);
@@ -549,30 +552,28 @@ BasedOnDate(selectedDate: any) {
           const parentItems = parentGroupedItems[parentName];
           debugger
           let total = 0;
-          let total1 = 0;
+        let total1 = 0;
 
-         
-          const hasSelectedDate = parentItems.some(item => 
-            item.Trans_Date <= this.selectedDate);
+        // Check if any transaction date is less than or equal to selectedDate
+        const hasSelectedDate = parentItems.some(item => {
+            const transDate = new Date(item.Trans_Date);
+            const selectedDate = new Date(this.selectedDate);
+            return transDate <= selectedDate;
+        });
 
+        // Extract start and end dates from currentFinancialYears
+        const startDateStr = this.currentFinancialYears.substring(0, 10);
+        const endDateStr = this.currentFinancialYears.substring(13, 23);
 
-          
-          // Extract start and end dates from currentFinancialYears
-
-
-          const startDateStr = this.currentFinancialYears.substring(0, 10); 
-          const endDateStr = this.currentFinancialYears.substring(13, 23); 
-          
-          // const isWithinFinancialYear = parentItems.some(item => 
-          //    item.Trans_Date <=startDateStr ||
-          //   item.Trans_Date >=endDateStr
-
-          const isWithinFinancialYear = parentItems.some(item => 
-            item.Trans_Date >= startDateStr && 
-            item.Trans_Date <= endDateStr
-      
-          
-        );
+        // Convert date strings to Date objects
+        // const startDate = new Date(startDateStr);
+        // const endDate = new Date(endDateStr);
+        
+        // Check if any transaction date falls within the financial year range
+        const isWithinFinancialYear = parentItems.some(item => {
+            // const transDate = new Date(item.Trans_Date);
+            return item.Trans_Date >= startDateStr && item.Trans_Date <= endDateStr;
+        });
         console.log("hasSelectedDate>", hasSelectedDate);
         console.log("isWithinFinancialYear>", isWithinFinancialYear);
           
@@ -581,7 +582,7 @@ BasedOnDate(selectedDate: any) {
               total += this.calculateParentTotal(parentItems);
             } 
             if(isWithinFinancialYear)  {
-              total1 += this.calculateParentTotal(parentItems);
+              total1 += this.calculateParentTotal1(parentItems);
             }
 
           return {
@@ -612,6 +613,7 @@ BasedOnDate(selectedDate: any) {
       // this.totalcreditamount = this.calculateTotalCreditAmount(this.pagedItems);
       // this.totaldebitamount = this.calculateTotalDebitAmount(this.pagedItems);
         this.totalAmount = this.calculateTotalAmount(this.pagedItems);
+        this.totalAmount1 = this.calculateTotalAmount(this.pagedItems);
       
     } else {
       this.totalAmount = 0
