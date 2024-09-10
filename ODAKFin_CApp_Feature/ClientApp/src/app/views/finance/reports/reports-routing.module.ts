@@ -15,6 +15,7 @@ import { ReportArLevelthreeComponent } from './report-ar-levelthree/report-ar-le
 import { ReportApLeveloneComponent } from './report-ap-levelone/report-ap-levelone.component';
 import { ReportApLeveltwoComponent } from './report-ap-leveltwo/report-ap-leveltwo.component';
 import { ProfitLossComponent } from './profit-loss/profit-loss.component';
+import { LeveltwoProfitlossComponent } from './leveltwo-profitloss/leveltwo-profitloss.component';
 
 
 
@@ -35,6 +36,7 @@ const routes: Routes = [
   { path: 'report-ap-levelone'          ,  component : ReportApLeveloneComponent},
   { path: 'report-ap-leveltwo'          ,  component : ReportApLeveltwoComponent },
   { path: 'profit-loss'                 , component: ProfitLossComponent },
+  {path: 'leveltwo-profitloss'          , component: LeveltwoProfitlossComponent}
 
 
 ];
