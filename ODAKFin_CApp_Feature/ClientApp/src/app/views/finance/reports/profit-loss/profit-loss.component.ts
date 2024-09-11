@@ -94,8 +94,7 @@ export class ProfitLossComponent implements OnInit {
     return this.expandedParents[key];
   }
 
-  navigate(){
-    this.nav=false;
+  navigate(){    this.nav=false;
   }
 
   onDateChange(event: any): void {
@@ -227,14 +226,14 @@ sort(properties: string[]) {
             const parentTotals = Object.keys(parentGroupedItems).map(parentName => {
             const parentItems = parentGroupedItems[parentName];
             debugger
-            let total = 0;
-          let total1 = 0;
-          let ChildNet = 0;
-          let ChildNet1 = 0;
           
   
-          // Check if any transaction date is less than or equal to selectedDate
-          const hasSelectedDate = parentItems.some(item => {
+            debugger
+            let total = 0;
+            let total1 = 0;
+            
+            // Check if any transaction date is less than or equal to selectedDate
+            const hasSelectedDate = parentItems.some(item => {
               const transDate = new Date(item.Trans_Date);
               const selectedDate = new Date(this.selectedDate);
               return transDate <= selectedDate;
@@ -256,22 +255,22 @@ sort(properties: string[]) {
             
               // Calculate total based on the condition
               if (hasSelectedDate) {
-                ChildNet = parentItems.reduce((sum, item) => sum + (item.ChildNet_Balance || 0), 0);
                 total += this.calculateParentTotal(parentItems);
-                
-  
               } 
               if(isWithinFinancialYear)  {
-                ChildNet1 = parentItems.reduce((sum, item) => sum + (item.ChildNet_Balance || 0), 0);
-                total1 += this.calculateParentTotal1(parentItems);
+              total1 += this.calculateParentTotal1(parentItems);
               }
-  
-              const itemsWithTotals  = parentItems.map(item => ({
-                ...item,
-                ChildNet: hasSelectedDate ? ChildNet : 0,
-                ChildNet1: isWithinFinancialYear ? ChildNet1 : 0
-            }));
-  
+              
+              const itemsWithTotals = parentItems.map(item => {
+                
+                const ChildNet = hasSelectedDate ? (item.ChildNet_Balance || 0) : 0;
+                const ChildNet1 = isWithinFinancialYear ? (item.ChildNet_Balance || 0) : 0;
+                return {
+                    ...item,
+                    ChildNet,
+                    ChildNet1
+                };
+            });
             return {
               ParentAccountName: parentName,
               items: itemsWithTotals ,
@@ -432,14 +431,14 @@ onDivisionChange(value: any) {
           const parentTotals = Object.keys(parentGroupedItems).map(parentName => {
           const parentItems = parentGroupedItems[parentName];
           debugger
-          let total = 0;
-        let total1 = 0;
-        let ChildNet = 0;
-        let ChildNet1 = 0;
         
 
-        // Check if any transaction date is less than or equal to selectedDate
-        const hasSelectedDate = parentItems.some(item => {
+          debugger
+          let total = 0;
+          let total1 = 0;
+          
+          // Check if any transaction date is less than or equal to selectedDate
+          const hasSelectedDate = parentItems.some(item => {
             const transDate = new Date(item.Trans_Date);
             const selectedDate = new Date(this.selectedDate);
             return transDate <= selectedDate;
@@ -461,22 +460,22 @@ onDivisionChange(value: any) {
           
             // Calculate total based on the condition
             if (hasSelectedDate) {
-              ChildNet = parentItems.reduce((sum, item) => sum + (item.ChildNet_Balance || 0), 0);
               total += this.calculateParentTotal(parentItems);
-              
-
             } 
             if(isWithinFinancialYear)  {
-              ChildNet1 = parentItems.reduce((sum, item) => sum + (item.ChildNet_Balance || 0), 0);
-              total1 += this.calculateParentTotal1(parentItems);
+            total1 += this.calculateParentTotal1(parentItems);
             }
-
-            const itemsWithTotals  = parentItems.map(item => ({
-              ...item,
-              ChildNet: hasSelectedDate ? ChildNet : 0,
-              ChildNet1: isWithinFinancialYear ? ChildNet1 : 0
-          }));
-
+            
+            const itemsWithTotals = parentItems.map(item => {
+              
+              const ChildNet = hasSelectedDate ? (item.ChildNet_Balance || 0) : 0;
+              const ChildNet1 = isWithinFinancialYear ? (item.ChildNet_Balance || 0) : 0;
+              return {
+                  ...item,
+                  ChildNet,
+                  ChildNet1
+              };
+          });
           return {
             ParentAccountName: parentName,
             items: itemsWithTotals ,
@@ -690,6 +689,7 @@ calculateCurrentFinancialYear(selectedDate: string) {
 }
 
 BasedOnDate(selectedDate: any) {
+  debugger
 
   var payload = {
     "DivisionId": "",
@@ -734,14 +734,14 @@ BasedOnDate(selectedDate: any) {
           const parentTotals = Object.keys(parentGroupedItems).map(parentName => {
           const parentItems = parentGroupedItems[parentName];
           debugger
-          let total = 0;
-        let total1 = 0;
-        let ChildNet = 0;
-        let ChildNet1 = 0;
         
 
-        // Check if any transaction date is less than or equal to selectedDate
-        const hasSelectedDate = parentItems.some(item => {
+          debugger
+          let total = 0;
+          let total1 = 0;
+          
+          // Check if any transaction date is less than or equal to selectedDate
+          const hasSelectedDate = parentItems.some(item => {
             const transDate = new Date(item.Trans_Date);
             const selectedDate = new Date(this.selectedDate);
             return transDate <= selectedDate;
@@ -763,22 +763,22 @@ BasedOnDate(selectedDate: any) {
           
             // Calculate total based on the condition
             if (hasSelectedDate) {
-              ChildNet = parentItems.reduce((sum, item) => sum + (item.ChildNet_Balance || 0), 0);
               total += this.calculateParentTotal(parentItems);
-              
-
             } 
             if(isWithinFinancialYear)  {
-              ChildNet1 = parentItems.reduce((sum, item) => sum + (item.ChildNet_Balance || 0), 0);
-              total1 += this.calculateParentTotal1(parentItems);
+            total1 += this.calculateParentTotal1(parentItems);
             }
-
-            const itemsWithTotals  = parentItems.map(item => ({
-              ...item,
-              ChildNet: hasSelectedDate ? ChildNet : 0,
-              ChildNet1: isWithinFinancialYear ? ChildNet1 : 0
-          }));
-
+            
+            const itemsWithTotals = parentItems.map(item => {
+              
+              const ChildNet = hasSelectedDate ? (item.ChildNet_Balance || 0) : 0;
+              const ChildNet1 = isWithinFinancialYear ? (item.ChildNet_Balance || 0) : 0;
+              return {
+                  ...item,
+                  ChildNet,
+                  ChildNet1
+              };
+          });
           return {
             ParentAccountName: parentName,
             items: itemsWithTotals ,
