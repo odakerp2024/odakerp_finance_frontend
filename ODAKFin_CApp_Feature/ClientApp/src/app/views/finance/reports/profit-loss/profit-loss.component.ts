@@ -184,8 +184,9 @@ sort(properties: string[]) {
     let financedate;
     if (payload.Date === "") {
       financedate = this.currentDate
-     
+      this.selectedDate = this.currentDate
     }
+    debugger
     this.calculateCurrentFinancialYear(financedate);
 
     this.reportService.GetProfitLossList(payload).subscribe(result => {
