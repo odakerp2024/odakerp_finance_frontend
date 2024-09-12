@@ -184,6 +184,7 @@ sort(properties: string[]) {
     let financedate;
     if (payload.Date === "") {
       financedate = this.currentDate
+      this.selectedDate = this.currentDate
      
     }
     this.calculateCurrentFinancialYear(financedate);
@@ -968,10 +969,10 @@ async downloadExcel() {
           }
         });
 
-       debugger
+      
        
-          parentTotal += balance.ChildNet_Balance;
-          parentTotalFY += balance.ChildNet_Balance;
+          parentTotal += balance.ChildNet;
+          parentTotalFY += balance.ChildNet1;
        
        
       });
