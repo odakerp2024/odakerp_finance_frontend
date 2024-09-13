@@ -185,8 +185,8 @@ sort(properties: string[]) {
     if (payload.Date === "") {
       financedate = this.currentDate
       this.selectedDate = this.currentDate
+     
     }
-    debugger
     this.calculateCurrentFinancialYear(financedate);
 
     this.reportService.GetProfitLossList(payload).subscribe(result => {
@@ -886,7 +886,7 @@ async downloadExcel() {
   worksheet.mergeCells(`B${subtitleRow1.number}:C${subtitleRow1.number}`);
 
   // Define header row
-  const headers = ['Account', 'Account Code', 'Total', 'Year To Date'];
+  const headers = ['Account', 'Total', 'Year To Date'];
   const headerRow = worksheet.addRow(headers);
 
   // Style the header row
@@ -912,7 +912,6 @@ async downloadExcel() {
   });
 
   let grandTotal = 0;
-  let AccountCode = '';
   let grandTotalFY = 0;
 
   this.pagedItems.forEach(group => {
@@ -936,23 +935,16 @@ async downloadExcel() {
       pattern: 'solid',
       fgColor: { argb: 'f0f0f0' },
     };
-    groupRow.getCell(4).fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      fgColor: { argb: 'f0f0f0' },
-    };
     let groupTotal = 0;
     let groupTotalFY = 0;
 
     group.parentTotals.forEach(parent => {
-      let AccountCode = '';
       let parentTotal = 0;
       let parentTotalFY = 0;
 
       parent.items.forEach(balance => {
         const rowData = [
           balance.ParentAccountName + ' - ' + balance.ChildAccountName,
-          balance.AccountCode,
           balance.ChildNet_Balance ? balance.ChildNet_Balance: 0,
           balance.ChildNet_Balance ? balance.ChildNet_Balance: 0
          ];
@@ -961,25 +953,25 @@ async downloadExcel() {
 
         // Apply styles based on column index
         row.eachCell((cell, colNumber) => {
-          if (colNumber === 1 || colNumber === 2) {
+          if (colNumber === 1 ) {
             cell.font = { color: { argb: '8B0000' }, bold: true }; // Red color for ChildAccountName
             cell.alignment = { horizontal: 'left' };
-          } else if (colNumber === 3 || colNumber === 4) {
+          } else if (colNumber === 2 || colNumber === 3) {
             cell.alignment = { horizontal: 'right' }; // Right align for Net Debit and Net Credit
           }
         });
 
-       debugger
+      
        
-          parentTotal += balance.ChildNet_Balance;
-          parentTotalFY += balance.ChildNet_Balance;
+          parentTotal += balance.ChildNet;
+          parentTotalFY += balance.ChildNet1;
        
        
       });
       
 
       // Add parent total row
-      const parentTotalRow = worksheet.addRow([`${parent.ParentAccountName} Total`, AccountCode, parentTotal, parentTotalFY]);
+      const parentTotalRow = worksheet.addRow([`${parent.ParentAccountName} Total`, parentTotal, parentTotalFY]);
       parentTotalRow.eachCell((cell, colNumber) => {
         cell.font = { bold: true };
         cell.alignment = { horizontal: colNumber === 1 ? 'left' : 'right' }; // Align first column to left
@@ -995,7 +987,7 @@ async downloadExcel() {
     });
 
     // Add group total row
-    const groupTotalRow = worksheet.addRow([`${group.GroupName.toUpperCase()} Total`, '', groupTotal, groupTotalFY]);
+    const groupTotalRow = worksheet.addRow([`${group.GroupName.toUpperCase()} Total`, groupTotal, groupTotalFY]);
     grandTotal += groupTotal;
     grandTotalFY += groupTotalFY;
 
@@ -1005,13 +997,13 @@ async downloadExcel() {
       cell.fill = {
         type: 'pattern',
         pattern: 'solid',
-        fgColor: { argb: 'f0f0f0' },
+        fgColor: { argb: 'FFCAe9F6' },
       };
     });
   });
 
   // Add grand total row
-  const grandTotalRow = worksheet.addRow(['Grand Total', '', grandTotal, grandTotalFY]);
+  const grandTotalRow = worksheet.addRow(['Grand Total', grandTotal, grandTotalFY]);
   grandTotalRow.eachCell((cell, colNumber) => {
     cell.font = { bold: true };
     cell.alignment = { horizontal: colNumber === 1 ? 'left' : 'right' };
@@ -1050,7 +1042,7 @@ async downloadExcel() {
       horizontal: 'center',
     };
   });
-  worksheet.mergeCells(`A${footerRow.number}:D${footerRow.number}`);
+  worksheet.mergeCells(`A${footerRow.number}:C${footerRow.number}`);
 
   // Write to Excel and save
   const buffer = await workbook.xlsx.writeBuffer();
