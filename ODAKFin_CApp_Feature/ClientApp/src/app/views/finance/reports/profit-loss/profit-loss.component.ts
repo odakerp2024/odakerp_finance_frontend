@@ -50,6 +50,18 @@ export class ProfitLossComponent implements OnInit {
   // sortOrder: { [key: string]: 'asc' | 'desc' } = {};
   fromMaxDate = this.currentDate;
 
+  PeroidList = [
+    { peroidId: 'today', peroidName: 'CURRENT DAY' },
+    { peroidId: 'week', peroidName: 'CURRENT WEEK' },
+    { peroidId: 'month', peroidName: 'CURRENT MONTH' },
+    { peroidId: 'year', peroidName: 'CURRENT FINANCIAL YEAR' },
+    { peroidId: 'custom', peroidName: 'CUSTOM' },
+    { peroidId: 'previoustoday', peroidName: 'PREVIOUS DAY' },
+    { peroidId: 'previousweek', peroidName: 'PREVIOUS WEEK' },
+    { peroidId: 'previousmonth', peroidName: 'PREVIOUS MONTH' },
+    { peroidId: 'previousyear', peroidName: 'PREVIOUS FINANCIAL YEAR' }
+  ];
+
   sortOrder: { [key: string]: 'asc' | 'desc' } = {
     ChildAccountName: 'asc',
     ParentAccountName: 'asc',
@@ -57,7 +69,9 @@ export class ProfitLossComponent implements OnInit {
   };
 
   expandedParents: { [key: string]: boolean } = {};
- 
+  selectedOption: string;
+  startDate = '';
+  endDate = '';
 
 
   @ViewChild('table') table: ElementRef;
@@ -70,17 +84,89 @@ export class ProfitLossComponent implements OnInit {
     private contraVoucherService: ContraVoucherService,
     private reportService: ReportDashboardService,
     private http: HttpClient) { 
-      this.createFilterForm();
+      this.createReportForm();
     }
 
   ngOnInit(): void {
+    debugger
+    this.createReportForm();
     this.getDivisionList();
     this.getOfficeList();
-    this.trailbalanceList();
-    // this.createAdjustment();
-    this.createFilterForm();
+  }
 
+  onOptionChange(selectedOption: string) {
+    
+    this.selectedOption = '';
+    switch (selectedOption) {
 
+      case 'today':
+        this.filterForm.controls.FromDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
+        this.filterForm.controls.ToDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
+        break;
+
+      case 'week':
+        this.filterForm.controls.FromDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay()), "yyyy-MM-dd"));
+        this.filterForm.controls.ToDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() + (6 - this.currentDate.getDay())), "yyyy-MM-dd"));
+        break;
+        case 'month':
+        const startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd")
+        const nextMonth = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 1);
+        const lastDayOfMonth = new Date(nextMonth);
+        lastDayOfMonth.setDate(nextMonth.getDate() - 1);
+        const endDate = this.datePipe.transform(lastDayOfMonth, "yyyy-MM-dd");
+        this.filterForm.controls.FromDate.setValue(startDate);
+        this.filterForm.controls.ToDate.setValue(endDate); 
+        break;
+
+      case 'year':
+        const currentYear = this.currentDate.getFullYear();
+        const startYear = this.currentDate.getMonth() >= 3 ? currentYear : currentYear - 1;
+        const endYear = startYear + 1;
+        this.filterForm.controls.FromDate.setValue(this.datePipe.transform(new Date(startYear, 3, 1), "yyyy-MM-dd"));
+        this.filterForm.controls.ToDate.setValue(this.datePipe.transform(new Date(endYear, 2, 31), "yyyy-MM-dd"));
+        break;
+
+      case 'previoustoday':
+        const previousDay = new Date(this.currentDate);
+        previousDay.setDate(previousDay.getDate() - 1);
+        this.filterForm.controls.FromDate.setValue(this.datePipe.transform(previousDay, "yyyy-MM-dd"));
+        this.filterForm.controls.ToDate.setValue(this.datePipe.transform(previousDay, "yyyy-MM-dd"));
+        break;
+
+      case 'previousweek':
+        const previousWeekStartDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay() - 7);
+        const previousWeekEndDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay() - 1);
+        this.filterForm.controls.FromDate.setValue(this.datePipe.transform(previousWeekStartDate, "yyyy-MM-dd"));
+        this.filterForm.controls.ToDate.setValue(this.datePipe.transform(previousWeekEndDate, "yyyy-MM-dd"));
+        break;
+
+      case 'previousmonth':
+      debugger
+        
+        const previousMonthStartDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() - 1, 1);
+        const previousMonthEndDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 0);
+        this.filterForm.controls.FromDate.setValue(this.datePipe.transform(previousMonthStartDate, "yyyy-MM-dd"));
+        this.filterForm.controls.ToDate.setValue(this.datePipe.transform(previousMonthEndDate, "yyyy-MM-dd"));
+        break;
+
+      case 'previousyear':
+        const previousYear = this.currentDate.getFullYear() - 1;
+        const previousYearStartDate = new Date(previousYear, 3, 1);
+        const previousYearEndDate = new Date(previousYear + 1, 2, 31);
+        this.filterForm.controls.FromDate.setValue(this.datePipe.transform(previousYearStartDate, "yyyy-MM-dd"));
+        this.filterForm.controls.ToDate.setValue(this.datePipe.transform(previousYearEndDate, "yyyy-MM-dd"));
+        break;
+
+      case 'custom':
+        this.selectedOption = 'custom';
+        this.startDate = this.filterForm.controls.FromDate.value;
+        this.endDate = this.filterForm.controls.ToDate.value;
+        break;
+      default:
+        this.selectedOption = '';
+        break;
+    }
+    this.trailbalanceList()
   }
 
 
@@ -97,11 +183,12 @@ export class ProfitLossComponent implements OnInit {
   navigate(){    this.nav=false;
   }
 
-  onDateChange(event: any): void {
-    this.selectedDate = this.datePipe.transform(event.value, 'yyyy-MM-dd');
-    this.BasedOnDate(this.selectedDate);
-    this.calculateCurrentFinancialYear(this.selectedDate);
-  } 
+  // onDateChange(event: any): void {
+  //   this.selectedDate = this.datePipe.transform(event.value, 'yyyy-MM-dd');
+  //   this.BasedOnDate(this.selectedDate);
+  //   // this.calculateCurrentFinancialYear(this.selectedDate);
+  // } 
+
   setPage(page: number) {
     if (this.balanceList.length) {
     if (page < 1 || page > this.pager.totalPages) {
@@ -175,21 +262,23 @@ sort(properties: string[]) {
   }
 
   trailbalanceList() {
-    const payload = {
-      "DivisionId": "",
-      "OfficeId": "",
-      "Date": ""
-    };
-
-    let financedate;
-    if (payload.Date === "") {
-      financedate = this.currentDate
-      this.selectedDate = this.currentDate
+    debugger
+    
+    // let financedate;
+    // if (payload.Date === "") {
+    //   financedate = this.currentDate
+    //   this.selectedDate = this.currentDate
      
-    }
-    this.calculateCurrentFinancialYear(financedate);
+    // }
+    // this.calculateCurrentFinancialYear(financedate);
 
-    this.reportService.GetProfitLossList(payload).subscribe(result => {
+    this.calculateCurrentFinancialYear();
+
+    this.startDate = this.filterForm.controls.FromDate.value;
+    this.endDate = this.filterForm.controls.ToDate.value;
+    
+
+    this.reportService.GetProfitLossList(this.filterForm.value).subscribe(result => {
       this.balanceList = [];
       this.pagedItems = [];
       if (result.message === 'Success' && result.data.Table.length > 0) {
@@ -236,8 +325,9 @@ sort(properties: string[]) {
             // Check if any transaction date is less than or equal to selectedDate
             const hasSelectedDate = parentItems.some(item => {
               const transDate = new Date(item.Trans_Date);
-              const selectedDate = new Date(this.selectedDate);
-              return transDate <= selectedDate;
+              const startDate = new Date(this.startDate);
+              const endDate = new Date(this.endDate);
+              return transDate >= startDate && transDate <= endDate;
           });
   
           // Extract start and end dates from currentFinancialYears
@@ -288,10 +378,6 @@ sort(properties: string[]) {
           
           const GroupTotals = parentTotals.reduce((sum, pt) => sum + pt.Amount, 0);
           const GroupTotals1 = parentTotals.reduce((sum, pt) => sum + pt.Amount1, 0);
-  
-          
-  
-          debugger
           return {
             GroupName: group,
             parentTotals: parentTotals,
@@ -354,17 +440,26 @@ sort(properties: string[]) {
       return sum + group.totalAmount1;
     }, 0);
   }
-
   
-
-createFilterForm(){
+  async createReportForm() {
+    debugger
   this.filterForm = this.fb.group({
-    Date: [this.currentDate],
+    FromDate: [this.startDate],
+    ToDate: [this.endDate],
     OfficeId: [''],
-    DivisionId: ['']
-  })
-}
+    DivisionId: [''],
+    Peroid: [''],
+  });
 
+//   if(this.filterForm.controls.DivisionId.value == "" || this.filterForm.controls.OfficeId.value == "")
+//   this.filterForm.controls.Peroid.setValue('month');
+// else{
+
+// }
+this.filterForm.controls.Peroid.setValue('month');
+  this.onOptionChange('month');
+  await this.trailbalanceList();
+}
 
 editBalance(id: number) {
   
@@ -386,15 +481,22 @@ editBalance(id: number) {
  
 }
 
-onDivisionChange(value: any) {
-  var selectedDivisionId = value;
-  var payload = {
-    "DivisionId": value,
-    "OfficeId": 0,
-    "Date": ""
-  };
+async onDivisionChange(value: any) {
+  debugger
+  
+  this.filterForm = this.fb.group({
+  FromDate: [this.startDate],
+  ToDate: [this.endDate],
+  OfficeId: [''],
+  DivisionId: [value],
+  Peroid: [this.filterForm.controls.Peroid.value],
 
-  this.reportService.GetProfitLossList(payload).subscribe(result => {
+});
+
+// this.onOptionChange()
+
+
+  this.reportService.GetProfitLossList(this.filterForm.value).subscribe(result => {
     this.balanceList = [];
     this.pagedItems = [];
     if (result.message === 'Success' && result.data.Table.length > 0) {
@@ -441,8 +543,9 @@ onDivisionChange(value: any) {
           // Check if any transaction date is less than or equal to selectedDate
           const hasSelectedDate = parentItems.some(item => {
             const transDate = new Date(item.Trans_Date);
-            const selectedDate = new Date(this.selectedDate);
-            return transDate <= selectedDate;
+            const startDate = new Date(this.startDate);
+              const endDate = new Date(this.endDate);
+              return transDate >= startDate && transDate <= endDate;
         });
 
         // Extract start and end dates from currentFinancialYears
@@ -525,14 +628,23 @@ onDivisionChange(value: any) {
 }
 
 
-onOfficeChange(values: any) {
 
-  var payload = {
-    "DivisionId": "",
-    "OfficeId": values,
-    "Date": ""
-  };
-  this.reportService.GetProfitLossList(payload).subscribe(result => {
+
+
+  async onOfficeChange(values: any) {
+    debugger
+    
+    this.filterForm = this.fb.group({
+    FromDate: [this.startDate],
+    ToDate: [this.endDate],
+    OfficeId: [values],
+    DivisionId: [this.filterForm.controls.DivisionId.value],
+    Peroid: [this.filterForm.controls.Peroid.value],
+  
+  });
+
+
+  this.reportService.GetProfitLossList(this.filterForm.value).subscribe(result => {
     this.balanceList = [];
     this.pagedItems = [];
     if (result.message === 'Success' && result.data.Table.length > 0) {
@@ -579,8 +691,9 @@ onOfficeChange(values: any) {
         // Check if any transaction date is less than or equal to selectedDate
         const hasSelectedDate = parentItems.some(item => {
             const transDate = new Date(item.Trans_Date);
-            const selectedDate = new Date(this.selectedDate);
-            return transDate <= selectedDate;
+            const startDate = new Date(this.startDate);
+            const endDate = new Date(this.endDate);
+            return transDate >= startDate && transDate <= endDate;
         });
 
         // Extract start and end dates from currentFinancialYears
@@ -662,9 +775,9 @@ onOfficeChange(values: any) {
   });
 }
 
-calculateCurrentFinancialYear(selectedDate: string) {
+calculateCurrentFinancialYear() {
   debugger
-  const today = new Date(selectedDate);
+  const today = new Date;
   const year = today.getFullYear();
   const month = today.getMonth() + 1; // months are 0-indexed, so +1
 
@@ -880,8 +993,7 @@ async downloadExcel() {
   const currentDate = new Date();
   debugger
   // const subtitleRow1 = worksheet.addRow(['', `From ${this.datePipe.transform(this.selectedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`, '', '']);
-  const subtitleRow1 = worksheet.addRow(['', `From ${this.datePipe.transform(this.selectedDate, 'dd-MM-yyyy')} To ${this.datePipe.transform(this.selectedDate, 'dd-MM-yyyy')}`, '', '']);
-
+  const subtitleRow1 = worksheet.addRow(['', `From ${this.datePipe.transform(this.startDate, 'dd-MM-yyyy')} To ${this.datePipe.transform(this.endDate, 'dd-MM-yyyy')}`, '', '' ]);
   subtitleRow1.getCell(2).alignment = { horizontal: 'center' };
   worksheet.mergeCells(`B${subtitleRow1.number}:C${subtitleRow1.number}`);
 
