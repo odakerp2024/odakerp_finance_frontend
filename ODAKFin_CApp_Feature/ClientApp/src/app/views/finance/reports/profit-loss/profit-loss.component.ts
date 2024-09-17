@@ -802,143 +802,143 @@ calculateCurrentFinancialYear() {
  
 }
 
-BasedOnDate(selectedDate: any) {
-  debugger
+// BasedOnDate(selectedDate: any) {
+//   debugger
 
-  var payload = {
-    "DivisionId": "",
-    "OfficeId": "",
-    "Date": selectedDate
-  };
-  this.reportService.GetProfitLossList(payload).subscribe(result => {
-    this.balanceList = [];
-    this.pagedItems = [];
-    if (result.message === 'Success' && result.data.Table.length > 0) {
-      // Group the items by GroupName
-      const groupedItems = result.data.Table.reduce((groups: any, item: any) => {
-        const group = item.GroupName;
-        if (!groups[group]) {
-          groups[group] = [];
-        }
-        groups[group].push(item);
-        return groups;
-      }, {});
-      console.log("Grouped items:", groupedItems);
+//   var payload = {
+//     "DivisionId": "",
+//     "OfficeId": "",
+//     "Date": selectedDate
+//   };
+//   this.reportService.GetProfitLossList(payload).subscribe(result => {
+//     this.balanceList = [];
+//     this.pagedItems = [];
+//     if (result.message === 'Success' && result.data.Table.length > 0) {
+//       // Group the items by GroupName
+//       const groupedItems = result.data.Table.reduce((groups: any, item: any) => {
+//         const group = item.GroupName;
+//         if (!groups[group]) {
+//           groups[group] = [];
+//         }
+//         groups[group].push(item);
+//         return groups;
+//       }, {});
+//       console.log("Grouped items:", groupedItems);
 
-      // Process each group to calculate parent totals and group totals
-      this.balanceList = Object.keys(groupedItems).map(group => {
-        const items = groupedItems[group];
-        const items1 = groupedItems[group];
+//       // Process each group to calculate parent totals and group totals
+//       this.balanceList = Object.keys(groupedItems).map(group => {
+//         const items = groupedItems[group];
+//         const items1 = groupedItems[group];
 
-        // Group items by ParentAccountName within the group
-        const parentGroupedItems = items.reduce((parents: any, item: any) => {
-          const parent = item.ParentAccountName;
-          if (!parents[parent]) {
-            parents[parent] = [];
-          }
-          // Ensure unique child account names
-          if (!parents[parent].some((child: any) => child.ChildAccountName === item.ChildAccountName)) {
-            parents[parent].push(item);
-          }
-          return parents;
-        }, {});
-        console.log("Grouped items by ParentAccountName:", parentGroupedItems);
+//         // Group items by ParentAccountName within the group
+//         const parentGroupedItems = items.reduce((parents: any, item: any) => {
+//           const parent = item.ParentAccountName;
+//           if (!parents[parent]) {
+//             parents[parent] = [];
+//           }
+//           // Ensure unique child account names
+//           if (!parents[parent].some((child: any) => child.ChildAccountName === item.ChildAccountName)) {
+//             parents[parent].push(item);
+//           }
+//           return parents;
+//         }, {});
+//         console.log("Grouped items by ParentAccountName:", parentGroupedItems);
 
-        // Calculate totals for each parent account within the group
-          const parentTotals = Object.keys(parentGroupedItems).map(parentName => {
-          const parentItems = parentGroupedItems[parentName];
-          debugger
+//         // Calculate totals for each parent account within the group
+//           const parentTotals = Object.keys(parentGroupedItems).map(parentName => {
+//           const parentItems = parentGroupedItems[parentName];
+//           debugger
         
 
-          debugger
-          let total = 0;
-          let total1 = 0;
+//           debugger
+//           let total = 0;
+//           let total1 = 0;
           
-          // Check if any transaction date is less than or equal to selectedDate
-          const hasSelectedDate = parentItems.some(item => {
-            const transDate = new Date(item.Trans_Date);
-            const selectedDate = new Date(this.selectedDate);
-            return transDate <= selectedDate;
-        });
+//           // Check if any transaction date is less than or equal to selectedDate
+//           const hasSelectedDate = parentItems.some(item => {
+//             const transDate = new Date(item.Trans_Date);
+//             const selectedDate = new Date(this.selectedDate);
+//             return transDate <= selectedDate;
+//         });
 
-        // Extract start and end dates from currentFinancialYears
-        const startDateStr = this.currentFinancialYears.substring(0, 10);
-        const endDateStr = this.currentFinancialYears.substring(13, 23);
+//         // Extract start and end dates from currentFinancialYears
+//         const startDateStr = this.currentFinancialYears.substring(0, 10);
+//         const endDateStr = this.currentFinancialYears.substring(13, 23);
 
        
         
-        // Check if any transaction date falls within the financial year range
-        const isWithinFinancialYear = parentItems.some(item => {
-            // const transDate = new Date(item.Trans_Date);
-            return item.Trans_Date >= startDateStr && item.Trans_Date <= endDateStr;
-        });
-        console.log("hasSelectedDate>", hasSelectedDate);
-        console.log("isWithinFinancialYear>", isWithinFinancialYear);
+//         // Check if any transaction date falls within the financial year range
+//         const isWithinFinancialYear = parentItems.some(item => {
+//             // const transDate = new Date(item.Trans_Date);
+//             return item.Trans_Date >= startDateStr && item.Trans_Date <= endDateStr;
+//         });
+//         console.log("hasSelectedDate>", hasSelectedDate);
+//         console.log("isWithinFinancialYear>", isWithinFinancialYear);
           
-            // Calculate total based on the condition
-            if (hasSelectedDate) {
-              total += this.calculateParentTotal(parentItems);
-            } 
-            if(isWithinFinancialYear)  {
-            total1 += this.calculateParentTotal1(parentItems);
-            }
+//             // Calculate total based on the condition
+//             if (hasSelectedDate) {
+//               total += this.calculateParentTotal(parentItems);
+//             } 
+//             if(isWithinFinancialYear)  {
+//             total1 += this.calculateParentTotal1(parentItems);
+//             }
             
-            const itemsWithTotals = parentItems.map(item => {
+//             const itemsWithTotals = parentItems.map(item => {
               
-              const ChildNet = hasSelectedDate ? (item.ChildNet_Balance || 0) : 0;
-              const ChildNet1 = isWithinFinancialYear ? (item.ChildNet_Balance || 0) : 0;
-              return {
-                  ...item,
-                  ChildNet,
-                  ChildNet1
-              };
-          });
-          return {
-            ParentAccountName: parentName,
-            items: itemsWithTotals ,
-            // ChildNet: hasSelectedDate ? ChildNet : 0,  
-            // ChildNet1: isWithinFinancialYear ? ChildNet1 : 0,  
+//               const ChildNet = hasSelectedDate ? (item.ChildNet_Balance || 0) : 0;
+//               const ChildNet1 = isWithinFinancialYear ? (item.ChildNet_Balance || 0) : 0;
+//               return {
+//                   ...item,
+//                   ChildNet,
+//                   ChildNet1
+//               };
+//           });
+//           return {
+//             ParentAccountName: parentName,
+//             items: itemsWithTotals ,
+//             // ChildNet: hasSelectedDate ? ChildNet : 0,  
+//             // ChildNet1: isWithinFinancialYear ? ChildNet1 : 0,  
 
-            Amount: total,
-            Amount1: total1
+//             Amount: total,
+//             Amount1: total1
 
-          };
-        });
+//           };
+//         });
 
-        // Calculate total credit and debit for the group
+//         // Calculate total credit and debit for the group
         
-        const GroupTotals = parentTotals.reduce((sum, pt) => sum + pt.Amount, 0);
-        const GroupTotals1 = parentTotals.reduce((sum, pt) => sum + pt.Amount1, 0);
+//         const GroupTotals = parentTotals.reduce((sum, pt) => sum + pt.Amount, 0);
+//         const GroupTotals1 = parentTotals.reduce((sum, pt) => sum + pt.Amount1, 0);
 
         
 
-        debugger
-        return {
-          GroupName: group,
-          parentTotals: parentTotals,
-          totalAmount: GroupTotals,
-          totalAmount1: GroupTotals1
-        };
-      });
+//         debugger
+//         return {
+//           GroupName: group,
+//           parentTotals: parentTotals,
+//           totalAmount: GroupTotals,
+//           totalAmount1: GroupTotals1
+//         };
+//       });
 
-      // Assign grouped list to pagedItems
-      this.pagedItems = this.balanceList;
-      this.setPage(1);
-      // this.totalcreditamount = this.calculateTotalCreditAmount(this.pagedItems);
-      // this.totaldebitamount = this.calculateTotalDebitAmount(this.pagedItems);
-        this.totalAmount = this.calculateTotalAmount(this.pagedItems);
-        this.totalAmount1 = this.calculateTotalAmount1(this.pagedItems);
+//       // Assign grouped list to pagedItems
+//       this.pagedItems = this.balanceList;
+//       this.setPage(1);
+//       // this.totalcreditamount = this.calculateTotalCreditAmount(this.pagedItems);
+//       // this.totaldebitamount = this.calculateTotalDebitAmount(this.pagedItems);
+//         this.totalAmount = this.calculateTotalAmount(this.pagedItems);
+//         this.totalAmount1 = this.calculateTotalAmount1(this.pagedItems);
       
-    } else {
-      this.totalAmount = 0
-      this.pager = {};
-      this.balanceList = [];
-      this.pagedItems = [];
-    }
-  }, error => {
-    console.error("Error occurred:", error);
-  });
-}
+//     } else {
+//       this.totalAmount = 0
+//       this.pager = {};
+//       this.balanceList = [];
+//       this.pagedItems = [];
+//     }
+//   }, error => {
+//     console.error("Error occurred:", error);
+//   });
+// }
 
 getOfficeLists(id: number) {
   this.commonDataService.getOfficeByDivisionId({ DivisionId: id }).subscribe(result => {
@@ -999,6 +999,16 @@ async downloadExcel() {
 
   // Define header row
   const headers = ['Account', 'Total', 'Year To Date'];
+
+  // const headers = [
+  //   'Account',
+  //   'Total',
+  //   `Year To Date  
+  //   ${this.currentFinancialYear}`
+  // ];
+  
+  
+
   const headerRow = worksheet.addRow(headers);
 
   // Style the header row
@@ -1057,8 +1067,8 @@ async downloadExcel() {
       parent.items.forEach(balance => {
         const rowData = [
           balance.ParentAccountName + ' - ' + balance.ChildAccountName,
-          balance.ChildNet_Balance ? balance.ChildNet_Balance: 0,
-          balance.ChildNet_Balance ? balance.ChildNet_Balance: 0
+          balance.ChildNet ? balance.ChildNet: 0,
+          balance.ChildNet1 ? balance.ChildNet1: 0
          ];
 
         const row = worksheet.addRow(rowData);

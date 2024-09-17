@@ -40,7 +40,7 @@
                     <mat-form-field class="tillDate mat_date_picker" appearance="outline">
                         <input matInput (click)="ToDate.open()" readonly autocomplete="off"
                             formControlName="ToDate" [matDatepicker]="ToDate" id="ToDate"
-                            [min]="reportFilter.get('FromDate').value" [placeholder]="entityDateFormat"
+                            [min]="filterForm.get('FromDate').value" [placeholder]="entityDateFormat"
                             (ngModelChange)="formatchange(false)">
                         <mat-datepicker-toggle matSuffix [for]="ToDate"></mat-datepicker-toggle>
                         <mat-datepicker #ToDate></mat-datepicker>
