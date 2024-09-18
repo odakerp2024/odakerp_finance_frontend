@@ -64,14 +64,14 @@
                 <tbody class="text-center">
                   <ng-container *ngIf="creditApplicationList.length > 0; else noRecord">
                     <tr *ngFor="let creditApplication of pagedItems; let i = index">
-                      <td
+                      <td class="text-left"
                         (click)="
                           editCreditApplication(
                             creditApplication.CreditApplicationId, creditApplication.IsRevise, creditApplication.IsRevoke, creditApplication.PreviousApplicationId)"
                         style="color: #0366d6; cursor: pointer">
                         {{ creditApplication.CreditApplicationNumber }}
-                      </td>
-                      <td>
+                      </td >
+                      <td class="text-left" >
                         {{
                         creditApplication.ApplicationDate
                         | date
@@ -79,18 +79,22 @@
                         entityDateFormat
                         )
                         }}
+                      </td >
+                      <td class="text-left"
+                      [title]="creditApplication.CustomerName | uppercase">
+                      {{ (creditApplication.CustomerName.length > 30) ? creditApplication.CustomerName.slice(0, 30) + '-' : creditApplication.CustomerName }}
                       </td>
-                      <td>{{ creditApplication.CustomerName }}</td>
+                      
   
-                      <td>
+                      <td class="text-left">
                         {{
                         creditApplication.CityName
                         ? creditApplication.CityName
                         : "-"
                         }}
-                      </td>
+                      </td >
   
-                      <td>
+                      <td class="text-right">
                         <!-- <select ([ngModel])="creditApplication.CreditLimitAmount" class="text-center form-control my-select disable-input--nostyle border-0">
                                                   <option value="" disabled>--SELECT CREDIT DAYS--</option>
                                                   <option *ngFor="let credit of creditLimit" [value]="credit.CreditApprovalSetupId">
@@ -99,14 +103,14 @@
                                               </select> -->
                         {{ creditApplication.CreditLimitDays }}
                       </td>
-                      <td>
+                      <td class="text-right">
                         <!-- <select class="text-center form-control my-select disable-input--nostyle border-0" ([ngModel])="creditApplication.MaxCreditAmount">
                                                   <option value='' disabled>--SELECT CREDIT AMOUNT--</option>
                                                   <option *ngFor="let  credit of creditLimit" [value]=credit.CreditApprovalSetupId>
                                                       {{credit.MaxCreditAmount}}
                                                   </option>
                                                   </select> -->
-                        {{ creditApplication.CreditLimitAmount }}
+                        {{ creditApplication.CreditLimitAmount | dynamicDecimal: entityFraction }}
                       </td>
                       <td>
                         <div [ngClass]="

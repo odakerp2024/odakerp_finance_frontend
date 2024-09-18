@@ -36,6 +36,7 @@ pagedItems: any[];// paged items
   customerAndBranchList = [];
   creditLimit = []
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat')
+  entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   statusValues = [
     { value: 1, viewValue: 'Active' },
     { value: 0, viewValue: 'Inactive' },
