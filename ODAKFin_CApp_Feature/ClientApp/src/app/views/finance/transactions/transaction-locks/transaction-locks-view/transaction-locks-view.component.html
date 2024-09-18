@@ -32,11 +32,11 @@
                             <tbody class="text-center">
                                 <ng-container *ngIf="transactionLocksList.length; else noRecord">
                                     <tr *ngFor="let transactionLocks of pagedItems;let i = index">
-                                        <td (click)="editTransactionLocks(transactionLocks.TransactionLockId)" style="color: #0366d6;cursor: pointer;">
+                                        <td class="text-left" (click)="editTransactionLocks(transactionLocks.TransactionLockId)" style="color: #0366d6;cursor: pointer;">
                                             {{transactionLocks.FinancialYear}}
                                         </td>
-                                        <td>{{transactionLocks.Period }}</td>
-                                        <td><div [ngClass]="transactionLocks.StatusName == 'Closed' ? 'badge badge-state-confirm' : 'badge badge-state'">
+                                        <td class="text-left">{{transactionLocks.Period }}</td>
+                                        <td class="text-center"><div [ngClass]="transactionLocks.StatusName == 'Closed' ? 'badge badge-state-confirm' : 'badge badge-state'">
                                             {{transactionLocks.StatusName}}</div>
                                         </td>
                                     </tr>

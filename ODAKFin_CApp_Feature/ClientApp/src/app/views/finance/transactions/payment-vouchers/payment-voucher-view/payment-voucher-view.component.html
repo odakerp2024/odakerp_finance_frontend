@@ -54,11 +54,11 @@
                             <tbody class="text-center">
                                 <tr *ngFor="let voucher of pagedItems;let i = index">
                                     <!-- <td>{{ i + 1}}</td> -->
-                                    <td>
+                                    <td class="text-left">
                                         <a style="color:#0366d6;cursor: pointer;" (click)="editPayment(voucher.PaymentVoucherId)"
                                             class="">{{voucher.PaymentVoucherNumber ? voucher.PaymentVoucherNumber : 'NA'}}</a>
                                     </td>
-                                    <td>{{voucher.PaymentVoucherDate | date: commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td>
+                                    <td class="text-left">{{voucher.PaymentVoucherDate | date: commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td>
                                     <!-- <td>
                                         <select class="form-control my-select disable-input--noStyle border-0"
                                             [(ngModel)]="voucher.VendorId">
@@ -71,13 +71,13 @@
                                     
                                     <!-- <td>{{voucher.VendorName}}</td> -->
 
-                                    <td [title]="voucher.VendorName | uppercase">
-                                        {{ (voucher.VendorName && voucher.VendorName.length > 20) ?voucher.VendorName.slice(0, 20) + '-' : voucher.VendorName }}
+                                    <td class="text-left" [title]="voucher.VendorName | uppercase">
+                                        {{ (voucher.VendorName && voucher.VendorName.length > 30) ?voucher.VendorName.slice(0, 30) + '-' : voucher.VendorName }}
                                       </td>
 
                                     <!-- <td>{{voucher.VendorBranch}}</td> -->
-                                    <td>{{voucher.AmountPaid}}</td>
-                                    <td>{{voucher.CurrencyName}}</td>
+                                    <td class="text-right">{{ voucher.AmountPaid | dynamicDecimal: entityFraction }}</td>
+                                    <td class="text-left">{{voucher.CurrencyName}}</td>
                                     <!-- <td>
                                         <select class="form-control my-select  disable-input--noStyle border-0 "
                                             [(ngModel)]="voucher.PaidfromId">
@@ -89,9 +89,10 @@
                                     </td> -->
 
                                  
-                                    <td>{{voucher.BankName}}</td>
+                                    <td class="text-left">{{voucher.BankName}}</td>
 
-                                    <td>{{voucher.ReferenceNo || '-'}}</td>
+                                    <td class="text-left" [title]="voucher.ReferenceNo | uppercase">
+                                        {{ (voucher.ReferenceNo.length > 30) ? voucher.ReferenceNo.slice(0, 30) + '-' : voucher.ReferenceNo }}</td>
                                     <td>
                                         <div
                                     [ngClass]="voucher.StatusName == 'Confirmed' ? 'badge badge-state-confirm' : voucher.StatusName == 'Cancelled' ? 'badge badge-state-cancel' : 'badge badge-state'">

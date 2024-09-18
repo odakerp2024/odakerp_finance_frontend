@@ -41,17 +41,17 @@
                             </thead>
                             <tbody class="text-center">
                                 <tr *ngFor="let journal of pagedItems;let i = index">
-                                    <td (click)="editJournal(journal.Id)" style="color: #0366d6;cursor: pointer;">
+                                    <td class="text-left" (click)="editJournal(journal.Id)" style="color: #0366d6;cursor: pointer;">
                                         {{journal.JournalNumber}}
                                     </td>
-                                    <td>{{journal.JournalDate | date :commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td>
+                                    <td class="text-left">{{journal.JournalDate | date :commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td>
                                     
-                                    <td [title]="journal.AccountName | uppercase">
-                                        {{ (journal.AccountName && journal.AccountName.length > 20) ?journal.AccountName.slice(0, 20) + '-' : journal.AccountName }}
+                                    <td class="text-left" [title]="journal.AccountName | uppercase">
+                                        {{ (journal.AccountName && journal.AccountName.length > 30) ?journal.AccountName.slice(0, 30) + '-' : journal.AccountName }}
                                       </td>
                                     <!-- <td>{{journal.AccountName}}</td> -->
-                                    <td>{{journal.CurrencyName}}</td>
-                                    <td>{{journal.Amount}}</td>
+                                    <td class="text-left">{{journal.CurrencyName}}</td>
+                                    <td class="text-right">{{ journal.Amount | dynamicDecimal: entityFraction }}</td>
                                     <td>
                                         <div
                                     [ngClass]="journal.Status == 'Confirmed' ? 'badge badge-state-confirm' : journal.Status == 'Cancelled' ? 'badge badge-state-cancel' : 'badge badge-state'">

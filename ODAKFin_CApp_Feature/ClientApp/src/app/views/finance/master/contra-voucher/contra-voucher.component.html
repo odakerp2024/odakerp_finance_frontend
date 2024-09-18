@@ -49,7 +49,7 @@
                             </thead>
                             <tbody class="text-center">
                                 <tr *ngFor="let contra of pagedItems; let i = index">
-                                    <td>
+                                    <td class="text-left">
                                         <!-- <a style="color:#0366d6;cursor: pointer;" href=""
                                         [routerLink]="['/views/contra-info/contra-info-view']"
                                         [queryParams]="{ contraId: contra.ContraVoucherId }"
@@ -58,7 +58,7 @@
                                         <a (click)="editPayment(contra.ContraVoucherId)"
                                             style="color:#0366d6;cursor: pointer;" class="">{{contra.ContraVoucherNumber? contra.ContraVoucherNumber: 'NA'}}</a>
                                     </td>
-                                    <td>{{contra.ContraVoucherDate | date: commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td>
+                                    <td class="text-left">{{contra.ContraVoucherDate | date: commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td>
                                     <!-- <td [title]="contra.FromAccount">
                                         <select
                                             class="form-control my-select disable-input--nostyle border-0 text-black"
@@ -76,7 +76,7 @@
                                           </option>
                                         </select>
                                       </td>                                      
-                                    <td [title]="getTooltipNameById(contra.ToAccount)">
+                                    <td class="text-left" [title]="getTooltipNameById(contra.ToAccount)">
                                         <select
                                             class="form-control my-select disable-input--nostyle border-0 text-black"
                                             [(ngModel)]="contra.ToAccount">
@@ -85,9 +85,12 @@
                                             </option>
                                         </select>
                                     </td>
-                                    <td>{{contra.AmountPaid}}</td>
-                                    <td>{{contra.CurrencyName}}</td>
-                                    <td>{{contra.ReferenceNo || '-' }}</td>
+                                    <td class="text-right">{{ contra.AmountPaid | dynamicDecimal: entityFraction }}</td>
+                                    <td class="text-left">{{contra.CurrencyName}}</td>
+                                    <td class="text-left" 
+                                    [title]="contra.ReferenceNo | uppercase">
+                                    {{ (contra.ReferenceNo.length > 30) ? contra.ReferenceNo.slice(0, 30) + '-' : contra.ReferenceNo }}
+                                    </td>
                                     <td>
                                         <div
                                             [ngClass]="contra.StatusName == 'Confirmed' ? 'badge badge-state-confirm' : contra.StatusName == 'Cancelled' ? 'badge badge-state-cancel' : 'badge badge-state'">
