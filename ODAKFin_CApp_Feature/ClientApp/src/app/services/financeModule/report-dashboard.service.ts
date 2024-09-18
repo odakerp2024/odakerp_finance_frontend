@@ -105,5 +105,9 @@ export class ReportDashboardService {
   GetProfitLossList(FormValue: any): Observable<any> {
     return this.http.post<any>(this.globals.APIURL + '/Reports/GetProfitLossList', FormValue);
   }
+
+  GetProfitLossById(FormValue: any): Observable<any> {
+    return this.http.post<any>(this.globals.APIURL + '/Reports/GetPNLById', FormValue);
+  }
  
 }
