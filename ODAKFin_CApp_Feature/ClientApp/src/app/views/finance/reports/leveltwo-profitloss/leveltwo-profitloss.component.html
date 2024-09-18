@@ -14,14 +14,47 @@
     <div class="col-10">
         <div class="row pb-1">
   
-    <div class="col-md-2">
-        <label class="str mb-2">Date</label>
-        <mat-form-field class="tillDate mat_date_picker" appearance="outline">
-            <input matInput formControlName="Date" (dateChange)="onDateChange($event)" readonly autocomplete="off" [max]="fromMaxDate" [matDatepicker]="ToDate" id="ToDate" style="padding:3px;">
-            <mat-datepicker-toggle matSuffix [for]="ToDate" class="center-icon"></mat-datepicker-toggle>
-            <mat-datepicker #ToDate></mat-datepicker>
-        </mat-form-field>
-    </div> 
+            <div class="col-2">
+
+                <label class=" fontstyles">PEROID</label>
+                <ng-select class="searchdropdown custom dropdown-size" formControlName="Peroid"
+                    (ngModelChange)="onOptionChange($event);" [clearable]="false">
+                    <ng-option [value]="''" disabled>-- SELECT --</ng-option>
+                    <ng-container *ngFor="let peroid of PeroidList">
+                        <ng-option [value]="peroid.peroidId">
+                            {{peroid.peroidName | uppercase}}
+                        </ng-option>
+                    </ng-container>
+                </ng-select>
+
+            </div>
+
+            <div class="col-2" *ngIf="selectedOption === 'custom'">
+                <label class="fontstyles mb-3">FROM</label>
+                <div class="input-group">
+                    <mat-form-field class="tillDate mat_date_picker" appearance="outline">
+                        <input matInput (click)="FromDate.open()" readonly autocomplete="off"
+                            (onchange)="formatchange(true)" [matDatepicker]="FromDate" id="FromDate"
+                            [placeholder]="entityDateFormat" formControlName="FromDate">
+                        <mat-datepicker-toggle matSuffix [for]="FromDate"></mat-datepicker-toggle>
+                        <mat-datepicker #FromDate></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="col-2" *ngIf="selectedOption === 'custom'">
+                <label class="fontstyles mb-3">TO</label>
+                <div class="input-group">
+                    <mat-form-field class="tillDate mat_date_picker" appearance="outline">
+                        <input matInput (click)="ToDate.open()" readonly autocomplete="off"
+                            formControlName="ToDate" [matDatepicker]="ToDate" id="ToDate"
+                            [min]="filterForm.get('FromDate').value" [placeholder]="entityDateFormat"
+                            (ngModelChange)="formatchange(false)">
+                        <mat-datepicker-toggle matSuffix [for]="ToDate"></mat-datepicker-toggle>
+                        <mat-datepicker #ToDate></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
     
     <div class="col-md-2">
         <label class="str" for="companyName">Select Division</label><br>
