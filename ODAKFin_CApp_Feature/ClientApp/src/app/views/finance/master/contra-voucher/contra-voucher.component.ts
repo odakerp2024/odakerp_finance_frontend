@@ -34,6 +34,7 @@ export class ContraVoucherComponent implements OnInit, OnDestroy {
 //  minDate: string = this.datePipe.transform(new Date(), "yyyy-MM-dd");
  validTillMinDate: string = this.datePipe.transform(new Date(), "yyyy-MM-dd");
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat')
+  entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   contraVoucherList: any[];
   private ngUnsubscribe = new Subject<void>();
   constructor(
@@ -298,7 +299,7 @@ export class ContraVoucherComponent implements OnInit, OnDestroy {
     const bank = this.bankList?.find(bank => bank.BankID === id);
   
     if (bank) {
-      const truncatedBankName = bank.BankName.slice(0, 20); // Get the first 20 characters
+      const truncatedBankName = bank.BankName.slice(0, 30); // Get the first 20 characters
       return truncatedBankName.toUpperCase(); // Convert to uppercase if needed
     } else {
       return '';
