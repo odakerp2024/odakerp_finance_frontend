@@ -239,6 +239,7 @@ sort(properties: string[]) {
 }
 
   getDivisionList() {
+    debugger
     var service = `${this.globals.APIURL}/Division/GetOrganizationDivisionList`; var payload: any = {}
     this.dataService.post(service, payload).subscribe((result: any) => {
       this.divisionList = [];
@@ -461,24 +462,43 @@ this.filterForm.controls.Peroid.setValue('month');
   await this.trailbalanceList();
 }
 
-editBalance(id: number) {
-  
-  const payload = {
-    "AccountId": id,
-    "Date": "",
-    "DivisionId": "",
-	"OfficeId" : ""
-  };
-  this.reportService.GetProfitLossList(payload).subscribe(data => {
+async editBalance(id: number) {
 
-    //Waiting for the screens while redirecting from the KK in profit and loss
-    // this.router.navigate(['/views/reports/profit-loss']);
-    this.router.navigate(['/views/reports/leveltwo-profitloss', { id: id }])
-   
+  // const payload = {
+  //   "AccountId": id,
+  //   "Date": "",
+  //   "DivisionId": "",
+	// "OfficeId" : ""
+  // };
+  
+  
+  // Define the form group
+  this.filterForm = this.fb.group({
+      FromDate: [this.startDate],
+      ToDate: [this.endDate],
+      OfficeId: [this.filterForm.controls.OfficeId.value],
+      DivisionId: [this.filterForm.controls.DivisionId.value],
+      Peroid: [this.filterForm.controls.Peroid.value],
+  });
+
+  
+
+  // Call the service
+  this.reportService.GetProfitLossList(this.filterForm.value).subscribe(data => {
+debugger
+      // Navigate to the leveltwo-profitloss component with query parameters
+      this.router.navigate(['/views/reports/leveltwo-profitloss', { 
+          id: id,
+          FromDate: this.filterForm.controls.FromDate.value,
+          ToDate: this.filterForm.controls.ToDate.value,
+          OfficeId: this.filterForm.controls.OfficeId.value,
+          DivisionId: this.filterForm.controls.DivisionId.value,
+          Peroid: this.filterForm.controls.Peroid.value
+      }]);
+      
   }, err => {
-    console.log('error:', err.message);
-});
- 
+      console.log('error:', err.message);
+  });
 }
 
 async onDivisionChange(value: any) {

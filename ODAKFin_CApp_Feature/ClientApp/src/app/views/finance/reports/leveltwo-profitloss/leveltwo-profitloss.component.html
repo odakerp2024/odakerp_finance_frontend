@@ -18,7 +18,7 @@
 
                 <label class=" fontstyles">PEROID</label>
                 <ng-select class="searchdropdown custom dropdown-size" formControlName="Peroid"
-                    (ngModelChange)="onOptionChange($event);" [clearable]="false">
+                    (ngModelChange)="onDateChange($event);" [clearable]="false">
                     <ng-option [value]="''" disabled>-- SELECT --</ng-option>
                     <ng-container *ngFor="let peroid of PeroidList">
                         <ng-option [value]="peroid.peroidId">
@@ -100,7 +100,8 @@
         <div class="form-group">
             <label class="str">VOUCHER #</label>
             <input
-                class="form-control my-select amount w-100 mr-0" formControlName="Transaction"  />
+                class="w-100 mr-0" formControlName="OnVoucher"
+                (input)="OnVoucher($event.target.value, id)" />
         </div>
     </div>
         </div>
@@ -108,7 +109,7 @@
 
     <div class="col-2" style="padding-top: 23px;">
         <div class="text-center">
-            <button type="button" (click)="createBalanceFilterForm();fetchData(id);"
+            <button type="button" (click)="fetchData(id);"
                 class="btn btn-warning text-white mb-0 col-auto clear-btn">
                 CLEAR
             </button>
