@@ -18,6 +18,16 @@
     color: #0366d6;
     cursor: pointer;
   }
+
+  .hyperColortwo {
+    color: #30529b !important; /* Primary color */
+    
+}
+
+.hyperColortwo:hover{
+  text-decoration: underline;
+}
+
   .hyperColor:hover{
     text-decoration: underline;
   }

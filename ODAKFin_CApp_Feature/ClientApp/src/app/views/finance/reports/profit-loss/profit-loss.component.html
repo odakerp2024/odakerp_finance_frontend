@@ -167,11 +167,11 @@
                       <!-- Grandparent and Parent names row -->
                       <tr (click)="toggleParent(group.GroupName, parent.ParentAccountName)" style="cursor: pointer;">
                         <td>
-                          <i class="fa fa-angle-double-right child-account hyperColor"
+                          <i class="fa fa-angle-double-right child-account hyperColortwo"
                             [ngClass]="{ 'hidden': isParentExpanded(group.GroupName, parent.ParentAccountName) }"></i>
-                          <i class="fa fa-angle-double-down child-account hyperColor"
+                          <i class="fa fa-angle-double-down child-account hyperColortwo"
                             [ngClass]="{ 'hidden': !isParentExpanded(group.GroupName, parent.ParentAccountName) }"></i>
-                          <strong class="child-account hyperColor">{{ parent.ParentAccountName }}</strong>
+                          <strong class="child-account hyperColortwo">{{ parent.ParentAccountName }}</strong>
                         </td>
                         <td class="text-right">
                           {{ isParentExpanded(group.GroupName, parent.ParentAccountName) ? 0 : ((parent.Amount) | dynamicentityDecimal) }}
@@ -200,7 +200,8 @@
                         <!-- Parent account totals -->
                         <tr style="padding: 7px !important; font-weight: bold; background-color: #f0f0f0;">
                           <td colspan="1" class="text-left">
-                            <span style="font-weight: bold; text-align: left;">{{ parent.ParentAccountName }} Total :</span>
+                            <strong style="text-align: left;">{{ parent.ParentAccountName }} Total :</strong>
+                            <!-- <span style="font-weight: bold; text-align: left;">{{ parent.ParentAccountName }} Total :</span> -->
                           </td>
                           <td class="text-right">{{ parent.Amount | dynamicentityDecimal }}</td>
 
