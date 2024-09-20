@@ -558,17 +558,17 @@ export class LeveltwoProfitlossComponent implements OnInit {
     worksheet.mergeCells(`C${titleRow.number}:D${titleRow.number}`);
   
     const subtitleRow = worksheet.addRow(['', '', 'Account Transactions', '', '', '']);
-    subtitleRow.getCell(3).font = { size: 15, bold: true };
+    subtitleRow.getCell(3).font = { size: 14, bold: true };
     subtitleRow.getCell(3).alignment = { horizontal: 'center' };
     worksheet.mergeCells(`C${subtitleRow.number}:D${subtitleRow.number}`);
   
     const subtitleRow1 = worksheet.addRow(['', '', 'Accounts Receivable', '', '', '']);
-    subtitleRow1.getCell(3).font = { size: 15, bold: true };
+    subtitleRow1.getCell(3).font = { size: 13, bold: true };
     subtitleRow1.getCell(3).alignment = { horizontal: 'center' };
     worksheet.mergeCells(`C${subtitleRow1.number}:D${subtitleRow1.number}`);
   
     const currentDate = new Date();
-    const subtitleRow2 = worksheet.addRow(['', '', `As of ${this.datePipe.transform(currentDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`, '', '', '']);
+    const subtitleRow2 = worksheet.addRow(['', '', `From ${this.datePipe.transform(this.startDate, 'dd-MM-yyyy')} To ${this.datePipe.transform(this.endDate, 'dd-MM-yyyy')}`, '', '','' ]);
     subtitleRow2.getCell(3).alignment = { horizontal: 'center' };
     worksheet.mergeCells(`C${subtitleRow2.number}:D${subtitleRow2.number}`);
   
@@ -709,7 +709,7 @@ export class LeveltwoProfitlossComponent implements OnInit {
     // Write to Excel and save
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    saveAs(blob, 'Report-PL_Account Transactions.xlsx');
+    saveAs(blob, 'Report-ProfitandLoss_Account Transactions.xlsx');
   }
   
 

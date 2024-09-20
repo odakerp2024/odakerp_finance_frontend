@@ -132,7 +132,10 @@
                 <h6 class="subtitle">Account Transactions</h6>
                 <p class="subtitle">Basis: Accrual</p> 
                 <h6 class="subtitle">Accounts Receivable</h6>
-                <p class="subtitle">{{ selectedDate ? selectedDate : currentDate | date:'mediumDate' }}</p>
+                <p class="title">
+                    From {{ datePipe.transform(startDate, 'dd/MM/yyyy') }} 
+                    To {{ datePipe.transform(endDate, 'dd/MM/yyyy') }}
+                  </p>
 
             </div>
 

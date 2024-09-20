@@ -521,7 +521,7 @@ export class TrialbalancetwoComponent implements OnInit {
     // Write to Excel and save
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    saveAs(blob, 'Report-Account Transactions.xlsx');
+    saveAs(blob, 'Report-TrailBalance_Account Transactions.xlsx');
   }
   
 
