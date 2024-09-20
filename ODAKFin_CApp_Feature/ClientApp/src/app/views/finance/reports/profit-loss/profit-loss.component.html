@@ -55,6 +55,7 @@
                   <ng-option [value]="''" disabled>--SELECT DIVISION--</ng-option>
                   <ng-container *ngFor="let division of divisionList">
                     <ng-option *ngIf="division.Active" [value]="division.ID">
+                      <!-- <ng-option *ngIf="division.Active" [value]="{ id: division.ID, name: division.DivisionName }"> -->
                       <span class="textwrap">{{ division.DivisionName | uppercase }}</span>
                     </ng-option>
                   </ng-container>

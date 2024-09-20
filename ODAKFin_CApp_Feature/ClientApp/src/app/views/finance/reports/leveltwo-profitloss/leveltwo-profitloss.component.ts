@@ -48,6 +48,24 @@ export class LeveltwoProfitlossComponent implements OnInit {
   pagesort: any = new GridSort().sort;
   transactionSearchTerm: any;
   filteredData: any;
+  selectedDivision: string;
+  selectedOffice: string;
+
+  PeroidList = [
+    { peroidId: 'today', peroidName: 'CURRENT DAY' },
+    { peroidId: 'week', peroidName: 'CURRENT WEEK' },
+    { peroidId: 'month', peroidName: 'CURRENT MONTH' },
+    { peroidId: 'year', peroidName: 'CURRENT FINANCIAL YEAR' },
+    { peroidId: 'custom', peroidName: 'CUSTOM' },
+    { peroidId: 'previoustoday', peroidName: 'PREVIOUS DAY' },
+    { peroidId: 'previousweek', peroidName: 'PREVIOUS WEEK' },
+    { peroidId: 'previousmonth', peroidName: 'PREVIOUS MONTH' },
+    { peroidId: 'previousyear', peroidName: 'PREVIOUS FINANCIAL YEAR' }
+  ];
+
+  selectedOption: string;
+  startDate = '';
+  endDate = '';
 
   @ViewChild('table') table: ElementRef;
 
@@ -63,7 +81,7 @@ export class LeveltwoProfitlossComponent implements OnInit {
     this.getDivisionList();
     this.getOfficeList();
     this.getDropDownType();
-    this.createBalanceFilterForm();
+    //this.createBalanceFilterForm();
 
     this.route.paramMap.subscribe(params => {
       this.id = +params.get('id');
@@ -172,8 +190,8 @@ export class LeveltwoProfitlossComponent implements OnInit {
 
 
   onDateChange(event: any): void {
-    this.selectedDate = this.datePipe.transform(event.value, 'yyyy-MM-dd');
-    this.BasedOnDate(this.selectedDate, this.id);
+    this.onOptionChange(event)
+    this.BasedOnDate(this.id);
   }
 
 
@@ -225,18 +243,112 @@ export class LeveltwoProfitlossComponent implements OnInit {
     }
   }
 
+  onOptionChange(selectedOption: string) {
+    debugger
+    
+    this.selectedOption = '';
+    switch (selectedOption) {
 
-  fetchData(id: number): void {
+      case 'today':
+        this.filterForm.controls.FromDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
+        this.filterForm.controls.ToDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
+        break;
 
-    const payload = {
-      "AccountId": id,
-      "Date": "",
-      "DivisionId": "",
-      "OfficeId": "",
-      "Type": " ",
-      "Transaction": ""
-    };
-    this.reportService.GetLedgerDataById(payload).subscribe(response => {
+      case 'week':
+        this.filterForm.controls.FromDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay()), "yyyy-MM-dd"));
+        this.filterForm.controls.ToDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() + (6 - this.currentDate.getDay())), "yyyy-MM-dd"));
+        break;
+        case 'month':
+        const startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd")
+        const nextMonth = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 1);
+        const lastDayOfMonth = new Date(nextMonth);
+        lastDayOfMonth.setDate(nextMonth.getDate() - 1);
+        const endDate = this.datePipe.transform(lastDayOfMonth, "yyyy-MM-dd");
+        this.filterForm.controls.FromDate.setValue(startDate);
+        this.filterForm.controls.ToDate.setValue(endDate); 
+        break;
+
+      case 'year':
+        const currentYear = this.currentDate.getFullYear();
+        const startYear = this.currentDate.getMonth() >= 3 ? currentYear : currentYear - 1;
+        const endYear = startYear + 1;
+        this.filterForm.controls.FromDate.setValue(this.datePipe.transform(new Date(startYear, 3, 1), "yyyy-MM-dd"));
+        this.filterForm.controls.ToDate.setValue(this.datePipe.transform(new Date(endYear, 2, 31), "yyyy-MM-dd"));
+        break;
+
+      case 'previoustoday':
+        const previousDay = new Date(this.currentDate);
+        previousDay.setDate(previousDay.getDate() - 1);
+        this.filterForm.controls.FromDate.setValue(this.datePipe.transform(previousDay, "yyyy-MM-dd"));
+        this.filterForm.controls.ToDate.setValue(this.datePipe.transform(previousDay, "yyyy-MM-dd"));
+        break;
+
+      case 'previousweek':
+        const previousWeekStartDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay() - 7);
+        const previousWeekEndDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay() - 1);
+        this.filterForm.controls.FromDate.setValue(this.datePipe.transform(previousWeekStartDate, "yyyy-MM-dd"));
+        this.filterForm.controls.ToDate.setValue(this.datePipe.transform(previousWeekEndDate, "yyyy-MM-dd"));
+        break;
+
+      case 'previousmonth':
+      debugger
+        
+        const previousMonthStartDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() - 1, 1);
+        const previousMonthEndDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 0);
+        this.filterForm.controls.FromDate.setValue(this.datePipe.transform(previousMonthStartDate, "yyyy-MM-dd"));
+        this.filterForm.controls.ToDate.setValue(this.datePipe.transform(previousMonthEndDate, "yyyy-MM-dd"));
+        break;
+
+      case 'previousyear':
+        const previousYear = this.currentDate.getFullYear() - 1;
+        const previousYearStartDate = new Date(previousYear, 3, 1);
+        const previousYearEndDate = new Date(previousYear + 1, 2, 31);
+        this.filterForm.controls.FromDate.setValue(this.datePipe.transform(previousYearStartDate, "yyyy-MM-dd"));
+        this.filterForm.controls.ToDate.setValue(this.datePipe.transform(previousYearEndDate, "yyyy-MM-dd"));
+        break;
+
+      case 'custom':
+        this.selectedOption = 'custom';
+        this.startDate = this.filterForm.controls.FromDate.value;
+        this.endDate = this.filterForm.controls.ToDate.value;
+        break;
+      default:
+        this.selectedOption = '';
+        break;
+    }
+     
+  }
+  
+  fetchData(id){
+    
+    const fromDate = this.route.snapshot.paramMap.get('FromDate');
+    const toDate = this.route.snapshot.paramMap.get('ToDate');
+    const officeId = this.route.snapshot.paramMap.get('OfficeId');
+    const divisionId = this.route.snapshot.paramMap.get('DivisionId');
+    const peroid = this.route.snapshot.paramMap.get('Peroid');
+
+    this.startDate = fromDate
+    this.endDate = toDate
+    
+    this.filterForm = this.fb.group({
+      AccountId:id,
+      FromDate: [fromDate],
+      ToDate: [toDate],
+      OfficeId: [''],
+      DivisionId: [''],
+      Type: [''],
+      Transaction: [''],
+      Peroid: [peroid]
+      
+    });
+
+    const selectedDivision = this.divisionList.find(division => division.ID === divisionId);
+    this.selectedDivision = selectedDivision ? selectedDivision.DivisionName : '';
+
+    const selectedOffice = this.officeList.find(Office => Office.ID === officeId);
+    this.selectedOffice = selectedOffice ? selectedOffice.OfficeName : '';
+    
+    this.reportService.GetProfitLossById(this.filterForm.value).subscribe(response => {
       if (response.data && Array.isArray(response.data.Table) && response.data.Table.length > 0) {
         this.dataList = response.data.Table;
         this.setPage(1);
@@ -264,30 +376,72 @@ export class LeveltwoProfitlossComponent implements OnInit {
       console.error('Error:', err);
     });
   }
-
+  
   createBalanceFilterForm() {
     this.filterForm = this.fb.group({
-      Date: [this.currentDate],
+      AccountId: [this.id],
+      FromDate: [this.startDate],
+      ToDate: [this.endDate],
       OfficeId: [''],
       DivisionId: [''],
       Type: [''],
-      Transaction: ['']
+      Transaction: [''],
+      period: ['']
     })
-    // Listen for changes in the transaction input field
-    this.filterForm.get('Transaction').valueChanges.subscribe(value => {
-      this.transactionSearchTerm = value;
-      if (value == '') {
-        this.applyFilter('Transaction', '', this.id);
-      } else {
-        this.applyFilter('Transaction', value, this.id);
-      }
-    });
-  }
-  //Filter By Date , Division , Office & TransactionType 
-  BasedOnDate(selectedDate: any, id: number) {
-    this.applyFilter('Date', selectedDate, id);
+    
+    this.startDate = this.filterForm.controls.FromDate.value;
+    this.endDate = this.filterForm.controls.ToDate.value;
+    this.trialbalancelist()
+    
   }
 
+  trialbalancelist(){
+
+    this.reportService.GetProfitLossById(this.filterForm.value).subscribe(response => {
+      if (response.data && Array.isArray(response.data.Table) && response.data.Table.length > 0) {
+        this.dataList = response.data.Table;
+        this.setPage(1);
+        // Calculate total debit amount
+        this.totalDebitAmount = this.dataList.reduce((sum, item) => sum + (parseFloat(item.Debit) || 0), 0);
+
+        // Calculate total credit amount
+        this.totalCreditAmount = this.dataList.reduce((sum, item) => sum + (parseFloat(item.Credit) || 0), 0);
+
+
+        // Calculate the difference between total credit and debit
+        this.totalAmount = Math.abs(this.totalDebitAmount - this.totalCreditAmount);
+
+
+
+      } else {
+        this.totalDebitAmount = 0;
+        this.totalCreditAmount = 0;
+        this.totalAmount = 0;
+        this.pager = {};
+        this.dataList = [];
+        // console.error('Error: Invalid response format');
+      }
+    }, err => {
+      console.error('Error:', err);
+    });
+  }
+  
+  BasedOnDate(id: number) {
+
+    
+   debugger
+    this.startDate = this.filterForm.controls.FromDate.value;
+    this.endDate = this.filterForm.controls.ToDate.value;
+   
+
+    if (this.startDate && this.endDate) {
+        // this.applyFilter('FromDate', this.startDate, id), this.applyFilter('ToDate', this.endDate, id);
+        this.applyFilter('DateRange', { FromDate: this.startDate, ToDate: this.endDate }, id);
+    } else {
+        console.warn('Start date or end date is Invalid.');
+    }
+  }
+  
   onDivisionChange(divisionId: any, id: number) {
     this.applyFilter('DivisionId', divisionId, id);
   }
@@ -299,16 +453,19 @@ export class LeveltwoProfitlossComponent implements OnInit {
   onTransactionTypeChange(type: any, id: number): void {
     this.applyFilter('Type', type, id);
   }
-  onTransactionChange(transaction: any, id: number): void {
-    this.applyFilter('Transaction', transaction, id);
+  
+  OnVoucher(Transaction: any, id: number): void {
+    debugger;
+    this.applyFilter('Transaction', Transaction, id);
   }
-
+  
 
 
   applyFilter(filterType: string, value: any, id: number): void {
     let payload: any = {
       "AccountId": id,
-      "Date": "",
+      "FromDate": this.startDate,
+      "ToDate": this.endDate,
       "DivisionId": "",
       "OfficeId": "",
       "Type": "",
@@ -316,8 +473,13 @@ export class LeveltwoProfitlossComponent implements OnInit {
     };
 
     switch (filterType) {
-      case 'Date':
-        payload.Date = value;
+      case 'DateRange':
+        payload.FromDate = value.FromDate;
+        payload.ToDate = value.ToDate;
+        
+        break;
+    case 'ToDate':
+        payload.ToDate = value;
         break;
       case 'DivisionId':
         payload.DivisionId = value;
@@ -328,7 +490,6 @@ export class LeveltwoProfitlossComponent implements OnInit {
       case 'Type':
         payload.Type = value;
         break;
-
       case 'Transaction':
         payload.Transaction = value;
         break;
@@ -337,15 +498,32 @@ export class LeveltwoProfitlossComponent implements OnInit {
         return;
     }
 
-    this.reportService.GetLedgerDataById(payload).subscribe(response => {
+    this.reportService.GetProfitLossById(payload).subscribe(response => {
       this.dataList = [];
       console.log('Response Data:', response);
 
       if (response.data.Table && response.data.Table.length > 0) {
         this.dataList = response.data.Table;
-        console.log('Data List:', this.dataList);
+        this.setPage(1);
+        // Calculate total debit amount
+        this.totalDebitAmount = this.dataList.reduce((sum, item) => sum + (parseFloat(item.Debit) || 0), 0);
+
+        // Calculate total credit amount
+        this.totalCreditAmount = this.dataList.reduce((sum, item) => sum + (parseFloat(item.Credit) || 0), 0);
+
+
+        // Calculate the difference between total credit and debit
+        this.totalAmount = Math.abs(this.totalDebitAmount - this.totalCreditAmount);
+
+
+
       } else {
-        console.error('Error: Invalid response format');
+        this.totalDebitAmount = 0;
+        this.totalCreditAmount = 0;
+        this.totalAmount = 0;
+        this.pager = {};
+        this.dataList = [];
+        // console.error('Error: Invalid response format');
       }
     }, err => {
       console.error('Error:', err);
