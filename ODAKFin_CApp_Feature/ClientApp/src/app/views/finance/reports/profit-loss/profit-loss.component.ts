@@ -1018,17 +1018,7 @@ async downloadExcel() {
   worksheet.mergeCells(`B${subtitleRow1.number}:C${subtitleRow1.number}`);
 
   // Define header row
-  const headers = ['Account', 'Total', 'Year To Date'];
-
-  // const headers = [
-  //   'Account',
-  //   'Total',
-  //   `Year To Date  
-  //   ${this.currentFinancialYear}`
-  // ];
-  
-  
-
+  const headers = ['Account', 'Total', `Year To Date\n${this.currentFinancialYear}`];
   const headerRow = worksheet.addRow(headers);
 
   // Style the header row
@@ -1044,6 +1034,8 @@ async downloadExcel() {
     };
     cell.alignment = {
       horizontal: 'center',
+      vertical: 'middle',
+      wrapText: true,
     };
     cell.border = {
       top: { style: 'thin' },
