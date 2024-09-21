@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Vendorlist } from 'src/app/model/financeModule/Vendor';
 import { PaginationService } from 'src/app/pagination.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DatePipe } from '@angular/common';
+import { DatePipe, UpperCasePipe } from '@angular/common';
 import { Globals } from 'src/app/globals';
 import { DataService } from 'src/app/services/data.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
@@ -80,6 +80,7 @@ export class LeveltwoProfitlossComponent implements OnInit {
   ngOnInit(): void {
     this.getDivisionList();
     this.getOfficeList();
+    this.getDivisionAndOfficeList();
     this.getDropDownType();
     //this.createBalanceFilterForm();
 
@@ -90,7 +91,6 @@ export class LeveltwoProfitlossComponent implements OnInit {
     });
   }
   Cancel() {
-    debugger
     this.router.navigate(['/views/reports/profit-loss', {}])
   }
 
@@ -219,15 +219,49 @@ export class LeveltwoProfitlossComponent implements OnInit {
       }
     }, error => { });
   }
+  
+  getDivisionAndOfficeList() {
+    const divisionService = `${this.globals.APIURL}/Division/GetOrganizationDivisionList`;
+    const officeService = `${this.globals.APIURL}/Office/GetOrganizationOfficeList`;
 
-  getOfficeList() {
+    // Fetch division list
+    this.dataService.post(divisionService, {}).subscribe((divisionResult: any) => {
+        this.divisionList = [];
+        if (divisionResult.data.Table.length > 0) {
+            this.divisionList = divisionResult.data.Table.filter(x => x.Active === true);
+        }
+
+        // Now fetch office list
+        this.dataService.post(officeService, {}).subscribe((officeResult: any) => {
+            this.officeList = [];
+            if (officeResult.message === 'Success' && officeResult.data.Office.length > 0) {
+                this.officeList = officeResult.data.Office.filter(x => x.Active === true);
+            }
+            debugger
+
+            // Check if both lists have items before calling fetchData
+            if (this.divisionList.length > 0 && this.officeList.length > 0) {
+              debugger
+                this.fetchData(this.id);
+            } else {
+                console.warn('Division or Office list is empty.');
+            }
+        }, error => {
+            console.error('Error fetching office list:', error);
+        });
+    }, error => {
+        console.error('Error fetching division list:', error);
+    });
+ }
+ 
+ getOfficeList() {
     var service = `${this.globals.APIURL}/Office/GetOrganizationOfficeList`;
     this.dataService.post(service, {}).subscribe((result: any) => {
       this.officeList = [];
       if (result.message == 'Success' && result.data.Office.length > 0) {
         this.officeList = result.data.Office.filter(x => x.Active == true);
       }
-    }, error => { });
+     }, error => { });
   }
 
   getDropDownType() {
@@ -244,7 +278,6 @@ export class LeveltwoProfitlossComponent implements OnInit {
   }
 
   onOptionChange(selectedOption: string) {
-    debugger
     
     this.selectedOption = '';
     switch (selectedOption) {
@@ -291,7 +324,7 @@ export class LeveltwoProfitlossComponent implements OnInit {
         break;
 
       case 'previousmonth':
-      debugger
+      
         
         const previousMonthStartDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() - 1, 1);
         const previousMonthEndDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 0);
@@ -320,62 +353,63 @@ export class LeveltwoProfitlossComponent implements OnInit {
   }
   
   fetchData(id){
-    
-    const fromDate = this.route.snapshot.paramMap.get('FromDate');
-    const toDate = this.route.snapshot.paramMap.get('ToDate');
-    const officeId = this.route.snapshot.paramMap.get('OfficeId');
-    const divisionId = this.route.snapshot.paramMap.get('DivisionId');
-    const peroid = this.route.snapshot.paramMap.get('Peroid');
+    debugger
 
-    this.startDate = fromDate
-    this.endDate = toDate
-    
-    this.filterForm = this.fb.group({
-      AccountId:id,
-      FromDate: [fromDate],
-      ToDate: [toDate],
-      OfficeId: [''],
-      DivisionId: [''],
-      Type: [''],
-      Transaction: [''],
-      Peroid: [peroid]
+   
+      const fromDate = this.route.snapshot.paramMap.get('FromDate');
+      const toDate = this.route.snapshot.paramMap.get('ToDate');
+      const officeId = this.route.snapshot.paramMap.get('OfficeId');
+      const divisionId = this.route.snapshot.paramMap.get('DivisionId');
+      const peroid = this.route.snapshot.paramMap.get('Peroid');
+  
+      this.startDate = fromDate
+      this.endDate = toDate
+  
+      const selectedDivision = this.divisionList.find(division => division.ID == divisionId);
+      this.selectedDivision = selectedDivision ? selectedDivision.DivisionName: '';
+      const selectedOffice = this.officeList.find(Office => Office.OfficeId == officeId);
+      this.selectedOffice = selectedOffice ? selectedOffice.OfficeName : '';
+      const OfficeName =  this.selectedOffice.toUpperCase();
+      const divisionName = this.selectedDivision.toUpperCase();
       
-    });
-
-    const selectedDivision = this.divisionList.find(division => division.ID === divisionId);
-    this.selectedDivision = selectedDivision ? selectedDivision.DivisionName : '';
-
-    const selectedOffice = this.officeList.find(Office => Office.ID === officeId);
-    this.selectedOffice = selectedOffice ? selectedOffice.OfficeName : '';
-    
-    this.reportService.GetProfitLossById(this.filterForm.value).subscribe(response => {
-      if (response.data && Array.isArray(response.data.Table) && response.data.Table.length > 0) {
-        this.dataList = response.data.Table;
-        this.setPage(1);
-        // Calculate total debit amount
-        this.totalDebitAmount = this.dataList.reduce((sum, item) => sum + (parseFloat(item.Debit) || 0), 0);
-
-        // Calculate total credit amount
-        this.totalCreditAmount = this.dataList.reduce((sum, item) => sum + (parseFloat(item.Credit) || 0), 0);
-
-
-        // Calculate the difference between total credit and debit
-        this.totalAmount = Math.abs(this.totalDebitAmount - this.totalCreditAmount);
-
-
-
-      } else {
-        this.totalDebitAmount = 0;
-        this.totalCreditAmount = 0;
-        this.totalAmount = 0;
-        this.pager = {};
-        this.dataList = [];
-        // console.error('Error: Invalid response format');
-      }
-    }, err => {
-      console.error('Error:', err);
-    });
-  }
+      this.filterForm = this.fb.group({
+        AccountId:id,
+        FromDate: [fromDate],
+        ToDate: [toDate],
+        OfficeId: [officeId],
+        DivisionId: [divisionId],
+        DivisionName:[divisionName],
+        OfficeName:[OfficeName],
+        Type: [''],
+        Transaction: [''],
+        Peroid: [peroid]
+        
+      });
+      this.reportService.GetProfitLossById(this.filterForm.value).subscribe(response => {
+        if (response.data && Array.isArray(response.data.Table) && response.data.Table.length > 0) {
+          this.dataList = response.data.Table;
+          this.setPage(1);
+          // Calculate total debit amount
+          this.totalDebitAmount = this.dataList.reduce((sum, item) => sum + (parseFloat(item.Debit) || 0), 0);
+  
+          // Calculate total credit amount
+          this.totalCreditAmount = this.dataList.reduce((sum, item) => sum + (parseFloat(item.Credit) || 0), 0);
+  
+  
+          // Calculate the difference between total credit and debit
+          this.totalAmount = Math.abs(this.totalDebitAmount - this.totalCreditAmount);
+        } else {
+          this.totalDebitAmount = 0;
+          this.totalCreditAmount = 0;
+          this.totalAmount = 0;
+          this.pager = {};
+          this.dataList = [];
+          // console.error('Error: Invalid response format');
+        }
+      }, err => {
+        console.error('Error:', err);
+      });
+    }
   
   createBalanceFilterForm() {
     this.filterForm = this.fb.group({
@@ -429,7 +463,7 @@ export class LeveltwoProfitlossComponent implements OnInit {
   BasedOnDate(id: number) {
 
     
-   debugger
+   
     this.startDate = this.filterForm.controls.FromDate.value;
     this.endDate = this.filterForm.controls.ToDate.value;
    
@@ -455,7 +489,6 @@ export class LeveltwoProfitlossComponent implements OnInit {
   }
   
   OnVoucher(Transaction: any, id: number): void {
-    debugger;
     this.applyFilter('Transaction', Transaction, id);
   }
   

@@ -59,7 +59,7 @@
     <div class="col-md-2">
         <label class="str" for="companyName">Select Division</label><br>
        
-        <ng-select  class="searchdropdown custom" formControlName="DivisionId" (change)="onDivisionChange(filterForm.value.DivisionId, id)"  (ngModelChange)="getOfficeLists($event)" [clearable]="false">
+        <ng-select  class="searchdropdown custom" formControlName="DivisionName" (change)="onDivisionChange($event, id)"  (ngModelChange)="getOfficeLists($event)" [clearable]="false">
             <ng-option [value]="''" [disabled]="true">--SELECT DIVISION--</ng-option>
             <ng-container  *ngFor="let division of divisionList">
               <ng-option  [value]="division.ID">
@@ -72,7 +72,7 @@
     <div class="col-md-2">
         <label class="str" >Select Office</label><br>
 
-        <ng-select  class="searchdropdown" formControlName="OfficeId" (change)="onOfficeChange(filterForm.value.OfficeId, id)" [clearable]="false">
+        <ng-select  class="searchdropdown" formControlName="OfficeName" (change)="onOfficeChange($event, id)" [clearable]="false">
             <ng-option [value]="''" disabled>--SELECT OFFICE--</ng-option>
             <ng-container *ngFor="let office of officeList">
               <ng-option [value]="office.ID">
@@ -109,7 +109,7 @@
 
     <div class="col-2" style="padding-top: 23px;">
         <div class="text-center">
-            <button type="button" (click)="fetchData(id);"
+            <button type="button" (click)="getDivisionAndOfficeList()"
                 class="btn btn-warning text-white mb-0 col-auto clear-btn">
                 CLEAR
             </button>
