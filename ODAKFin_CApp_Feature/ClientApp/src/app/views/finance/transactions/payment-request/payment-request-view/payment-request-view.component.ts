@@ -30,6 +30,7 @@ export class PaymentRequestViewComponent implements OnInit {
   paymentRequestFilter: FormGroup;
   validTillMinDate: string = this.datePipe.transform(new Date(), "yyyy-MM-dd");
   entityDateFormat = this.commonDataService.getLocalStorageEntityConfigurable('DateFormat');
+  entityFraction = Number(this.commonDataService.getLocalStorageEntityConfigurable('NoOfFractions'));
   userId = localStorage.getItem('UserID')
   openRequestDetails = []
   requestStatus: any;

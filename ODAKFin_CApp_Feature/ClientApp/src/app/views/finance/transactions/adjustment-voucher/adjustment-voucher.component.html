@@ -19,8 +19,7 @@
             <div class="card m-b-30">
                 <div class="card-body cpad enqview">
                     <div class="col-sm-12 ">
-                        <table class="table table-responsive table-striped table-bordered w-100 dataTable no-footer"
-                            style="text-align-last: center;">
+                        <table class="table table-responsive table-striped table-bordered w-100 dataTable no-footer">
                             <thead>
                                 <tr>
                                     <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
@@ -50,23 +49,23 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="let data of pagedItems">
-                                    <td (click)="adjustmentInfoRoute(data.Id)" style="color: #0366d6;cursor: pointer;">
+                                    <td class="text-left" (click)="adjustmentInfoRoute(data.Id)" style="color: #0366d6;cursor: pointer;">
                                         {{data.AVNumber}}</td>
-                                    <td>{{data.AVDate | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td>
+                                    <td class="text-left">{{data.AVDate | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td>
                                     
-                                    <td [title]="data.AccountName | uppercase">
-                                        {{ (data.AccountName && data.AccountName.length > 20) ?data.AccountName.slice(0, 20) + '-' : data.AccountName }}
+                                    <td class="text-left"  [title]="data.AccountName | uppercase">
+                                        {{ (data.AccountName && data.AccountName.length > 30) ?data.AccountName.slice(0, 30) + '-' : data.AccountName }}
                                       </td>
                                     
                                     <!-- <td>{{data.AccountName}}</td> -->
-                                    <td>{{data.TransactionType}}</td>
+                                    <td class="text-left">{{data.TransactionType}}</td>
                                     <td>
                                         <div
                                     [ngClass]="data.Status == 'Confirmed' ? 'badge badge-state-confirm' : data.Status == 'Cancelled' ? 'badge badge-state-cancel' : 'badge badge-state'">
                                         {{data.Status}}
                                         </div>
                                     </td>
-                                    <td>
+                                    <td class="text-center">
                                         <button (click)="copyPaste(data.Id, true)"
                                                 class="btn btn-primary bmd-btn-fab">
                                                 <i class="material-icons">filter_none</i>

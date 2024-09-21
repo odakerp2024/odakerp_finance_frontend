@@ -65,33 +65,36 @@
                             <tbody class="text-center">
                                 <ng-container *ngIf="pagedItems.length > 0 else noRecord">
                                     <tr *ngFor="let payment of pagedItems">
-                                        <td (click)="EditInfo(payment.PaymentRequestId)" style="color: #0366d6;cursor: pointer;">
+                                        <td class="text-left" (click)="EditInfo(payment.PaymentRequestId)" style="color: #0366d6;cursor: pointer;">
                                             <a>{{payment.PRNumber}}</a>
                                         </td>
-                                        <td>{{payment.RequestDateAndTime | date:'dd-MM-yyyy | HH:MM:SS' }}</td>
+                                        <td class="text-left">{{payment.RequestDateAndTime | date:'dd-MM-yyyy | HH:MM:SS' }}</td>
 
-                                        <td [title]="payment.Division | uppercase">
-                                            {{ (payment.Division && payment.Division.length > 20) ?payment.Division.slice(0, 20) + '-' : payment.Division }}
+                                        <td class="text-left">
+                                            {{payment.Division}}
                                           </td>
                                         <!-- <td>{{payment.Division}}</td> -->
-                                        <td [title]="payment.Office | uppercase">
-                                            {{ (payment.Office && payment.Office.length > 20) ?payment.Office.slice(0, 20) + '-' : payment.Office }}
+                                        <td class="text-left">
+                                            {{payment.Office}}
                                           </td>
                                        
-                                       <td>{{payment.Requester}}</td>
+                                       <td class="text-left"
+                                       [title]="payment.Requester | uppercase">
+                                        {{ (payment.Requester.length > 30) ? payment.Requester.slice(0, 30) + '-' : payment.Requester }}
+                                       </td>
 
-                                       <td [title]="payment.VendorName | uppercase">
-                                        {{ (payment.VendorName && payment.VendorName.length > 20) ?payment.VendorName.slice(0, 20) + '-' : payment.VendorName }}
+                                       <td class="text-left" [title]="payment.VendorName | uppercase">
+                                        {{ (payment.VendorName && payment.VendorName.length > 30) ?payment.VendorName.slice(0, 30) + '-' : payment.VendorName }}
                                       </td>
                                      
-                                        <td>{{payment.Amount}}</td>
+                                        <td class="text-right">{{payment.Amount | dynamicDecimal: entityFraction }}</td>
                                         <td>
                                             <div [ngClass]="payment.Status == 'Payment Processed' ? 'badge badge-state-confirm' : payment.Status == 'Approved' ?'badge badge-state-confirm': 
                                             payment.Status == 'Rejected' ? 'badge badge-state-cancel' : payment.Status == 'Pending Payment' ? 'badge badge-state-pending':payment.Status == 'Pending Approval' ? 'badge badge-state-pending': payment.Status == null ? '' : 'badge badge-state'">
                                                 {{payment.Status}}
                                             </div>
                                         </td>
-                                        <td>{{ payment.PaymentDate ? (payment.PaymentDate | date: commonDataService.convertToLowerCaseDay(entityDateFormat)) : '-' }}</td>
+                                        <td class="text-left">{{ payment.PaymentDate ? (payment.PaymentDate | date: commonDataService.convertToLowerCaseDay(entityDateFormat)) : '-' }}</td>
                                     </tr>
                                 </ng-container>
                                 <ng-template #noRecord>

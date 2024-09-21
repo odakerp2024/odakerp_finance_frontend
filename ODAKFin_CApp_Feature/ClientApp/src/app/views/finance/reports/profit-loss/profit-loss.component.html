@@ -6,23 +6,56 @@
           <div class="col-10">
             <div class="row pb-1">
   
-              <div class="col-md-2">
-                <label class="str mb-2">Date</label>
-                <mat-form-field class="tillDate mat_date_picker" appearance="outline">
-                  <input matInput (dateChange)="onDateChange($event)" formControlName="Date" autocomplete="off" [max]="fromMaxDate"
-                    [matDatepicker]="ToDate" id="ToDate" style="padding:3px;">
-                  <mat-datepicker-toggle matSuffix [for]="ToDate" class="center-icon"></mat-datepicker-toggle>
-                  <mat-datepicker #ToDate></mat-datepicker>
-                </mat-form-field>
-              </div>
+              <div class="col-2">
+
+                <label class=" fontstyles">PEROID</label>
+                <ng-select class="searchdropdown custom dropdown-size" formControlName="Peroid"
+                    (ngModelChange)="onOptionChange($event);" [clearable]="false">
+                    <ng-option [value]="''" disabled>-- SELECT --</ng-option>
+                    <ng-container *ngFor="let peroid of PeroidList">
+                        <ng-option [value]="peroid.peroidId">
+                            {{peroid.peroidName | uppercase}}
+                        </ng-option>
+                    </ng-container>
+                </ng-select>
+
+            </div>
+
+            <div class="col-2" *ngIf="selectedOption === 'custom'">
+                <label class="fontstyles mb-3">FROM</label>
+                <div class="input-group">
+                    <mat-form-field class="tillDate mat_date_picker" appearance="outline">
+                        <input matInput (click)="FromDate.open()" readonly autocomplete="off"
+                            (onchange)="formatchange(true)" [matDatepicker]="FromDate" id="FromDate"
+                            [placeholder]="entityDateFormat" formControlName="FromDate">
+                        <mat-datepicker-toggle matSuffix [for]="FromDate"></mat-datepicker-toggle>
+                        <mat-datepicker #FromDate></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="col-2" *ngIf="selectedOption === 'custom'">
+                <label class="fontstyles mb-3">TO</label>
+                <div class="input-group">
+                    <mat-form-field class="tillDate mat_date_picker" appearance="outline">
+                        <input matInput (click)="ToDate.open()" readonly autocomplete="off"
+                            formControlName="ToDate" [matDatepicker]="ToDate" id="ToDate"
+                            [min]="filterForm.get('FromDate').value" [placeholder]="entityDateFormat"
+                            (ngModelChange)="formatchange(false)">
+                        <mat-datepicker-toggle matSuffix [for]="ToDate"></mat-datepicker-toggle>
+                        <mat-datepicker #ToDate></mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
   
               <div class="col-md-2">
                 <label class="str" for="companyName">Select Division</label><br>
                 <ng-select class="searchdropdown custom" [clearable]="false" formControlName="DivisionId"
-                  (change)="onDivisionChange(filterForm.value.DivisionId)" (ngModelChange)="getOfficeLists($event)">
+                 (change)="onDivisionChange(filterForm.value.DivisionId)" (ngModelChange)="getOfficeLists($event)">
                   <ng-option [value]="''" disabled>--SELECT DIVISION--</ng-option>
                   <ng-container *ngFor="let division of divisionList">
                     <ng-option *ngIf="division.Active" [value]="division.ID">
+                      <!-- <ng-option *ngIf="division.Active" [value]="{ id: division.ID, name: division.DivisionName }"> -->
                       <span class="textwrap">{{ division.DivisionName | uppercase }}</span>
                     </ng-option>
                   </ng-container>
@@ -49,7 +82,7 @@
   
           <div class="col-2" style="padding-top: 23px;">
             <div class="text-center">
-              <button type="button" (click)="createFilterForm();trailbalanceList();"
+              <button type="button" (click)="createReportForm();"
                 class="btn btn-warning text-white mb-0 col-auto clear-btn">
                 CLEAR
               </button>
@@ -69,11 +102,14 @@
   
             <div class="row">
               <div class="col-10 justify-content-end text-center ">
+                <h6 class="title">ODAK SOLUTIONS PRIVATE LIMITED</h6>
                 <h6 class="title">Profit and Loss</h6>
                 <h6 class="subtitle">Basis: Accrual</h6>
-                <p class="subtitle">
-                 From  {{ (selectedDate ? (selectedDate | date:'dd/MM/yyyy') : (currentDate | date:'dd/MM/yyyy')) }} To {{ (currentDate | date:'dd/MM/yyyy') }}
+                <p class="title">
+                  From {{ datePipe.transform(startDate, 'dd/MM/yyyy') }} 
+                  To {{ datePipe.transform(endDate, 'dd/MM/yyyy') }}
                 </p>
+                
                 
   
               </div>
@@ -99,18 +135,21 @@
                   <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
                     aria-label="Account: activate to sort column ascending" 
                     (click)="sort(['GroupName', 'ParentAccountName', 'GrandParentAccountName', 'ChildAccountName'])"
-                    style="width: 177.575px;">Account
+                    style="width: 177.575px; text-align: center">Account
                   </th>
                   <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
-                    aria-label="Net Debit: activate to sort column ascending" 
+                    aria-label="Total: activate to sort column ascending" 
                     (click)="sort([ 'ChildNet_Balance', 'GroupName', 'ParentAccountName', 'GrandParentAccountName', 'ChildAccountName'])"
-                    style="width: 177.575px;">Net Debit
+                    style="width: 177.575px; text-align: center">Total
                   </th>
+                 
                   <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
-                    aria-label="Net Credit: activate to sort column ascending" 
-                    (click)="sort([ 'ChildNet_Balance', 'GroupName', 'ParentAccountName', 'GrandParentAccountName', 'ChildAccountName'])"
-                    style="width: 177.575px;">Net Credit
-                  </th>
+                aria-label="Year To Date: activate to sort column ascending" 
+                (click)="sort([ 'ChildNet_Balance', 'GroupName', 'ParentAccountName', 'GrandParentAccountName', 'ChildAccountName'])"
+                style="width: 177.575px; text-align: center">
+                Year To Date<br>
+                {{ currentFinancialYear }}
+            </th>
                 </tr>
               </thead>
               <tbody>
@@ -128,17 +167,17 @@
                       <!-- Grandparent and Parent names row -->
                       <tr (click)="toggleParent(group.GroupName, parent.ParentAccountName)" style="cursor: pointer;">
                         <td>
-                          <i class="fa fa-angle-double-right child-account hyperColor"
+                          <i class="fa fa-angle-double-right child-account hyperColortwo"
                             [ngClass]="{ 'hidden': isParentExpanded(group.GroupName, parent.ParentAccountName) }"></i>
-                          <i class="fa fa-angle-double-down child-account hyperColor"
+                          <i class="fa fa-angle-double-down child-account hyperColortwo"
                             [ngClass]="{ 'hidden': !isParentExpanded(group.GroupName, parent.ParentAccountName) }"></i>
-                          <strong class="child-account hyperColor">{{ parent.ParentAccountName }}</strong>
+                          <strong class="child-account hyperColortwo">{{ parent.ParentAccountName }}</strong>
                         </td>
                         <td class="text-right">
-                          {{ isParentExpanded(group.GroupName, parent.ParentAccountName) ? 0 : (parent.totalDebit | dynamicentityDecimal) }}
+                          {{ isParentExpanded(group.GroupName, parent.ParentAccountName) ? 0 : ((parent.Amount) | dynamicentityDecimal) }}
                         </td>
                         <td class="text-right">
-                          {{ isParentExpanded(group.GroupName, parent.ParentAccountName) ? 0 : (parent.totalCredit | dynamicentityDecimal) }}
+                          {{ isParentExpanded(group.GroupName, parent.ParentAccountName) ? 0 : ((parent.Amount1) | dynamicentityDecimal) }}
                         </td>
                       </tr>
           
@@ -148,24 +187,26 @@
                             <td (click)="editBalance(balance.ChartOfAccountsId)"><span class="hyperColor child-name-indent">
                                 {{ balance.ChildAccountName }}</span>
                             </td>
-                            <td *ngIf="balance.ChildTransaction_Type === 'Debit'" class="text-right">
-                              {{ balance.ChildNet_Balance | dynamicentityDecimal }}
+                            <td class="text-right">
+                              {{ balance.ChildNet | dynamicentityDecimal }}
                             </td>
-                            <td *ngIf="balance.ChildTransaction_Type !== 'Debit'" class="text-right">0</td>
-                            <td *ngIf="balance.ChildTransaction_Type === 'Credit'" class="text-right">
-                              {{ balance.ChildNet_Balance | dynamicentityDecimal }}
+                            <td class="text-right">
+                              {{ balance.ChildNet1 | dynamicentityDecimal }}
                             </td>
-                            <td *ngIf="balance.ChildTransaction_Type !== 'Credit'" class="text-right">0</td>
+                           
                           </tr>
                         </ng-container>
           
                         <!-- Parent account totals -->
                         <tr style="padding: 7px !important; font-weight: bold; background-color: #f0f0f0;">
                           <td colspan="1" class="text-left">
-                            <span style="font-weight: bold; text-align: left;">{{ parent.ParentAccountName }} Total :</span>
+                            <strong style="text-align: left;">{{ parent.ParentAccountName }} Total :</strong>
+                            <!-- <span style="font-weight: bold; text-align: left;">{{ parent.ParentAccountName }} Total :</span> -->
                           </td>
-                          <td class="text-right">{{ parent.totalDebit | dynamicentityDecimal }}</td>
-                          <td class="text-right">{{ parent.totalCredit | dynamicentityDecimal }}</td>
+                          <td class="text-right">{{ parent.Amount | dynamicentityDecimal }}</td>
+
+                          <!-- <td class="text-right">{{ parent.totaslDebit | dynamicentityDecimal }}</td> -->
+                          <td class="text-right">{{ parent.Amount1 | dynamicentityDecimal }}</td>
                         </tr>
                       </ng-container>
                     </ng-container>
@@ -183,8 +224,8 @@
                   <td colspan="1" class="text-left">
                     <span style="font-size: medium;">Grand Total :</span>
                   </td>
-                  <td class="text-right" colspan="1">{{ totaldebitamount | dynamicentityDecimal }}</td>
-                  <td class="text-right" colspan="1">{{ totalcreditamount | dynamicentityDecimal }}</td>
+                  <td class="text-right" colspan="1">{{ (totalAmount) | dynamicentityDecimal }}</td>
+                  <td class="text-right" colspan="1">{{ (totalAmount1) | dynamicentityDecimal }}</td>
                 </tr>
               </tfoot>
             </table>
