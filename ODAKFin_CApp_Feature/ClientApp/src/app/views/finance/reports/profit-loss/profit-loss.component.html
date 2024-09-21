@@ -138,14 +138,14 @@
                     style="width: 177.575px; text-align: center">Account
                   </th>
                   <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
-                    aria-label="Net Debit: activate to sort column ascending" 
+                    aria-label="Total: activate to sort column ascending" 
                     (click)="sort([ 'ChildNet_Balance', 'GroupName', 'ParentAccountName', 'GrandParentAccountName', 'ChildAccountName'])"
                     style="width: 177.575px; text-align: center">Total
                   </th>
                  
                   <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
-                aria-label="Net Credit: activate to sort column ascending" 
-                (click)="applyReportFilter()"
+                aria-label="Year To Date: activate to sort column ascending" 
+                (click)="sort([ 'ChildNet_Balance', 'GroupName', 'ParentAccountName', 'GrandParentAccountName', 'ChildAccountName'])"
                 style="width: 177.575px; text-align: center">
                 Year To Date<br>
                 {{ currentFinancialYear }}
