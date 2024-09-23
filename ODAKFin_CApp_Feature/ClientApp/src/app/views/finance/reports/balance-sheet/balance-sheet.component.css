@@ -1,0 +1,145 @@
+.table>tbody>tr>td {
+  /* text-align: left !important; */
+  padding: 12px !important;
+  font-size: 13px !important;
+}
+
+tr:hover {
+  background-color: aliceblue;
+  text-decoration-color: rgb(0, 162, 255)
+}
+
+.hyperTextColor {
+  color: #0366d6;
+  
+}
+
+.hyperColor {
+  color: #0366d6;
+  cursor: pointer;
+}
+.hyperColor:hover{
+  text-decoration: underline;
+}
+
+.example-form-field {
+  margin: 0 8px 16px 0;
+}
+
+.custom-margin-top {
+  margin-top: -100px;
+  margin-right: 80px;
+}
+
+table.dataTable{
+  margin-top: 0px !important;
+}
+
+
+.card-body{
+  padding: 0.2rem !important;
+}
+
+
+.title {
+  font-size: 0.8rem !important;
+  margin: 1px !important;
+}
+
+.subtitle {
+  font-size: 0.7rem !important;
+  margin: 1px !important;
+  margin-bottom: 1px !important;
+}
+
+.card .card-body {
+  padding: 0.25rem !important;
+}
+
+.card .card-body .cpad {
+  padding: 20px !important;
+}
+
+.card .card-body .enqview {
+  text-align: center !important;
+}
+
+.clear-btn {
+  width: 96px;
+}
+.child-account {
+  margin-left: 10px ;
+}
+.child-name-indent {
+  padding-left: 40px; /* Adjust the value as needed */
+}
+
+.hidden {
+  display: none;
+}
+
+
+
+@media (min-width: 1000px) and (max-width: 1800px) {
+  .field-responsive#active {
+    width: 102% !important;
+    max-width: 105% !important; 
+    overflow: visible !important;
+  }
+}
+
+@media (min-width: 1701px) and (max-width: 1820px) {
+  
+  .table>tbody>tr>td {
+    /* text-align: left !important; */
+    padding: 13px !important;
+    font-size: 13px !important;
+  }
+ 
+}
+
+
+
+@media (min-width: 1601px) and (max-width: 1700px) {
+  
+  .table>tbody>tr>td {
+    /* text-align: left !important; */
+    padding: 11px !important;
+    font-size: 11px !important;
+  }
+ 
+}
+
+@media (min-width: 1498px) and (max-width: 1600px) {
+  
+  .table>tbody>tr>td {
+    /* text-align: left !important; */
+    padding: 10px !important;
+    font-size: 10px !important;
+  }
+ 
+}
+
+
+@media (min-width: 1400px) and (max-width: 1498px) {
+  
+  .table>tbody>tr>td {
+    /* text-align: left !important; */
+    padding: 9px !important;
+    font-size: 9px !important;
+  }
+ 
+}
+
+
+@media (min-width: 700px) and (max-width: 1399px) {
+  
+  .table>tbody>tr>td {
+    /* text-align: left !important; */
+    padding: 8px !important;
+    font-size: 8px !important;
+  }
+ 
+}
+
+

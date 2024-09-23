@@ -1,1 +1,219 @@
-<p>leveltwo-balance-sheet works!</p>
+<div class="container-fluid">
+    <form [formGroup]="filterForm">
+        <div class="card mt-0 p-3">
+            <div class="col-12 mt-auto">
+                <div class="float-right">
+        
+                    <!-- back -->
+                    <button type="button" class="btn btn-success bmd-btn-edit text-white mr-3" (click)="Cancel()">
+                        <i class="material-icons editicon">reply</i>
+                    </button>
+                    </div>
+                    </div>
+<div class="row">
+    <div class="col-10">
+        <div class="row pb-1">
+  
+    <div class="col-md-2">
+        <label class="str mb-2">Date</label>
+        <mat-form-field class="tillDate mat_date_picker" appearance="outline">
+            <input matInput formControlName="Date" (dateChange)="onDateChange($event)" readonly autocomplete="off" [max]="fromMaxDate" [matDatepicker]="ToDate" id="ToDate" style="padding:3px;">
+            <mat-datepicker-toggle matSuffix [for]="ToDate" class="center-icon"></mat-datepicker-toggle>
+            <mat-datepicker #ToDate></mat-datepicker>
+        </mat-form-field>
+    </div> 
+    
+    <div class="col-md-2">
+        <label class="str" for="companyName">Select Division</label><br>
+       
+        <ng-select  class="searchdropdown custom" formControlName="DivisionId" (change)="onDivisionChange(filterForm.value.DivisionId, id)"  (ngModelChange)="getOfficeLists($event)" [clearable]="false">
+            <ng-option [value]="''" [disabled]="true">--SELECT DIVISION--</ng-option>
+            <ng-container  *ngFor="let division of divisionList">
+              <ng-option  [value]="division.ID">
+                <span class="textwrap">{{division.DivisionName | uppercase}}</span>
+              </ng-option>
+           </ng-container>
+        </ng-select>
+    </div>
+
+    <div class="col-md-2">
+        <label class="str" >Select Office</label><br>
+
+        <ng-select  class="searchdropdown" formControlName="OfficeId" (change)="onOfficeChange(filterForm.value.OfficeId, id)" [clearable]="false">
+            <ng-option [value]="''" disabled>--SELECT OFFICE--</ng-option>
+            <ng-container *ngFor="let office of officeList">
+              <ng-option [value]="office.ID">
+                <span class="textwrap">{{office.OfficeName | uppercase}}</span>
+              </ng-option>
+            </ng-container>
+        </ng-select> 
+    </div>
+
+    <div class="col-md-2">
+        <label class="str">Transaction Type </label>
+        <ng-select class="searchdropdown" formControlName="Type" [clearable]="false" 
+        id="CategoryId" (change)="onTransactionTypeChange(filterForm.value.Type , id)" >
+            <ng-option [value]="''" [disabled]="true">--SELECT VOUCHER TYPE--</ng-option>
+            <ng-container *ngFor="let data of TypeList">
+                <ng-option [value]="data.LedgerTransactionTypeName">
+                    <span class="textwrap"> {{data.LedgerTransactionTypeName | uppercase}}
+                    </span>
+                </ng-option>
+            </ng-container>
+        </ng-select>
+    </div>
+
+    <div class="col-md-2">
+        <div class="form-group">
+            <label class="str">VOUCHER #</label>
+            <input
+                class="form-control my-select amount w-100 mr-0" formControlName="Transaction"  />
+        </div>
+    </div>
+        </div>
+    </div>
+
+    <div class="col-2" style="padding-top: 23px;">
+        <div class="text-center">
+            <button type="button" (click)="createBalanceFilterForm();fetchData(id);"
+                class="btn btn-warning text-white mb-0 col-auto clear-btn">
+                CLEAR
+            </button>
+        </div>
+    </div>
+
+    </div>
+
+    </div>
+</form>
+
+<div class="row">
+    <div class="col-md-12 mt-2">
+        <div class="card m-b-30">
+            <div class="card-body cpad enqview">
+
+            <div class="row">
+                <div class="col-10 justify-content-end text-center ">
+                <h6 class="title">ODAK SOLUTIONS PRIVATE LIMITED</h6>
+                <h6 class="subtitle">Account Transactions</h6>
+                <p class="subtitle">Basis: Accrual</p> 
+                <h6 class="subtitle">Accounts Receivable</h6>
+                <p class="subtitle">{{ selectedDate ? selectedDate : currentDate | date:'mediumDate' }}</p>
+
+            </div>
+
+        <div class="col-2 text-right ">
+            <div style="font-weight: 600;padding-top: 18px;padding-right: 10px;">
+                <img style="cursor: pointer;" width="36px" height="36px"
+                class="exportAs mx-1 align-baseline"
+                src="../../../../../assets/images/csv_color.png" (click)="downloadExcel()"
+                alt="logo">
+                <img style="cursor: pointer;" width="36px" height="36px"
+                class="exportAs mx-1 align-baseline"
+                src="../../../../../assets/images/xlsx_color.png" (click)="downloadExcel()"
+                alt="logo">
+            </div>
+        </div>
+
+            </div>
+
+            </div>
+
+
+
+            <div class="col-10" id="table-container"  style="margin-left: auto; margin-right: auto;">
+                  <table id="datatable-buttons" class="table table-responsive table-bordered w-100 dataTable no-footer" role="grid" aria-describedby="datatable-buttons_info">
+                    <thead class="header">
+                      <tr role="row">
+                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Date: activate to sort column ascending" (click)="sort('Trans_Date')">DATE</th>
+                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" (click)="sort('Trans_Account_Name')">ACCOUNT</th>
+                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" (click)="sort('Trans_Details')">TRANSACTION DETAILS</th>
+                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" (click)="sort('Trans_Type')">TRANSACTION TYPE</th>
+                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" (click)="sort('Trans_Number')">TRANSACTION #</th>
+                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" (click)="sort('Trans_Ref_Details')">REFERENCE #</th>
+                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" (click)="sort('Debit')">DEBIT</th>
+                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" (click)="sort('Credit')">CREDIT</th>
+                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" (click)="sort('Amount')">AMOUNT</th>
+                      </tr>
+                      <tr>
+                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" (click)="sort('Type')">As On</th>
+                        <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" (click)="sort('Type')">Opening Balance</th>
+                        <th colspan="7"></th>
+                      </tr>
+                    </thead>
+                    <tbody id="scrollable-body">
+                      <ng-container *ngIf="dataList.length > 0;">
+                        <ng-container *ngFor="let balance of dataList">
+                          <tr>
+                            <td>{{balance.Trans_Date | date: commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td>
+                            <td [title]= balance.Trans_Account_Name>{{(balance.Trans_Account_Name && balance.Trans_Account_Name.length > 20) ? balance.Trans_Account_Name.slice(0, 20) + '-' : balance.Trans_Account_Name}}</td>
+                            <td class="hyperTextColor" [title]= balance.Trans_Details>{{(balance.Trans_Details && balance.Trans_Details.length > 20) ? balance.Trans_Details.slice(0, 20) + '-' : balance.Trans_Details}}</td>
+                            <td [title]="balance.Trans_Type"> {{ balance.Trans_Type.length > 20 ? balance.Trans_Type.slice(0, 20) + '-' : balance.Trans_Type }} </td>
+                            <td class="hyperColor" (click)="clickTransactionNumber(balance.ID, balance.Trans_Type, balance.Trans_Number, balance.RedirectUrl)">{{balance.Trans_Number == 0 ? null : balance.Trans_Number}}</td>
+                            <td *ngIf = "balance.Trans_Ref_Details === '-'">{{balance.Trans_Ref_Details}} </td>
+                            <td *ngIf = "balance.Trans_Ref_Details !== '-'" [title]="balance.Trans_Ref_Details">{{ balance.Trans_Ref_Details == 0 ? null : (balance.Trans_Ref_Details.length > 20 ? balance.Trans_Ref_Details.slice(0, 20) + '-' : balance.Trans_Ref_Details) }} </td>
+                            <td class="text-right">{{balance.Debit | dynamicentityDecimal}}</td>
+                            <td class="text-right">{{balance.Credit | dynamicentityDecimal}}</td>
+                            <td class="text-right">{{balance.Amount | dynamicentityDecimal}}</td>
+                          </tr>
+                        </ng-container>
+                      </ng-container>
+                      <tr *ngIf="dataList.length == 0">
+                        <td class="text-center" colspan="10">No records found</td>
+                      </tr>
+                    </tbody>
+                    <tfoot class="table-footer" *ngIf="dataList.length > 0">
+                      <tr style="padding: 7px !important; background-image: linear-gradient(#3A5BA0, #273773) !important; color: #fff !important;">
+                        <td colspan="2" class="text-left">
+                          <span style="font-size: medium;">Grand Total : </span>
+                        </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="text-right" colspan="1">{{totalDebitAmount | dynamicentityDecimal }}</td>
+                        <td class="text-right" colspan="1">{{totalCreditAmount | dynamicentityDecimal}}</td>
+                        <td class="text-right" colspan="1">{{totalAmount | dynamicentityDecimal }}</td>
+                      </tr>
+                    </tfoot>
+                  </table>
+              </div>
+              
+              
+            
+
+            <!-- <div  class="row page mr-3" align="right">
+        <ul *ngIf="pager.pages && pager.pages.length && pager.totalItems > 10 && pager.totalItems > 10" class="pagination">
+            <li [ngClass]="{disabled:pager.currentPage === 1}">
+                <a (click)="setPage(1)">First</a>
+            </li>
+            <li [ngClass]="{disabled:pager.currentPage === 1}">
+                <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+            </li>
+            <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
+                <a (click)="setPage(page)">{{page}}</a>
+            </li>
+            <li *ngIf="(pager.totalPages - pager.startPage) > 5 ">
+                <a (click)="setPage(pager.startPage + 5)">...</a>
+            </li>
+            <li *ngIf="(pager.totalPages - pager.startPage) > 5">
+                <a (click)="setPage(pager.totalPages)">{{pager.totalPages}}</a>
+            </li>
+
+            <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                <a (click)="setPage(pager.currentPage + 1)">Next</a>
+            </li>
+            <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
+                <a (click)="setPage(pager.totalPages)">Last</a>
+            </li>
+        </ul>
+            </div> -->
+                </div>
+            </div>
+        </div>
+ 
+
+</div>
+
+
+
