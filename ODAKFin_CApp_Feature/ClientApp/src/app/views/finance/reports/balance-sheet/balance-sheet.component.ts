@@ -46,6 +46,7 @@ export class BalanceSheetComponent implements OnInit {
   entityThousands = Number(this.commonDataService.getLocalStorageEntityConfigurable('CurrenecyFormat'));
   // sortOrder: { [key: string]: 'asc' | 'desc' } = {};
   fromMaxDate = this.currentDate;
+  formattedDate = this.currentDate.toISOString().split('T')[0];
 
   sortOrder: { [key: string]: 'asc' | 'desc' } = {
     ChildAccountName: 'asc',
@@ -58,6 +59,8 @@ export class BalanceSheetComponent implements OnInit {
 
 
   @ViewChild('table') table: ElementRef;
+  officeId: any;
+  divisionId: any;
 
   constructor(public ps: PaginationService,
     private fb: FormBuilder,
@@ -175,11 +178,11 @@ sort(properties: string[]) {
   }
 
   GetBalanceSheetList() {
-    debugger
+    this.selectedDate= this.formattedDate
     const payload = {
       "DivisionId": "",
       "OfficeId": "",
-      "Date": ""
+      "Date": this.selectedDate
     };
     this.reportService.GetBalanceSheetList(payload).subscribe(result => {
       this.balanceList = [];
@@ -289,12 +292,14 @@ sort(properties: string[]) {
   
 
 createFilterForm(){
-  debugger
   this.filterForm = this.fb.group({
     Date: [this.currentDate],
     OfficeId: [''],
     DivisionId: ['']
   })
+  this.divisionId = ""
+  this.officeId = ""
+  
 }
 
 
@@ -316,11 +321,12 @@ editBalance(id: number) {
 }
 
 onDivisionChange(value: any) {
-  var selectedDivisionId = value;
+  this.divisionId = value;
+
   var payload = {
     "DivisionId": value,
-    "OfficeId": 0,
-    "Date": ""
+    "OfficeId": this.officeId,
+    "Date": this.formattedDate
   };
 
   this.reportService.GetBalanceSheetList(payload).subscribe(result => {
@@ -401,11 +407,13 @@ onDivisionChange(value: any) {
 
 
 onOfficeChange(values: any) {
+  
+  this.officeId = values
 
   var payload = {
-    "DivisionId": "",
+    "DivisionId": this.divisionId,
     "OfficeId": values,
-    "Date": ""
+    "Date": this.formattedDate
   };
   this.reportService.GetBalanceSheetList(payload).subscribe(result => {
     this.balanceList = [];

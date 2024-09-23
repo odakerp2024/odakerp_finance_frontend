@@ -997,25 +997,26 @@ async downloadExcel() {
   const worksheet = workbook.addWorksheet('Report');
   
   // Add title and subtitle rows
-  const titleRow = worksheet.addRow(['', 'ODAK SOLUTIONS PRIVATE LIMITED', '', '']);
-  titleRow.getCell(2).font = { size: 15, bold: true };
-  titleRow.getCell(2).alignment = { horizontal: 'center' };
-  worksheet.mergeCells(`B${titleRow.number}:C${titleRow.number}`);
+  const titleRow = worksheet.addRow([, 'ODAK SOLUTIONS PRIVATE LIMITED']);
+  titleRow.getCell(1).font = { size: 15, bold: true };
+  titleRow.getCell(1).alignment = { horizontal: 'center' };
+  worksheet.mergeCells(`A${titleRow.number}:C${titleRow.number}`);
 
   // added based on the Proift and loss scenerio
 
-  const subtitleRow = worksheet.addRow(['', 'Profit and Loss', '', '']);
-  subtitleRow.getCell(2).font = { size: 15, bold: true };
-  subtitleRow.getCell(2).alignment = { horizontal: 'center' };
-  worksheet.mergeCells(`B${subtitleRow.number}:C${subtitleRow.number}`);
+  const subtitleRow = worksheet.addRow(['Profit and Loss']);
+  subtitleRow.getCell(1).font = { size: 15, bold: true };
+  subtitleRow.getCell(1).alignment = { horizontal: 'center' };
+  worksheet.mergeCells(`A${subtitleRow.number}:C${subtitleRow.number}`);
 
   // Add date row
   const currentDate = new Date();
   debugger
   // const subtitleRow1 = worksheet.addRow(['', `From ${this.datePipe.transform(this.selectedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`, '', '']);
-  const subtitleRow1 = worksheet.addRow(['', `From ${this.datePipe.transform(this.startDate, 'dd-MM-yyyy')} To ${this.datePipe.transform(this.endDate, 'dd-MM-yyyy')}`, '', '' ]);
-  subtitleRow1.getCell(2).alignment = { horizontal: 'center' };
-  worksheet.mergeCells(`B${subtitleRow1.number}:C${subtitleRow1.number}`);
+  const subtitleRow1 = worksheet.addRow([`From ${this.datePipe.transform(this.startDate, 'dd-MM-yyyy')} To ${this.datePipe.transform(this.endDate, 'dd-MM-yyyy')}`]);
+  subtitleRow.getCell(1).font = { size: 14, bold: false };
+  subtitleRow1.getCell(1).alignment = { horizontal: 'center' };
+  worksheet.mergeCells(`A${subtitleRow1.number}:C${subtitleRow1.number}`);
 
   // Define header row
   const headers = ['Account', 'Total', `Year To Date\n${this.currentFinancialYear}`];
