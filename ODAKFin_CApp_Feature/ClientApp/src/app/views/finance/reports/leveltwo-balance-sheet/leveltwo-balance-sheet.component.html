@@ -75,7 +75,7 @@
 
     <div class="col-2" style="padding-top: 23px;">
         <div class="text-center">
-            <button type="button" (click)="createBalanceFilterForm();fetchData(id);"
+            <button type="button" (click)="createBalanceFilterForm();"
                 class="btn btn-warning text-white mb-0 col-auto clear-btn">
                 CLEAR
             </button>
@@ -98,7 +98,7 @@
                 <h6 class="subtitle">Account Transactions</h6>
                 <p class="subtitle">Basis: Accrual</p> 
                 <h6 class="subtitle">Accounts Receivable</h6>
-                <p class="subtitle">{{ selectedDate ? selectedDate : currentDate | date:'mediumDate' }}</p>
+                <p class="title">As of {{ selectedDate | date:'mediumDate' }}</p>
 
             </div>
 

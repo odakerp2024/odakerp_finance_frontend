@@ -307,12 +307,18 @@ editBalance(id: number) {
   debugger
   const payload = {
     "AccountId": id,
-    "Date": "",
-    "DivisionId": "",
-	  "OfficeId" : ""
+    "Date": this.selectedDate,
+    "DivisionId": this.divisionId,
+	  "OfficeId" : this.officeId
   };
   this.reportService.GetBalanceSheetList(payload).subscribe(data => {
-    this.router.navigate(['/views/reports/leveltwo-balance-sheet', { id: id }])
+    this.router.navigate(['/views/reports/leveltwo-balance-sheet', { 
+      id: id ,
+      "Date": this.selectedDate,
+      "DivisionId": this.divisionId,
+      "OfficeId" : this.officeId
+    
+    }])
    
   }, err => {
     console.log('error:', err.message);

@@ -47,6 +47,8 @@ export class LeveltwoBalanceSheetComponent implements OnInit {
   filteredData: any;
 
   @ViewChild('table') table: ElementRef;
+  selectedDivision: any;
+  selectedOffice: any;
 
   constructor(public ps: PaginationService, private globals: Globals,
     private dataService: DataService,
@@ -59,6 +61,7 @@ export class LeveltwoBalanceSheetComponent implements OnInit {
   ngOnInit(): void {
     this.getDivisionList();
     this.getOfficeList();
+    this.getDivisionAndOfficeList();
     this.getDropDownType();
     this.createBalanceFilterForm();
 
@@ -181,6 +184,40 @@ export class LeveltwoBalanceSheetComponent implements OnInit {
     this.pagedItems = this.dataList.slice(this.pager.startIndex, this.pager.endIndex + 1);
   }
 
+  getDivisionAndOfficeList() {
+    const divisionService = `${this.globals.APIURL}/Division/GetOrganizationDivisionList`;
+    const officeService = `${this.globals.APIURL}/Office/GetOrganizationOfficeList`;
+
+    // Fetch division list
+    this.dataService.post(divisionService, {}).subscribe((divisionResult: any) => {
+        this.divisionList = [];
+        if (divisionResult.data.Table.length > 0) {
+            this.divisionList = divisionResult.data.Table.filter(x => x.Active === true);
+        }
+
+        // Now fetch office list
+        this.dataService.post(officeService, {}).subscribe((officeResult: any) => {
+            this.officeList = [];
+            if (officeResult.message === 'Success' && officeResult.data.Office.length > 0) {
+                this.officeList = officeResult.data.Office.filter(x => x.Active === true);
+            }
+            debugger
+
+            // Check if both lists have items before calling fetchData
+            if (this.divisionList.length > 0 && this.officeList.length > 0) {
+              debugger
+                this.fetchData(this.id);
+            } else {
+                console.warn('Division or Office list is empty.');
+            }
+        }, error => {
+            console.error('Error fetching office list:', error);
+        });
+    }, error => {
+        console.error('Error fetching division list:', error);
+    });
+ }
+
   getDivisionList() {
     var service = `${this.globals.APIURL}/Division/GetOrganizationDivisionList`; var payload: any = {}
     this.dataService.post(service, payload).subscribe((result: any) => {
@@ -217,12 +254,30 @@ export class LeveltwoBalanceSheetComponent implements OnInit {
 
 
   fetchData(id: number): void {
+
+    const Date = this.route.snapshot.paramMap.get('Date');
+    this.selectedDate = Date;
+      const DivisionId = this.route.snapshot.paramMap.get('DivisionId');
+      const officeId = this.route.snapshot.paramMap.get('OfficeId');
+  
+      // this.startDate = fromDate
+      // this.endDate = toDate
+  
+      const selectedDivision = this.divisionList.find(division => division.ID == DivisionId);
+      this.selectedDivision = selectedDivision ? selectedDivision.DivisionName: '';
+      const selectedOffice = this.officeList.find(Office => Office.OfficeId == officeId);
+      this.selectedOffice = selectedOffice ? selectedOffice.OfficeName : '';
+      const OfficeName =  this.selectedOffice.toUpperCase();
+      const divisionName = this.selectedDivision.toUpperCase();
+
   debugger
     const payload = {
       "AccountId": id,
-      "Date": "",
-      "DivisionId": "",
-      "OfficeId": "",
+      "Date": this.selectedDate,
+      "DivisionId":DivisionId,
+      "DivisionName": divisionName,
+      "OfficeId":officeId,
+      "OfficeName": OfficeName,
       "Type": " ",
       "Transaction": ""
     };
@@ -257,6 +312,7 @@ export class LeveltwoBalanceSheetComponent implements OnInit {
 
   createBalanceFilterForm() {
     this.filterForm = this.fb.group({
+      AccountId: this.id,
       Date: [this.currentDate],
       OfficeId: [''],
       DivisionId: [''],
