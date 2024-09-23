@@ -69,7 +69,7 @@ export class LeveltwoBalanceSheetComponent implements OnInit {
     });
   }
   Cancel() {
-    this.router.navigate(['/views/finance/reports/levelone', {}])
+    this.router.navigate(['/views/reports/balance-sheet', {}])
   }
 
 
@@ -217,7 +217,7 @@ export class LeveltwoBalanceSheetComponent implements OnInit {
 
 
   fetchData(id: number): void {
-
+  debugger
     const payload = {
       "AccountId": id,
       "Date": "",

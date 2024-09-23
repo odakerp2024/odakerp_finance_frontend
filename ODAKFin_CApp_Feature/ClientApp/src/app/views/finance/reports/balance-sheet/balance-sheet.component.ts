@@ -299,7 +299,7 @@ createFilterForm(){
 
 
 editBalance(id: number) {
-  
+  debugger
   const payload = {
     "AccountId": id,
     "Date": "",
@@ -307,7 +307,7 @@ editBalance(id: number) {
 	  "OfficeId" : ""
   };
   this.reportService.GetBalanceSheetList(payload).subscribe(data => {
-    this.router.navigate(['/views/finance/reports/leveltwo', { id: id }])
+    this.router.navigate(['/views/reports/leveltwo-balance-sheet', { id: id }])
    
   }, err => {
     console.log('error:', err.message);
@@ -610,7 +610,7 @@ async downloadExcel() {
   worksheet.mergeCells(`A${titleRow.number}:B${titleRow.number}`);
 
   const subtitleRow = worksheet.addRow(['Balance Sheet']);
-  subtitleRow.getCell(1).font = { size: 14, bold: true };
+  subtitleRow.getCell(1).font = { size: 15, bold: true };
   subtitleRow.getCell(1).alignment = { horizontal: 'center' };
   worksheet.mergeCells(`A${subtitleRow.number}:B${subtitleRow.number}`);
 
