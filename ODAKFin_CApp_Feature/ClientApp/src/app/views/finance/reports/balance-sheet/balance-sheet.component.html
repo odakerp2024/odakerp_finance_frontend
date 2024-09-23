@@ -49,7 +49,7 @@
 
         <div class="col-2" style="padding-top: 23px;">
           <div class="text-center">
-            <button type="button" (click)="createFilterForm();trailbalanceList();"
+            <button type="button" (click)="createFilterForm();GetBalanceSheetList();"
               class="btn btn-warning text-white mb-0 col-auto clear-btn">
               CLEAR
             </button>
@@ -70,9 +70,9 @@
           <div class="row">
             <div class="col-10 justify-content-end text-center ">
               <h6 class="title">ODAK SOLUTIONS PRIVATE LIMITED</h6>
-              <h6 class="subtitle">Trail Balance</h6>
+              <h6 class="title">Balance Sheet</h6>
               <p class="subtitle">Basis: Accrual</p>
-              <p class="subtitle">As of {{ selectedDate ? selectedDate : currentDate | date:'mediumDate' }}</p>
+              <p class="title">As of {{ (selectedDate ? selectedDate : currentDate) | date:'mediumDate' }}</p>
 
             </div>
 
@@ -94,20 +94,20 @@
             role="grid" aria-describedby="datatable-buttons_info">
             <thead>
               <tr role="row">
-                <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                <th class="sorting text-center" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
                   aria-label="Account: activate to sort column ascending" 
                   (click)="sort(['GroupName', 'ParentAccountName', 'GrandParentAccountName', 'ChildAccountName'])"
                   style="width: 177.575px;">Account
                 </th>
-                <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                <!-- <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
                   aria-label="Net Debit: activate to sort column ascending" 
                   (click)="sort([ 'ChildNet_Balance', 'GroupName', 'ParentAccountName', 'GrandParentAccountName', 'ChildAccountName'])"
                   style="width: 177.575px;">Net Debit
-                </th>
-                <th class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
+                </th> -->
+                <th class="sorting text-center" tabindex="0" aria-controls="datatable-buttons" rowspan="1" colspan="1"
                   aria-label="Net Credit: activate to sort column ascending" 
                   (click)="sort([ 'ChildNet_Balance', 'GroupName', 'ParentAccountName', 'GrandParentAccountName', 'ChildAccountName'])"
-                  style="width: 177.575px;">Net Credit
+                  style="width: 177.575px;">Total Amount
                 </th>
               </tr>
             </thead>
@@ -126,18 +126,22 @@
                     <!-- Grandparent and Parent names row -->
                     <tr (click)="toggleParent(group.GroupName, parent.ParentAccountName)" style="cursor: pointer;">
                       <td>
-                        <i class="fa fa-angle-double-right child-account hyperColor"
+                        <i class="fa fa-angle-double-right child-account hyperColortwo"
                           [ngClass]="{ 'hidden': isParentExpanded(group.GroupName, parent.ParentAccountName) }"></i>
-                        <i class="fa fa-angle-double-down child-account hyperColor"
+                        <i class="fa fa-angle-double-down child-account hyperColortwo"
                           [ngClass]="{ 'hidden': !isParentExpanded(group.GroupName, parent.ParentAccountName) }"></i>
-                        <strong class="child-account hyperColor">{{ parent.ParentAccountName }}</strong>
+                        <strong class="child-account hyperColortwo">{{ parent.ParentAccountName }}</strong>
                       </td>
-                      <td class="text-right">
+                      <!-- <td class="text-right">
                         {{ isParentExpanded(group.GroupName, parent.ParentAccountName) ? 0 : (parent.totalDebit | dynamicentityDecimal) }}
                       </td>
                       <td class="text-right">
                         {{ isParentExpanded(group.GroupName, parent.ParentAccountName) ? 0 : (parent.totalCredit | dynamicentityDecimal) }}
-                      </td>
+                      </td> -->
+                      <td class="text-right">
+                        {{ isParentExpanded(group.GroupName, parent.ParentAccountName) ? 0 : ((parent.totalDebit+ parent.totalCredit) | dynamicentityDecimal) }}
+                      </td> 
+                      
                     </tr>
         
                     <ng-container *ngIf="isParentExpanded(group.GroupName, parent.ParentAccountName)">
@@ -146,14 +150,15 @@
                           <td (click)="editBalance(balance.ChartOfAccountsId)"><span class="hyperColor child-name-indent">
                               {{ balance.ChildAccountName }}</span>
                           </td>
-                          <td *ngIf="balance.ChildTransaction_Type === 'Debit'" class="text-right">
+                          <!-- <td *ngIf="balance.ChildTransaction_Type === 'Debit'" class="text-right">
                             {{ balance.ChildNet_Balance | dynamicentityDecimal }}
                           </td>
                           <td *ngIf="balance.ChildTransaction_Type !== 'Debit'" class="text-right">0</td>
                           <td *ngIf="balance.ChildTransaction_Type === 'Credit'" class="text-right">
                             {{ balance.ChildNet_Balance | dynamicentityDecimal }}
                           </td>
-                          <td *ngIf="balance.ChildTransaction_Type !== 'Credit'" class="text-right">0</td>
+                          <td *ngIf="balance.ChildTransaction_Type !== 'Credit'" class="text-right">0</td> -->
+                          <td class="text-right"> {{ balance.ChildNet_Balance ? balance.ChildNet_Balance : 0| dynamicentityDecimal }}</td> 
                         </tr>
                       </ng-container>
         
@@ -162,8 +167,9 @@
                         <td colspan="1" class="text-left">
                           <span style="font-weight: bold; text-align: left;">{{ parent.ParentAccountName }} Total :</span>
                         </td>
-                        <td class="text-right">{{ parent.totalDebit | dynamicentityDecimal }}</td>
-                        <td class="text-right">{{ parent.totalCredit | dynamicentityDecimal }}</td>
+                        <!-- <td class="text-right">{{ parent.totalDebit | dynamicentityDecimal }}</td>
+                        <td class="text-right">{{ parent.totalCredit | dynamicentityDecimal }}</td> -->
+                        <td class="text-right">{{ parent.totalDebit+parent.totalCredit | dynamicentityDecimal }}</td>
                       </tr>
                     </ng-container>
                   </ng-container>
@@ -181,8 +187,9 @@
                 <td colspan="1" class="text-left">
                   <span style="font-size: medium;">Grand Total :</span>
                 </td>
-                <td class="text-right" colspan="1">{{ totaldebitamount | dynamicentityDecimal }}</td>
-                <td class="text-right" colspan="1">{{ totalcreditamount | dynamicentityDecimal }}</td>
+                <!-- <td class="text-right" colspan="1">{{ totaldebitamount | dynamicentityDecimal }}</td>
+                <td class="text-right" colspan="1">{{ totalcreditamount | dynamicentityDecimal }}</td> -->
+                <td class="text-right" colspan="1">{{ totaldebitamount + totalcreditamount | dynamicentityDecimal }}</td> 
               </tr>
             </tfoot>
           </table>

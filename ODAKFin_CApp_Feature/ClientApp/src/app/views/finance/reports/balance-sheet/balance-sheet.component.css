@@ -78,6 +78,14 @@ table.dataTable{
   display: none;
 }
 
+.hyperColortwo {
+  color: #30529b !important; /* Primary color */
+  
+}
+
+.hyperColortwo:hover{
+text-decoration: underline;
+}
 
 
 @media (min-width: 1000px) and (max-width: 1800px) {

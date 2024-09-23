@@ -71,9 +71,10 @@ export class BalanceSheetComponent implements OnInit {
     }
 
   ngOnInit(): void {
+    
     this.getDivisionList();
     this.getOfficeList();
-    this.trailbalanceList();
+    this.GetBalanceSheetList();
     // this.createAdjustment();
     this.createFilterForm();
 
@@ -96,6 +97,7 @@ export class BalanceSheetComponent implements OnInit {
   }
 
   onDateChange(event: any): void {
+    debugger
     this.selectedDate = this.datePipe.transform(event.value, 'yyyy-MM-dd');
     this.BasedOnDate(this.selectedDate);
   }
@@ -172,13 +174,14 @@ sort(properties: string[]) {
     }, error => { });
   }
 
-  trailbalanceList() {
+  GetBalanceSheetList() {
+    debugger
     const payload = {
       "DivisionId": "",
       "OfficeId": "",
       "Date": ""
     };
-    this.reportService.GetTrailBalanceList(payload).subscribe(result => {
+    this.reportService.GetBalanceSheetList(payload).subscribe(result => {
       this.balanceList = [];
       this.pagedItems = [];
       if (result.message === 'Success' && result.data.Table.length > 0) {
@@ -286,6 +289,7 @@ sort(properties: string[]) {
   
 
 createFilterForm(){
+  debugger
   this.filterForm = this.fb.group({
     Date: [this.currentDate],
     OfficeId: [''],
@@ -300,9 +304,9 @@ editBalance(id: number) {
     "AccountId": id,
     "Date": "",
     "DivisionId": "",
-	"OfficeId" : ""
+	  "OfficeId" : ""
   };
-  this.reportService.GetTrailBalanceList(payload).subscribe(data => {
+  this.reportService.GetBalanceSheetList(payload).subscribe(data => {
     this.router.navigate(['/views/finance/reports/leveltwo', { id: id }])
    
   }, err => {
@@ -319,7 +323,7 @@ onDivisionChange(value: any) {
     "Date": ""
   };
 
-  this.reportService.GetTrailBalanceList(payload).subscribe(result => {
+  this.reportService.GetBalanceSheetList(payload).subscribe(result => {
     this.balanceList = [];
     this.pagedItems = [];
     if (result.message === 'Success' && result.data.Table.length > 0) {
@@ -403,7 +407,7 @@ onOfficeChange(values: any) {
     "OfficeId": values,
     "Date": ""
   };
-  this.reportService.GetTrailBalanceList(payload).subscribe(result => {
+  this.reportService.GetBalanceSheetList(payload).subscribe(result => {
     this.balanceList = [];
     this.pagedItems = [];
     if (result.message === 'Success' && result.data.Table.length > 0) {
@@ -480,13 +484,14 @@ onOfficeChange(values: any) {
 }
 
 BasedOnDate(selectedDate: any) {
+  debugger
 
   var payload = {
     "DivisionId": "",
     "OfficeId": "",
     "Date": selectedDate
   };
-  this.reportService.GetTrailBalanceList(payload).subscribe(result => {
+  this.reportService.GetBalanceSheetList(payload).subscribe(result => {
     this.balanceList = [];
     this.pagedItems = [];
     if (result.message === 'Success' && result.data.Table.length > 0) {
@@ -604,14 +609,14 @@ async downloadExcel() {
   titleRow.getCell(2).alignment = { horizontal: 'center' };
   worksheet.mergeCells(`B${titleRow.number}:C${titleRow.number}`);
 
-  const subtitleRow = worksheet.addRow(['', 'Trail Balance', '', '']);
+  const subtitleRow = worksheet.addRow(['', 'Balance Sheet', '', '']);
   subtitleRow.getCell(2).font = { size: 15, bold: true };
   subtitleRow.getCell(2).alignment = { horizontal: 'center' };
   worksheet.mergeCells(`B${subtitleRow.number}:C${subtitleRow.number}`);
 
   // Add date row
   const currentDate = new Date();
-  const subtitleRow1 = worksheet.addRow(['', `As of ${this.datePipe.transform(currentDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`, '', '']);
+  const subtitleRow1 = worksheet.addRow(['', `As of ${this.datePipe.transform(this.selectedDate || this.currentDate, 'mediumDate')}`, '', '']);
   subtitleRow1.getCell(2).alignment = { horizontal: 'center' };
   worksheet.mergeCells(`B${subtitleRow1.number}:C${subtitleRow1.number}`);
 
