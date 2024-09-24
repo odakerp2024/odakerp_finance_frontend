@@ -109,5 +109,9 @@ export class ReportDashboardService {
   GetProfitLossById(FormValue: any): Observable<any> {
     return this.http.post<any>(this.globals.APIURL + '/Reports/GetPNLById', FormValue);
   }
+
+  GetBalanceSheetList(FormValue: any): Observable<any> {
+    return this.http.post<any>(this.globals.APIURL + '/Reports/GetBalanceSheetList', FormValue);
+  }
  
 }

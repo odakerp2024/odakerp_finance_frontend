@@ -1,27 +1,24 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Globals } from 'src/app/globals';
 import { Vendorlist } from 'src/app/model/financeModule/Vendor';
 import { PaginationService } from 'src/app/pagination.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { DatePipe, UpperCasePipe } from '@angular/common';
-import { Globals } from 'src/app/globals';
 import { DataService } from 'src/app/services/data.service';
+import { DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonService } from 'src/app/services/common.service';
-import Swal from 'sweetalert2';
-import { ContraVoucherService } from 'src/app/services/contra-voucher.service';
-import { GridSort } from 'src/app/model/common';
-import * as XLSX from 'xlsx';
-import { HttpClient } from '@angular/common/http';
 import { Workbook } from 'exceljs';
 import { saveAs } from 'file-saver';
+import Swal from 'sweetalert2';
+import { GridSort } from 'src/app/model/common';
 import { ReportDashboardService } from 'src/app/services/financeModule/report-dashboard.service';
 
 @Component({
-  selector: 'app-leveltwo-profitloss',
-  templateUrl: './leveltwo-profitloss.component.html',
-  styleUrls: ['./leveltwo-profitloss.component.css']
+  selector: 'app-leveltwo-balance-sheet',
+  templateUrl: './leveltwo-balance-sheet.component.html',
+  styleUrls: ['./leveltwo-balance-sheet.component.css']
 })
-export class LeveltwoProfitlossComponent implements OnInit {
+export class LeveltwoBalanceSheetComponent implements OnInit {
 
   id: number;
   dataList: any[] = [];
@@ -48,27 +45,12 @@ export class LeveltwoProfitlossComponent implements OnInit {
   pagesort: any = new GridSort().sort;
   transactionSearchTerm: any;
   filteredData: any;
-  selectedDivision: string;
-  selectedOffice: string;
-
-  PeroidList = [
-    { peroidId: 'today', peroidName: 'CURRENT DAY' },
-    { peroidId: 'week', peroidName: 'CURRENT WEEK' },
-    { peroidId: 'month', peroidName: 'CURRENT MONTH' },
-    { peroidId: 'year', peroidName: 'CURRENT FINANCIAL YEAR' },
-    { peroidId: 'custom', peroidName: 'CUSTOM' },
-    { peroidId: 'previoustoday', peroidName: 'PREVIOUS DAY' },
-    { peroidId: 'previousweek', peroidName: 'PREVIOUS WEEK' },
-    { peroidId: 'previousmonth', peroidName: 'PREVIOUS MONTH' },
-    { peroidId: 'previousyear', peroidName: 'PREVIOUS FINANCIAL YEAR' }
-  ];
-
-  selectedOption: string;
-  startDate = '';
-  endDate = '';
 
   @ViewChild('table') table: ElementRef;
+  selectedDivision: any;
+  selectedOffice: any;
   divisionId: any;
+  officeId: any;
 
   constructor(public ps: PaginationService, private globals: Globals,
     private dataService: DataService,
@@ -83,7 +65,7 @@ export class LeveltwoProfitlossComponent implements OnInit {
     this.getOfficeList();
     this.getDivisionAndOfficeList();
     this.getDropDownType();
-    //this.createBalanceFilterForm();
+    this.createBalanceFilterForm();
 
     this.route.paramMap.subscribe(params => {
       this.id = +params.get('id');
@@ -92,7 +74,7 @@ export class LeveltwoProfitlossComponent implements OnInit {
     });
   }
   Cancel() {
-    this.router.navigate(['/views/reports/profit-loss', {}])
+    this.router.navigate(['/views/reports/balance-sheet', {}])
   }
 
 
@@ -130,12 +112,12 @@ export class LeveltwoProfitlossComponent implements OnInit {
           this.router.createUrlTree(['/views/contra-info/contra-info-view', { contraId: id }])
         );
         break;
-
+      
       case 'Adjustment Voucher':
-      url = this.router.serializeUrl(
-        this.router.createUrlTree(['/views/Adjustment-info/Adjustment-Voucher-info', { id: id, isUpdate: true }])
-      );
-      break;
+        url = this.router.serializeUrl(
+          this.router.createUrlTree(['/views/Adjustment-info/Adjustment-Voucher-info', { id: id, isUpdate: true }])
+        );
+        break;
         
       case 'Voucher Reversal':
       url = this.router.serializeUrl(
@@ -191,8 +173,8 @@ export class LeveltwoProfitlossComponent implements OnInit {
 
 
   onDateChange(event: any): void {
-    this.onOptionChange(event)
-    this.BasedOnDate(this.id);
+    this.selectedDate = this.datePipe.transform(event.value, 'yyyy-MM-dd');
+    this.BasedOnDate(this.selectedDate, this.id);
   }
 
 
@@ -210,18 +192,8 @@ export class LeveltwoProfitlossComponent implements OnInit {
     this.pagedItems = this.dataList.slice(this.pager.startIndex, this.pager.endIndex + 1);
   }
 
-  getDivisionList() {
-    var service = `${this.globals.APIURL}/Division/GetOrganizationDivisionList`; var payload: any = {}
-    this.dataService.post(service, payload).subscribe((result: any) => {
-      this.divisionList = [];
-      if (result.data.Table.length > 0) {
-        let divisionList = result.data.Table;
-        this.divisionList = divisionList.filter(x => x.Active == true);
-      }
-    }, error => { });
-  }
-  
   getDivisionAndOfficeList() {
+    debugger
     const divisionService = `${this.globals.APIURL}/Division/GetOrganizationDivisionList`;
     const officeService = `${this.globals.APIURL}/Office/GetOrganizationOfficeList`;
 
@@ -254,15 +226,26 @@ export class LeveltwoProfitlossComponent implements OnInit {
         console.error('Error fetching division list:', error);
     });
  }
- 
- getOfficeList() {
+
+  getDivisionList() {
+    var service = `${this.globals.APIURL}/Division/GetOrganizationDivisionList`; var payload: any = {}
+    this.dataService.post(service, payload).subscribe((result: any) => {
+      this.divisionList = [];
+      if (result.data.Table.length > 0) {
+        let divisionList = result.data.Table;
+        this.divisionList = divisionList.filter(x => x.Active == true);
+      }
+    }, error => { });
+  }
+
+  getOfficeList() {
     var service = `${this.globals.APIURL}/Office/GetOrganizationOfficeList`;
     this.dataService.post(service, {}).subscribe((result: any) => {
       this.officeList = [];
       if (result.message == 'Success' && result.data.Office.length > 0) {
         this.officeList = result.data.Office.filter(x => x.Active == true);
       }
-     }, error => { });
+    }, error => { });
   }
 
   getDropDownType() {
@@ -278,161 +261,55 @@ export class LeveltwoProfitlossComponent implements OnInit {
     }
   }
 
-  onOptionChange(selectedOption: string) {
-    
-    this.selectedOption = '';
-    switch (selectedOption) {
 
-      case 'today':
-        this.filterForm.controls.FromDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
-        this.filterForm.controls.ToDate.setValue(this.datePipe.transform(this.currentDate, "yyyy-MM-dd"));
-        break;
-
-      case 'week':
-        this.filterForm.controls.FromDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay()), "yyyy-MM-dd"));
-        this.filterForm.controls.ToDate.setValue(this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() + (6 - this.currentDate.getDay())), "yyyy-MM-dd"));
-        break;
-        case 'month':
-        const startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd")
-        const nextMonth = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 1);
-        const lastDayOfMonth = new Date(nextMonth);
-        lastDayOfMonth.setDate(nextMonth.getDate() - 1);
-        const endDate = this.datePipe.transform(lastDayOfMonth, "yyyy-MM-dd");
-        this.filterForm.controls.FromDate.setValue(startDate);
-        this.filterForm.controls.ToDate.setValue(endDate); 
-        break;
-
-      case 'year':
-        const currentYear = this.currentDate.getFullYear();
-        const startYear = this.currentDate.getMonth() >= 3 ? currentYear : currentYear - 1;
-        const endYear = startYear + 1;
-        this.filterForm.controls.FromDate.setValue(this.datePipe.transform(new Date(startYear, 3, 1), "yyyy-MM-dd"));
-        this.filterForm.controls.ToDate.setValue(this.datePipe.transform(new Date(endYear, 2, 31), "yyyy-MM-dd"));
-        break;
-
-      case 'previoustoday':
-        const previousDay = new Date(this.currentDate);
-        previousDay.setDate(previousDay.getDate() - 1);
-        this.filterForm.controls.FromDate.setValue(this.datePipe.transform(previousDay, "yyyy-MM-dd"));
-        this.filterForm.controls.ToDate.setValue(this.datePipe.transform(previousDay, "yyyy-MM-dd"));
-        break;
-
-      case 'previousweek':
-        const previousWeekStartDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay() - 7);
-        const previousWeekEndDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), this.currentDate.getDate() - this.currentDate.getDay() - 1);
-        this.filterForm.controls.FromDate.setValue(this.datePipe.transform(previousWeekStartDate, "yyyy-MM-dd"));
-        this.filterForm.controls.ToDate.setValue(this.datePipe.transform(previousWeekEndDate, "yyyy-MM-dd"));
-        break;
-
-      case 'previousmonth':
-      
-        
-        const previousMonthStartDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() - 1, 1);
-        const previousMonthEndDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 0);
-        this.filterForm.controls.FromDate.setValue(this.datePipe.transform(previousMonthStartDate, "yyyy-MM-dd"));
-        this.filterForm.controls.ToDate.setValue(this.datePipe.transform(previousMonthEndDate, "yyyy-MM-dd"));
-        break;
-
-      case 'previousyear':
-        const previousYear = this.currentDate.getFullYear() - 1;
-        const previousYearStartDate = new Date(previousYear, 3, 1);
-        const previousYearEndDate = new Date(previousYear + 1, 2, 31);
-        this.filterForm.controls.FromDate.setValue(this.datePipe.transform(previousYearStartDate, "yyyy-MM-dd"));
-        this.filterForm.controls.ToDate.setValue(this.datePipe.transform(previousYearEndDate, "yyyy-MM-dd"));
-        break;
-
-      case 'custom':
-        this.selectedOption = 'custom';
-        this.startDate = this.filterForm.controls.FromDate.value;
-        this.endDate = this.filterForm.controls.ToDate.value;
-        break;
-      default:
-        this.selectedOption = '';
-        break;
-    }
-     
-  }
-  
-  fetchData(id){
+  fetchData(id: number): void {
     debugger
 
-   
-      const fromDate = this.route.snapshot.paramMap.get('FromDate');
-      const toDate = this.route.snapshot.paramMap.get('ToDate');
+    this.divisionId = ""
+    this.officeId = ""
+
+    const Date = this.route.snapshot.paramMap.get('Date');
+    this.selectedDate = Date;
+      const DivisionId = this.route.snapshot.paramMap.get('DivisionId');
+      this.divisionId = DivisionId;
       const officeId = this.route.snapshot.paramMap.get('OfficeId');
-      const divisionId = this.route.snapshot.paramMap.get('DivisionId');
-      const peroid = this.route.snapshot.paramMap.get('Peroid');
+      this.officeId = officeId;
   
-      this.startDate = fromDate
-      this.endDate = toDate
+      // this.startDate = fromDate
+      // this.endDate = toDate
   
-      const selectedDivision = this.divisionList.find(division => division.ID == divisionId);
+      const selectedDivision = this.divisionList.find(division => division.ID == DivisionId);
       this.selectedDivision = selectedDivision ? selectedDivision.DivisionName: '';
       const selectedOffice = this.officeList.find(Office => Office.OfficeId == officeId);
       this.selectedOffice = selectedOffice ? selectedOffice.OfficeName : '';
       const OfficeName =  this.selectedOffice.toUpperCase();
       const divisionName = this.selectedDivision.toUpperCase();
-      
-      this.filterForm = this.fb.group({
-        AccountId:id,
-        FromDate: [fromDate],
-        ToDate: [toDate],
-        OfficeId: [officeId],
-        DivisionId: [divisionId],
-        DivisionName:[divisionName],
-        OfficeName:[OfficeName],
-        Type: [''],
-        Transaction: [''],
-        Peroid: [peroid]
-        
-      });
-      this.reportService.GetProfitLossById(this.filterForm.value).subscribe(response => {
-        if (response.data && Array.isArray(response.data.Table) && response.data.Table.length > 0) {
-          this.dataList = response.data.Table;
-          this.setPage(1);
-          // Calculate total debit amount
-          this.totalDebitAmount = this.dataList.reduce((sum, item) => sum + (parseFloat(item.Debit) || 0), 0);
+
   
-          // Calculate total credit amount
-          this.totalCreditAmount = this.dataList.reduce((sum, item) => sum + (parseFloat(item.Credit) || 0), 0);
-  
-  
-          // Calculate the difference between total credit and debit
-          this.totalAmount = Math.abs(this.totalDebitAmount - this.totalCreditAmount);
-        } else {
-          this.totalDebitAmount = 0;
-          this.totalCreditAmount = 0;
-          this.totalAmount = 0;
-          this.pager = {};
-          this.dataList = [];
-          // console.error('Error: Invalid response format');
-        }
-      }, err => {
-        console.error('Error:', err);
-      });
-    }
-  
-  createBalanceFilterForm() {
+    // const payload = {
+    //   "AccountId": id,
+    //   "Date": this.selectedDate,
+    //   "DivisionId":DivisionId,
+    //   "DivisionName": divisionName,
+    //   "OfficeId":officeId,
+    //   "OfficeName": OfficeName,
+    //   "Type": " ",
+    //   "Transaction": ""
+    // };
+
     this.filterForm = this.fb.group({
-      AccountId: [this.id],
-      FromDate: [this.startDate],
-      ToDate: [this.endDate],
-      OfficeId: [''],
-      DivisionId: [''],
+
+      AccountId: this.id,
+      Date: [this.selectedDate],
+      OfficeId: [officeId],
+      DivisionName: [divisionName],
+      OfficeName: [OfficeName],
+      DivisionId: [DivisionId],
       Type: [''],
-      Transaction: [''],
-      period: ['']
+      Transaction: ['']
     })
     
-    this.startDate = this.filterForm.controls.FromDate.value;
-    this.endDate = this.filterForm.controls.ToDate.value;
-    this.trialbalancelist()
-    
-  }
-
-  trialbalancelist(){
-
-    this.reportService.GetProfitLossById(this.filterForm.value).subscribe(response => {
+    this.reportService.GetLedgerDataById(this.filterForm.value).subscribe(response => {
       if (response.data && Array.isArray(response.data.Table) && response.data.Table.length > 0) {
         this.dataList = response.data.Table;
         this.setPage(1);
@@ -460,62 +337,60 @@ export class LeveltwoProfitlossComponent implements OnInit {
       console.error('Error:', err);
     });
   }
-  
-  BasedOnDate(id: number) {
 
+  createBalanceFilterForm() {
+    this.filterForm = this.fb.group({
+      AccountId: this.id,
+      Date: [this.currentDate],
+      OfficeId: [''],
+      DivisionId: [''],
+      Type: [''],
+      Transaction: ['']
+    })
+    // Listen for changes in the transaction input field
     
-   
-    this.startDate = this.filterForm.controls.FromDate.value;
-    this.endDate = this.filterForm.controls.ToDate.value;
-   
-
-    if (this.startDate && this.endDate) {
-        // this.applyFilter('FromDate', this.startDate, id), this.applyFilter('ToDate', this.endDate, id);
-        this.applyFilter('DateRange', { FromDate: this.startDate, ToDate: this.endDate }, id);
-    } else {
-        console.warn('Start date or end date is Invalid.');
-    }
   }
-  
+  //Filter By Date , Division , Office & TransactionType 
+  BasedOnDate(selectedDate: any, id: number) {
+    this.applyFilter('Date', selectedDate, id);
+  }
+
   onDivisionChange(divisionId: any, id: number) {
+    this.divisionId = divisionId
+    debugger
     this.applyFilter('DivisionId', divisionId, id);
   }
 
   onOfficeChange(officeId: any, id: number) {
+    this.officeId = officeId
     this.applyFilter('OfficeId', officeId, id);
   }
 
   onTransactionTypeChange(type: any, id: number): void {
+    debugger
     this.applyFilter('Type', type, id);
   }
-  
   OnVoucher(Transaction: any, id: number): void {
+    debugger
     this.applyFilter('Transaction', Transaction, id);
   }
-  
+
 
 
   applyFilter(filterType: string, value: any, id: number): void {
-    debugger
     let payload: any = {
       "AccountId": id,
-      "FromDate": this.startDate,
-      "ToDate": this.endDate,
+      "Date": this.selectedDate,
       "DivisionId": this.divisionId,
-      "OfficeId": "",
+      "OfficeId": this.officeId,
       "Type": "",
       "Transaction": ""
     };
 
     switch (filterType) {
-      case 'DateRange':
-        payload.FromDate = value.FromDate;
-        payload.ToDate = value.ToDate;
-        
-        break;
-    case 'ToDate':
-        payload.ToDate = value;
-        break;
+      // case 'Date':
+      //   payload.Date = value;
+      //   break;
       case 'DivisionId':
         payload.DivisionId = value;
         break;
@@ -525,6 +400,7 @@ export class LeveltwoProfitlossComponent implements OnInit {
       case 'Type':
         payload.Type = value;
         break;
+
       case 'Transaction':
         payload.Transaction = value;
         break;
@@ -533,7 +409,7 @@ export class LeveltwoProfitlossComponent implements OnInit {
         return;
     }
 
-    this.reportService.GetProfitLossById(payload).subscribe(response => {
+    this.reportService.GetLedgerDataById(payload).subscribe(response => {
       this.dataList = [];
       console.log('Response Data:', response);
 
@@ -593,22 +469,22 @@ export class LeveltwoProfitlossComponent implements OnInit {
     worksheet.mergeCells(`C${titleRow.number}:D${titleRow.number}`);
   
     const subtitleRow = worksheet.addRow(['', '', 'Account Transactions', '', '', '']);
-    subtitleRow.getCell(3).font = { size: 14, bold: true };
+    subtitleRow.getCell(3).font = { size: 15, bold: true };
     subtitleRow.getCell(3).alignment = { horizontal: 'center' };
     worksheet.mergeCells(`C${subtitleRow.number}:D${subtitleRow.number}`);
   
     const subtitleRow1 = worksheet.addRow(['', '', 'Accounts Receivable', '', '', '']);
-    subtitleRow1.getCell(3).font = { size: 13, bold: true };
+    subtitleRow1.getCell(3).font = { size: 15, bold: true };
     subtitleRow1.getCell(3).alignment = { horizontal: 'center' };
     worksheet.mergeCells(`C${subtitleRow1.number}:D${subtitleRow1.number}`);
   
     const currentDate = new Date();
-    const subtitleRow2 = worksheet.addRow(['', '', `From ${this.datePipe.transform(this.startDate, 'dd-MM-yyyy')} To ${this.datePipe.transform(this.endDate, 'dd-MM-yyyy')}`, '', '','' ]);
+    const subtitleRow2 = worksheet.addRow(['', '', `As of ${this.datePipe.transform(currentDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`, '', '', '']);
     subtitleRow2.getCell(3).alignment = { horizontal: 'center' };
     worksheet.mergeCells(`C${subtitleRow2.number}:D${subtitleRow2.number}`);
   
     // Define header row
-    const headers = ['Trans_Date', 'Trans_Account_Name', 'Trans_Details', 'Trans_Type', 'Transaction', 'Trans_Ref_Details', 'Amount'];
+    const headers = ['Trans_Date', 'Trans_Account_Name', 'Trans_Details', 'Trans_Type', 'Transaction', 'Trans_Ref_Details', 'Debit', 'Credit', 'Amount'];
     const headerRow = worksheet.addRow(headers);
   
     // Style the header row
@@ -648,8 +524,8 @@ export class LeveltwoProfitlossComponent implements OnInit {
         group.Trans_Type,
         group.Trans_Number,
         group.Trans_Ref_Details,
-        // group.Debit.toFixed(this.entityFraction),
-        // group.Credit.toFixed(this.entityFraction),
+        group.Debit.toFixed(this.entityFraction),
+        group.Credit.toFixed(this.entityFraction),
         group.Amount.toFixed(this.entityFraction)
       ];
   
@@ -692,8 +568,8 @@ export class LeveltwoProfitlossComponent implements OnInit {
       '',
       '',
       '',
-      // this.totalDebitAmount.toFixed(this.entityFraction),
-      // this.totalCreditAmount.toFixed(this.entityFraction),
+      this.totalDebitAmount.toFixed(this.entityFraction),
+      this.totalCreditAmount.toFixed(this.entityFraction),
       this.totalAmount.toFixed(this.entityFraction)
     ]);
   
@@ -744,11 +620,12 @@ export class LeveltwoProfitlossComponent implements OnInit {
     // Write to Excel and save
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    saveAs(blob, 'Report-ProfitandLoss_Account Transactions.xlsx');
+    saveAs(blob, 'Report-BalanceSheet_Account Transactions.xlsx');
   }
   
 
 }
+
 
 
 
