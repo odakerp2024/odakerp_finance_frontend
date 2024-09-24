@@ -49,6 +49,8 @@ export class LeveltwoBalanceSheetComponent implements OnInit {
   @ViewChild('table') table: ElementRef;
   selectedDivision: any;
   selectedOffice: any;
+  divisionId: any;
+  officeId: any;
 
   constructor(public ps: PaginationService, private globals: Globals,
     private dataService: DataService,
@@ -108,6 +110,12 @@ export class LeveltwoBalanceSheetComponent implements OnInit {
       case 'Contra Voucher':
         url = this.router.serializeUrl(
           this.router.createUrlTree(['/views/contra-info/contra-info-view', { contraId: id }])
+        );
+        break;
+      
+      case 'Adjustment Voucher':
+        url = this.router.serializeUrl(
+          this.router.createUrlTree(['/views/Adjustment-info/Adjustment-Voucher-info', { id: id, isUpdate: true }])
         );
         break;
         
@@ -185,6 +193,7 @@ export class LeveltwoBalanceSheetComponent implements OnInit {
   }
 
   getDivisionAndOfficeList() {
+    debugger
     const divisionService = `${this.globals.APIURL}/Division/GetOrganizationDivisionList`;
     const officeService = `${this.globals.APIURL}/Office/GetOrganizationOfficeList`;
 
@@ -254,11 +263,17 @@ export class LeveltwoBalanceSheetComponent implements OnInit {
 
 
   fetchData(id: number): void {
+    debugger
+
+    this.divisionId = ""
+    this.officeId = ""
 
     const Date = this.route.snapshot.paramMap.get('Date');
     this.selectedDate = Date;
       const DivisionId = this.route.snapshot.paramMap.get('DivisionId');
+      this.divisionId = DivisionId;
       const officeId = this.route.snapshot.paramMap.get('OfficeId');
+      this.officeId = officeId;
   
       // this.startDate = fromDate
       // this.endDate = toDate
@@ -270,18 +285,31 @@ export class LeveltwoBalanceSheetComponent implements OnInit {
       const OfficeName =  this.selectedOffice.toUpperCase();
       const divisionName = this.selectedDivision.toUpperCase();
 
-  debugger
-    const payload = {
-      "AccountId": id,
-      "Date": this.selectedDate,
-      "DivisionId":DivisionId,
-      "DivisionName": divisionName,
-      "OfficeId":officeId,
-      "OfficeName": OfficeName,
-      "Type": " ",
-      "Transaction": ""
-    };
-    this.reportService.GetLedgerDataById(payload).subscribe(response => {
+  
+    // const payload = {
+    //   "AccountId": id,
+    //   "Date": this.selectedDate,
+    //   "DivisionId":DivisionId,
+    //   "DivisionName": divisionName,
+    //   "OfficeId":officeId,
+    //   "OfficeName": OfficeName,
+    //   "Type": " ",
+    //   "Transaction": ""
+    // };
+
+    this.filterForm = this.fb.group({
+
+      AccountId: this.id,
+      Date: [this.selectedDate],
+      OfficeId: [officeId],
+      DivisionName: [divisionName],
+      OfficeName: [OfficeName],
+      DivisionId: [DivisionId],
+      Type: [''],
+      Transaction: ['']
+    })
+    
+    this.reportService.GetLedgerDataById(this.filterForm.value).subscribe(response => {
       if (response.data && Array.isArray(response.data.Table) && response.data.Table.length > 0) {
         this.dataList = response.data.Table;
         this.setPage(1);
@@ -320,14 +348,7 @@ export class LeveltwoBalanceSheetComponent implements OnInit {
       Transaction: ['']
     })
     // Listen for changes in the transaction input field
-    this.filterForm.get('Transaction').valueChanges.subscribe(value => {
-      this.transactionSearchTerm = value;
-      if (value == '') {
-        this.applyFilter('Transaction', '', this.id);
-      } else {
-        this.applyFilter('Transaction', value, this.id);
-      }
-    });
+    
   }
   //Filter By Date , Division , Office & TransactionType 
   BasedOnDate(selectedDate: any, id: number) {
@@ -335,18 +356,23 @@ export class LeveltwoBalanceSheetComponent implements OnInit {
   }
 
   onDivisionChange(divisionId: any, id: number) {
+    this.divisionId = divisionId
+    debugger
     this.applyFilter('DivisionId', divisionId, id);
   }
 
   onOfficeChange(officeId: any, id: number) {
+    this.officeId = officeId
     this.applyFilter('OfficeId', officeId, id);
   }
 
   onTransactionTypeChange(type: any, id: number): void {
+    debugger
     this.applyFilter('Type', type, id);
   }
-  onTransactionChange(transaction: any, id: number): void {
-    this.applyFilter('Transaction', transaction, id);
+  OnVoucher(Transaction: any, id: number): void {
+    debugger
+    this.applyFilter('Transaction', Transaction, id);
   }
 
 
@@ -354,17 +380,17 @@ export class LeveltwoBalanceSheetComponent implements OnInit {
   applyFilter(filterType: string, value: any, id: number): void {
     let payload: any = {
       "AccountId": id,
-      "Date": "",
-      "DivisionId": "",
-      "OfficeId": "",
+      "Date": this.selectedDate,
+      "DivisionId": this.divisionId,
+      "OfficeId": this.officeId,
       "Type": "",
       "Transaction": ""
     };
 
     switch (filterType) {
-      case 'Date':
-        payload.Date = value;
-        break;
+      // case 'Date':
+      //   payload.Date = value;
+      //   break;
       case 'DivisionId':
         payload.DivisionId = value;
         break;
@@ -389,9 +415,26 @@ export class LeveltwoBalanceSheetComponent implements OnInit {
 
       if (response.data.Table && response.data.Table.length > 0) {
         this.dataList = response.data.Table;
-        console.log('Data List:', this.dataList);
+        this.setPage(1);
+        // Calculate total debit amount
+        this.totalDebitAmount = this.dataList.reduce((sum, item) => sum + (parseFloat(item.Debit) || 0), 0);
+
+        // Calculate total credit amount
+        this.totalCreditAmount = this.dataList.reduce((sum, item) => sum + (parseFloat(item.Credit) || 0), 0);
+
+
+        // Calculate the difference between total credit and debit
+        this.totalAmount = Math.abs(this.totalDebitAmount - this.totalCreditAmount);
+
+
+
       } else {
-        console.error('Error: Invalid response format');
+        this.totalDebitAmount = 0;
+        this.totalCreditAmount = 0;
+        this.totalAmount = 0;
+        this.pager = {};
+        this.dataList = [];
+        // console.error('Error: Invalid response format');
       }
     }, err => {
       console.error('Error:', err);
