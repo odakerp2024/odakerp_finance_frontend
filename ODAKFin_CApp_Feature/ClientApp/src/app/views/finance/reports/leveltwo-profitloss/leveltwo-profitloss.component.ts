@@ -68,6 +68,7 @@ export class LeveltwoProfitlossComponent implements OnInit {
   endDate = '';
 
   @ViewChild('table') table: ElementRef;
+  divisionId: any;
 
   constructor(public ps: PaginationService, private globals: Globals,
     private dataService: DataService,
@@ -495,11 +496,12 @@ export class LeveltwoProfitlossComponent implements OnInit {
 
 
   applyFilter(filterType: string, value: any, id: number): void {
+    debugger
     let payload: any = {
       "AccountId": id,
       "FromDate": this.startDate,
       "ToDate": this.endDate,
-      "DivisionId": "",
+      "DivisionId": this.divisionId,
       "OfficeId": "",
       "Type": "",
       "Transaction": ""
