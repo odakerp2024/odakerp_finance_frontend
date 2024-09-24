@@ -1237,6 +1237,10 @@ export class FinanceMasterComponent implements OnInit {
     else if (routePage == 'ProfitandLoss') {
        this.router.navigate(['/views/reports/profit-loss']);
     }
+    else if (routePage == 'BalanceSheet') {
+      debugger
+      this.router.navigate(['/views/reports/balance-sheet']);
+   }
     const userID = localStorage.getItem("UserID");
     const paylod = {
       userID: Number(userID),

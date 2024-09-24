@@ -16,6 +16,9 @@ import { ReportApLeveloneComponent } from './report-ap-levelone/report-ap-levelo
 import { ReportApLeveltwoComponent } from './report-ap-leveltwo/report-ap-leveltwo.component';
 import { ProfitLossComponent } from './profit-loss/profit-loss.component';
 import { LeveltwoProfitlossComponent } from './leveltwo-profitloss/leveltwo-profitloss.component';
+import { BalanceSheetComponent } from './balance-sheet/balance-sheet.component';
+import { LeveltwoBalanceSheetComponent } from './leveltwo-balance-sheet/leveltwo-balance-sheet.component';
+
 
 
 
@@ -36,7 +39,9 @@ const routes: Routes = [
   { path: 'report-ap-levelone'          ,  component : ReportApLeveloneComponent},
   { path: 'report-ap-leveltwo'          ,  component : ReportApLeveltwoComponent },
   { path: 'profit-loss'                 , component: ProfitLossComponent },
-  {path: 'leveltwo-profitloss'          , component: LeveltwoProfitlossComponent}
+  {path: 'leveltwo-profitloss'          , component: LeveltwoProfitlossComponent},
+  {path: 'balance-sheet'                , component: BalanceSheetComponent},
+  {path: 'leveltwo-balance-sheet'       , component: LeveltwoBalanceSheetComponent}
 
 
 ];

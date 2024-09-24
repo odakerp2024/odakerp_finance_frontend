@@ -22,6 +22,8 @@ import { ReportApLeveloneComponent } from './report-ap-levelone/report-ap-levelo
 import { ReportApLeveltwoComponent } from './report-ap-leveltwo/report-ap-leveltwo.component';
 import { ProfitLossComponent } from './profit-loss/profit-loss.component';
 import { LeveltwoProfitlossComponent } from './leveltwo-profitloss/leveltwo-profitloss.component';
+import { BalanceSheetComponent } from './balance-sheet/balance-sheet.component';
+import { LeveltwoBalanceSheetComponent } from './leveltwo-balance-sheet/leveltwo-balance-sheet.component';
 
 
 
@@ -42,7 +44,9 @@ import { LeveltwoProfitlossComponent } from './leveltwo-profitloss/leveltwo-prof
     ReportApLeveloneComponent,
     ReportApLeveltwoComponent,
     ProfitLossComponent,
-    LeveltwoProfitlossComponent
+    LeveltwoProfitlossComponent,
+    BalanceSheetComponent,
+    LeveltwoBalanceSheetComponent
   ],
   imports: [
     CommonModule,
