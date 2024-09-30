@@ -45,9 +45,9 @@
     border-color: #28a745 !important;
     opacity: .65 !important;
 }
-:host .checked-row {
+/* :host .checked-row {
     background: rgb(208, 252, 208) !important;
-}
+} */
 div.form-group input.form-control.amount {
     background-color: rgb(192, 247, 192)!important;
     font-weight: bold !important;
@@ -147,7 +147,7 @@ div.form-group input.form-control.amount {
     
     #tabledata {
       padding: 9px !important;
-      font-size: 8px !important;
+      font-size: 13px !important;
     }
   
     .table thead th {
@@ -155,6 +155,36 @@ div.form-group input.form-control.amount {
       }
    
   }
+
+  @media (min-width: 14198px) and (max-width: 16010px) {
+  #tabledata {
+      padding: 9px !important;
+      font-size: 13px !important;
+      width: 141px;
+  }
+  .table thead th {
+      padding: 9px 13px !important;
+      font-size: 13px !important;
+  }
+  .table td {
+      padding: 0px 0px !important;
+  }
+}
+
+@media (min-width: 1498px) and (max-width: 1600px) {
+  #tabledata {
+      padding: 9px !important;
+      font-size: 13px !important;
+      width: 141px;
+  }
+  .table thead th {
+      padding: 9px 13px !important;
+      font-size: 13px !important;
+  }
+  .table td {
+      padding: 0px 0px !important;
+  }
+}
   
   
   @media (min-width: 1400px) and (max-width: 1498px) {

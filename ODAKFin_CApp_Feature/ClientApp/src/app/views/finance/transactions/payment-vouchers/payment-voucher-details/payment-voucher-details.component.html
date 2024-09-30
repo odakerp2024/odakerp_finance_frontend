@@ -558,27 +558,27 @@
                                     <tr *ngFor="let due of paymentDetailsTableList;let i = index"
                                         [ngClass]="getIsChecked(i) ? 'checked-row' : ''">
                                         <td class="text-center" id = tabledata >{{ i + 1 }}</td>
-                                        <td class="text-center" id = tabledata >{{due.InvoiceNumber}}</td>
+                                        <td class="text-left" id = tabledata >{{due.InvoiceNumber}}</td>
                                         <!-- <td>{{due.date | date: commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td> -->
-                                        <td class="text-center" id = tabledata >{{due.BillDate |
+                                        <td class="text-left" id = tabledata >{{due.BillDate |
                                             date:commonDataService.convertToLowerCaseDay(entityDateFormat) }}</td>
 
-                                        <td class="text-center" id = tabledata >{{due.Currency}}</td>
-                                        <td class="text-center" id = tabledata >{{due.BillAmount }}</td>
-                                        <td class="text-center" id = tabledata >
+                                        <td class="text-left" id = tabledata >{{due.Currency}}</td>
+                                        <td class="text-right" id = tabledata >{{due.BillAmount }}</td>
+                                        <td class="text-right" id = tabledata >
                                             {{due.DueAmount}}
                                             <!-- <input class="w-100" [ngClass]="isEditDueBill ? '' : 'disable-input'"
                                                 type="number" [(ngModel)]="due.DueAmount"
                                                 [ngModelOptions]="{standalone: true}"> -->
                                         </td>
-                                        <td class="text-center" id = tabledata >{{due.InvoiceAmountCCY }}</td>
+                                        <td class="text-right" id = tabledata >{{due.InvoiceAmountCCY }}</td>
                                         <!-- <td class="text-center">{{due.BillAmountLocal }}</td> -->
-                                        <td class="text-center" id = tabledata >
+                                        <td class="text-right" id = tabledata >
                                             {{due.DueAmountCCY}}
                                         </td>
 
                                         <!-- <td class="text-center">{{due.DueAmountLocal}}</td> -->
-                                        <td class="text-center" id = tabledata >
+                                        <td class="text-right" id = tabledata >
                                             <!-- <input class="w-100"
                                                 [ngClass]="IsFinal  || !isTds || !isEditMode || !due.IsCheck ? 'disable-input' : ''"
                                                 numbersOnly appDynamicDecimal
@@ -587,7 +587,7 @@
                                             {{due.TDS}}
                                         </td>
                                         
-                                        <td class="text-center">
+                                        <td class="text-right">
                                             <!-- {{due.payment}} -->
                                             <input min="1" class="w-100" id = tabledata 
                                                 onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
