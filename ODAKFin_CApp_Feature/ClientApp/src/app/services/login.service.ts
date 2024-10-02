@@ -41,13 +41,6 @@ export class LoginService {
         return this.http.post<any>(this.globals.APIURLFF + '/Login/GetAllMenulist', payload);
     }
 
-    // GetOverAllMenuListByMainMenu(payload: any): Observable<any> {
-    //    return this.http.post<any>(this.globals.APIURLFF + '/Login/GetAllMenulistByMainMenu', payload);
-    // }
-    // GetOverAllMenuListByMainMenu(OL:MenuMasterData): Observable<MenuMasterData[]> {
-    //    return this.http.post<any>(this.globals.APIURL + '/MenuMaster/MainMenu', OL);
-    // }
-
     GetUserPermissionObject(payload: any): Observable<any> {
         return this.http.post<any>(this.globals.APIURLLA + '/MenuMaster/UserPermissionObject', payload);
     }

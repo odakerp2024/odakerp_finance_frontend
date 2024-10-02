@@ -229,36 +229,7 @@ export class ChartaccountsComponent implements OnInit {
   onSubmit() {
 
     var validation = "";
-    //commented due to conditions are validated in backend itself so here we not validated
-    
-    // if (!this.isUpdateMode) {
-    //   // var data = this.ParentAccountList.filter(x => x.AccountName.toLowerCase() == this.fg.value.AccountName.toLowerCase());
-    //   var data = this.ParentAccountList.filter(x => 
-    //     x.AccountName.toLowerCase() == this.fg.value.AccountName.toLowerCase() &&
-    //     x.AccountTypeId == this.fg.value.AccountTypeID
-    // );
-    
-    // }
-    // else if (this.isUpdateMode) {
-    //   let removedCurrentAccount = this.ParentAccountList.filter(x => x.AccountName != this.AccountName)
-    //   var data = removedCurrentAccount.filter(x => x.AccountName.toLowerCase() == this.fg.value.AccountName.toLowerCase());
-    // }
-
-    // if (data.length > 0) {
-    //   debugger
-    //   validation += "<span style='color:red;'>*</span> <span>Already account name exits!!</span></br>"
-    //   return Swal.fire('', validation, 'warning');
-    // }
-
-    //     this.fg.value.AccountCode = $('#txtAcctCode').val();
-    // console.log( $('#txtAcctCode').val());
-    //     if (this.fg.value.AccountCode == "") {
-    //       validation += "<span style='color:red;'>*</span> <span>Please Enter Entity value </span></br>"
-    //     }
-
     var ddlAccType = this.fg.value.AccountTypeID;
-    // var ddlActive = (Number($('#ddlStatus').val()));
-
 
     if (ddlAccType == null) {
       validation += "<span style='color:red;'>*</span> <span>Please select account type</span></br>"
@@ -276,12 +247,6 @@ export class ChartaccountsComponent implements OnInit {
     if (this.fg.value.ShortName == "") {
       validation += "<span style='color:red;'>*</span> <span>Please enter Short Name </span></br>"
     }
-
-    // if (ddlActive == null) {
-    //   validation += "<span style='color:red;'>*</span> <span>Please select Active</span></br>"
-    // }
-
-
     if (this.fg.value.IsSubAccount == true) {
       var ddlPAccount = $('#ddlPAccount').val();
       if (ddlPAccount == null) {

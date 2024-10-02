@@ -151,11 +151,6 @@ export class ExchangeRateComponent implements OnInit {
       validation += "<span style='color:red;'>*</span> <span>Please Enter rate</span></br>"
     }
 
-    // var ddlIsActive = $('#ddlIsActive').val();
-    // if (ddlIsActive == null) {
-    //   validation += "<span style='color:red;'>*</span> <span>Please select status</span></br>"
-    // }
-
     if (validation != "") {
       Swal.fire('', validation, 'warning');
       return false;

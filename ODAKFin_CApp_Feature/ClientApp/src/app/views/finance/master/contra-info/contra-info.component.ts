@@ -551,43 +551,7 @@ export class ContraInfoComponent implements OnInit {
 
     return validation;
   }
-
-  // getExchangeRate(){
-  //   debugger
-  //   const payload = {
-  //     FromCurrencyId: +this.entityCurrencyId,
-  //     ToCurrencyId: +this.contraForm.controls['CurrencyId'].value
-  //   }
-
-  //   if(payload.FromCurrencyId != payload.ToCurrencyId){
-  //     this.isSameCurrency = false;
-  //     this.contraVoucherService.getExchangeRatePairs(payload)
-  //     // .pipe(takeUntil(this.ngUnsubscribe))
-  //     .subscribe((result: any) => {
-  //       if(result.message == "Success"){
-  //         // console.log('getExchangeRatePairs', result)
-  //         this.exchangePairDetails = result.data.Table;
-  //         if(this.exchangePairDetails.length){
-  //           debugger
-  //           const exchangePairId = result.data.Table[0].CurrencyPairId;
-  //           const CurrentExRate = this.contraForm.value.CurrentExRate;
-  //           this.contraForm.controls['ExchangeRateId'].setValue(exchangePairId);
-  //           this.contraForm.controls['Rate'].setValue(this.exchangePairDetails[0].Rate);
-  //           this.contraForm.controls['CurrentExRate'].setValue(this.contraForm.value.CurrentExRate);
-  //           // this.contraForm.controls['TotalAmount'].setValue(Number(this.contraForm.value.AmountPaid)* Number(this.exchangePairDetails[0].Rate));
-  //           this.contraForm.controls['TotalAmount'].setValue(Number(this.contraForm.value.AmountPaid)* (CurrentExRate ? CurrentExRate : Number(this.exchangePairDetails[0].Rate)));
-  //         }
-  //         else {
-  //           this.contraForm.controls['TotalAmount'].setValue(Number(this.contraForm.value.AmountPaid));
-  //         }
-  //       }
-  //     })
-  //   }
-  //   else{
-  //     this.isSameCurrency = true;
-  //     this.contraForm.controls['TotalAmount'].setValue(Number(this.contraForm.value.AmountPaid));
-  //   }
-  // }
+  
   getExchangeRate() {
     const payload = {
       FromCurrencyId: +this.entityCurrencyId,
@@ -955,30 +919,6 @@ export class ContraInfoComponent implements OnInit {
       this.isSameCurrency = false;
     }
   }
-  // CurrentExRate() {
-  //   debugger;
-
-  //   if (!this.contraForm.value.CurrentExRate) {
-  //     return;
-  //   }
-
-  //   if (this.contraForm.value.AmountPaid && !this.isSameCurrency) {
-  //     this.contraForm.controls["TotalAmount"].setValue(
-  //       Number(this.contraForm.value.AmountPaid) *
-  //         Number(this.contraForm.value.CurrentExRate)
-  //     );
-  //   } else {
-  //     this.contraForm.controls["TotalAmount"].setValue(
-  //       Number(this.contraForm.value.AmountPaid)
-  //     );
-  //   }
-  // }
-  // calculateLocalAmount(){
-  //   debugger
-  //   if (this.contraForm.value.AmountPaid && !this.isSameCurrency) {
-  //       const data = (Number(this.contraForm.value.AmountPaid) * Number(this.exchangePairDetails[0].Rate)).toFixed(3);
-  //       this.contraForm.controls['TotalAmount'].setValue(Number(data));
-  //   }
 
   calculateLocalAmount() {
     if (this.contraForm.value.AmountPaid && !this.isSameCurrency) {

@@ -99,9 +99,6 @@ export class OfficeInfoComponent implements OnInit, AfterViewChecked, AfterViewI
     }
   }
   ngAfterViewChecked(): void {
-    // if (this.panCardShow) {
-    // this.officeFormEnable();
-    // }
     this.salesChanged(this.officeDetailsForm.value.IsSalesOffice);
   }
 
@@ -143,8 +140,6 @@ export class OfficeInfoComponent implements OnInit, AfterViewChecked, AfterViewI
       OrgId: [localStorage.getItem('OrgId')],
       OfficeName: [''],
       BusinessLocation: [''],
-      // CIN: ['', [Validators.pattern(this.cinPattern)]],
-      // PANNo: ['', [Validators.required, panValidator]],
       CreatedBy: [localStorage.getItem('UserID')],
       CreatedDate: [new Date()],
       UpdatedBy: [localStorage.getItem('UserID')],
@@ -172,7 +167,6 @@ export class OfficeInfoComponent implements OnInit, AfterViewChecked, AfterViewI
       Telephone: ['', [Validators.pattern(this.telephonePattern), Validators.minLength(12), Validators.maxLength(16)]],
       Address: [''],
       GSTNo: ['', Validators.pattern(this.gstPattern)],
-      // GSTNo: [''],
       EffectiveDate: [''],
       CreatedBy: [localStorage.getItem('UserID')],
       CreatedDate: [new Date()],
@@ -340,9 +334,6 @@ export class OfficeInfoComponent implements OnInit, AfterViewChecked, AfterViewI
     if (this.officeDetailsForm.value.OfficeShortName == "") {
       validation += "<span style='color:red;'>*</span> <span>Please Enter Office Short Name</span></br>"
     }
-    // if (this.officeDetailsForm.value.Telephone == "") {
-    //   validation += "<span style='color:red;'>*</span> <span>Please Enter Telephone</span></br>"
-    // }
     if (this.officeDetailsForm.value.EffectiveDate == "") {
       validation += "<span style='color:red;'>*</span> <span>Please Enter EffectiveDate</span></br>"
     }
@@ -351,14 +342,6 @@ export class OfficeInfoComponent implements OnInit, AfterViewChecked, AfterViewI
       Swal.fire(validation)
       return false;
     }
-
-    // if (this.officeForm.invalid) {
-    //   return false;
-    // }
-
-    // if (this.officeDetailsForm.invalid) {
-    //   return false;
-    // }
 
     this.customPayload(emailTableData);
     Swal.fire({
@@ -543,12 +526,6 @@ export class OfficeInfoComponent implements OnInit, AfterViewChecked, AfterViewI
           UpdatedBy: localStorage.getItem('UserID'),
           UpdatedDate: new Date()
         });
-        // setTimeout(() => {
-        //   this.officeDetailsForm.controls.StateId.setValue(officeDetails.StateId.toString());
-        // }, 2000)
-        // setTimeout(() => {
-        //   this.officeDetailsForm.controls.StateId.setValue(officeDetails.StateId.toString());
-        // }, 3000)
 
         const emailData = [];
         result.data.EmailIds.forEach(element => {

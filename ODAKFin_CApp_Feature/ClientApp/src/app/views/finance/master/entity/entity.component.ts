@@ -538,29 +538,6 @@ export class EntityComponent implements OnInit, AfterViewInit {
       CreatedDate: configurationInfo.CreatedDate,
       ModifiedDate: new Date(),
     }
-
-    // if (this.productForm.value.quantities.length == 0) {
-    //   var Table2: any = [{
-    //     ID: 0,
-    //     OrgId: this.companyDetailId,
-    //     Category: '',
-    //     EmailId: '',
-    //     StartDate: '',
-    //     EndDate: '',
-    //     CreatedBy: localStorage.getItem('UserID'),
-    //     UpdatedBy: localStorage.getItem('UserID'),
-    //     CreatedDate: new Date(),
-    //     ModifiedDate: new Date()
-    //   }]
-    // }
-    // else {
-    //   let copyArray = [...this.productForm.value.quantities];
-    //   copyArray.forEach(object => {
-    //     delete object['checkBox'];
-    //     object.OrgId = this.companyDetailId
-    //   });
-    //   var Table2: any = copyArray;
-    // }
     let emailData = [];
     if (this.emailData) {
       emailData = this.customEmail(this.emailData);
@@ -727,9 +704,6 @@ export class EntityComponent implements OnInit, AfterViewInit {
         Table3: this.getOrganizationInfo.Table3
       }
     }
-    // if(payload.Organization.Table2.length == this.emailData.length ){
-    //   return
-    // }
     let service = `${this.globals.APIURL}/Organization/SaveOrganizationEntity`;
     this.dataService.post(service, payload).subscribe((result: any) => {
       if (result.data.length > 0) {
@@ -813,7 +787,6 @@ export class EntityComponent implements OnInit, AfterViewInit {
 
   deleteDocument(event) {
     const indexToDelete = event;
-    // let index = this.documentListInfo.findIndex((element) => element.ID == deleteIndex.ID);
     if (indexToDelete >= 0 && indexToDelete < this.documentListInfo.length) {
       this.documentListInfo.splice(indexToDelete, 1);
       // this.documentListInfoResponse.splice(index, 1);

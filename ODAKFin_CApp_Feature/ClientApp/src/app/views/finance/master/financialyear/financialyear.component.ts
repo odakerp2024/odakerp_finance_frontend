@@ -26,7 +26,6 @@ export class FinancialyearComponent implements OnInit {
   dscountryItem: Country[];
   FormMode: String = "A";
   editable: boolean = true;
-  //const newTodo = new StatusValue(); //statusvalues: Status[]=this.newTodo.statusvaluesv;
   statusvalues: Status[] = new StatusView().statusvalues;
   finicalYearId: any = 0;
   isUpdate: boolean = false;
