@@ -281,7 +281,6 @@ export class ReportDayBookComponent implements OnInit {
   }
 
    clickTransactionNumber(id: number, transType: string, Trans_Number: string, RedirectUrl: string) {
-    debugger
     // Check if transType or Trans_Number is empty and return immediately if either is
     if (!transType || !Trans_Number) {
       console.warn('Transaction type or Transaction number is empty. Staying in the same place.');

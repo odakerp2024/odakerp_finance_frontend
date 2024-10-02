@@ -150,7 +150,6 @@ export class AssetComponent implements OnInit {
   }
 
   openPopup() {
-    debugger
     this.getPermissionListForCreate(613);
   }
 
@@ -354,7 +353,6 @@ export class AssetComponent implements OnInit {
       SubfunctionID: value
     }
     this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
       if (data.length > 0) {
         console.log("PermissionObject", data);
 
@@ -393,7 +391,6 @@ export class AssetComponent implements OnInit {
       SubfunctionID: value
     }
     this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
       if (data.length > 0) {
         console.log("PermissionObject", data);
 

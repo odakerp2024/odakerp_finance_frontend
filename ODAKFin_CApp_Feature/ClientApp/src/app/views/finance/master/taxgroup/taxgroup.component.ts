@@ -115,7 +115,6 @@ export class TaxgroupComponent implements OnInit {
       SubfunctionID: 587
     }
     this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
       if (data.length > 0) {
         console.log("PermissionObject", data);
 

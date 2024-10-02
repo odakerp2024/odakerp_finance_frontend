@@ -132,7 +132,6 @@ export class AccountReceivableDetailsComponent implements OnInit {
   }
 
   // getCustomerBranch(CustomerId) {
-  //   debugger
   //   const customerDetails = this.CustomerCodeList.find(vendor => vendor.CustomerId === CustomerId);
   //   this.accountReceivableForm.controls['CustomerBranch'].setValue('');
   //   if (customerDetails) {
@@ -144,7 +143,6 @@ export class AccountReceivableDetailsComponent implements OnInit {
   // }
 
   getAccountReceivableIdByID() {
-    debugger;
     const payload = this.accountReceivableId;
     var service = `${this.globals.APIURL}/AccountsReceivable/GetAccountInvoiceListById`;
     this.dataService
@@ -177,7 +175,6 @@ export class AccountReceivableDetailsComponent implements OnInit {
           await this.selectedCustomer(info.CustomerId, true);
           await this.getCustomerList(info.DivisionId);
           await this.getOfficeList(info.DivisionId);
-          debugger;
           this.accountReceivableForm.patchValue({
             ReceiptVoucherId: this.accountReceivableId,
             DivisionId: info.DivisionId,
@@ -317,7 +314,6 @@ export class AccountReceivableDetailsComponent implements OnInit {
       this.accountReceivableForm.value,
       "this.accountReceivableForm.value"
     );
-    debugger;
     const data = {
       Id: this.accountReceivableId,
       Division: this.accountReceivableForm.value.Division,

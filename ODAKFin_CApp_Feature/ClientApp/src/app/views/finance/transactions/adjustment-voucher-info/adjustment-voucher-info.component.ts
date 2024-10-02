@@ -491,7 +491,6 @@ private downloadFile = (data: HttpResponse<Blob>) => {
 
   
   async addRow() {  
-    debugger
     var validation = "";
     const accountMappingIds = []; // Replace this with your actual data
    const selectedAccountId = this.AccountTypeId;
@@ -676,7 +675,6 @@ private downloadFile = (data: HttpResponse<Blob>) => {
   }
 
   resetTable() {
-    debugger
     this.AdjustmentCreateForm.controls['Id'].setValue(0);
     this.AdjustmentCreateForm.controls['AccountId'].setValue(0);
     this.AdjustmentCreateForm.controls['AccountType'].setValue(0);
@@ -776,8 +774,6 @@ private downloadFile = (data: HttpResponse<Blob>) => {
     // }
     // this.accountNameCheck = this.AccountId[0].AccountType
     // this.fetchAccountMappingIds(this.AccountTypeId);
-
-    // debugger
     this.accountName = []
     if(accountTypeName == 'COA MASTER') {
       this.accountName = this.groupedCoaTypeList['AccountName'];
@@ -1000,7 +996,6 @@ private downloadFile = (data: HttpResponse<Blob>) => {
 
   // * check its having COA and customer or vendor matching the scenerio
 CustomerValidation(){
-    debugger
     const isCoaAccount1 = this.AdjustmentTableList.some((item) => {  return item.DrCrName == "Dr" && item.AccountType == "CUSTOMER" });
     const isCoaAccount = this.AdjustmentTableList.some((item) => {  return item.DrCrName == "Cr" && item.AccountType == "CUSTOMER" });
     const isCusdtomer = this.AdjustmentTableList.some((item) => { return item.AccountType == "COA MASTER" || item.AccountType == "VENDOR"});
@@ -1009,7 +1004,6 @@ CustomerValidation(){
   }
 
   VendorValidation(){
-    debugger
     const isCoaAccount1 = this.AdjustmentTableList.some((item) => {  return item.DrCrName == "Dr" && item.AccountType == "VENDOR" });
     const isCoaAccount = this.AdjustmentTableList.some((item) => {  return item.DrCrName == "Cr" && item.AccountType == "VENDOR" });
     const isCusdtomer = this.AdjustmentTableList.some((item) => { return item.AccountType == "COA MASTER" || item.AccountType == "CUSTOMER"});
@@ -1018,7 +1012,6 @@ CustomerValidation(){
   }
 
   COAValidation(){
-    debugger
     const isCoaAccount1 = this.AdjustmentTableList.some((item) => {  return item.DrCrName == "Dr" && item.AccountType == "COA MASTER" });
     const isCoaAccount = this.AdjustmentTableList.some((item) => {  return item.DrCrName == "Cr" && item.AccountType == "COA MASTER" });
     const isCusdtomer = this.AdjustmentTableList.some((item) => { return item.AccountType == "CUSTOMER" || item.AccountType == "VENDOR"});

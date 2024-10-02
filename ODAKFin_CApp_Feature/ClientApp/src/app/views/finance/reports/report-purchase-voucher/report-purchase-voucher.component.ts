@@ -338,7 +338,6 @@ export class ReportPurchaseVoucherComponent implements OnInit {
 
 
   async downloadAsExcel() {
-    debugger
     if (this.reportForExcelList.length === 0) {
       Swal.fire('No record found');
       return;
@@ -533,7 +532,6 @@ export class ReportPurchaseVoucherComponent implements OnInit {
 
 
   async downloadAsCSV() {
-    debugger
     if (this.reportForExcelList.length === 0) {
       Swal.fire('No record found');
       return;

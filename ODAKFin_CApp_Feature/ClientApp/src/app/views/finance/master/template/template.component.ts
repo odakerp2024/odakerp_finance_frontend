@@ -35,7 +35,6 @@ export class TemplateComponent implements OnInit {
   }
 
   checkUpdatePermission(id) {
-    debugger
     this.getPermissionListForCreate(573, 'edit', id);
   }	
 
@@ -50,7 +49,6 @@ export class TemplateComponent implements OnInit {
       SubfunctionID: value
     }
     this.CommonService.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
       if (data.length > 0) {
         console.log("PermissionObject", data);
 

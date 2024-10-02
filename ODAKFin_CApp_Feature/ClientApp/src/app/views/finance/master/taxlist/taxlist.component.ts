@@ -165,7 +165,6 @@ export class TaxlistComponent implements OnInit {
       Mode: value
     }
     this.commonDataService.GetCOAAccountList(payload).subscribe(data => {
-      debugger
       if (value == 1) {
         this.AccountList = data["data"].Table;
       }
@@ -173,7 +172,6 @@ export class TaxlistComponent implements OnInit {
   }
 
   GetCOAAccountMappingList(value) {
-    debugger
     const payload = {
       AccountId: value
     }
@@ -269,7 +267,6 @@ export class TaxlistComponent implements OnInit {
     //console.log(this.taxtypeDetailsSave.Table1=this.Taxtype);
     this.TaxtypeModel.TaxType = this.taxtypeDetailsSave;
     // this.TaxtypeModel = this.taxtypeDetailsSave;
-    debugger
     for (let item of this.DynamicGrid) {
       this.AssociatedDetails = new AssociatedGLMappingDetails();
       this.AssociatedDetails.TaxTypeId = item.TaxTypeId ? item.TaxTypeId : 0;
@@ -436,7 +433,6 @@ export class TaxlistComponent implements OnInit {
   }
 
   taxChanges(event: any) {
-    debugger
     this.chipsList = [];
     if (event.length > 0) {
       for (let data of event) {
@@ -523,7 +519,6 @@ export class TaxlistComponent implements OnInit {
   }
 
   GridRowValidation(newRow): boolean {
-    debugger
     const existingRow = this.DynamicGrid.find(gRow => gRow.AssociatedtaxId === newRow.AssociatedtaxId
       && gRow.TransactionType === newRow.TransactionType && gRow.OfficeId === newRow.OfficeId && gRow.SubLedgerId === newRow.SubLedgerId
       && gRow.AccountId === newRow.AccountId && gRow.MappingGLTaxTypeId !== newRow.MappingGLTaxTypeId);
@@ -532,7 +527,6 @@ export class TaxlistComponent implements OnInit {
   }
 
   DynamicGridAddRow() {
-    debugger
     const gRow = this.GLMappingform.value;
     var validation = "";
 
@@ -613,7 +607,6 @@ export class TaxlistComponent implements OnInit {
 
   OnClickEditValue() {
     // console.log('row', row, index)
-    debugger
     const editRow = this.DynamicGrid[this.editSelectedIndex];
     this.GetCOAAccountMappingList(editRow.AccountId)
     this.patchLinkedGLForm(editRow);

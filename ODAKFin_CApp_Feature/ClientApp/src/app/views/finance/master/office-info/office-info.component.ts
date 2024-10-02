@@ -107,7 +107,6 @@ export class OfficeInfoComponent implements OnInit, AfterViewChecked, AfterViewI
 
   async ngOnInit(): Promise<void> {
     this.route.params.subscribe(async (param) => {
-      debugger
       if (param.id) {
         this.isUpdate = param.isCreate === 'false' ? true : false;
         this.officeId = param.id;
@@ -854,7 +853,6 @@ export class OfficeInfoComponent implements OnInit, AfterViewChecked, AfterViewI
   }
 
   checkPermission(value) {
-    debugger
     if (value == 'Basic' && this.isOfficeDetail == true) {
       this.selectedTabName = 'Basic'
     } else if (value == 'email' && this.isEmailids == true) {

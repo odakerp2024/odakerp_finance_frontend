@@ -229,7 +229,6 @@ export class ClosedPaymentsComponent implements OnInit {
   }
 
   period(period: any){
-    // debugger
     if(period == "This Year"){
      
       const currentDate = new Date();
@@ -394,8 +393,6 @@ export class ClosedPaymentsComponent implements OnInit {
 
       this.Custom = true
     } 
-
-    // debugger
 
     this.GetPaymentBatchCloseRequestList();
 

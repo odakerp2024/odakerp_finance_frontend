@@ -193,7 +193,6 @@ export class LeveltwoBalanceSheetComponent implements OnInit {
   }
 
   getDivisionAndOfficeList() {
-    debugger
     const divisionService = `${this.globals.APIURL}/Division/GetOrganizationDivisionList`;
     const officeService = `${this.globals.APIURL}/Office/GetOrganizationOfficeList`;
 
@@ -210,11 +209,9 @@ export class LeveltwoBalanceSheetComponent implements OnInit {
             if (officeResult.message === 'Success' && officeResult.data.Office.length > 0) {
                 this.officeList = officeResult.data.Office.filter(x => x.Active === true);
             }
-            debugger
 
             // Check if both lists have items before calling fetchData
             if (this.divisionList.length > 0 && this.officeList.length > 0) {
-              debugger
                 this.fetchData(this.id);
             } else {
                 console.warn('Division or Office list is empty.');
@@ -263,7 +260,6 @@ export class LeveltwoBalanceSheetComponent implements OnInit {
 
 
   fetchData(id: number): void {
-    debugger
 
     this.divisionId = ""
     this.officeId = ""
@@ -357,7 +353,6 @@ export class LeveltwoBalanceSheetComponent implements OnInit {
 
   onDivisionChange(divisionId: any, id: number) {
     this.divisionId = divisionId
-    debugger
     this.applyFilter('DivisionId', divisionId, id);
   }
 
@@ -367,11 +362,9 @@ export class LeveltwoBalanceSheetComponent implements OnInit {
   }
 
   onTransactionTypeChange(type: any, id: number): void {
-    debugger
     this.applyFilter('Type', type, id);
   }
   OnVoucher(Transaction: any, id: number): void {
-    debugger
     this.applyFilter('Transaction', Transaction, id);
   }
 

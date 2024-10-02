@@ -72,7 +72,6 @@ export class PartyMappingInfoComponent implements OnInit {
   }
 
   edit(){
-    debugger
     this.partyCreateForm.enable();
     this.isUpdate = true;
     this.isUpdateMode = false;

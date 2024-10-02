@@ -46,7 +46,6 @@ export class ExchangeRatePairComponent implements OnInit {
       SubfunctionID: value
     }
     this.CommonService.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
       if (data.length > 0) {
         console.log("PermissionObject", data);
 

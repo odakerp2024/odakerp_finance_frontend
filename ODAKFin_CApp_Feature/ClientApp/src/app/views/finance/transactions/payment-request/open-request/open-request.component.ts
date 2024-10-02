@@ -412,7 +412,6 @@ export class OpenRequestComponent implements OnInit {
   }
 
   //   Submit() {
-  //  debugger
   //     const openRequestForm = this.openRequestForm.value;
   //     var validation = "";
   //     if (openRequestForm.BankId == 0){

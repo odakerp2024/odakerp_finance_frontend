@@ -386,7 +386,6 @@ if(this.finalInvoiceresultArray.length==0){
   Swal.fire("Please select Atleast one record!");
 }
 else{
-//  debugger
 
   console.log(this.finalInvoiceresultArray,'this.finalInvoiceresultArray')
   const payload = {
@@ -438,7 +437,6 @@ else{
     if (this.inProgressForm.value.DivisionId && this.inProgressForm.value.OfficeId) {
       officeInfo = this.officeList.find(x => x.ID == this.inProgressForm.value.OfficeId);
       divisionInfo = this.divisionList.find(x => x.ID == this.inProgressForm.value.DivisionId);
-      debugger
     }
   
     for (var i = 0; i < sectionInfo.length; i++) {

@@ -507,7 +507,6 @@ export class PaymentVoucherDetailsComponent implements OnInit {
 
 
   async submit(isDelete = false) {
-    debugger
     if (this.mappingSuccess == false) {
       Swal.fire(this.errorMessage)
       return false;
@@ -619,7 +618,6 @@ export class PaymentVoucherDetailsComponent implements OnInit {
   }
 
   CurrentFinancialYear() {
-    debugger
     const service = `${this.globals.APIURL}/financialyear/CurrentFinancialYear`;
 
     this.dataService.post(service, { VoucherDate: this.paymentForm.controls.Table.value.PaymentVoucherDate }).subscribe(
@@ -939,7 +937,6 @@ export class PaymentVoucherDetailsComponent implements OnInit {
     var totalPaymentAmount = 0;
 
     table1Data.forEach(element => {
-      debugger
       const dueAmount = (element.DueAmount ? element.DueAmount : element.BillAmount).toFixed(this.entityFraction);
       // element.DueAmountActual = dueAmount + element.TDS + element.Payment; // previous logic
       element.DueAmountActual = dueAmount;

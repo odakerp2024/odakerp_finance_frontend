@@ -235,7 +235,6 @@ export class ExpensesDetailComponent implements OnInit {
         Swal.fire(validation)
         return false;
       }
-      debugger
       this.divisionList = [];
       for (let i = 0; i < this.divisionList.length; i++) { 
         this.accountExpensesForm.get('Division').setValue(this.divisionList[i].DivisionName);

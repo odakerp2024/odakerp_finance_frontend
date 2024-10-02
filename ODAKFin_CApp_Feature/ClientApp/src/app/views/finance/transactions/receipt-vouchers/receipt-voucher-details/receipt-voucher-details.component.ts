@@ -580,7 +580,6 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
   }
 
   CurrentFinancialYear() {
-    debugger
     const service = `${this.globals.APIURL}/financialyear/CurrentFinancialYear`;
 
     this.dataService.post(service, { VoucherDate: this.receiptForm.value.VoucherDate }).subscribe(

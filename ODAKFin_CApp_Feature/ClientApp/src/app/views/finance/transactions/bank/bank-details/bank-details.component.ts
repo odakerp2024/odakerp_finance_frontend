@@ -342,7 +342,6 @@ export class BankDetailsComponent implements OnInit {
   }
 
   getGroup() {
-    debugger
     const payload = {
       ModuleType: 5
     }

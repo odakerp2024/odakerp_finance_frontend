@@ -95,7 +95,6 @@ export class ReportArLeveltwoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    debugger
     this.createReportForm();
     this.onOptionChange('month');
     this.getDivisionList();
@@ -113,7 +112,6 @@ export class ReportArLeveltwoComponent implements OnInit {
 
 
   async goBack() {
-    debugger
     if (this.type === 'customerinvoicewise') {
       this.type = 'customerwise';
       //await this.createReportForm();
@@ -169,7 +167,6 @@ export class ReportArLeveltwoComponent implements OnInit {
   // }
 
   // async showCustomerInvoiceWise(subtypecustomerId: number) {
-  //   debugger
   //   this.subtypecustomerId = subtypecustomerId;
   //   this.pagedItems = [];
   //   this.type = 'customerinvoicewise';
@@ -254,7 +251,6 @@ export class ReportArLeveltwoComponent implements OnInit {
 
 
   async createReportForm() {
-    debugger
     if (this.type == 'overall') {
       this.reportFilter = this.fb.group({
         DivisionId: [0],
@@ -768,7 +764,6 @@ export class ReportArLeveltwoComponent implements OnInit {
   }
 
   export() {
-    debugger
     if (this.type == "overall") {
       this.downloadAsExcel(this.reportList, this.startDate, this.endDate, 'overall');
     }
@@ -805,7 +800,6 @@ export class ReportArLeveltwoComponent implements OnInit {
 
     switch (reportType) {
       case 'overall':
-        debugger
         titleHeader = 'Receivable Aging Summary - Overall';
         excludeKeys = ['Id'];
         columnsToColor = ['Sub Category', 'Balance (Company Currency)'],
@@ -945,7 +939,6 @@ export class ReportArLeveltwoComponent implements OnInit {
         //     break;
 
         case 'overall':
-          debugger
           // Initialize totals object if it doesn't exist
           if (!this.totals) {
             this.totals = {};
@@ -1078,7 +1071,6 @@ export class ReportArLeveltwoComponent implements OnInit {
     console.log('Entity Fraction:', this.entityFraction);
 
     if (reportType === 'overall') {
-      debugger
       this.headers.forEach((header, index) => {
         if (index === 0) {
           // Skip the first column which already has 'Grand Total'

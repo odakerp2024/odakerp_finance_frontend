@@ -82,7 +82,6 @@ export class EntityComponent implements OnInit, AfterViewInit {
       this.isDocuments = params.isDocuments == 'true' ? true : false;
       this.isEmailids = params.isEmailids == 'true' ? true : false;
       this.isReadDocument = params.isReadDocument == 'true' ? true : false;
-      debugger
     });
 
 
@@ -100,7 +99,6 @@ export class EntityComponent implements OnInit, AfterViewInit {
   }
 
   checkPermission(value) {
-    debugger
     if (value == 'email' && this.isEmailids == true) {
       this.selectedTabName = 'email'
     } else if (value == 'documents' && this.isDocuments == true) {
@@ -691,7 +689,6 @@ export class EntityComponent implements OnInit, AfterViewInit {
     return new Promise((resolve) => {
     this.commonDataService.AttachUpload(this.selectedFile).subscribe(data => {
       if (data) {
-        debugger
         event.UniqueFilePath = data.FileNamev
       } resolve(true);
 

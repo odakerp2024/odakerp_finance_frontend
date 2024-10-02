@@ -110,7 +110,6 @@ export class AccountPayableDetailsComponent  implements OnInit {
   }
   
  async getAccountPayableIdByID() {
-  debugger
     const payload =  this.accountPayableId
     var service = `${this.globals.APIURL}/AccountsPayable/GetAccountPayableListId`;
     this.dataService.post(service, { Id: payload }).subscribe(async (result: any) => {
@@ -129,7 +128,6 @@ export class AccountPayableDetailsComponent  implements OnInit {
         }
         this.CreatedOn = this.datePipe.transform(info.CreatedDate, this.entityDateFormat1);
         this.ModifiedOn = this.datePipe.transform(info.ModifiedDate, this.entityDateFormat1);
-       debugger
        await this.getVendorBranch(info.VendorId, true);
        await this.getVendorList(info.DivisionId);
        await this.getOffice(info.DivisionId);
@@ -158,7 +156,6 @@ export class AccountPayableDetailsComponent  implements OnInit {
 
      var validation = "";
       if(info.Isflag == 1){
-        debugger
           validation += "<span>Updating or deleting the selected invoices is not feasible as they are already associated with a Payment voucher.</span></br>"
       }  
       if (validation != "") {
@@ -171,7 +168,6 @@ export class AccountPayableDetailsComponent  implements OnInit {
   }
 
   getVendorBranch(event: any, isUpdate = false) {
-    debugger
     const service = `${this.globals.APIURL}/PaymentVoucher/PaymentVoucherBillDuePaymentList`;
     this.dataService.post(service, { VendorId: event }).subscribe((result: any) => {
       this.VendorCodeList = [];
@@ -192,7 +188,6 @@ export class AccountPayableDetailsComponent  implements OnInit {
   }
 
   // getVendorBranchList(VendorId) {
-  //   debugger
   //   const customerDetails = this.VendorCodeList.find(vendor => vendor.VendorID === VendorId);
   //   this.accountPayableForm.controls['CustomerBranch'].setValue('');
   //   if (customerDetails) {
@@ -203,7 +198,6 @@ export class AccountPayableDetailsComponent  implements OnInit {
   //   }
   // }
   getVendorList(ID) {
-    debugger
     return new Promise((resolve, reject) => {
        let payload = { "DivisionId": ID }
        var service = `${this.globals.APIURL}/Common/GetCustomerAndVendorByDivisionId`;
@@ -236,7 +230,6 @@ export class AccountPayableDetailsComponent  implements OnInit {
     })
   }
   getDivisionList(filter?: string) { 
-    debugger
     this.PaymentReceivableService.getDivision({}).pipe(takeUntil(this.ngUnsubscribe)).subscribe((result: any)=>{
       this.divisionList = [];
       if (result.data.Table.length > 0) {
@@ -246,7 +239,6 @@ export class AccountPayableDetailsComponent  implements OnInit {
   }
 
   getOffice(Division){
-    debugger
       return new Promise((resolve, reject) => {
         const payload = {DivisionId: Division}
         this.commonDataService.getOfficeByDivisionId(payload).pipe(takeUntil(this.ngUnsubscribe)).subscribe((result: any)=>{
@@ -287,7 +279,6 @@ export class AccountPayableDetailsComponent  implements OnInit {
   }
 
   save(){
-    debugger
       this.accountPayableForm.value.Id = this.accountPayableId
       var validation = "";
       if (this.accountPayableForm.value.DivisionId == "") {

@@ -99,7 +99,6 @@ export class LedgerMappingComponent implements OnInit {
     this.ledgerSubModuleList = [];
     let service = `${this.globals.APIURL}/LedgerMapping/GetLedgerSubModuleDropdownList`;
     this.dataService.post(service, payload).subscribe((result: any) => {
-      // debugger
       if (result.message = "Success") {
         this.ledgerSubModuleList = result.data.Table;
       }
