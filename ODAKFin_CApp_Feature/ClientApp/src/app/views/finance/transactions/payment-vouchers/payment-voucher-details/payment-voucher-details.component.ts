@@ -939,26 +939,30 @@ export class PaymentVoucherDetailsComponent implements OnInit {
     var totalPaymentAmount = 0;
 
     table1Data.forEach(element => {
-      const dueAmount = element.DueAmount ? element.DueAmount : element.BillAmount;
+      debugger
+      const dueAmount = (element.DueAmount ? element.DueAmount : element.BillAmount).toFixed(this.entityFraction);
       // element.DueAmountActual = dueAmount + element.TDS + element.Payment; // previous logic
       element.DueAmountActual = dueAmount;
       if (this.IsFinal) {
-        element.DueAmount = element.DueAmount;
+        element.DueAmount = (element.DueAmount).toFixed(this.entityFraction);
       } else {
         const newDue = dueAmount - (element.TDS + element.Payment);
+
+        // const newDue = parseFloat(newDues.toFixed(this.entityFraction));
+        
         if (newDue < 0) {
           element.DueAmount = dueAmount;
           element.TDS = 0;
           element.Payment = 0;
         } else {
-          element.DueAmount = newDue;
+          element.DueAmount = newDue.toFixed(this.entityFraction);
         }
       }
 
       if (element.Currency == toCurrency.CurrencyCode) {
         // element.InvoiceAmountCCY = element.InvoiceAmountCCY * this.exchangePairDetails[0].Rate
         // element.DueAmountCCY = element.DueAmountCCY * this.exchangePairDetails[0].Rate
-        element.InvoiceAmountCCY = element.BillAmount
+        element.InvoiceAmountCCY = element.BillAmount.toFixed(this.entityFraction);
         element.DueAmountCCY = element.DueAmount
       }
 
@@ -1852,9 +1856,9 @@ export class PaymentVoucherDetailsComponent implements OnInit {
             Currency: invoice.CurrencyCode,
             BillAmount: invoice.InvoiceAmount,
             TDS: invoice.TDSAmount ?? 0,
-            DueAmountActual: invoice.DueAmount ? +invoice.DueAmount : +invoice.InvoiceAmount,
-            DueAmount: invoice.DueAmount ? +invoice.DueAmount : +invoice.InvoiceAmount,
-            Payment: '',
+            DueAmountActual: (invoice.DueAmount ? +invoice.DueAmount : +invoice.InvoiceAmount).toFixed(this.entityFraction),
+            DueAmount: (invoice.DueAmount ? +invoice.DueAmount : +invoice.InvoiceAmount).toFixed(this.entityFraction),
+            Payment: 0,
             CreatedBy: this.CreatedBy,
             CreatedDate: this.CreatedDate,
             IsCheck: 0,

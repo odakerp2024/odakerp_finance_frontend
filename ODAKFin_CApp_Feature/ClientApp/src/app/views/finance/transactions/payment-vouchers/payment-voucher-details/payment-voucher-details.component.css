@@ -108,157 +108,126 @@ div.form-group input.form-control.amount {
     font-size: 10px !important;
   }
   
-@media (min-width: 1000px) and (max-width: 1800px) {
+  @media (min-width: 1200px) {
+    .unique-table .container {
+        max-width: 866px;
+    }
+  }
+  
+  @media (min-width: 1000px) and (max-width: 1800px) {
     .field-responsive#active {
-      width: 102% !important;
-      max-width: 105% !important; 
-      overflow: visible !important;
+        width: 102% !important;
+        max-width: 105% !important;
+        overflow: visible !important;
     }
   }
   
-  @media (min-width: 1701px) and (max-width: 1820px) {
-    
+  @media (min-width: 1600px) and (max-width: 1700px) {
     #tabledata {
-      padding: 10px !important;
-      font-size: 10px !important;
+        padding: 9px !important;
+        font-size: 13px !important;
+        width: 118px;
     }
-
-    .table thead th {
-        font-size: 11px !important;
-      }
-   
-  }
-  
-  
-  
-  @media (min-width: 1601px) and (max-width: 1700px) {
-  
-    #tabledata{
-      padding: 9px !important;
-      font-size: 9px !important;
-    }
-   
-    .table thead th {
-        font-size: 10px !important;
-      }
   }
   
   @media (min-width: 1498px) and (max-width: 1600px) {
-    
     #tabledata {
-      padding: 9px !important;
-      font-size: 13px !important;
+        padding: 9px !important;
+        font-size: 13px !important;
+        width: 141px;
     }
-  
     .table thead th {
-        font-size: 8px !important;
-      }
-   
+        padding: 9px 13px !important;
+        font-size: 13px !important;
+    }
+    .table td {
+        padding: 0px 0px !important;
+    }
   }
-
-  @media (min-width: 14198px) and (max-width: 16010px) {
-  #tabledata {
-      padding: 9px !important;
-      font-size: 13px !important;
-      width: 141px;
-  }
-  .table thead th {
-      padding: 9px 13px !important;
-      font-size: 13px !important;
-  }
-  .table td {
-      padding: 0px 0px !important;
-  }
-}
-
-@media (min-width: 1498px) and (max-width: 1600px) {
-  #tabledata {
-      padding: 9px !important;
-      font-size: 13px !important;
-      width: 141px;
-  }
-  .table thead th {
-      padding: 9px 13px !important;
-      font-size: 13px !important;
-  }
-  .table td {
-      padding: 0px 0px !important;
-  }
-}
-  
   
   @media (min-width: 1400px) and (max-width: 1498px) {
-    
     #tabledata {
-      padding: 8px !important;
-      font-size: 8px !important;
+        padding: 9px !important;
+        font-size: 13px !important;
+        width: 118px;
     }
-  
     .table thead th {
-        font-size: 8px !important;
-      }
+        font-size: 13px !important;
+    }
   }
   
-  @media (min-width: 800px) and (max-width: 1000px) {
-  
+  @media (min-width: 1900px) and (max-width: 1920px) {
     #tabledata {
-      padding: 7px !important;
-      font-size: 7px !important;
+        padding: 9px !important;
+        font-size: 13px !important;
     }
-  
     .table thead th {
-      font-size: 8px !important;
+        font-size: 13px !important;
     }
-    
   }
   
   @media (min-width: 700px) and (max-width: 1399px) {
-    
-  
     #tabledata {
-      padding: 10px !important;
-      font-size: 6px !important;
+        padding: 9px !important;
+        font-size: 13px !important;
     }
-  
     .table thead th {
-      font-size: 8px !important;
+        font-size: 13px !important;
     }
-  
   }
   
-  
-  @media (min-width: 857px) and (max-width: 1200px) {
-  
-    #tabledata{
-      padding: 5px !important;
-      font-size: 6px !important;
-    }
-  
-    .table thead th {
-      font-size: 8px !important;
-    }
-    
-  }
-
-  @media (min-width: 860px) and (max-width: 1045px) {
-  
-    #tabledata{
-      padding: 3px !important;
-      font-size: 5px !important;
-    }
-  
-    .table thead th {
-      font-size: 6px !important;
-    }
-    
-  }
-
-
   @media (max-width: 1280px) {
     .table > tbody > tr > td, .table > tfoot > tr > td, .table > thead > tr > td {
-    
         vertical-align: middle !important;
         font-size: 16px !important;
         max-width: 6rem !important;
     }
-}
+  }
+  
+  /* Ensure the table container has a fixed height and overflow */
+  .bend-table-container {
+    max-height: 500px; /* Adjust height as needed */
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  
+  /* Fix the table header */
+  .bend-table thead th {
+    position: sticky;
+    top: -3px;
+    z-index: 10; /* Increase z-index to ensure it's above other content */
+    background-color: #fff; /* Match the header background to the table */
+    border-bottom: 1px solid #ddd; /* Add a border to prevent shift */
+  }
+  
+  /* Fix the table footer */
+  .bend-table tfoot td {
+    position: sticky;
+    bottom: -3px;
+    z-index: 10; /* Increase z-index to ensure it's above other content */
+    background-color: #fff; /* Match the footer background to the table */
+    border-top: 1px solid #ddd; /* Add a border to prevent shift */
+  }
+  
+  /* Ensure the table rows have padding */
+  .table td {
+    padding: 0px 0px !important;
+  }
+  
+  /* Adjustments to ensure content does not overflow */
+  .table tbody td {
+    word-wrap: break-word;
+    /* white-space: nowrap; */
+  }
+  
+  /* Style for table field currency */
+  .invoice-date-text-box-currency {
+    width: 100% !important;
+    max-width: 150px !important;
+    box-sizing: border-box !important;
+  }
+  
+  .bend-table thead th,
+  .bend-table tfoot td {
+    transform: translateZ(0);
+  }

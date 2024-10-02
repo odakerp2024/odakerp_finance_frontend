@@ -548,8 +548,8 @@
                                     <!-- <th  class="text-center" scope="col">Bill Amount (L)</th> -->
                                     <th class="text-center" scope="col">Due Amount <br>(CCY)</th>
                                     <!-- <th  class="text-center" scope="col">Due Amount (L)</th> -->
-                                    <th class="text-center" scope="col">TDS</th>
-                                    <th class="text-center" style="min-width: 90px;" scope="col">Adjusted invoice<br> Amount</th>
+                                    <th class="text-center"  style="min-width: 90px;" scope="col">TDS</th>
+                                    <th class="text-center" scope="col">Adjusted invoice<br> Amount</th>
                                     <th class="text-center" scope="col">Select</th>
                                 </tr>
                             </thead>
@@ -594,10 +594,10 @@
                                                 (change)="getDueAmount(due.TDS, due.BillAmount,$event.target.value, i, due.DueAmount,'payment');summaryAmountCalculation()"
                                                 numbersOnly appDynamicDecimal [(ngModel)]="due.Payment"
                                                 [ngClass]="IsFinal || !isEditMode || !due.IsCheck ? 'disable-input' : ''"
-                                                [ngModelOptions]="{standalone: true}" step="0.001">
+                                                [ngModelOptions]="{standalone: true}"  style="text-align: right">
 
                                         </td>
-                                        <td>
+                                        <td class="text-center">
                                             <input id = tabledata 
                                                 onkeypress='return event.charCode >= 46 && event.charCode <= 57 && event.charCode != 47'
                                                 (click)="OnClickRadio(i, due.InvoiceNumber, due.IsCheck);setInitalPaymentAmount(i, due);calculateFinalTotal();"
