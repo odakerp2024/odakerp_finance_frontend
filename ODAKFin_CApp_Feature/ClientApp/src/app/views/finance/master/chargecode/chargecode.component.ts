@@ -88,7 +88,6 @@ export class ChargecodeComponent implements OnInit {
     this.getNumberRange();
     this.getDivisionList();
     this.route.params.subscribe(params => {
-      debugger
       this.fg = this.fb.group({ ChargesId: params['id'] });
       if (params['id']) {
         this.isUpdate = true;
@@ -104,7 +103,6 @@ export class ChargecodeComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    debugger
     // this.GridPushEmptyrow();
     this.getFFGLActivityList();
     this.GetCOAAccountList(1);
@@ -128,7 +126,6 @@ export class ChargecodeComponent implements OnInit {
       SubfunctionID: 583
     }
     this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
       if (data.length > 0) {
         console.log("PermissionObject", data);
 
@@ -217,7 +214,6 @@ export class ChargecodeComponent implements OnInit {
   }
 
   createForm() {
-    debugger
     if (this.fg.value.ChargesId != null) {
       this.FormMode = "B";
       this.Charges_Id = this.fg.value.ChargesId;
@@ -739,7 +735,7 @@ export class ChargecodeComponent implements OnInit {
   }
 
   GridRowValidation(newRow): boolean {
-    debugger
+    
     const existingRow = this.DynamicGrid.find(gRow => gRow.ActivityId === newRow.ActivityId
       && gRow.TransactionType === newRow.TransactionType && gRow.WIP === newRow.WIP && gRow.ProvisionAccountId === newRow.ProvisionAccountId
       && gRow.ActualAccountId === newRow.ActualAccountId && gRow.MappingFFDivisionId !== newRow.MappingFFDivisionId);
@@ -748,7 +744,6 @@ export class ChargecodeComponent implements OnInit {
   }
 
   GridRowOtherDivisionValidation(newRow): boolean {
-    debugger
     const existingRow = this.DynamicOtherDivisionGrid.find(gRow => gRow.DivisionId === newRow.DivisionId
       && gRow.TransactionType === newRow.TransactionType && gRow.WIP === newRow.WIP && gRow.ProvisionAccountId === newRow.ProvisionAccountId
       && gRow.ActualAccountId === newRow.ActualAccountId && gRow.MappingFFDivisionId !== newRow.MappingFFDivisionId);
@@ -757,7 +752,6 @@ export class ChargecodeComponent implements OnInit {
   }
 
   DynamicGridAddRow() {
-    debugger
     const gRow = this.linkedGLForm.value;
     var validation = "";
 
@@ -873,7 +867,6 @@ export class ChargecodeComponent implements OnInit {
   }
 
   DynamicOtherDivisionGridAddRow() {
-    debugger
     const gRow = this.linkedOtherGLForm.value;
     var validation = "";
 
@@ -1046,7 +1039,6 @@ export class ChargecodeComponent implements OnInit {
 
   OnClickEditValue() {
     // console.log('row', row, index)
-    debugger
     const editRow = this.DynamicGrid[this.editSelectedIndex];
     if (editRow.TransactionType == 4) {
       this.IsIncome = true;
@@ -1199,7 +1191,6 @@ export class ChargecodeComponent implements OnInit {
 
   getFFGLActivityList() {
     this.commonDataService.getFFGLActivityList().subscribe(data => {
-      debugger
       this.ActivityList = data["data"].Table;
     });
   }
@@ -1209,7 +1200,6 @@ export class ChargecodeComponent implements OnInit {
       Mode: value
     }
     this.commonDataService.GetCOAAccountList(payload).subscribe(data => {
-      debugger
       if (value == 1) {
         this.WIPList = data["data"].Table;
       } else if (value == 2) {
@@ -1222,7 +1212,6 @@ export class ChargecodeComponent implements OnInit {
   }
 
   OnTransactionChange(type: any = '') {
-    debugger
 
     if (type == 4) {
       this.IsIncome = true;
@@ -1238,7 +1227,6 @@ export class ChargecodeComponent implements OnInit {
   }
   
   OnOtherDivisionTransactionChange(type: any = '') {
-    debugger
 
     if (type == 4) {
       this.OtherDivisionIsIncome = true;
@@ -1256,7 +1244,6 @@ export class ChargecodeComponent implements OnInit {
   async getCoaGroup() {
     let service = `${this.globals.APIURL}/COAType/GetCOAGroupList`;
     this.dataService.post(service, {}).subscribe((result: any) => {
-      debugger
       this.TransactionTypeList = [];
       if (result.data.Table.length > 0) {
         this.TransactionTypeList = result.data.Table.filter(e => e.ID > 3);
@@ -1267,7 +1254,6 @@ export class ChargecodeComponent implements OnInit {
   }
 
   IsAllSelect(event) {
-    debugger
   }
 
 }

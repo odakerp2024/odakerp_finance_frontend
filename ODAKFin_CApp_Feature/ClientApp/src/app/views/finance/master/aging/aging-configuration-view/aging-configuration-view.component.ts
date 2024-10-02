@@ -41,7 +41,6 @@ export class AgingConfigurationViewComponent implements OnInit {
   }
 
   checkUpdatePermission(AgingId, ReportId, Id) {
-    debugger
     // [queryParams]="{'AgingId': agingData.AgingId, ReportId: agingData.ReportId, Id: agingData.Id}"
     this.getPermissionListForUpdate(583, AgingId, ReportId, Id);
   }
@@ -56,7 +55,6 @@ export class AgingConfigurationViewComponent implements OnInit {
       SubfunctionID: value
     }
     this.CommonService.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
       if (data.length > 0) {
         console.log("PermissionObject", data);
 
@@ -86,7 +84,6 @@ export class AgingConfigurationViewComponent implements OnInit {
       SubfunctionID: value
     }
     this.CommonService.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
       if (data.length > 0) {
         console.log("PermissionObject", data);
 

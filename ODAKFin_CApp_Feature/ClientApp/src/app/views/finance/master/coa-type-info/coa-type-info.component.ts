@@ -86,7 +86,6 @@ export class CoaTypeInfoComponent implements OnInit {
       SubfunctionID: 576
     }
     this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
       if (data.length > 0) {
         console.log("PermissionObject", data);
 
@@ -183,7 +182,6 @@ export class CoaTypeInfoComponent implements OnInit {
   }
 
   getCAOInfo() {
-    debugger
     let service = `${this.globals.APIURL}/COAType/GetCOATypeById`;
     this.dataService.post(service, { Id: this.coaId }).subscribe((result: any) => {
       if (result.message == 'Success') {

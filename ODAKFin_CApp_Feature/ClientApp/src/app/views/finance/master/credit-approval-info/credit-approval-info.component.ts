@@ -121,7 +121,6 @@ export class CreditApprovalInfoComponent implements OnInit {
       SubfunctionID: value
     }
     this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
 
 
       // if (route == 'Approval') {      COMMENTED THE BELOW PERMISSION DUE TO THE REMOVED THE APPROVAL TAB - 08-03-2024
@@ -196,7 +195,6 @@ export class CreditApprovalInfoComponent implements OnInit {
       SubfunctionID: value
     }
     this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
       if (route == 'Approval') {
         if (data.length > 0) {
           console.log("PermissionObject", data);
@@ -261,7 +259,6 @@ export class CreditApprovalInfoComponent implements OnInit {
   }
 
   checkPermission(value) {
-    debugger
     if (value == 'Approval' && this.isApproval == true) {
       this.selectedTabName = 'Approval'
     } else if (value == 'Documents' && this.isDocuments == true) {

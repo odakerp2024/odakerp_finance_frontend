@@ -296,7 +296,6 @@ export class EMailTableComponent implements OnInit, OnChanges {
   }
 
   setEndMinDate() {
-    debugger
     let nextdate = new Date(this.emailForm.value.StartDate);
     nextdate = new Date(nextdate.setDate(nextdate.getDate() + 1));
     this.endMinDate = this.datePipe.transform(nextdate, "yyyy-MM-dd");

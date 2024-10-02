@@ -38,7 +38,6 @@ export class CreditApplicationService {
   }
 
   getTradeList(payload: any): Observable<any[]> {
-    debugger
     return this.http.post<any[]>(this.globals.APIURL + '/CreditApplication/getTradeList', payload);
   }
   

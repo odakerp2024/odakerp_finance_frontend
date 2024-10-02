@@ -27,7 +27,6 @@ export class PaymentVoucherService {
   }
 
   getPaymentVoucher1(FormValue: PaymentVoucher): Observable<PaymentVoucher[]> {
-    debugger;
     return this.http.post<PaymentVoucher[]>(this.globals.APIURL + '/Dropdown/GetPaymentVoucher', FormValue);
   }
 

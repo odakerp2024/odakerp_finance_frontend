@@ -256,7 +256,6 @@ export class ContraInfoComponent implements OnInit {
   }
 
   getContraById() {
-    debugger
     // this.showExchangeRate = true;
 
     return new Promise((resolve, rejects) => {
