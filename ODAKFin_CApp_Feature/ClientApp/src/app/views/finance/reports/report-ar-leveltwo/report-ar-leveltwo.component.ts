@@ -572,7 +572,7 @@ export class ReportArLeveltwoComponent implements OnInit {
 
   //Dynamic Grand Total Calculation Methods Customer Wise
   calculateHeadersCustomerwise(): string[] {
-    let excludedColumns: string[] = ['CustomerID']; // Define columns to be excluded
+    let excludedColumns: string[] = ['CustomerID','BLType','RedirectUrl']; // Define columns to be excluded
 
     if (this.pagedItems.length > 0) {
       return Object.keys(this.pagedItems[0])
