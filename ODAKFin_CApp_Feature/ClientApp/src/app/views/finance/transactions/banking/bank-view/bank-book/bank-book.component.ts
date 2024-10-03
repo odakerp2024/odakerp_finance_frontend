@@ -276,7 +276,7 @@ export class BankBookComponent implements OnInit {
     this.bankBookCountPagedItems =  this.bankBookCountPagedItems1
     this.pager = {}
     setTimeout(() => {
-      let bankBook = document.getElementById("bankStatementTable") as HTMLTableElement;
+      let bankBook = document.getElementById("bankBookTable") as HTMLTableElement;
       this.setPage(1)
       this.excelService.exportToPdf(bankBook, 'bank-statement')
     }, 1000); 
@@ -394,9 +394,7 @@ export class BankBookComponent implements OnInit {
 
     if (fromDate > toDate) {
       this.bankBookDetails.controls.fromPeriod.setValue(toDate)
-      // console.log('fromDate is greater than toDate');
     } else if (fromDate < toDate) {
-      // console.log('fromDate is less than toDate');
     }
   }
 

@@ -71,3 +71,43 @@
     font-size: 14px !important;
     box-sizing: border-box;
 }
+
+/* Optional: Remove any default date formatting */
+.mat-input-element::-webkit-datetime-edit {
+    text-align: start; /* Centers the text */
+}
+
+/* Hide the input's default value format */
+.mat-input-element {
+    text-align: start;
+}
+
+.tillDate1 {
+    width: 60%;
+    padding: 0px !important;
+    font-size: 9px !important;
+  }
+
+
+  .appearance .mat-form-field-outline {
+    color: #ccc !important;
+    height: 30px !important;
+}
+
+
+.appearance .mat-form-field-outline-thick {
+    color: #d9d9d9 !important; /* Ensures the border is gray when focused */
+}
+
+input.mat-input-element {
+    margin-top: -1.0625em;
+}
+  
+
+  /* .mat_date_picker1.mat-form-field-appearance-outline .mat-form-field-outline {
+    color: transparent !important;
+    border: 1px solid #a9a9a9 !important;
+    border-color: #333 !important;
+  } */ 
+
+

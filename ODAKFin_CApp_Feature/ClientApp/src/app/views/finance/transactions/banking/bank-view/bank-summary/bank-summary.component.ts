@@ -222,9 +222,7 @@ export class BankSummaryComponent implements OnInit {
 
     if (fromDate > toDate) {
       this.bankFilterForm.controls.FromDate.setValue(toDate)
-      // console.log('fromDate is greater than toDate');
     } else if (fromDate < toDate) {
-      // console.log('fromDate is less than toDate');
     }
   }
 
@@ -238,7 +236,7 @@ export class BankSummaryComponent implements OnInit {
     this.bankSummeryTablePagedItems =  this.bankSummeryTablePagedItems1
     this.pager = {}
     setTimeout(() => {
-      let bankBook = document.getElementById("bankStatementTable") as HTMLTableElement;
+      let bankBook = document.getElementById("bankSummaryTable") as HTMLTableElement;
       this.setPage(1)
       this.excelService.exportToPdf(bankBook, 'bank-statement')
     }, 1000); 

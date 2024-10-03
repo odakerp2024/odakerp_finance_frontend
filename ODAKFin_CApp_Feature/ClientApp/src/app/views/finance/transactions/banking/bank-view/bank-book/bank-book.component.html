@@ -175,7 +175,24 @@
 
     <div class="col-4 m-auto">
         <div class="form-group bmd-form-group">
-            <input type="date"
+            <mat-form-field 
+            class="tillDate1 p-0 mt-4 appearance"
+            *ngIf="filterForm.value.SearchBy === 'Date' || filterForm.value.SearchBy === 'Bank Date'" 
+            appearance="outline">
+            
+            <input matInput [matDatepicker]="fromPeriod" autocomplete="off" [max]="fromMaxDate" 
+                [placeholder]="entityDateFormat" formControlName="SearchByValue">
+            <mat-datepicker-toggle matSuffix [for]="fromPeriod"></mat-datepicker-toggle>
+            <mat-datepicker #fromPeriod></mat-datepicker>
+        </mat-form-field>
+        
+          
+        <input type="text"
+            *ngIf="filterForm.value.SearchBy !== 'Date' && filterForm.value.SearchBy !== 'Bank Date' && filterForm.value.SearchBy !== 'ReconcileStatus' && filterForm.value.SearchBy !== 'PaymentType'"
+            formControlName="SearchByValue" 
+            class="w-50 pl-2 pt-1 mt-2 pb-0 pr-0 searchdropdown format">
+   
+             <!-- <input type="date"
             *ngIf="filterForm.value.SearchBy === 'Date' || filterForm.value.SearchBy === 'Bank Date'" 
             formControlName="SearchByValue"
             class="w-50 pl-2 pt-1 mt-2 pb-0 pr-0 form-control searchdropdown format">
@@ -183,7 +200,7 @@
         <input type="text"
             *ngIf="filterForm.value.SearchBy !== 'Date' && filterForm.value.SearchBy !== 'Bank Date' && filterForm.value.SearchBy !== 'ReconcileStatus' && filterForm.value.SearchBy !== 'PaymentType'"
             formControlName="SearchByValue" 
-            class="w-50 pl-2 pt-1 mt-2  pb-0 pr-0  searchdropdown format">
+            class="w-50 pl-2 pt-1 mt-2  pb-0 pr-0  searchdropdown format">  -->
         
         <ng-select class="pl-2 pt-1 mt-0  pb-0 pr-0 light-text searchdropdown format"
             formControlName="SearchByValue"
