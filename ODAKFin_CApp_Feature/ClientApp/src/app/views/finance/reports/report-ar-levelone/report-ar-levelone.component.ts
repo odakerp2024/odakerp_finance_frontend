@@ -327,6 +327,93 @@ export class ReportArLeveloneComponent implements OnInit {
     })
   }
 
+  clickTransactionNumber(id: number, transType: string, Trans_Number: string, RedirectUrl: string) {
+    debugger
+    // Check if transType or Trans_Number is empty and return immediately if either is
+    // if (!transType || !Trans_Number) {
+    //   console.warn('Transaction type or Transaction number is empty. Staying in the same place.');
+    //   return;
+    // }
+
+    let url: string;
+
+    // Use switch case on transType alone, as switch (transType && Trans_Number) does not work
+    switch (transType) {
+      case 'Receipt Voucher':
+        url = this.router.serializeUrl(
+          this.router.createUrlTree(['/views/transactions/receipt/receipt-details', { id: id }])
+        );
+        break;
+
+      case 'Payment Voucher':
+        url = this.router.serializeUrl(
+          this.router.createUrlTree(['/views/transactions/payment/payment-details', { voucherId: id }])
+        );
+        break;
+
+      case 'Journal Voucher':
+        url = this.router.serializeUrl(
+          this.router.createUrlTree(['/views/transactions/journal/journal-details', { id: id, isUpdate: true }])
+        );
+        break;
+
+      case 'Contra Voucher':
+        url = this.router.serializeUrl(
+          this.router.createUrlTree(['/views/contra-info/contra-info-view', { contraId: id }])
+        );
+        break;
+        
+      case 'Voucher Reversal':
+      url = this.router.serializeUrl(
+        this.router.createUrlTree(['/views/voucher-info/voucher-reversals-info', { id: id, isUpdate: true }])
+      );
+      break;
+
+      case 'Provision Final - FI':
+      url = this.router.serializeUrl(
+        this.router.createUrlTree(['/views/provision/provision-detail', { ProvisionId: id}])
+      );
+      break;
+
+      // case 'Purchase Voucher':
+      //   url = this.router.serializeUrl(
+      //     this.router.createUrlTree(['/views/purchase-info/purchase-info-view', { id: id, isUpdate: true, isCopy: false }])
+      //   );
+      //   break;
+
+      // case 'Vendor Credit':
+      //   url = this.router.serializeUrl(
+      //     this.router.createUrlTree(['/views/vendor-info-notes/vendor-info-view', { id: id, isUpdate: true }])
+      //   );
+      //   break;
+
+      case 'Opening Balance':
+        Swal.fire('Cannot Open. This Item Belongs To Opening Balance');
+        return; // Exit the function to prevent opening a new tab 
+      default:
+
+        if (transType.includes('FI – Purchase Inv')) {
+          url = this.router.serializeUrl(
+            this.router.createUrlTree(['/views/purchase-admin-info/purchase-invoice-info', { id: id, isUpdate: true }])
+          );
+          break;
+        }
+        
+        else if (transType.includes('LA') || transType.includes('FF')) {
+            url = RedirectUrl 
+            break;
+          }
+
+        console.error('Unhandled Trans_Type:', transType);
+        return; // Exit the function to prevent opening a new tab
+    }
+
+    // Open the URL in a new tab if url is defined
+    if (url) {
+      window.open(url, '_blank');
+    }
+  }
+
   getCustomerWiseList() {
     this.startDate = this.reportFilter.controls.FromDate.value;
     this.endDate = this.reportFilter.controls.ToDate.value;
