@@ -327,7 +327,7 @@
                                     <td>{{data['Date']| date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td>
                                     <!-- <td class="hyperTextColor">{{data['Invoice #']}}</td> -->
                                     
-                                    <td class="hyperColor" (click)="clickTransactionNumber(data.ID, data.Trans_Type, data.Trans_Number, data.RedirectUrl)">{{data['Invoice #']}}</td>
+                                    <td class="hyperColor" (click)="clickTransactionNumber(data.ID, data['Transaction Type'], data.Trans_Number, data.RedirectUrl)">{{data['Invoice #']}}</td>
 
                                     <td class="hyperTextColor">{{data['Transaction Type']}}</td>
                                     <td class="text-right hyperTextColor">{{data['Invoice Amount'] | dynamicDecimal: entityFraction}}</td>
