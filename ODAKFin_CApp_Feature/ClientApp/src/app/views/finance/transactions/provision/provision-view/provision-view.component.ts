@@ -56,7 +56,6 @@ export class ProvisionViewComponent implements OnInit {
   }
 
   getProvisionList() {
-    debugger
     var service = `${this.globals.APIURL}/Provision/GetProvisionList`;
     this.dataService.post(service, this.provisionFilter.value).subscribe((result: any) => {
       this.provisionList = [];

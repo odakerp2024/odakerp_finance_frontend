@@ -238,11 +238,9 @@ export class LeveltwoProfitlossComponent implements OnInit {
             if (officeResult.message === 'Success' && officeResult.data.Office.length > 0) {
                 this.officeList = officeResult.data.Office.filter(x => x.Active === true);
             }
-            debugger
 
             // Check if both lists have items before calling fetchData
             if (this.divisionList.length > 0 && this.officeList.length > 0) {
-              debugger
                 this.fetchData(this.id);
             } else {
                 console.warn('Division or Office list is empty.');
@@ -354,7 +352,6 @@ export class LeveltwoProfitlossComponent implements OnInit {
   }
   
   fetchData(id){
-    debugger
 
    
       const fromDate = this.route.snapshot.paramMap.get('FromDate');
@@ -496,7 +493,6 @@ export class LeveltwoProfitlossComponent implements OnInit {
 
 
   applyFilter(filterType: string, value: any, id: number): void {
-    debugger
     let payload: any = {
       "AccountId": id,
       "FromDate": this.startDate,

@@ -106,14 +106,12 @@ uploadFile() {
 
 
   // fileSelected(event) {
-  //   debugger
   //   // console.log('xls file', event);
   //   this.file = event.target.files[0];
   // }
   
 
   // uploadFile() {
-  //   debugger
   //   if (this.file && this.selectedBank) {
   //     const selectedBank = this.bankList.find((bank) => { return bank.BankID == this.selectedBank });
   //     const formData = new FormData();

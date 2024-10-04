@@ -287,8 +287,8 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
       DueAmountActual: [0],
       DueAmount: [''],
       DueDate: [''],
-      TDS: [''],
-      Payment: [''],
+      TDS: [0],
+      Payment: [0],
       IsSelect: [false],
       InvoiceAmountCCY: [''],
       DueAmountCCY: [''],
@@ -580,7 +580,6 @@ export class ReceiptVoucherDetailsComponent implements OnInit {
   }
 
   CurrentFinancialYear() {
-    debugger
     const service = `${this.globals.APIURL}/financialyear/CurrentFinancialYear`;
 
     this.dataService.post(service, { VoucherDate: this.receiptForm.value.VoucherDate }).subscribe(

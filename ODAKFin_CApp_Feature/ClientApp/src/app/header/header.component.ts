@@ -31,26 +31,6 @@ export class HeaderComponent implements OnInit {
 
         });
     }
-    //BindDynamicMenu() {
-    //    let payload = {
-    //        "MenuType": 2
-    //    }
-    //    let MenuArray: any = [];
-    //    this.LService.GetAllMenuList(payload).subscribe((res:any) => {
-
-    //        this.FillMainMenuList = res?.data?.UserType;
-    //        for (let i = 0; i < res?.data?.UserType.length; i++) {
-    //            this.FillMainMenuList = res?.data?.UserType;
-
-    //        }
-    //        console.log("MenuArray", MenuArray);
-
-
-
-    //    });
-    //}
-    
-   
     btntabclick(tab) {
         
         if (tab == 1)
@@ -69,7 +49,4 @@ export class HeaderComponent implements OnInit {
         }
         
     }
-    //toggleSidebar() {
-    //    this.toggleSidebarForMe.emit();
-    //}
 }

@@ -99,7 +99,6 @@ export class LedgerMappingComponent implements OnInit {
     this.ledgerSubModuleList = [];
     let service = `${this.globals.APIURL}/LedgerMapping/GetLedgerSubModuleDropdownList`;
     this.dataService.post(service, payload).subscribe((result: any) => {
-      // debugger
       if (result.message = "Success") {
         this.ledgerSubModuleList = result.data.Table;
       }
@@ -140,9 +139,6 @@ export class LedgerMappingComponent implements OnInit {
     if (this.ledgerForm.value.SubModuleId == 0) {
       validation += "<span style='color:red;'>*</span> <span>Please select Sub-Module</span></br>"
     }
-    // if (this.ledgerForm.value.ClassificationId == 0) {
-    //   validation += "<span style='color:red;'>*</span> <span>Please select Classification</span></br>"
-    // }
     if (this.ledgerForm.value.AccountMappingIds == "") {
       validation += "<span style='color:red;'>*</span> <span>Please select Mapping</span></br>"
     }
@@ -150,15 +146,6 @@ export class LedgerMappingComponent implements OnInit {
       validation += "<span style='color:red;'>*</span> <span>Please select Updated Date</span></br>"
     }
 
-    // let application = this.ledgerList.filter(x => x.ApplicationId == this.ledgerForm.value.ApplicationId);
-    // let module = this.ledgerList.filter(x => x.ModuleId == this.ledgerForm.value.ModuleId);
-    // let subModule = this.ledgerList.filter(x => x.SubModuleId == this.ledgerForm.value.SubModuleId);
-    // let ClassificationId = this.ledgerList.filter(x => x.ClassificationId == this.ledgerForm.value.ClassificationId);
-    // let AccountMappingIds = this.ledgerList.filter(x => x.AccountMappingIds == this.ledgerForm.value.AccountMappingIds);
-
-    // if (application.length > 0 && module.length > 0 && subModule.length > 0 && ClassificationId.length > 0 && AccountMappingIds.length > 0) {
-    //   validation += "<span style='color:red;'>*</span> <span>Already, a record has been created.</span></br>"
-    // }
 
     if (validation != "") {
       Swal.fire(validation)

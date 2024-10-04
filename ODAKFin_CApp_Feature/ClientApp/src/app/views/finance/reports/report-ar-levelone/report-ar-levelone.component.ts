@@ -70,6 +70,7 @@ export class ReportArLeveloneComponent implements OnInit {
   totalinvoicewiseccy : number = 0;
   subtype       : number;
   subtypecustomerId : number;
+  InvoiceId: number;
   
 
   constructor(
@@ -115,13 +116,16 @@ export class ReportArLeveloneComponent implements OnInit {
    await this.getCustomerWiseList();
   }
 
-  async showCustomerInvoiceWise(subtypecustomerId:number) {
+  async showCustomerInvoiceWise(subtypecustomerId:number, invoiceid: number) {
+
     this.subtypecustomerId = subtypecustomerId;
+    this.InvoiceId = invoiceid;
     this.pagedItems = []; 
     this.type = 'customerinvoicewise';
     //await this.createReportForm();
     this.reportFilter.controls.Type.setValue(2);
     this.reportFilter.controls.SubTypeId.setValue(this.subtypecustomerId);
+    this.reportFilter.controls.InvoiceId.setValue(this.InvoiceId);
     await this.getInvoiceWiseList();
   }
 
@@ -216,6 +220,7 @@ export class ReportArLeveloneComponent implements OnInit {
       this.reportFilter = this.fb.group({
         DivisionId: [0],
         OfficeId: [0],
+        InvoiceId:[this.InvoiceId],
         Type:[0],
         SubTypeId: [0],
         FromDate: [this.startDate],
@@ -227,6 +232,7 @@ export class ReportArLeveloneComponent implements OnInit {
       this.reportFilter = this.fb.group({
         DivisionId: [0],
         OfficeId: [0],
+        InvoiceId:[this.InvoiceId],
         CustomerId: [0], 
         Type:[1],
         SubTypeId: [this.subtype],
@@ -327,6 +333,93 @@ export class ReportArLeveloneComponent implements OnInit {
     })
   }
 
+  clickTransactionNumber(id: number, transType: string, Trans_Number: string, RedirectUrl: string) {
+    debugger
+    // Check if transType or Trans_Number is empty and return immediately if either is
+    // if (!transType || !Trans_Number) {
+    //   console.warn('Transaction type or Transaction number is empty. Staying in the same place.');
+    //   return;
+    // }
+
+    let url: string;
+
+    // Use switch case on transType alone, as switch (transType && Trans_Number) does not work
+    switch (transType) {
+      case 'Receipt Voucher':
+        url = this.router.serializeUrl(
+          this.router.createUrlTree(['/views/transactions/receipt/receipt-details', { id: id }])
+        );
+        break;
+
+      case 'Payment Voucher':
+        url = this.router.serializeUrl(
+          this.router.createUrlTree(['/views/transactions/payment/payment-details', { voucherId: id }])
+        );
+        break;
+
+      case 'Journal Voucher':
+        url = this.router.serializeUrl(
+          this.router.createUrlTree(['/views/transactions/journal/journal-details', { id: id, isUpdate: true }])
+        );
+        break;
+
+      case 'Contra Voucher':
+        url = this.router.serializeUrl(
+          this.router.createUrlTree(['/views/contra-info/contra-info-view', { contraId: id }])
+        );
+        break;
+        
+      case 'Voucher Reversal':
+      url = this.router.serializeUrl(
+        this.router.createUrlTree(['/views/voucher-info/voucher-reversals-info', { id: id, isUpdate: true }])
+      );
+      break;
+
+      case 'Provision Final - FI':
+      url = this.router.serializeUrl(
+        this.router.createUrlTree(['/views/provision/provision-detail', { ProvisionId: id}])
+      );
+      break;
+
+      // case 'Purchase Voucher':
+      //   url = this.router.serializeUrl(
+      //     this.router.createUrlTree(['/views/purchase-info/purchase-info-view', { id: id, isUpdate: true, isCopy: false }])
+      //   );
+      //   break;
+
+      // case 'Vendor Credit':
+      //   url = this.router.serializeUrl(
+      //     this.router.createUrlTree(['/views/vendor-info-notes/vendor-info-view', { id: id, isUpdate: true }])
+      //   );
+      //   break;
+
+      case 'Opening Balance':
+        Swal.fire('Cannot Open. This Item Belongs To Opening Balance');
+        return; // Exit the function to prevent opening a new tab 
+      default:
+
+        if (transType.includes('FI – Purchase Inv')) {
+          url = this.router.serializeUrl(
+            this.router.createUrlTree(['/views/purchase-admin-info/purchase-invoice-info', { id: id, isUpdate: true }])
+          );
+          break;
+        }
+        
+        else if (transType.includes('LA') || transType.includes('FF')) {
+            url = RedirectUrl 
+            break;
+          }
+
+        console.error('Unhandled Trans_Type:', transType);
+        return; // Exit the function to prevent opening a new tab
+    }
+
+    // Open the URL in a new tab if url is defined
+    if (url) {
+      window.open(url, '_blank');
+    }
+  }
+
   getCustomerWiseList() {
     this.startDate = this.reportFilter.controls.FromDate.value;
     this.endDate = this.reportFilter.controls.ToDate.value;
@@ -382,7 +475,7 @@ export class ReportArLeveloneComponent implements OnInit {
   }
 
   async getallcustomerlist(){
-   await this.showCustomerInvoiceWise(0);
+   await this.showCustomerInvoiceWise(0,0);
   }
 
   calculateTotalCustomers(items: any[]): number {
@@ -543,14 +636,14 @@ export class ReportArLeveloneComponent implements OnInit {
         break;
       case 'customerwise':
         titleHeader = 'Receivable Balance Summary - Customer Wise';
-        excludeKeys = ['CustomerID', 'InvoiceDate'];
+        excludeKeys = ['CustomerID', 'InvoiceDate','invoiceid'];
         columnsToColor = ['Customer', 'Credit Amount', 'Balance (Invoice Currency)', 'Net Balance (Invoice currency)', 'Balance (Company Currency)'];
         columnsToAlignLeft = ['Customer'];
         columnsToAlignRight = ['Credit Amount', 'Balance (Invoice Currency)', 'Net Balance (Invoice currency)', 'Balance (Company Currency)'];
         break;
       case 'customerinvoicewise':
         titleHeader = 'Receivable Balance Summary - Invoice Wise';
-        excludeKeys = [];
+        excludeKeys = ['RedirectUrl'];
         columnsToColor = ['Invoice #', 'Transaction Type', 'Invoice Amount', 'Balance (Invoice currency)', 'Balance (Company Currency)'];
         columnsToAlignLeft = ['Invoice #', 'Transaction Type'];
         columnsToAlignRight = ['Invoice Amount', 'Balance (Invoice currency)', 'Balance (Company Currency)'];

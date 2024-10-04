@@ -248,7 +248,6 @@ getAgentInvoice() {
 }
 
   // markInvoice(index){
-  //   debugger;
   //   this.allInvoices[index].isChecked = !this.allInvoices[index].isChecked;
   // }
   
@@ -698,7 +697,6 @@ markInvoiceSelected(index){
   }
 
   // getfileupload(event: number) {
-  //   debugger
   //   this.setRequesterType(event);
   //   this.selectedInvoices = [];
 

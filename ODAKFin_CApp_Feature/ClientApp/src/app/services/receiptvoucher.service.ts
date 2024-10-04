@@ -20,7 +20,6 @@ export class ReceiptvoucherService {
     }
 
     saveReceiptvoucher(FormValue: any): Observable<any[]> {
-        debugger;
         return this.http.post<any[]>(this.globals.APIURL + '/ReceiptVoucher/InsertOrUpdateReceiptVoucher/', FormValue);
     }
 

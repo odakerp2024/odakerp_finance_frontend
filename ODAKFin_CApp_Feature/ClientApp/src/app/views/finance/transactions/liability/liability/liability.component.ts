@@ -146,7 +146,6 @@ export class LiabilityComponent implements OnInit {
   }
 
   openPopup() {
-    debugger
     this.getPermissionListForCreate(603);
   }
 
@@ -361,7 +360,6 @@ export class LiabilityComponent implements OnInit {
       SubfunctionID: value
     }
     this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
       if (data.length > 0) {
         console.log("PermissionObject", data);
 
@@ -401,7 +399,6 @@ export class LiabilityComponent implements OnInit {
       SubfunctionID: value
     }
     this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
       if (data.length > 0) {
         console.log("PermissionObject", data);
 

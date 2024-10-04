@@ -80,9 +80,6 @@ export class MastersService {
         return this.http.post<Port[]>(this.globals.APIURL + '/home/Portviewedit', OL);
 
     }
-    //getGeoLocByCountryBind(OL: MyAgency): Observable<MyAgency[]> {
-    //    return this.http.post<MyAgency[]>(this.globals.APIURL + '/home/GeoLocByCountry' ,OL);
-    //}
 
     getGeoLocByCountryBind(OL: SalesOffice): Observable<SalesOffice[]> {
         return this.http.post<SalesOffice[]>(this.globals.APIURL + '/OrgStructure/OfficeLocation', OL);

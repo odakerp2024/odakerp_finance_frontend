@@ -493,7 +493,6 @@ export class ReportVoucherReversalComponent implements OnInit  {
 
  
   async downloadAsCSV() {
-    debugger
     if (this.reportForExcelList.length === 0) {
       Swal.fire('No record found');
       return;
@@ -612,8 +611,6 @@ export class ReportVoucherReversalComponent implements OnInit  {
     if (ExrateGain) filteredData['Ex rate Gain'] = ExrateGain;
     if (ExrateLoss) filteredData['Ex rate Loss'] = ExrateLoss;
     if (BankCharges) filteredData['Bank Charges'] = BankCharges;
-
-debugger
       // Add the filtered data to the worksheet
       const row = worksheet.addRow(Object.values(filteredData));
 

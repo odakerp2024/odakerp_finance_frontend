@@ -58,7 +58,6 @@ export class RegionConfigurationViewComponent implements OnInit {
       SubfunctionID: value
     }
     this.CommonService.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
       if (data.length > 0) {
         console.log("PermissionObject", data);
 
@@ -88,7 +87,6 @@ export class RegionConfigurationViewComponent implements OnInit {
       SubfunctionID: value
     }
     this.CommonService.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
       if (data.length > 0) {
         console.log("PermissionObject", data);
 

@@ -55,7 +55,6 @@ export class AgingConfigurationComponent implements OnInit {
     this.createAgingConfigurationForm();
     await this.getReportDropdown();
     this.route.params.subscribe(params => {
-      debugger
       this.agingDetails = {
         ReportId: +params['ReportId'] ? +params['ReportId'] : 0,
         AgingId: +params['AgingId'] ? +params['AgingId'] : 0,
@@ -273,7 +272,6 @@ export class AgingConfigurationComponent implements OnInit {
   }
 
   OnClickRadio(index) {
-    debugger
     this.editSelectedIndexTable = index;
   }
 
@@ -362,7 +360,6 @@ export class AgingConfigurationComponent implements OnInit {
     if (!this.agingConfigurationForm.value.Description) {
       validation += '<span style=\'color:red;\'>*</span> <span>Please enter description</span></br>';
     }
-debugger
     if (parseInt(this.agingConfigurationForm.value.From) > parseInt(this.agingConfigurationForm.value.To)) {
       validation += '<span style=\'color:red;\'>*</span> <span>From (days) should be lower than To (days)</span></br>';
     }
@@ -395,7 +392,6 @@ debugger
   // * table fuction end
 
   getReportDropdown() {
-    debugger
     return new Promise((resolves, rejects) => {
       this.agingService.getDropdownList({})
         .subscribe((result: any) => {

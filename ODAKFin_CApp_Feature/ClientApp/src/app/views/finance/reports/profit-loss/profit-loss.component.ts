@@ -88,7 +88,6 @@ export class ProfitLossComponent implements OnInit {
     }
 
   ngOnInit(): void {
-    debugger
     this.createReportForm();
     this.getDivisionList();
     this.getOfficeList();
@@ -141,7 +140,6 @@ export class ProfitLossComponent implements OnInit {
         break;
 
       case 'previousmonth':
-      debugger
         
         const previousMonthStartDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() - 1, 1);
         const previousMonthEndDate = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 0);
@@ -239,7 +237,6 @@ sort(properties: string[]) {
 }
 
   getDivisionList() {
-    debugger
     var service = `${this.globals.APIURL}/Division/GetOrganizationDivisionList`; var payload: any = {}
     this.dataService.post(service, payload).subscribe((result: any) => {
       this.divisionList = [];
@@ -263,7 +260,6 @@ sort(properties: string[]) {
   }
 
   trailbalanceList() {
-    debugger
     
     // let financedate;
     // if (payload.Date === "") {
@@ -316,10 +312,6 @@ sort(properties: string[]) {
           // Calculate totals for each parent account within the group
             const parentTotals = Object.keys(parentGroupedItems).map(parentName => {
             const parentItems = parentGroupedItems[parentName];
-            debugger
-          
-  
-            debugger
             let total = 0;
             let total1 = 0;
             
@@ -443,7 +435,6 @@ sort(properties: string[]) {
   }
   
   async createReportForm() {
-    debugger
   this.filterForm = this.fb.group({
     FromDate: [this.startDate],
     ToDate: [this.endDate],
@@ -485,7 +476,6 @@ async editBalance(id: number) {
 
   // Call the service
   this.reportService.GetProfitLossList(this.filterForm.value).subscribe(data => {
-debugger
       // Navigate to the leveltwo-profitloss component with query parameters
       this.router.navigate(['/views/reports/leveltwo-profitloss', { 
           id: id,
@@ -502,7 +492,6 @@ debugger
 }
 
 async onDivisionChange(value: any) {
-  debugger
   
   this.filterForm = this.fb.group({
   FromDate: [this.startDate],
@@ -553,10 +542,6 @@ async onDivisionChange(value: any) {
         // Calculate totals for each parent account within the group
           const parentTotals = Object.keys(parentGroupedItems).map(parentName => {
           const parentItems = parentGroupedItems[parentName];
-          debugger
-        
-
-          debugger
           let total = 0;
           let total1 = 0;
           
@@ -619,7 +604,6 @@ async onDivisionChange(value: any) {
 
         
 
-        debugger
         return {
           GroupName: group,
           parentTotals: parentTotals,
@@ -652,7 +636,6 @@ async onDivisionChange(value: any) {
 
 
   async onOfficeChange(values: any) {
-    debugger
     
     this.filterForm = this.fb.group({
     FromDate: [this.startDate],
@@ -701,7 +684,6 @@ async onDivisionChange(value: any) {
         // Calculate totals for each parent account within the group
           const parentTotals = Object.keys(parentGroupedItems).map(parentName => {
           const parentItems = parentGroupedItems[parentName];
-          debugger
           let total = 0;
         let total1 = 0;
         let ChildNet = 0;
@@ -767,7 +749,6 @@ async onDivisionChange(value: any) {
 
         
 
-        debugger
         return {
           GroupName: group,
           parentTotals: parentTotals,
@@ -796,7 +777,6 @@ async onDivisionChange(value: any) {
 }
 
 calculateCurrentFinancialYear() {
-  debugger
   const today = new Date;
   const year = today.getFullYear();
   const month = today.getMonth() + 1; // months are 0-indexed, so +1
@@ -823,7 +803,6 @@ calculateCurrentFinancialYear() {
 }
 
 // BasedOnDate(selectedDate: any) {
-//   debugger
 
 //   var payload = {
 //     "DivisionId": "",
@@ -867,10 +846,6 @@ calculateCurrentFinancialYear() {
 //         // Calculate totals for each parent account within the group
 //           const parentTotals = Object.keys(parentGroupedItems).map(parentName => {
 //           const parentItems = parentGroupedItems[parentName];
-//           debugger
-        
-
-//           debugger
 //           let total = 0;
 //           let total1 = 0;
           
@@ -932,7 +907,6 @@ calculateCurrentFinancialYear() {
 
         
 
-//         debugger
 //         return {
 //           GroupName: group,
 //           parentTotals: parentTotals,
@@ -1011,7 +985,6 @@ async downloadExcel() {
 
   // Add date row
   const currentDate = new Date();
-  debugger
   // const subtitleRow1 = worksheet.addRow(['', `From ${this.datePipe.transform(this.selectedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`, '', '']);
   const subtitleRow1 = worksheet.addRow([`From ${this.datePipe.transform(this.startDate, 'dd-MM-yyyy')} To ${this.datePipe.transform(this.endDate, 'dd-MM-yyyy')}`]);
   subtitleRow.getCell(1).font = { size: 14, bold: false };

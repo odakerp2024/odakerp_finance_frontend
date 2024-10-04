@@ -244,7 +244,7 @@
                                 <tr *ngFor="let data of pagedItems">
                                   <td>{{data['Sub Category']}}</td>
                                   <td class="hyperColor" [title]="data['Customer']">
-                                    <a (click)="showCustomerInvoiceWise(data.CustomerID)">
+                                    <a (click)="showCustomerInvoiceWise(data.CustomerID, data.invoiceid)">
                                       {{ (data['Customer'] && data['Customer'].length > 20) ? data['Customer'].slice(0, 20) + '-' : data['Customer'] }}
                                     </a>
                                   </td>
@@ -325,7 +325,7 @@
                                     <td ><a>{{data.Customer}}</a></td>
                                     <td>{{data.Branch}}</td>
                                     <td>{{data['Date']| date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}</td>
-                                    <td class="hyperTextColor">{{data['Invoice #']}}</td>
+                                    <td class="hyperColor" (click)="clickTransactionNumber(data.ID, data['Transaction Type'], data.Trans_Number, data.RedirectUrl)">{{data['Invoice #']}}</td>
                                     <td class="hyperTextColor">{{data['Transaction Type']}}</td>
                                     <td class="text-right hyperTextColor">{{data['Invoice Amount'] | dynamicDecimal: entityFraction}}</td>
                                     <td class="text-right hyperTextColor">{{data['Balance (Invoice currency)'] | dynamicDecimal: entityFraction}}</td>

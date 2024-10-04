@@ -27,7 +27,6 @@ export class ContraVoucherService {
   }
 
   getContraVoucher1(FormValue: ContraVoucher): Observable<ContraVoucher[]> {
-    debugger;
     return this.http.post<ContraVoucher[]>(this.globals.APIURL + '/Dropdown/GetContraVoucher', FormValue);
   }
 

@@ -360,7 +360,6 @@ export class CreditReviseRevokeInfoComponent implements OnInit {
 
   //  * credit save
  async confirmFunction(type) {
-  debugger
     if(this.reviseAndRevokeForm.value.NewApplicationNumber == ''){
       const code =  await this.getAutoCodeGeneration();
     }

@@ -26,7 +26,6 @@ export class FinancialyearComponent implements OnInit {
   dscountryItem: Country[];
   FormMode: String = "A";
   editable: boolean = true;
-  //const newTodo = new StatusValue(); //statusvalues: Status[]=this.newTodo.statusvaluesv;
   statusvalues: Status[] = new StatusView().statusvalues;
   finicalYearId: any = 0;
   isUpdate: boolean = false;
@@ -47,7 +46,6 @@ export class FinancialyearComponent implements OnInit {
   ) {
 
     this.route.params.subscribe(params => {
-      debugger
       this.fg = this.fb.group({ FinancialYearId: params['id'] });
       if (params['id']) {
         this.finicalYearId = params['id'];
@@ -85,7 +83,6 @@ export class FinancialyearComponent implements OnInit {
 
       let service = `${this.globals.APIURL}/FinancialYear/GetFinancialYearId/`;
       this.dataService.post(service, { FinancialYearId: this.finicalYearId }).subscribe((data: any) => {
-        debugger
         // this.fy.getFinancialYearbyId(this.fg.value).pipe().subscribe(data => {
         var startDate = ''
         var endDate = ''
@@ -275,7 +272,6 @@ export class FinancialyearComponent implements OnInit {
   }
 
   dateChange(event: any) {
-    debugger
     // Your logic here
     const selectedDate = event.target.value;
     var startDate = ''

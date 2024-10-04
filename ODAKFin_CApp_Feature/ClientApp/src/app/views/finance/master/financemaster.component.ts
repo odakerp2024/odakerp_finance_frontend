@@ -373,7 +373,6 @@ export class FinanceMasterComponent implements OnInit {
 
 
   ngOnInit() {
-    debugger
     this.titleService.setTitle(this.title);
     $('.my-select').select2();
     //this.getUserDtls();
@@ -1238,7 +1237,6 @@ export class FinanceMasterComponent implements OnInit {
        this.router.navigate(['/views/reports/profit-loss']);
     }
     else if (routePage == 'BalanceSheet') {
-      debugger
       this.router.navigate(['/views/reports/balance-sheet']);
    }
     const userID = localStorage.getItem("UserID");

@@ -64,7 +64,6 @@ export class CreditReviewDetailsComponent implements OnInit {
   }
 
   getById(){
-    // debugger
     const payload = {
       "CreditReviewId" : this.creditReviewId,
       "CustomerId" : this.CustomerId

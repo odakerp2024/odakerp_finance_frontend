@@ -82,30 +82,6 @@ export class LoginComponent implements OnInit {
                 Swal.fire("Invalid Credentials");
             }
         });
-
-        // this.LService.getLoginList(this.LoginForm.value).subscribe(data => {
-        //     debugger
-        //     if (data.length > 0) {
-        //         const Token = "odakla@2023";
-        //         console.log("LoginDetails", data[0]);
-        //         console.log("userid", data[0].ID.toString());
-        //         console.log("Token", data[0].Token);
-
-        //         this.allItems = data;
-        //         this.setEntityConfigurable();
-        //         localStorage.setItem("UserID", data[0].ID.toString());
-        //         localStorage.setItem("UserName", data[0]["UserName"]);
-        //         localStorage.setItem("Token", Token);
-        //         localStorage.setItem("EncKey", "ODAK21$#@$^@1ODK");
-        //         localStorage.setItem("NotAllowed", "Edit not Allowed");
-        //         localStorage.setItem("Save", "Record Saved Successfully");
-        //         localStorage.setItem('OrgId', '1'); // need to get from login in feature for diff org
-        //         this.GeneratePermission(data[0].ID.toString());
-        //         this.router.navigate(['/views/dashboard']);
-        //     } else {
-        //         Swal.fire("Invalid Credentials");
-        //     }
-        // });
     }
 
     setEntityConfigurable() {
@@ -123,16 +99,6 @@ export class LoginComponent implements OnInit {
         /* $('#overlay').fadeIn().delay(2000).fadeOut();*/
 
     }
-    //userAuthentication(userName, password) {
-
-    //    var data = {
-    //        Username: userName,
-    //        Password: password,
-    //        grant_type: "password"
-    //    };
-    //    var reqHeader = new HttpHeaders({ 'Content-Type': 'application/json', 'No-Auth': 'True' });
-    //    return this.http.post(this.globals.APIURL + '/users/authenticate', data, { headers: reqHeader });
-    //}
 
     GeneratePermission(userid: any) {
         let payload3 = {
@@ -161,9 +127,6 @@ export class LoginComponent implements OnInit {
             if (res.message == "Success") {
                 this.GeneratePermissionCombined(parseInt(userid));
             }
-            // else {
-            //     Swal.fire(res.message);
-            // }
         }, err => {
             Swal.fire(err.message);
         });

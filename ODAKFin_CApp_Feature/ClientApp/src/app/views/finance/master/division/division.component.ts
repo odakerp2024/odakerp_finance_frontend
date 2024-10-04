@@ -53,7 +53,6 @@ export class DivisionComponent implements OnInit {
   }
 
   divisionInfoRoute() {
-    debugger
     this.getPermissionListForCreate(540, 'Division', 0);
     // if (routePAth == 'add') this.router.navigate(['views/division-info/division-info-view']);
     // else if (routePAth == 'finance') this.router.navigate(['views/finance/financemaster']);
@@ -138,7 +137,6 @@ export class DivisionComponent implements OnInit {
 
   getPermissionListForUpdate(value, route, id) {
     // Check Permission for Division Add
-    debugger
     const userID = localStorage.getItem("UserID");
     const paylod = {
       userID: Number(userID),

@@ -47,7 +47,6 @@ export class PartyMappingComponent implements OnInit {
   }
 
   getPartyList(type?: string) {
-    debugger
     this.partyFilter.value.Status = "" ? null : this.partyFilter.value.Status;
     // this.partyFilter.value.Status = true ? '1' : '2';
     if (this.partyFilter.value.Status == "true") {
@@ -100,7 +99,6 @@ export class PartyMappingComponent implements OnInit {
       SubfunctionID: value
     }
     this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
       if (data.length > 0) {
         console.log("PermissionObject", data);
 
@@ -130,7 +128,6 @@ export class PartyMappingComponent implements OnInit {
       SubfunctionID: value
     }
     this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
       if (data.length > 0) {
         console.log("PermissionObject", data);
 

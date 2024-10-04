@@ -156,12 +156,6 @@ export class VoucherReversalsComponent implements OnInit {
     });
   }
 
-  // voucherEvent(event: any) {
-  //   debugger
-  //   this.voucherFilter.controls['EndDate'].setValue('');
-  //   this.validTillMinDate = this.datePipe.transform(new Date(event), "yyyy-MM-dd");
-  // }
-
   isDesc: boolean = false;
   column: string = '';
   sort(property) {
