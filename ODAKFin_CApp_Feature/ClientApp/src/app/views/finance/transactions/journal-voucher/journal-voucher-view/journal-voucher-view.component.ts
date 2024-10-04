@@ -143,7 +143,6 @@ export class JournalVoucherViewComponent implements OnInit {
   }
 
   getJournalList() {
-    // debugger
     var service = `${this.globals.APIURL}/JournalVoucher/GetJournalVoucherList`;
     this.dataService.post(service, this.filterForm.value).subscribe((result: any) => {
       this.journalList = [];
@@ -257,7 +256,6 @@ export class JournalVoucherViewComponent implements OnInit {
   // }
 
   // journalEvent(event: any) {
-  //   debugger
   //   this.filterForm.controls['EndDate'].setValue('');
   //   this.validTillMinDate = this.datePipe.transform(new Date(event), "yyyy-MM-dd");
   // }

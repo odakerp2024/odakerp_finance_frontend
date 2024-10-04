@@ -27,7 +27,6 @@ export class DashboardComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    debugger
     this.titleService.setTitle(this.title);
     // var qrStr = window.location.search;
     // var spQrStr = qrStr.substring(1);

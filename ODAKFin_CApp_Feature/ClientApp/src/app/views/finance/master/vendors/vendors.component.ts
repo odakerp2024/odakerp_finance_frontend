@@ -2051,7 +2051,6 @@ export class VendorsComponent implements OnInit {
   // }
 
   async onSubmit() {
-    debugger
     // if (this.mappingSuccess == false) {
     //   Swal.fire(this.errorMessage)
     //   return false;
@@ -2376,8 +2375,6 @@ export class VendorsComponent implements OnInit {
             //   InputPage = 'Division';
             //  }
             this.VendorModel.Vendor.Table10[0] = { 'InputPage': InputPage };
-            
-            debugger
             this.VendorModel.Vendor.Table1[0].BranchCode = this.fg.value.BranchCode == "" ? this.Branch_Code : this.fg.value.BranchCode;
             
             //-----
@@ -2956,7 +2953,6 @@ export class VendorsComponent implements OnInit {
 
   /*File Download*/
   download = (fileUrl) => {
-    debugger
     this.fileUrl = "UploadFolder\\Attachments\\" + fileUrl;
     this.commonservice.download(fileUrl).subscribe((event) => {
 
@@ -2982,7 +2978,6 @@ export class VendorsComponent implements OnInit {
   }
 
   // deleteDocument(deleteIndex) {
-  //   debugger
 
   //   const index = this.documentPayloadInfo.findIndex((element) => element.VendorDocumentsID == deleteIndex.VendorDocumentsID)
   //   this.documentPayloadInfo.splice(index, 1);
@@ -2990,7 +2985,6 @@ export class VendorsComponent implements OnInit {
   // }
 
   deleteDocument(event) {
-    debugger
     const indexToDelete = event;
     if (indexToDelete >= 0 && indexToDelete < this.documentPayloadInfo.length) {
       this.documentPayloadInfo.splice(indexToDelete, 1);
@@ -3637,7 +3631,6 @@ export class VendorsComponent implements OnInit {
 
 
   async getNumberRange() {
-    debugger
     return new Promise(async (resolve, rejects) => {
     let service = `${this.globals.APIURL}/COAType/GetNumberRangeCodeGenerator`;
     this.dataService.post(service, { Id: 0, ObjectId: 0 }).subscribe((result: any) => {
@@ -3659,7 +3652,6 @@ export class VendorsComponent implements OnInit {
   
 
   async autoCodeGeneration(event: any) {
-    debugger
     if (!this.isUpdate) {
       if (event) {
         let Info = this.autoGenerateCodeList.filter(x => x.ObjectName == 'Vendors');
@@ -3683,7 +3675,6 @@ export class VendorsComponent implements OnInit {
 
   checkAutoSectionItem(sectionInfo: any, runningNumber: any, Code: string) {
     var sectionA = '';
-    debugger
     var sectionB = '';
     var sectionC = '';
     var sectionD = '';

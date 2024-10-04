@@ -72,7 +72,6 @@ export class DocumentsComponent implements OnInit, OnChanges, AfterContentChecke
   }
 
   deleteDocument() {
-    debugger
     // this.documentList = this.documentList.filter(item => item.CustomerDocumentsID !== this.editSelectedData.CustomerDocumentsID)
     if (this.editSelectedData == undefined) {
       Swal.fire('<span style=\'color:red;\'>*</span> <span>Please Select The Document To Select </span>');
@@ -87,12 +86,10 @@ export class DocumentsComponent implements OnInit, OnChanges, AfterContentChecke
   }
 
   onFileSelected(index: any) {
-    debugger
     this.editSelectedData = index;
   }
 
-  fileSelected(event) {
-    debugger
+  fileSelected(event) { 
     if (event.target.files.length > 0) {
       this.documentForm.controls.FilePath.setValue(event.target.files[0].name);
       this.documentForm.controls.file.setValue(event);
@@ -100,7 +97,6 @@ export class DocumentsComponent implements OnInit, OnChanges, AfterContentChecke
   }
 
   uploadDocument() {
-    debugger
     let validation = '';
     if (!this.documentForm.value.DocumentName) {
       validation += '<span style=\'color:red;\'>*</span> <span>Please select Document Name </span></br>';
@@ -129,7 +125,6 @@ export class DocumentsComponent implements OnInit, OnChanges, AfterContentChecke
 
   /*File Download*/
 download = (fileUrl) => {
-  debugger
   this.fileUrl = "UploadFolder\\Attachments\\" + fileUrl;
   this.commonDataService.download(fileUrl).subscribe((event) => {
 

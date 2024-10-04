@@ -119,7 +119,6 @@ export class SACviewComponent implements OnInit {
   }
 
   checkUpdatePerission(id) {
-    debugger
     this.getPermissionListForUpdate(583, id);
   }
 
@@ -133,7 +132,6 @@ export class SACviewComponent implements OnInit {
       SubfunctionID: value
     }
     this.CommonService.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
       if (data.length > 0) {
         console.log("PermissionObject", data);
 
@@ -163,7 +161,6 @@ export class SACviewComponent implements OnInit {
       SubfunctionID: value
     }
     this.CommonService.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
       if (data.length > 0) {
         console.log("PermissionObject", data);
 

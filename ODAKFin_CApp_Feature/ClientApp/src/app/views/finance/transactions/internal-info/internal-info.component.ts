@@ -357,7 +357,6 @@ export class InternalInfoComponent implements OnInit {
 
   
   getOfficeList(DivisionId) {
-    debugger
     return new Promise((resolve, reject) => { 
     const payload = {DivisionId}
     this.commonDataService.getOfficeByDivisionId(payload).subscribe((result: any) => {
@@ -424,7 +423,6 @@ export class InternalInfoComponent implements OnInit {
 
 
   addRow() {
-    debugger
     var validation = "";
     if (this.internalCreateForm.value.AccountId == "" || this.internalCreateForm.value.AccountId == 0) {
       validation += "<span style='color:red;'>*</span> <span>Please select Account.</span></br>"
@@ -702,7 +700,6 @@ export class InternalInfoComponent implements OnInit {
 
 
   totalAmountCalculation(event) {
-    debugger
   const rate = Number(this.internalCreateForm.value.Rate)
   const qty = Number( this.internalCreateForm.value.Quantity)
  
@@ -716,7 +713,6 @@ export class InternalInfoComponent implements OnInit {
 
   
 //   totalAmountCalculation(event) {
-//     debugger
 
 //     // this.purchaseCreateForm.controls['Amount'].setValue(this.purchaseCreateForm.value.Rate * this.purchaseCreateForm.value.Quantity).toFixed(entityFraction);
 //     const rate = this.internalCreateForm.value.Rate;
@@ -745,7 +741,6 @@ export class InternalInfoComponent implements OnInit {
 
 
   OnClickEditValue() {
-    debugger
     let info = this.internalTableList[this.editSelectedIdex];
     this.internalCreateForm.patchValue({
       Id: info.Id,
@@ -763,7 +758,6 @@ export class InternalInfoComponent implements OnInit {
   }
 
   onEditView(){
-    debugger
     this.isEditEnabled  = true
   }
 

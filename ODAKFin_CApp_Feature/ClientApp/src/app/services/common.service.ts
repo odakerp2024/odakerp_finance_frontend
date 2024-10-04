@@ -45,19 +45,6 @@ export class CommonService {
 
         return this.http.get<GeneralMaster[]>(this.globals.APIURL + '/CommonAccessApi/ModuleValues/' + idv, this.createAuthHeader());
     }
-    //getData() {
-    //    return this.http.get('https://jsonplaceholder.typicode.com/users')
-    //        .pipe(
-    //            map((response: []) => response.map(item => item['name']))
-    //        )
-    //}
-
-    //getData() {
-    //    return this.http.get('http://test.oceanus-lines.com/api/CommonAccessApi/ModuleValues')
-    //        .pipe(
-    //            map((response: []) => response.map(item => item['LinerNmae']))
-    //        )
-    //}
     getData() {
         return this.http.get<LinerName[]>(this.globals.APIURL + '/CommonAccessApi/CustomerBussTypesMaster/', this.createAuthHeader())
             .pipe(

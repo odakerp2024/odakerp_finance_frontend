@@ -283,81 +283,73 @@
                     </div>
 
                      <!-- Dynamic Headers By CustomerInvoiceWise -->
-                    <div class="col-12" *ngIf="type == 'customerinvoicewise'">
+                     <div class="col-12" *ngIf="type == 'customerinvoicewise'">
                         <table class="table table-responsive table-bordered w-100 dataTable no-footer">
                             <thead>
-                                    <tr>
-                                        <th h class="sorting" tabindex="0" aria-controls="datatable-buttons" rowspan="1"
-                                        colspan="1" aria-label="Name: activate to sort column ascending"  style="width: 177.575px;"
-                                        *ngFor="let header of headers" (click)="sort(header)">
-                                            {{ header }}
-                                            <span *ngIf="sortOrder[header] === 'asc'"></span>
-                                            <span *ngIf="sortOrder[header] === 'desc'"></span>
-                                          </th> 
-                                    </tr>
+                                <tr>
+                                    <!-- Dynamic Header Creation -->
+                                    <th
+                                        class="sorting"
+                                        tabindex="0"
+                                        aria-controls="datatable-buttons"
+                                        rowspan="1"
+                                        colspan="1"
+                                        *ngFor="let header of headers"
+                                        (click)="sort(header)">
+                                        {{ header }}
+                                        <span *ngIf="sortOrder[header] === 'asc'">↑</span>
+                                        <span *ngIf="sortOrder[header] === 'desc'">↓</span>
+                                    </th>
+                                </tr>
                             </thead>
                             <tbody>
                                 <tr *ngFor="let row of pagedItems">
-                                    <td *ngFor="let header of calculateHeadersInvoicewise(); let i = index"
+                                    <td *ngFor="let header of calculateHeadersInvoicewise();let i=index"
                                         [class.text-right]="header === 'Balance (Company Currency)' || header === 'Balance (Invoice Currency)' || header === 'Invoice Amount'">
-                                
                                         <ng-container [ngSwitch]="header">
-                                
-                                            <!-- Condition for 'Invoice #' column -->
                                             <a *ngSwitchCase="'Invoice #'" class="hyperTextColor">{{ row[header] }}</a>
-                                
-                                            <!-- Condition for 'Date' column -->
                                             <span *ngSwitchCase="'Date'">{{ row[header] | date: commonDataService.convertToLowerCaseDay(entityDateFormat) }}</span>
-                                
-                                            <!-- Condition for amount columns -->
-                                            <a *ngSwitchCase="'Balance (Company Currency)'" class="hyperTextColor">{{ row[header]  | dynamicDecimal: entityFraction  }}</a>
-                                            <a *ngSwitchCase="'Balance (Invoice Currency)'" class="hyperTextColor">{{ row[header]  | dynamicDecimal: entityFraction }}</a>
+                                            <a *ngSwitchCase="'Balance (Company Currency)'" class="hyperTextColor">{{ row[header] | dynamicDecimal: entityFraction }}</a>
+                                            <a *ngSwitchCase="'Balance (Invoice Currency)'" class="hyperTextColor">{{ row[header] | dynamicDecimal: entityFraction }}</a>
                                             <a *ngSwitchCase="'Invoice Amount'" class="hyperTextColor">{{ row[header] | dynamicDecimal: entityFraction }}</a>
-                                
-                                            <!-- Default condition for other columns -->
                                             <span *ngSwitchDefault>{{ row[header] }}</span>
-                                
                                         </ng-container>
                                     </td>
                                 </tr>
+                                <!-- No Records Found -->
                                 <tr *ngIf="pagedItems.length == 0">
                                     <td colspan="12" class="text-center">No records found</td>
                                 </tr>
-                                </tbody>
-
-                                <tfoot class="table-footer" *ngIf="pagedItems.length > 0">
-                                    <tr class="footer-position-sticky">
-                                        <td class="text-left">
-                                            <span style="font-size: medium;">Grand Total : </span>
+                            </tbody>
+                            <tfoot class="table-footer" *ngIf="pagedItems.length > 0">
+                                <tr class="footer-position-sticky">
+                                    <td class="text-left">
+                                        <span style="font-size: medium;">Grand Total: </span>
+                                    </td>
+                                    <ng-container *ngFor="let header of calculateHeadersInvoicewise()">
+                                        <td
+                                            [class.text-right]="header === 'Balance (Company Currency)' || header === 'Balance (Invoice Currency)' || header === 'Invoice Amount'"
+                                            *ngIf="header !== 'Customer' && isNumeric(InvoiceTotals(header))">
+                                            {{ calculateInvoicewise(header) | dynamicDecimal: (header === 'Balance (Company Currency)' || header === 'Balance (Invoice Currency)' || header === 'Invoice Amount') ? entityFraction : null }}
                                         </td>
-                                        <!-- <ng-container
-                                            *ngFor="let header of calculateHeadersInvoicewise(); let last = last">
-                                            <td [class.text-right]="header === 'Balance (Company Currency)' || header === 'Balance (Invoice Currency)' 
-                                            || header === 'Invoice Amount'"
-                                                *ngIf="header !== 'Customer' && isNumeric(InvoiceTotals(header))">
-                                                {{ calculateInvoicewise(header) }}
-                                            </td>
-                                           
-                                            <td *ngIf="header !== 'Customer' && !isNumeric(InvoiceTotals(header))">
-                                             Display empty cell for non-numeric totals -->
-                                            <!-- </td>
-                                         </ng-container>   -->
-
-                                        <ng-container *ngFor="let header of calculateHeadersInvoicewise(); let last = last">
-                                            <td 
-                                                [class.text-right]="header === 'Balance (Company Currency)' || header === 'Balance (Invoice Currency)' || header === 'Invoice Amount'" 
-                                                *ngIf="header !== 'Customer' && isNumeric(InvoiceTotals(header))">
-                                                {{ calculateInvoicewise(header) | dynamicDecimal: (header === 'Balance (Company Currency)' || header === 'Balance (Invoice Currency)' || header === 'Invoice Amount') ? entityFraction : null }}
-                                            </td>
-                                            <td *ngIf="header !== 'Customer' && !isNumeric(InvoiceTotals(header))">
-                                                {{ calculateInvoicewise(header) }}
-                                            </td>
-                                        </ng-container> 
-                                        
-                                    </tr>
-                                </tfoot>
+                                        <td *ngIf="header !== 'Customer' && !isNumeric(InvoiceTotals(header))">
+                                            {{ calculateInvoicewise(header) }}
+                                        </td>
+                                    </ng-container>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
 
                     <div class="row page mr-3" align="right">
                         <ul *ngIf="pager && pager.totalItems > 10" class="pagination">

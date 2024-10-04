@@ -152,7 +152,6 @@ export class IncomeDetailComponent implements OnInit {
   }
 
   getOffice(Division){
-    debugger
       return new Promise((resolve, reject) => {
         const payload = {DivisionId: Division}
         this.commonDataService.getOfficeByDivisionId(payload).pipe(takeUntil(this.ngUnsubscribe)).subscribe((result: any)=>{

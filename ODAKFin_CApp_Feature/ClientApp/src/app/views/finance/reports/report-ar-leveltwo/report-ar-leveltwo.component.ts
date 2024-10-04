@@ -95,7 +95,6 @@ export class ReportArLeveltwoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    debugger
     this.createReportForm();
     this.onOptionChange('month');
     this.getDivisionList();
@@ -113,7 +112,6 @@ export class ReportArLeveltwoComponent implements OnInit {
 
 
   async goBack() {
-    debugger
     if (this.type === 'customerinvoicewise') {
       this.type = 'customerwise';
       //await this.createReportForm();
@@ -169,7 +167,6 @@ export class ReportArLeveltwoComponent implements OnInit {
   // }
 
   // async showCustomerInvoiceWise(subtypecustomerId: number) {
-  //   debugger
   //   this.subtypecustomerId = subtypecustomerId;
   //   this.pagedItems = [];
   //   this.type = 'customerinvoicewise';
@@ -253,8 +250,94 @@ export class ReportArLeveltwoComponent implements OnInit {
   }
 
 
+  clickTransactionNumber(id: number, transType: string, Trans_Number: string, RedirectUrl: string) {
+    // Check if transType or Trans_Number is empty and return immediately if either is
+    // if (!transType || !Trans_Number) {
+    //   console.warn('Transaction type or Transaction number is empty. Staying in the same place.');
+    //   return;
+    // }
+
+    let url: string;
+
+    // Use switch case on transType alone, as switch (transType && Trans_Number) does not work
+    switch (transType) {
+      case 'Receipt Voucher':
+        url = this.router.serializeUrl(
+          this.router.createUrlTree(['/views/transactions/receipt/receipt-details', { id: id }])
+        );
+        break;
+
+      case 'Payment Voucher':
+        url = this.router.serializeUrl(
+          this.router.createUrlTree(['/views/transactions/payment/payment-details', { voucherId: id }])
+        );
+        break;
+
+      case 'Journal Voucher':
+        url = this.router.serializeUrl(
+          this.router.createUrlTree(['/views/transactions/journal/journal-details', { id: id, isUpdate: true }])
+        );
+        break;
+
+      case 'Contra Voucher':
+        url = this.router.serializeUrl(
+          this.router.createUrlTree(['/views/contra-info/contra-info-view', { contraId: id }])
+        );
+        break;
+        
+      case 'Voucher Reversal':
+      url = this.router.serializeUrl(
+        this.router.createUrlTree(['/views/voucher-info/voucher-reversals-info', { id: id, isUpdate: true }])
+      );
+      break;
+
+      case 'Provision Final - FI':
+      url = this.router.serializeUrl(
+        this.router.createUrlTree(['/views/provision/provision-detail', { ProvisionId: id}])
+      );
+      break;
+
+      // case 'Purchase Voucher':
+      //   url = this.router.serializeUrl(
+      //     this.router.createUrlTree(['/views/purchase-info/purchase-info-view', { id: id, isUpdate: true, isCopy: false }])
+      //   );
+      //   break;
+
+      // case 'Vendor Credit':
+      //   url = this.router.serializeUrl(
+      //     this.router.createUrlTree(['/views/vendor-info-notes/vendor-info-view', { id: id, isUpdate: true }])
+      //   );
+      //   break;
+
+      case 'Opening Balance':
+        Swal.fire('Cannot Open. This Item Belongs To Opening Balance');
+        return; // Exit the function to prevent opening a new tab 
+      default:
+
+        if (transType.includes('FI – Purchase Inv')) {
+          url = this.router.serializeUrl(
+            this.router.createUrlTree(['/views/purchase-admin-info/purchase-invoice-info', { id: id, isUpdate: true }])
+          );
+          break;
+        }
+        
+        else if (transType.includes('LA') || transType.includes('FF')) {
+            url = RedirectUrl 
+            break;
+          }
+
+        console.error('Unhandled Trans_Type:', transType);
+        return; // Exit the function to prevent opening a new tab
+    }
+
+    // Open the URL in a new tab if url is defined
+    if (url) {
+      window.open(url, '_blank');
+    }
+  }
+
+
   async createReportForm() {
-    debugger
     if (this.type == 'overall') {
       this.reportFilter = this.fb.group({
         DivisionId: [0],
@@ -500,17 +583,22 @@ export class ReportArLeveltwoComponent implements OnInit {
   getInvoiceWiseList() {
     this.startDate = this.reportFilter.controls.FromDate.value;
     this.endDate = this.reportFilter.controls.ToDate.value;
-
+  
     this.reportService.getAgingSummaryList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
       if (result.message == "Success" && result.data && result.data.Table) {
         this.reportList = result['data'].Table;
         let tableData = result.data.Table;
-
+        console.log('Tabledata', tableData);
+  
         if (tableData.length > 0) {
-          this.headers = Object.keys(tableData[0]).filter(header => header !== 'CustomerID');
-
-          // Extract 'Balance (Company Currency)' field and format it
+          // Filter out 'CustomerID', 'RedirectUrl', and 'BLType'
+          this.headers = Object.keys(tableData[0]).filter(header => 
+            header !== 'CustomerID' && header !== 'RedirectUrl' && header !== 'BLType'
+          );
+          console.log('Header....', this.headers);
+  
+          // Format the 'Balance (Company Currency)', 'Balance (Invoice Currency)', and 'Invoice Amount' fields
           this.pagedItems = tableData.map(row => ({
             ...row,
             'Invoice Amount': Number(row['Invoice Amount']).toFixed(this.entityFraction),
@@ -524,6 +612,7 @@ export class ReportArLeveltwoComponent implements OnInit {
       } console.error();
     });
   }
+  
 
   //Dynamic CustomerWise List
   getCustomerWiseList() {
@@ -535,11 +624,9 @@ export class ReportArLeveltwoComponent implements OnInit {
       if (result.message == "Success" && result.data && result.data.Table) {
         this.reportList = result['data'].Table;
         let tableData = result.data.Table;
-
         if (tableData.length > 0) {
           // Set headers from the first data row
           this.headers = Object.keys(tableData[0]).filter(header => header !== 'CustomerID');
-
           // Extract 'Balance (Company Currency)' field and format it
           this.pagedItems = tableData.map(row => ({
             ...row,
@@ -576,7 +663,7 @@ export class ReportArLeveltwoComponent implements OnInit {
 
   //Dynamic Grand Total Calculation Methods Customer Wise
   calculateHeadersCustomerwise(): string[] {
-    let excludedColumns: string[] = ['CustomerID']; // Define columns to be excluded
+    let excludedColumns: string[] = ['CustomerID','BLType','RedirectUrl']; // Define columns to be excluded
 
     if (this.pagedItems.length > 0) {
       return Object.keys(this.pagedItems[0])
@@ -619,7 +706,7 @@ export class ReportArLeveltwoComponent implements OnInit {
 
   //Dynamic Header Invoice Wise
   calculateHeadersInvoicewise(): string[] {
-    let excludedColumns: string[] = ['CustomerID']; // Define columns to be excluded
+    let excludedColumns: string[] = ['CustomerID', 'RedirectUrl', 'BLType']; // Define columns to be excluded
     if (this.pagedItems.length > 0) {
       // var list = Object.keys(this.pagedItems[0])
       // .filter(key => !excludedColumns.includes(key));
@@ -640,34 +727,30 @@ export class ReportArLeveltwoComponent implements OnInit {
 
   InvoiceTotals(header: string): any {
     console.log('Header value:', header); // Log the header value
+    // Specify the fields that should be shown
     const specifiedFields = [
-      "Balance (Invoice Currency)",
-      "Balance (Company Currency)",
-      "Invoice Amount",
-      "Age (Days)",
+        "Balance (Invoice Currency)",
+        "Balance (Company Currency)",
+        "Invoice Amount",
+        "Age (Days)",
     ];
-
-    //Check if the header is one of the specified fields
-    if (!specifiedFields.includes(header)) {
-      return ''; // Return empty for non-specified fields
+    // Specify fields that should not be displayed in the UI
+    const hiddenFields = ["RedirectUrl", "BLType"];
+    // Check if the header is one of the hidden fields
+    if (hiddenFields.includes(header)) {
+        return ''; // Return empty for hidden fields
     }
-    // const isNumeric = this.pagedItems.some(item => !isNaN(parseFloat(item[header])));
-
-    // // If none of the fields are numeric, return an empty string
-    // if (!isNumeric) {
-    //   return '';
-    // }
-
-
+    // Check if the header is one of the specified fields
+    if (!specifiedFields.includes(header)) {
+        return ''; // Return empty for non-specified fields
+    }
     // Calculate total for the specified header
     const total = this.pagedItems.reduce((acc, item) => {
-      const value = parseFloat(item[header]);
-      return isNaN(value) ? acc : acc + value;
+        const value = parseFloat(item[header]);
+        return isNaN(value) ? acc : acc + value;
     }, 0);
-
     return total;
-  }
-
+}
 
   calculateInvoicewise(header: string): any {
     const total = this.InvoiceTotals(header);
@@ -768,7 +851,6 @@ export class ReportArLeveltwoComponent implements OnInit {
   }
 
   export() {
-    debugger
     if (this.type == "overall") {
       this.downloadAsExcel(this.reportList, this.startDate, this.endDate, 'overall');
     }
@@ -805,7 +887,6 @@ export class ReportArLeveltwoComponent implements OnInit {
 
     switch (reportType) {
       case 'overall':
-        debugger
         titleHeader = 'Receivable Aging Summary - Overall';
         excludeKeys = ['Id'];
         columnsToColor = ['Sub Category', 'Balance (Company Currency)'],
@@ -899,6 +980,7 @@ export class ReportArLeveltwoComponent implements OnInit {
               obj[key] = data[key];
               return obj;
             }, {});
+            console.log('Data',data)
 
 
           filteredData['Balance (Invoice Currency)'] = `${data['Balance (Invoice Currency)'] !== null ? parseFloat(data['Balance (Invoice Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
@@ -945,7 +1027,6 @@ export class ReportArLeveltwoComponent implements OnInit {
         //     break;
 
         case 'overall':
-          debugger
           // Initialize totals object if it doesn't exist
           if (!this.totals) {
             this.totals = {};
@@ -1078,7 +1159,6 @@ export class ReportArLeveltwoComponent implements OnInit {
     console.log('Entity Fraction:', this.entityFraction);
 
     if (reportType === 'overall') {
-      debugger
       this.headers.forEach((header, index) => {
         if (index === 0) {
           // Skip the first column which already has 'Grand Total'

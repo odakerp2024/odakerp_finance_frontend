@@ -56,7 +56,6 @@ export class DivisionInfoComponent implements OnInit {
     this.getNumberRange();
     this.cerateDivisionForm();
     this.route.params.subscribe((param) => {
-      debugger
       if (param.id != 0) {
         this.isUpdate = param.isCreate;
         this.divisionId = param.id;

@@ -59,7 +59,6 @@ export class ExchangeRateInfoComponent implements OnInit {
       SubfunctionID: 609
     }
     this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
       if (data.length > 0) {
         console.log("PermissionObject", data);
 
@@ -100,7 +99,6 @@ export class ExchangeRateInfoComponent implements OnInit {
   }
 
   onSubmit() {
-  debugger
     var validation = "";
     if (this.fg.value.FromCurrency == "") {
       validation += "<span style='color:red;'>*</span> <span>Please  select From Currency </span></br>"

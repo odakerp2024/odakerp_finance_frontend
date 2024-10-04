@@ -72,7 +72,6 @@ export class TemplateInfoComponent implements OnInit {
       SubfunctionID: 573
     }
     this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
       if (data.length > 0) {
         console.log("PermissionObject", data);
 

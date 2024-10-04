@@ -136,7 +136,6 @@ export class FinancialyearviewComponent implements OnInit {
   }
 
   checkUpdatePerission(id) {
-    debugger
     this.getPermissionListForUpdate(619, id);
   }
 
@@ -150,7 +149,6 @@ export class FinancialyearviewComponent implements OnInit {
       SubfunctionID: value
     }
     this.CommonService.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
       if (data.length > 0) {
         console.log("PermissionObject", data);
 
@@ -180,7 +178,6 @@ export class FinancialyearviewComponent implements OnInit {
       SubfunctionID: value
     }
     this.CommonService.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
       if (data.length > 0) {
         console.log("PermissionObject", data);
 

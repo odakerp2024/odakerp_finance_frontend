@@ -31,7 +31,6 @@ export class PaymentBatchComponent implements OnInit {
 
   //   console.log(data,'wgwgwegwg');
   //   this.currentTabName = data
-  //   debugger
     
 
   // } 

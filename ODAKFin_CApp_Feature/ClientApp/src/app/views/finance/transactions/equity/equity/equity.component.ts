@@ -77,7 +77,6 @@ export class EquityComponent implements OnInit {
       AccountName: [''],
       Amount: [''],
     });
-    debugger
     this.uploadForm = this.fb.group({
       RegistrationCode: [this.registerCode],
       UploadDate: [this.getCurrentDate()],
@@ -145,7 +144,6 @@ export class EquityComponent implements OnInit {
   }
 
   openPopup() {
-    debugger
     this.getPermissionListForCreate(605);
   }
 
@@ -360,7 +358,6 @@ export class EquityComponent implements OnInit {
       SubfunctionID: value
     }
     this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
       if (data.length > 0) {
         console.log("PermissionObject", data);
 
@@ -400,7 +397,6 @@ export class EquityComponent implements OnInit {
       SubfunctionID: value
     }
     this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
       if (data.length > 0) {
         console.log("PermissionObject", data);
 

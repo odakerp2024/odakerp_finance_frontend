@@ -100,7 +100,6 @@ export class BalanceSheetComponent implements OnInit {
   }
 
   onDateChange(event: any): void {
-    debugger
     this.selectedDate = this.datePipe.transform(event.value, 'yyyy-MM-dd');
     this.BasedOnDate(this.selectedDate);
   }
@@ -304,7 +303,6 @@ createFilterForm(){
 
 
 editBalance(id: number) {
-  debugger
   const payload = {
     "AccountId": id,
     "Date": this.selectedDate,
@@ -498,7 +496,6 @@ onOfficeChange(values: any) {
 }
 
 BasedOnDate(selectedDate: any) {
-  debugger
 
   var payload = {
     "DivisionId": "",

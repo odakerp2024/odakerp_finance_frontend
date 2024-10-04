@@ -170,7 +170,6 @@ export class TransactionLocksDetailsComponent implements OnInit {
     this.dataService.post(service, { PeriordTypeId: this.transactionLockForm.value.PeriodType, StartDate: (this.transactionLockForm.value.FYStartDate),EndDate : (this.transactionLockForm.value.FYEndDate)}).subscribe((result: any) => {
       this.PeriodTypeList = [];
       this.items.clear();
-      // debugger
       if (result.message == "Success" && result.data.Table.length > 0) {
         this.PeriodTypeList = result.data.Table;
         this.PeriodTypeList.map(x => {
@@ -294,7 +293,6 @@ export class TransactionLocksDetailsComponent implements OnInit {
     }
     
     let table1 = info.periodArray
-    // debugger
     table1.map(x => {
       x.FromDate = (x.FromDate);
       x.ToDate =  (x.ToDate);

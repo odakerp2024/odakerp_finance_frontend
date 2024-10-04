@@ -60,7 +60,6 @@ export class ChartaccountsviewComponent implements OnInit {
           SubfunctionID: value
         }
         this.CommonService.GetUserPermissionObject(paylod).subscribe(data => {
-          debugger
           if (data.length > 0) {
             console.log("PermissionObject", data);
     
@@ -162,7 +161,6 @@ export class ChartaccountsviewComponent implements OnInit {
 
               
         this.chartaccountService.getChartaccountFilter(queryParams).subscribe(data => {
-            debugger
             if (data["data"].length == 0) { this.Is_DataFound = false; }
             else {
                 this.Is_DataFound = true;

@@ -186,7 +186,6 @@ export class OfficeComponent implements OnInit {
       SubfunctionID: value
     }
     this.CommonService.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
       if (route == 'Office Details') {
 
         if (data.length > 0) {
@@ -268,7 +267,6 @@ export class OfficeComponent implements OnInit {
       SubfunctionID: value
     }
     this.CommonService.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
       if (route == 'Office Details') {
 
         if (data.length > 0) {

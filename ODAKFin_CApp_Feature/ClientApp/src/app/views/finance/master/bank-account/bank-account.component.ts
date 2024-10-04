@@ -1310,7 +1310,6 @@ export class BankAccountComponent implements OnInit {
       filedata.append('file', this.selectedFile, this.selectedFile.name)
  this.commonDataService.AttachUpload(this.selectedFile).subscribe(data => {
         if (data) {
-debugger
     const payload = {
       BankAttachmentsID: 0,
       BankID: this.editbankId,  

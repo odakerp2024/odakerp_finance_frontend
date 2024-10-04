@@ -251,7 +251,6 @@ export class ReceiptVouchersViewComponent implements OnInit {
   }
 
   selectedCustomer(event:any) {
-    // debugger
     let service = `${this.globals.APIURL}/ReceiptVoucher/GetReceiptVoucherDropDownList`
     this.dataService.post(service, { CustomerId: event }).subscribe((result: any) => {
       this.voucherCustomerCodeList = [];

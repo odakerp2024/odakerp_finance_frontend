@@ -322,7 +322,6 @@ export class PurchaseInfoComponent implements OnInit {
 
 
   addRow() {
-    debugger
     var validation = "";
     if (this.purchaseCreateForm.value.AccountId == "" || this.purchaseCreateForm.value.AccountId == 0) {
       validation += "<span style='color:red;'>*</span> <span>Please select Account.</span></br>"
@@ -693,7 +692,6 @@ export class PurchaseInfoComponent implements OnInit {
     }
   }
  totalAmountCalculation(event) {
-    debugger
   const rate = Number(this.purchaseCreateForm.value.Rate)
   const qty = Number( this.purchaseCreateForm.value.Quantity)
  
@@ -732,7 +730,6 @@ export class PurchaseInfoComponent implements OnInit {
   }
 
   OnClickEditValue() {
-    debugger
     let info = this.PurchaseTableList[this.editSelectedIdex];
     this.purchaseCreateForm.patchValue({
       Id: info.Id,
@@ -752,7 +749,6 @@ export class PurchaseInfoComponent implements OnInit {
     this.isEditEnabled = true
   }
   // fileSelected(event) {
-  //   debugger 
   //   if (event.target.files.length > 0 && this.purchaseFileList.length < 5) {
   //     this.purchaseFileList.push({
   //       Id: 0,
@@ -954,7 +950,6 @@ private downloadFile = (data: HttpResponse<Blob>) => {
   }
 
   checkRange(event) {
-    debugger;
     const decimalIndex = event.indexOf('.'); // Check if decimal is present
 
     if (decimalIndex !== -1) {

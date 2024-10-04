@@ -71,7 +71,6 @@ export class ExchangeRateComponent implements OnInit {
       SubfunctionID: 611
     }
     this.commonDataService.GetUserPermissionObject(paylod).subscribe(data => {
-      debugger
       if (data.length > 0) {
         console.log("PermissionObject", data);
 
@@ -151,11 +150,6 @@ export class ExchangeRateComponent implements OnInit {
     if (this.fg.value.Rate == "") {
       validation += "<span style='color:red;'>*</span> <span>Please Enter rate</span></br>"
     }
-
-    // var ddlIsActive = $('#ddlIsActive').val();
-    // if (ddlIsActive == null) {
-    //   validation += "<span style='color:red;'>*</span> <span>Please select status</span></br>"
-    // }
 
     if (validation != "") {
       Swal.fire('', validation, 'warning');
