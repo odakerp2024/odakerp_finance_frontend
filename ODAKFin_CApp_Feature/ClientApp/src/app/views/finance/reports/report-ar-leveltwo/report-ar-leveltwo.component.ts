@@ -496,17 +496,22 @@ export class ReportArLeveltwoComponent implements OnInit {
   getInvoiceWiseList() {
     this.startDate = this.reportFilter.controls.FromDate.value;
     this.endDate = this.reportFilter.controls.ToDate.value;
-
+  
     this.reportService.getAgingSummaryList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
       if (result.message == "Success" && result.data && result.data.Table) {
         this.reportList = result['data'].Table;
         let tableData = result.data.Table;
-
+        console.log('Tabledata', tableData);
+  
         if (tableData.length > 0) {
-          this.headers = Object.keys(tableData[0]).filter(header => header !== 'CustomerID');
-
-          // Extract 'Balance (Company Currency)' field and format it
+          // Filter out 'CustomerID', 'RedirectUrl', and 'BLType'
+          this.headers = Object.keys(tableData[0]).filter(header => 
+            header !== 'CustomerID' && header !== 'RedirectUrl' && header !== 'BLType'
+          );
+          console.log('Header....', this.headers);
+  
+          // Format the 'Balance (Company Currency)', 'Balance (Invoice Currency)', and 'Invoice Amount' fields
           this.pagedItems = tableData.map(row => ({
             ...row,
             'Invoice Amount': Number(row['Invoice Amount']).toFixed(this.entityFraction),
@@ -520,6 +525,7 @@ export class ReportArLeveltwoComponent implements OnInit {
       } console.error();
     });
   }
+  
 
   //Dynamic CustomerWise List
   getCustomerWiseList() {
@@ -531,11 +537,9 @@ export class ReportArLeveltwoComponent implements OnInit {
       if (result.message == "Success" && result.data && result.data.Table) {
         this.reportList = result['data'].Table;
         let tableData = result.data.Table;
-
         if (tableData.length > 0) {
           // Set headers from the first data row
           this.headers = Object.keys(tableData[0]).filter(header => header !== 'CustomerID');
-
           // Extract 'Balance (Company Currency)' field and format it
           this.pagedItems = tableData.map(row => ({
             ...row,
@@ -615,7 +619,7 @@ export class ReportArLeveltwoComponent implements OnInit {
 
   //Dynamic Header Invoice Wise
   calculateHeadersInvoicewise(): string[] {
-    let excludedColumns: string[] = ['CustomerID']; // Define columns to be excluded
+    let excludedColumns: string[] = ['CustomerID', 'RedirectUrl', 'BLType']; // Define columns to be excluded
     if (this.pagedItems.length > 0) {
       // var list = Object.keys(this.pagedItems[0])
       // .filter(key => !excludedColumns.includes(key));
@@ -636,34 +640,30 @@ export class ReportArLeveltwoComponent implements OnInit {
 
   InvoiceTotals(header: string): any {
     console.log('Header value:', header); // Log the header value
+    // Specify the fields that should be shown
     const specifiedFields = [
-      "Balance (Invoice Currency)",
-      "Balance (Company Currency)",
-      "Invoice Amount",
-      "Age (Days)",
+        "Balance (Invoice Currency)",
+        "Balance (Company Currency)",
+        "Invoice Amount",
+        "Age (Days)",
     ];
-
-    //Check if the header is one of the specified fields
-    if (!specifiedFields.includes(header)) {
-      return ''; // Return empty for non-specified fields
+    // Specify fields that should not be displayed in the UI
+    const hiddenFields = ["RedirectUrl", "BLType"];
+    // Check if the header is one of the hidden fields
+    if (hiddenFields.includes(header)) {
+        return ''; // Return empty for hidden fields
     }
-    // const isNumeric = this.pagedItems.some(item => !isNaN(parseFloat(item[header])));
-
-    // // If none of the fields are numeric, return an empty string
-    // if (!isNumeric) {
-    //   return '';
-    // }
-
-
+    // Check if the header is one of the specified fields
+    if (!specifiedFields.includes(header)) {
+        return ''; // Return empty for non-specified fields
+    }
     // Calculate total for the specified header
     const total = this.pagedItems.reduce((acc, item) => {
-      const value = parseFloat(item[header]);
-      return isNaN(value) ? acc : acc + value;
+        const value = parseFloat(item[header]);
+        return isNaN(value) ? acc : acc + value;
     }, 0);
-
     return total;
-  }
-
+}
 
   calculateInvoicewise(header: string): any {
     const total = this.InvoiceTotals(header);
@@ -893,6 +893,7 @@ export class ReportArLeveltwoComponent implements OnInit {
               obj[key] = data[key];
               return obj;
             }, {});
+            console.log('Data',data)
 
 
           filteredData['Balance (Invoice Currency)'] = `${data['Balance (Invoice Currency)'] !== null ? parseFloat(data['Balance (Invoice Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
