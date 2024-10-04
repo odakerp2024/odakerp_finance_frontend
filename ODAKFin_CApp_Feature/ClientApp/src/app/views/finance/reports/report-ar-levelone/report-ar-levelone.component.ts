@@ -70,6 +70,7 @@ export class ReportArLeveloneComponent implements OnInit {
   totalinvoicewiseccy : number = 0;
   subtype       : number;
   subtypecustomerId : number;
+  InvoiceId: number;
   
 
   constructor(
@@ -115,13 +116,16 @@ export class ReportArLeveloneComponent implements OnInit {
    await this.getCustomerWiseList();
   }
 
-  async showCustomerInvoiceWise(subtypecustomerId:number) {
+  async showCustomerInvoiceWise(subtypecustomerId:number, invoiceid: number) {
+
     this.subtypecustomerId = subtypecustomerId;
+    this.InvoiceId = invoiceid;
     this.pagedItems = []; 
     this.type = 'customerinvoicewise';
     //await this.createReportForm();
     this.reportFilter.controls.Type.setValue(2);
     this.reportFilter.controls.SubTypeId.setValue(this.subtypecustomerId);
+    this.reportFilter.controls.InvoiceId.setValue(this.InvoiceId);
     await this.getInvoiceWiseList();
   }
 
@@ -216,6 +220,7 @@ export class ReportArLeveloneComponent implements OnInit {
       this.reportFilter = this.fb.group({
         DivisionId: [0],
         OfficeId: [0],
+        InvoiceId:[this.InvoiceId],
         Type:[0],
         SubTypeId: [0],
         FromDate: [this.startDate],
@@ -227,6 +232,7 @@ export class ReportArLeveloneComponent implements OnInit {
       this.reportFilter = this.fb.group({
         DivisionId: [0],
         OfficeId: [0],
+        InvoiceId:[this.InvoiceId],
         CustomerId: [0], 
         Type:[1],
         SubTypeId: [this.subtype],
@@ -469,7 +475,7 @@ export class ReportArLeveloneComponent implements OnInit {
   }
 
   async getallcustomerlist(){
-   await this.showCustomerInvoiceWise(0);
+   await this.showCustomerInvoiceWise(0,0);
   }
 
   calculateTotalCustomers(items: any[]): number {
@@ -630,14 +636,14 @@ export class ReportArLeveloneComponent implements OnInit {
         break;
       case 'customerwise':
         titleHeader = 'Receivable Balance Summary - Customer Wise';
-        excludeKeys = ['CustomerID', 'InvoiceDate'];
+        excludeKeys = ['CustomerID', 'InvoiceDate','invoiceid'];
         columnsToColor = ['Customer', 'Credit Amount', 'Balance (Invoice Currency)', 'Net Balance (Invoice currency)', 'Balance (Company Currency)'];
         columnsToAlignLeft = ['Customer'];
         columnsToAlignRight = ['Credit Amount', 'Balance (Invoice Currency)', 'Net Balance (Invoice currency)', 'Balance (Company Currency)'];
         break;
       case 'customerinvoicewise':
         titleHeader = 'Receivable Balance Summary - Invoice Wise';
-        excludeKeys = [];
+        excludeKeys = ['RedirectUrl'];
         columnsToColor = ['Invoice #', 'Transaction Type', 'Invoice Amount', 'Balance (Invoice currency)', 'Balance (Company Currency)'];
         columnsToAlignLeft = ['Invoice #', 'Transaction Type'];
         columnsToAlignRight = ['Invoice Amount', 'Balance (Invoice currency)', 'Balance (Company Currency)'];
