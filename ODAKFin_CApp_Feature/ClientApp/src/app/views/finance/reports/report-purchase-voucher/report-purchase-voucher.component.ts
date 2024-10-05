@@ -202,6 +202,7 @@ export class ReportPurchaseVoucherComponent implements OnInit {
   }
 
   getVendorList() {
+    debugger
     return new Promise((resolve, reject) => {
       this.reportService.getVendorList().subscribe((result: any) => {
         if (result.message == "Success") {
@@ -327,18 +328,29 @@ export class ReportPurchaseVoucherComponent implements OnInit {
       VendorBranch: 0,
       Amount: '',
       Type: 0,
-      InvoiceNo: 0,
+      InvoiceNo: '',
       InvoiceType: 0,
-      VendorInvoice: 0,
+      VendorInvoice: '',
     });
     this.officeList = [];
     this.reportFilter.controls.Peroid.setValue('month');
     this.getPurchaseVoucherReportList();
   }
 
+  clickTransactionNumber(RedirectUrl: string) {
+    
+    let url: string;
+
+    url = RedirectUrl;
+       
+    if (url) {
+        window.open(url, '_blank');
+    }
+  }
+
 
   async downloadAsExcel() {
-    if (this.reportForExcelList.length === 0) {
+    if (this.pagedItems.length === 0) {
       Swal.fire('No record found');
       return;
     }
@@ -348,45 +360,48 @@ export class ReportPurchaseVoucherComponent implements OnInit {
     const worksheet = workbook.addWorksheet('Report');
 
     // Add title and subtitle rows
-    const titleRow = worksheet.addRow(['', '', '', '', '', 'NAVIO SHIPPING PRIVATE LIMITED', '']);
-    titleRow.getCell(6).font = { size: 15, bold: true };
-    titleRow.getCell(6).alignment = { horizontal: 'center' };
+    const titleRow = worksheet.addRow(['', '', '',  'NAVIO SHIPPING PRIVATE LIMITED', '']);
+    titleRow.getCell(4).font = { size: 15, bold: true };
+    titleRow.getCell(4).alignment = { horizontal: 'center' };
 
     // Calculate the length of the title string
     const titleLength = 'NAVIO SHIPPING PRIVATE LIMITED'.length;
 
     // Iterate through each column to adjust the width based on the title length
     worksheet.columns.forEach((column) => {
-      if (column.number === 6) {
+      if (column.number === 4) {
         column.width = titleLength + 2;
       }
     });
 
     // Merge cells for the title
-    worksheet.mergeCells(`F${titleRow.number}:G${titleRow.number}`);
+    worksheet.mergeCells(`D${titleRow.number}:E${titleRow.number}`);
 
     // Add subtitle row
-    const subtitleRow = worksheet.addRow(['', '', '', '', '', 'Purchase Voucher', '']);
-    subtitleRow.getCell(6).font = { size: 14 };
-    subtitleRow.getCell(6).alignment = { horizontal: 'center' };
+    const subtitleRow = worksheet.addRow(['', '', '',  'Purchase Voucher', '']);
+    subtitleRow.getCell(4).font = { size: 14 };
+    subtitleRow.getCell(4).alignment = { horizontal: 'center' };
 
     // Merge cells for the subtitle
-    worksheet.mergeCells(`F${subtitleRow.number}:G${subtitleRow.number}`);
+    worksheet.mergeCells(`D${subtitleRow.number}:E${subtitleRow.number}`);
 
     // Add "FROM Date" and "TO Date" to the worksheet
-    const dateRow = worksheet.addRow(['', '', '', '', '', `FROM ${this.datePipe.transform(this.startDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))} - TO ${this.datePipe.transform(this.endDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`]);
+    const dateRow = worksheet.addRow(['', '', '', `FROM ${this.datePipe.transform(this.startDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))} - TO ${this.datePipe.transform(this.endDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`]);
     dateRow.eachCell((cell) => {
       cell.alignment = { horizontal: 'center' };
     });
-    dateRow.getCell(6).numFmt = this.commonDataService.convertToLowerCaseDay(this.entityDateFormat);
-    dateRow.getCell(6).numFmt = this.commonDataService.convertToLowerCaseDay(this.entityDateFormat);
+    dateRow.getCell(4).numFmt = this.commonDataService.convertToLowerCaseDay(this.entityDateFormat);
+    dateRow.getCell(4).numFmt =  this.commonDataService.convertToLowerCaseDay(this.entityDateFormat);
 
     // Merge cells for "FROM Date" and "TO Date"
-    worksheet.mergeCells(`F${dateRow.number}:G${dateRow.number}`);
+    worksheet.mergeCells(`D${dateRow.number}:E${dateRow.number}`);
 
 
     // Define header row and style it with yellow background, bold, and centered text
-    const header = Object.keys(this.reportForExcelList[0]).filter(key => key !== 'Symbol');
+    const keysToRemove = ['Symbol', 'BLTpes','RedirectUrl'];
+
+    const header = Object.keys(this.pagedItems[0])
+        .filter(key => !keysToRemove.includes(key));
     const headerRow = worksheet.addRow(header);
 
 
@@ -412,12 +427,12 @@ export class ReportPurchaseVoucherComponent implements OnInit {
     });
 
     // Add data rows with concatenated symbol and amount
-    this.reportForExcelList.forEach((data) => {
+      this.reportList.forEach((data) => {
 
       //To Remove Time from date field data
       const date = data.Date
       // const formattedDate = date.split('T')[0];
-      // data.Date = this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
+      // data.Date =  this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
       const formattedDate = date ? date.split('T')[0] : null;
       if(formattedDate != date){
         data.Date =  this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
@@ -427,69 +442,66 @@ export class ReportPurchaseVoucherComponent implements OnInit {
       }
       const defalutvalue = 0;
       // Merge the symbol and amount into a single string with fixed decimal places
-      const mergedICYAmount = ` ${data['Amount (ICY)'] !== null ? parseFloat(data['Amount (ICY)']).toFixed(2) : '0.00'}`;
-      const mergedCCYAmount = ` ${data['Amount (CCY)'] !== null ? parseFloat(data['Amount (CCY)']).toFixed(2) : '0.00'}`;
-      const TDSamount = ` ${data['TDS amount'] !== null ? parseFloat(data['TDS amount']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const ExRateGain = ` ${data['Ex rate Gain'] !== null ? parseFloat(data['Ex rate Gain']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const ExRateLoss = ` ${data['Ex rate Loss'] !== null ? parseFloat(data['Ex rate Loss']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const BankCharges = ` ${data['Bank charges'] !== null ? parseFloat(data['Bank charges']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const Payment = ` ${data['Payments'] !== null ? parseFloat(data['Payments']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-
+      const mergedICYAmount = `${data['Invoice Amount (ICY)']  !== null ? parseFloat(data['Invoice Amount (ICY)'] ).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      const mergedCCYAmount = `${data['Invoice Amount (CCY)'] !== null  ? parseFloat(data['Invoice Amount (CCY)']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      const invoicetax = `${data['Total Tax'] !== null ? parseFloat(data['Total Tax']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
 
 
       // Filter out properties you don't want to include in the Excel sheet
+      
+    
+      const keysToRemove = ['Symbol', 'BLTpes','RedirectUrl'];
+
       const filteredData = Object.keys(data)
-        .filter(key => key !== 'Symbol')
-        .reduce((obj, key) => {
-          obj[key] = data[key];
-          return obj;
-        }, {});
+          .filter(key => !keysToRemove.includes(key))
+          .reduce((obj, key) => {
+              obj[key] = data[key];
+              return obj;
+          }, {});
 
+      const  defalutJobValue = 'NA'
       // Update the 'Amount (ICY)' property in the filtered data object with the merged amount
-      filteredData['Amount (ICY)'] = mergedICYAmount;
-      filteredData['Amount (CCY)'] = mergedCCYAmount;
-      filteredData['TDS amount'] = TDSamount;
-      filteredData['Ex rate Gain'] = ExRateGain;
-      filteredData['Ex rate Loss'] = ExRateLoss;
-      filteredData['Bank charges'] = BankCharges;
-      filteredData['Payments'] = Payment;
-
-
+      filteredData['Invoice Amount (ICY)'] = mergedICYAmount;
+      filteredData['Invoice Amount (CCY)'] = mergedCCYAmount;
+      filteredData['Total Tax'] = invoicetax;
+      filteredData['Job #'] = data['Job #'] == null ? defalutJobValue : data['Job #'];
+      filteredData['GST #'] = data['GST #'] == null ? defalutJobValue : data['GST #'];
+      filteredData['Container'] = data['Container'] == null ? defalutJobValue : data['Container'];
+      filteredData['BL #'] = data['BL #'] == null ? defalutJobValue : data['BL #'];
+      
       // Add the filtered data to the worksheet
       const row = worksheet.addRow(Object.values(filteredData));
 
-   
-
-         // Set text color for specific columns and align them
-         const columnsToColorRight =  ['Vendor', 'Payment', 'Amount (CCY)', 'Amount (ICY)'];
-         const columnsToAlignLeft =  ['Vendor', 'Payment']; 
-         const columnsToAlignRight = [ 'Amount (CCY)', 'Amount (ICY)'];
-   
-         columnsToColorRight.forEach(columnName => {
-           const columnIndex = Object.keys(filteredData).indexOf(columnName);
-           if (columnIndex !== -1) {
-             const cell = row.getCell(columnIndex + 1);
-             cell.font = { color: { argb: '8B0000' }, bold: true }; // Red color
-           }
-         });
-   
-         columnsToAlignLeft.forEach(columnName => {
-           const columnIndex = Object.keys(filteredData).indexOf(columnName);
-           if (columnIndex !== -1) {
-             const cell = row.getCell(columnIndex + 1);
-             cell.alignment = { horizontal: 'left' };
-           }
-         });
-   
-         columnsToAlignRight.forEach(columnName => {
-           const columnIndex = Object.keys(filteredData).indexOf(columnName);
-           if (columnIndex !== -1) {
-             const cell = row.getCell(columnIndex + 1);
-             cell.alignment = { horizontal: 'right' };
-           }
-         });
-   
-       });
+          // Set text color for specific columns and align them
+          const columnsToColorRight = ['Invoice', 'Customer Name', 'Invoice Amount (ICY)', 'Invoice Amount (CCY)','Total Tax'];
+          const columnsToAlignLeft =  ['Invoice', 'Customer Name',]; 
+          const columnsToAlignRight = [ 'Invoice Amount (ICY)', 'Invoice Amount (CCY)','Total Tax'];
+    
+          columnsToColorRight.forEach(columnName => {
+            const columnIndex = Object.keys(filteredData).indexOf(columnName);
+            if (columnIndex !== -1) {
+              const cell = row.getCell(columnIndex + 1);
+              cell.font = { color: { argb: '8B0000' }, bold: true }; // Red color
+            }
+          });
+    
+          columnsToAlignLeft.forEach(columnName => {
+            const columnIndex = Object.keys(filteredData).indexOf(columnName);
+            if (columnIndex !== -1) {
+              const cell = row.getCell(columnIndex + 1);
+              cell.alignment = { horizontal: 'left' };
+            }
+          });
+    
+          columnsToAlignRight.forEach(columnName => {
+            const columnIndex = Object.keys(filteredData).indexOf(columnName);
+            if (columnIndex !== -1) {
+              const cell = row.getCell(columnIndex + 1);
+              cell.alignment = { horizontal: 'right' };
+            }
+          });
+    
+        });
 
     // Adjust column widths to fit content
     worksheet.columns.forEach((column) => {
@@ -532,7 +544,7 @@ export class ReportPurchaseVoucherComponent implements OnInit {
 
 
   async downloadAsCSV() {
-    if (this.reportForExcelList.length === 0) {
+    if (this.pagedItems.length === 0) {
       Swal.fire('No record found');
       return;
     }
@@ -568,7 +580,7 @@ export class ReportPurchaseVoucherComponent implements OnInit {
     worksheet.mergeCells(`F${subtitleRow.number}:G${subtitleRow.number}`);
 
     // Add "FROM Date" and "TO Date" to the worksheet
-    const dateRow = worksheet.addRow(['', '', '', '', '', `FROM ${this.datePipe.transform(this.startDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))} - TO ${this.datePipe.transform(this.endDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`]);
+    const dateRow = worksheet.addRow(['', '', '', '', '', `FROM ${this.datePipe.transform(this.startDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))} - TO ${this.datePipe.transform(this.startDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat))}`]);
     dateRow.eachCell((cell) => {
       cell.alignment = { horizontal: 'center' };
     });
@@ -580,7 +592,11 @@ export class ReportPurchaseVoucherComponent implements OnInit {
 
 
     // Define header row and style it with yellow background, bold, and centered text
-    const header = Object.keys(this.reportForExcelList[0]).filter(key => key !== 'Symbol');
+    const keysToRemove = ['Symbol', 'BLTpes','RedirectUrl'];
+
+    const header = Object.keys(this.pagedItems[0])
+        .filter(key => !keysToRemove.includes(key));
+    
     const headerRow = worksheet.addRow(header);
 
 
@@ -606,12 +622,12 @@ export class ReportPurchaseVoucherComponent implements OnInit {
     });
 
     // Add data rows with concatenated symbol and amount
-    this.reportForExcelList.forEach((data) => {
+    this.reportList.forEach((data) => {
 
       //To Remove Time from date field data
       const date = data.Date
-        // const formattedDate = date.split('T')[0];
-        // data.Date = this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
+      // const formattedDate = date.split('T')[0];
+      // data.Date =  this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
       const formattedDate = date ? date.split('T')[0] : null;
       if(formattedDate != date){
         data.Date =  this.datePipe.transform(formattedDate, this.commonDataService.convertToLowerCaseDay(this.entityDateFormat));
@@ -619,71 +635,70 @@ export class ReportPurchaseVoucherComponent implements OnInit {
       else{
         data.Date =  formattedDate
       }
-
       const defalutvalue = 0;
       // Merge the symbol and amount into a single string with fixed decimal places
-      const mergedICYAmount = `${data.Symbol} ${data['Amount (ICY)'] !== null ? parseFloat(data['Amount (ICY)']).toFixed(2) : '0.00'}`;
-      const mergedCCYAmount = `${data.Symbol} ${data['Amount (CCY)'] !== null ? parseFloat(data['Amount (CCY)']).toFixed(2) : '0.00'}`;
-      const TDSamount = ` ${data['TDS amount'] !== null ? parseFloat(data['TDS amount']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const ExRateGain = ` ${data['Ex rate Gain'] !== null ? parseFloat(data['Ex rate Gain']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const ExRateLoss = ` ${data['Ex rate Loss'] !== null ? parseFloat(data['Ex rate Loss']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const BankCharges = ` ${data['Bank charges'] !== null ? parseFloat(data['Bank charges']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
-      const Payment = ` ${data['Payments'] !== null ? parseFloat(data['Payments']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      const mergedICYAmount = `${data['Invoice Amount (ICY)']  !== null ? parseFloat(data['Invoice Amount (ICY)'] ).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      const mergedCCYAmount = `${data['Invoice Amount (CCY)'] !== null  ? parseFloat(data['Invoice Amount (CCY)']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
+      const invoicetax = `${data['Total Tax'] !== null ? parseFloat(data['Total Tax']).toFixed(this.entityFraction) : (defalutvalue).toFixed(this.entityFraction)}`;
 
-
+    
       // Filter out properties you don't want to include in the Excel sheet
-      const filteredData = Object.keys(data)
-        .filter(key => key !== 'Symbol')
-        .reduce((obj, key) => {
-          obj[key] = data[key];
-          return obj;
-        }, {});
 
-      // Update the 'Amount (ICY)' property in the filtered data object with the merged amount
-      filteredData['Amount (ICY)'] = mergedICYAmount;
-      filteredData['Amount (CCY)'] = mergedCCYAmount;
-      filteredData['TDS amount'] = TDSamount;
-      filteredData['Ex rate Gain'] = ExRateGain;
-      filteredData['Ex rate Loss'] = ExRateLoss;
-      filteredData['Bank charges'] = BankCharges;
-      filteredData['Payments'] = Payment;
+      const keysToRemove = ['Symbol', 'BLTpes','RedirectUrl'];
+
+      const filteredData = Object.keys(data)
+          .filter(key => !keysToRemove.includes(key))
+          .reduce((obj, key) => {
+              obj[key] = data[key];
+              return obj;
+          }, {});
+      
+    
+       const  defalutJobValue = 'NA'
+        // Update the 'Amount (ICY)' property in the filtered data object with the merged amount
+      filteredData['Invoice Amount (ICY)'] = mergedICYAmount;
+      filteredData['Invoice Amount (CCY)'] = mergedCCYAmount;
+      filteredData['Total Tax'] = invoicetax;
+      filteredData['Job #'] = data['Job #'] == null ? defalutJobValue : data['Job #'];
+      filteredData['GST #'] = data['GST #'] == null ? defalutJobValue : data['GST #'];
+      filteredData['Container'] = data['Container'] == null ? defalutJobValue : data['Container'];
+      filteredData['BL #'] = data['BL #'] == null ? defalutJobValue : data['BL #'];
 
 
       // Add the filtered data to the worksheet
       const row = worksheet.addRow(Object.values(filteredData));
 
+      // Set text color for specific columns and align them
+      const columnsToColorRight = ['Invoice', 'Customer Name', 'Invoice Amount (ICY)', 'Invoice Amount (CCY)','Total Tax'];
+      const columnsToAlignLeft =  ['Invoice', 'Customer Name',]; 
+      const columnsToAlignRight = [ 'Invoice Amount (ICY)', 'Invoice Amount (CCY)','Total Tax'];
 
-         // Set text color for specific columns and align them
-         const columnsToColorRight =  ['Vendor', 'Payment', 'Amount (CCY)', 'Amount (ICY)'];
-         const columnsToAlignLeft =  ['Vendor', 'Payment']; 
-         const columnsToAlignRight = [ 'Amount (CCY)', 'Amount (ICY)'];
-   
-         columnsToColorRight.forEach(columnName => {
-           const columnIndex = Object.keys(filteredData).indexOf(columnName);
-           if (columnIndex !== -1) {
-             const cell = row.getCell(columnIndex + 1);
-             cell.font = { color: { argb: '8B0000' }, bold: true }; // Red color
-           }
-         });
-   
-         columnsToAlignLeft.forEach(columnName => {
-           const columnIndex = Object.keys(filteredData).indexOf(columnName);
-           if (columnIndex !== -1) {
-             const cell = row.getCell(columnIndex + 1);
-             cell.alignment = { horizontal: 'left' };
-           }
-         });
-   
-         columnsToAlignRight.forEach(columnName => {
-           const columnIndex = Object.keys(filteredData).indexOf(columnName);
-           if (columnIndex !== -1) {
-             const cell = row.getCell(columnIndex + 1);
-             cell.alignment = { horizontal: 'right' };
-           }
-         });
-   
-       });
- 
+      columnsToColorRight.forEach(columnName => {
+        const columnIndex = Object.keys(filteredData).indexOf(columnName);
+        if (columnIndex !== -1) {
+          const cell = row.getCell(columnIndex + 1);
+          cell.font = { color: { argb: '8B0000' }, bold: true }; // Red color
+        }
+      });
+
+      columnsToAlignLeft.forEach(columnName => {
+        const columnIndex = Object.keys(filteredData).indexOf(columnName);
+        if (columnIndex !== -1) {
+          const cell = row.getCell(columnIndex + 1);
+          cell.alignment = { horizontal: 'left' };
+        }
+      });
+
+      columnsToAlignRight.forEach(columnName => {
+        const columnIndex = Object.keys(filteredData).indexOf(columnName);
+        if (columnIndex !== -1) {
+          const cell = row.getCell(columnIndex + 1);
+          cell.alignment = { horizontal: 'right' };
+        }
+      });
+
+    });
+
     // Adjust column widths to fit content
     worksheet.columns.forEach((column) => {
       let maxLength = 0;
@@ -720,7 +735,7 @@ export class ReportPurchaseVoucherComponent implements OnInit {
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     saveAs(blob, 'Report-PurchaseVoucher.xlsx');
-  }
 
+  }
 }
 
