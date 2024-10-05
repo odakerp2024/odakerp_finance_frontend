@@ -325,7 +325,7 @@ export class ReportSalesVoucherComponent implements OnInit {
     if (url) {
         window.open(url, '_blank');
     }
-}
+  }
 
   async downloadAsExcel() {
     if (this.pagedItems.length === 0) {

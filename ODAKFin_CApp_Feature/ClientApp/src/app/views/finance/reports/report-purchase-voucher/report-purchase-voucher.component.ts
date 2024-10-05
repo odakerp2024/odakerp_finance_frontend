@@ -336,6 +336,17 @@ export class ReportPurchaseVoucherComponent implements OnInit {
     this.getPurchaseVoucherReportList();
   }
 
+  clickTransactionNumber(RedirectUrl: string) {
+    
+    let url: string;
+
+    url = RedirectUrl;
+       
+    if (url) {
+        window.open(url, '_blank');
+    }
+  }
+
 
   async downloadAsExcel() {
     if (this.pagedItems.length === 0) {
