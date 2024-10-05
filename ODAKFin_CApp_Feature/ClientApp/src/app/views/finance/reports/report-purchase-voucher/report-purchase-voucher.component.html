@@ -235,20 +235,18 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="let data of pagedItems">
-                                    <td>{{data.Invoice_date | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}
+                                    <td>{{data.Date | date:commonDataService.convertToLowerCaseDay(entityDateFormat)}}
                                     </td>
-                                    <td class="hyperTextColor">{{data.Invoice_no == 0 ? '' :  data.Invoice_no}}</td>
-                                    <td>{{data.Invoice_type}}</td>
-                                    <td class="hyperTextColor" [title]="data['VendorName']">
-                                        {{ (data['VendorName'] && data['VendorName'].length > 30) ? data['VendorName'].slice(0, 30) + '-' : data['VendorName'] }}
-                                    </td> 
-                                    <td>{{data.CityName}}</td>
-                                    <td>{{data.CurrencyCode}}</td>
-                                    <td class="text-right hyperTextColor">{{ data.Symbol + ' ' + (data.InvoiceAmountICY |
-                                        dynamicDecimal: entityFraction) }}</td>
-                                    <td class="text-right hyperTextColor">{{ data.Symbol + ' ' + (data.InvoiceAmountCCY |
-                                        dynamicDecimal: entityFraction) }}</td>
-                                    <td
+                                    <td class="hyperTextColor">{{data.Invoice_no == 0 ? '' :  data.Invoice}}</td>
+                                    <td>{{ data['Transaction Type'] }}</td>
+                                    <td class="hyperTextColor" [title]="data['Vendor Name']">
+                                    {{ (data['Vendor Name'] && data['Vendor Name'].length > 30) ? (data['Vendor Name'].slice(0, 30) + '-') : data['Vendor Name'] }}
+                                    </td>
+                                    <td>{{data.Branch}}</td>
+                                    <td>{{ data['Invoice Currency'] }}</td>
+                                    <td class="text-right hyperTextColor">{{ data.Symbol + ' ' + (data['Invoice Amount (ICY)'] | dynamicDecimal: entityFraction) }}</td>
+                                    <td class="text-right hyperTextColor">{{ data.Symbol + ' ' + (data['Invoice Amount (CCY)'] | dynamicDecimal: entityFraction) }}</td>
+                                   <td
                                         [ngClass]="data.Status == 'Paid' ? ' badge-confirm' : data.Status == 'Due' ? 'badge-cancel' : ' badge-draft'">
                                         {{data.Status}}</td>
                                 </tr>
