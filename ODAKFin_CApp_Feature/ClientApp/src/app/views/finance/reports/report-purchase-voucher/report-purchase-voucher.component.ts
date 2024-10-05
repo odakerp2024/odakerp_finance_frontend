@@ -202,6 +202,7 @@ export class ReportPurchaseVoucherComponent implements OnInit {
   }
 
   getVendorList() {
+    debugger
     return new Promise((resolve, reject) => {
       this.reportService.getVendorList().subscribe((result: any) => {
         if (result.message == "Success") {
@@ -327,9 +328,9 @@ export class ReportPurchaseVoucherComponent implements OnInit {
       VendorBranch: 0,
       Amount: '',
       Type: 0,
-      InvoiceNo: 0,
+      InvoiceNo: '',
       InvoiceType: 0,
-      VendorInvoice: 0,
+      VendorInvoice: '',
     });
     this.officeList = [];
     this.reportFilter.controls.Peroid.setValue('month');
