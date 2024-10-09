@@ -493,7 +493,7 @@ export class ReportArLeveloneComponent implements OnInit {
   }
 
   calculateTotalNetBalance(items: any[]): number {
-    return items.reduce((sum, item) => sum + item['Net Balance (Invoice currency)'], 0);
+    return items.reduce((sum, item) => sum + item['Net Balance (Invoice Currency)'], 0);
   }
 
   calculateTotalCompanyCurrency(items: any[]): number {
@@ -631,9 +631,9 @@ export class ReportArLeveloneComponent implements OnInit {
       case 'customerwise':
         titleHeader = 'Receivable Balance Summary - Customer Wise';
         excludeKeys = ['CustomerID', 'InvoiceDate','invoiceid'];
-        columnsToColor = ['Customer', 'Credit Amount', 'Balance (Invoice Currency)', 'Net Balance (Invoice currency)', 'Balance (Company Currency)'];
-        columnsToAlignLeft = ['Customer'];
-        columnsToAlignRight = ['Credit Amount', 'Balance (Invoice Currency)', 'Net Balance (Invoice currency)', 'Balance (Company Currency)'];
+        columnsToColor = ['Customer', 'Credit Amount', 'Balance (Invoice Currency)', 'Net Balance (Invoice Currency)', 'Balance (Company Currency)'];
+        columnsToAlignLeft = ['Sub Category', 'Customer'];
+        columnsToAlignRight = ['Credit Amount', 'Balance (Invoice Currency)', 'Net Balance (Invoice Currency)', 'Balance (Company Currency)'];
         break;
       case 'customerinvoicewise':
         titleHeader = 'Receivable Balance Summary - Invoice Wise';
@@ -750,7 +750,7 @@ export class ReportArLeveloneComponent implements OnInit {
   
           filteredData['Credit Amount'] = `${data['Credit Amount'] !== null ? parseFloat(data['Credit Amount']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
           filteredData['Balance (Invoice Currency)'] = `${data['Balance (Invoice Currency)'] !== null ? parseFloat(data['Balance (Invoice Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
-          filteredData['Net Balance (Invoice currency)'] = `${data['Net Balance (Invoice currency)'] !== null ? parseFloat(data['Net Balance (Invoice currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
+          filteredData['Net Balance (Invoice Currency)'] = `${data['Net Balance (Invoice Currency)'] !== null ? parseFloat(data['Net Balance (Invoice Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
           filteredData['Balance (Company Currency)'] = `${data['Balance (Company Currency)'] !== null ? parseFloat(data['Balance (Company Currency)']).toFixed(this.entityFraction) : defaultValue.toFixed(this.entityFraction)}`;
          
         
@@ -758,7 +758,7 @@ export class ReportArLeveloneComponent implements OnInit {
     
           totalCreditAmount += parseFloat(data['Credit Amount']) || 0;
           totalBalanceInvoiceCurrency += parseFloat(data['Balance (Invoice Currency)']) || 0;
-          totalNetBalanceInvoiceCurrency += parseFloat(data['Net Balance (Invoice currency)']) || 0;
+          totalNetBalanceInvoiceCurrency += parseFloat(data['Net Balance (Invoice Currency)']) || 0;
           totalBalanceCompanyCurrency += parseFloat(data['Balance (Company Currency)']) || 0;
           break;
       }
@@ -816,7 +816,7 @@ export class ReportArLeveloneComponent implements OnInit {
         footerData.push(totalInvoice.toFixed(defaultValue));
       }else if (header[i] === 'Balance (Invoice Currency)') {
         footerData.push(totalBalanceInvoiceCurrency.toFixed(this.entityFraction));
-      } else if (header[i] === 'Net Balance (Invoice currency)') {
+      } else if (header[i] === 'Net Balance (Invoice Currency)') {
         footerData.push(totalNetBalanceInvoiceCurrency.toFixed(this.entityFraction));
       } else if (header[i] === 'Balance (Company Currency)') {
         footerData.push(totalBalanceCompanyCurrency.toFixed(this.entityFraction));
