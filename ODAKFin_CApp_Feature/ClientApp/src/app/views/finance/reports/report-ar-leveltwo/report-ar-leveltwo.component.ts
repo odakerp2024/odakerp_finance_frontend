@@ -902,7 +902,7 @@ export class ReportArLeveltwoComponent implements OnInit {
         break;
       case 'customerinvoicewise':
         titleHeader = 'Receivable Aging Summary - Invoice Wise';
-        excludeKeys = ['CustomerID'];
+        excludeKeys = ['CustomerID','RedirectUrl','BLType'];
         columnsToColor = [ 'Balance (Invoice Currency)', 'Balance (Company Currency)']
         columnsToAlignLeft = ['Invoice #', 'Transaction Type'];
         columnsToAlignRight = ['Invoice Amount', 'Balance (Invoice Currency)', 'Balance (Company Currency)'];
