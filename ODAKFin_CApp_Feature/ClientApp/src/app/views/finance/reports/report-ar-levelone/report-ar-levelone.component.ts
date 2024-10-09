@@ -70,7 +70,6 @@ export class ReportArLeveloneComponent implements OnInit {
   totalinvoicewiseccy : number = 0;
   subtype       : number;
   subtypecustomerId : number;
-  InvoiceId: number;
   
 
   constructor(
@@ -115,17 +114,14 @@ export class ReportArLeveloneComponent implements OnInit {
    this.reportFilter.controls.SubTypeId.setValue( this.subtype);
    await this.getCustomerWiseList();
   }
-
-  async showCustomerInvoiceWise(subtypecustomerId:number, invoiceid: number) {
+  async showCustomerInvoiceWise(subtypecustomerId:number) {
 
     this.subtypecustomerId = subtypecustomerId;
-    this.InvoiceId = invoiceid;
     this.pagedItems = []; 
     this.type = 'customerinvoicewise';
     //await this.createReportForm();
     this.reportFilter.controls.Type.setValue(2);
     this.reportFilter.controls.SubTypeId.setValue(this.subtypecustomerId);
-    this.reportFilter.controls.InvoiceId.setValue(this.InvoiceId);
     await this.getInvoiceWiseList();
   }
 
@@ -220,7 +216,6 @@ export class ReportArLeveloneComponent implements OnInit {
       this.reportFilter = this.fb.group({
         DivisionId: [0],
         OfficeId: [0],
-        InvoiceId:[this.InvoiceId],
         Type:[0],
         SubTypeId: [0],
         FromDate: [this.startDate],
@@ -232,7 +227,6 @@ export class ReportArLeveloneComponent implements OnInit {
       this.reportFilter = this.fb.group({
         DivisionId: [0],
         OfficeId: [0],
-        InvoiceId:[this.InvoiceId],
         CustomerId: [0], 
         Type:[1],
         SubTypeId: [this.subtype],
@@ -475,7 +469,7 @@ export class ReportArLeveloneComponent implements OnInit {
   }
 
   async getallcustomerlist(){
-   await this.showCustomerInvoiceWise(0,0);
+   await this.showCustomerInvoiceWise(0);
   }
 
   calculateTotalCustomers(items: any[]): number {

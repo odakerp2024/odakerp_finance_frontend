@@ -307,7 +307,7 @@
                                     <td *ngFor="let header of calculateHeadersInvoicewise();let i=index"
                                         [class.text-right]="header === 'Balance (Company Currency)' || header === 'Balance (Invoice Currency)' || header === 'Invoice Amount'">
                                         <ng-container [ngSwitch]="header">
-                                            <a *ngSwitchCase="'Invoice #'" class="hyperTextColor">{{ row[header] }}</a>
+                                            <a *ngSwitchCase="'Invoice #'" class="hyperlink-style" (click)="clickTransactionNumber(row.Id, row.BLType, row['Invoice #'], row.RedirectUrl)">{{ row[header] }}</a>
                                             <span *ngSwitchCase="'Date'">{{ row[header] | date: commonDataService.convertToLowerCaseDay(entityDateFormat) }}</span>
                                             <a *ngSwitchCase="'Balance (Company Currency)'" class="hyperTextColor">{{ row[header] | dynamicDecimal: entityFraction }}</a>
                                             <a *ngSwitchCase="'Balance (Invoice Currency)'" class="hyperTextColor">{{ row[header] | dynamicDecimal: entityFraction }}</a>

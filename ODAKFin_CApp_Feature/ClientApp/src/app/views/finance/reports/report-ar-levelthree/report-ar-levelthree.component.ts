@@ -364,6 +364,18 @@ export class ReportArLevelthreeComponent implements OnInit {
     })
   }
 
+  clickTransactionNumber(RedirectUrl: string) {
+    debugger
+    
+    let url: string;
+
+    url = RedirectUrl;
+       
+    if (url) {
+        window.open(url, '_blank');
+    }
+  }
+
   calculateTotalDays(reportList: any[]): void {
     // Initialize totals to 0
     this.totalcustomer = 0;
