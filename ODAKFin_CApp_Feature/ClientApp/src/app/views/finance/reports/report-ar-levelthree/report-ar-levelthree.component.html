@@ -333,8 +333,8 @@
                                     <td>{{data.Customer}}</td>
                                     <td>{{data.Branch}}</td>
                                     <td>{{data['Date'] | date: commonDataService.convertToLowerCaseDay(entityDateFormat) }}</td>
-                                    <td class="text-right hyperTextColor">{{data['Invoice #']}}</td>
-                                    <td class="text-right hyperTextColor">{{data['Transaction Type']}}</td>
+                                    <td class="text-left hyperColor" (click)="clickTransactionNumber(data.RedirectUrl)">{{data['Invoice #']}}</td>
+                                    <td class="text-left hyperTextColor">{{data['Transaction Type']}}</td>
                                     <td class="text-right hyperTextColor">{{data['Balance (Invoice Currency)'] | dynamicDecimal: entityFraction }}</td>
                                     <td class="text-right hyperTextColor">{{data['Balance (Company Currency)'] | dynamicDecimal: entityFraction }}</td>
                                 </tr>

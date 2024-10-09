@@ -364,6 +364,18 @@ export class ReportArLevelthreeComponent implements OnInit {
     })
   }
 
+  clickTransactionNumber(RedirectUrl: string) {
+    debugger
+    
+    let url: string;
+
+    url = RedirectUrl;
+       
+    if (url) {
+        window.open(url, '_blank');
+    }
+  }
+
   calculateTotalDays(reportList: any[]): void {
     // Initialize totals to 0
     this.totalcustomer = 0;
@@ -473,18 +485,16 @@ export class ReportArLevelthreeComponent implements OnInit {
       {
         this.downloadAsExcel(this.reportList, this.startDate, this.endDate, 'overall');
       }
-     else if(this.type =="customerwise")
-      {
-        this.downloadAsExcel(this.reportList, this.startDate, this.endDate, 'customerwise');
+      else if(this.type =="customerwise")
+        {
+          this.downloadAsExcel(this.reportList, this.startDate, this.endDate, 'customerwise');
       }
     else
       {
         this.downloadAsExcel(this.reportList, this.startDate, this.endDate, 'customerinvoicewise');
       }
     } 
-    
-  
-    async downloadAsExcel(
+     async downloadAsExcel(
       reportList: any[],
       startDate: string,
       endDate: string,
@@ -522,7 +532,7 @@ export class ReportArLevelthreeComponent implements OnInit {
               break;
           case 'customerinvoicewise':
               titleHeader = 'Receivable Sales Summary - Invoice Wise';
-              excludeKeys = [];
+              excludeKeys = ['RedirectUrl','BLType'];
               columnsToColor = ['Invoice #', 'Transaction Type', 'Invoice Amount', 'Balance (Invoice Currency)', 'Balance (Company Currency)'];
               columnsToAlignLeft = ['Invoice #', 'Transaction Type'];
               columnsToAlignRight = ['Invoice Amount', 'Balance (Invoice Currency)', 'Balance (Company Currency)'];
