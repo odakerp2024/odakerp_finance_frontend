@@ -28,6 +28,7 @@ const year = today.getFullYear();
 export class ReportArLeveltwoComponent implements OnInit {
 
   reportFilter: FormGroup;
+ isSearchApplied:boolean = false;
   divisionList: any = [];
   officeList: any = [];
   reportList: any[];
@@ -112,10 +113,14 @@ export class ReportArLeveltwoComponent implements OnInit {
 
 
   async goBack() {
+    if(this.isSearchApplied){
+      this.reportFilter.controls.Peroid.setValue('month');
+      this.onOptionChange('month');
+    }
     if (this.type === 'customerinvoicewise') {
       this.type = 'customerwise';
       //await this.createReportForm();
-      await this.showCustomerWise(0);
+      await this.showCustomerWise(this.subtype);
     } else if (this.type === 'customerwise') {
       this.type = 'overall';
       await this.createReportForm();
@@ -789,7 +794,7 @@ export class ReportArLeveltwoComponent implements OnInit {
 
 
   async search() {
-
+   this.isSearchApplied = true;
     if (this.type == 'overall') {
       await this.getOverallList();
     }
@@ -801,6 +806,7 @@ export class ReportArLeveltwoComponent implements OnInit {
   }
 
   clear() {
+   this.isSearchApplied = false;
     this.startDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 1), "yyyy-MM-dd");
     this.endDate = this.datePipe.transform(new Date(this.currentDate.getFullYear(), this.currentDate.getMonth(), 31), "yyyy-MM-dd");
     if (this.type == 'overall') {

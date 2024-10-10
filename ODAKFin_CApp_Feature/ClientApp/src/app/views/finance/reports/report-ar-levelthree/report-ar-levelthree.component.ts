@@ -97,7 +97,7 @@ export class ReportArLevelthreeComponent implements OnInit {
     if (this.type === 'customerinvoicewise') {
       this.type = 'customerwise';
       await this.createReportForm();
-      await this.showCustomerWise(0); 
+      await this.showCustomerWise(); 
     } else if (this.type === 'customerwise') {
       this.type = 'overall';
       await this.createReportForm();    
@@ -105,7 +105,7 @@ export class ReportArLevelthreeComponent implements OnInit {
     }
   }
 
-    async showCustomerWise(subTypeId:number) {
+    async showCustomerWise(subTypeId?:number) {
     this.subtype = subTypeId;
     this.pagedItems = [];
     this.type = 'customerwise';
@@ -304,7 +304,7 @@ export class ReportArLevelthreeComponent implements OnInit {
   getOverallList() {
     this.startDate = this.reportFilter.controls.FromDate.value;
     this.endDate = this.reportFilter.controls.ToDate.value;
-
+   console.log('Overall...',this.reportFilter.value)
     this.reportService.getSalesSummaryList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
       if (result['data'].Table.length > 0) {
@@ -325,7 +325,7 @@ export class ReportArLevelthreeComponent implements OnInit {
   getCustomerWiseList() {
     this.startDate = this.reportFilter.controls.FromDate.value;
     this.endDate = this.reportFilter.controls.ToDate.value;
-
+    console.log('Customerwise...',this.reportFilter.value)
     this.reportService.getSalesSummaryList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
       if (result['data'].Table.length > 0) {
@@ -347,7 +347,7 @@ export class ReportArLevelthreeComponent implements OnInit {
   getInvoiceWiseList() {
     this.startDate = this.reportFilter.controls.FromDate.value;
     this.endDate = this.reportFilter.controls.ToDate.value;
-
+    console.log('invoicewise...',this.reportFilter.value)
     this.reportService.getSalesSummaryList(this.reportFilter.value).subscribe(result => {
       this.reportList = [];
       if (result['data'].Table.length > 0) {
@@ -362,18 +362,6 @@ export class ReportArLevelthreeComponent implements OnInit {
         this. totalamountccy = 0;
       }
     })
-  }
-
-  clickTransactionNumber(RedirectUrl: string) {
-    debugger
-    
-    let url: string;
-
-    url = RedirectUrl;
-       
-    if (url) {
-        window.open(url, '_blank');
-    }
   }
 
   calculateTotalDays(reportList: any[]): void {
@@ -485,16 +473,18 @@ export class ReportArLevelthreeComponent implements OnInit {
       {
         this.downloadAsExcel(this.reportList, this.startDate, this.endDate, 'overall');
       }
-      else if(this.type =="customerwise")
-        {
-          this.downloadAsExcel(this.reportList, this.startDate, this.endDate, 'customerwise');
+     else if(this.type =="customerwise")
+      {
+        this.downloadAsExcel(this.reportList, this.startDate, this.endDate, 'customerwise');
       }
     else
       {
         this.downloadAsExcel(this.reportList, this.startDate, this.endDate, 'customerinvoicewise');
       }
     } 
-     async downloadAsExcel(
+    
+  
+    async downloadAsExcel(
       reportList: any[],
       startDate: string,
       endDate: string,
@@ -532,7 +522,7 @@ export class ReportArLevelthreeComponent implements OnInit {
               break;
           case 'customerinvoicewise':
               titleHeader = 'Receivable Sales Summary - Invoice Wise';
-              excludeKeys = ['RedirectUrl','BLType'];
+              excludeKeys = [];
               columnsToColor = ['Invoice #', 'Transaction Type', 'Invoice Amount', 'Balance (Invoice Currency)', 'Balance (Company Currency)'];
               columnsToAlignLeft = ['Invoice #', 'Transaction Type'];
               columnsToAlignRight = ['Invoice Amount', 'Balance (Invoice Currency)', 'Balance (Company Currency)'];

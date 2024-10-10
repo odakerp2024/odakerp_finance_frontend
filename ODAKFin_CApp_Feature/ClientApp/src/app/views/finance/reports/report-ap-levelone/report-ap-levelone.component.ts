@@ -225,7 +225,6 @@ export class ReportApLeveloneComponent implements OnInit {
     this.reportFilter.controls.Type.setValue(1);   
     this.reportFilter.controls.SubTypeId.setValue(this.subtype); 
     await this.getAccountPayableVendorList();
-   
 
   }
 
